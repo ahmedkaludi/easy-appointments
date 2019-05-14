@@ -1,0 +1,20 @@
+{
+    "name": "loncar/easy-appointment",
+    "description": "Easy Appointments plugin",
+    "autoload" : {
+        "classmap" : [
+            "src/"
+        ]
+    },
+    "authors": [
+        {
+            "name": "Nikola Loncar",
+            "email": "nikolanbg@gmail.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {
+        "lucatume/di52": "^2.0",
+        "jaybizzle/crawler-detect" :"1.*"
+    }
+}

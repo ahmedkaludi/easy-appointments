@@ -1,0 +1,22 @@
+{
+  "name": "easyappointments",
+  "version": "1.0.0",
+  "description": "=== Easy Appointments === Contributors: loncar Donate link: https://easy-appointments.net/ Tags: appointment, appointments, Booking, calendar, plugin, reservation, reservations, wp appointment, reservation plugin, reservations, schedule Requires at least: 3.7 Tested up to: 4.9 Stable tag: 1.12.3 License: GPLv2 License URI: http://www.gnu.org/licenses/gpl-2.0.html",
+  "main": "gulpfile.js",
+  "directories": {
+    "test": "tests"
+  },
+  "dependencies": {
+    "gulp": "^3.9.1",
+    "gulp-exec": "^2.1.2",
+    "gulp-shell": "^0.5.2"
+  },
+  "devDependencies": {
+    "gulp-watch": "^4.3.11"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Nikola Loncar",
+  "license": "ISC"
+}

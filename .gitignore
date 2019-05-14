@@ -1,0 +1,7 @@
+#/trunk
+/latest
+/easy-appointments-connect
+/main/node_modules
+.DS_Store
+.idea
+phpunit.phar

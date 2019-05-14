@@ -1,0 +1,58 @@
+version: '3.4'
+
+services:
+
+# BUILD PROCESS FOR JS
+  ea-build-js:
+    build: ./main/.docker/buildjs/
+    container_name: easy-appointments-buildjs
+    working_dir: /easy-appointments/main
+    volumes:
+      - .:/easy-appointments
+#   command: bash -c "sh build.sh && gulp default"
+    command: bash -c "npm install && gulp watch"
+    depends_on:
+      - ea-wordpress
+
+# PHP CONTAINER FOR WORDPRESS
+  ea-wordpress:
+#      image: wordpress:5.2-apache
+      build: ./main/.docker/wp/
+      container_name: easy-appointments-wordpress
+      restart: always
+      volumes:
+        - ./trunk:/var/www/html/wp-content/plugins/easy-appointments
+        - ./themes/Bootstrap-3-blank-wordpress-theme-master:/var/www/html/wp-content/themes/Bootstrap-3-blank-wordpress-theme-master
+        - ./themes/Bootstrap-3-blank-wordpress-theme-master-child:/var/www/html/wp-content/themes/Bootstrap-3-blank-wordpress-theme-master-child
+        - ./easy-appointments-connect:/var/www/html/wp-content/plugins/easy-appointments-connect
+      ports:
+        - 8080:80
+      environment:
+        MYSQL_DATABASE: wordpress
+        WORDPRESS_DB_HOST: ea-mysql
+        WORDPRESS_DB_PASSWORD: root
+      depends_on:
+         - ea-mailhog
+         - ea-mysql
+#      tty: true
+
+# MAIL CATCHER
+  ea-mailhog:
+      image: mailhog/mailhog
+      container_name: easy-appointments-mailhog
+      ports:
+          - 1025:1025
+          - 8025:8025
+
+# MYSQL
+  ea-mysql:
+      image: mysql:5.7
+      container_name: easy-appointments-db
+      restart: always
+      ports:
+        - 3306:3306
+      volumes:
+        - ./dump.sql:/docker-entrypoint-initdb.d/dump.sql
+      environment:
+        MYSQL_ROOT_PASSWORD: root
+        MYSQL_DATABASE: wordpress
