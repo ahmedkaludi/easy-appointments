@@ -923,7 +923,7 @@
             </tr>
             <tr>
                 <td colspan="3">
-                    <span class="description"> <?php _e('To use using the email notification for user there must be field named "email" or "e-mail"', 'easy-appointments'); ?></span>
+                    <span class="description"> <?php _e('To use using the email notification for user there must be field named "email" or "e-mail" or field with type "email"', 'easy-appointments'); ?></span>
                 </td>
             </tr>
             </tbody>
