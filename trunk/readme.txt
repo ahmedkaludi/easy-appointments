@@ -4,7 +4,7 @@ Donate link: https://easy-appointments.net/
 Tags: appointment, appointments, Booking, calendar, plugin, reservation, reservations, wp appointment, reservation plugin, reservations, schedule
 Requires at least: 3.7
 Tested up to: 5.2
-Stable tag: 2.4.2
+Stable tag: 2.4.3
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -203,6 +203,9 @@ Note: you can have only one calendar on one page.
 17. Admin panel - Report - Time table overview
 
 == Changelog ==
+
+= 2.4.3 (2019-05-16) =
+* Fixed bug with API endpoint registration
 
 = 2.4.2 (2019-05-12) =
 * New custom field type *email* . Now you can add multiple email fields to customers form for booking appointments. Notification emails will be sent to all of those addresses.
