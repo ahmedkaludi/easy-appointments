@@ -4,7 +4,7 @@
  * Plugin Name: Easy Appointments
  * Plugin URI: https://easy-appointments.net/
  * Description: Simple and easy to use management system for Appointments and Bookings
- * Version: 2.4.2
+ * Version: 2.4.3
  * Author: Nikola Loncar
  * Author URI: http://nikolaloncar.com
  * Text Domain: easy-appointments
@@ -89,6 +89,8 @@ class EasyAppointment
 
         // we want to check if it is link from EA mail
         add_action('init', array($this, 'url_delete_reservations'));
+
+        add_action('rest_api_init', array($this, 'register_api'));
 
         // init action for mails
         /** @var EAMail $mail */
@@ -238,13 +240,21 @@ class EasyAppointment
         load_plugin_textdomain('easy-appointments', FALSE, basename(dirname(__FILE__)) . '/languages/');
     }
 
+
+    /**
+     * Register all api endpoints
+     */
+    public function register_api()
+    {
+        // register API endpoints
+        new EAMainApi($this->get_container()); // not ready yet
+    }
+
     /**
      * Reserved for cron execution, url for deleting reservations
      */
     public function url_delete_reservations()
     {
-        // register API endpoints
-        new EAMainApi($this->get_container()); // not ready yet
 
         $whitelist = array(
             '127.0.0.1',
