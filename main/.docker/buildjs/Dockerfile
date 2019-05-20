@@ -1,4 +1,4 @@
-FROM node:9.2.0
+FROM node:8.16.0
 
 RUN apt-get update && \
   apt-get install zip unzip -y && \
