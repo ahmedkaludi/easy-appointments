@@ -574,7 +574,17 @@
 <!--Customize -->
 <script type="text/template" id="ea-tpl-custumize">
 	<div class="wp-filter">
-		<h2><?php _e('Connections', 'easy-appointments'); ?> :</h2>
+		<div class="form-section">
+			<h2><?php _e('Connections', 'easy-appointments'); ?></h2>
+			<span class="separator vertical"></span>
+			<div class="form-container">
+				<div class="form-item">
+					<label for=""><?php _e('Multiple work', 'easy-appointments');?></label>
+					<input class="field" data-key="multiple.work" name="multiple.work" type="checkbox" <% if
+						(_.findWhere(settings, {ea_key:'multiple.work'}).ea_value == "1") { %>checked<% } %>>
+				</div>
+			</div>
+		</div>
 		<table class="form-table form-table-translation">
 			<tbody>
 			<tr>

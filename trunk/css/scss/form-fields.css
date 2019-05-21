@@ -1,2 +1,25 @@
 .wp-filter h2 {
-  color: red; }
+  /*color: green;*/ }
+
+.wp-filter .form-section {
+  display: flex;
+  align-items: flex-start;
+  padding: 20px; }
+  .wp-filter .form-section h2 {
+    margin: 0;
+    width: 150px;
+    font-size: 18px; }
+  .wp-filter .form-section span.separator.vertical {
+    align-self: stretch;
+    margin: 0 20px;
+    width: 1px;
+    background-color: #989898; }
+
+.wp-filter .form-container .form-item {
+  width: 800px;
+  display: flex;
+  align-items: center; }
+  .wp-filter .form-container .form-item label {
+    font-size: 15px;
+    width: 200px;
+    background-color: yellow; }

@@ -1,5 +1,41 @@
 .wp-filter {
 	h2 {
-		color: green;
+		/*color: green;*/
+	}
+
+	.form-section {
+		display: flex;
+		align-items: flex-start;
+		padding: 20px;
+
+		h2 {
+			margin: 0;
+			width: 150px;
+    		font-size: 18px;
+		}
+		span.separator {
+			&.vertical {
+				align-self: stretch;
+    			margin: 0 20px;
+    			width: 1px;
+    			background-color: #989898;
+			}
+		}
+	}
+
+	.form-container {
+		
+		.form-item {
+			width: 800px;
+			display: flex;
+			align-items: center;
+
+			label {
+				font-size: 15px;
+				width: 200px;
+
+				background-color: yellow;
+			}
+		}
 	}
 }
