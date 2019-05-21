@@ -1,7 +1,10 @@
+@import "./scss/form-fields.css";
+
 hr.divider {
 	border-top: 2px dashed #DDD;
 	border-bottom: 0 none;
 	margin-top: 20px;
+	color: white;
 }
 
 select.field {
