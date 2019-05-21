@@ -6,6 +6,7 @@ cd /easy-appointments
 rm -r ./trunk/*
 mkdir ./trunk/img
 mkdir ./trunk/css
+mkdir ./trunk/css/scss
 mkdir ./trunk/js
 mkdir ./trunk/js/libs
 mkdir ./trunk/js/libs/fullcalendar
@@ -19,9 +20,14 @@ metascript ./main/js/admin.js > ./main/js/admin.prod.js
 metascript ./main/js/report.js > ./main/js/report.prod.js
 metascript ./main/js/settings.js > ./main/js/settings.prod.js
 
+cd ./main
+npm run scss
+cd ../
+
 cp ./main/main.php ./trunk/
 cp ./main/readme.txt ./trunk/
 cp -R ./main/css ./trunk/
+cp -R ./main/css/scss ./trunk/css/
 cp -R ./main/img ./trunk/
 cp -R ./main/fonts ./trunk/
 cp -R ./main/src ./trunk/

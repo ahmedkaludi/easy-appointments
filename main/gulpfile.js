@@ -2,7 +2,7 @@ var gulp = require('gulp');
 var exec = require('child_process').exec;
 var watch = require('gulp-watch');
 
-var fileFilter = ['**/*.js', '**/*.php', '!**/*prod.js'];
+var fileFilter = ['**/*.js', '**/*.php', '!**/*prod.js', '**/*.scss', '**/*.css' ];
 
 gulp.task('watch', function(cb) {
 	watch(fileFilter, function() {
