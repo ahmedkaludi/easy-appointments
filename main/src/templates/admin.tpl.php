@@ -638,226 +638,109 @@
 			</div>
 		</div>
 
-		<table class="form-table form-table-translation">
-			<tbody>
-			<tr>
-				<th class="row">
-					<label for=""><?php _e('Multiple work', 'easy-appointments'); ?> :</label>
-				</th>
-				<td>
-					<input class="field" data-key="multiple.work" name="multiple.work" type="checkbox" <% if
-					(_.findWhere(settings, {ea_key:'multiple.work'}).ea_value == "1") { %>checked<% } %>>
-				</td>
-				<td>
-					<span class="description"> <?php _e('Mark this option if you want to calculate free worker slots only by current service and location. If it\'s not marked system will check if worker is working on any location and service at current time.', 'easy-appointments'); ?></span>
-				</td>
-			</tr>
-			<tr>
-				<th class="row">
-					<label for=""><?php _e('Compatibility mode', 'easy-appointments'); ?> :</label>
-				</th>
-				<td>
-					<input class="field" data-key="compatibility.mode" name="compatibility.mode" type="checkbox" <% if
-					(_.findWhere(settings, {ea_key:'compatibility.mode'}).ea_value == "1") { %>checked<% } %>>
-				</td>
-				<td>
-					<span class="description"> <?php _e('If you can\'t <strong>EDIT</strong> or <strong>DELETE</strong> conecntion or any other settings, you should mark this option. NOTE: <strong>After saving this options you must refresh page!</strong>', 'easy-appointments'); ?></span>
-				</td>
-			</tr>
-			<tr>
-				<th class="row">
-					<label for=""><?php _e('Max number of appointments', 'easy-appointments'); ?> :</label>
-				</th>
-				<td>
-					<input style="width: 50px; margin-right: 20px;" class="field" data-key="max.appointments"
-						   name="max.appointments" type="text"
-						   value="<%= _.findWhere(settings, {ea_key:'max.appointments'}).ea_value %>"><br>
-				</td>
-				<td>
-					<span class="description"> <?php _e('Number of appointments that one visitor can make reservation before limit alert is shown. Appointments are counted during one day.', 'easy-appointments'); ?></span>
-				</td>
-			</tr>
-            <tr>
-                <td>&nbsp;</td>
-            </tr>
-			<tr>
-				<th class="row">
-					<label><?php _e('Auto reservation', 'easy-appointments'); ?> :</label>
-				</th>
-				<td>
-					<input class="field" data-key="pre.reservation" name="pre.reservation" type="checkbox" <% if
-					(_.findWhere(settings, {ea_key:'pre.reservation'}).ea_value == "1") { %>checked<% } %>>
-				</td>
-				<td>
-					<span class="description"> <?php _e('Make reservation at moment user select date and time!', 'easy-appointments'); ?></span>
-				</td>
-			</tr>
-            <tr>
-                <td>&nbsp;</td>
-            </tr>
-            <tr class="row">
-                <th>
-                    <label for=""><?php _e('Turn nonce off', 'easy-appointments'); ?> :</label>
-                </th>
-                <td>
-                    <input class="field" data-key="nonce.off" name="nonce.off" type="checkbox" <% if
-                    (_.findWhere(settings, {ea_key:'nonce.off'}).ea_value == "1") { %>checked<% } %>>
-                </td>
-                <td>
-                    <span class="description"> <?php _e('if you have issues with validation code that is expired in form you can turn off nonce but you are doing that on your own risk.', 'easy-appointments'); ?></span>
-                </td>
-            </tr>
-            <tr>
-                <td>&nbsp;</td>
-            </tr>
-			<tr>
-				<th class="row">
-					<label><?php _e('Default status', 'easy-appointments'); ?> :</label>
-				</th>
-				<td>
-					<select class="field" name="ea-select-status" data-key="default.status">
-						<option value="pending"
-						<% if (_.findWhere(settings, {ea_key:'default.status'}).ea_value == "pending") {
-						%>selected="selected"<% } %>><%= eaData.Status.pending %></option>
-						<option value="confirmed"
-						<% if (_.findWhere(settings, {ea_key:'default.status'}).ea_value == "confirmed") {
-						%>selected="selected"<% } %>><%= eaData.Status.confirmed %></option>
-					</select>
-				</td>
-				<td>
-					<span class="description"> <?php _e('Default status of Appointment made by visitor.', 'easy-appointments'); ?></span>
-				</td>
-			</tr>
-			</tbody>
-		</table>
 		<hr class="divider">
-		<h2><?php _e('Mail', 'easy-appointments'); ?> : </h2>
-		<h3><?php _e('Notifications', 'easy-appointments'); ?></h3>
-		<p class="notifications-help"><?php _e('You can use this tags inside email content', 'easy-appointments'); ?> :
-			<strong>#id#, #date#, #start#, #end#, #status#, #created#, #price#, #ip#, #link_confirm#, #link_cancel#, #url_confirm#,
-				#url_cancel#, #service_name#, #service_duration#, #service_price#, #worker_name#, #worker_email#, #worker_phone#,
-				#location_name#, #location_address#, #location_location#, <span id="custom-tags"></span></strong></p>
-		<table class='notifications form-table'>
-			<tbody>
-			<tr>
-				<td colspan="2">
-					<p>
-						<a class="mail-tab selected"
-						   data-textarea="#mail-pending"><?php _e('Pending', 'easy-appointments'); ?></a>
-						<a class="mail-tab"
-						   data-textarea="#mail-reservation"><?php _e('Reservation', 'easy-appointments'); ?></a>
-						<a class="mail-tab"
-						   data-textarea="#mail-canceled"><?php _e('Canceled', 'easy-appointments'); ?></a>
-						<a class="mail-tab"
-						   data-textarea="#mail-confirmed"><?php _e('Confirmed', 'easy-appointments'); ?></a>
-						<a class="mail-tab"
-                           data-textarea="#mail-admin"><?php _e('Admin', 'easy-appointments'); ?></a>
-					</p>
-					<textarea id="mail-template" style="height: 250px;" name="mail-template"><%= _.findWhere(settings, {ea_key:'mail.pending'}).ea_value %></textarea>
-				</td>
-			</tr>
-				<tr style="display:none;">
-					<td>
-						<textarea id="mail-pending" class="field" data-key="mail.pending"><%= _.findWhere(settings, {ea_key:'mail.pending'}).ea_value %></textarea>
-					</td>
-					<td>
-						<textarea id="mail-reservation" class="field" data-key="mail.reservation"><%= _.findWhere(settings, {ea_key:'mail.reservation'}).ea_value %></textarea>
-					</td>
-				</tr>
-				<tr style="display:none;">
-					<td>
-						<textarea id="mail-canceled" class="field" data-key="mail.canceled"><%= _.findWhere(settings, {ea_key:'mail.canceled'}).ea_value %></textarea>
-					</td>
-					<td>
-						<textarea id="mail-confirmed" class="field" data-key="mail.confirmed"><%= _.findWhere(settings, {ea_key:'mail.confirmed'}).ea_value %></textarea>
-					</td>
-				</tr>
-				<tr style="display:none;">
-					<td colspan="2">
-						<textarea id="mail-admin" class="field" data-key="mail.admin"><%= (_.findWhere(settings, {ea_key:'mail.admin'}) != null) ? _.findWhere(settings, {ea_key:'mail.admin'}).ea_value: '' %></textarea>
-					</td>
-				</tr>
-			</tbody>
-		</table>
-		<br>
-		<table class="form-table form-table-translation">
-			<tbody>
-			<tr>
-				<th class="row">
-					<label for=""><?php _e('Pending notification emails', 'easy-appointments'); ?> :</label>
-				</th>
-				<td>
-					<input style="width: 300px" class="field" data-key="pending.email" name="pending.email" type="text"
-						value="<%= _.findWhere(settings, {ea_key:'pending.email'}).ea_value %>"><br>
-				</td>
-				<td>
-					<span class="description"> <?php _e('Enter email adress that will receive new reservation notification. Separate multiple emails with , (comma)', 'easy-appointments'); ?></span>
-				</td>
-			</tr>
-			<tr>
-				<th class="row">
-					<label for=""><?php _e('Admin notification subject', 'easy-appointments'); ?> :</label>
-				</th>
-				<td>
-					<input style="width: 300px" class="field" data-key="pending.subject.email"
-						name="pending.subject.email" type="text"
-						value="<%= _.findWhere(settings, {ea_key:'pending.subject.email'}).ea_value %>"><br>
-				</td>
-				<td>
-					<span class="description"> <?php _e('You can use any tag that is available as in custom email notifications.', 'easy-appointments'); ?></span>
-				</td>
-			</tr>
-			<tr>
-				<th class="row">
-					<label for=""><?php _e('Visitor notification subject', 'easy-appointments'); ?> :</label>
-				</th>
-				<td>
-					<input style="width: 300px" class="field" data-key="pending.subject.visitor.email"
-						name="pending.subject.visitor.email" type="text"
-						value="<%= _.findWhere(settings, {ea_key:'pending.subject.visitor.email'}).ea_value %>"><br>
-				</td>
-				<td>
-					<span class="description"> <?php _e('You can use any tag that is available as in custom email notifications.', 'easy-appointments'); ?></span>
-				</td>
-			</tr>
-			<tr>
-				<th class="row">
-					<label for="send.worker.email"><?php _e('Send email to worker', 'easy-appointments'); ?> :</label>
-				</th>
-				<td>
-					<input class="field" data-key="send.worker.email" name="send.worker.email" type="checkbox" <% if
-					(_.findWhere(settings, {ea_key:'send.worker.email'}).ea_value == "1") { %>checked<% } %>><br>
-				</td>
-				<td>
-					<span class="description"> <?php _e('Mark this option if you want to employee receive admin email after filing the form.', 'easy-appointments'); ?></span>
-				</td>
-			</tr>
-			<tr>
-				<th class="row">
-					<label for="send.user.email"><?php _e('Send email to user', 'easy-appointments'); ?> :</label>
-				</th>
-				<td>
-					<input class="field" data-key="send.user.email" name="send.user.email" type="checkbox" <% if
-					(_.findWhere(settings, {ea_key:'send.user.email'}).ea_value == "1") { %>checked<% } %>><br>
-				</td>
-				<td>
-					<span class="description"> <?php _e('Mark this option if you want to user receive email after filing the form.', 'easy-appointments'); ?></span>
-				</td>
-			</tr>
-			<tr>
-				<th class="row">
-					<label for=""><?php _e('Send from', 'easy-appointments'); ?> :</label>
-				</th>
-				<td>
-					<input style="width: 300px" class="field" data-key="send.from.email" name="send.from.email"
-						   type="text" value="<%= _.findWhere(settings, {ea_key:'send.from.email'}).ea_value %>"><br>
-				</td>
-				<td>
-					<span class="description"> <?php _e('Send from email adress (Example: Name &lt;name@domain.com&gt;). Leave blank to use default address.', 'easy-appointments'); ?></span>
-				</td>
-			</tr>
-			</tbody>
-		</table>
+
+		<div class="form-section">
+			<h2><?php _e('Mail', 'easy-appointments'); ?></h2>
+			<span class="separator vertical"></span>
+			<div class="form-container">
+				<div class="form-item">
+					<div class="label-with-tooltip">
+						<label for=""><?php _e('Notifications', 'easy-appointments'); ?></label>
+						<span class="tooltip tooltip-right" data-tooltip="<?php _e('You can use this tags inside email content: #id#, #date#, #start#, #end#, #status#, #created#, #price#, #ip#, #link_confirm#, #link_cancel#, #url_confirm#, #url_cancel#, #service_name#, #service_duration#, #service_price#, #worker_name#, #worker_email#, #worker_phone#, #location_name#, #location_address#, #location_location#', 'easy-appointments'); ?>"></span>
+					</div>
+					<table class='notifications form-table'>
+						<tbody>
+							<tr>
+								<td colspan="2">
+									<p>
+										<a class="mail-tab selected"
+									   data-textarea="#mail-pending"><?php _e('Pending', 'easy-appointments'); ?></a>
+										<a class="mail-tab"
+										   data-textarea="#mail-reservation"><?php _e('Reservation', 'easy-appointments'); ?></a>
+										<a class="mail-tab"
+										   data-textarea="#mail-canceled"><?php _e('Canceled', 'easy-appointments'); ?></a>
+										<a class="mail-tab"
+										   data-textarea="#mail-confirmed"><?php _e('Confirmed', 'easy-appointments'); ?></a>
+										<a class="mail-tab"
+					                       data-textarea="#mail-admin"><?php _e('Admin', 'easy-appointments'); ?></a>
+									</p>
+									<textarea id="mail-template" style="height: 150px;" name="mail-template"><%= _.findWhere(settings, {ea_key:'mail.pending'}).ea_value %></textarea>
+								</td>
+							</tr>
+							<tr style="display:none;">
+								<td>
+									<textarea id="mail-pending" class="field" data-key="mail.pending"><%= _.findWhere(settings, {ea_key:'mail.pending'}).ea_value %></textarea>
+								</td>
+								<td>
+									<textarea id="mail-reservation" class="field" data-key="mail.reservation"><%= _.findWhere(settings, {ea_key:'mail.reservation'}).ea_value %></textarea>
+								</td>
+							</tr>
+							<tr style="display:none;">
+								<td>
+									<textarea id="mail-canceled" class="field" data-key="mail.canceled"><%= _.findWhere(settings, {ea_key:'mail.canceled'}).ea_value %></textarea>
+								</td>
+								<td>
+									<textarea id="mail-confirmed" class="field" data-key="mail.confirmed"><%= _.findWhere(settings, {ea_key:'mail.confirmed'}).ea_value %></textarea>
+								</td>
+							</tr>
+							<tr style="display:none;">
+								<td colspan="2">
+									<textarea id="mail-admin" class="field" data-key="mail.admin"><%= (_.findWhere(settings, {ea_key:'mail.admin'}) != null) ? _.findWhere(settings, {ea_key:'mail.admin'}).ea_value: '' %></textarea>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<div class="form-item">
+					<div class="label-with-tooltip">
+						<label for=""><?php _e('Pending notification emails', 'easy-appointments'); ?></label>
+						<span class="tooltip tooltip-right" data-tooltip="<?php _e('Enter email adress that will receive new reservation notification. Separate multiple emails with , (comma)', 'easy-appointments'); ?>"></span>
+					</div>
+					<input class="field" data-key="pending.email" name="pending.email" type="text" value="<%= _.findWhere(settings, {ea_key:'pending.email'}).ea_value %>">
+				</div>
+				<div class="form-item">
+					<div class="label-with-tooltip">
+						<label for=""><?php _e('Admin notification subject', 'easy-appointments'); ?> :</label>
+						<span class="tooltip tooltip-right" data-tooltip="<?php _e('You can use any tag that is available as in custom email notifications.', 'easy-appointments'); ?>"></span>
+					</div>
+					<input class="field" data-key="pending.subject.email" name="pending.subject.email" type="text" value="<%= _.findWhere(settings, {ea_key:'pending.subject.email'}).ea_value %>">
+				</div>
+				<div class="form-item">
+					<div class="label-with-tooltip">
+						<label for=""><?php _e('Visitor notification subject', 'easy-appointments'); ?></label>
+						<span class="tooltip tooltip-right" data-tooltip="<?php _e('You can use any tag that is available as in custom email notifications.', 'easy-appointments'); ?>"></span>
+					</div>
+					<input class="field" data-key="pending.subject.visitor.email" name="pending.subject.visitor.email" type="text" value="<%= _.findWhere(settings, {ea_key:'pending.subject.visitor.email'}).ea_value %>">
+				</div>
+				<div class="form-item">
+					<div class="label-with-tooltip">
+						<label for="send.worker.email"><?php _e('Send email to worker', 'easy-appointments'); ?> :</label>
+						<span class="tooltip tooltip-right" data-tooltip="<?php _e('Mark this option if you want to employee receive admin email after filing the form.', 'easy-appointments'); ?>"></span>
+					</div>
+					<div class="field-wrap">
+						<input class="field" data-key="send.worker.email" name="send.worker.email" type="checkbox" <% if (_.findWhere(settings, {ea_key:'send.worker.email'}).ea_value == "1") { %>checked<% } %>>
+					</div>
+				</div>
+				<div class="form-item">
+					<div class="label-with-tooltip">
+						<label for="send.user.email"><?php _e('Send email to user', 'easy-appointments'); ?> :</label>
+						<span class="tooltip tooltip-right" data-tooltip="<?php _e('Mark this option if you want to user receive email after filing the form.', 'easy-appointments'); ?>"></span>
+					</div>
+					<div class="field-wrap">
+						<input class="field" data-key="send.user.email" name="send.user.email" type="checkbox" <% if (_.findWhere(settings, {ea_key:'send.user.email'}).ea_value == "1") { %>checked<% } %>>
+					</div>
+				</div>
+				<div class="form-item">
+					<div class="label-with-tooltip">
+						<label for=""><?php _e('Send from', 'easy-appointments'); ?> :</label>
+						<span class="tooltip tooltip-right" data-tooltip="<?php _e('Send from email adress (Example: Name &lt;name@domain.com&gt;). Leave blank to use default address.', 'easy-appointments'); ?>"></span>
+					</div>
+					<input class="field" data-key="send.from.email" name="send.from.email" type="text" value="<%= _.findWhere(settings, {ea_key:'send.from.email'}).ea_value %>">
+				</div>
+			</div>
+		</div>
+		
 		<hr class="divider">
 		<h2><?php _e('Labels', 'easy-appointments'); ?> :</h2>
 		<table class="form-table form-table-translation">

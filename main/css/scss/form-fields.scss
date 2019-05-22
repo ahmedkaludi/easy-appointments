@@ -114,6 +114,21 @@
 				@include ff-style;
 			}
 
+			table {
+				margin: 0;
+				width: 500px;
+
+				.mce-tinymce {
+				    border: 1px solid #e5e5e5;
+				    border-radius: 4px;
+				    box-shadow: none;
+				}
+
+				td {
+					padding: 0;
+				}
+			}
+
 			&:not(:first-child) {
 				margin-top: 12px;
 			}
