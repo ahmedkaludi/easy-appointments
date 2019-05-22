@@ -579,12 +579,65 @@
 			<span class="separator vertical"></span>
 			<div class="form-container">
 				<div class="form-item">
-					<label for=""><?php _e('Multiple work', 'easy-appointments');?></label>
-					<input class="field" data-key="multiple.work" name="multiple.work" type="checkbox" <% if
-						(_.findWhere(settings, {ea_key:'multiple.work'}).ea_value == "1") { %>checked<% } %>>
+					<div class="label-with-tooltip">
+						<label for=""><?php _e('Multiple work', 'easy-appointments');?></label>
+						<span class="tooltip tooltip-right" data-tooltip="<?php _e('Mark this option if you want to calculate free worker slots only by current service and location. If it\'s not marked system will check if worker is working on any location and service at current time.', 'easy-appointments'); ?>"></span>
+					</div>
+					<div class="field-wrap">
+						<input class="field" data-key="multiple.work" name="multiple.work" type="checkbox" <% if (_.findWhere(settings, {ea_key:'multiple.work'}).ea_value == "1") { %>checked<% } %>>
+					</div>
+				</div>
+				<div class="form-item">
+					<div class="label-with-tooltip">
+						<label for=""><?php _e('Compatibility mode', 'easy-appointments'); ?></label>
+						<span class="tooltip tooltip-right" data-tooltip="<?php _e('If you can\'t EDIT or DELETE conecntion or any other settings, you should mark this option. NOTE: After saving this options you must refresh page!', 'easy-appointments'); ?>"></span>
+					</div>
+					<div class="field-wrap">
+						<input class="field" data-key="compatibility.mode" name="compatibility.mode" type="checkbox" <% if (_.findWhere(settings, {ea_key:'compatibility.mode'}).ea_value == "1") { %>checked<% } %>>
+					</div>
+				</div>
+				<div class="form-item">
+					<div class="label-with-tooltip">
+						<label for=""><?php _e('Max number of appointments', 'easy-appointments'); ?></label>
+						<span class="tooltip tooltip-right" data-tooltip="<?php _e('Number of appointments that one visitor can make reservation before limit alert is shown. Appointments are counted during one day.', 'easy-appointments'); ?>"></span>
+					</div>
+					<input class="field" data-key="max.appointments" name="max.appointments" type="text" value="<%= _.findWhere(settings, {ea_key:'max.appointments'}).ea_value %>">
+				</div>
+				<div class="form-item">
+					<div class="label-with-tooltip">
+						<label><?php _e('Auto reservation', 'easy-appointments'); ?></label>
+						<span class="tooltip tooltip-right" data-tooltip="<?php _e('Make reservation at moment user select date and time!', 'easy-appointments'); ?>"></span>
+					</div>
+					<div class="field-wrap">
+						<input class="field" data-key="pre.reservation" name="pre.reservation" type="checkbox" <% if (_.findWhere(settings, {ea_key:'pre.reservation'}).ea_value == "1") { %>checked<% } %>>
+					</div>
+				</div>
+				<div class="form-item">
+					<div class="label-with-tooltip">
+						<label for=""><?php _e('Turn nonce off', 'easy-appointments'); ?></label>
+						<span class="tooltip tooltip-right" data-tooltip="<?php _e('if you have issues with validation code that is expired in form you can turn off nonce but you are doing that on your own risk.', 'easy-appointments'); ?>"></span>
+					</div>
+					<div class="field-wrap">
+						<input class="field" data-key="nonce.off" name="nonce.off" type="checkbox" <% if (_.findWhere(settings, {ea_key:'nonce.off'}).ea_value == "1") { %>checked<% } %>>
+					</div>
+				</div>
+				<div class="form-item">
+					<div class="label-with-tooltip">
+						<label for=""><?php _e('Default status', 'easy-appointments'); ?></label>
+						<span class="tooltip tooltip-right" data-tooltip="<?php _e('Default status of Appointment made by visitor.', 'easy-appointments'); ?>"></span>
+					</div>
+					<select class="field" name="ea-select-status" data-key="default.status">
+						<option value="pending"
+						<% if (_.findWhere(settings, {ea_key:'default.status'}).ea_value == "pending") {
+						%>selected="selected"<% } %>><%= eaData.Status.pending %></option>
+						<option value="confirmed"
+						<% if (_.findWhere(settings, {ea_key:'default.status'}).ea_value == "confirmed") {
+						%>selected="selected"<% } %>><%= eaData.Status.confirmed %></option>
+					</select>
 				</div>
 			</div>
 		</div>
+
 		<table class="form-table form-table-translation">
 			<tbody>
 			<tr>

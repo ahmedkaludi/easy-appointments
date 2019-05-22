@@ -1,4 +1,5 @@
 @import "./scss/form-fields.css";
+@import "./scss/tooltip.css";
 
 hr.divider {
 	border-top: 2px dashed #DDD;
