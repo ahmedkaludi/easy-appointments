@@ -1,5 +1,5 @@
 @mixin ff-style {
-	width: 500px;
+	width: 100%;
 	height: 32px;
     padding: 4px 11px;
     color: rgba(0,0,0,0.65);
@@ -22,6 +22,7 @@
 }
 
 .wp-filter {
+
 	h2 {
 		/*color: green;*/
 	}
@@ -53,12 +54,19 @@
 			display: flex;
 			flex-direction: column;
 			align-items: flex-start;
+			width: 500px;
 
-			label {
+			label,
+			.pure-text {
 				font-size: 15px;
 				line-height: 20px;
 				margin-bottom: 5px;
 				cursor: default;
+
+				&.hint {
+					font-size: 13px;
+					font-style: italic;
+				}
 			}
 
 			.label-with-tooltip {
@@ -93,10 +101,11 @@
 			    background-image: none;
 			    border: 1px solid #ececec;;
 			    border-radius: 4px;
-			    width: 480px;
+			    width: 100%;
 			    height: 32px;
 			    display: flex;
 			    align-items: center;
+			    box-sizing: border-box;
 			    padding: 0 10px;
 			}
 
@@ -116,7 +125,7 @@
 
 			table {
 				margin: 0;
-				width: 500px;
+				width: 100%;
 
 				.mce-tinymce {
 				    border: 1px solid #e5e5e5;
@@ -132,6 +141,39 @@
 			&:not(:first-child) {
 				margin-top: 12px;
 			}
+
+			&.inline-fields {
+				flex-direction: row;
+				align-items: flex-end;
+
+				.form-item {
+					flex: 1;
+
+					&:not(:first-child) {
+						margin-top: 0;
+					}
+
+					&:not(:last-child) {
+						margin-right: 10px;
+					}
+				}
+			}
+
+			ul {
+				width: 100%;
+
+				.menu-item-handle, 
+				.field-settings {
+					width: 100%;
+				}
+
+			}
+		}
+
+		button {
+			height: 32px;
+		    margin: 0 0 2px 0;
+		    padding: 0 20px 1px;
 		}
 	}
 }

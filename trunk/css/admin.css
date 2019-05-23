@@ -1,6 +1,10 @@
 @import "./scss/form-fields.css";
 @import "./scss/tooltip.css";
 
+* {
+	box-sizing: border-box;
+}
+
 hr.divider {
 	border-top: 2px dashed #DDD;
 	border-bottom: 0 none;
