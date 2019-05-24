@@ -50,7 +50,7 @@
         .wp-filter .form-container .form-item .label-with-tooltip .tooltip.tooltip-right:before, .wp-filter .form-container .form-item .label-with-tooltip .tooltip.tooltip-right:after {
           left: 200%; }
         .wp-filter .form-container .form-item .label-with-tooltip .tooltip.tooltip-right:after {
-          width: 350px; }
+          width: 250px; }
     .wp-filter .form-container .form-item .field-wrap {
       background-color: #fff;
       background-image: none;
@@ -111,6 +111,30 @@
         box-shadow: none; }
       .wp-filter .form-container .form-item table td {
         padding: 0; }
+    .wp-filter .form-container .form-item textarea {
+      width: 100%;
+      height: 32px;
+      padding: 4px 11px;
+      color: rgba(0, 0, 0, 0.65);
+      font-size: 14px;
+      line-height: 1.5;
+      background-color: #fff;
+      background-image: none;
+      border: 1px solid #d9d9d9;
+      border-radius: 4px;
+      -webkit-transition: all .3s;
+      transition: all .3s;
+      height: 200px; }
+      .wp-filter .form-container .form-item textarea:focus, .wp-filter .form-container .form-item textarea:active {
+        border-color: #40a9ff;
+        border-right-width: 1px !important;
+        outline: 0;
+        -webkit-box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+        box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2); }
+    .wp-filter .form-container .form-item button.button-field {
+      height: 32px;
+      margin: 0 0 2px 0;
+      padding: 0 20px 1px; }
     .wp-filter .form-container .form-item:not(:first-child) {
       margin-top: 12px; }
     .wp-filter .form-container .form-item.inline-fields {
@@ -127,7 +151,3 @@
       .wp-filter .form-container .form-item ul .menu-item-handle,
       .wp-filter .form-container .form-item ul .field-settings {
         width: 100%; }
-  .wp-filter .form-container button {
-    height: 32px;
-    margin: 0 0 2px 0;
-    padding: 0 20px 1px; }

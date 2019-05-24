@@ -838,7 +838,7 @@
 	                        <option value="EMAIL"><?php _e('Email', 'easy-appointments'); ?></option>
 	                    </select>
 					</div>
-					<button class="button button-primary btn-add-field"><?php _e('Add', 'easy-appointments'); ?></button>
+					<button class="button button-primary btn-add-field button-field"><?php _e('Add', 'easy-appointments'); ?></button>
 				</div>
 				<div class="form-item">
 					<ul id="custom-fields"></ul>
@@ -874,52 +874,35 @@
 
         <hr class="divider">
 
-        
-        <h2>Form</h2>
-        <table class="form-table">
-            <tbody>
-                <tr>
-                    <th class="row">
-                        <label for=""><?php _e('Custom style', 'easy-appointments'); ?> :</label>
-                    </th>
-                    <td class="custom-css">
-                        <textarea class="field" data-key="custom.css"><% if (typeof _.findWhere(settings, {ea_key:'custom.css'}) !== 'undefined') { %><%= (_.findWhere(settings, {ea_key:'custom.css'})).ea_value %><% } %></textarea>
-                    </td>
-                    <td>
-                        <span class="description"> <?php _e('Place here custom css styles here. This will be included in both standard and bootstrap widget.', 'easy-appointments'); ?></span>
-                    </td>
-                </tr>
-                <tr>
-                    <th class="row">
-                        <label for=""><?php _e('Turn off css files', 'easy-appointments'); ?> :</label>
-                    </th>
-                    <td>
-                        <input class="field" data-key="css.off" name="css.off" type="checkbox" <% if (_.findWhere(settings,
-                        {ea_key:'css.off'}).ea_value == "1") { %>checked<% } %>><br>
-                    </td>
-                </tr>
-			</tbody>
-		</table>
-		<table class="form-table">
-			<tbody>
-			<tr>
-				<th class="row">
-					<label for=""><?php _e('I agree field', 'easy-appointments'); ?> :</label>
-				</th>
-				<td>
-					<input class="field" type="checkbox" name="show.iagree" data-key="show.iagree"<% if (typeof
-					_.findWhere(settings, {ea_key:'show.iagree'}) !== 'undefined' && _.findWhere(settings,
-					{ea_key:'show.iagree'}).ea_value == '1') { %>checked<% } %> />
-				</td>
-				<td>
-					<span class="description"> <?php _e('I agree option at the end of form. If this is marked user must confirm "I agree" checkbox.', 'easy-appointments'); ?></span>
-				</td>
-			</tr>
-			<tr>
-				<th class="row">
-					<label><?php _e('After cancel go to', 'easy-appointments'); ?> :</label>
-				</th>
-				<td>
+        <div class="form-section">
+			<h2><?php _e('Form', 'easy-appointments'); ?></h2>
+			<span class="separator vertical"></span>
+			<div class="form-container">
+				<div class="form-item">
+					<div class="label-with-tooltip">
+						<label for=""><?php _e('Custom style', 'easy-appointments'); ?></label>
+						<span class="tooltip tooltip-right" data-tooltip="<?php _e('Place here custom css styles here. This will be included in both standard and bootstrap widget.', 'easy-appointments'); ?>"></span>
+					</div>
+					<textarea class="field" data-key="custom.css"><% if (typeof _.findWhere(settings, {ea_key:'custom.css'}) !== 'undefined') { %><%= (_.findWhere(settings, {ea_key:'custom.css'})).ea_value %><% } %></textarea>
+				</div>
+				<div class="form-item">
+					<label for="send.worker.email"><?php _e('Turn off css files', 'easy-appointments'); ?></label>
+					<div class="field-wrap">
+						<input class="field" data-key="css.off" name="css.off" type="checkbox" <% if (_.findWhere(settings,
+                        {ea_key:'css.off'}).ea_value == "1") { %>checked<% } %>>
+					</div>
+				</div>
+				<div class="form-item">
+					<div class="label-with-tooltip">
+						<label for="send.worker.email"><?php _e('I agree field', 'easy-appointments'); ?></label>
+						<span class="tooltip tooltip-right" data-tooltip="<?php _e('I agree option at the end of form. If this is marked user must confirm "I agree" checkbox.', 'easy-appointments'); ?>"></span>
+					</div>
+					<div class="field-wrap">
+						<input class="field" type="checkbox" name="show.iagree" data-key="show.iagree"<% if (typeof _.findWhere(settings, {ea_key:'show.iagree'}) !== 'undefined' && _.findWhere(settings, {ea_key:'show.iagree'}).ea_value == '1') { %>checked<% } %> />
+					</div>
+				</div>
+				<div class="form-item">
+					<label for=""><?php _e('After cancel go to', 'easy-appointments'); ?></label>
 					<select data-key="cancel.scroll" class="field" name="cancel.scroll">
 						<% var langs = [
 						'calendar', 'worker', 'service', 'location'
@@ -933,111 +916,83 @@
 						<% }
 						});%>
 					</select>
-				</td>
-			</tr>
-			<tr>
-				<th class="row go-to-page">
-					<label for=""><?php _e('Go to page', 'easy-appointments'); ?> :</label>
-				</th>
-				<td>
-					<input class="field" data-key="submit.redirect" name="submit.redirect" type="text"
-						   value="<%= _.findWhere(settings, {ea_key:'submit.redirect'}).ea_value %>"><br>
-				</td>
-				<td>
-					<span class="description"> <?php _e('After a visitor creates an appointment on the front-end form. Leave blank to turn off redirect.', 'easy-appointments'); ?></span>
-				</td>
-			</tr>
-			</tbody>
-		</table>
+				</div>
+				<div class="form-item">
+					<div class="label-with-tooltip">
+						<label for=""><?php _e('Go to page', 'easy-appointments'); ?></label>
+						<span class="tooltip tooltip-right" data-tooltip="<?php _e('After a visitor creates an appointment on the front-end form. Leave blank to turn off redirect.', 'easy-appointments'); ?>"></span>
+					</div>
+					<input class="field" data-key="submit.redirect" name="submit.redirect" type="text" value="<%= _.findWhere(settings, {ea_key:'submit.redirect'}).ea_value %>">
+				</div>
+			</div>
+		</div>
+
         <hr class="divider">
-        <h2>GDPR</h2>
-        <table class="form-table form-table-translation">
-            <tbody>
-                <tr>
-                    <th class="row">
-                        <label for=""><?php _e('Turn on checkbox', 'easy-appointments'); ?> :</label>
-                    </th>
-                    <td>
-                        <input class="field" type="checkbox" name="gdpr.on" data-key="gdpr.on"<% if (typeof
-                        _.findWhere(settings, {ea_key:'gdpr.on'}) !== 'undefined' && _.findWhere(settings,
-                        {ea_key:'gdpr.on'}).ea_value == '1') { %>checked<% } %> />
-                    </td>
-                    <td>
-                        <span class="description"> <?php _e('GDPR section checkbox.', 'easy-appointments'); ?></span>
-                    </td>
-                </tr>
-                <tr>
-                    <th class="row">
-                        <label for=""><?php _e('Label', 'easy-appointments'); ?> :</label>
-                    </th>
-                    <td>
-                        <input style="width: 300px" class="field" data-key="gdpr.label" name="gdpr.label" type="text"
-                               value="<%= _.findWhere(settings, {ea_key:'gdpr.label'}).ea_value %>">
-                    </td>
-                    <td>
-                        <span class="description"> <?php _e('Label next to checkbox.', 'easy-appointments'); ?></span>
-                    </td>
-                </tr>
-                <tr>
-                    <th class="row">
-                        <label for=""><?php _e('Page with GDPR content', 'easy-appointments'); ?> :</label>
-                    </th>
-                    <td>
-                        <input style="width: 300px" class="field" data-key="gdpr.link" name="gdpr.link" type="text"
-                               value="<%= _.findWhere(settings, {ea_key:'gdpr.link'}).ea_value %>">
-                    </td>
-                    <td>
-                        <span class="description"> <?php _e('Link to page with GDPR content.', 'easy-appointments'); ?></span>
-                    </td>
-                </tr>
-                <tr>
-                    <th class="row">
-                        <label for=""><?php _e('Error message', 'easy-appointments'); ?> :</label>
-                    </th>
-                    <td>
-                        <input style="width: 300px" class="field" data-key="gdpr.message" name="gdpr.message" type="text"
-                               value="<%= _.findWhere(settings, {ea_key:'gdpr.message'}).ea_value %>">
-                    </td>
-                    <td>
-                        <span class="description"> <?php _e('Message if user don\'t mark the GDPR checkbox.', 'easy-appointments'); ?></span>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+
+        <div class="form-section">
+			<h2><?php _e('GDPR', 'easy-appointments'); ?></h2>
+			<span class="separator vertical"></span>
+			<div class="form-container">
+				<div class="form-item">
+					<div class="label-with-tooltip">
+						<label for="send.worker.email"><?php _e('Turn on checkbox', 'easy-appointments'); ?></label>
+						<span class="tooltip tooltip-right" data-tooltip="<?php _e('GDPR section checkbox.', 'easy-appointments'); ?>"></span>
+					</div>
+					<div class="field-wrap">
+						<input class="field" type="checkbox" name="gdpr.on" data-key="gdpr.on"<% if (typeof _.findWhere(settings, {ea_key:'gdpr.on'}) !== 'undefined' && _.findWhere(settings, {ea_key:'gdpr.on'}).ea_value == '1') { %>checked<% } %> />
+					</div>
+				</div>
+				<div class="form-item">
+					<div class="label-with-tooltip">
+						<label for=""><?php _e('Label', 'easy-appointments'); ?></label>
+						<span class="tooltip tooltip-right" data-tooltip="<?php _e('Label next to checkbox.', 'easy-appointments'); ?>"></span>
+					</div>
+					<input class="field" data-key="gdpr.label" name="gdpr.label" type="text" value="<%= _.findWhere(settings, {ea_key:'gdpr.label'}).ea_value %>">
+				</div>
+				<div class="form-item">
+					<div class="label-with-tooltip">
+						<label for=""><?php _e('Page with GDPR content', 'easy-appointments'); ?></label>
+						<span class="tooltip tooltip-right" data-tooltip="<?php _e('Link to page with GDPR content.', 'easy-appointments'); ?>"></span>
+					</div>
+					<input class="field" data-key="gdpr.link" name="gdpr.link" type="text" value="<%= _.findWhere(settings, {ea_key:'gdpr.link'}).ea_value %>">
+				</div>
+				<div class="form-item">
+					<div class="label-with-tooltip">
+						<label for=""><?php _e('Error message', 'easy-appointments'); ?></label>
+						<span class="tooltip tooltip-right" data-tooltip="<?php _e('Message if user don\'t mark the GDPR checkbox.', 'easy-appointments'); ?>"></span>
+					</div>
+					<input class="field" data-key="gdpr.message" name="gdpr.message" type="text" value="<%= _.findWhere(settings, {ea_key:'gdpr.message'}).ea_value %>">
+				</div>
+			</div>
+		</div>
+
         <hr class="divider">
-        <h2>Money</h2>
-        <table class="form-table form-table-translation">
-            <tbody>
-            <tr>
-                <th class="row">
-                    <label for=""><?php _e('Currency', 'easy-appointments'); ?> :</label>
-                </th>
-                <td>
-                    <input class="field" data-key="trans.currency" name="currency" type="text"
-                           value="<%= _.findWhere(settings, {ea_key:'trans.currency'}).ea_value %>"><br>
-                </td>
-            </tr>
-            <tr>
-                <th class="row">
-                    <label for=""><?php _e('Currency before price', 'easy-appointments'); ?> :</label>
-                </th>
-                <td>
-                    <input class="field" data-key="currency.before" name="currency.before" type="checkbox" <% if
-                    (_.findWhere(settings, {ea_key:'currency.before'}).ea_value == "1") { %>checked<% } %>><br>
-                </td>
-            </tr>
-            <tr>
-                <th class="row">
-                    <label for=""><?php _e('Hide price', 'easy-appointments'); ?> :</label>
-                </th>
-                <td>
-                    <input class="field" data-key="price.hide" name="price.hide" type="checkbox" <% if
-                    (_.findWhere(settings, {ea_key:'price.hide'}).ea_value == "1") { %>checked<% } %>><br>
-                </td>
-            </tr>
-            </tbody>
-        </table>
+
+        <div class="form-section">
+			<h2><?php _e('Money', 'easy-appointments'); ?></h2>
+			<span class="separator vertical"></span>
+			<div class="form-container">
+				<div class="form-item">
+					<label for=""><?php _e('Currency', 'easy-appointments'); ?></label>
+					<input class="field" data-key="trans.currency" name="currency" type="text" value="<%= _.findWhere(settings, {ea_key:'trans.currency'}).ea_value %>">
+				</div>
+				<div class="form-item">
+					<label for="send.worker.email"><?php _e('Currency before price', 'easy-appointments'); ?></label>
+					<div class="field-wrap">
+						<input class="field" data-key="currency.before" name="currency.before" type="checkbox" <% if (_.findWhere(settings, {ea_key:'currency.before'}).ea_value == "1") { %>checked<% } %>>
+					</div>
+				</div>
+				<div class="form-item">
+					<label for="send.worker.email"><?php _e('Hide price', 'easy-appointments'); ?></label>
+					<div class="field-wrap">
+						<input class="field" data-key="price.hide" name="price.hide" type="checkbox" <% if (_.findWhere(settings, {ea_key:'price.hide'}).ea_value == "1") { %>checked<% } %>>
+					</div>
+				</div>
+			</div>
+		</div>
+
         <br><br>
+
         <button class="button button-primary btn-save-settings"><?php _e('Save', 'easy-appointments'); ?></button>
         <br><br>
     </div>
@@ -1061,11 +1016,11 @@
 <script type="text/template" id="ea-tpl-custom-form-options">
 <div class="field-settings">
     <p>
-        <label>Label :</label><input type="text" class="field-label" name="field-label"
+        <label>Label</label><input type="text" class="field-label" name="field-label"
                                      value="<%= _.escape(item.label) %>">
     </p>
     <p>
-        <label>Placeholder :</label><input type="text" class="field-mixed" name="field-mixed"
+        <label>Placeholder</label><input type="text" class="field-mixed" name="field-mixed"
                                            value="<%= _.escape(item.mixed) %>">
     </p>
     <% if (item.type === "SELECT") { %>

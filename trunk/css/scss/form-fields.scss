@@ -91,7 +91,7 @@
 					}
 
 					&.tooltip-right:after {
-						width: 350px;
+						width: 250px;
 					}
 				}
 			}
@@ -138,6 +138,20 @@
 				}
 			}
 
+			textarea {
+				@include ff-style;
+				height: 200px;
+			}
+
+			button {
+
+				&.button-field {
+					height: 32px;
+				    margin: 0 0 2px 0;
+				    padding: 0 20px 1px;
+				}
+			}
+
 			&:not(:first-child) {
 				margin-top: 12px;
 			}
@@ -168,12 +182,6 @@
 				}
 
 			}
-		}
-
-		button {
-			height: 32px;
-		    margin: 0 0 2px 0;
-		    padding: 0 20px 1px;
 		}
 	}
 }
