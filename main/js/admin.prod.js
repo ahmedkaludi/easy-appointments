@@ -1883,7 +1883,8 @@
             "click .item-save" : "apply",
             "click .item-delete": "deleteOption",
             "click .remove-select-option": "removeSelectedOption",
-            "click .mail-tab": "selectMailNotification"
+            "click .mail-tab": "selectMailNotification",
+            "click .tab-selection a": "tabClicked"
         },
 
         initialize: function () {
@@ -2264,6 +2265,20 @@
             this.remove();
             Backbone.View.prototype.remove.call(this);
         },
+
+        tabClicked: function (event) {
+            event.stopPropagation();
+
+            // get previous selected
+            var prevId = this.$el.find('.tab-selection .selected').removeClass('selected').data('tab');
+            // get next selected
+            var tabId = $(event.target).addClass('selected').data('tab');
+
+            this.$el.find('#' + prevId).addClass('hidden');
+            this.$el.find('#' + tabId).removeClass('hidden');
+
+            return false;
+        }
     });    // Main tamplate
     EA.ToolsView = Backbone.View.extend({
 

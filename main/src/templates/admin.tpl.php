@@ -574,10 +574,23 @@
 <!--Customize -->
 <script type="text/template" id="ea-tpl-custumize">
 	<div class="wp-filter">
-		<div class="form-section">
-			<h2><?php _e('Connections', 'easy-appointments'); ?></h2>
+        <!-- TAB SECTION -->
+        <div class="tab-selection">
+            <a data-tab="tab-connections" class="selected" href="#"><?php _e('Connections', 'easy-appointments'); ?></a>
+            <a data-tab="tab-mail" href="#"><?php _e('Mail', 'easy-appointments'); ?></a>
+            <a data-tab="tab-labels" href="#"><?php _e('Labels', 'easy-appointments'); ?></a>
+            <a data-tab="tab-date-time" href="#"><?php _e('Date & Time', 'easy-appointments'); ?></a>
+            <a data-tab="tab-fields" href="#"><?php _e('Custom form fields', 'easy-appointments'); ?></a>
+            <a data-tab="tab-captcha" href="#"><?php _e('Google reCAPTCHA v2', 'easy-appointments'); ?></a>
+            <a data-tab="tab-form" href="#"><?php _e('Form', 'easy-appointments'); ?></a>
+            <a data-tab="tab-gdpr" href="#"><?php _e('GDPR', 'easy-appointments'); ?></a>
+            <a data-tab="tab-money" href="#"><?php _e('Money', 'easy-appointments'); ?></a>
+        </div>
+
+		<div id="tab-connections" class="form-section">
+<!--			<h2>--><?php //_e('Connections', 'easy-appointments'); ?><!--</h2>-->
 			<span class="separator vertical"></span>
-			<div class="form-container">
+			<div class="form-container" id="customize-general">
 				<div class="form-item">
 					<div class="label-with-tooltip">
 						<label for=""><?php _e('Multiple work', 'easy-appointments');?></label>
@@ -638,10 +651,10 @@
 			</div>
 		</div>
 
-		<hr class="divider">
+<!--		<hr class="divider">-->
 
-		<div class="form-section">
-			<h2><?php _e('Mail', 'easy-appointments'); ?></h2>
+		<div id="tab-mail" class="form-section hidden">
+<!--			<h2>--><?php //_e('Mail', 'easy-appointments'); ?><!--</h2>-->
 			<span class="separator vertical"></span>
 			<div class="form-container">
 				<div class="form-item">
@@ -741,10 +754,10 @@
 			</div>
 		</div>
 		
-		<hr class="divider">
+<!--		<hr class="divider">-->
 
-		<div class="form-section">
-			<h2><?php _e('Labels', 'easy-appointments'); ?></h2>
+		<div id="tab-labels" class="form-section hidden">
+<!--			<h2>--><?php //_e('Labels', 'easy-appointments'); ?><!--</h2>-->
 			<span class="separator vertical"></span>
 			<div class="form-container">
 				<div class="form-item">
@@ -769,10 +782,10 @@
 			</div>
 		</div>
 
-		<hr class="divider">
+<!--		<hr class="divider">-->
 
-		<div class="form-section">
-			<h2><?php _e('Date & Time', 'easy-appointments'); ?></h2>
+		<div id="tab-date-time" class="form-section hidden">
+<!--			<h2>--><?php //_e('Date & Time', 'easy-appointments'); ?><!--</h2>-->
 			<span class="separator vertical"></span>
 			<div class="form-container">
 				<div class="form-item">
@@ -814,10 +827,10 @@
 			</div>
 		</div>
 
-		<hr class="divider">
+<!--		<hr class="divider">-->
 
-		<div class="form-section">
-			<h2><?php _e('Custom form fields', 'easy-appointments'); ?></h2>
+		<div id="tab-fields" class="form-section hidden">
+<!--			<h2>--><?php //_e('Custom form fields', 'easy-appointments'); ?><!--</h2>-->
 			<span class="separator vertical"></span>
 			<div class="form-container">
 				<div class="form-item">
@@ -849,10 +862,10 @@
 			</div>
 		</div>
 
-        <hr class="divider">
+<!--        <hr class="divider">-->
 
-        <div class="form-section">
-			<h2><?php _e('Google reCAPTCHA v2', 'easy-appointments'); ?></h2>
+        <div id="tab-captcha" class="form-section hidden">
+<!--			<h2>--><?php //_e('Google reCAPTCHA v2', 'easy-appointments'); ?><!--</h2>-->
 			<span class="separator vertical"></span>
 			<div class="form-container">
 				<div class="form-item">
@@ -872,10 +885,10 @@
 			</div>
 		</div>
 
-        <hr class="divider">
+<!--        <hr class="divider">-->
 
-        <div class="form-section">
-			<h2><?php _e('Form', 'easy-appointments'); ?></h2>
+        <div id="tab-form" class="form-section hidden">
+<!--			<h2>--><?php //_e('Form', 'easy-appointments'); ?><!--</h2>-->
 			<span class="separator vertical"></span>
 			<div class="form-container">
 				<div class="form-item">
@@ -927,10 +940,10 @@
 			</div>
 		</div>
 
-        <hr class="divider">
+<!--        <hr class="divider">-->
 
-        <div class="form-section">
-			<h2><?php _e('GDPR', 'easy-appointments'); ?></h2>
+        <div id="tab-gdpr" class="form-section hidden">
+<!--			<h2>--><?php //_e('GDPR', 'easy-appointments'); ?><!--</h2>-->
 			<span class="separator vertical"></span>
 			<div class="form-container">
 				<div class="form-item">
@@ -966,10 +979,10 @@
 			</div>
 		</div>
 
-        <hr class="divider">
+<!--        <hr class="divider">-->
 
-        <div class="form-section">
-			<h2><?php _e('Money', 'easy-appointments'); ?></h2>
+        <div id="tab-money" class="form-section hidden">
+<!--			<h2>--><?php //_e('Money', 'easy-appointments'); ?><!--</h2>-->
 			<span class="separator vertical"></span>
 			<div class="form-container">
 				<div class="form-item">

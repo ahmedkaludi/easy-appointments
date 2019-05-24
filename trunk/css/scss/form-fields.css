@@ -1,10 +1,22 @@
 .wp-filter h2 {
   /*color: green;*/ }
 
+.wp-filter .tab-selection {
+  float: left; }
+  .wp-filter .tab-selection a {
+    display: block;
+    width: 150px;
+    padding: 5px; }
+    .wp-filter .tab-selection a.selected {
+      color: white;
+      background-color: #0073aa; }
+
 .wp-filter .form-section {
   display: flex;
   align-items: flex-start;
   padding: 20px; }
+  .wp-filter .form-section.hidden {
+    display: none; }
   .wp-filter .form-section h2 {
     margin: 0;
     width: 150px;
