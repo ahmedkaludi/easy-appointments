@@ -22,188 +22,199 @@
 }
 
 .wp-filter {
+	padding: 20px;
 
-  h2 {
-    /*color: green;*/
-  }
+	.custom-tab-view {
+	  	display: flex;
+	  	justify-content: flex-start;
 
-  .tab-selection {
-    float: left;
+	  	.tab-selection {
+	  		width: 170px;
+	  		margin-right: 30px;
+	  		min-height: 400px;
+	  		display: flex;
+	  		flex-direction: column;
+	  		justify-content: space-between;
 
-    a {
-      display: block;
-      width: 150px;
-      padding: 5px;
+		    a {
+		    	display: block;
+			    width: 100%;
+			    padding: 5px;
+			    font-size: 15px;
 
-      &.selected {
-        //text-decoration: underline;
-        color: white;
-        background-color: #0073aa;
-      }
-    }
-  }
+			    &.selected {
+			    	color: white;
+			        background-color: #0073aa;
+			    }
 
-  .form-section {
-    display: flex;
-    align-items: flex-start;
-    padding: 20px;
+			    &:active, &:focus {
+			    	outline: none;
+			    	box-shadow: none;
+			    }
+		    }
+		}
 
-    &.hidden {
-      display: none;
-    }
+		.form-section {
+			display: flex;
+		    align-items: flex-start;
+		    flex: 1;
 
-    h2 {
-      margin: 0;
-      width: 150px;
-      font-size: 18px;
-    }
+		    &.hidden {
+		    	display: none;
+		    }
 
-    span.separator {
-      &.vertical {
-        align-self: stretch;
-        margin: 0 20px;
-        width: 1px;
-        background-color: #989898;
-      }
-    }
-  }
+		    h2 {
+		    	margin: 0;
+		    	width: 150px;
+		    	font-size: 18px;
+		    }
 
-  .form-container {
-    flex: 1;
+		    span.separator {
+		    	&.vertical {
+			        align-self: stretch;
+			        width: 1px;
+			        background-color: #989898;
+	      		}
+		    }
+		    
+		    .form-container {
+		    	flex: 1;
+		    	padding: 0 30px;
 
-    .form-item {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      width: 500px;
+			    .form-item {
+					display: flex;
+					flex-direction: column;
+					align-items: flex-start;
+					width: 500px;
 
-      label,
-      .pure-text {
-        font-size: 15px;
-        line-height: 20px;
-        margin-bottom: 5px;
-        cursor: default;
+					label,
+					.pure-text {
+						font-size: 15px;
+						line-height: 20px;
+						margin-bottom: 5px;
+						cursor: default;
 
-        &.hint {
-          font-size: 13px;
-          font-style: italic;
-        }
-      }
+						&.hint {
+							font-size: 13px;
+							font-style: italic;
+						}
+					}
 
-      .label-with-tooltip {
-        display: flex;
-        align-items: center;
+					.label-with-tooltip {
+						display: flex;
+						align-items: center;
 
-        .tooltip {
-          display: block;
-          height: 15px;
-          width: 15px;
-          background-image: url('../images/info.svg');
-          background-repeat: no-repeat;
-          background-size: contain;
-          background-position: center;
-          margin: 0 0 5px 10px;
-          position: relative;
-          z-index: 2;
-          cursor: pointer;
+						.tooltip {
+							display: block;
+							height: 15px;
+							width: 15px;
+							background-image: url('../images/info.svg');
+							background-repeat: no-repeat;
+							background-size: contain;
+							background-position: center;
+							margin: 0 0 5px 10px;
+							position: relative;
+							z-index: 2;
+							cursor: pointer;
 
-          &.tooltip-right:before, &.tooltip-right:after {
-            left: 200%;
-          }
+							&.tooltip-right:before, &.tooltip-right:after {
+								left: 200%;
+							}
 
-          &.tooltip-right:after {
-            width: 250px;
-          }
-        }
-      }
+							&.tooltip-right:after {
+								width: 250px;
+							}
+						}
+					}
 
-      .field-wrap {
-        background-color: #fff;
-        background-image: none;
-        border: 1px solid #ececec;;
-        border-radius: 4px;
-        width: 100%;
-        height: 32px;
-        display: flex;
-        align-items: center;
-        box-sizing: border-box;
-        padding: 0 10px;
-      }
+					.field-wrap {
+						background-color: #fff;
+						background-image: none;
+						border: 1px solid #ececec;;
+						border-radius: 4px;
+						width: 100%;
+						height: 32px;
+						display: flex;
+						align-items: center;
+						box-sizing: border-box;
+						padding: 0 10px;
+					}
 
-      input {
+					input {
 
-        &[type="text"] {
-          @include ff-style;
-        }
+						&[type="text"] {
+							@include ff-style;
+						}
 
-        &[type="checkbox"] {
-          margin: 0;
-        }
-      }
+						&[type="checkbox"] {
+							margin: 0;
+						}
+					}
 
-      select {
-        @include ff-style;
-      }
+					select {
+						@include ff-style;
+					}
 
-      table {
-        margin: 0;
-        width: 100%;
+					table {
+						margin: 0;
+						width: 100%;
 
-        .mce-tinymce {
-          border: 1px solid #e5e5e5;
-          border-radius: 4px;
-          box-shadow: none;
-        }
+						.mce-tinymce {
+							border: 1px solid #e5e5e5;
+							border-radius: 4px;
+							box-shadow: none;
+						}
 
-        td {
-          padding: 0;
-        }
-      }
+						td {
+							padding: 0;
+						}
+					}
 
-      textarea {
-        @include ff-style;
-        height: 200px;
-      }
+					textarea {
+						@include ff-style;
+						height: 200px;
+					}
 
-      button {
+					button {
 
-        &.button-field {
-          height: 32px;
-          margin: 0 0 2px 0;
-          padding: 0 20px 1px;
-        }
-      }
+						&.button-field {
+							height: 32px;
+							margin: 0 0 2px 0;
+							padding: 0 20px 1px;
+						}
+					}
 
-      &:not(:first-child) {
-        margin-top: 12px;
-      }
+					&:not(:first-child) {
+						margin-top: 12px;
+					}
 
-      &.inline-fields {
-        flex-direction: row;
-        align-items: flex-end;
+					&.inline-fields {
+						flex-direction: row;
+						align-items: flex-end;
 
-        .form-item {
-          flex: 1;
+						.form-item {
+							flex: 1;
 
-          &:not(:first-child) {
-            margin-top: 0;
-          }
+							&:not(:first-child) {
+								margin-top: 0;
+							}
 
-          &:not(:last-child) {
-            margin-right: 10px;
-          }
-        }
-      }
+							&:not(:last-child) {
+								margin-right: 10px;
+							}
+						}
+					}
 
-      ul {
-        width: 100%;
+					ul {
+						width: 100%;
 
-        .menu-item-handle,
-        .field-settings {
-          width: 100%;
-        }
-
-      }
-    }
-  }
+						.menu-item-handle,
+						.field-settings {
+							width: 100%;
+						}
+					}
+			    }
+			}
+	  	}
+	}
 }
