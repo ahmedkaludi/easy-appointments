@@ -4,7 +4,7 @@ Donate link: https://easy-appointments.net/
 Tags: appointment, appointments, Booking, calendar, plugin, reservation, reservations, wp appointment, reservation plugin, reservations, schedule
 Requires at least: 3.7
 Tested up to: 5.2
-Stable tag: 2.4.3
+Stable tag: 2.4.4
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -204,6 +204,9 @@ Note: you can have only one calendar on one page.
 18. Admin panel - Report - Export page
 
 == Changelog ==
+
+= 2.4.4 (2019-06-03) =
+* Added custom redirect based on selected Service. Now user can be redirected to a page based by service after booking.
 
 = 2.4.3 (2019-05-16) =
 * Fixed bug with API endpoint registration

@@ -848,8 +848,27 @@
 
                 plugin.triggerEvent();
 
+                var redirected = false;
+
                 // if there is redirect do that
-                if (ea_settings['submit.redirect'] !== '') {
+                if (ea_settings['advance.redirect'] !== '') {
+                    var data = JSON.parse(ea_settings['advance.redirect']);
+                    var service = plugin.$element.find('[name="service"]').val();
+
+                    var redirect = data.find(function(el) {
+                        return el.service === service;
+                    });
+
+                    if (redirect) {
+                        redirected = true;
+                        setTimeout(function () {
+                            window.location.href = redirect.url;
+                        }, 2000);
+                    }
+                }
+
+                // if there is redirect do that
+                if (ea_settings['submit.redirect'] !== '' && redirected === false) {
                     setTimeout(function () {
                         window.location.href = ea_settings['submit.redirect'];
                     }, 2000);
