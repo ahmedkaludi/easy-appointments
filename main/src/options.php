@@ -53,6 +53,7 @@ class EAOptions
             'send.from.email'               => '',
             'css.off'                       => '0',
             'submit.redirect'               => '',
+            'advance.redirect'              => '[]',
             'pending.subject.visitor.email' => 'Reservation #id#',
             'block.time'                    => '0',
             'max.appointments'              => '5',

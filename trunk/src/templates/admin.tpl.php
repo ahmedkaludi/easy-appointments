@@ -562,12 +562,12 @@
 </script>
 
 <script type="text/template" id="ea-tpl-single-bulk-connection">
-	<li>
-		<span class="bulk-value"><%= _.escape( _.findWhere(locations, {id:row.location}).name ) %></span>
-		<span class="bulk-value"><%= _.escape( _.findWhere(services,  {id:row.service}).name ) %></span>
-		<span class="bulk-value"><%= _.escape( _.findWhere(workers,   {id:row.worker}).name ) %></span>
-		<span style="display: inline-block;"><button class="button bulk-connection-remove">Remove</button></span>
-	</li>
+    <li>
+        <span class="bulk-value"><%= _.escape( _.findWhere(locations, {id:row.location}).name ) %></span>
+        <span class="bulk-value"><%= _.escape( _.findWhere(services,  {id:row.service}).name ) %></span>
+        <span class="bulk-value"><%= _.escape( _.findWhere(workers,   {id:row.worker}).name ) %></span>
+        <span style="display: inline-block;"><button class="button bulk-connection-remove">Remove</button></span>
+    </li>
 </script>
 
 
@@ -1021,20 +1021,45 @@
 					</select>
 				</td>
 			</tr>
-			<tr>
-				<th class="row go-to-page">
-					<label for=""><?php _e('Go to page', 'easy-appointments'); ?> :</label>
-				</th>
-				<td>
-					<input class="field" data-key="submit.redirect" name="submit.redirect" type="text"
-						   value="<%= _.findWhere(settings, {ea_key:'submit.redirect'}).ea_value %>"><br>
-				</td>
-				<td>
-					<span class="description"> <?php _e('After a visitor creates an appointment on the front-end form. Leave blank to turn off redirect.', 'easy-appointments'); ?></span>
-				</td>
-			</tr>
-			</tbody>
-		</table>
+            <tr>
+                <th class="row go-to-page">
+                    <label for=""><?php _e('Go to page', 'easy-appointments'); ?> :</label>
+                </th>
+                <td>
+                    <input class="field" data-key="submit.redirect" name="submit.redirect" type="text"
+                           value="<%= _.findWhere(settings, {ea_key:'submit.redirect'}).ea_value %>"><br>
+                </td>
+                <td>
+                    <span class="description"> <?php _e('After a visitor creates an appointment on the front-end form. Leave blank to turn off redirect.', 'easy-appointments'); ?></span>
+                </td>
+            </tr>
+            <tr>
+                <th class="row go-to-page">
+                    <label for=""><?php _e('Advance Go to', 'easy-appointments'); ?> :</label>
+                </th>
+                <td><span class="description"> <?php _e('Add custom redirect based on service.', 'easy-appointments'); ?></span></td>
+            </tr>
+            <tr>
+                <td></td>
+                <th colspan="2">
+                    <span><?php _e('Service', 'easy-appointments'); ?> : </span><select id="redirect-service" style="width: 200px;">
+                        <% _.each(eaData.Services,function(item,key,list){ %>
+                        <option value="<%= _.escape(item.id) %>"><%= _.escape(item.name) %></option>
+                        <% });%>
+                    </select>
+                    <span><?php _e('Redirect to', 'easy-appointments'); ?> : <input id="redirect-url" name="redirect-url" type="text" style="height: 28px; width: 300px;">
+                    <button class="button button-primary btn-add-redirect"><?php _e('Add advance redirect', 'easy-appointments'); ?></button><br>
+                    <input type="hidden" id="advance-redirect" data-key="advance.redirect" class="field" name="advance.redirect" value="<%= _.escape(ea_settings['advance.redirect']) %>">
+                </th>
+            </tr>
+            <tr>
+                <td></td>
+                <td colspan="2">
+                    <ul id="custom-redirect-list"></ul>
+                </td>
+            </tr>
+            </tbody>
+        </table>
         <hr class="divider">
         <h2>GDPR</h2>
         <table class="form-table form-table-translation">
@@ -1212,6 +1237,24 @@
 		</div>
 		<br/>
 	</div>
+</script>
+
+<script type="text/template" id="ea-tpl-advance-redirect">
+    <div style="min-height: 380px; max-height: 380px;">
+
+    </div>
+    <div class="bulk-footer">
+        <button id="close-advance-redirect" class="button-primary" disabled>Close</button>
+    </div>
+</script>
+
+<script type="text/template" id="ea-tpl-single-advance-redirect">
+    <li>
+        <span class="bulk-value"><%= _.escape( _.findWhere(locations, {id:row.location}).name ) %></span>
+        <span class="bulk-value"><%= _.escape( _.findWhere(services,  {id:row.service}).name ) %></span>
+        <span class="bulk-value"><%= _.escape( _.findWhere(workers,   {id:row.worker}).name ) %></span>
+        <span style="display: inline-block;"><button class="button bulk-connection-remove">Remove</button></span>
+    </li>
 </script>
 
 <!-- TOOLS LOG -->
