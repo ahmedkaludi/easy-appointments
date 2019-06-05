@@ -1884,7 +1884,12 @@
             "click .item-delete": "deleteOption",
             "click .remove-select-option": "removeSelectedOption",
             "click .mail-tab": "selectMailNotification",
+<<<<<<< HEAD
             "click .tab-selection a": "tabClicked"
+=======
+            "click .btn-add-redirect": "addAdvanceRedirect",
+            "click .remove-advance-redirect": "removeAdvanceRedirect"
+>>>>>>> master
         },
 
         initialize: function () {
@@ -1906,6 +1911,8 @@
 
             jQuery.when(defOptions, defFields).done(function (d1, d2) {
                 plugin.render();
+
+                plugin.showCustomRedirects();
             });
 
             // if there is no data in cache
@@ -2235,6 +2242,66 @@
             var $btn = jQuery(e.currentTarget);
 
             $btn.closest('li').remove();
+        },
+
+        addAdvanceRedirect: function() {
+            var $elData = this.$el.find('#advance-redirect');
+            var data = JSON.parse($elData.val());
+
+            if (!Array.isArray(data)) {
+                data = [];
+            }
+
+            var newItem = {
+                service: this.$el.find('#redirect-service').val(),
+                url: this.$el.find('#redirect-url').val()
+            };
+
+            data.push(newItem);
+
+            $elData.val(JSON.stringify(data));
+
+            this.showCustomRedirects();
+        },
+
+        removeAdvanceRedirect: function(e) {
+            var $btn = jQuery(e.currentTarget);
+            var index = $btn.data('index');
+
+            var $elData = this.$el.find('#advance-redirect');
+            var data = JSON.parse($elData.val());
+
+            data.splice(index, 1);
+
+            $elData.val(JSON.stringify(data));
+
+            this.showCustomRedirects();
+        },
+
+        showCustomRedirects: function() {
+            var $list = this.$el.find('#custom-redirect-list');
+            var $ulData = this.$el.find('#advance-redirect');
+            var data = JSON.parse($ulData.val());
+
+            if (!Array.isArray(data)) {
+                data = [];
+            }
+
+            $list.empty();
+
+            jQuery.each(data, function(index, element) {
+                var service = eaData.Services.find(function(el) {
+                   return el.id === element.service;
+                });
+
+                if (!service) {
+                    service = {
+                        name: 'REMOVED'
+                    };
+                }
+
+                $list.append('<div class="redirect-row">' + (index+1) + '. <span class="redirect-service-name">' + service.name + '</span><span class="redirect-url">' + element.url + '</span><button data-index="' + index + '" class="button button-primary remove-advance-redirect"> X </button></div>');
+            });
         },
 
         reorder: function() {

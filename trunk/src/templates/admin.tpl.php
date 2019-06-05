@@ -562,18 +562,19 @@
 </script>
 
 <script type="text/template" id="ea-tpl-single-bulk-connection">
-	<li>
-		<span class="bulk-value"><%= _.escape( _.findWhere(locations, {id:row.location}).name ) %></span>
-		<span class="bulk-value"><%= _.escape( _.findWhere(services,  {id:row.service}).name ) %></span>
-		<span class="bulk-value"><%= _.escape( _.findWhere(workers,   {id:row.worker}).name ) %></span>
-		<span style="display: inline-block;"><button class="button bulk-connection-remove">Remove</button></span>
-	</li>
+    <li>
+        <span class="bulk-value"><%= _.escape( _.findWhere(locations, {id:row.location}).name ) %></span>
+        <span class="bulk-value"><%= _.escape( _.findWhere(services,  {id:row.service}).name ) %></span>
+        <span class="bulk-value"><%= _.escape( _.findWhere(workers,   {id:row.worker}).name ) %></span>
+        <span style="display: inline-block;"><button class="button bulk-connection-remove">Remove</button></span>
+    </li>
 </script>
 
 
 <!--Customize -->
 <script type="text/template" id="ea-tpl-custumize">
 	<div class="wp-filter">
+<<<<<<< HEAD
 		<div class="custom-tab-view">
         <!-- TAB SECTION -->
 	        <div class="tab-selection">
@@ -1011,6 +1012,584 @@
 			</div>
 		</div>
 
+=======
+		<h2><?php _e('Connections', 'easy-appointments'); ?> :</h2>
+		<table class="form-table form-table-translation">
+			<tbody>
+			<tr>
+				<th class="row">
+					<label for=""><?php _e('Multiple work', 'easy-appointments'); ?> :</label>
+				</th>
+				<td>
+					<input class="field" data-key="multiple.work" name="multiple.work" type="checkbox" <% if
+					(_.findWhere(settings, {ea_key:'multiple.work'}).ea_value == "1") { %>checked<% } %>>
+				</td>
+				<td>
+					<span class="description"> <?php _e('Mark this option if you want to calculate free worker slots only by current service and location. If it\'s not marked system will check if worker is working on any location and service at current time.', 'easy-appointments'); ?></span>
+				</td>
+			</tr>
+			<tr>
+				<th class="row">
+					<label for=""><?php _e('Compatibility mode', 'easy-appointments'); ?> :</label>
+				</th>
+				<td>
+					<input class="field" data-key="compatibility.mode" name="compatibility.mode" type="checkbox" <% if
+					(_.findWhere(settings, {ea_key:'compatibility.mode'}).ea_value == "1") { %>checked<% } %>>
+				</td>
+				<td>
+					<span class="description"> <?php _e('If you can\'t <strong>EDIT</strong> or <strong>DELETE</strong> conecntion or any other settings, you should mark this option. NOTE: <strong>After saving this options you must refresh page!</strong>', 'easy-appointments'); ?></span>
+				</td>
+			</tr>
+			<tr>
+				<th class="row">
+					<label for=""><?php _e('Max number of appointments', 'easy-appointments'); ?> :</label>
+				</th>
+				<td>
+					<input style="width: 50px; margin-right: 20px;" class="field" data-key="max.appointments"
+						   name="max.appointments" type="text"
+						   value="<%= _.findWhere(settings, {ea_key:'max.appointments'}).ea_value %>"><br>
+				</td>
+				<td>
+					<span class="description"> <?php _e('Number of appointments that one visitor can make reservation before limit alert is shown. Appointments are counted during one day.', 'easy-appointments'); ?></span>
+				</td>
+			</tr>
+            <tr>
+                <td>&nbsp;</td>
+            </tr>
+			<tr>
+				<th class="row">
+					<label><?php _e('Auto reservation', 'easy-appointments'); ?> :</label>
+				</th>
+				<td>
+					<input class="field" data-key="pre.reservation" name="pre.reservation" type="checkbox" <% if
+					(_.findWhere(settings, {ea_key:'pre.reservation'}).ea_value == "1") { %>checked<% } %>>
+				</td>
+				<td>
+					<span class="description"> <?php _e('Make reservation at moment user select date and time!', 'easy-appointments'); ?></span>
+				</td>
+			</tr>
+            <tr>
+                <td>&nbsp;</td>
+            </tr>
+            <tr class="row">
+                <th>
+                    <label for=""><?php _e('Turn nonce off', 'easy-appointments'); ?> :</label>
+                </th>
+                <td>
+                    <input class="field" data-key="nonce.off" name="nonce.off" type="checkbox" <% if
+                    (_.findWhere(settings, {ea_key:'nonce.off'}).ea_value == "1") { %>checked<% } %>>
+                </td>
+                <td>
+                    <span class="description"> <?php _e('if you have issues with validation code that is expired in form you can turn off nonce but you are doing that on your own risk.', 'easy-appointments'); ?></span>
+                </td>
+            </tr>
+            <tr>
+                <td>&nbsp;</td>
+            </tr>
+			<tr>
+				<th class="row">
+					<label><?php _e('Default status', 'easy-appointments'); ?> :</label>
+				</th>
+				<td>
+					<select class="field" name="ea-select-status" data-key="default.status">
+						<option value="pending"
+						<% if (_.findWhere(settings, {ea_key:'default.status'}).ea_value == "pending") {
+						%>selected="selected"<% } %>><%= eaData.Status.pending %></option>
+						<option value="confirmed"
+						<% if (_.findWhere(settings, {ea_key:'default.status'}).ea_value == "confirmed") {
+						%>selected="selected"<% } %>><%= eaData.Status.confirmed %></option>
+					</select>
+				</td>
+				<td>
+					<span class="description"> <?php _e('Default status of Appointment made by visitor.', 'easy-appointments'); ?></span>
+				</td>
+			</tr>
+			</tbody>
+		</table>
+		<hr class="divider">
+		<h2><?php _e('Mail', 'easy-appointments'); ?> : </h2>
+		<h3><?php _e('Notifications', 'easy-appointments'); ?></h3>
+		<p class="notifications-help"><?php _e('You can use this tags inside email content', 'easy-appointments'); ?> :
+			<strong>#id#, #date#, #start#, #end#, #status#, #created#, #price#, #ip#, #link_confirm#, #link_cancel#, #url_confirm#,
+				#url_cancel#, #service_name#, #service_duration#, #service_price#, #worker_name#, #worker_email#, #worker_phone#,
+				#location_name#, #location_address#, #location_location#, <span id="custom-tags"></span></strong></p>
+		<table class='notifications form-table'>
+			<tbody>
+			<tr>
+				<td colspan="2">
+					<p>
+						<a class="mail-tab selected"
+						   data-textarea="#mail-pending"><?php _e('Pending', 'easy-appointments'); ?></a>
+						<a class="mail-tab"
+						   data-textarea="#mail-reservation"><?php _e('Reservation', 'easy-appointments'); ?></a>
+						<a class="mail-tab"
+						   data-textarea="#mail-canceled"><?php _e('Canceled', 'easy-appointments'); ?></a>
+						<a class="mail-tab"
+						   data-textarea="#mail-confirmed"><?php _e('Confirmed', 'easy-appointments'); ?></a>
+						<a class="mail-tab"
+                           data-textarea="#mail-admin"><?php _e('Admin', 'easy-appointments'); ?></a>
+					</p>
+					<textarea id="mail-template" style="height: 250px;" name="mail-template"><%= _.findWhere(settings, {ea_key:'mail.pending'}).ea_value %></textarea>
+				</td>
+			</tr>
+				<tr style="display:none;">
+					<td>
+						<textarea id="mail-pending" class="field" data-key="mail.pending"><%= _.findWhere(settings, {ea_key:'mail.pending'}).ea_value %></textarea>
+					</td>
+					<td>
+						<textarea id="mail-reservation" class="field" data-key="mail.reservation"><%= _.findWhere(settings, {ea_key:'mail.reservation'}).ea_value %></textarea>
+					</td>
+				</tr>
+				<tr style="display:none;">
+					<td>
+						<textarea id="mail-canceled" class="field" data-key="mail.canceled"><%= _.findWhere(settings, {ea_key:'mail.canceled'}).ea_value %></textarea>
+					</td>
+					<td>
+						<textarea id="mail-confirmed" class="field" data-key="mail.confirmed"><%= _.findWhere(settings, {ea_key:'mail.confirmed'}).ea_value %></textarea>
+					</td>
+				</tr>
+				<tr style="display:none;">
+					<td colspan="2">
+						<textarea id="mail-admin" class="field" data-key="mail.admin"><%= (_.findWhere(settings, {ea_key:'mail.admin'}) != null) ? _.findWhere(settings, {ea_key:'mail.admin'}).ea_value: '' %></textarea>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		<br>
+		<table class="form-table form-table-translation">
+			<tbody>
+			<tr>
+				<th class="row">
+					<label for=""><?php _e('Pending notification emails', 'easy-appointments'); ?> :</label>
+				</th>
+				<td>
+					<input style="width: 300px" class="field" data-key="pending.email" name="pending.email" type="text"
+						value="<%= _.findWhere(settings, {ea_key:'pending.email'}).ea_value %>"><br>
+				</td>
+				<td>
+					<span class="description"> <?php _e('Enter email adress that will receive new reservation notification. Separate multiple emails with , (comma)', 'easy-appointments'); ?></span>
+				</td>
+			</tr>
+			<tr>
+				<th class="row">
+					<label for=""><?php _e('Admin notification subject', 'easy-appointments'); ?> :</label>
+				</th>
+				<td>
+					<input style="width: 300px" class="field" data-key="pending.subject.email"
+						name="pending.subject.email" type="text"
+						value="<%= _.findWhere(settings, {ea_key:'pending.subject.email'}).ea_value %>"><br>
+				</td>
+				<td>
+					<span class="description"> <?php _e('You can use any tag that is available as in custom email notifications.', 'easy-appointments'); ?></span>
+				</td>
+			</tr>
+			<tr>
+				<th class="row">
+					<label for=""><?php _e('Visitor notification subject', 'easy-appointments'); ?> :</label>
+				</th>
+				<td>
+					<input style="width: 300px" class="field" data-key="pending.subject.visitor.email"
+						name="pending.subject.visitor.email" type="text"
+						value="<%= _.findWhere(settings, {ea_key:'pending.subject.visitor.email'}).ea_value %>"><br>
+				</td>
+				<td>
+					<span class="description"> <?php _e('You can use any tag that is available as in custom email notifications.', 'easy-appointments'); ?></span>
+				</td>
+			</tr>
+			<tr>
+				<th class="row">
+					<label for="send.worker.email"><?php _e('Send email to worker', 'easy-appointments'); ?> :</label>
+				</th>
+				<td>
+					<input class="field" data-key="send.worker.email" name="send.worker.email" type="checkbox" <% if
+					(_.findWhere(settings, {ea_key:'send.worker.email'}).ea_value == "1") { %>checked<% } %>><br>
+				</td>
+				<td>
+					<span class="description"> <?php _e('Mark this option if you want to employee receive admin email after filing the form.', 'easy-appointments'); ?></span>
+				</td>
+			</tr>
+			<tr>
+				<th class="row">
+					<label for="send.user.email"><?php _e('Send email to user', 'easy-appointments'); ?> :</label>
+				</th>
+				<td>
+					<input class="field" data-key="send.user.email" name="send.user.email" type="checkbox" <% if
+					(_.findWhere(settings, {ea_key:'send.user.email'}).ea_value == "1") { %>checked<% } %>><br>
+				</td>
+				<td>
+					<span class="description"> <?php _e('Mark this option if you want to user receive email after filing the form.', 'easy-appointments'); ?></span>
+				</td>
+			</tr>
+			<tr>
+				<th class="row">
+					<label for=""><?php _e('Send from', 'easy-appointments'); ?> :</label>
+				</th>
+				<td>
+					<input style="width: 300px" class="field" data-key="send.from.email" name="send.from.email"
+						   type="text" value="<%= _.findWhere(settings, {ea_key:'send.from.email'}).ea_value %>"><br>
+				</td>
+				<td>
+					<span class="description"> <?php _e('Send from email adress (Example: Name &lt;name@domain.com&gt;). Leave blank to use default address.', 'easy-appointments'); ?></span>
+				</td>
+			</tr>
+			</tbody>
+		</table>
+		<hr class="divider">
+		<h2><?php _e('Labels', 'easy-appointments'); ?> :</h2>
+		<table class="form-table form-table-translation">
+			<tbody>
+			<tr>
+				<th class="row">
+					<label for=""><?php _e('Service', 'easy-appointments'); ?> :</label>
+				</th>
+				<td>
+					<input class="field" data-key="trans.service" name="service" type="text"
+						   value="<%= _.escape( _.findWhere(settings, {ea_key:'trans.service'}).ea_value ) %>"><br>
+				</td>
+			</tr>
+			<tr>
+				<th class="row">
+					<label for=""><?php _e('Location', 'easy-appointments'); ?> :</label>
+				</th>
+				<td>
+					<input class="field" data-key="trans.location" name="location" type="text"
+						   value="<%= _.escape( _.findWhere(settings, {ea_key:'trans.location'}).ea_value ) %>"><br>
+				</td>
+			</tr>
+			<tr>
+				<th class="row">
+					<label for=""><?php _e('Worker', 'easy-appointments'); ?> :</label>
+				</th>
+				<td>
+					<input class="field" data-key="trans.worker" name="worker" type="text"
+						   value="<%= _.escape( _.findWhere(settings, {ea_key:'trans.worker'}).ea_value ) %>"><br>
+				</td>
+			</tr>
+			<tr>
+				<th class="row">
+					<label for=""><?php _e('Done message', 'easy-appointments'); ?> :</label>
+				</th>
+				<td>
+					<input class="field" data-key="trans.done_message" name="done_message" type="text"
+						   value="<%= _.escape( _.findWhere(settings, {ea_key:'trans.done_message'}).ea_value ) %>"><br>
+				</td>
+				<td>
+					<span class="description"> <?php _e('Message that user receive after completing appointment', 'easy-appointments'); ?></span>
+				</td>
+			</tr>
+			</tbody>
+		</table>
+		<hr class="divider">
+		<h2><?php _e('Date & Time', 'easy-appointments'); ?> : </h2>
+		<table class="form-table form-table-translation">
+			<tbody>
+			<tr>
+				<th class="row">
+					<label><?php _e('Time format', 'easy-appointments'); ?> :</label>
+				</th>
+				<td>
+					<select data-key="time_format" class="field" name="time_format">
+						<option value="00-24"
+						<% if (_.findWhere(settings, {ea_key:'time_format'}).ea_value === "00-24") {
+						%>selected="selected"<% } %>>00-24</option>
+						<option value="am-pm"
+						<% if (_.findWhere(settings, {ea_key:'time_format'}).ea_value === "am-pm") {
+						%>selected="selected"<% } %>>AM-PM</option>
+					</select>
+				</td>
+				<td>
+					<span class="description"> <?php _e('Notice : date/time formating for email notification are done by <b>Settings > General</b>.', 'easy-appointments'); ?></span>
+				</td>
+			</tr>
+			<tr>
+				<th class="row">
+					<label><?php _e('Calendar localization', 'easy-appointments'); ?> :</label>
+				</th>
+				<td>
+					<select data-key="datepicker" class="field" name="datepicker">
+						<% var langs = [
+						'af','ar','ar-DZ','az','be','bg','bs','ca','cs','cy-GB','da','de','el','en','en-AU','en-GB','en-NZ','en-US','eo','es','et','eu','fa','fi','fo','fr','fr-CA','fr-CH','gl','he','hi','hr','hu','hy','id','is','it','it-CH','ja','ka','kk','km','ko','ky','lb','lt','lv','mk','ml','ms','nb','nl','nl-BE','nn','no','pl','pt','pt-BR','rm','ro','ru','sk','sl','sq','sr','sr-SR','sv','ta','th','tj','tr','uk','vi','zh-CN','zh-HK','zh-TW'
+						];
+						_.each(langs,function(item,key,list){
+						if(_.findWhere(settings, {ea_key:'datepicker'}).ea_value === item) { %>
+						<option value="<%= item %>" selected="selected"><%= item %></option>
+						<% } else { %>
+						<option value="<%= item %>"><%= item %></option>
+						<% }
+						});%>
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<th class="row">
+					<label><?php _e('Block time', 'easy-appointments'); ?> :</label>
+				</th>
+				<td>
+					<input class="field" data-key="block.time" name="block.time" type="text"
+						   value="<%= _.findWhere(settings, {ea_key:'block.time'}).ea_value %>"><br>
+				</td>
+				<td>
+					<span class="description"> <?php _e('(in minutes). Prevent visitor from making an appointment if there are less minutes than this.', 'easy-appointments'); ?></span>
+				</td>
+			</tr>
+			</tbody>
+		</table>
+		<hr class="divider">
+        <h2><?php _e('Custom form fields', 'easy-appointments'); ?> -
+            <small>Create all fields that you need. Custom order them by drag and drop.</small>
+        </h2>
+        <table class="form-table">
+            <tbody>
+            <tr>
+                <th colspan="2">
+                    <span>Name :</span>
+                    <input type="text">
+                    <span>Type :</span>
+                    <select>
+                        <option value="INPUT"><?php _e('Input', 'easy-appointments'); ?></option>
+                        <option value="SELECT"><?php _e('Select', 'easy-appointments'); ?></option>
+                        <option value="TEXTAREA"><?php _e('Textarea', 'easy-appointments'); ?></option>
+                        <option value="PHONE"><?php _e('Phone', 'easy-appointments'); ?></option>
+                        <option value="EMAIL"><?php _e('Email', 'easy-appointments'); ?></option>
+                    </select>
+                    <button class="button button-primary btn-add-field"><?php _e('Add', 'easy-appointments'); ?></button>
+                </th>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <ul id="custom-fields"></ul>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="3">
+                    <span class="description"> <?php _e('To use using the email notification for user there must be field named "email" or "e-mail" or field with type "email"', 'easy-appointments'); ?></span>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <hr class="divider">
+        <h2>Google reCAPTCHA v2</h2>
+        <table class="form-table">
+            <tbody>
+            <tr>
+                <th class="row">
+                    <label><?php _e('Site key', 'easy-appointments'); ?> :</label>
+                </th>
+                <td>
+                    <input style="width: 100%" class="field" data-key="captcha.site-key" name="captcha.site-key" type="text"
+                           value="<%= _.findWhere(settings, {ea_key:'captcha.site-key'}).ea_value %>">
+                </td>
+                <td>
+                    <span class="description"> <?php _e('Google reCAPTCHA key can be generated via', 'easy-appointments'); ?> <a href="https://www.google.com/recaptcha/admin" target="_blank">LINK</a></span>
+                </td>
+            </tr>
+            <tr>
+                <th class="row">
+                    <label><?php _e('Secret key', 'easy-appointments'); ?> :</label>
+                </th>
+                <td>
+                    <input style="width: 100%" class="field" data-key="captcha.secret-key" name="captcha.secret-key" type="text"
+                           value="<%= _.findWhere(settings, {ea_key:'captcha.secret-key'}).ea_value %>">
+                </td>
+            </tr>
+            <tr>
+                <td colspan="3">
+                    <span class="description"> <?php _e('If you want to use Captcha you must have auto reservation option turned off. If you don\'t want to use Captcha just leave fields empty.', 'easy-appointments'); ?></span>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <hr class="divider">
+        <h2>Form</h2>
+        <table class="form-table">
+            <tbody>
+                <tr>
+                    <th class="row">
+                        <label for=""><?php _e('Custom style', 'easy-appointments'); ?> :</label>
+                    </th>
+                    <td class="custom-css">
+                        <textarea class="field" data-key="custom.css"><% if (typeof _.findWhere(settings, {ea_key:'custom.css'}) !== 'undefined') { %><%= (_.findWhere(settings, {ea_key:'custom.css'})).ea_value %><% } %></textarea>
+                    </td>
+                    <td>
+                        <span class="description"> <?php _e('Place here custom css styles here. This will be included in both standard and bootstrap widget.', 'easy-appointments'); ?></span>
+                    </td>
+                </tr>
+                <tr>
+                    <th class="row">
+                        <label for=""><?php _e('Turn off css files', 'easy-appointments'); ?> :</label>
+                    </th>
+                    <td>
+                        <input class="field" data-key="css.off" name="css.off" type="checkbox" <% if (_.findWhere(settings,
+                        {ea_key:'css.off'}).ea_value == "1") { %>checked<% } %>><br>
+                    </td>
+                </tr>
+			</tbody>
+		</table>
+		<table class="form-table">
+			<tbody>
+			<tr>
+				<th class="row">
+					<label for=""><?php _e('I agree field', 'easy-appointments'); ?> :</label>
+				</th>
+				<td>
+					<input class="field" type="checkbox" name="show.iagree" data-key="show.iagree"<% if (typeof
+					_.findWhere(settings, {ea_key:'show.iagree'}) !== 'undefined' && _.findWhere(settings,
+					{ea_key:'show.iagree'}).ea_value == '1') { %>checked<% } %> />
+				</td>
+				<td>
+					<span class="description"> <?php _e('I agree option at the end of form. If this is marked user must confirm "I agree" checkbox.', 'easy-appointments'); ?></span>
+				</td>
+			</tr>
+			<tr>
+				<th class="row">
+					<label><?php _e('After cancel go to', 'easy-appointments'); ?> :</label>
+				</th>
+				<td>
+					<select data-key="cancel.scroll" class="field" name="cancel.scroll">
+						<% var langs = [
+						'calendar', 'worker', 'service', 'location'
+						];
+						_.each(langs,function(item,key,list){
+						if(typeof _.findWhere(settings, {ea_key:'cancel.scroll'}) !== 'undefined' &&
+						_.findWhere(settings, {ea_key:'cancel.scroll'}).ea_value === item) { %>
+						<option value="<%= item %>" selected="selected"><%= item %></option>
+						<% } else { %>
+						<option value="<%= item %>"><%= item %></option>
+						<% }
+						});%>
+					</select>
+				</td>
+			</tr>
+            <tr>
+                <th class="row go-to-page">
+                    <label for=""><?php _e('Go to page', 'easy-appointments'); ?> :</label>
+                </th>
+                <td>
+                    <input class="field" data-key="submit.redirect" name="submit.redirect" type="text"
+                           value="<%= _.findWhere(settings, {ea_key:'submit.redirect'}).ea_value %>"><br>
+                </td>
+                <td>
+                    <span class="description"> <?php _e('After a visitor creates an appointment on the front-end form. Leave blank to turn off redirect.', 'easy-appointments'); ?></span>
+                </td>
+            </tr>
+            <tr>
+                <th class="row go-to-page">
+                    <label for=""><?php _e('Advance Go to', 'easy-appointments'); ?> :</label>
+                </th>
+                <td><span class="description"> <?php _e('Add custom redirect based on service.', 'easy-appointments'); ?></span></td>
+            </tr>
+            <tr>
+                <td></td>
+                <th colspan="2">
+                    <span><?php _e('Service', 'easy-appointments'); ?> : </span><select id="redirect-service" style="width: 200px;">
+                        <% _.each(eaData.Services,function(item,key,list){ %>
+                        <option value="<%= _.escape(item.id) %>"><%= _.escape(item.name) %></option>
+                        <% });%>
+                    </select>
+                    <span><?php _e('Redirect to', 'easy-appointments'); ?> : <input id="redirect-url" name="redirect-url" type="text" style="height: 28px; width: 300px;">
+                    <button class="button button-primary btn-add-redirect"><?php _e('Add advance redirect', 'easy-appointments'); ?></button><br>
+                    <input type="hidden" id="advance-redirect" data-key="advance.redirect" class="field" name="advance.redirect" value="<%= _.escape(ea_settings['advance.redirect']) %>">
+                </th>
+            </tr>
+            <tr>
+                <td></td>
+                <td colspan="2">
+                    <ul id="custom-redirect-list"></ul>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <hr class="divider">
+        <h2>GDPR</h2>
+        <table class="form-table form-table-translation">
+            <tbody>
+                <tr>
+                    <th class="row">
+                        <label for=""><?php _e('Turn on checkbox', 'easy-appointments'); ?> :</label>
+                    </th>
+                    <td>
+                        <input class="field" type="checkbox" name="gdpr.on" data-key="gdpr.on"<% if (typeof
+                        _.findWhere(settings, {ea_key:'gdpr.on'}) !== 'undefined' && _.findWhere(settings,
+                        {ea_key:'gdpr.on'}).ea_value == '1') { %>checked<% } %> />
+                    </td>
+                    <td>
+                        <span class="description"> <?php _e('GDPR section checkbox.', 'easy-appointments'); ?></span>
+                    </td>
+                </tr>
+                <tr>
+                    <th class="row">
+                        <label for=""><?php _e('Label', 'easy-appointments'); ?> :</label>
+                    </th>
+                    <td>
+                        <input style="width: 300px" class="field" data-key="gdpr.label" name="gdpr.label" type="text"
+                               value="<%= _.findWhere(settings, {ea_key:'gdpr.label'}).ea_value %>">
+                    </td>
+                    <td>
+                        <span class="description"> <?php _e('Label next to checkbox.', 'easy-appointments'); ?></span>
+                    </td>
+                </tr>
+                <tr>
+                    <th class="row">
+                        <label for=""><?php _e('Page with GDPR content', 'easy-appointments'); ?> :</label>
+                    </th>
+                    <td>
+                        <input style="width: 300px" class="field" data-key="gdpr.link" name="gdpr.link" type="text"
+                               value="<%= _.findWhere(settings, {ea_key:'gdpr.link'}).ea_value %>">
+                    </td>
+                    <td>
+                        <span class="description"> <?php _e('Link to page with GDPR content.', 'easy-appointments'); ?></span>
+                    </td>
+                </tr>
+                <tr>
+                    <th class="row">
+                        <label for=""><?php _e('Error message', 'easy-appointments'); ?> :</label>
+                    </th>
+                    <td>
+                        <input style="width: 300px" class="field" data-key="gdpr.message" name="gdpr.message" type="text"
+                               value="<%= _.findWhere(settings, {ea_key:'gdpr.message'}).ea_value %>">
+                    </td>
+                    <td>
+                        <span class="description"> <?php _e('Message if user don\'t mark the GDPR checkbox.', 'easy-appointments'); ?></span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <hr class="divider">
+        <h2>Money</h2>
+        <table class="form-table form-table-translation">
+            <tbody>
+            <tr>
+                <th class="row">
+                    <label for=""><?php _e('Currency', 'easy-appointments'); ?> :</label>
+                </th>
+                <td>
+                    <input class="field" data-key="trans.currency" name="currency" type="text"
+                           value="<%= _.findWhere(settings, {ea_key:'trans.currency'}).ea_value %>"><br>
+                </td>
+            </tr>
+            <tr>
+                <th class="row">
+                    <label for=""><?php _e('Currency before price', 'easy-appointments'); ?> :</label>
+                </th>
+                <td>
+                    <input class="field" data-key="currency.before" name="currency.before" type="checkbox" <% if
+                    (_.findWhere(settings, {ea_key:'currency.before'}).ea_value == "1") { %>checked<% } %>><br>
+                </td>
+            </tr>
+            <tr>
+                <th class="row">
+                    <label for=""><?php _e('Hide price', 'easy-appointments'); ?> :</label>
+                </th>
+                <td>
+                    <input class="field" data-key="price.hide" name="price.hide" type="checkbox" <% if
+                    (_.findWhere(settings, {ea_key:'price.hide'}).ea_value == "1") { %>checked<% } %>><br>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <br><br>
+        <button class="button button-primary btn-save-settings"><?php _e('Save', 'easy-appointments'); ?></button>
+>>>>>>> master
         <br><br>
 
         <!--<button class="button button-primary btn-save-settings"><?php _e('Save', 'easy-appointments'); ?></button>
@@ -1101,6 +1680,24 @@
 		</div>
 		<br/>
 	</div>
+</script>
+
+<script type="text/template" id="ea-tpl-advance-redirect">
+    <div style="min-height: 380px; max-height: 380px;">
+
+    </div>
+    <div class="bulk-footer">
+        <button id="close-advance-redirect" class="button-primary" disabled>Close</button>
+    </div>
+</script>
+
+<script type="text/template" id="ea-tpl-single-advance-redirect">
+    <li>
+        <span class="bulk-value"><%= _.escape( _.findWhere(locations, {id:row.location}).name ) %></span>
+        <span class="bulk-value"><%= _.escape( _.findWhere(services,  {id:row.service}).name ) %></span>
+        <span class="bulk-value"><%= _.escape( _.findWhere(workers,   {id:row.worker}).name ) %></span>
+        <span style="display: inline-block;"><button class="button bulk-connection-remove">Remove</button></span>
+    </li>
 </script>
 
 <!-- TOOLS LOG -->
