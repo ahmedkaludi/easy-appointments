@@ -1023,10 +1023,7 @@
                 </div>
             </div>
 
-            <!--        <hr class="divider">-->
-
             <div id="tab-gdpr" class="form-section hidden">
-                <!--			<h2>--><?php //_e('GDPR', 'easy-appointments'); ?><!--</h2>-->
                 <span class="separator vertical"></span>
                 <div class="form-container">
                     <div class="form-item">
@@ -1072,10 +1069,7 @@
                 </div>
             </div>
 
-            <!--        <hr class="divider">-->
-
             <div id="tab-money" class="form-section hidden">
-                <!--			<h2>--><?php //_e('Money', 'easy-appointments'); ?><!--</h2>-->
                 <span class="separator vertical"></span>
                 <div class="form-container">
                     <div class="form-item">
@@ -1104,9 +1098,6 @@
         </div>
 
         <br><br>
-
-        <!--<button class="button button-primary btn-save-settings"><?php _e('Save', 'easy-appointments'); ?></button>
-        <br><br>-->
     </div>
 </script>
 
