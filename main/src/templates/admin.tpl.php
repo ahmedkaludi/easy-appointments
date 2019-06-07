@@ -1000,25 +1000,31 @@
                                value="<%= _.findWhere(settings, {ea_key:'submit.redirect'}).ea_value %>">
                     </div>
 
-                    <div class="form-item">
+                    <div class="form-item subgroup">
                         <div class="label-with-tooltip">
                             <label for=""><?php _e('Advance Go to', 'easy-appointments'); ?></label>
                             <span class="tooltip tooltip-right"
                                   data-tooltip="<?php _e('Add custom redirect based on service.', 'easy-appointments'); ?>"></span>
                         </div>
-                        <div>
-                          <?php _e('Service', 'easy-appointments'); ?> : </span><select id="redirect-service" style="width: 200px;">
-                                <% _.each(eaData.Services,function(item,key,list){ %>
-                                <option value="<%= _.escape(item.id) %>"><%= _.escape(item.name) %></option>
-                                <% });%>
-                            </select>
-                            <span><?php _e('Redirect to', 'easy-appointments'); ?> : <input id="redirect-url" name="redirect-url" type="text" style="height: 28px; width: 300px;">
-                            <button class="button button-primary btn-add-redirect"><?php _e('Add advance redirect', 'easy-appointments'); ?></button>
-                            <input type="hidden" id="advance-redirect" data-key="advance.redirect" class="field" name="advance.redirect" value="<%= _.escape(ea_settings['advance.redirect']) %>">
-                        </div>
-                        <div>
-                            <ul id="custom-redirect-list"></ul>
-                        </div>
+                    </div>
+                    <div class="form-item">
+                    	<label for=""><?php _e('Service', 'easy-appointments'); ?></label>
+                    	<select id="redirect-service" class="field">
+                            <% _.each(eaData.Services,function(item,key,list){ %>
+                            <option value="<%= _.escape(item.id) %>"><%= _.escape(item.name) %></option>
+                            <% });%>
+                        </select>
+                    </div>
+                    <div class="form-item inline-fields">
+                    	<div class="form-item">
+	                    	<label for=""><?php _e('Redirect to', 'easy-appointments'); ?></label>
+	                    	<input id="redirect-url" name="redirect-url" type="text">
+	                    </div>
+	                    <button class="button button-primary btn-add-redirect button-field"><?php _e('Add advance redirect', 'easy-appointments'); ?></button>
+                    </div>
+                	<input type="hidden" id="advance-redirect" data-key="advance.redirect" class="field" name="advance.redirect" value="<%= _.escape(ea_settings['advance.redirect']) %>">
+                    <div class="form-item">
+                        <ul id="custom-redirect-list" class="list-form-item"></ul>
                     </div>
                 </div>
             </div>

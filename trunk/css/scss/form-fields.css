@@ -163,8 +163,35 @@
             height: 32px;
             margin: 0 0 2px 0;
             padding: 0 20px 1px; }
+          .wp-filter .custom-tab-view .form-section .form-container .form-item ul.list-form-item {
+            font-size: 14px;
+            line-height: 1.5;
+            border: 1px solid #d9d9d9;
+            border-radius: 4px;
+            padding: 10px;
+            margin: 0; }
+            .wp-filter .custom-tab-view .form-section .form-container .form-item ul.list-form-item:empty {
+              border: none;
+              padding: 0;
+              margin: 0; }
+            .wp-filter .custom-tab-view .form-section .form-container .form-item ul.list-form-item .list-item {
+              padding: 5px;
+              width: 100%;
+              display: flex;
+              align-items: flex-end;
+              justify-content: space-between; }
+              .wp-filter .custom-tab-view .form-section .form-container .form-item ul.list-form-item .list-item:not(:first-child) {
+                border-top: 1px solid #e4e4e4; }
+              .wp-filter .custom-tab-view .form-section .form-container .form-item ul.list-form-item .list-item span, .wp-filter .custom-tab-view .form-section .form-container .form-item ul.list-form-item .list-item button {
+                flex: 1;
+                margin: 0 10px; }
+                .wp-filter .custom-tab-view .form-section .form-container .form-item ul.list-form-item .list-item span:first-child, .wp-filter .custom-tab-view .form-section .form-container .form-item ul.list-form-item .list-item span:last-child, .wp-filter .custom-tab-view .form-section .form-container .form-item ul.list-form-item .list-item button:first-child, .wp-filter .custom-tab-view .form-section .form-container .form-item ul.list-form-item .list-item button:last-child {
+                  margin: 0; }
           .wp-filter .custom-tab-view .form-section .form-container .form-item:not(:first-child) {
             margin-top: 12px; }
+          .wp-filter .custom-tab-view .form-section .form-container .form-item.subgroup {
+            text-transform: uppercase;
+            margin-top: 3vh; }
           .wp-filter .custom-tab-view .form-section .form-container .form-item.inline-fields {
             flex-direction: row;
             align-items: flex-end; }
@@ -179,3 +206,5 @@
             .wp-filter .custom-tab-view .form-section .form-container .form-item ul .menu-item-handle,
             .wp-filter .custom-tab-view .form-section .form-container .form-item ul .field-settings {
               width: 100%; }
+        .wp-filter .custom-tab-view .form-section .form-container .form-item .list-form-item .redirect-row span:first-child, .wp-filter .custom-tab-view .form-section .form-container .form-item .list-form-item .redirect-row button:last-child {
+          flex: none; }

@@ -272,37 +272,6 @@ textarea[data-key="custom.css"] {
 	width: 100%;
 }
 
-#custom-redirect-list {
-	margin: 0;
-	padding: 0;
-}
-
-.redirect-row {
-	border-bottom: 1px dotted grey;
-	width: max-content;
-	padding: 5px;
-}
-
-.redirect-row.redirect-row button {
-	vertical-align: bottom;
-}
-
-.redirect-service-name {
-	font-weight: bold;
-	display: inline-block;
-	width: 200px;
-	margin-top: 10px;
-}
-
-.redirect-url {
-	font-weight: bold;
-	display: inline-block;
-	width: 200px;
-	margin-top: 10px;
-}
-
-
-
 /* tinyMCE */
 .notifications .mce-tinymce {
 	border: 1px solid #e5e5e5;

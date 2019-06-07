@@ -195,8 +195,50 @@
 						}
 					}
 
+					ul.list-form-item {
+						font-size: 14px;
+						line-height: 1.5;
+						border: 1px solid #d9d9d9;
+						border-radius: 4px;
+						padding: 10px;
+						margin: 0;
+
+						&:empty {
+							border: none;
+							padding: 0;
+							margin: 0;
+						}
+
+						.list-item {
+							padding: 5px;
+						    width: 100%;
+						    display: flex;
+						    align-items: flex-end;
+						    justify-content: space-between;
+
+						    &:not(:first-child) {
+						    	border-top: 1px solid #e4e4e4;
+						    }
+
+						    span, button {
+						    	flex: 1;
+						    	margin: 0 10px;
+
+						    	&:first-child,
+						    	&:last-child {
+						    		margin: 0;
+						    	}
+						    }
+						}
+					}
+
 					&:not(:first-child) {
 						margin-top: 12px;
+					}
+
+					&.subgroup {
+						text-transform: uppercase;
+    					margin-top: 3vh;
 					}
 
 					&.inline-fields {
@@ -224,6 +266,16 @@
 							width: 100%;
 						}
 					}
+			    }
+
+			    // CUSTOM STUFF
+
+			    .form-item {
+			    	.list-form-item .redirect-row {
+			    		span:first-child, button:last-child {
+			    			flex: none;
+			    		}
+			    	}
 			    }
 			}
 	  	}

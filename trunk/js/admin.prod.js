@@ -1884,12 +1884,9 @@
             "click .item-delete": "deleteOption",
             "click .remove-select-option": "removeSelectedOption",
             "click .mail-tab": "selectMailNotification",
-<<<<<<< HEAD
-            "click .tab-selection a": "tabClicked"
-=======
+            "click .tab-selection a": "tabClicked",
             "click .btn-add-redirect": "addAdvanceRedirect",
             "click .remove-advance-redirect": "removeAdvanceRedirect"
->>>>>>> master
         },
 
         initialize: function () {
@@ -2300,7 +2297,7 @@
                     };
                 }
 
-                $list.append('<div class="redirect-row">' + (index+1) + '. <span class="redirect-service-name">' + service.name + '</span><span class="redirect-url">' + element.url + '</span><button data-index="' + index + '" class="button button-primary remove-advance-redirect"> X </button></div>');
+                $list.append('<div class="list-item redirect-row"><span class="row-no">' + (index+1) + '.</span><span class="redirect-service-name">' + service.name + '</span><span class="redirect-url">' + element.url + '</span><button data-index="' + index + '" class="button button-primary remove-advance-redirect"> X </button></div>');
             });
         },
 
