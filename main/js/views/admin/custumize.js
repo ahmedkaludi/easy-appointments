@@ -16,6 +16,7 @@ EA.CustumizeView = Backbone.View.extend({
         "click .item-delete": "deleteOption",
         "click .remove-select-option": "removeSelectedOption",
         "click .mail-tab": "selectMailNotification",
+        "click .tab-selection a": "tabClicked",
         "click .btn-add-redirect": "addAdvanceRedirect",
         "click .remove-advance-redirect": "removeAdvanceRedirect"
     },
@@ -428,7 +429,7 @@ EA.CustumizeView = Backbone.View.extend({
                 };
             }
 
-            $list.append('<div class="redirect-row">' + (index+1) + '. <span class="redirect-service-name">' + service.name + '</span><span class="redirect-url">' + element.url + '</span><button data-index="' + index + '" class="button button-primary remove-advance-redirect"> X </button></div>');
+            $list.append('<div class="list-item redirect-row"><span class="row-no">' + (index+1) + '.</span><span class="redirect-service-name">' + service.name + '</span><span class="redirect-url">' + element.url + '</span><button data-index="' + index + '" class="button button-primary remove-advance-redirect"> X </button></div>');
         });
     },
 
@@ -460,4 +461,18 @@ EA.CustumizeView = Backbone.View.extend({
         this.remove();
         Backbone.View.prototype.remove.call(this);
     },
+
+    tabClicked: function (event) {
+        event.stopPropagation();
+
+        // get previous selected
+        var prevId = this.$el.find('.tab-selection .selected').removeClass('selected').data('tab');
+        // get next selected
+        var tabId = $(event.target).addClass('selected').data('tab');
+
+        this.$el.find('#' + prevId).addClass('hidden');
+        this.$el.find('#' + tabId).removeClass('hidden');
+
+        return false;
+    }
 });
