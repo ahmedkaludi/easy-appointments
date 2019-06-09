@@ -573,25 +573,25 @@
 
 <!--Customize -->
 <script type="text/template" id="ea-tpl-custumize">
-	<div class="wp-filter">
+    <div class="wp-filter">
         <div class="custom-tab-view">
             <!-- TAB SECTION -->
             <div class="tab-selection">
                 <div class="tabs-list">
                     <a data-tab="tab-connections" class="selected"
-                       href="#"><?php _e('Connections', 'easy-appointments'); ?></a>
-                    <a data-tab="tab-mail" href="#"><?php _e('Mail', 'easy-appointments'); ?></a>
+                       href="#"><?php _e('General', 'easy-appointments'); ?></a>
+                    <a data-tab="tab-mail" href="#"><?php _e('Mail Notifications', 'easy-appointments'); ?></a>
                     <a data-tab="tab-labels"
                        href="#"><?php _e('Labels', 'easy-appointments'); ?></a>
                     <a data-tab="tab-date-time"
                        href="#"><?php _e('Date & Time', 'easy-appointments'); ?></a>
                     <a data-tab="tab-fields"
-                       href="#"><?php _e('Custom form fields', 'easy-appointments'); ?></a>
+                       href="#"><?php _e('Custom Form Fields', 'easy-appointments'); ?></a>
                     <a data-tab="tab-captcha"
                        href="#"><?php _e('Google reCAPTCHA v2', 'easy-appointments'); ?></a>
-                    <a data-tab="tab-form" href="#"><?php _e('Form', 'easy-appointments'); ?></a>
+                    <a data-tab="tab-form" href="#"><?php _e('Form Style & Redirect', 'easy-appointments'); ?></a>
                     <a data-tab="tab-gdpr" href="#"><?php _e('GDPR', 'easy-appointments'); ?></a>
-                    <a data-tab="tab-money" href="#"><?php _e('Money', 'easy-appointments'); ?></a>
+                    <a data-tab="tab-money" href="#"><?php _e('Money Format', 'easy-appointments'); ?></a>
                 </div>
                 <div class="button-wrap">
                     <button class="button button-primary btn-save-settings"><?php _e('Save', 'easy-appointments'); ?></button>
@@ -947,7 +947,7 @@
                         <div class="label-with-tooltip">
                             <label for=""><?php _e('Custom style', 'easy-appointments'); ?></label>
                             <span class="tooltip tooltip-right"
-                                  data-tooltip="<?php _e('Place here custom css styles here. This will be included in both standard and bootstrap widget.', 'easy-appointments'); ?>"></span>
+                                  data-tooltip="<?php _e('Place here custom css styles. This will be included in both standard and bootstrap widget.', 'easy-appointments'); ?>"></span>
                         </div>
                         <textarea class="field" data-key="custom.css"><% if (typeof _.findWhere(settings, {ea_key:'custom.css'}) !== 'undefined') { %><%= (_.findWhere(settings, {ea_key:'custom.css'})).ea_value %><% } %></textarea>
                     </div>

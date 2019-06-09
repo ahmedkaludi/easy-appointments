@@ -205,6 +205,9 @@ Note: you can have only one calendar on one page.
 
 == Changelog ==
 
+= 2.5.0 (2019-06-09) =
+* New design for EA Settings Customize page.
+
 = 2.4.4 (2019-06-03) =
 * Added custom redirect based on selected Service. Now user can be redirected to a page based by service after booking.
 
