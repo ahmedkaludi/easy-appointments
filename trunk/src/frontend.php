@@ -71,7 +71,7 @@ class EAFrontend
             'ea-momentjs',
             EA_PLUGIN_URL . 'js/libs/moment.min.js',
             array(),
-            false,
+            EASY_APPOINTMENTS_VERSION,
             true
         );
 
@@ -79,7 +79,7 @@ class EAFrontend
             'ea-validator',
             EA_PLUGIN_URL . 'js/libs/jquery.validate.min.js',
             array('jquery'),
-            false,
+            EASY_APPOINTMENTS_VERSION,
             true
         );
 
@@ -87,7 +87,7 @@ class EAFrontend
             'ea-datepicker-localization',
             EA_PLUGIN_URL . 'js/libs/jquery-ui-i18n.min.js',
             array('jquery', 'jquery-ui-datepicker'),
-            false,
+            EASY_APPOINTMENTS_VERSION,
             true
         );
 
@@ -96,7 +96,7 @@ class EAFrontend
             'ea-front-end',
             EA_PLUGIN_URL . 'js/frontend.js',
             array('jquery', 'jquery-ui-datepicker', 'ea-datepicker-localization', 'ea-momentjs'),
-            false,
+            EASY_APPOINTMENTS_VERSION,
             true
         );
 
@@ -105,7 +105,7 @@ class EAFrontend
             'ea-bootstrap',
             EA_PLUGIN_URL . 'components/bootstrap/js/bootstrap.js',
             array(),
-            false,
+            EASY_APPOINTMENTS_VERSION,
             true
         );
 
@@ -114,7 +114,7 @@ class EAFrontend
             'ea-front-bootstrap',
             EA_PLUGIN_URL . 'js/frontend-bootstrap.js',
             array('jquery', 'jquery-ui-datepicker', 'ea-datepicker-localization', 'ea-momentjs'),
-            false,
+            EASY_APPOINTMENTS_VERSION,
             true
         );
 
@@ -123,7 +123,7 @@ class EAFrontend
             'ea-google-recaptcha',
             'https://www.google.com/recaptcha/api.js',
             array(),
-            false,
+            EASY_APPOINTMENTS_VERSION,
             true
         );
 
@@ -134,28 +134,38 @@ class EAFrontend
 
         wp_register_style(
             'ea-bootstrap',
-            EA_PLUGIN_URL . 'components/bootstrap/ea-css/bootstrap.css'
+            EA_PLUGIN_URL . 'components/bootstrap/ea-css/bootstrap.css',
+            array(),
+            EASY_APPOINTMENTS_VERSION
         );
 
         wp_register_style(
             'ea-bootstrap-select',
-            EA_PLUGIN_URL . 'components/bootstrap-select/css/bootstrap-select.css'
+            EA_PLUGIN_URL . 'components/bootstrap-select/css/bootstrap-select.css',
+            array(),
+            EASY_APPOINTMENTS_VERSION
         );
 
         wp_register_style(
             'ea-frontend-style',
-            EA_PLUGIN_URL . 'css/eafront.css'
+            EA_PLUGIN_URL . 'css/eafront.css',
+            array(),
+            EASY_APPOINTMENTS_VERSION
         );
 
         wp_register_style(
             'ea-frontend-bootstrap',
-            EA_PLUGIN_URL . 'css/eafront-bootstrap.css'
+            EA_PLUGIN_URL . 'css/eafront-bootstrap.css',
+            array(),
+            EASY_APPOINTMENTS_VERSION
         );
 
         // admin style
         wp_register_style(
             'ea-admin-awesome-css',
-            EA_PLUGIN_URL . 'css/font-awesome.css'
+            EA_PLUGIN_URL . 'css/font-awesome.css',
+            array(),
+            EASY_APPOINTMENTS_VERSION
         );
     }
 

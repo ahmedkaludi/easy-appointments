@@ -70,7 +70,7 @@ class EAAdminPanel
             'ea-compatibility-mode',
             EA_PLUGIN_URL . 'js/backbone.sync.fix.js',
             array('backbone'),
-            false,
+            EASY_APPOINTMENTS_VERSION,
             true
         );
 
@@ -79,7 +79,7 @@ class EAAdminPanel
             'time-picker-i18n',
             EA_PLUGIN_URL . 'js/libs/jquery-ui-timepicker-addon-i18n.js',
             array('jquery', 'time-picker'),
-            false,
+            EASY_APPOINTMENTS_VERSION,
             true
         );
 
@@ -88,7 +88,7 @@ class EAAdminPanel
             'ea-momentjs',
             EA_PLUGIN_URL . 'js/libs/moment.min.js',
             array(),
-            false,
+            EASY_APPOINTMENTS_VERSION,
             true
         );
 
@@ -97,7 +97,7 @@ class EAAdminPanel
             'time-picker',
             EA_PLUGIN_URL . 'js/libs/jquery-ui-timepicker-addon.js',
             array('jquery', 'jquery-ui-datepicker'),
-            false,
+            EASY_APPOINTMENTS_VERSION,
             true
         );
 
@@ -106,7 +106,7 @@ class EAAdminPanel
             'jquery-chosen',
             EA_PLUGIN_URL . 'js/libs/chosen.jquery.min.js',
             array('jquery'),
-            false,
+            EASY_APPOINTMENTS_VERSION,
             true
         );
 
@@ -126,7 +126,7 @@ class EAAdminPanel
                 'jquery-chosen',
                 'thickbox'
             ),
-            false,
+            EASY_APPOINTMENTS_VERSION,
             true
         );
 
@@ -143,7 +143,7 @@ class EAAdminPanel
                 'backbone',
                 'underscore'
             ),
-            false,
+            EASY_APPOINTMENTS_VERSION,
             true
         );
 
@@ -152,7 +152,7 @@ class EAAdminPanel
             'ea-report',
             EA_PLUGIN_URL . 'js/report.prod.js',
             array('jquery', 'time-picker', 'ea-datepicker-localization', 'backbone', 'underscore'),
-            false,
+            EASY_APPOINTMENTS_VERSION,
             true
         );
 
@@ -160,7 +160,7 @@ class EAAdminPanel
             'ea-datepicker-localization',
             EA_PLUGIN_URL . 'js/libs/jquery-ui-i18n.min.js',
             array('jquery'),
-            false,
+            EASY_APPOINTMENTS_VERSION,
             true
         );
 
@@ -168,44 +168,56 @@ class EAAdminPanel
             'ea-tinymce',
             EA_PLUGIN_URL . 'js/libs/mce.plugin.code.min.js',
             array('tinymce_js'),
-            false,
+            EASY_APPOINTMENTS_VERSION,
             true
         );
 
         // admin style
         wp_register_style(
             'ea-admin-css',
-            EA_PLUGIN_URL . 'css/admin.css'
+            EA_PLUGIN_URL . 'css/admin.css',
+            array(),
+            EASY_APPOINTMENTS_VERSION
         );
 
         // admin style
         wp_register_style(
             'jquery-chosen',
-            EA_PLUGIN_URL . 'css/chosen.min.css'
+            EA_PLUGIN_URL . 'css/chosen.min.css',
+            array(),
+            EASY_APPOINTMENTS_VERSION
         );
 
 
         // report style
         wp_register_style(
             'ea-report-css',
-            EA_PLUGIN_URL . 'css/report.css'
+            EA_PLUGIN_URL . 'css/report.css',
+            array(),
+            EASY_APPOINTMENTS_VERSION
         );
 
         // admin style
         wp_register_style(
             'ea-admin-awesome-css',
-            EA_PLUGIN_URL . 'css/font-awesome.css'
+            EA_PLUGIN_URL . 'css/font-awesome.css',
+            array(),
+            EASY_APPOINTMENTS_VERSION
         );
 
         // admin style
         wp_register_style(
             'time-picker',
-            EA_PLUGIN_URL . 'css/jquery-ui-timepicker-addon.css'
+            EA_PLUGIN_URL . 'css/jquery-ui-timepicker-addon.css',
+            array(),
+            EASY_APPOINTMENTS_VERSION
         );
 
         wp_register_style(
             'jquery-style',
-            EA_PLUGIN_URL . 'css/jquery-ui.css'
+            EA_PLUGIN_URL . 'css/jquery-ui.css',
+            array(),
+            EASY_APPOINTMENTS_VERSION
         );
 
     }
