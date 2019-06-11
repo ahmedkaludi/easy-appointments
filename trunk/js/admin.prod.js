@@ -2081,7 +2081,7 @@
         addCustomFiled: function(e) {
             var obj = this;
             var $btn = jQuery(e.currentTarget);
-            var $row = $btn.closest('th');
+            var $row = $btn.closest('div');
             var name = $row.find('input').val();
             var type = $row.find('select').val();
 
