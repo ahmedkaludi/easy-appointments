@@ -167,6 +167,14 @@ class EAFrontend
             array(),
             EASY_APPOINTMENTS_VERSION
         );
+
+        // custom fonts
+        wp_register_style(
+            'ea-admin-fonts-css',
+            EA_PLUGIN_URL . 'css/fonts.css',
+            array(),
+            EASY_APPOINTMENTS_VERSION
+        );
     }
 
     /**

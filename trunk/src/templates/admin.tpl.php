@@ -6,37 +6,37 @@
 		<ul id="tab-header">
 			<li>
 				<a href="#locations/">
-					<i class="fa fa-map-marker"></i>
+					<i class="icon-location"></i>
 					<?php _e('Locations', 'easy-appointments');?>
 				</a>
 			</li>
 			<li>
 				<a href="#services/">
-					<i class="fa fa-cube"></i>
+					<i class="icon-services"></i>
 					<?php _e('Services', 'easy-appointments');?>
 				</a>
 			</li>
 			<li>
 				<a href="#staff/">
-					<i class="fa fa-user"></i>
+					<i class="icon-workers"></i>
 					<?php _e('Workers', 'easy-appointments');?>
 				</a>
 			</li>
 			<li>
 				<a href="#connection/">
-					<i class="fa fa-sitemap"></i>
+					<i class="icon-connections"></i>
 					<?php _e('Connections', 'easy-appointments');?>
 				</a>
 			</li>
 			<li>
 				<a href="#custumize/">
-					<i class="fa fa-paint-brush"></i>
+					<i class="icon-customize"></i>
 					<?php _e('Customize', 'easy-appointments');?>
 				</a>
 			</li>
 			<li>
 				<a href="#tools/">
-					<i class="fa fa-bug" aria-hidden="true"></i>
+					<i class="icon-tools" aria-hidden="true"></i>
 					<?php _e('Tools', 'easy-appointments');?>
 				</a>
 			</li>

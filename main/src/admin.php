@@ -220,6 +220,14 @@ class EAAdminPanel
             EASY_APPOINTMENTS_VERSION
         );
 
+        // custom fonts
+        wp_register_style(
+            'ea-admin-fonts-css',
+            EA_PLUGIN_URL . 'css/fonts.css',
+            array(),
+            EASY_APPOINTMENTS_VERSION
+        );
+
     }
 
     /**
@@ -247,6 +255,8 @@ class EAAdminPanel
         wp_enqueue_style('ea-admin-awesome-css');
         wp_enqueue_style('thickbox');
         wp_enqueue_style('jquery-chosen');
+        wp_enqueue_style('ea-admin-fonts-css');
+        
 
         // style editor
 
