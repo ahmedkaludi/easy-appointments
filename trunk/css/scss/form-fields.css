@@ -4,7 +4,7 @@
     display: flex;
     justify-content: flex-start; }
     .wp-filter .custom-tab-view .tab-selection {
-      width: 170px;
+      width: 210px;
       margin-right: 30px;
       min-height: 400px;
       height: 400px;
@@ -12,16 +12,25 @@
       flex-direction: column;
       justify-content: space-between; }
       .wp-filter .custom-tab-view .tab-selection a {
-        display: block;
+        display: flex;
+        align-items: center;
         width: 100%;
         padding: 5px;
         font-size: 15px; }
         .wp-filter .custom-tab-view .tab-selection a.selected {
           color: white;
           background-color: #0073aa; }
+          .wp-filter .custom-tab-view .tab-selection a.selected .icon {
+            color: #ffffff; }
         .wp-filter .custom-tab-view .tab-selection a:active, .wp-filter .custom-tab-view .tab-selection a:focus {
           outline: none;
           box-shadow: none; }
+        .wp-filter .custom-tab-view .tab-selection a .icon {
+          font-size: 23px;
+          color: #000000; }
+        .wp-filter .custom-tab-view .tab-selection a .text-label {
+          padding-left: 15px;
+          flex: 1; }
       .wp-filter .custom-tab-view .tab-selection .button-wrap {
         padding: 10px;
         border-top: 1px solid #dcdcdc; }

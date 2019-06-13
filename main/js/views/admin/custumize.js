@@ -468,7 +468,12 @@ EA.CustumizeView = Backbone.View.extend({
         // get previous selected
         var prevId = this.$el.find('.tab-selection .selected').removeClass('selected').data('tab');
         // get next selected
-        var tabId = $(event.target).addClass('selected').data('tab');
+        var target = $(event.target);
+
+        if (target.prop('tagName').toLowerCase() === 'span') {
+            target = $(event.target).closest('a');
+        } 
+        var tabId = target.addClass('selected').data('tab');
 
         this.$el.find('#' + prevId).addClass('hidden');
         this.$el.find('#' + tabId).removeClass('hidden');

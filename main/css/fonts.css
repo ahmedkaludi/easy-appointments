@@ -24,6 +24,33 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.icon-date:before {
+  content: "\e906";
+}
+.icon-fields:before {
+  content: "\e907";
+}
+.icon-gdpr:before {
+  content: "\e908";
+}
+.icon-general:before {
+  content: "\e909";
+}
+.icon-label:before {
+  content: "\e90a";
+}
+.icon-mail:before {
+  content: "\e90b";
+}
+.icon-money:before {
+  content: "\e90c";
+}
+.icon-recaptcha:before {
+  content: "\e90d";
+}
+.icon-redirect:before {
+  content: "\e90e";
+}
 .icon-connections:before {
   content: "\e900";
 }
