@@ -19,7 +19,7 @@ if (!defined('WPINC')) {
 /**
  * Currently plugin version.
  */
-define( 'EASY_APPOINTMENTS_VERSION', '2.5.1' );
+define( 'EASY_APPOINTMENTS_VERSION', '2.5.2' );
 
 // path for source files
 define('EA_SRC_DIR', dirname(__FILE__) . '/src/');
