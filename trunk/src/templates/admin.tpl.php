@@ -6,37 +6,37 @@
 		<ul id="tab-header">
 			<li>
 				<a href="#locations/">
-					<i class="fa fa-map-marker"></i>
+					<i class="icon-location"></i>
 					<?php _e('Locations', 'easy-appointments');?>
 				</a>
 			</li>
 			<li>
 				<a href="#services/">
-					<i class="fa fa-cube"></i>
+					<i class="icon-services"></i>
 					<?php _e('Services', 'easy-appointments');?>
 				</a>
 			</li>
 			<li>
 				<a href="#staff/">
-					<i class="fa fa-user"></i>
+					<i class="icon-workers"></i>
 					<?php _e('Workers', 'easy-appointments');?>
 				</a>
 			</li>
 			<li>
 				<a href="#connection/">
-					<i class="fa fa-sitemap"></i>
+					<i class="icon-connections"></i>
 					<?php _e('Connections', 'easy-appointments');?>
 				</a>
 			</li>
 			<li>
 				<a href="#custumize/">
-					<i class="fa fa-paint-brush"></i>
+					<i class="icon-customize"></i>
 					<?php _e('Customize', 'easy-appointments');?>
 				</a>
 			</li>
 			<li>
 				<a href="#tools/">
-					<i class="fa fa-bug" aria-hidden="true"></i>
+					<i class="icon-tools" aria-hidden="true"></i>
 					<?php _e('Tools', 'easy-appointments');?>
 				</a>
 			</li>
@@ -578,20 +578,33 @@
             <!-- TAB SECTION -->
             <div class="tab-selection">
                 <div class="tabs-list">
-                    <a data-tab="tab-connections" class="selected"
-                       href="#"><?php _e('General', 'easy-appointments'); ?></a>
-                    <a data-tab="tab-mail" href="#"><?php _e('Mail Notifications', 'easy-appointments'); ?></a>
-                    <a data-tab="tab-labels"
-                       href="#"><?php _e('Labels', 'easy-appointments'); ?></a>
-                    <a data-tab="tab-date-time"
-                       href="#"><?php _e('Date & Time', 'easy-appointments'); ?></a>
-                    <a data-tab="tab-fields"
-                       href="#"><?php _e('Custom Form Fields', 'easy-appointments'); ?></a>
-                    <a data-tab="tab-captcha"
-                       href="#"><?php _e('Google reCAPTCHA v2', 'easy-appointments'); ?></a>
-                    <a data-tab="tab-form" href="#"><?php _e('Form Style & Redirect', 'easy-appointments'); ?></a>
-                    <a data-tab="tab-gdpr" href="#"><?php _e('GDPR', 'easy-appointments'); ?></a>
-                    <a data-tab="tab-money" href="#"><?php _e('Money Format', 'easy-appointments'); ?></a>
+                    <a data-tab="tab-connections" class="selected" href="#">
+                    	<span class="icon icon-general"></span><span class="text-label"><?php _e('General', 'easy-appointments'); ?></span>
+                    </a>
+                    <a data-tab="tab-mail" href="#">
+                    	<span class="icon icon-mail"></span><span class="text-label"><?php _e('Mail Notifications', 'easy-appointments'); ?></span>
+                    </a>
+                    <a data-tab="tab-labels" href="#">
+                    	<span class="icon icon-label"></span><span class="text-label"><?php _e('Labels', 'easy-appointments'); ?></span>
+                    </a>
+                    <a data-tab="tab-date-time" href="#">
+                    	<span class="icon icon-date"></span><span class="text-label"><?php _e('Date & Time', 'easy-appointments'); ?></span>
+                    </a>
+                    <a data-tab="tab-fields" href="#">
+                    	<span class="icon icon-fields"></span><span class="text-label"><?php _e('Custom Form Fields', 'easy-appointments'); ?></span>
+                    </a>
+                    <a data-tab="tab-captcha" href="#">
+                    	<span class="icon icon-recaptcha"></span><span class="text-label"><?php _e('Google reCAPTCHA v2', 'easy-appointments'); ?></span>
+                    </a>
+                    <a data-tab="tab-form" href="#">
+                    	<span class="icon icon-redirect"></span><span class="text-label"><?php _e('Form Style & Redirect', 'easy-appointments'); ?></span>
+                    </a>
+                    <a data-tab="tab-gdpr" href="#">
+                    	<span class="icon icon-gdpr"></span><span class="text-label"><?php _e('GDPR', 'easy-appointments'); ?></span>
+                    </a>
+                    <a data-tab="tab-money" href="#">
+                    	<span class="icon icon-money"></span><span class="text-label"><?php _e('Money Format', 'easy-appointments'); ?></span>
+                    </a>
                 </div>
                 <div class="button-wrap">
                     <button class="button button-primary btn-save-settings"><?php _e('Save', 'easy-appointments'); ?></button>
