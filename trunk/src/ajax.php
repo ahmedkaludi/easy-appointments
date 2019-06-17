@@ -1146,22 +1146,48 @@ class EAAjax
             return;
         }
 
-        $post_data = http_build_query(
-            array(
-                'secret'   => $secret,
-                'response' => $captcha,
-                'remoteip' => $_SERVER['REMOTE_ADDR']
-            )
-        );
-        $opts = array('http' =>
-            array(
-                'method'  => 'POST',
-                'header'  => 'Content-type: application/x-www-form-urlencoded',
-                'content' => $post_data
-            )
-        );
-        $context  = stream_context_create($opts);
-        $response = file_get_contents('https://www.google.com/recaptcha/api/siteverify', false, $context);
+        // check if curl extension is loaded
+        $curl_enabled = extension_loaded('curl');
+
+        // Try first curl
+        if ($curl_enabled) {
+            $ch = curl_init();
+
+            curl_setopt_array($ch, [
+                CURLOPT_URL => 'https://www.google.com/recaptcha/api/siteverify',
+                CURLOPT_POST => true,
+                CURLOPT_POSTFIELDS => [
+                    'secret' => $secret,
+                    'response' => $captcha,
+                    'remoteip' => $_SERVER['REMOTE_ADDR']
+                ],
+                CURLOPT_RETURNTRANSFER => true
+            ]);
+
+            $response = curl_exec($ch);
+            curl_close($ch);
+
+        } else {
+
+            // if not use regular remote file open
+            $post_data = http_build_query(
+                array(
+                    'secret'   => $secret,
+                    'response' => $captcha,
+                    'remoteip' => $_SERVER['REMOTE_ADDR']
+                )
+            );
+            $opts = array('http' =>
+                array(
+                    'method'  => 'POST',
+                    'header'  => 'Content-type: application/x-www-form-urlencoded',
+                    'content' => $post_data
+                )
+            );
+            $context  = stream_context_create($opts);
+            $response = file_get_contents('https://www.google.com/recaptcha/api/siteverify', false, $context);
+
+        }
 
         $result = json_decode($response);
 

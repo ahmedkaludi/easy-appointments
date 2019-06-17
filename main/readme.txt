@@ -4,7 +4,7 @@ Donate link: https://easy-appointments.net/
 Tags: appointment, appointments, Booking, calendar, plugin, reservation, reservations, wp appointment, reservation plugin, reservations, schedule
 Requires at least: 3.7
 Tested up to: 5.2
-Stable tag: 2.5.1
+Stable tag: 2.5.2
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -204,6 +204,11 @@ Note: you can have only one calendar on one page.
 18. Admin panel - Report - Export page
 
 == Changelog ==
+
+= 2.5.2 (2019-06-17) =
+* Improved Styles in Admin section
+* Escaped mail address input fields inside Admin customize page
+* Added CURL support for Google Captcha
 
 = 2.5.1 (2019-06-11) =
 * Style and JS cache buster based on plugin version

@@ -768,7 +768,7 @@
                         </div>
                         <input class="field" data-key="pending.subject.email"
                                name="pending.subject.email" type="text"
-                               value="<%= _.findWhere(settings, {ea_key:'pending.subject.email'}).ea_value %>">
+                               value="<%- _.findWhere(settings, {ea_key:'pending.subject.email'}).ea_value %>">
                     </div>
                     <div class="form-item">
                         <div class="label-with-tooltip">
@@ -778,7 +778,7 @@
                         </div>
                         <input class="field" data-key="pending.subject.visitor.email"
                                name="pending.subject.visitor.email" type="text"
-                               value="<%= _.findWhere(settings, {ea_key:'pending.subject.visitor.email'}).ea_value %>">
+                               value="<%- _.findWhere(settings, {ea_key:'pending.subject.visitor.email'}).ea_value %>">
                     </div>
                     <div class="form-item">
                         <div class="label-with-tooltip">
@@ -813,7 +813,7 @@
                         </div>
                         <input class="field" data-key="send.from.email" name="send.from.email"
                                type="text"
-                               value="<%= _.findWhere(settings, {ea_key:'send.from.email'}).ea_value %>">
+                               value="<%- _.findWhere(settings, {ea_key:'send.from.email'}).ea_value %>">
                     </div>
                 </div>
             </div>
@@ -877,9 +877,9 @@
                             ];
                             _.each(langs,function(item,key,list){
                             if(_.findWhere(settings, {ea_key:'datepicker'}).ea_value === item) { %>
-                            <option value="<%= item %>" selected="selected"><%= item %></option>
+                            <option value="<%- item %>" selected="selected"><%- item %></option>
                             <% } else { %>
-                            <option value="<%= item %>"><%= item %></option>
+                            <option value="<%- item %>"><%- item %></option>
                             <% }
                             });%>
                         </select>
@@ -891,7 +891,7 @@
                                   data-tooltip="<?php _e('(in minutes). Prevent visitor from making an appointment if there are less minutes than this.', 'easy-appointments'); ?>"></span>
                         </div>
                         <input class="field" data-key="block.time" name="block.time" type="text"
-                               value="<%= _.findWhere(settings, {ea_key:'block.time'}).ea_value %>">
+                               value="<%- _.findWhere(settings, {ea_key:'block.time'}).ea_value %>">
                     </div>
                 </div>
             </div>
@@ -935,7 +935,7 @@
                         <label for=""><?php _e('Site key', 'easy-appointments'); ?></label>
                         <input style="width: 100%" class="field" data-key="captcha.site-key"
                                name="captcha.site-key" type="text"
-                               value="<%= _.findWhere(settings, {ea_key:'captcha.site-key'}).ea_value %>">
+                               value="<%- _.findWhere(settings, {ea_key:'captcha.site-key'}).ea_value %>">
                     </div>
                     <div class="form-item">
                         <span class="pure-text hint"><?php _e('* Google reCAPTCHA key can be generated via', 'easy-appointments'); ?> <a
@@ -945,7 +945,7 @@
                         <label for=""><?php _e('Secret key', 'easy-appointments'); ?></label>
                         <input style="width: 100%" class="field" data-key="captcha.secret-key"
                                name="captcha.secret-key" type="text"
-                               value="<%= _.findWhere(settings, {ea_key:'captcha.secret-key'}).ea_value %>">
+                               value="<%- _.findWhere(settings, {ea_key:'captcha.secret-key'}).ea_value %>">
                     </div>
                     <div class="form-item">
                         <span class="pure-text hint"><?php _e('* If you want to use Captcha you must have auto reservation option turned off. If you don\'t want to use Captcha just leave fields empty.', 'easy-appointments'); ?></span>
@@ -962,7 +962,7 @@
                             <span class="tooltip tooltip-right"
                                   data-tooltip="<?php _e('Place here custom css styles. This will be included in both standard and bootstrap widget.', 'easy-appointments'); ?>"></span>
                         </div>
-                        <textarea class="field" data-key="custom.css"><% if (typeof _.findWhere(settings, {ea_key:'custom.css'}) !== 'undefined') { %><%= (_.findWhere(settings, {ea_key:'custom.css'})).ea_value %><% } %></textarea>
+                        <textarea class="field" data-key="custom.css"><% if (typeof _.findWhere(settings, {ea_key:'custom.css'}) !== 'undefined') { %><%- (_.findWhere(settings, {ea_key:'custom.css'})).ea_value %><% } %></textarea>
                     </div>
                     <div class="form-item">
                         <label for="send.worker.email"><?php _e('Turn off css files', 'easy-appointments'); ?></label>
@@ -995,9 +995,9 @@
                             if(typeof _.findWhere(settings, {ea_key:'cancel.scroll'}) !==
                             'undefined' &&
                             _.findWhere(settings, {ea_key:'cancel.scroll'}).ea_value === item) { %>
-                            <option value="<%= item %>" selected="selected"><%= item %></option>
+                            <option value="<%- item %>" selected="selected"><%- item %></option>
                             <% } else { %>
-                            <option value="<%= item %>"><%= item %></option>
+                            <option value="<%- item %>"><%- item %></option>
                             <% }
                             });%>
                         </select>
@@ -1010,7 +1010,7 @@
                         </div>
                         <input class="field" data-key="submit.redirect" name="submit.redirect"
                                type="text"
-                               value="<%= _.findWhere(settings, {ea_key:'submit.redirect'}).ea_value %>">
+                               value="<%- _.findWhere(settings, {ea_key:'submit.redirect'}).ea_value %>">
                     </div>
 
                     <div class="form-item subgroup">
@@ -1065,7 +1065,7 @@
                                   data-tooltip="<?php _e('Label next to checkbox.', 'easy-appointments'); ?>"></span>
                         </div>
                         <input class="field" data-key="gdpr.label" name="gdpr.label" type="text"
-                               value="<%= _.findWhere(settings, {ea_key:'gdpr.label'}).ea_value %>">
+                               value="<%- _.findWhere(settings, {ea_key:'gdpr.label'}).ea_value %>">
                     </div>
                     <div class="form-item">
                         <div class="label-with-tooltip">
@@ -1074,7 +1074,7 @@
                                   data-tooltip="<?php _e('Link to page with GDPR content.', 'easy-appointments'); ?>"></span>
                         </div>
                         <input class="field" data-key="gdpr.link" name="gdpr.link" type="text"
-                               value="<%= _.findWhere(settings, {ea_key:'gdpr.link'}).ea_value %>">
+                               value="<%- _.findWhere(settings, {ea_key:'gdpr.link'}).ea_value %>">
                     </div>
                     <div class="form-item">
                         <div class="label-with-tooltip">
@@ -1083,7 +1083,7 @@
                                   data-tooltip="<?php _e('Message if user don\'t mark the GDPR checkbox.', 'easy-appointments'); ?>"></span>
                         </div>
                         <input class="field" data-key="gdpr.message" name="gdpr.message" type="text"
-                               value="<%= _.findWhere(settings, {ea_key:'gdpr.message'}).ea_value %>">
+                               value="<%- _.findWhere(settings, {ea_key:'gdpr.message'}).ea_value %>">
                     </div>
                 </div>
             </div>
@@ -1094,7 +1094,7 @@
                     <div class="form-item">
                         <label for=""><?php _e('Currency', 'easy-appointments'); ?></label>
                         <input class="field" data-key="trans.currency" name="currency" type="text"
-                               value="<%= _.findWhere(settings, {ea_key:'trans.currency'}).ea_value %>">
+                               value="<%- _.findWhere(settings, {ea_key:'trans.currency'}).ea_value %>">
                     </div>
                     <div class="form-item">
                         <label for="send.worker.email"><?php _e('Currency before price', 'easy-appointments'); ?></label>
@@ -1152,7 +1152,7 @@
     <p>
     <ul class="select-options">
         <% _.each(item.options, function(element) { %>
-        <li data-element="<%= element %>"><%= element %><a href="#" class="remove-select-option"><i
+        <li data-element="<%- element %>"><%= element %><a href="#" class="remove-select-option"><i
                         class="fa fa-trash-o"></i></a></li>
         <% }); %>
     </ul>
@@ -1224,10 +1224,10 @@
 </script>
 
 <!-- TOOLS LOG -->
-<script type="text/template" id="ea-tpl-tools-log">------------ ERROR #<%= item.id %> ------------
-TYPE: <%= item.error_type %>
+<script type="text/template" id="ea-tpl-tools-log">------------ ERROR #<%- item.id %> ------------
+TYPE: <%- item.error_type %>
 ERRORS: <%= item.errors %>
 ERRORS_DATA: <%= item.errors_data %>
----------- ERROR #<%= item.id %> END ----------
+---------- ERROR #<%- item.id %> END ----------
 
 </script>
