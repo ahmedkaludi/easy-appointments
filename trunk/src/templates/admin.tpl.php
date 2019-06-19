@@ -700,7 +700,7 @@
                         <div class="label-with-tooltip">
                             <label for=""><?php _e('Notifications', 'easy-appointments'); ?></label>
                             <span class="tooltip tooltip-right"
-                                  data-tooltip="<?php _e('You can use this tags inside email content: #id#, #date#, #start#, #end#, #status#, #created#, #price#, #ip#, #link_confirm#, #link_cancel#, #url_confirm#, #url_cancel#, #service_name#, #service_duration#, #service_price#, #worker_name#, #worker_email#, #worker_phone#, #location_name#, #location_address#, #location_location#', 'easy-appointments'); ?>"></span>
+                                  data-tooltip="<?php _e('You can use this tags inside email content. Just place for example #id# inside mail template and that value will be replaced with value.', 'easy-appointments'); ?>"></span>
                         </div>
                         <table class='notifications form-table'>
                             <tbody>
@@ -749,6 +749,7 @@
                             </tr>
                             </tbody>
                         </table>
+                        <div><small><?php _e('Available tags', 'easy-appointments'); ?>: #id#, #date#, #start#, #end#, #status#, #created#, #price#, #ip#, #link_confirm#, #link_cancel#, #url_confirm#, #url_cancel#, #service_name#, #service_duration#, #service_price#, #worker_name#, #worker_email#, #worker_phone#, #location_name#, #location_address#, #location_location#, <?php echo implode(', ', EADBModels::get_custom_fields_tags()); ?></small></div>
                     </div>
                     <div class="form-item">
                         <div class="label-with-tooltip">

@@ -665,4 +665,15 @@ class EADBModels
 
         return array($column => $order);
     }
+
+    public static function get_custom_fields_tags()
+    {
+        global $wpdb;
+
+        $table_name = $wpdb->prefix . 'ea_meta_fields';
+
+        $fields = $wpdb->get_col('SELECT CONCAT(\'#\', `slug`, \'#\') FROM ' . $table_name);
+
+        return $fields;
+    }
 }
