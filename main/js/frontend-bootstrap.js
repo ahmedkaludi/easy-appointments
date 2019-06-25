@@ -186,8 +186,15 @@
             $element.parent().children().removeClass('selected-time');
 
             jQuery.each($nextSlots, function (index, elem) {
-
                 var $elem = jQuery(elem);
+
+                var startTime = moment($element.data('val'), 'HH:mm');
+                var calculatedTime = (index + 1) * slot_step;
+                var expectedTime = startTime.add(calculatedTime, 'minutes').format('HH:mm');
+
+                if ($elem.data('val') !== expectedTime) {
+                    return false;
+                }
 
                 if (index + 2 > takeSlots) {
                     return false;
