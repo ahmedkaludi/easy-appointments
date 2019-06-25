@@ -1,0 +1,40 @@
+.report-container .report-items {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(13vw, 1fr));
+  grid-gap: 15px; }
+  .report-container .report-items .report-item {
+    background: #ffffff;
+    border: 1px solid #e2e2e2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-family: RobotoRegular;
+    padding: 1vw;
+    cursor: pointer;
+    transition: all .8s; }
+    .report-container .report-items .report-item .icon {
+      width: 5vw;
+      height: 5vw;
+      border-radius: 100%;
+      align-self: center;
+      display: flex;
+      font-size: 3.5vw;
+      color: #ffffff; }
+      .report-container .report-items .report-item .icon:before {
+        margin: auto; }
+    .report-container .report-items .report-item.time-table .icon {
+      background-color: #515e5f; }
+    .report-container .report-items .report-item.money .icon {
+      background-color: #fe9c2b; }
+    .report-container .report-items .report-item.export .icon {
+      background-color: #00a99c; }
+    .report-container .report-items .report-item span {
+      margin: 1vw 0;
+      text-align: center; }
+      .report-container .report-items .report-item span.rep-title {
+        font-size: 1.1vw; }
+      .report-container .report-items .report-item span.rep-description {
+        font-size: 0.8vw;
+        margin-top: 0; }
+    .report-container .report-items .report-item:hover {
+      border: 1px solid #0073aa; }

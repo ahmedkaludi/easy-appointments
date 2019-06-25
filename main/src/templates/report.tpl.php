@@ -21,7 +21,24 @@
 		</li>
 	</ul>
 	<div id="report-content">
-		<div class="report-message"><?php _e('Click on menu icon to open report.', 'easy-appointments');?><br> <?php _e('New reports are comming soon!', 'easy-appointments');?></div>
+		<!--<div class="report-message"><?php //_e('Click on menu icon to open report.', 'easy-appointments');?><br> <?php //_e('New reports are comming soon!', 'easy-appointments');?></div>-->
+		<div class="report-items">
+			<div class="report-item time-table">
+				<i class="icon icon-timetable"></i>
+				<span class="rep-title">Time table</span>
+				<span class="rep-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent sed est id ipsum elementum dapibus.</span>
+			</div>
+			<div class="report-item money">
+				<i class="icon icon-money-2"></i>
+				<span class="rep-title">Money</span>
+				<span class="rep-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent sed est id ipsum elementum dapibus.</span>
+			</div>
+			<div class="report-item export">
+				<i class="icon icon-export"></i>
+				<span class="rep-title">Export</span>
+				<span class="rep-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent sed est id ipsum elementum dapibus.</span>
+			</div>
+		</div>
 	</div>
 </div>
 </script>
