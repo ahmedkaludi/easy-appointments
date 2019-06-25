@@ -24,18 +24,6 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-.icon-commerce:before {
-  content: "\e90f";
-}
-.icon-googlecalendar:before {
-  content: "\e910";
-}
-.icon-icalendar:before {
-  content: "\e911";
-}
-.icon-sms:before {
-  content: "\e912";
-}
 .icon-date:before {
   content: "\e906";
 }

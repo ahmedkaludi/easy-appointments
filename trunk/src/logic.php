@@ -304,9 +304,10 @@ class EALogic
             $lower_time = strtotime($start);
             $upper_time = strtotime($end);
 
-            if ($app->end === '00:00:00' || $upper_time < $lower_time) {
-                $upper_time = strtotime('23:59:59');
-            }
+            // all day event fix
+            // if ($app->end === '00:00:00' || $upper_time < $lower_time) {
+                // $upper_time = strtotime('23:59:59');
+            // }
 
             // check slots
             foreach ($slots as $temp_time => $value) {
