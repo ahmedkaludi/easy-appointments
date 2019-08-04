@@ -85,6 +85,7 @@ class EAFullCalendar
             'max_date'             => null,
             'show_remaining_slots' => '0',
             'show_week'            => '0',
+            'title_field'          => 'name',
             'default_view'         => 'month', // basicWeek, basicDay, agendaDay, agendaWeek
             'views'                => 'month,basicWeek,basicDay',
             'day_names_short'      => 'Sun,Mon,Tue,Wed,Thu,Fri,Sat',
@@ -144,13 +145,22 @@ class EAFullCalendar
           _wpnonce: wpApiSettings.nonce, 
           location: '{$code_params['location']}',
           service: '{$code_params['service']}',
-          worker: '{$code_params['worker']}'
+          worker: '{$code_params['worker']}',
+          title_field: '{$code_params['title_field']}',
         },
         error: function() {
           alert('there was an error while fetching events!');
         },
-        color: 'yellow',   // a non-ajax option
-        textColor: 'black' // a non-ajax option
+        textColor: 'white' // a non-ajax option
+      },
+      eventRender: function(event, element) {
+        var statusMapping = {
+          canceled: 'graffit',
+          confirmed: 'darkgreen',
+          pending: 'grape',
+          reserved: 'darkblue'
+        }
+        element.addClass(statusMapping[event.status]);
       }
     });
 
