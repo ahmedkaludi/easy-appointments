@@ -1,98 +1,89 @@
 <script type="text/template" id="ea-report-main">
-<div class="report-container">
-	<ul id="tab-header" class="reports">
-		<li class="report" data-report="overview">
-			<a>
-				<i class="fa fa-table"></i>
-				<span><?php _e('Time table', 'easy-appointments');?></span>
-			</a>
-		</li>
-		<li class="report" data-report="money">
-			<a class="disabled">
-				<i class="fa fa-money"></i>
-				<span><?php _e('Money', 'easy-appointments');?></span>
-			</a>
-		</li>
-		<li class="report" data-report="excel">
-			<a>
-				<i class="fa fa-file-excel-o"></i>
-				<span><?php _e('Export', 'easy-appointments');?></span>
-			</a>
-		</li>
-	</ul>
-	<div id="report-content">
-		<!--<div class="report-message"><?php //_e('Click on menu icon to open report.', 'easy-appointments');?><br> <?php //_e('New reports are comming soon!', 'easy-appointments');?></div>-->
-		<div class="report-items">
-			<div class="report-item time-table">
-				<i class="icon icon-timetable"></i>
-				<span class="rep-title">Time table</span>
-				<span class="rep-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent sed est id ipsum elementum dapibus.</span>
-			</div>
-			<div class="report-item money">
-				<i class="icon icon-money-2"></i>
-				<span class="rep-title">Money</span>
-				<span class="rep-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent sed est id ipsum elementum dapibus.</span>
-			</div>
-			<div class="report-item export">
-				<i class="icon icon-export"></i>
-				<span class="rep-title">Export</span>
-				<span class="rep-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent sed est id ipsum elementum dapibus.</span>
-			</div>
-		</div>
-	</div>
-</div>
+    <div class="report-container">
+        <div id="tab-header" style="padding-top: 20px; padding-bottom: 20px">
+            <div class="report-items">
+                <div class="report-item time-table report-card" data-report="overview">
+                    <i class="icon icon-timetable"></i>
+                    <span class="rep-title"><?php _e('Time table', 'easy-appointments'); ?></span>
+                    <span class="rep-description"><?php _e('Have Calendar overview of all bookings and free slots. ','easy-appointments'); ?></span>
+                </div>
+                <div class="report-item money" style="display: none;">
+                    <i class="icon icon-money-2"></i>
+                    <span class="rep-title"><?php _e('Money', 'easy-appointments'); ?></span>
+                    <span class="rep-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent sed est id ipsum elementum dapibus.</span>
+                </div>
+                <div class="report-item export report-card" data-report="excel">
+                    <i class="icon icon-export"></i>
+                    <span class="rep-title"><?php _e('Export', 'easy-appointments'); ?></span>
+                    <span class="rep-description"><?php _e('Export data in Excel CSV format for selected time period.', 'easy-appointments'); ?></span>
+                </div>
+            </div>
+            <div class="back-section" style="display: none;">
+                <button class="button-primary go-back"><?php _e(' < Back to reports', 'easy-appointments'); ?></button>
+            </div>
+        </div>
+        <div id="report-content">
+        </div>
+    </div>
 </script>
 
 <!-- template for overview report -->
 <script type="text/template" id="ea-report-overview">
-	<div class="filter-select">
-		<label htmlFor=""><?php _e('Location', 'easy-appointments');?> :</label>
-		<select name="location" id="overview-location">
-			<option value="">-</option>
-			<% _.each(cache.Locations,function(item,key,list){ %>
-				<option value="<%= item.id %>"><%= item.name %></option>
-			<% });%>
-		</select>
-		<label htmlFor=""><?php _e('Service', 'easy-appointments');?> :</label>
-		<select name="service" id="overview-service">
-			<option value="">-</option>
-			<% _.each(cache.Services,function(item,key,list){ %>
-				<option value="<%= item.id %>"><%= item.name %></option>
-			<% });%>
-		</select>
-		<label htmlFor=""><?php _e('Worker', 'easy-appointments');?> :</label>
-		<select name="worker" id="overview-worker">
-			<option value="">-</option>
-			<% _.each(cache.Workers,function(item,key,list){ %>
-				<option value="<%= item.id %>"><%= item.name %></option>
-			<% });%>
-		</select>
-		<span>&nbsp&nbsp;</span>
-		<button class="refresh button-primary"><?php _e('Refresh', 'easy-appointments');?></button><br><br>
-		<div name="month" class="datepicker" id="overview-month"/><br>
-	</div>
-	<div id="overview-data">
-</div>
+    <div class="filter-select">
+        <label htmlFor=""><?php _e('Location', 'easy-appointments'); ?> :</label>
+        <select name="location" id="overview-location">
+            <option value="">-</option>
+            <% _.each(cache.Locations,function(item,key,list){ %>
+            <option value="<%= item.id %>"><%= item.name %></option>
+            <% });%>
+        </select>
+        <label htmlFor=""><?php _e('Service', 'easy-appointments'); ?> :</label>
+        <select name="service" id="overview-service">
+            <option value="">-</option>
+            <% _.each(cache.Services,function(item,key,list){ %>
+            <option value="<%= item.id %>"><%= item.name %></option>
+            <% });%>
+        </select>
+        <label htmlFor=""><?php _e('Worker', 'easy-appointments'); ?> :</label>
+        <select name="worker" id="overview-worker">
+            <option value="">-</option>
+            <% _.each(cache.Workers,function(item,key,list){ %>
+            <option value="<%= item.id %>"><%= item.name %></option>
+            <% });%>
+        </select>
+        <span>&nbsp&nbsp;</span>
+        <button class="refresh button-primary"><?php _e('Refresh', 'easy-appointments'); ?></button>
+        <br><br>
+        <div name="month" class="datepicker" id="overview-month"/>
+        <br>
+    </div>
+    <div id="overview-data">
+    </div>
 </script>
 
 <!-- Template for overview report -->
 <script type="text/template" id="ea-report-excel">
-<div>
     <div>
-        <a id="ea-export-customize-columns-toggle" href="#"><?php _e('Customize columns for export!','easy-appointments');?></a>
-        <div id="ea-export-customize-columns" style="display: none;">
-            <p>Columns: <b><?php echo implode(', ', $this->models->get_all_tags_for_template());?></b></p>
-            <?php _e('Place fields separate by , for example: id,name,email','easy-appointments');?>
-            <p><input id="ea-export-custom-columns" type="text" style="width:800px" value="<?php echo get_option('ea_excel_columns', '');?>" /></p>
-            <button id="ea-export-save-custom-columns" class="btn"><?php _e('Save settings', 'easy-appointments');?></button>
+        <div>
+            <a id="ea-export-customize-columns-toggle"
+               href="#"><?php _e('Customize columns for export!', 'easy-appointments'); ?></a>
+            <div id="ea-export-customize-columns" style="display: none;">
+                <p>Columns: <b><?php echo implode(', ', $this->models->get_all_tags_for_template()); ?></b></p>
+                <?php _e('Place fields separate by , for example: id,name,email', 'easy-appointments'); ?>
+                <p><input id="ea-export-custom-columns" type="text" style="width:800px"
+                          value="<?php echo get_option('ea_excel_columns', ''); ?>"/></p>
+                <button id="ea-export-save-custom-columns"
+                        class="btn"><?php _e('Save settings', 'easy-appointments'); ?></button>
+            </div>
         </div>
+        <div>&nbsp;</div>
+        <form id="ea-export-form" action="<%= export_link %>" method="get">
+            <input type="hidden" name="action" value="ea_export">
+            <?php _e('From', 'easy-appointments'); ?> : <input class="ea-datepicker" type="text"
+                                                               name="ea-export-from"> <?php _e('To', 'easy-appointments'); ?>
+            : <input class="ea-datepicker" type="text" name="ea-export-to">
+            <p><?php _e('Export data to CSV, can be imported to MS Excel, OpenOffice Calc... ', 'easy-appointments'); ?></p>
+            <button class="eadownloadcsv button-primary"><?php _e('Export data', 'easy-appointments'); ?></button>
+        </form>
     </div>
-    <div>&nbsp;</div>
-    <form id="ea-export-form" action="<%= export_link %>" method="get">
-        <input type="hidden" name="action" value="ea_export">
-        <?php _e('From','easy-appointments');?> : <input class="ea-datepicker" type="text" name="ea-export-from"> <?php _e('To','easy-appointments');?> : <input class="ea-datepicker" type="text" name="ea-export-to">
-        <p><?php _e('Export data to CSV, can be imported to MS Excel, OpenOffice Calc... ', 'easy-appointments');?></p>
-        <button class="eadownloadcsv button-primary"><?php _e('Export data', 'easy-appointments');?></button>
-    </form>
-</div>
 </script>

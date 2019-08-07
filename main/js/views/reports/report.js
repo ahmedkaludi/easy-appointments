@@ -4,48 +4,54 @@
  *
  **/
 EA.ReportView = Backbone.View.extend({
-	el : jQuery('#wpbody-content'),
+    el: jQuery('#wpbody-content'),
 
-	template : _.template( jQuery("#ea-report-main").html() ),
+    template: _.template(jQuery("#ea-report-main").html()),
 
-	events : {
-        "click .report"  : "reportSelected"
-	},
+    events: {
+        "click .report-card": "reportSelected",
+        "click .go-back": "goBackAction"
+    },
 
-	initialize: function () {
-		this.render();
+    initialize: function () {
+        this.render();
 
-	},
+    },
 
-	render: function () {
-		this.$el.empty(); 
+    render: function () {
+        this.$el.empty();
 
-		this.$el.html( this.template());
+        this.$el.html(this.template());
 
-		return this;
-	},
+        return this;
+    },
 
-	reportSelected: function(elem) {
-		var report = jQuery(elem.currentTarget).data('report');
+    reportSelected: function (elem) {
+        var report = jQuery(elem.currentTarget).data('report');
 
-		var menu = jQuery(elem.currentTarget).closest('ul');
-		menu.find('.tab-selected').removeClass('tab-selected');
+        var currentView = null;
 
-		jQuery(elem.currentTarget).addClass('tab-selected');
+        switch (report) {
+            case 'overview' :
+                currentView = new EA.OverviewReportView();
+                break;
+            case 'excel' :
+                currentView = new EA.ExcelReportView();
+                break;
+        }
 
-		var currentView = null;
+        this.$el.find('.report-items').hide();
+        this.$el.find('.back-section').show();
 
-		switch (report) {
-			case 'overview' :
-				currentView = new EA.OverviewReportView();
-				break;
-			case 'excel' :
-				currentView = new EA.ExcelReportView();
-				break;
-		}
+        var output = currentView.render();
 
-		var output = currentView.render();
+        this.$el.find('#report-content').html(output.$el);
+    },
 
-		this.$el.find('#report-content').html(output.$el);
-	},
+    goBackAction: function () {
+        this.$el.find('.back-section').hide();
+        this.$el.find('.report-items').show();
+
+        this.$el.find('#report-content').empty();
+    }
 });

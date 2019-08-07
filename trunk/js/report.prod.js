@@ -205,267 +205,274 @@
      *
      **/
     EA.ReportView = Backbone.View.extend({
-    	el : jQuery('#wpbody-content'),
+        el: jQuery('#wpbody-content'),
 
-    	template : _.template( jQuery("#ea-report-main").html() ),
+        template: _.template(jQuery("#ea-report-main").html()),
 
-    	events : {
-            "click .report"  : "reportSelected"
-    	},
+        events: {
+            "click .report-card": "reportSelected",
+            "click .go-back": "goBackAction"
+        },
 
-    	initialize: function () {
-    		this.render();
+        initialize: function () {
+            this.render();
 
-    	},
+        },
 
-    	render: function () {
-    		this.$el.empty();
+        render: function () {
+            this.$el.empty();
 
-    		this.$el.html( this.template());
+            this.$el.html(this.template());
 
-    		return this;
-    	},
+            return this;
+        },
 
-    	reportSelected: function(elem) {
-    		var report = jQuery(elem.currentTarget).data('report');
+        reportSelected: function (elem) {
+            var report = jQuery(elem.currentTarget).data('report');
 
-    		var menu = jQuery(elem.currentTarget).closest('ul');
-    		menu.find('.tab-selected').removeClass('tab-selected');
+            var currentView = null;
 
-    		jQuery(elem.currentTarget).addClass('tab-selected');
+            switch (report) {
+                case 'overview' :
+                    currentView = new EA.OverviewReportView();
+                    break;
+                case 'excel' :
+                    currentView = new EA.ExcelReportView();
+                    break;
+            }
 
-    		var currentView = null;
+            this.$el.find('.report-items').hide();
+            this.$el.find('.back-section').show();
 
-    		switch (report) {
-    			case 'overview' :
-    				currentView = new EA.OverviewReportView();
-    				break;
-    			case 'excel' :
-    				currentView = new EA.ExcelReportView();
-    				break;
-    		}
+            var output = currentView.render();
 
-    		var output = currentView.render();
+            this.$el.find('#report-content').html(output.$el);
+        },
 
-    		this.$el.find('#report-content').html(output.$el);
-    	},
+        goBackAction: function () {
+            this.$el.find('.back-section').hide();
+            this.$el.find('.report-items').show();
+
+            this.$el.find('#report-content').empty();
+        }
     });    /**
      * Overvire report view
      */
     EA.OverviewReportView = Backbone.View.extend({
 
-    	template : _.template( jQuery("#ea-report-overview").html() ),
+        template: _.template(jQuery("#ea-report-overview").html()),
 
-    	events : {
-    		'change select' : 'selectChange',
-    		'click .refresh': 'selectChange'
-    	},
+        events: {
+            'change select': 'selectChange',
+            'click .refresh': 'selectChange'
+        },
 
-    	initialize: function () {
-    		jQuery.datepicker.setDefaults( jQuery.datepicker.regional[ea_settings.datepicker] );
+        initialize: function () {
+            jQuery.datepicker.setDefaults(jQuery.datepicker.regional[ea_settings.datepicker]);
 
-    		// this.render();
-    	},
+            // this.render();
+        },
 
-    	render: function() {
-    		var view = this;
+        render: function () {
+            var view = this;
 
-    		this.$el.empty();
+            this.$el.empty();
 
-    		this.$el.html( this.template({ cache: eaData }) );
+            this.$el.html(this.template({cache: eaData}));
 
-    		var options = {
-    			firstDay: 1,
-    			onChangeMonthYear: function (year, month, widget) {
-    				view.selectChange(month, year);
-    			},
+            var options = {
+                firstDay: 1,
+                onChangeMonthYear: function (year, month, widget) {
+                    view.selectChange(month, year);
+                },
 
-    			beforeShowDay: function (date) {
-    				var month = date.getMonth() + 1;
-    				var days = date.getDate();
+                beforeShowDay: function (date) {
+                    var month = date.getMonth() + 1;
+                    var days = date.getDate();
 
-    				if (month < 10) {
-    					month = '0' + month;
-    				}
+                    if (month < 10) {
+                        month = '0' + month;
+                    }
 
-    				if (days < 10) {
-    					days = '0' + days;
-    				}
+                    if (days < 10) {
+                        days = '0' + days;
+                    }
 
-    				return [false, date.getFullYear() + '-' + month + '-' + days, ''];
-    			}
-    		};
+                    return [false, date.getFullYear() + '-' + month + '-' + days, ''];
+                }
+            };
 
-    		if (typeof jQuery.datepicker != 'undefined' &&
-    			typeof jQuery.datepicker.regional != 'undefined' &&
-    			typeof jQuery.datepicker.regional[ea_settings.datepicker] != 'undefined'
-    		) {
-    			options.dayNamesMin = jQuery.datepicker.regional[ea_settings.datepicker].dayNames;
-    		}
+            if (typeof jQuery.datepicker != 'undefined' &&
+                typeof jQuery.datepicker.regional != 'undefined' &&
+                typeof jQuery.datepicker.regional[ea_settings.datepicker] != 'undefined'
+            ) {
+                options.dayNamesMin = jQuery.datepicker.regional[ea_settings.datepicker].dayNames;
+            }
 
-    		this.$el.find('.datepicker').datepicker(options);
+            this.$el.find('.datepicker').datepicker(options);
 
-    		// do autoselect
-    		this.autoSelect();
+            // do autoselect
+            this.autoSelect();
 
-    		return this;
-    	},
+            return this;
+        },
 
-    	/**
-    	 * Put default value into select box if there is only one option
-    	 */
-    	autoSelect: function() {
-    		if(eaData.Locations.length === 1) {
-    			this.$el.find('#overview-location').val(eaData.Locations[0].id);
-    		}
+        /**
+         * Put default value into select box if there is only one option
+         */
+        autoSelect: function () {
+            if (eaData.Locations.length === 1) {
+                this.$el.find('#overview-location').val(eaData.Locations[0].id);
+            }
 
-    		if(eaData.Services.length === 1) {
-    			this.$el.find('#overview-service').val(eaData.Services[0].id);
-    		}
+            if (eaData.Services.length === 1) {
+                this.$el.find('#overview-service').val(eaData.Services[0].id);
+            }
 
-    		if(eaData.Workers.length === 1) {
-    			this.$el.find('#overview-worker').val(eaData.Workers[0].id);
-    		}
+            if (eaData.Workers.length === 1) {
+                this.$el.find('#overview-worker').val(eaData.Workers[0].id);
+            }
 
-    		// refresh data
-    		this.selectChange();
-    	},
+            // refresh data
+            this.selectChange();
+        },
 
-    	/**
-    	 * Refresh data
-    	 * by Month change or by Refresh button
-    	 */
-    	selectChange: function(month, year) {
-    		var self = this;
+        /**
+         * Refresh data
+         * by Month change or by Refresh button
+         */
+        selectChange: function (month, year) {
+            var self = this;
 
-    		if(typeof month === 'undefined' || typeof year === 'undefined') {
-    			var currentDate = this.$el.find('.datepicker').datepicker('getDate');
+            if (typeof month === 'undefined' || typeof year === 'undefined') {
+                var currentDate = this.$el.find('.datepicker').datepicker('getDate');
 
-    			month = currentDate.getMonth() + 1;
-    			year  = currentDate.getFullYear();
-    		}
+                month = currentDate.getMonth() + 1;
+                year = currentDate.getFullYear();
+            }
 
-    		// check is all filled
-    		if(this.checkStatus()) {
-    			var selects = this.$el.find('select');
+            // check is all filled
+            if (this.checkStatus()) {
+                var selects = this.$el.find('select');
 
-    			var fields = selects.serializeArray();
+                var fields = selects.serializeArray();
 
-    			fields.push({ 'name' : 'action', 'value': 'ea_report' });
-    			fields.push({ 'name' : 'report', 'value': 'overview' });
-    			fields.push({ 'name' : 'month', 'value': month });
-    			fields.push({ 'name' : 'year', 'value': year });
+                fields.push({'name': 'action', 'value': 'ea_report'});
+                fields.push({'name': 'report', 'value': 'overview'});
+                fields.push({'name': 'month', 'value': month});
+                fields.push({'name': 'year', 'value': year});
 
-    			jQuery.get(ajaxurl, fields, function(result) {
-    				self.refreshData(result);
-    			}, 'json');
-    		}
-    	},
-    	/**
-    	 * Is everything selected
-    	 * @return {boolean} Is ready for sending data
-    	 */
-    	checkStatus: function() {
-    		var selects = this.$el.find('select');
+                jQuery.get(ajaxurl, fields, function (result) {
+                    self.refreshData(result);
+                }, 'json');
+            }
+        },
+        /**
+         * Is everything selected
+         * @return {boolean} Is ready for sending data
+         */
+        checkStatus: function () {
+            var selects = this.$el.find('select');
 
-    		var isComplete = true;
+            var isComplete = true;
 
-    		selects.each(function(index, element) {
-    			isComplete = isComplete && jQuery(element).val() !== '';
-    		});
+            selects.each(function (index, element) {
+                isComplete = isComplete && jQuery(element).val() !== '';
+            });
 
-    		return isComplete;
-    	},
+            return isComplete;
+        },
 
-    	refreshData: function(data) {
-    		var datepicker = this.$el.find('.datepicker');
+        refreshData: function (data) {
+            var datepicker = this.$el.find('.datepicker');
 
-    		jQuery.each(data, function(key, slots){
-    			var td = datepicker.find('.' + key);
-    			td.find('.single-item').remove();
+            jQuery.each(data, function (key, slots) {
+                var td = datepicker.find('.' + key);
+                td.find('.single-item').remove();
 
-    			if(slots.length === 0) {
-    				td.addClass('empty-day');
-    				return;
-    			} else {
-    				td.removeClass('empty-day');
-    			}
+                if (slots.length === 0) {
+                    td.addClass('empty-day');
+                    return;
+                } else {
+                    td.removeClass('empty-day');
+                }
 
-    			var itemElement;
-    			for (var i = 0; i < slots.length; i++) {
+                var itemElement;
+                for (var i = 0; i < slots.length; i++) {
 
-    				itemElement = jQuery(document.createElement('div'))
-    					.text(slots[i].show + ' - x ' + slots[i].count	)
-    					.addClass('single-item')
-    					.addClass('free-items-' + slots[i].count)
-    					.data('value', slots[i].value)
-    					.appendTo(td);
+                    itemElement = jQuery(document.createElement('div'))
+                        .text(slots[i].show + ' - x ' + slots[i].count)
+                        .addClass('single-item')
+                        .addClass('free-items-' + slots[i].count)
+                        .data('value', slots[i].value)
+                        .appendTo(td);
 
-    				if(slots[i].count < 0) {
-    					itemElement.addClass('error-booking');
-    				}
-    			}
-    		});
-    	}
+                    if (slots[i].count < 0) {
+                        itemElement.addClass('error-booking');
+                    }
+                }
+            });
+        }
     });    /**
      * Overvire report view
      */
     EA.ExcelReportView = Backbone.View.extend({
 
-    	template : _.template( jQuery("#ea-report-excel").html() ),
+        template: _.template(jQuery("#ea-report-excel").html()),
 
-    	events : {
-    		//  'click .eadownloadcsv': 'download',
-            "click #ea-export-customize-columns-toggle" : "toggleColumnSettings",
-            "click #ea-export-save-custom-columns" : "saveCustomColumns"
-    	},
+        events: {
+            //  'click .eadownloadcsv': 'download',
+            "click #ea-export-customize-columns-toggle": "toggleColumnSettings",
+            "click #ea-export-save-custom-columns": "saveCustomColumns"
+        },
 
-    	initialize: function () {
-    		jQuery.datepicker.setDefaults( jQuery.datepicker.regional[ea_settings.datepicker] );
+        initialize: function () {
+            jQuery.datepicker.setDefaults(jQuery.datepicker.regional[ea_settings.datepicker]);
 
-    		// this.render();
-    	},
+            // this.render();
+        },
 
-    	render: function() {
-    		var view = this;
+        render: function () {
+            var view = this;
 
-    		this.$el.empty();
+            this.$el.empty();
 
-    		this.$el.html( this.template({export_link: ajaxurl}));
+            this.$el.html(this.template({export_link: ajaxurl}));
 
-    		this.$el.find('.ea-datepicker').datepicker({
-    			dateFormat: 'yy-mm-dd'
-    		});
+            this.$el.find('.ea-datepicker').datepicker({
+                dateFormat: 'yy-mm-dd'
+            });
 
-    		return this;
-    	},
+            return this;
+        },
 
-    	download: function () {
+        download: function () {
 
-    		var fields = [];
-    		fields.push({ 'name' : 'action', 'value': 'ea_export' });
+            var fields = [];
+            fields.push({'name': 'action', 'value': 'ea_export'});
 
-    		jQuery.get(ajaxurl, fields, function(result) {});
-    	},
+            jQuery.get(ajaxurl, fields, function (result) {
+            });
+        },
 
         /**
          * Toggle settings
          */
-        toggleColumnSettings: function() {
+        toggleColumnSettings: function () {
             jQuery('#ea-export-customize-columns').toggle();
         },
 
         /**
          *
          */
-        saveCustomColumns: function() {
+        saveCustomColumns: function () {
 
             var data = {
                 fields: this.$el.find('#ea-export-custom-columns').val(),
                 action: 'ea_save_custom_columns'
             };
 
-            jQuery.post(ajaxurl, data, function(result) {
+            jQuery.post(ajaxurl, data, function (result) {
                 alert('Settings saved');
             });
         }
