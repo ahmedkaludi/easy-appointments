@@ -98,6 +98,9 @@ class EAApiFullCalendar
             'service'  => $request->get_param('service'),
         );
 
+        // TODO remove location and service type if empty
+        // allow user to have overview of all appointments
+
         $res = $this->db_models->get_all_appointments($params);
 
         $fields = $this->db_models->get_all_rows('ea_meta_fields', array(), array('position' => 'ASC'));
@@ -110,6 +113,15 @@ class EAApiFullCalendar
             );
 
             $result['title'] = $element->{$title_key};
+            $result['fields'] = array();
+
+            foreach ($fields as $field) {
+                $field_key = $field->slug;
+                $result['fields'][$field->slug] = array(
+                    'value' => $element->{$field_key},
+                    'label' => $field->label,
+                );
+            }
 
             return $result;
         }, $res);
