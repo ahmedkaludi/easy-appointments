@@ -1,3 +1,5 @@
+@import "./scss/reporting.css";
+
 .report-container {
 	padding: 0;
 	margin: 0;
@@ -40,7 +42,7 @@
 }
 
 #report-content .ui-datepicker {
-	width: 70em !important;
+	/*width: 70em !important;*/
 	box-sizing: border-box;
 }
 
@@ -80,7 +82,7 @@
 	border: 1px dotted #FFF;
 }
 
-#report-content .ui-state-default, #overview-month .ui-widget-content .ui-state-default {
+/*#report-content .ui-state-default, #overview-month .ui-widget-content .ui-state-default {
 	position: absolute;
 	top: 0px;
 	right: 5px;
@@ -88,7 +90,7 @@
 	color: black;
 	background: none;
 	border: 0 solid black;
-}
+}*/
 
 .filter-select select {
 	width: 180px;

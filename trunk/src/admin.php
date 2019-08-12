@@ -294,6 +294,7 @@ class EAAdminPanel
         wp_enqueue_style('ea-admin-awesome-css');
         wp_enqueue_style('ea-report-css');
         wp_enqueue_style('jquery-style');
+        wp_enqueue_style('ea-admin-fonts-css');
     }
 
     /**
