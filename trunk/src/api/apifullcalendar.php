@@ -57,6 +57,9 @@ class EAApiFullCalendar
      * @return bool|WP_Error
      */
     public function get_items_permissions_check( $request ) {
+
+        // TODO
+
         if ( ! current_user_can( 'read' ) ) {
             return new WP_Error( 'rest_forbidden', esc_html__( 'You cannot view the category resource.' ), array( 'status' => $this->authorization_status_code() ) );
         }
@@ -85,6 +88,7 @@ class EAApiFullCalendar
      * @return mixed|WP_REST_Response
      */
     public function get_items( $request ) {
+        $title_key = $request->get_param('title_field');
 
         $params = array(
             'from'     => $request->get_param('start'),
@@ -96,12 +100,18 @@ class EAApiFullCalendar
 
         $res = $this->db_models->get_all_appointments($params);
 
-        $res = array_map(function($element){
-            return array(
-                'title' => 'Title',
-                'start' => $element->date . 'T' . $element->start,
-                'end'   => $element->end_date . 'T' . $element->end,
+        $fields = $this->db_models->get_all_rows('ea_meta_fields', array(), array('position' => 'ASC'));
+
+        $res = array_map(function($element) use ($fields, $title_key) {
+            $result = array(
+                'start'  => $element->date . 'T' . $element->start,
+                'end'    => $element->end_date . 'T' . $element->end,
+                'status' => $element->status,
             );
+
+            $result['title'] = $element->{$title_key};
+
+            return $result;
         }, $res);
 
         // Return all of our comment response data.
@@ -153,6 +163,12 @@ class EAApiFullCalendar
             'type'              => 'integer',
             'required'          => true,
             'sanitize_callback' => 'absint',
+        );
+
+        $args['title_field'] = array(
+            'description'       => esc_html__( 'Field that will be used as title', 'easy-appointments' ),
+            'type'              => 'string',
+            'required'          => true,
         );
 
         $args['start'] = array(

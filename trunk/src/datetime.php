@@ -17,6 +17,21 @@ class EADateTime
      */
     function convert_to_moment_format($format)
     {
+        $escaped = array();
+        $local = $format;
+
+        // replace escape string \ with [] around
+        while (true) {
+            $index = strpos($local,'\\');
+
+            if ($index === false) break;
+
+            $currentPos = '!' . count($escaped) . '!';
+            $escaped[$currentPos] = "[{$local[$index+1]}]";
+
+            $local = substr($local, 0, $index) . $currentPos . substr($local, ($index+2));
+        }
+
         $replacements = array(
             'd' => 'DD',
             'D' => 'ddd',
@@ -57,8 +72,9 @@ class EADateTime
             'U' => 'X',
         );
 
-        $momentFormat = strtr($format, $replacements);
-        return $momentFormat;
+        $momentFormat = strtr($local, $replacements);
+        $momentFormatWithEscaped = strtr($momentFormat, $escaped);
+        return $momentFormatWithEscaped;
     }
 
     /**
