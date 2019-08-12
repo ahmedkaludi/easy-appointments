@@ -459,7 +459,7 @@
          * Toggle settings
          */
         toggleColumnSettings: function () {
-            jQuery('#ea-export-customize-columns').toggle();
+            jQuery('#ea-export-customize-columns').slideToggle("slow");
         },
 
         /**
