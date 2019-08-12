@@ -19,7 +19,7 @@
                 </div>
             </div>
             <div class="back-section" style="display: none;">
-                <button class="button-primary go-back"><?php _e(' < Back to reports', 'easy-appointments'); ?></button>
+                <button class="button-primary go-back"><?php _e(' < Back to Reports', 'easy-appointments'); ?></button>
             </div>
         </div>
         <div id="report-content" class="report-content">
@@ -89,11 +89,11 @@
             <input type="hidden" name="action" value="ea_export">
             <div class="form-item">
                 <label for=""><?php _e('From', 'easy-appointments'); ?></label>
-                <input class="ea-datepicker field" type="text" name="ea-export-from">
+                <input class="ea-datepicker field" type="text" name="ea-export-from" autocomplete="off">
             </div>
             <div class="form-item">
                 <label for=""><?php _e('To', 'easy-appointments'); ?></label>
-                <input class="ea-datepicker field" type="text" name="ea-export-to">
+                <input class="ea-datepicker field" type="text" name="ea-export-to" autocomplete="off">
             </div>
             <p><?php _e('Export data to CSV, can be imported to MS Excel, OpenOffice Calc... ', 'easy-appointments'); ?></p>
             <button class="eadownloadcsv button-primary"><?php _e('Export data', 'easy-appointments'); ?></button>
