@@ -195,13 +195,20 @@ Note: you can have only one calendar on one page.
 9. Admin panel - Settings Services. Define your Services
 10. Admin panel - Settings Workers. Define your Workers
 11. Admin panel - Settings Connection. Set single combination for location, service, worker
-12. Admin panel - Settings - Bulk connection creation - Step 1
-13. Admin panel - Settings - Bulk connection creation - Step 2
-14. Admin panel - Settings - Customize - Email notifications
-15. Admin panel - Settings - Customize - Custom form fields
-16. Admin panel - Settings - Tools page
-17. Admin panel - Report - Time table overview
-18. Admin panel - Report - Export page
+12. Admin panel - Settings - Bulk connection creation
+13. Admin panel - Settings - Customize General
+14. Admin panel - Settings - Customize - Email notifications / templates
+15. Admin panel - Settings - Customize - Custom labels
+16. Admin panel - Settings - Customize - Date & Time format
+17. Admin panel - Settings - Customize - Custom fields
+18. Admin panel - Settings - Customize - Google Captcha
+19. Admin panel - Settings - Customize - Custom styles and redirects
+20. Admin panel - Settings - Customize - GDPR
+21. Admin panel - Settings - Customize - Money format
+22. Admin panel - Tools page
+23. Admin panel - Report
+24. Admin panel - Report - Time table overview
+25. Admin panel - Report - Export page
 
 == Changelog ==
 
