@@ -4,7 +4,7 @@ Donate link: https://easy-appointments.net/
 Tags: appointment, appointments, Booking, calendar, plugin, reservation, reservations, wp appointment, reservation plugin, reservations, schedule
 Requires at least: 3.7
 Tested up to: 5.2
-Stable tag: 2.5.7
+Stable tag: 2.5.8
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -211,6 +211,9 @@ Note: you can have only one calendar on one page.
 25. Admin panel - Report - Export page
 
 == Changelog ==
+
+= 2.5.8 (2019-08-28) =
+* Remove Google reCaptcha after booking
 
 = 2.5.7 (2019-08-12) =
 * New style for Reports pages

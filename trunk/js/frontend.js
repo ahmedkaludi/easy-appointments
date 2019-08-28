@@ -572,6 +572,7 @@
 
                 plugin.$element.find('.final').append('<h4>' + ea_settings['trans.done_message'] + '</h4>');
                 plugin.$element.find('form').find('input').prop('disabled', true);
+                plugin.$element.find('.g-recaptcha').remove();
 
                 // send an event
                 plugin.triggerEvent();
