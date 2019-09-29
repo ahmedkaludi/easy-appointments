@@ -62,6 +62,43 @@ class EAMail
 
         // we need to pars
         add_filter('ea_format_notification_params', array($this, 'format_data'), 100, 2);
+
+        // wrap email template into html
+        add_filter('ea_admin_mail_template', array($this, 'wrap_email_with_html_tags'), 10, 1);
+        add_filter('ea_customer_mail_template', array($this, 'wrap_email_with_html_tags'), 10, 1);
+    }
+
+
+    /**
+     * @param $template
+     * @return mixed
+     */
+    public function wrap_email_with_html_tags($template)
+    {
+
+        if (strlen($template) < 1) {
+            return $template;
+        }
+
+        if (strpos($template, '<html') !== false) {
+            return $template;
+        }
+
+        $local = substr(get_locale(), 0, 2);
+
+        $new_template = <<<EOT
+<!DOCTYPE HTML>
+<html lang="{$local}">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    </head>
+    <body>
+        {$template}
+    </body>
+</html>
+EOT;
+
+        return $new_template;
     }
 
     /**
@@ -364,6 +401,8 @@ class EAMail
         $emails = apply_filters('ea_admin_mail_address_list', $emails, $raw_data);
 
         $body_template = $this->options->get_option_value('mail.admin', '');
+
+        $body_template = apply_filters('ea_admin_mail_template', $body_template);
 
         if (!empty($body_template)) {
             // custom email
