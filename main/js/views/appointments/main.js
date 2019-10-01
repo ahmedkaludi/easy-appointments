@@ -15,7 +15,10 @@ EA.MainView = Backbone.View.extend({
         "click .add-new": "addNew",
 
         "change #ea-filter-locations": "filterLocationChanged",
-        "change #ea-filter-services" : "filterServiceChanged"
+        "change #ea-filter-services" : "filterServiceChanged",
+        "change #ea-sort-by" : "onSortChange",
+        "change #ea-order-by" : "onSortChange",
+        "click .ea-set-sort": "columnSortClick"
     },
 
     initialize: function () {
@@ -45,7 +48,7 @@ EA.MainView = Backbone.View.extend({
         this.setDefaults();
 
         // Bind the reset event
-        this.collection.bind("reset", this.showRows, this);
+        this.collection.bind("reset sort", this.showRows, this);
 
         // Get data from server
         // this.collection.fetch( {reset:true} );
@@ -349,5 +352,40 @@ EA.MainView = Backbone.View.extend({
         tomorrow.setDate(tomorrow.getDate() + 1);
         this.$el.find('#ea-filter-from').datepicker('setDate', new Date());
         this.$el.find('#ea-filter-to').datepicker('setDate', tomorrow);
+    },
+
+    onSortChange: function() {
+        var sortBy = this.$el.find('#ea-sort-by').val();
+        var orderBy = this.$el.find('#ea-order-by').val();
+
+        this.collection.comparator = function(model) {
+            if (sortBy === 'id') {
+                return (orderBy === 'DESC') ? -model.get('id') : model.get('id');
+            }
+
+            if (sortBy === 'date') {
+                var value = model.get('date') + '' + model.get('start');
+                value = value.replace(/\D/g,'');
+
+                return (orderBy === 'DESC') ? -value : value;
+            }
+
+            if (sortBy === 'created') {
+                var value = model.get('created');
+                value = value.replace(/\D/g,'');
+
+                return (orderBy === 'DESC') ? -value : value;
+            }
+        };
+
+        this.collection.sort();
+    },
+
+    columnSortClick: function (e) {
+        e.preventDefault();
+
+        var key = jQuery(e.target).data('key');
+
+        this.$el.find('#ea-sort-by').val(key).change();
     }
 });
