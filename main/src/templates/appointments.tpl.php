@@ -64,7 +64,7 @@
 				</tr>
 			</tbody>
 		</table>
-		<h2>
+		<div>
 			<a href="#" class="add-new-h2 add-new">
 				<i class="fa fa-plus"></i>
 				<?php _e('Add New Appointment', 'easy-appointments');?>
@@ -73,17 +73,30 @@
 				<i class="fa fa-refresh"></i>
 				<?php _e('Refresh', 'easy-appointments');?>
 			</a>
+            <div class="ea-sort-fields">
+                <label><?php _e('Sort By');?>:</label>
+                <select id="ea-sort-by" name="ea-sort-by">
+                    <option value="id"><?php _e('Id', 'easy-appointments');?></option>
+                    <option value="date"><?php _e('Date & time', 'easy-appointments');?></option>
+                    <option value="created"><?php _e('Created', 'easy-appointments');?></option>
+                </select>
+                <label><?php _e('Order by');?>:</label>
+                <select id="ea-order-by" name="ea-order-by">
+                    <option value="ASC">asc</option>
+                    <option value="DESC" selected>desc</option>
+                </select>
+            </div>
 			<span id="status-msg" class="status"></span>
-		</h2>
+		</div>
 
 		<table class="ea-responsive-table widefat fixed">
 			<thead>
 				<tr>
-					<th colspan="2" class="manage-column column-title">Id / <?php _e('Location', 'easy-appointments');?> / <?php _e('Service', 'easy-appointments');?> / <?php _e('Worker', 'easy-appointments');?></th>
+                    <th colspan="2" class="manage-column column-title"><a class="ea-set-sort" data-key="id" href="#">Id</a> / <?php _e('Location', 'easy-appointments');?> / <?php _e('Service', 'easy-appointments');?> / <?php _e('Worker', 'easy-appointments');?></th>
 					<th colspan="2" class="manage-column column-title"><?php _e('Customer', 'easy-appointments');?></th>
 					<th class="manage-column column-title"><?php _e('Descrtiption', 'easy-appointments');?></th>
-					<th class="manage-column column-title"><?php _e('Date & time', 'easy-appointments');?></th>
-					<th class="manage-column column-title"><?php _e('Status', 'easy-appointments');?> / <?php _e('Price', 'easy-appointments');?> / <?php _e('Created', 'easy-appointments');?></th>
+					<th class="manage-column column-title"><a class="ea-set-sort" data-key="date" href="#"><?php _e('Date & time', 'easy-appointments');?></a></th>
+                    <th class="manage-column column-title"><?php _e('Status', 'easy-appointments');?> / <?php _e('Price', 'easy-appointments');?> / <a href="#" class="ea-set-sort" data-key="created"><?php _e('Created', 'easy-appointments');?></a></th>
 					<th class="manage-column column-title"><?php _e('Action', 'easy-appointments');?></th>
 				</tr>
 			</thead>

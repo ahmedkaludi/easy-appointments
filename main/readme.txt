@@ -4,7 +4,7 @@ Donate link: https://easy-appointments.net/
 Tags: appointment, appointments, Booking, calendar, plugin, reservation, reservations, wp appointment, reservation plugin, reservations, schedule
 Requires at least: 3.7
 Tested up to: 5.2
-Stable tag: 2.5.9
+Stable tag: 2.6.0
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -211,6 +211,9 @@ Note: you can have only one calendar on one page.
 25. Admin panel - Report - Export page
 
 == Changelog ==
+
+= 2.6.0 (2019-10-01) =
+* Added sorting option on Appointments page in admin panel. Now you can sort by Id, Date&Time and Creation time both Asc and Desc.
 
 = 2.5.9 (2019-09-29) =
 * Improved mail content - wrapped under html tags if there is none
