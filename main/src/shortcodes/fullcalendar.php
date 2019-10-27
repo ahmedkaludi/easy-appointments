@@ -27,15 +27,22 @@ class EAFullCalendar
     protected $datetime;
 
     /**
+     * @var EALogic
+     */
+    protected $logic;
+
+    /**
      * @param EADBModels $models
+     * @param $logic
      * @param EAOptions $options
      * @param $datetime
      */
-    function __construct($models, $options, $datetime)
+    function __construct($models, $logic, $options, $datetime)
     {
         $this->options  = $options;
         $this->models   = $models;
         $this->datetime = $datetime;
+        $this->logic = $logic;
     }
 
     public function init()
@@ -73,7 +80,6 @@ class EAFullCalendar
 
     public function ea_full_calendar($atts)
     {
-
         $code_params = shortcode_atts(array(
             'location'             => null,
             'service'              => null,
@@ -118,6 +124,16 @@ class EAFullCalendar
 
         $script = <<<EOT
   jQuery(document).ready(function() {
+  
+    jQuery('#ea-calendar-color-map-{$id}').find('.status').hover(
+        function(event) {
+            var el = jQuery(event.target);
+            var classSelector = '.' + el.data('class');
+            jQuery('#ea-full-calendar-{$id}').find('.fc-event:not(' + classSelector + ')').animate({ opacity: 1/2 }, 200);
+        },
+    function(event){
+        jQuery('#ea-full-calendar-{$id}').find('.fc-event').animate({ opacity: 1 }, 100);
+    });
 
     jQuery('#ea-full-calendar-{$id}').fullCalendar({
       header: {
@@ -163,13 +179,29 @@ class EAFullCalendar
         element.addClass(statusMapping[event.status]);
       }
     });
-
   });
 EOT;
 
         wp_add_inline_script( 'ea-full-calendar', $script);
 
-        return "<div id='ea-full-calendar-{$id}'></div>";
+        $statuses = $this->logic->getStatus();
+        $status_label = __('Status', 'easy-appointments');
+
+        // html and status legend
+        $html = <<<EOT
+<div id="ea-full-calendar-{$id}"></div>
+<div class="fc">
+    <div id="ea-calendar-color-map-{$id}" class="ea-calendar-color-map fc-view-container">
+        <div>{$status_label}</div>
+        <div data-class="grape" class="fc-event status grape">{$statuses['pending']}</div>
+        <div data-class="darkgreen" class="fc-event status darkgreen">{$statuses['confirmed']}</div>
+        <div data-class="darkblue" class="fc-event status darkblue">{$statuses['reservation']}</div>
+        <div data-class="graffit" class="fc-event status graffit">{$statuses['canceled']}</div>
+    </div>
+</div>
+EOT;
+
+        return $html;
     }
 
     /**

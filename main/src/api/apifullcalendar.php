@@ -57,10 +57,10 @@ class EAApiFullCalendar
      * @return bool|WP_Error
      */
     public function get_items_permissions_check( $request ) {
+        // just for demo page
+        $have_access = apply_filters( 'ea_calendar_public_access', false);
 
-        // TODO
-
-        if ( ! current_user_can( 'read' ) ) {
+        if ( ! current_user_can( 'read' ) && !$have_access ) {
             return new WP_Error( 'rest_forbidden', esc_html__( 'You cannot view the category resource.' ), array( 'status' => $this->authorization_status_code() ) );
         }
         return true;

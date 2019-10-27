@@ -4,7 +4,7 @@ Donate link: https://easy-appointments.net/
 Tags: appointment, appointments, Booking, calendar, plugin, reservation, reservations, wp appointment, reservation plugin, reservations, schedule
 Requires at least: 3.7
 Tested up to: 5.2
-Stable tag: 2.6.0
+Stable tag: 2.7.0
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -21,7 +21,7 @@ Can be used for : <strong>Lawyers</strong>, <strong>Salons</strong>, <strong>Mec
 <a href="https://easy-appointments.net/demo-standard-single-column-layout/">**Standard Appointment form**</a><br>
 
 = Doc =
-https://easy-appointments.net/documentation/
+<a href="https://easy-appointments.net/documentation/">Documentation</a>
 
 = Features =
 
@@ -85,7 +85,7 @@ There is extension plugin that you can buy and add to your Easy Appointments plu
 For more info follow the link for <a href="https://easy-appointments.net/#extension">Extension plugin</a>
 
 = HomePage =
-https://easy-appointments.net/
+<a href="https://easy-appointments.net/">easy-appointments.net</a>
 
 == Installation ==
 
@@ -188,8 +188,8 @@ Note: you can have only one calendar on one page.
 2. Responsive front end shortcode `[ea_bootstrap]` - part2
 3. Responsive front end two column `[ea_bootstrap layout_cols="2"]` - part1
 4. Responsive front end two column `[ea_bootstrap layout_cols="2"]` - part2
-5. Standard front end form for Appointment `[ea_standard]` - part1
-6. Standard front end form for Appointment `[ea_standard]` - part2
+5. Standard front end form for Appointment `[ea_standard]`
+6. Full Calendar short code
 7. Admin panel - Appointments list
 8. Admin panel - Settings Location. Define your Locations
 9. Admin panel - Settings Services. Define your Services
@@ -211,6 +211,9 @@ Note: you can have only one calendar on one page.
 25. Admin panel - Report - Export page
 
 == Changelog ==
+
+= 2.7.0 (2019-10-27) =
+* Short code for full calendar
 
 = 2.6.0 (2019-10-01) =
 * Added sorting option on Appointments page in admin panel. Now you can sort by Id, Date&Time and Creation time both Asc and Desc.

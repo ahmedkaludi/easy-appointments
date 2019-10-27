@@ -159,3 +159,18 @@
 .fc .fc-view-container .fc-list-table .fc-list-item.red .fc-event-dot {
     background-color: #d50000;
     border: 1px solid #d50000; }
+
+.ea-calendar-color-map {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 10px;
+}
+
+.ea-calendar-color-map div {
+    padding: 3px;
+    margin-right: 5px;
+    width: 80px;
+    text-align: center;
+    cursor: default;
+}
