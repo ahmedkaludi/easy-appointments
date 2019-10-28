@@ -122,6 +122,11 @@ class EAFullCalendar
         $month_names_short = $this->convert_csv_to_js_array_of_strings($code_params['month_names_short']);
         $month_names = $this->convert_csv_to_js_array_of_strings($code_params['month_names']);
 
+        // set it as optional
+        $location_param = $code_params['location'] !== null ? "location: '{$code_params['location']}'," : '';
+        $service_param = $code_params['service'] !== null ? "service: '{$code_params['service']}'," : '';
+        $worker_param = $code_params['worker'] !== null ? "worker: '{$code_params['worker']}'," : '';
+
         $script = <<<EOT
   jQuery(document).ready(function() {
   
@@ -159,9 +164,9 @@ class EAFullCalendar
         type: 'GET',
         data: {
           _wpnonce: wpApiSettings.nonce, 
-          location: '{$code_params['location']}',
-          service: '{$code_params['service']}',
-          worker: '{$code_params['worker']}',
+          {$location_param}
+          {$service_param}
+          {$worker_param}
           title_field: '{$code_params['title_field']}',
         },
         error: function() {

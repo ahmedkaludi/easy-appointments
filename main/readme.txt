@@ -4,7 +4,7 @@ Donate link: https://easy-appointments.net/
 Tags: appointment, appointments, Booking, calendar, plugin, reservation, reservations, wp appointment, reservation plugin, reservations, schedule
 Requires at least: 3.7
 Tested up to: 5.2
-Stable tag: 2.7.0
+Stable tag: 2.7.1
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -18,6 +18,7 @@ Can be used for : <strong>Lawyers</strong>, <strong>Salons</strong>, <strong>Mec
 = Live Demo =
 <a href="https://easy-appointments.net/responsive-single-column-layout/">**Responsive Appointment form**</a><br>
 <a href="https://easy-appointments.net/responsive-two-columns/">**Responsive Appointment form - two column layout**</a><br>
+<a href="https://easy-appointments.net/full-calendar/">**Full calendar NEW**</a><br>
 <a href="https://easy-appointments.net/demo-standard-single-column-layout/">**Standard Appointment form**</a><br>
 
 = Doc =
@@ -211,6 +212,9 @@ Note: you can have only one calendar on one page.
 25. Admin panel - Report - Export page
 
 == Changelog ==
+
+= 2.7.1 (2019-10-28) =
+* Additional improvement to full calendar short code. If Location, Worker or Service id is not defined it will show all.
 
 = 2.7.0 (2019-10-27) =
 * Short code for full calendar
