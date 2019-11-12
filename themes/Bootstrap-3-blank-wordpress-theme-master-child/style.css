@@ -312,3 +312,29 @@ input[name="quantity"] {
 .wspsc_cart_total {
 	border-top: 1px solid #eee;
 }
+
+/* Fixing issue with app name falling in second line */
+@media screen and (max-width: 480px) {
+	.navbar .navbar-header {
+		display: flex;
+	}
+	.navbar .navbar-header .navbar-toggle {
+		order: 2;
+	}
+	.navbar .navbar-header .logo-name {
+		flex: 1;
+		display: flex;
+		align-items: center;
+		margin: 5px 0 5px 5px;
+	}
+	.navbar .navbar-header .navbar-brand {
+		font-size: 5vw;
+		height: auto;
+    	padding: 1vw 0 0 5px;
+	}
+	.navbar .navbar-header .logo {
+		height: 10vw;
+    	object-fit: contain;
+    	margin: 0;
+	}
+}

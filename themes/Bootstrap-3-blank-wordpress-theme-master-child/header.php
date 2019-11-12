@@ -19,8 +19,10 @@
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
         </button>
+        <div class="logo-name">
           <img class="logo" src="https://easy-appointments.net/wordpress/wp-content/uploads/2018/07/Artboard-4ЕАSY.png" />
           <a class="navbar-brand" href="<?php echo home_url(); ?>"><?php bloginfo( 'name' ); ?></a>
+        </div>
       </div>
 
       <!-- Collect the nav links, forms, and other content for toggling -->
