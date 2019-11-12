@@ -159,3 +159,18 @@
 .fc .fc-view-container .fc-list-table .fc-list-item.red .fc-event-dot {
     background-color: #d50000;
     border: 1px solid #d50000; }
+
+/* Fixing issue with buttons size */
+@media screen and (max-width: 480px) {
+    .fc .fc-toolbar.fc-header-toolbar .fc-button {
+        padding: 2vw;
+    }
+    .fc .fc-toolbar.fc-header-toolbar .fc-center {
+        width: 100%;
+        margin-top: 20px;
+    }
+    .fc .fc-toolbar.fc-header-toolbar .fc-center h2 {
+        width: 100%;
+        text-align: center;
+    }
+}
