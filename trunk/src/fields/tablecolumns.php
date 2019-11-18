@@ -70,6 +70,8 @@ class EATableColumns
                 'name',
                 'duration',
                 'slot_step',
+                'block_before',
+                'block_after',
                 'price'
             ),
             'ea_options' => array(

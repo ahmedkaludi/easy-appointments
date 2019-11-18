@@ -42,7 +42,7 @@ class EAInstallTools
     function __construct($wpdb, $models, $options)
     {
 //        $this->easy_app_db_version = '1.9.11';
-        $this->easy_app_db_version = '2.2.0';
+        $this->easy_app_db_version = EASY_APPOINTMENTS_VERSION;
 
         $this->wpdb = $wpdb;
         $this->models = $models;
@@ -149,6 +149,8 @@ CREATE TABLE {$table_prefix}ea_services (
   name varchar(255) NOT NULL,
   duration int(11) NOT NULL,
   slot_step int(11) DEFAULT NULL,
+  block_before int(11) DEFAULT 0,
+  block_after int(11) DEFAULT 0,
   price decimal(10,2) DEFAULT NULL,
   PRIMARY KEY  (id)
 ) $charset_collate ;
@@ -736,6 +738,22 @@ EOT;
             }
 
             $version = '2.2.0';
+        }
+
+        if (version_compare($version, '2.8.0', '<')) {
+            $table_queries = array();
+
+            $table_services = $this->wpdb->prefix . 'ea_services';
+
+            $table_queries[] = "ALTER TABLE `{$table_services}` ADD COLUMN `block_before` int(11) DEFAULT 0 AFTER `slot_step`;";
+            $table_queries[] = "ALTER TABLE `{$table_services}` ADD COLUMN `block_after` int(11) DEFAULT 0 AFTER `block_before`;";
+
+            // add relations
+            foreach ($table_queries as $query) {
+                $this->wpdb->query($query);
+            }
+
+            $version = '2.8.0';
         }
 
         update_option('easy_app_db_version', $version);
