@@ -165,12 +165,29 @@
     .fc .fc-toolbar.fc-header-toolbar .fc-button {
         padding: 2vw;
     }
+
     .fc .fc-toolbar.fc-header-toolbar .fc-center {
         width: 100%;
         margin-top: 20px;
     }
+
     .fc .fc-toolbar.fc-header-toolbar .fc-center h2 {
         width: 100%;
         text-align: center;
     }
+}
+
+.ea-calendar-color-map {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 10px;
+}
+
+.ea-calendar-color-map div {
+    padding: 3px;
+    margin-right: 5px;
+    width: 80px;
+    text-align: center;
+    cursor: default;
 }

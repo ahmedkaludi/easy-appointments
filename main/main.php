@@ -4,7 +4,7 @@
  * Plugin Name: Easy Appointments
  * Plugin URI: https://easy-appointments.net/
  * Description: Simple and easy to use management system for Appointments and Bookings
- * Version: 2.6.0
+ * Version: 2.8.0
  * Author: Nikola Loncar
  * Author URI: http://nikolaloncar.com
  * Text Domain: easy-appointments
@@ -16,11 +16,10 @@ if (!defined('WPINC')) {
     die;
 }
 
-
 /**
  * Currently plugin version.
  */
-define( 'EASY_APPOINTMENTS_VERSION', '2.6.0' );
+define( 'EASY_APPOINTMENTS_VERSION', '2.8.0' );
 
 // path for source files
 define('EA_SRC_DIR', dirname(__FILE__) . '/src/');
@@ -173,7 +172,7 @@ class EasyAppointment
         };
 
         $this->container['fullcalendar'] = function ($container) {
-            return new EAFullCalendar($container['db_models'], $container['options'], $container['datetime']);
+            return new EAFullCalendar($container['db_models'], $container['logic'], $container['options'], $container['datetime']);
         };
 
         $this->container['ajax'] = function ($container) {

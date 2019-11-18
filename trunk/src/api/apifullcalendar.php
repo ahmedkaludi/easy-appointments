@@ -57,10 +57,10 @@ class EAApiFullCalendar
      * @return bool|WP_Error
      */
     public function get_items_permissions_check( $request ) {
+        // just for demo page
+        $have_access = apply_filters( 'ea_calendar_public_access', false);
 
-        // TODO
-
-        if ( ! current_user_can( 'read' ) ) {
+        if ( ! current_user_can( 'read' ) && !$have_access ) {
             return new WP_Error( 'rest_forbidden', esc_html__( 'You cannot view the category resource.' ), array( 'status' => $this->authorization_status_code() ) );
         }
         return true;
@@ -97,6 +97,18 @@ class EAApiFullCalendar
             'worker'   => $request->get_param('worker'),
             'service'  => $request->get_param('service'),
         );
+
+        if ($params['location'] === null) {
+            unset($params['location']);
+        }
+
+        if ($params['worker'] === null) {
+            unset($params['worker']);
+        }
+
+        if ($params['service'] === null) {
+            unset($params['service']);
+        }
 
         $res = $this->db_models->get_all_appointments($params);
 
@@ -147,21 +159,21 @@ class EAApiFullCalendar
         $args['location'] = array(
             'description'       => esc_html__( 'Location id that will be used for getting free / taken slots', 'easy-appointments' ),
             'type'              => 'integer',
-            'required'          => true,
+//            'required'          => true,
             'sanitize_callback' => 'absint',
         );
 
         $args['service'] = array(
             'description'       => esc_html__( 'Service id that will be used for getting free / taken slots', 'easy-appointments' ),
             'type'              => 'integer',
-            'required'          => true,
+//            'required'          => true,
             'sanitize_callback' => 'absint',
         );
 
         $args['worker'] = array(
             'description'       => esc_html__( 'Worker id that will be used for getting free / taken slots', 'easy-appointments' ),
             'type'              => 'integer',
-            'required'          => true,
+//            'required'          => true,
             'sanitize_callback' => 'absint',
         );
 

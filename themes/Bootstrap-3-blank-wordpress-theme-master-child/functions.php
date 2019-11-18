@@ -174,6 +174,9 @@ function my_login_redirect( $redirect_to, $request, $user ) {
 
 add_filter( 'login_redirect', 'my_login_redirect', 10, 3 );
 
+
+add_filter('ea_calendar_public_access', function() { return true; });
+
 // [login_register]
 function login_register( $atts ){
     $ask_question = '<a href="https://easy-appointments.net/support-forum-ask-question/" class=\'btn btn-success\'>Ask Question</a>';
