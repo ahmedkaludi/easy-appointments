@@ -3,7 +3,7 @@ Contributors: loncar
 Donate link: https://easy-appointments.net/
 Tags: appointment, appointments, Booking, calendar, plugin, reservation, reservations, wp appointment, reservation plugin, reservations, schedule
 Requires at least: 3.7
-Tested up to: 5.2
+Tested up to: 5.3
 Stable tag: 2.7.1
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
