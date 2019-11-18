@@ -150,6 +150,8 @@
             <th class="manage-column column-title"><?php _e('Name', 'easy-appointments'); ?></th>
             <th class="manage-column column-title"><?php _e('Duration (in minutes)', 'easy-appointments'); ?></th>
             <th class="manage-column column-title"><?php _e('Slot step (in minutes)', 'easy-appointments'); ?></th>
+            <th class="manage-column column-title"><?php _e('Block before (in minutes)', 'easy-appointments'); ?></th>
+            <th class="manage-column column-title"><?php _e('Block after (in minutes)', 'easy-appointments'); ?></th>
             <th class="manage-column column-title"><?php _e('Price', 'easy-appointments'); ?></th>
             <th class="manage-column column-title column-15"><?php _e('Actions', 'easy-appointments'); ?></th>
         </tr>
@@ -173,6 +175,12 @@
         <strong><%= _.escape( row.slot_step ) %></strong>
     </td>
     <td>
+        <strong><%= _.escape( row.block_before ) %></strong>
+    </td>
+    <td>
+        <strong><%= _.escape( row.block_after ) %></strong>
+    </td>
+    <td>
         <strong><%= _.escape( row.price ) %></strong>
     </td>
     <td>
@@ -186,6 +194,8 @@
 	<td><input type="text" data-prop="name" value="<%= _.escape( row.name ) %>"></td>
 	<td><input type="text" data-prop="duration" value="<%= _.escape( row.duration ) %>"></td>
 	<td><input type="text" data-prop="slot_step" value="<%= _.escape( row.slot_step ) %>"></td>
+	<td><input type="text" data-prop="block_before" value="<%= _.escape( row.block_before ) %>"></td>
+	<td><input type="text" data-prop="block_after" value="<%= _.escape( row.block_after ) %>"></td>
 	<td><input type="text" data-prop="price" value="<%= _.escape( row.price ) %>"></td>
 	<td>
 		<button class="button button-primary btn-save"><?php _e('Save','easy-appointments');?></button>

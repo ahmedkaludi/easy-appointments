@@ -4,7 +4,7 @@ Donate link: https://easy-appointments.net/
 Tags: appointment, appointments, Booking, calendar, plugin, reservation, reservations, wp appointment, reservation plugin, reservations, schedule
 Requires at least: 3.7
 Tested up to: 5.3
-Stable tag: 2.7.1
+Stable tag: 2.8.0
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -212,6 +212,10 @@ Note: you can have only one calendar on one page.
 25. Admin panel - Report - Export page
 
 == Changelog ==
+
+= 2.8.0 (2019-11-18) =
+* Added support for blocking times before/after appointments. Now you can set blocking time after/before appointment. For example if you are doing some cleaning or need to travel to next appointment etc.
+* Improved responsive design for FullCalendar short code
 
 = 2.7.1 (2019-10-28) =
 * Additional improvement to full calendar short code. If Location, Worker or Service id is not defined it will show all.

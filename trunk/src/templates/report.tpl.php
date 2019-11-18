@@ -19,7 +19,7 @@
                 </div>
             </div>
             <div class="back-section" style="display: none;">
-                <button class="button-primary go-back"><?php _e(' < Back to Reports', 'easy-appointments'); ?></button>
+                <button class="button-primary go-back" style="padding-left: 10px"><span style="padding-top: 4px;" class="dashicons dashicons-arrow-left-alt2"></span> <?php _e('Back to Reports', 'easy-appointments'); ?></button>
             </div>
         </div>
         <div id="report-content" class="report-content">

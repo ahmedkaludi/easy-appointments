@@ -28,6 +28,11 @@ class EALogic
     protected $wpdb;
 
     /**
+     * @var array Cache for services
+     */
+    protected $service_cache = [];
+
+    /**
      * EALogic constructor.
      * @param wpdb $wpdb
      * @param EADBModels $models
@@ -296,6 +301,8 @@ class EALogic
 
         $appointments = $this->wpdb->get_results($query);
 
+        $serviceObj = $this->get_service($service);
+
         // check all no working times
         foreach ($appointments as $app) {
             $start = ($app->date == $day) ? $app->start : '00:00';
@@ -303,6 +310,10 @@ class EALogic
 
             $lower_time = strtotime($start);
             $upper_time = strtotime($end);
+
+            // add block before and after time
+            $lower_time -= $serviceObj->block_before;
+            $upper_time += $serviceObj->block_after;
 
             // all day event fix
             // if ($app->end === '00:00:00' || $upper_time < $lower_time) {
@@ -329,13 +340,22 @@ class EALogic
     }
 
     /**
-     * Return services
+     * Return service
+     *
      * @param $service_id
      * @return array|null|object|void
      */
     public function get_service($service_id)
     {
-        return $this->models->get_row('ea_services', $service_id);
+        if (array_key_exists($service_id, $this->service_cache)) {
+            return $this->service_cache[$service_id];
+        }
+
+        $model = $this->models->get_row('ea_services', $service_id);
+
+        $this->service_cache[$service_id] = $model;
+
+        return $model;
     }
 
     /**
