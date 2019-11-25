@@ -92,6 +92,25 @@
 	background-color: #eee;
 	cursor: pointer;
 }
+.ui-datepicker .ui-datepicker-calendar td.ui-start-date,
+.ui-datepicker .ui-datepicker-calendar td.ui-start-date:hover {
+	border-radius: 20px 0 0 20px;
+	background-color: #4289cc;
+}
+.ui-datepicker .ui-datepicker-calendar td.ui-end-date,
+.ui-datepicker .ui-datepicker-calendar td.ui-end-date:hover {
+	border-radius: 0 20px 20px 0;
+	background-color: #4289cc;
+}
+.ui-datepicker .ui-datepicker-calendar td.ui-medium-date,
+.ui-datepicker .ui-datepicker-calendar td.ui-medium-date:hover {
+	border-radius: 0px;
+	background-color: #e2eefb;
+}
+.ui-datepicker .ui-datepicker-calendar td.ui-start-date a,
+.ui-datepicker .ui-datepicker-calendar td.ui-end-date a {
+	color: #ffffff;
+}
 .ui-datepicker .ui-datepicker-calendar td a {
 	text-decoration: none;
 }
