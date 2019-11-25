@@ -145,6 +145,9 @@
 
                     plugin.$element.find('.final').find('select,input').first().focus();
                     plugin.scrollToElement(plugin.$element.find('.final'));
+
+                    // trigger global event when time slot is selected
+                    jQuery(document).trigger('ea-timeslot:selected');
                 }
 
                 // only load form if that option is not turned off

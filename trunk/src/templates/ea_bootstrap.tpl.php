@@ -137,12 +137,14 @@
                     <% } %>
 
                     <% if (settings['captcha.site-key'] !== '') { %>
-                    <div style="width: 100%" class="g-recaptcha" data-sitekey="<%= settings['captcha.site-key'] %>"></div><br>
+                        <div style="width: 100%; padding: 20px;" class="g-recaptcha" data-sitekey="<%= settings['captcha.site-key'] %>"></div>
                     <% } %>
+
+                    <?php echo apply_filters('ea_payment_select', ''); ?>
 
                     <div class="form-group">
                         <div class="col-sm-12 ea-actions-group" style="display: inline-flex; align-items: center; justify-content: center;">
-                            <?php echo apply_filters('ea_checkout_button', '<button class="ea-btn ea-submit btn btn-primary"><%= settings[\'trans.submit\'] %></button>'); ?>
+                            <?php echo apply_filters('ea_checkout_button', '<button class="ea-btn ea-submit btn btn-primary booking-button"><%= settings[\'trans.submit\'] %></button>'); ?>
                             <button class="ea-btn ea-cancel btn btn-default"><%= settings['trans.cancel'] %></button>
                         </div>
                     </div>

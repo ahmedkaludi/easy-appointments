@@ -9,6 +9,6 @@ gulp.task('watch', function(cb) {
         exec('sh build.sh', function (err, stdout, stderr) {
             console.log(stdout);
         });
-	})
+	});
 });
 

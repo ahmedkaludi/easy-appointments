@@ -213,6 +213,9 @@ Note: you can have only one calendar on one page.
 
 == Changelog ==
 
+= 2.8.1 (2019-11-25) =
+* Added additional filters and events
+
 = 2.8.0 (2019-11-18) =
 * Added support for blocking times before/after appointments. Now you can set blocking time after/before appointment. For example if you are doing some cleaning or need to travel to next appointment etc.
 * Improved responsive design for FullCalendar short code
