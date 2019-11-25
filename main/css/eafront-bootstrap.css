@@ -102,8 +102,8 @@
 	border-radius: 0 20px 20px 0;
 	background-color: #4289cc;
 }
-.ui-datepicker .ui-datepicker-calendar td.ui-medium-date,
-.ui-datepicker .ui-datepicker-calendar td.ui-medium-date:hover {
+.ui-datepicker .ui-datepicker-calendar td.ui-middle-date,
+.ui-datepicker .ui-datepicker-calendar td.ui-middle-date:hover {
 	border-radius: 0px;
 	background-color: #e2eefb;
 }
