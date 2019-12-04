@@ -25,6 +25,9 @@ services:
         - ./themes/Bootstrap-3-blank-wordpress-theme-master:/var/www/html/wp-content/themes/Bootstrap-3-blank-wordpress-theme-master
         - ./themes/Bootstrap-3-blank-wordpress-theme-master-child:/var/www/html/wp-content/themes/Bootstrap-3-blank-wordpress-theme-master-child
         - ./easy-appointments-connect:/var/www/html/wp-content/plugins/easy-appointments-connect
+#        - type: bind
+#          source: ./wordpress
+#          target: /var/www/html
       ports:
         - 8080:80
       environment:
@@ -34,7 +37,6 @@ services:
       depends_on:
          - ea-mailhog
          - ea-mysql
-#      tty: true
 
 # MAIL CATCHER
   ea-mailhog:

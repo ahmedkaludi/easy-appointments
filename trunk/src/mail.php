@@ -58,7 +58,7 @@ class EAMail
         add_action('ea_admin_email_notification', array($this, 'send_admin_email_notification_action'), 10, 2);
 
         // we want to check if it is link from EA mail
-        add_action('init', array($this, 'parse_mail_link'));
+        add_action('wp', array($this, 'parse_mail_link'));
 
         // we need to pars
         add_filter('ea_format_notification_params', array($this, 'format_data'), 100, 2);
@@ -150,13 +150,13 @@ EOT;
 
         if (empty($data)) {
             header('Refresh:3; url=' . get_home_url());
-            die(__('No appointment.', 'easy-appointments'));
+            wp_die(__('No appointment.', 'easy-appointments'));
         }
 
         // invalid token
         if ($this->generate_token($data, $_GET['_ea-action']) != $_GET['_ea-t']) {
             header('Refresh:3; url=' . get_home_url());
-            die(__('Invalid token.', 'easy-appointments'));
+            wp_die(__('Invalid token.', 'easy-appointments'));
         }
 
         $table = 'ea_appointments';
@@ -173,7 +173,8 @@ EOT;
         if ($_GET['_ea-action'] == 'confirm') {
 
             if ($data['status'] != 'pending') {
-                die(__('Appointment can\'t be confirmed!', 'easy-appointments'));
+                header('Refresh:3; url=' . get_home_url());
+                wp_die(__('Appointment can\'t be confirmed!', 'easy-appointments'));
             }
 
             $app_data['status'] = 'confirmed';
@@ -191,7 +192,7 @@ EOT;
             $url = apply_filters( 'ea_confirmed_redirect_url', get_home_url());
 
             header('Refresh:3; url=' . $url);
-            die(__('Appointment has been confirmed.', 'easy-appointments'));
+            wp_die(__('Appointment has been confirmed.', 'easy-appointments'));
         }
 
         // cancel appointment
@@ -200,7 +201,7 @@ EOT;
 
             // only pending and confirmed appointments can be canceled
             if ($data['status'] != 'pending' && $data['status'] != 'confirmed') {
-                die(__('Appointment can\'t be canceled!', 'easy-appointments'));
+                wp_die(__('Appointment can\'t be canceled!', 'easy-appointments'));
             }
 
             $response = $this->models->replace($table, $app_data, true);
@@ -218,13 +219,13 @@ EOT;
                 $url = apply_filters( 'ea_cant_be_canceled_redirect_url', get_home_url());
 
                 header('Refresh:3; url=' . $url);
-                die(__('Appointment can\'t be canceled', 'easy-appointments'));
+                wp_die(__('Appointment can\'t be canceled', 'easy-appointments'));
             }
 
             $url = apply_filters( 'ea_cancel_redirect_url', get_home_url());
 
             header('Refresh:3; url=' . $url);
-            die(__('Appointment has been canceled', 'easy-appointments'));
+            wp_die(__('Appointment has been canceled', 'easy-appointments'));
         }
     }
 

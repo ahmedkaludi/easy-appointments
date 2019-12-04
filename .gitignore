@@ -2,6 +2,7 @@
 /latest
 /easy-appointments-connect
 /main/node_modules
+/wordpress
 .DS_Store
 .idea
 phpunit.phar
