@@ -34,6 +34,11 @@ class EAMail
     protected $options;
 
     /**
+     * @var DateTimeZone
+     */
+    protected $time_zone;
+
+    /**
      * EAMail constructor.
      * @param wpdb $wpdb
      * @param EADBModels $models
@@ -66,6 +71,8 @@ class EAMail
         // wrap email template into html
         add_filter('ea_admin_mail_template', array($this, 'wrap_email_with_html_tags'), 10, 1);
         add_filter('ea_customer_mail_template', array($this, 'wrap_email_with_html_tags'), 10, 1);
+
+        $this->time_zone = self::get_wp_timezone();
     }
 
 
@@ -369,7 +376,9 @@ EOT;
 
         foreach ($raw_data as $key => $value) {
             if ($key == 'start' || $key == 'end') {
-                $value = date_i18n($time_format, strtotime("{$raw_data['date']} $value"));
+                $start_date = $raw_data['date'] . ' ' . $raw_data[$key];
+                $temp_date = DateTime::createFromFormat('Y-m-d H:i:s', $start_date, $this->time_zone);
+                $value = $temp_date->format($time_format);
             }
 
             if ($key == 'date') {
@@ -434,6 +443,23 @@ EOT;
         $this->send_email($emails, $subject, $mail_content, $headers, $files);
     }
 
+    /**
+     * Determine time zone from WordPress options and return as object.
+     *
+     * @return DateTimeZone
+     */
+    public static function get_wp_timezone() {
+        $timezone_string = get_option( 'timezone_string' );
+        if ( ! empty( $timezone_string ) ) {
+            return new DateTimeZone($timezone_string);
+        }
+        $offset  = get_option( 'gmt_offset' );
+        $hours   = (int) $offset;
+        $minutes = abs( ( $offset - (int) $offset ) * 60 );
+        $offset  = sprintf( '%+03d:%02d', $hours, $minutes );
+        return new DateTimeZone($offset);
+    }
+
     private function custom_admin_mail($body_template, $app_array)
     {
         $time_format = get_option('time_format', 'H:i');
@@ -441,7 +467,9 @@ EOT;
 
         foreach ($app_array as $key => $value) {
             if ($key == 'start' || $key == 'end') {
-                $value = date_i18n($time_format, strtotime("{$app_array['date']} $value"));
+                $start_date = $app_array['date'] . ' ' . $app_array[$key];
+                $temp_date = DateTime::createFromFormat('Y-m-d H:i:s', $start_date, $this->time_zone);
+                $value = $temp_date->format($time_format);
             }
 
             if ($key == 'date') {
