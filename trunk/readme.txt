@@ -4,7 +4,7 @@ Donate link: https://easy-appointments.net/
 Tags: appointment, appointments, Booking, calendar, plugin, reservation, reservations, wp appointment, reservation plugin, reservations, schedule
 Requires at least: 3.7
 Tested up to: 5.3
-Stable tag: 2.9.0
+Stable tag: 2.9.1
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -212,6 +212,9 @@ Note: you can have only one calendar on one page.
 25. Admin panel - Report - Export page
 
 == Changelog ==
+
+= 2.9.1 (2019-12-14) =
+* Fixed issue with time in customers mail
 
 = 2.9.0 (2019-12-13) =
 * Improvements regarding date time formatting inside email notifications. Fixed issue with different time in appointment and mail.

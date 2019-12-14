@@ -518,7 +518,9 @@ EOT;
 
         foreach ($app_array as $key => $value) {
             if ($key == 'start' || $key == 'end') {
-                $value = date_i18n($time_format, strtotime("{$app_array['date']} $value"));
+                $start_date = $app_array['date'] . ' ' . $app_array[$key];
+                $temp_date = DateTime::createFromFormat('Y-m-d H:i:s', $start_date, $this->time_zone);
+                $value = $temp_date->format($time_format);
             }
 
             if ($key == 'date') {
