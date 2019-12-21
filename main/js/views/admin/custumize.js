@@ -104,9 +104,9 @@ EA.CustumizeView = Backbone.View.extend({
             relative_urls : false,
             remove_script_host : false,
             toolbar: [
-                "bold,italic,alignleft,aligncenter,alignright,bullist,numlist,outdent,indent,undo,redo,link,unlink,code"
+                "bold,italic,alignleft,aligncenter,alignright,bullist,numlist,outdent,indent,image,media,undo,redo,link,unlink,code"
             ],
-            plugins : "wordpress,wplink,paste,-code",
+            plugins : "wordpress,image,media,wplink,paste,-code",
             paste_auto_cleanup_on_paste : true,
             paste_postprocess : function( pl, o ) {
                 o.node.innerHTML = o.node.innerHTML.replace( /&nbsp;+/ig, " " );
