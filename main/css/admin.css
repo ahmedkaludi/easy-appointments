@@ -98,6 +98,10 @@ select.field {
 	cursor: pointer;
 }
 
+.ea-row .action-column {
+	padding: 0;
+}
+
 .ea-sort-fields {
 	display: inline-block;
 	position: relative;

@@ -108,19 +108,21 @@ EA.LocationView = Backbone.View.extend({
     removeItem: function() {
         var view = this;
 
-        if(confirm('Are you sure?')) {
-            view.parent.showMessage('Deleting...');
-
-            this.model.destroy({
-                success: function(model, response) {
-                    view.remove();
-                    view.parent.showMessage('Done...');
-                },
-                error: function(model, response) {
-                    view.parent.showMessage('Error...');
-                }
-            });
+        if (!confirm('Are you sure?')) {
+            return;
         }
+
+        view.parent.showMessage('Deleting...');
+
+        this.model.destroy({
+            success: function(model, response) {
+                view.remove();
+                view.parent.showMessage('Done...');
+            },
+            error: function(model, response) {
+                view.parent.showMessage('Error...');
+            }
+        });
     },
 
     // 

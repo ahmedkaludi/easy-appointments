@@ -53,6 +53,12 @@ class EAFullCalendar
 
         // add shortcode standard
         add_shortcode('ea_full_calendar', array($this, 'ea_full_calendar'));
+
+        // allow public access for FullCalendar
+        $is_public = $this->options->get_option_value('fullcalendar.public', '0');
+        if (!empty($is_public)) {
+            add_filter('ea_calendar_public_access', function() { return true; });
+        }
     }
 
     public function init_scripts()
@@ -78,6 +84,12 @@ class EAFullCalendar
         );
     }
 
+    /**
+     * Shortcode def
+     *
+     * @param $atts
+     * @return string
+     */
     public function ea_full_calendar($atts)
     {
         $code_params = shortcode_atts(array(

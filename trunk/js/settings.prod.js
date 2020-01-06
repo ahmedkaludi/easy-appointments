@@ -141,6 +141,7 @@
             location : null,
             service : null,
             worker : null,
+            slots_count: 1,
             day_of_week : [],
             time_from : null,
             time_to : null,
@@ -958,9 +959,13 @@
             this.edit_mode = false;
         },
 
-        // Delets model and view
+        // Deletes model and view
         removeItem: function() {
             var view = this;
+
+            if (!confirm('Are you sure?')) {
+                return;
+            }
 
             this.model.destroy({
                 success: function(model, response) {

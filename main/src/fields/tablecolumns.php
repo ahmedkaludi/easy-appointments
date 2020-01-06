@@ -39,6 +39,7 @@ class EATableColumns
                 'location',
                 'service',
                 'worker',
+                'slot_count',
                 'day_of_week',
                 'time_from',
                 'time_to',

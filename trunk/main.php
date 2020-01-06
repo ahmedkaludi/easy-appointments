@@ -4,7 +4,7 @@
  * Plugin Name: Easy Appointments
  * Plugin URI: https://easy-appointments.net/
  * Description: Simple and easy to use management system for Appointments and Bookings
- * Version: 2.9.1
+ * Version: 2.10.0
  * Author: Nikola Loncar
  * Author URI: http://nikolaloncar.com
  * Text Domain: easy-appointments
@@ -19,7 +19,7 @@ if (!defined('WPINC')) {
 /**
  * Currently plugin version.
  */
-define( 'EASY_APPOINTMENTS_VERSION', '2.9.1' );
+define( 'EASY_APPOINTMENTS_VERSION', '2.10.0' );
 
 // path for source files
 define('EA_SRC_DIR', dirname(__FILE__) . '/src/');
@@ -134,6 +134,7 @@ class EasyAppointment
 
         $this->container = new tad_DI52_Container();
         $this->container['wpdb'] = $wpdb;
+        $this->container['utils'] = new EAUtils();
 
         $this->container['options'] = function($container) {
             return new EAOptions($container['wpdb']);
@@ -168,7 +169,7 @@ class EasyAppointment
         };
 
         $this->container['frontend'] = function ($container) {
-            return new EAFrontend($container['db_models'], $container['options'], $container['datetime']);
+            return new EAFrontend($container['db_models'], $container['options'], $container['datetime'], $container['utils']);
         };
 
         $this->container['fullcalendar'] = function ($container) {

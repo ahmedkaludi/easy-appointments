@@ -4,7 +4,7 @@ Donate link: https://easy-appointments.net/
 Tags: appointment, appointments, Booking, calendar, plugin, reservation, reservations, wp appointment, reservation plugin, reservations, schedule
 Requires at least: 3.7
 Tested up to: 5.3
-Stable tag: 2.9.1
+Stable tag: 2.10.0
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -212,6 +212,17 @@ Note: you can have only one calendar on one page.
 25. Admin panel - Report - Export page
 
 == Changelog ==
+
+= 2.10.0 (2020-01-05) =
+* Added option for slot count on connection level. Now you don't need to have same connections to increase number of slots, just alter that value on connection level
+* Now you can override booking overview template inside you theme under (`theme-folder/easy-appointments/booking.overview.tpl.php`)
+* Added option for making FullCalendar shortcode public
+* Added confirm popup for deleting appointments
+* Small style improvements
+
+= 2.9.2 (2019-12-23) =
+* Fixed issue with mail error that prevented sending confirmed message to user
+* Added new email template options for image and media
 
 = 2.9.1 (2019-12-14) =
 * Fixed issue with time in customers mail

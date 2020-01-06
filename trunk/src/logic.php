@@ -138,9 +138,9 @@ class EALogic
                     }
 
                     if (!array_key_exists($current_time, $working_hours)) {
-                        $working_hours[$current_time] = 1;
+                        $working_hours[$current_time] = (int)$working_day->slot_count;
                     } else {
-                        $working_hours[$current_time] += 1;
+                        $working_hours[$current_time] += (int)$working_day->slot_count;
                     }
                 } else {
                     break;
@@ -213,7 +213,7 @@ class EALogic
                     // after
                 } else {
                     // remove slot
-                    $slots[$temp_time] = $value - 1;
+                    $slots[$temp_time] = $value - (int)$working_day->slot_count;
                 }
             }
         }

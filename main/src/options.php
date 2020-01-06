@@ -73,7 +73,8 @@ class EAOptions
             'order.services-by'             => 'DESC',
             'order.locations-by'            => 'DESC',
             'captcha.site-key'              => '',
-            'captcha.secret-key'            => ''
+            'captcha.secret-key'            => '',
+            'fullcalendar.public'           => '0'
         );
     }
 

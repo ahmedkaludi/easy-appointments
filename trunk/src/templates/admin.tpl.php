@@ -99,7 +99,7 @@
 	<td>
 		<strong><%= _.escape( row.location ) %></strong>
 	</td>
-	<td>
+	<td class="action-column">
 		<button class="button btn-edit"><?php _e('Edit','easy-appointments');?></button>
 		<button class="button btn-del"><?php _e('Delete','easy-appointments');?></button>
 	</td>
@@ -183,7 +183,7 @@
     <td>
         <strong><%= _.escape( row.price ) %></strong>
     </td>
-    <td>
+    <td class="action-column">
         <button class="button btn-edit"><?php _e('Edit','easy-appointments');?></button>
         <button class="button btn-del"><?php _e('Delete','easy-appointments');?></button>
     </td>
@@ -264,7 +264,7 @@
 	<td>
 		<strong><%= _.escape( row.phone ) %></strong>
 	</td>
-	<td>
+	<td class="action-column">
 		<button class="button btn-edit"><?php _e('Edit','easy-appointments');?></button>
 		<button class="button btn-del"><?php _e('Delete','easy-appointments');?></button>
 	</td>
@@ -345,6 +345,9 @@
 				<%= (row.worker == 0) ? '-' : _.escape( _.findWhereSafe(workers, row.worker, 'name' )) %>
 			</strong>
 		</p>
+        <p>
+            <strong><?php _e('Number of slots','easy-appointments');?>: <%= row.slot_count %></strong>
+        </p>
 	</td>
 	<% var weekdays = {
 			"Monday" : "<?php _e('Monday','easy-appointments');?>",
@@ -425,6 +428,8 @@
 	 <% }
 		});%>
 		</select>
+        <br>
+        <?php _e('Number of slots','easy-appointments');?>: <input type="number" data-prop="slot_count" min="1" class="slot-count" value="<%= row.slot_count %>">
 	</td>
 	<td colspan="2">
 		<select data-prop="day_of_week" size="7" multiple>
@@ -699,6 +704,19 @@
                             "confirmed") {
                             %>selected="selected"<% } %>><%= eaData.Status.confirmed %></option>
                         </select>
+                    </div>
+                    <div class="form-item">
+                        <div class="label-with-tooltip">
+                            <label for=""><?php _e('Allow public access to FullCalendar shortcode', 'easy-appointments'); ?></label>
+                            <span class="tooltip tooltip-right"
+                                  data-tooltip="<?php _e('By default only logged in users can see data in FullCalendar. Mark this option if you want to allow public access for all.', 'easy-appointments'); ?>"></span>
+                        </div>
+                        <div class="field-wrap">
+                            <input class="field" data-key="fullcalendar.public"
+                                   name="fullcalendar.public" type="checkbox" <% if
+                            (_.findWhere(settings, {ea_key:'fullcalendar.public'}).ea_value == "1") {
+                            %>checked<% } %>>
+                        </div>
                     </div>
                 </div>
             </div>

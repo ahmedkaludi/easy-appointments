@@ -72,7 +72,7 @@ class EAMail
         add_filter('ea_admin_mail_template', array($this, 'wrap_email_with_html_tags'), 10, 1);
         add_filter('ea_customer_mail_template', array($this, 'wrap_email_with_html_tags'), 10, 1);
 
-        $this->time_zone = self::get_wp_timezone();
+        $this->time_zone = $this->get_wp_timezone();
     }
 
 
@@ -377,7 +377,7 @@ EOT;
         foreach ($raw_data as $key => $value) {
             if ($key == 'start' || $key == 'end') {
                 $start_date = $raw_data['date'] . ' ' . $raw_data[$key];
-                $temp_date = DateTime::createFromFormat('Y-m-d H:i:s', $start_date, $this->time_zone);
+                $temp_date = DateTime::createFromFormat('Y-m-d H:i:s', $start_date, $this->get_wp_timezone());
                 $value = $temp_date->format($time_format);
             }
 
@@ -448,7 +448,7 @@ EOT;
      *
      * @return DateTimeZone
      */
-    public static function get_wp_timezone() {
+    public function get_wp_timezone() {
         $timezone_string = get_option( 'timezone_string' );
         if ( ! empty( $timezone_string ) ) {
             return new DateTimeZone($timezone_string);
@@ -468,7 +468,7 @@ EOT;
         foreach ($app_array as $key => $value) {
             if ($key == 'start' || $key == 'end') {
                 $start_date = $app_array['date'] . ' ' . $app_array[$key];
-                $temp_date = DateTime::createFromFormat('Y-m-d H:i:s', $start_date, $this->time_zone);
+                $temp_date = DateTime::createFromFormat('Y-m-d H:i:s', $start_date, $this->get_wp_timezone());
                 $value = $temp_date->format($time_format);
             }
 
@@ -519,7 +519,7 @@ EOT;
         foreach ($app_array as $key => $value) {
             if ($key == 'start' || $key == 'end') {
                 $start_date = $app_array['date'] . ' ' . $app_array[$key];
-                $temp_date = DateTime::createFromFormat('Y-m-d H:i:s', $start_date, $this->time_zone);
+                $temp_date = DateTime::createFromFormat('Y-m-d H:i:s', $start_date, $this->get_wp_timezone());
                 $value = $temp_date->format($time_format);
             }
 

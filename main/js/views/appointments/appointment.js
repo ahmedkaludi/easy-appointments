@@ -289,9 +289,13 @@ EA.AppointmentView = Backbone.View.extend({
         this.edit_mode = false;
     },
 
-    // Delets model and view
+    // Deletes model and view
     removeItem: function() {
         var view = this;
+
+        if (!confirm('Are you sure?')) {
+            return;
+        }
 
         this.model.destroy({
             success: function(model, response) {

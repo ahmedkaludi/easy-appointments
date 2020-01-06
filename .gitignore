@@ -2,6 +2,7 @@
 /latest
 /easy-appointments-connect
 /main/node_modules
+/main/composer.phar
 /wordpress
 .DS_Store
 .idea

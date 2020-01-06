@@ -32,15 +32,22 @@ class EAFrontend
     protected $datetime;
 
     /**
+     * @var EAUtils
+     */
+    protected $utils;
+
+    /**
      * @param EADBModels $models
      * @param EAOptions $options
      * @param $datetime
+     * @param EAUtils $utils
      */
-    function __construct($models, $options, $datetime)
+    function __construct($models, $options, $datetime, $utils)
     {
         $this->options  = $options;
         $this->models   = $models;
         $this->datetime = $datetime;
+        $this->utils    = $utils;
     }
 
     public function init()
@@ -253,8 +260,8 @@ class EAFrontend
 
         ob_start();
 
-        // require tempalte
-        require EA_SRC_DIR . 'templates/booking.overview.tpl.php';
+        // GET TEMPLATE
+        require $this->utils->get_template_path('booking.overview.tpl.php');
 
         ?>
         <script type="text/javascript">
@@ -534,7 +541,7 @@ class EAFrontend
         }
 
         // OVERVIEW TEMPLATE
-        require EA_SRC_DIR . 'templates/booking.overview.tpl.php';
+        require $this->utils->get_template_path('booking.overview.tpl.php');
 
         ?>
         <div class="ea-bootstrap bootstrap"></div><?php

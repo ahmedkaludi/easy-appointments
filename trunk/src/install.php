@@ -98,6 +98,7 @@ CREATE TABLE {$table_prefix}ea_connections (
   location int(11) DEFAULT NULL,
   service int(11) DEFAULT NULL,
   worker int(11) DEFAULT NULL,
+  slot_count int(11) DEFAULT 1,
   day_of_week varchar(60) DEFAULT NULL,
   time_from time DEFAULT NULL,
   time_to time DEFAULT NULL,
@@ -754,6 +755,21 @@ EOT;
             }
 
             $version = '2.8.0';
+        }
+
+        if (version_compare($version, '2.10.0', '<')) {
+            $table_queries = array();
+
+            $table_connections = $this->wpdb->prefix . 'ea_connections';
+
+            $table_queries[] = "ALTER TABLE `{$table_connections}` ADD COLUMN `slot_count` int(11) DEFAULT 1 AFTER `worker`;";
+
+            // add relations
+            foreach ($table_queries as $query) {
+                $this->wpdb->query($query);
+            }
+
+            $version = '2.10.0';
         }
 
         update_option('easy_app_db_version', $version);
