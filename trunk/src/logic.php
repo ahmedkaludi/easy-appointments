@@ -137,10 +137,13 @@ class EALogic
                         continue;
                     }
 
+                    // slot count
+                    $slot_count = is_numeric($working_day->slot_count) ? (int) $working_day->slot_count : 1;
+
                     if (!array_key_exists($current_time, $working_hours)) {
-                        $working_hours[$current_time] = (int)$working_day->slot_count;
+                        $working_hours[$current_time] = $slot_count;
                     } else {
-                        $working_hours[$current_time] += (int)$working_day->slot_count;
+                        $working_hours[$current_time] += $slot_count;
                     }
                 } else {
                     break;
@@ -213,7 +216,8 @@ class EALogic
                     // after
                 } else {
                     // remove slot
-                    $slots[$temp_time] = $value - (int)$working_day->slot_count;
+                    $slot_count = is_numeric($working_day->slot_count) ? (int) $working_day->slot_count : 1;
+                    $slots[$temp_time] = $value - $slot_count;
                 }
             }
         }

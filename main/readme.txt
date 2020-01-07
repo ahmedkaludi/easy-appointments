@@ -4,7 +4,7 @@ Donate link: https://easy-appointments.net/
 Tags: appointment, appointments, Booking, calendar, plugin, reservation, reservations, wp appointment, reservation plugin, reservations, schedule
 Requires at least: 3.7
 Tested up to: 5.3
-Stable tag: 2.10.0
+Stable tag: 2.10.1
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -212,6 +212,9 @@ Note: you can have only one calendar on one page.
 25. Admin panel - Report - Export page
 
 == Changelog ==
+
+= 2.10.1 (2020-01-07) =
+* Small Fix for connections slot number
 
 = 2.10.0 (2020-01-05) =
 * Added option for slot count on connection level. Now you don't need to have same connections to increase number of slots, just alter that value on connection level

@@ -7,7 +7,7 @@ EA.Connection = Backbone.Model.extend({
         location : null,
         service : null,
         worker : null,
-        slots_count: 1,
+        slot_count: 1,
         day_of_week : [],
         time_from : null,
         time_to : null,
