@@ -47,6 +47,11 @@
                 plugin.parsePhoneField($(this));
             });
 
+            // set default value for phone fields
+            this.$element.find('.ea-phone-country-code-part').each(function(index, select) {
+                $(select).val($(select).data('default'));
+            });
+
             this.$element.find('form').validate();
 
             // select change event

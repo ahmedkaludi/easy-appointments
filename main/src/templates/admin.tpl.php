@@ -718,6 +718,19 @@
                             %>checked<% } %>>
                         </div>
                     </div>
+                    <div class="form-item">
+                        <div class="label-with-tooltip">
+                            <label for=""><?php _e('Compress shortcode output (removes new lines from templates).', 'easy-appointments'); ?></label>
+                            <span class="tooltip tooltip-right"
+                                  data-tooltip="<?php _e('WordPress can add auto paragraph html element for each line break. This option prevents WP from doing that on EA shortcode.', 'easy-appointments'); ?>"></span>
+                        </div>
+                        <div class="field-wrap">
+                            <input class="field" data-key="shortcode.compress"
+                                   name="shortcode.compress" type="checkbox" <% if
+                            (_.findWhere(settings, {ea_key:'shortcode.compress'}).ea_value == "1") {
+                            %>checked<% } %>>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -1174,6 +1187,12 @@
         <label>Placeholder</label><input type="text" class="field-mixed" name="field-mixed"
                                            value="<%= _.escape(item.mixed) %>">
     </p>
+
+    <% if (item.type === "PHONE") { %>
+    <p>
+        <label>Default value</label><select class="field-default_value" name="field-default_value"><?php require __DIR__ . '/phone.list.tpl.php';?></select>
+    </p>
+    <% } %>
     <% if (item.type === "SELECT") { %>
     <p>
         <label>Options :</label>

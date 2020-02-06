@@ -772,6 +772,24 @@ EOT;
             $version = '2.10.0';
         }
 
+        if (version_compare($version, '2.10.2', '<')) {
+            $wp_ea_options = array(
+                array('ea_key' => 'shortcode.compress', 'ea_value' => '0', 'type' => 'default'),
+            );
+
+            $table_name = $this->wpdb->prefix . 'ea_options';
+
+            // insert options
+            foreach ($wp_ea_options as $row) {
+                $this->wpdb->insert(
+                    $table_name,
+                    $row
+                );
+            }
+
+            $version = '2.10.2';
+        }
+
         update_option('easy_app_db_version', $version);
     }
 

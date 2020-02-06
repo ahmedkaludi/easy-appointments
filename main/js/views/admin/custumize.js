@@ -277,7 +277,12 @@ EA.CustumizeView = Backbone.View.extend({
                 }
             }
 
-            $html = this.template_options({item:o});
+            $html = $(this.template_options({item:o}));
+
+            if (o.type === 'PHONE') {
+                $html.find('.field-default_value').val(o.default_value);
+            }
+
             $li.append($html);
 
             this.$el.find('#custom-fields').sortable('disable');
@@ -326,6 +331,10 @@ EA.CustumizeView = Backbone.View.extend({
 
         if ($li.find('.field-mixed').length > 0) {
             element.set('mixed', $li.find('.field-mixed').val());
+        }
+
+        if ($li.find('.field-default_value').length > 0) {
+            element.set('default_value', $li.find('.field-default_value').val());
         }
 
         if (options.length > 0) {

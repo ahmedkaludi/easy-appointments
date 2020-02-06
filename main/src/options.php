@@ -74,7 +74,8 @@ class EAOptions
             'order.locations-by'            => 'DESC',
             'captcha.site-key'              => '',
             'captcha.secret-key'            => '',
-            'fullcalendar.public'           => '0'
+            'fullcalendar.public'           => '0',
+            'shortcode.compress'            => '1',
         );
     }
 

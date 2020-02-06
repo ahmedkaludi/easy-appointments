@@ -11,12 +11,13 @@ EA.Connection = Backbone.Model.extend({
         day_of_week : [],
         time_from : null,
         time_to : null,
-        day_from : '2018-01-01',
-        day_to : '2020-01-01',
+        day_from : '2020-01-01',
+        day_to : '2021-12-31',
         is_working : 0
     },
 
-    url: function() { return ajaxurl+'?action=ea_connection&id=' + encodeURIComponent(this.id) },
+
+    url: function() { return ajaxurl + '?action=ea_connection&id=' + encodeURIComponent(this.id); },
 
     toJSON: function() {
         var attrs = _.clone( this.attributes );

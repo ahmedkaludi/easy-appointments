@@ -340,7 +340,13 @@ class EAFrontend
 
         apply_filters('ea_checkout_script', '');
 
-        return ob_get_clean();
+        $content = ob_get_clean();
+        // compress output
+        if ($this->options->get_option_value('shortcode.compress', '1') === '1') {
+            $content = preg_replace('/\s+/', ' ', $content);
+        }
+
+        return $content;
     }
 
     /**
@@ -549,7 +555,13 @@ class EAFrontend
         // load scripts if there are some
         apply_filters('ea_checkout_script', '');
 
-        return ob_get_clean();
+        $content = ob_get_clean();
+        // compress output
+        if ($this->options->get_option_value('shortcode.compress', '1') === '1') {
+            $content = preg_replace('/\s+/', ' ', $content);
+        }
+
+        return $content;
     }
 
     /**

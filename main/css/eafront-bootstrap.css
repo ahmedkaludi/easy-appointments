@@ -330,3 +330,24 @@
 	background-color: inherit;
 	cursor: default;
 }
+
+.ea-bootstrap .ui-datepicker {
+	width: auto;
+}
+
+.ea-bootstrap .ui-state-default, .ea-bootstrap .ui-widget-content .ui-state-default {
+	border: none;
+	background-color: transparent;
+	background-image: none;
+}
+
+.ea-bootstrap .ui-widget-header {
+	background-color: transparent;
+	background-image: none;
+	border: none;
+	color: inherit;
+}
+
+.ea-bootstrap .ui-datepicker td span, .ui-datepicker td a {
+	text-align: center;
+}

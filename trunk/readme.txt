@@ -4,7 +4,7 @@ Donate link: https://easy-appointments.net/
 Tags: appointment, appointments, Booking, calendar, plugin, reservation, reservations, wp appointment, reservation plugin, reservations, schedule
 Requires at least: 3.7
 Tested up to: 5.3
-Stable tag: 2.10.1
+Stable tag: 2.10.2
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -212,6 +212,13 @@ Note: you can have only one calendar on one page.
 25. Admin panel - Report - Export page
 
 == Changelog ==
+
+= 2.11.0 (2020-01-28) =
+* Improved styles for calendar on customers form (bootstrap shortcode)
+* Added default country code option for PHONE field type in custom form fields
+
+= 2.10.2 (2020-01-12) =
+* Added option for removing line breaks from shortcode template. Prevents wpautop
 
 = 2.10.1 (2020-01-07) =
 * Small Fix for connections slot number
