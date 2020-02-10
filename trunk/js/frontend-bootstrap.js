@@ -1052,7 +1052,7 @@
 
         parsePhoneField: function ($el) {
             var code = $el.parent().find('.ea-phone-country-code-part').val();
-            var number = $el.parent().find('.ea-phone-number-part').val();
+            var number = $el.parent().find('.ea-phone-number-part').val().replace(/^0+/, '');
 
             $el.parent().find('.full-value').val('+' + code + number);
         }
