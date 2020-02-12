@@ -187,6 +187,8 @@
 						<input type="text" data-prop="<%= item.slug %>" placeholder="<%= _.escape( item.label ) %>" value="<% if (typeof row[item.slug] !== "undefined") { %><%= _.escape( row[item.slug] ) %><% } %>"><br>
                         <% } else if(item.type === 'PHONE') { %>
                         <input type="text" data-prop="<%= item.slug %>" placeholder="<%= _.escape( item.label ) %>" value="<% if (typeof row[item.slug] !== "undefined") { %><%= _.escape( row[item.slug] ) %><% } %>"><br>
+                        <% } else if(item.type === 'EMAIL') { %>
+                        <input type="text" data-prop="<%= item.slug %>" placeholder="<%= _.escape( item.label ) %>" value="<% if (typeof row[item.slug] !== "undefined") { %><%= _.escape( row[item.slug] ) %><% } %>"><br>
                         <% } else if(item.type === 'SELECT') { %>
 							<select data-prop="<%= item.slug %>">
 								<% _.each(item.mixed.split(','),function(i,k,l) {
