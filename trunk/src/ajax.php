@@ -455,14 +455,14 @@ class EAAjax
                 $response['options'][] = $this->models->replace('ea_options', $option);
             }
         }
+
         if (array_key_exists('fields', $data)) {
             foreach ($data['fields'] as $option) {
                 // update single option
-                $option['slug'] = sanitize_title($option['label']);
+                // $option['slug'] = sanitize_title($option['label']);
                 $response['fields'][] = $this->models->replace('ea_meta_fields', $option);
             }
         }
-
 
         $this->send_ok_json_result($response);
     }
