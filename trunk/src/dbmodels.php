@@ -590,7 +590,7 @@ class EADBModels
      * @return int
      */
     public function get_next_meta_field_id() {
-        $meta = $this->wpdb->prefix . 'meta_fields';
+        $meta = $this->wpdb->prefix . 'ea_meta_fields';
 
         $query = "SELECT MAX(id) FROM $meta";
 

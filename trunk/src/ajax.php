@@ -459,7 +459,7 @@ class EAAjax
         if (array_key_exists('fields', $data)) {
             foreach ($data['fields'] as $option) {
                 // update single option
-                // $option['slug'] = sanitize_title($option['label']);
+                $option['slug'] = EAMetaFields::parse_field_slug_name($option, $this->models->get_next_meta_field_id());
                 $response['fields'][] = $this->models->replace('ea_meta_fields', $option);
             }
         }
@@ -686,23 +686,7 @@ class EAAjax
         // we need to parse new and update case
         if ($this->type == 'NEW' || $this->type == 'UPDATE') {
 
-            $data['slug'] = sanitize_title($data['label']);
-
-            // case if there are some utf8 chars in slug
-            if (strpos($data['slug'], '%') > -1) {
-                $data['slug'] = trim(iconv('UTF8', 'ASCII//IGNORE//TRANSLIT', $data['label']));
-
-                if ($data['slug'] == '' || strlen($data['slug']) < 5) {
-
-                    $max = $this->models->get_next_meta_field_id();
-
-                    if (!empty($data['id'])) {
-                        $max = $data['id'];
-                    }
-
-                    $data['slug'] = 'custom_field_' . $max;
-                }
-            }
+            $data['slug'] = EAMetaFields::parse_field_slug_name($data, $this->models->get_next_meta_field_id());
 
             $response = $this->models->replace($table, $data, true);
 
