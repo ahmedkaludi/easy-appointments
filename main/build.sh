@@ -53,6 +53,7 @@ cp ./main/js/report.prod.js ./trunk/js/
 cp ./main/js/settings.prod.js ./trunk/js/
 cp ./main/js/backbone.sync.fix.js ./trunk/js/
 cp ./main/js/formater.js ./trunk/js/
+cp ./main/js/wizard.js ./trunk/js/
 
 # set dist dir
 cd ./trunk

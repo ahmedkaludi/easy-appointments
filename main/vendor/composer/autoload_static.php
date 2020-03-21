@@ -56,6 +56,7 @@ class ComposerStaticInit6454aa61d36164254036b36c455b0d68
         'EATableColumns' => __DIR__ . '/../..' . '/src/fields/tablecolumns.php',
         'EAUninstallTools' => __DIR__ . '/../..' . '/src/uninstall.php',
         'EAUtils' => __DIR__ . '/../..' . '/src/utils.php',
+        'EAWizard' => __DIR__ . '/../..' . '/src/shortcodes/wizard.php',
         'Jaybizzle\\CrawlerDetect\\CrawlerDetect' => __DIR__ . '/..' . '/jaybizzle/crawler-detect/src/CrawlerDetect.php',
         'Jaybizzle\\CrawlerDetect\\Fixtures\\AbstractProvider' => __DIR__ . '/..' . '/jaybizzle/crawler-detect/src/Fixtures/AbstractProvider.php',
         'Jaybizzle\\CrawlerDetect\\Fixtures\\Crawlers' => __DIR__ . '/..' . '/jaybizzle/crawler-detect/src/Fixtures/Crawlers.php',

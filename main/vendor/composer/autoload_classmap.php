@@ -24,6 +24,7 @@ return array(
     'EATableColumns' => $baseDir . '/src/fields/tablecolumns.php',
     'EAUninstallTools' => $baseDir . '/src/uninstall.php',
     'EAUtils' => $baseDir . '/src/utils.php',
+    'EAWizard' => $baseDir . '/src/shortcodes/wizard.php',
     'Jaybizzle\\CrawlerDetect\\CrawlerDetect' => $vendorDir . '/jaybizzle/crawler-detect/src/CrawlerDetect.php',
     'Jaybizzle\\CrawlerDetect\\Fixtures\\AbstractProvider' => $vendorDir . '/jaybizzle/crawler-detect/src/Fixtures/AbstractProvider.php',
     'Jaybizzle\\CrawlerDetect\\Fixtures\\Crawlers' => $vendorDir . '/jaybizzle/crawler-detect/src/Fixtures/Crawlers.php',

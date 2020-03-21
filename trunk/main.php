@@ -115,6 +115,10 @@ class EasyAppointment
             /** @var EAFullCalendar $full_calendar */
             $full_calendar = $this->container['fullcalendar']; // not ready yet
             $full_calendar->init();
+
+            /** @var EAWizard $wizard */
+            $wizard = $this->container['wizard'];
+            $wizard->init();
         }
 
         // ajax hooks
@@ -174,6 +178,10 @@ class EasyAppointment
 
         $this->container['fullcalendar'] = function ($container) {
             return new EAFullCalendar($container['db_models'], $container['logic'], $container['options'], $container['datetime']);
+        };
+
+        $this->container['wizard'] = function ($container) {
+            return new EAWizard($container['utils']);
         };
 
         $this->container['ajax'] = function ($container) {
