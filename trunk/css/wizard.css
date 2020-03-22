@@ -16,7 +16,7 @@
     cursor: pointer; /* Add a pointer on hover */
 }
 
-.ea-wizard-overlay .ea-wizard {
+.ea-wizard {
     position: absolute;
     top: 50%;
     left: 50%;
@@ -25,4 +25,5 @@
     min-width: 400px;
     transform: translate(-50%,-50%);
     -ms-transform: translate(-50%,-50%);
+    z-index: 3;
 }
