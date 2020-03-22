@@ -25,6 +25,7 @@ _JS builds are done on each change_
 * Demo Bootstrap: http://127.0.0.1:8080/demo-bootstrap/
 * Demo Standard: http://127.0.0.1:8080/demo-standard/
 * Demo FullCalendar: http://127.0.0.1:8080/demo-fullcalendar/
+* Demo WIzard : http://127.0.0.1:8080/wizard/
 
 ### Admin (`admin`/`password`)
 
