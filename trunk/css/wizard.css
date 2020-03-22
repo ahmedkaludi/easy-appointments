@@ -27,3 +27,12 @@
     -ms-transform: translate(-50%,-50%);
     z-index: 3;
 }
+
+
+.ea-wizard-step {
+    display: none;
+}
+
+.ea-wizard-step.current {
+    display: block;
+}
