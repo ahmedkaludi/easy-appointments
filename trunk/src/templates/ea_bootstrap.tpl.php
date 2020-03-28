@@ -92,7 +92,7 @@
                             </select>
                             <!-- TEXTAREA TYPE -->
                             <% } else if(item.type === 'TEXTAREA') { %>
-                            <textarea class="form-control custom-field" rows="3" maxlength="499" style="height: auto;"
+                            <textarea class="form-control custom-field" rows="3" maxlength="499" style="height: auto;" placeholder="<%= _.escape(item.mixed) %>"
                                       name="<%= item.slug %>" <% if (item.required == "1") { %>data-rule-required="true"
                             data-msg-required="<%= settings['trans.field-required'] %>"<% } %>></textarea>
                             <% } %>

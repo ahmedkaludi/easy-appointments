@@ -79,7 +79,7 @@
                             <% }});%>
                         </select>
                     <% } else if(item.type === 'TEXTAREA') { %>
-                        <textarea class="form-control custom-field" rows="3" maxlength="499" style="height: auto;" name="<%= item.slug %>" <% if (item.required == "1") { %>data-rule-required="true" data-msg-required="<%= settings['trans.field-required'] %>"<% } %>></textarea>
+                        <textarea class="form-control custom-field" rows="3" maxlength="499" style="height: auto;" placeholder="<%= _.escape(item.mixed) %>" name="<%= item.slug %>" <% if (item.required == "1") { %>data-rule-required="true" data-msg-required="<%= settings['trans.field-required'] %>"<% } %>></textarea>
                     <% } %>
                 </div>
                 <label class="col-sm-4 control-label ea-rtl-label"><%= item.label %> <% if (item.required == "1") { %>*<% } %> :</label>
