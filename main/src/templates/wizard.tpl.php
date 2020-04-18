@@ -4,6 +4,9 @@
 
       <div class="ea-wizard-header">
         <h3>Create an appointment</h3>
+        <button type="button" class="ea-wizard-close-modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
       </div>
 
       <div class="ea-wizard-progress">
@@ -32,8 +35,8 @@
       </div>
 
       <div class="ea-wizard-actions">
-        <button class="ea-wizard-prev" style="display: none">Prev</button>
-        <button class="ea-wizard-next">Next</button>
+        <button class="ea-wizard-prev btn btn-primary" style="display: none">Prev</button>
+        <button class="ea-wizard-next btn btn-primary">Next</button>
       </div>
 
     </div>

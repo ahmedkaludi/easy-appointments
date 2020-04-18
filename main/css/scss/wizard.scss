@@ -40,6 +40,26 @@ $blue: #337ab7;
         font-size: 18px;
         margin: auto;
       }
+
+      button.ea-wizard-close-modal {
+        background: transparent;
+        border: 0;
+
+        &:focus, &:active {
+          outline: none;
+        }
+
+        span {
+          font-size: 23px;
+          font-weight: 700;
+          line-height: 18px;
+          color: #000;
+
+          &:hover {
+            color: $blue;
+          }
+        }
+      }
     }
 
     &-progress {
@@ -125,6 +145,18 @@ $blue: #337ab7;
 
     &-content {
       flex: 1;
+      padding: 15px;
+    }
+
+    &-actions {
+      border-top: 1px solid #e9ecef;
+      padding: 15px;
+      display: flex;
+      justify-content: flex-end;
+
+      button:nth-child(1) {
+        margin-right: auto;
+      }
     }
 
     &-step {

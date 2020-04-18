@@ -28,8 +28,10 @@
             template.find('.ea-wizard-next').show();
         });
 
-        template.show().appendTo('body').on('click', function() {
-            $(this).hide();
+        template.find('.ea-wizard-close-modal').on('click', function() {
+          template.hide();
         });
+        
+        template.show().appendTo('body');
     });
 }(jQuery));

@@ -32,6 +32,18 @@
         margin: 0;
         font-size: 18px;
         margin: auto; }
+      .ea-wizard-overlay .ea-wizard-header button.ea-wizard-close-modal {
+        background: transparent;
+        border: 0; }
+        .ea-wizard-overlay .ea-wizard-header button.ea-wizard-close-modal:focus, .ea-wizard-overlay .ea-wizard-header button.ea-wizard-close-modal:active {
+          outline: none; }
+        .ea-wizard-overlay .ea-wizard-header button.ea-wizard-close-modal span {
+          font-size: 23px;
+          font-weight: 700;
+          line-height: 18px;
+          color: #000; }
+          .ea-wizard-overlay .ea-wizard-header button.ea-wizard-close-modal span:hover {
+            color: #337ab7; }
     .ea-wizard-overlay .ea-wizard-progress {
       border-bottom: 1px solid #e9ecef; }
       .ea-wizard-overlay .ea-wizard-progress-steps {
@@ -90,7 +102,15 @@
       .ea-wizard-overlay .ea-wizard-progress #thanks:before {
         content: "\f00c"; }
     .ea-wizard-overlay .ea-wizard-content {
-      flex: 1; }
+      flex: 1;
+      padding: 15px; }
+    .ea-wizard-overlay .ea-wizard-actions {
+      border-top: 1px solid #e9ecef;
+      padding: 15px;
+      display: flex;
+      justify-content: flex-end; }
+      .ea-wizard-overlay .ea-wizard-actions button:nth-child(1) {
+        margin-right: auto; }
     .ea-wizard-overlay .ea-wizard-step {
       display: none; }
       .ea-wizard-overlay .ea-wizard-step.current {
