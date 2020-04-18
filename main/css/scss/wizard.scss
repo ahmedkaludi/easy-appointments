@@ -1,0 +1,138 @@
+$white: #ffffff;
+$border: #e9ecef;
+$blue: #337ab7;
+
+.ea-wizard-overlay {
+  position: fixed;
+  display: none;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0,0,0,0.5);
+  z-index: 2;
+
+  .ea-wizard {
+    min-height: 600px;
+    min-width: 800px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    background-color: $white;
+    border: 1px solid rgba(0, 0, 0, .6);
+    border-radius: 5px;
+    outline: 0;
+    z-index: 3;
+    display: flex;
+    flex-direction: column;
+
+    &-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      padding: 15px;
+
+      h3 {
+        margin: 0;
+        font-size: 18px;
+        margin: auto;
+      }
+    }
+
+    &-progress {
+      border-bottom: 1px solid $border;
+
+      &-steps {
+        margin: 15px 0;
+        overflow: hidden;
+        color: lightgrey;
+        display: flex;
+        padding: 0;
+        justify-content: space-evenly;
+      }
+
+      &-step {
+        list-style-type: none;
+        font-size: 12px;
+        flex: 1;
+        position: relative;
+        text-align: center;
+
+        &:before {
+          font-family: FontAwesome;
+          content: '';
+          width: 34px;
+          height: 34px;
+          line-height: 34px;
+          display: block;
+          font-size: 18px;
+          color: $white;
+          background: $border;
+          border-radius: 50%;
+          margin: 0 auto 10px auto;
+          padding: 2px;
+        }
+
+        &:after {
+          content: '';
+          width: 100%;
+          height: 2px;
+          background: $border;
+          position: absolute;
+          left: 0;
+          top: 17px;
+          z-index: -1;
+        }
+
+        &.current {
+          color: #000000;
+
+          &:before,
+          &:after {
+            background: $blue;
+          }
+        }
+      }
+
+      #location:before {
+        content: "\f041";
+      }
+      #worker:before {
+        content: "\f007";
+      }
+      #service:before {
+        content: "\f013";
+      }
+      #calendar:before {
+        content: "\f073";
+      }
+      #slots:before {
+        content: "\f00b";
+      }
+      #personal:before {
+        content: "\f129";
+      }
+      #overview:before {
+        content: "\f06e";
+      }
+      #thanks:before {
+        content: "\f00c";
+      }
+    }
+
+    &-content {
+      flex: 1;
+    }
+
+    &-step {
+      display: none;
+
+      &.current {
+        display: block;
+      }
+    }
+  }
+}
