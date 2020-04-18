@@ -43,7 +43,7 @@ class EAWizard
         // wizard style
         wp_register_style(
             'ea-wizard-css',
-            EA_PLUGIN_URL . 'css/wizard.css'
+            EA_PLUGIN_URL . 'css/scss/wizard.css'
         );
     }
 

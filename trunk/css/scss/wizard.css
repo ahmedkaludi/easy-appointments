@@ -1,0 +1,97 @@
+.ea-wizard-overlay {
+  position: fixed;
+  display: none;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 2; }
+  .ea-wizard-overlay .ea-wizard {
+    min-height: 600px;
+    min-width: 800px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #ffffff;
+    border: 1px solid rgba(0, 0, 0, 0.6);
+    border-radius: 5px;
+    outline: 0;
+    z-index: 3;
+    display: flex;
+    flex-direction: column; }
+    .ea-wizard-overlay .ea-wizard-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      padding: 15px; }
+      .ea-wizard-overlay .ea-wizard-header h3 {
+        margin: 0;
+        font-size: 18px;
+        margin: auto; }
+    .ea-wizard-overlay .ea-wizard-progress {
+      border-bottom: 1px solid #e9ecef; }
+      .ea-wizard-overlay .ea-wizard-progress-steps {
+        margin: 15px 0;
+        overflow: hidden;
+        color: lightgrey;
+        display: flex;
+        padding: 0;
+        justify-content: space-evenly; }
+      .ea-wizard-overlay .ea-wizard-progress-step {
+        list-style-type: none;
+        font-size: 12px;
+        flex: 1;
+        position: relative;
+        text-align: center; }
+        .ea-wizard-overlay .ea-wizard-progress-step:before {
+          font-family: FontAwesome;
+          content: '';
+          width: 34px;
+          height: 34px;
+          line-height: 34px;
+          display: block;
+          font-size: 18px;
+          color: #ffffff;
+          background: #e9ecef;
+          border-radius: 50%;
+          margin: 0 auto 10px auto;
+          padding: 2px; }
+        .ea-wizard-overlay .ea-wizard-progress-step:after {
+          content: '';
+          width: 100%;
+          height: 2px;
+          background: #e9ecef;
+          position: absolute;
+          left: 0;
+          top: 17px;
+          z-index: -1; }
+        .ea-wizard-overlay .ea-wizard-progress-step.current {
+          color: #000000; }
+          .ea-wizard-overlay .ea-wizard-progress-step.current:before, .ea-wizard-overlay .ea-wizard-progress-step.current:after {
+            background: #337ab7; }
+      .ea-wizard-overlay .ea-wizard-progress #location:before {
+        content: "\f041"; }
+      .ea-wizard-overlay .ea-wizard-progress #worker:before {
+        content: "\f007"; }
+      .ea-wizard-overlay .ea-wizard-progress #service:before {
+        content: "\f013"; }
+      .ea-wizard-overlay .ea-wizard-progress #calendar:before {
+        content: "\f073"; }
+      .ea-wizard-overlay .ea-wizard-progress #slots:before {
+        content: "\f00b"; }
+      .ea-wizard-overlay .ea-wizard-progress #personal:before {
+        content: "\f129"; }
+      .ea-wizard-overlay .ea-wizard-progress #overview:before {
+        content: "\f06e"; }
+      .ea-wizard-overlay .ea-wizard-progress #thanks:before {
+        content: "\f00c"; }
+    .ea-wizard-overlay .ea-wizard-content {
+      flex: 1; }
+    .ea-wizard-overlay .ea-wizard-step {
+      display: none; }
+      .ea-wizard-overlay .ea-wizard-step.current {
+        display: block; }
