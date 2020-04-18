@@ -108,7 +108,27 @@ $blue: #337ab7;
         }
 
         &.current {
-          color: #000000;
+          color: #1f4d75;
+          font-weight: bold;
+          text-transform: uppercase;
+
+          &:before {
+            background: #1f4d75;
+          }
+          &:after {
+            background: $blue;
+          }
+        }
+
+        &:last-child.current {
+          color: #4bb543;
+          &:before {
+            background: #4bb543;
+          }
+        }
+
+        &.done {
+          color: $blue;
 
           &:before,
           &:after {

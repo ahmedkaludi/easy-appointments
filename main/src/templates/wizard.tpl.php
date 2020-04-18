@@ -37,6 +37,8 @@
       <div class="ea-wizard-actions">
         <button class="ea-wizard-prev btn btn-primary" style="display: none">Prev</button>
         <button class="ea-wizard-next btn btn-primary">Next</button>
+        <button class="ea-wizard-submit btn btn-primary" style="display: none">Submit</button>
+        <button class="ea-wizard-close btn btn-primary" style="display: none">Close</button>
       </div>
 
     </div>

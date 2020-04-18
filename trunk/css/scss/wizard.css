@@ -82,8 +82,20 @@
           top: 17px;
           z-index: -1; }
         .ea-wizard-overlay .ea-wizard-progress-step.current {
-          color: #000000; }
-          .ea-wizard-overlay .ea-wizard-progress-step.current:before, .ea-wizard-overlay .ea-wizard-progress-step.current:after {
+          color: #1f4d75;
+          font-weight: bold;
+          text-transform: uppercase; }
+          .ea-wizard-overlay .ea-wizard-progress-step.current:before {
+            background: #1f4d75; }
+          .ea-wizard-overlay .ea-wizard-progress-step.current:after {
+            background: #337ab7; }
+        .ea-wizard-overlay .ea-wizard-progress-step:last-child.current {
+          color: #4bb543; }
+          .ea-wizard-overlay .ea-wizard-progress-step:last-child.current:before {
+            background: #4bb543; }
+        .ea-wizard-overlay .ea-wizard-progress-step.done {
+          color: #337ab7; }
+          .ea-wizard-overlay .ea-wizard-progress-step.done:before, .ea-wizard-overlay .ea-wizard-progress-step.done:after {
             background: #337ab7; }
       .ea-wizard-overlay .ea-wizard-progress #location:before {
         content: "\f041"; }

@@ -1,37 +1,74 @@
 (function($) {
+  function toggleButtons(template) {
+    const steps = template.find('.ea-wizard-step');
+    const first = steps.first();
+    const last = steps.last();
 
-    $('.ea-wizard-button').on('click', function() {
-        var template = $($('#ea-wizard-template').html());
+    if (first.hasClass('current')) {
+      template.find('.ea-wizard-prev').hide();
+      template.find('.ea-wizard-submit').hide();
+      template.find('.ea-wizard-close').hide();
+      template.find('.ea-wizard-next').show();
+    } else if (last.hasClass('current')) {
+      template.find('.ea-wizard-next').hide();
+      template.find('.ea-wizard-prev').hide();
+      template.find('.ea-wizard-submit').hide();
+      template.find('.ea-wizard-close').show();
+    } else if (last.prev().hasClass('current')) {
+      template.find('.ea-wizard-close').hide();
+      template.find('.ea-wizard-next').hide();
+      template.find('.ea-wizard-prev').show();
+      template.find('.ea-wizard-submit').show();
+    } else {
+      template.find('.ea-wizard-close').hide();
+      template.find('.ea-wizard-submit').hide();
+      template.find('.ea-wizard-prev').show();
+      template.find('.ea-wizard-next').show();
+    }
+  }
 
-        template.find('.ea-wizard').on('click', function(e) {
-           e.preventDefault();
-           return false;
-        });
+  function showStep(template, direction) {
+    template.find('.ea-wizard-progress-step').removeClass('done');
 
-        template.find('.ea-wizard-next').on('click', function() {
-            template.find('.ea-wizard-step.current').removeClass('current').next().addClass('current');
+    if (direction === 'next') {
+      template.find('.ea-wizard-step.current').removeClass('current').next().addClass('current');
+      template.find('.ea-wizard-progress-step.current').removeClass('current').next().addClass('current').prevAll().addClass('done');
+    } else {
+      template.find('.ea-wizard-step.current').removeClass('current').prev().addClass('current');
+      template.find('.ea-wizard-progress-step.current').removeClass('current').prev().addClass('current').prevAll().addClass('done');
+    }
 
-            if (template.find('.ea-wizard-step').last().hasClass('current')) {
-                $(this).hide();
-            }
+    toggleButtons(template);
+  }
 
-            template.find('.ea-wizard-prev').show();
-        });
+  $('.ea-wizard-button').on('click', function() {
+    var template = $($('#ea-wizard-template').html());
 
-        template.find('.ea-wizard-prev').on('click', function() {
-            template.find('.ea-wizard-step.current').removeClass('current').prev().addClass('current');
-
-            if (template.find('.ea-wizard-step').first().hasClass('current')) {
-                $(this).hide();
-            }
-
-            template.find('.ea-wizard-next').show();
-        });
-
-        template.find('.ea-wizard-close-modal').on('click', function() {
-          template.hide();
-        });
-        
-        template.show().appendTo('body');
+    template.find('.ea-wizard').on('click', function(e) {
+      e.preventDefault();
+      return false;
     });
+
+    template.find('.ea-wizard-prev').on('click', function() {
+      showStep(template, 'prev');
+    });
+
+    template.find('.ea-wizard-next').on('click', function() {
+      showStep(template, 'next');
+    });
+
+    template.find('.ea-wizard-submit').on('click', function() {
+      showStep(template, 'next');
+    });
+
+    template.find('.ea-wizard-close').on('click', function() {
+      template.hide();
+    });
+
+    template.find('.ea-wizard-close-modal').on('click', function() {
+      template.hide();
+    });
+    
+    template.show().appendTo('body');
+  });
 }(jQuery));
