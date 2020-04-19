@@ -8,7 +8,7 @@
     var templateWorker = _.template($('#ea-wizard-template-worker').html());
 
     eaData.Locations.forEach(function (location) {
-      template.find('.ea-step-location').append(templateLocation({location: location}));
+      template.find('.ea-step-location-content').append(templateLocation({location: location}));
     });
 
     eaData.Services.forEach(function (service) {
@@ -62,6 +62,11 @@
     toggleButtons(template);
   }
 
+  function setChosen(me) {
+    me.siblings().removeClass('chosen');
+    me.addClass('chosen');
+  }
+
   $('.ea-wizard-button').on('click', function() {
     var template = $($('#ea-wizard-template').html());
 
@@ -90,6 +95,12 @@
 
     template.find('.ea-wizard-close-modal').on('click', function() {
       template.hide();
+    });
+
+    template.find('.choice').on('click', function() {
+      setChosen($(this));
+      // $(this).siblings().removeClass('chosen');
+      // $(this).addClass('chosen');
     });
     
     template.show().appendTo('body');

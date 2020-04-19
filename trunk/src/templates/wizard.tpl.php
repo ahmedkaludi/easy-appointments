@@ -1,15 +1,15 @@
 <?php require_once EA_SRC_DIR . 'templates/inlinedata.sorted.tpl.php'; ?>
 <!-- Template for Location Selection -->
 <script id="ea-wizard-template-location" type="text/template">
-    <div class="ea-wizard-location">
-        <span><%- location.name %></span>
-        <span><%- location.address %></span>
-        <span><%- location.location %></span>
+    <div class="choice ea-wizard-location">
+      <div class="header"><span><%- location.name %></span></div>
+      <span><%- location.address %></span>
+      <span><%- location.location %></span>
     </div>
 </script>
 <!-- Template for Service Selection -->
 <script id="ea-wizard-template-service" type="text/template">
-    <div class="ea-wizard-service">
+    <div class="choice ea-wizard-service">
         <span><%- service.name %></span>
         <span><%- service.duration %> minutes</span>
         <span>$<%- service.price %></span>
@@ -17,7 +17,7 @@
 </script>
 <!-- Template for Worker Selection -->
 <script id="ea-wizard-template-worker" type="text/template">
-    <div class="ea-wizard-worker">
+    <div class="choice ea-wizard-worker">
         <span><%- worker.name %></span>
         <span><%- worker.description %></span>
         <span><%- worker.phone %></span>
@@ -50,7 +50,9 @@
 
       <div class="ea-wizard-content">
         <!--<div class="ea-wizard-step current ea-loading">LOADING...BRE</div>-->
-        <div class="ea-wizard-step ea-step-location current"></div>
+        <div class="ea-wizard-step ea-step-location current">
+          <div class="ea-step-location-content"></div>
+        </div>
         <div class="ea-wizard-step ea-step-worker"></div>
         <div class="ea-wizard-step ea-step-service"></div>
         <div class="ea-wizard-step ea-step-calendar">
