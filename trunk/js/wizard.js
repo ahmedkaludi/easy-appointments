@@ -1,4 +1,25 @@
 (function($) {
+
+  function init(template) {
+    template.find('.ea-wizard-calendar').datepicker();
+
+    var templateLocation = _.template($('#ea-wizard-template-location').html());
+    var templateService = _.template($('#ea-wizard-template-service').html());
+    var templateWorker = _.template($('#ea-wizard-template-worker').html());
+
+    eaData.Locations.forEach(function (location) {
+      template.find('.ea-step-location').append(templateLocation({location: location}));
+    });
+
+    eaData.Services.forEach(function (service) {
+      template.find('.ea-step-service').append(templateService({service: service}));
+    });
+
+    eaData.Workers.forEach(function (worker) {
+      template.find('.ea-step-worker').append(templateWorker({worker: worker}));
+    });
+  }
+
   function toggleButtons(template) {
     const steps = template.find('.ea-wizard-step');
     const first = steps.first();
@@ -43,6 +64,8 @@
 
   $('.ea-wizard-button').on('click', function() {
     var template = $($('#ea-wizard-template').html());
+
+    init(template);
 
     template.find('.ea-wizard').on('click', function(e) {
       e.preventDefault();

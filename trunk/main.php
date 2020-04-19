@@ -181,7 +181,7 @@ class EasyAppointment
         };
 
         $this->container['wizard'] = function ($container) {
-            return new EAWizard($container['utils']);
+            return new EAWizard($container['utils'], $container['db_models'], $container['logic']);
         };
 
         $this->container['ajax'] = function ($container) {

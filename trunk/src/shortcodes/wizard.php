@@ -15,9 +15,21 @@ class EAWizard
      */
     protected $utils;
 
-    public function __construct($utils)
+    /**
+     * @var EADBModels
+     */
+    protected $models;
+
+    /**
+     * @var EALogic
+     */
+    protected $logic;
+
+    public function __construct($utils, $models, $logic)
     {
         $this->utils = $utils;
+        $this->models = $models;
+        $this->logic = $logic;
     }
 
     public function init()
@@ -35,7 +47,7 @@ class EAWizard
         wp_register_script(
             'ea-wizard',
             EA_PLUGIN_URL . 'js/wizard.js',
-            array('jquery', 'ea-momentjs', 'wp-api'),
+            array('jquery', 'underscore', 'jquery-ui-datepicker', 'ea-momentjs', 'wp-api'),
             EASY_APPOINTMENTS_VERSION,
             true
         );

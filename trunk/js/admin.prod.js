@@ -1262,8 +1262,6 @@
                 var time_from = parseInt(connection.get('time_from').replace(':', ''));
                 var time_to   = parseInt(connection.get('time_to').replace(':', ''));
 
-                console.log(time_from, time_to);
-
                 if (time_from > time_to) {
                     var fromField = $el.find('[data-prop="time_from"]');
                     var toField   = $el.find('[data-prop="time_to"]');
