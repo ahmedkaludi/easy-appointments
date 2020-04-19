@@ -5,7 +5,7 @@ $blue: #337ab7;
 $darkblue: #1f4d75;
 $success: #4bb543;
 
-@mixin grid-display ($min: 350px) {
+@mixin grid-display ($min: 300px) {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax($min, 1fr));
   grid-gap: 20px;
@@ -35,7 +35,7 @@ $success: #4bb543;
 
   .ea-wizard {
     min-height: 600px;
-    min-width: 800px;
+    min-width: 750px;
     position: absolute;
     top: 50%;
     left: 50%;
@@ -131,7 +131,6 @@ $success: #4bb543;
         &.current {
           color: $darkblue;
           font-weight: bold;
-          text-transform: uppercase;
 
           &:before {
             background: $darkblue;
@@ -221,7 +220,8 @@ $success: #4bb543;
 
       &-location,
       &-service,
-      &-worker, {
+      &-worker,
+      &-timeslots {
         .content {
           @include grid-display;
 
@@ -284,6 +284,35 @@ $success: #4bb543;
                 top: 3px;
                 right: 3px;
               }
+            }
+          }
+        }
+      }
+
+      &-calendar {
+        .ea-wizard-calendar {
+          .ui-datepicker {
+            border: none;
+            box-shadow: none;
+
+            .ui-datepicker-header {
+              margin-bottom: 20px;
+            }
+          }
+        }
+      }
+
+      &-timeslots {
+        .content {
+          @include grid-display(150px);
+
+          .choice {
+            min-width: 100%;
+            max-width: 100%;
+            text-decoration: unset;
+
+            &:hover, &:visited {
+              text-decoration: unset;
             }
           }
         }

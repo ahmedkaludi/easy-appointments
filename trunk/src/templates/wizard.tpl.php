@@ -65,7 +65,23 @@
             <div class="ea-wizard-calendar"></div>
         </div>
         <div class="ea-wizard-step ea-step-timeslots">
-            <div class="ea-wizard-time-slots"><a href="#" class="time-value" data-val="07:00">07:00 am</a><a href="#" class="time-value" data-val="07:45">07:45 am</a><a href="#" class="time-value" data-val="08:30">08:30 am</a><a href="#" class="time-value" data-val="09:15">09:15 am</a><a href="#" class="time-value" data-val="10:00">10:00 am</a><a href="#" class="time-value" data-val="10:45">10:45 am</a><a href="#" class="time-value" data-val="11:30">11:30 am</a><a href="#" class="time-value" data-val="12:15">12:15 pm</a><a href="#" class="time-value" data-val="13:00">01:00 pm</a><a href="#" class="time-value" data-val="13:45">01:45 pm</a><a href="#" class="time-value" data-val="14:30">02:30 pm</a><a href="#" class="time-value" data-val="15:15">03:15 pm</a><a href="#" class="time-value" data-val="16:00">04:00 pm</a><a href="#" class="time-value" data-val="16:45">04:45 pm</a><a href="#" class="time-value" data-val="17:30">05:30 pm</a></div>
+          <div class="ea-wizard-time-slots content">
+            <a href="#" class="time-value choice" data-val="07:00">07:00 am</a>
+            <a href="#" class="time-value choice" data-val="07:45">07:45 am</a>
+            <a href="#" class="time-value choice" data-val="08:30">08:30 am</a>
+            <a href="#" class="time-value choice" data-val="09:15">09:15 am</a>
+            <a href="#" class="time-value choice" data-val="10:00">10:00 am</a>
+            <a href="#" class="time-value choice" data-val="10:45">10:45 am</a>
+            <a href="#" class="time-value choice" data-val="11:30">11:30 am</a>
+            <a href="#" class="time-value choice" data-val="12:15">12:15 pm</a>
+            <a href="#" class="time-value choice" data-val="13:00">01:00 pm</a>
+            <a href="#" class="time-value choice" data-val="13:45">01:45 pm</a>
+            <a href="#" class="time-value choice" data-val="14:30">02:30 pm</a>
+            <a href="#" class="time-value choice" data-val="15:15">03:15 pm</a>
+            <a href="#" class="time-value choice" data-val="16:00">04:00 pm</a>
+            <a href="#" class="time-value choice" data-val="16:45">04:45 pm</a>
+            <a href="#" class="time-value choice" data-val="17:30">05:30 pm</a>
+          </div>
         </div>
         <div class="ea-wizard-step ea-step-personal-info"></div>
         <div class="ea-wizard-step ea-step-overview">OVERVIEW</div>
