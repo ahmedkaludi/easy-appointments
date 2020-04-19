@@ -219,11 +219,13 @@ $success: #4bb543;
 
     .ea-step {
 
-      &-location {
-        &-content {
+      &-location,
+      &-service,
+      &-worker, {
+        .content {
           @include grid-display;
 
-          .ea-wizard-location {
+          .choice {
             padding: 10px 26px;
             border: 1px solid $border;
             cursor: pointer;

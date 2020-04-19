@@ -12,17 +12,17 @@
 <!-- Template for Service Selection -->
 <script id="ea-wizard-template-service" type="text/template">
     <div class="choice ea-wizard-service">
-        <span><%- service.name %></span>
-        <span><%- service.duration %> minutes</span>
-        <span>$<%- service.price %></span>
+      <div class="header"><span><%- service.name %></span></div>
+      <span><%- service.duration %> minutes</span>
+      <span>$<%- service.price %></span>
     </div>
 </script>
 <!-- Template for Worker Selection -->
 <script id="ea-wizard-template-worker" type="text/template">
     <div class="choice ea-wizard-worker">
-        <span><%- worker.name %></span>
-        <span><%- worker.description %></span>
-        <span><%- worker.phone %></span>
+      <div class="header"><span><%- worker.name %></span></div>
+      <span><%- worker.description %></span>
+      <span><%- worker.phone %></span>
     </div>
 </script>
 
@@ -53,10 +53,14 @@
       <div class="ea-wizard-content">
         <!--<div class="ea-wizard-step current ea-loading">LOADING...BRE</div>-->
         <div class="ea-wizard-step ea-step-location current">
-          <div class="ea-step-location-content"></div>
+          <div class="content"></div>
         </div>
-        <div class="ea-wizard-step ea-step-worker"></div>
-        <div class="ea-wizard-step ea-step-service"></div>
+        <div class="ea-wizard-step ea-step-worker">
+          <div class="content"></div>
+        </div>
+        <div class="ea-wizard-step ea-step-service">
+          <div class="content"></div>
+        </div>
         <div class="ea-wizard-step ea-step-calendar">
             <div class="ea-wizard-calendar"></div>
         </div>

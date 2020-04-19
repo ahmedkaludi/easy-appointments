@@ -9,15 +9,15 @@
     var templateCustomFields = _.template($('#ea-template-custom-fields').html());
 
     eaData.Locations.forEach(function (location) {
-      template.find('.ea-step-location-content').append(templateLocation({location: location}));
+      template.find('.ea-step-location').find('.content').append(templateLocation({location: location}));
     });
 
     eaData.Services.forEach(function (service) {
-      template.find('.ea-step-service').append(templateService({service: service}));
+      template.find('.ea-step-service').find('.content').append(templateService({service: service}));
     });
 
     eaData.Workers.forEach(function (worker) {
-      template.find('.ea-step-worker').append(templateWorker({worker: worker}));
+      template.find('.ea-step-worker').find('.content').append(templateWorker({worker: worker}));
     });
 
     template.find('.ea-step-personal-info').append(templateCustomFields({ settings: ea_wizard_settings }));
