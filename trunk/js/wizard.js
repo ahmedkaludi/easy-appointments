@@ -102,8 +102,6 @@
 
     template.find('.choice').on('click', function() {
       setChosen($(this));
-      // $(this).siblings().removeClass('chosen');
-      // $(this).addClass('chosen');
     });
     
     template.show().appendTo('body');
