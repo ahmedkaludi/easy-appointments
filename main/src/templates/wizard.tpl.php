@@ -85,7 +85,15 @@
         </div>
         <div class="ea-wizard-step ea-step-personal-info"></div>
         <div class="ea-wizard-step ea-step-overview">OVERVIEW</div>
-        <div class="ea-wizard-step ea-step-thanks">THANKS</div>
+        <div class="ea-wizard-step ea-step-thanks">
+          <div class="content">
+            <div class="success">
+              <span class="success-icon fa fa-check"></span>
+              <span class="success-message">You've successfully created an appointment.</span>
+              <span class="success-thanks">Thank you for using Easy Appointments.</span>
+            </div>
+          </div>
+        </div>
       </div>
 
       <div class="ea-wizard-actions">

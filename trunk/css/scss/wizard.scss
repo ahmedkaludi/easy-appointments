@@ -5,12 +5,10 @@ $blue: #337ab7;
 $darkblue: #1f4d75;
 $success: #4bb543;
 
-@mixin grid-display ($min: 300px) {
+@mixin grid-display ($min: 270px) {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax($min, 1fr));
   grid-gap: 20px;
-  overflow: hidden;
-  overflow-y: scroll;
 }
 
 @mixin title ($lines: 1) {
@@ -19,6 +17,7 @@ $success: #4bb543;
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
+  white-space: normal;
 }
 
 .ea-wizard-overlay {
@@ -35,7 +34,7 @@ $success: #4bb543;
 
   .ea-wizard {
     min-height: 600px;
-    min-width: 750px;
+    min-width: 650px;
     position: absolute;
     top: 50%;
     left: 50%;
@@ -210,6 +209,8 @@ $success: #4bb543;
 
     &-step {
       display: none;
+      overflow: hidden;
+      overflow-y: scroll;
 
       &.current {
         display: block;
@@ -317,14 +318,52 @@ $success: #4bb543;
           }
         }
       }
+
+      &-personal-info {
+        .form-group {
+          display: flex;
+          align-items: center;
+          width: 600px;
+          margin: 0 auto;
+          margin-bottom: 10px;
+
+          label {
+            font-weight: normal;
+            width: 25%;
+          }
+
+          div.col-sm-8 {
+            flex: 1;
+          }
+        }
+      }
+
+      &-thanks {
+        .content {
+          display: flex;
+          height: 100%;
+
+          .success {
+            margin: auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+
+            &-icon {
+              margin-bottom: 20px;
+              width: 50px;
+              height: 50px;
+              line-height: 50px;
+              display: block;
+              font-size: 38px;
+              color: $success;
+              border-radius: 50%;
+              border: 1px solid $success;
+              text-align: center;
+            }
+          }
+        }
+      }
     }
-
-      /*&.ea-step-worker {}
-
-      &.ea-step-service {}
-
-      &.ea-step-calendar {}
-
-      &.ea-step-timeslots {}*/
   }
 }

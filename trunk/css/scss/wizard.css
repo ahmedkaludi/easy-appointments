@@ -11,7 +11,7 @@
   z-index: 2; }
   .ea-wizard-overlay .ea-wizard {
     min-height: 600px;
-    min-width: 750px;
+    min-width: 650px;
     position: absolute;
     top: 50%;
     left: 50%;
@@ -22,14 +22,7 @@
     outline: 0;
     z-index: 3;
     display: flex;
-    flex-direction: column;
-    /*&.ea-step-worker {}
-
-      &.ea-step-service {}
-
-      &.ea-step-calendar {}
-
-      &.ea-step-timeslots {}*/ }
+    flex-direction: column; }
     .ea-wizard-overlay .ea-wizard-header {
       display: flex;
       align-items: flex-start;
@@ -139,15 +132,15 @@
       .ea-wizard-overlay .ea-wizard-actions button:nth-child(1) {
         margin-right: auto; }
     .ea-wizard-overlay .ea-wizard-step {
-      display: none; }
+      display: none;
+      overflow: hidden;
+      overflow-y: scroll; }
       .ea-wizard-overlay .ea-wizard-step.current {
         display: block; }
     .ea-wizard-overlay .ea-wizard .ea-step-location .content, .ea-wizard-overlay .ea-wizard .ea-step-service .content, .ea-wizard-overlay .ea-wizard .ea-step-worker .content, .ea-wizard-overlay .ea-wizard .ea-step-timeslots .content {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-      grid-gap: 20px;
-      overflow: hidden;
-      overflow-y: scroll; }
+      grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+      grid-gap: 20px; }
       .ea-wizard-overlay .ea-wizard .ea-step-location .content .choice, .ea-wizard-overlay .ea-wizard .ea-step-service .content .choice, .ea-wizard-overlay .ea-wizard .ea-step-worker .content .choice, .ea-wizard-overlay .ea-wizard .ea-step-timeslots .content .choice {
         padding: 10px 26px;
         border: 1px solid #e9ecef;
@@ -165,7 +158,8 @@
           -webkit-line-clamp: 1;
           -webkit-box-orient: vertical;
           overflow: hidden;
-          text-overflow: ellipsis; }
+          text-overflow: ellipsis;
+          white-space: normal; }
         .ea-wizard-overlay .ea-wizard .ea-step-location .content .choice div.header, .ea-wizard-overlay .ea-wizard .ea-step-service .content .choice div.header, .ea-wizard-overlay .ea-wizard .ea-step-worker .content .choice div.header, .ea-wizard-overlay .ea-wizard .ea-step-timeslots .content .choice div.header {
           margin-bottom: 10px;
           padding-bottom: 5px;
@@ -180,7 +174,8 @@
             -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
             overflow: hidden;
-            text-overflow: ellipsis; }
+            text-overflow: ellipsis;
+            white-space: normal; }
         .ea-wizard-overlay .ea-wizard .ea-step-location .content .choice.chosen, .ea-wizard-overlay .ea-wizard .ea-step-service .content .choice.chosen, .ea-wizard-overlay .ea-wizard .ea-step-worker .content .choice.chosen, .ea-wizard-overlay .ea-wizard .ea-step-timeslots .content .choice.chosen {
           position: relative;
           border: 1px solid #b5c9da;
@@ -210,12 +205,40 @@
     .ea-wizard-overlay .ea-wizard .ea-step-timeslots .content {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-      grid-gap: 20px;
-      overflow: hidden;
-      overflow-y: scroll; }
+      grid-gap: 20px; }
       .ea-wizard-overlay .ea-wizard .ea-step-timeslots .content .choice {
         min-width: 100%;
         max-width: 100%;
         text-decoration: unset; }
         .ea-wizard-overlay .ea-wizard .ea-step-timeslots .content .choice:hover, .ea-wizard-overlay .ea-wizard .ea-step-timeslots .content .choice:visited {
           text-decoration: unset; }
+    .ea-wizard-overlay .ea-wizard .ea-step-personal-info .form-group {
+      display: flex;
+      align-items: center;
+      width: 600px;
+      margin: 0 auto;
+      margin-bottom: 10px; }
+      .ea-wizard-overlay .ea-wizard .ea-step-personal-info .form-group label {
+        font-weight: normal;
+        width: 25%; }
+      .ea-wizard-overlay .ea-wizard .ea-step-personal-info .form-group div.col-sm-8 {
+        flex: 1; }
+    .ea-wizard-overlay .ea-wizard .ea-step-thanks .content {
+      display: flex;
+      height: 100%; }
+      .ea-wizard-overlay .ea-wizard .ea-step-thanks .content .success {
+        margin: auto;
+        display: flex;
+        flex-direction: column;
+        align-items: center; }
+        .ea-wizard-overlay .ea-wizard .ea-step-thanks .content .success-icon {
+          margin-bottom: 20px;
+          width: 50px;
+          height: 50px;
+          line-height: 50px;
+          display: block;
+          font-size: 38px;
+          color: #4bb543;
+          border-radius: 50%;
+          border: 1px solid #4bb543;
+          text-align: center; }
