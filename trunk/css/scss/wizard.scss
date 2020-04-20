@@ -20,6 +20,36 @@ $success: #4bb543;
   white-space: normal;
 }
 
+.ea-wizard-button {
+  padding: 10px;
+  background: $blue;
+  color: $white;
+  display: flex;
+  align-items: center;
+  transition: all .2s linear;
+  border: none;
+  border-radius: 5px;
+
+  &:before {
+    font-family: FontAwesome;
+    content: "\f073";
+    width: 34px;
+    height: 34px;
+    line-height: 34px;
+    display: block;
+    font-size: 18px;
+    color: $white;
+  }
+
+  &:hover {
+    background: $darkblue;
+  }
+  &:focus, &:active {
+    outline: none;
+  }
+
+}
+
 .ea-wizard-overlay {
   position: fixed;
   display: none;
