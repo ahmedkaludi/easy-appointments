@@ -508,7 +508,7 @@ class EAFrontend
         foreach ($rows as $key => $row) {
             $rows[$key]->label = __($row->label, 'easy-appointments');
         }
-
+        $rows = apply_filters( 'ea_form_rows', $rows);
         $settings['MetaFields'] = $rows;
 
         wp_localize_script('ea-front-bootstrap', 'ea_settings', $settings);
