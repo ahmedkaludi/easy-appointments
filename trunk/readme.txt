@@ -4,7 +4,7 @@ Donate link: https://easy-appointments.net/
 Tags: appointment, appointments, Booking, calendar, plugin, reservation, reservations, wp appointment, reservation plugin, reservations, schedule
 Requires at least: 3.7
 Tested up to: 5.3
-Stable tag: 2.12.3
+Stable tag: 2.13.0
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -55,7 +55,8 @@ Can be used for : <strong>Lawyers</strong>, <strong>Salons</strong>, <strong>Mec
     - input
     - Make fields required
     - Drag and drop order
-    - Google reCAPTCHA v2 **NEW**
+    - Google reCAPTCHA v2
+    - **NEW** use current logged in user data sa default value for custom field.
 * **Internationalization** - support for translations (you can create your own translation <a href="https://easy-appointments.net/documentation/#translate">>> tutorial <<</a>)
     - German translation (thanks to Matthias)
     - Romanian translation (thanks to Vlad)
@@ -212,6 +213,9 @@ Note: you can have only one calendar on one page.
 25. Admin panel - Report - Export page
 
 == Changelog ==
+
+= 2.13.0 (2020-04-26) =
+* NEW - Use current logged in user data sa default value for custom field. Available for bootstrap version of shortcode.
 
 = 2.12.3 (2020-03-28) =
 * Fixed issue with missing text field placeholder value in form

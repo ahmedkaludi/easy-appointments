@@ -1188,6 +1188,14 @@
                                            value="<%= _.escape(item.mixed) %>">
     </p>
 
+    <% if (item.type !== "PHONE" && item.type !== "SELECT") { %>
+    <p>
+        <label>Default value</label><input type="text" class="field-default_value" name="field-default_value"
+                                         value="<%- item.default_value %>">
+        <small>You can put values from logged in user (list of keys: <?php echo EAUserFieldMapper::all_field_keys(); ?>)</small>
+    </p>
+    <% } %>
+
     <% if (item.type === "PHONE") { %>
     <p>
         <label>Default value</label><select class="field-default_value" name="field-default_value"><?php require __DIR__ . '/phone.list.tpl.php';?></select>
