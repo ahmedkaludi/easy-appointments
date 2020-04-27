@@ -12,7 +12,13 @@ class EAUserFieldMapper
     public function process_fields($fields)
     {
         $current_user = wp_get_current_user();
-        $user_data = array_merge($current_user->to_array(), get_user_meta(get_current_user_id()));
+        $user_data = $current_user->to_array();
+        $meta_data = get_user_meta(get_current_user_id());
+
+        // Maybe here is no meta data
+        if (is_array($meta_data)) {
+            $user_data = array_merge($user_data, );
+        }
 
         if (empty($user_data)) {
             // clear field template values

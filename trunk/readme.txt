@@ -3,8 +3,8 @@ Contributors: loncar
 Donate link: https://easy-appointments.net/
 Tags: appointment, appointments, Booking, calendar, plugin, reservation, reservations, wp appointment, reservation plugin, reservations, schedule
 Requires at least: 3.7
-Tested up to: 5.3
-Stable tag: 2.13.0
+Tested up to: 5.4
+Stable tag: 2.13.1
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -213,6 +213,8 @@ Note: you can have only one calendar on one page.
 25. Admin panel - Report - Export page
 
 == Changelog ==
+= 2.13.1 (2020-04-27) =
+* Fixed issue with warning message when user is not logged in.
 
 = 2.13.0 (2020-04-26) =
 * NEW - Use current logged in user data sa default value for custom field. Available for bootstrap version of shortcode.
