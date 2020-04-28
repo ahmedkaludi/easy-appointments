@@ -17,12 +17,17 @@ class EAUserFieldMapper
 
         // Maybe here is no meta data
         if (is_array($meta_data)) {
-            $user_data = array_merge($user_data, );
+            $user_data = array_merge($user_data, $meta_data);
         }
 
         if (empty($user_data)) {
             // clear field template values
             foreach ($fields as $field) {
+                // skip phone field
+                if ($field->type === 'PHONE') {
+                    continue;
+                }
+
                 $field->default_value = '';
             }
             return $fields;

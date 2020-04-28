@@ -4,7 +4,7 @@ Donate link: https://easy-appointments.net/
 Tags: appointment, appointments, Booking, calendar, plugin, reservation, reservations, wp appointment, reservation plugin, reservations, schedule
 Requires at least: 3.7
 Tested up to: 5.4
-Stable tag: 2.13.1
+Stable tag: 2.13.2
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -213,6 +213,9 @@ Note: you can have only one calendar on one page.
 25. Admin panel - Report - Export page
 
 == Changelog ==
+= 2.13.2 (2020-04-28) =
+* Fixed issue with Phone field and pre selected country code
+
 = 2.13.1 (2020-04-27) =
 * Fixed issue with warning message when user is not logged in.
 
