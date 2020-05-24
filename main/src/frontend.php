@@ -435,7 +435,8 @@ class EAFrontend
             'min_date'             => null,
             'max_date'             => null,
             'show_remaining_slots' => '0',
-            'show_week'            => '0'
+            'show_week'            => '0',
+            'cal_auto_select'      => '0'
         ), $atts);
 
         // check params
@@ -464,6 +465,7 @@ class EAFrontend
         $settings['show_remaining_slots']  = $code_params['show_remaining_slots'];
         $settings['show_week']             = $code_params['show_week'];
         $settings['save_form_content']     = $code_params['save_form_content'];
+        $settings['cal_auto_select']       = $code_params['cal_auto_select'];
 
         // LOCALIZATION
         $settings['trans.please-select-new-date'] = __('Please select another day', 'easy-appointments');

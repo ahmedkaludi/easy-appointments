@@ -4,7 +4,7 @@ Donate link: https://easy-appointments.net/
 Tags: appointment, appointments, Booking, calendar, plugin, reservation, reservations, wp appointment, reservation plugin, reservations, schedule
 Requires at least: 3.7
 Tested up to: 5.4
-Stable tag: 2.13.3
+Stable tag: 2.13.4
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -213,6 +213,10 @@ Note: you can have only one calendar on one page.
 25. Admin panel - Report - Export page
 
 == Changelog ==
+= 2.13.4 (2020-05-24) =
+* Added shortcode option to prevent date auto select day when calendar is first step (`ea_bootstrap`)
+* Added shortcode option for button label customization for full calendar (`ea_full_calendar`)
+
 = 2.13.3 (2020-05-17) =
 * Added new option for FullCalendar shortcode (`time_format`, `display_event_end`)
 * Added option to hide price in select field in customers form (shortcode ea_standard ea_bootdstrap)

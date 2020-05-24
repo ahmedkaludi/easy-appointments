@@ -111,7 +111,8 @@ class EAFullCalendar
             'day_names_short'      => 'Sun,Mon,Tue,Wed,Thu,Fri,Sat',
             'day_names'            => 'Sunday,Monday,Tuesday,Wednesday,Thursday,Friday,Saturday',
             'month_names_short'    => 'Jan,Feb,Mar,Apr,May,Jun,Jul,Aug,Sep,Oct,Nov,Dec',
-            'month_names'          => 'January,February,March,April,May,June,July,August,September,October,November,December'
+            'month_names'          => 'January,February,March,April,May,June,July,August,September,October,November,December',
+            'button_labels'        => 'today,month,week,day,list'
         ), $atts);
 
         // scripts that are going to be used
@@ -135,6 +136,7 @@ class EAFullCalendar
         $day_names = $this->convert_csv_to_js_array_of_strings($code_params['day_names']);
         $month_names_short = $this->convert_csv_to_js_array_of_strings($code_params['month_names_short']);
         $month_names = $this->convert_csv_to_js_array_of_strings($code_params['month_names']);
+        $button_labels = explode(',', $code_params['button_labels']);
 
         // set it as optional
         $location_param = $code_params['location'] !== null ? "location: '{$code_params['location']}'," : '';
@@ -166,6 +168,13 @@ class EAFullCalendar
       dayNames: {$day_names},
       monthNamesShort: {$month_names_short},
       monthNames: {$month_names},
+      buttonText: {
+        today: '{$button_labels[0]}',
+        month: '{$button_labels[1]}',
+        week:  '{$button_labels[2]}',
+        day:   '{$button_labels[3]}',
+        list:  '{$button_labels[4]}'
+      },
       isRTL: {$is_rtl},
       defaultView: '{$code_params['default_view']}',
       showNonCurrentDates: false,

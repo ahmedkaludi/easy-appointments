@@ -163,7 +163,7 @@
             });
 
             // init blur next steps
-            this.blurNextSteps(this.$element.find('.step:visible:first'), true);
+            this.blurNextSteps(this.$element.find('.step:visible:first'), true, true);
 
             if (ea_settings['pre.reservation'] === '1') {
                 this.$element.find('.ea-submit').on('click', jQuery.proxy( plugin.finalComformation, plugin ));
@@ -454,7 +454,7 @@
         getCurrentStatus: function () {
             var options = jQuery(this.element).find('select').not('.custom-field');
         },
-        blurNextSteps: function (current, dontScroll) {
+        blurNextSteps: function (current, dontScroll, initialCall) {
 
             // check if there is scroll param
             dontScroll = dontScroll || false;
@@ -477,7 +477,10 @@
 
                 var calendar = this.$element.find('.date');
 
-                this.selectChange();
+                // skip auto select date if
+                if (!initialCall || ea_settings.cal_auto_select !== '1') {
+                    this.selectChange();
+                }
 
                 if (!dontScroll) {
                     this.scrollToElement(calendar);
