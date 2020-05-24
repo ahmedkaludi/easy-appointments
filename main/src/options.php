@@ -42,6 +42,7 @@ class EAOptions
             'trans.currency'                => '$',
             'pending.email'                 => '',
             'price.hide'                    => '0',
+            'price.hide.service'            => '0',
             'datepicker'                    => 'en-US',
             'send.user.email'               => '0',
             'custom.css'                    => '',

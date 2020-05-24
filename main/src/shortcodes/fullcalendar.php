@@ -85,7 +85,7 @@ class EAFullCalendar
     }
 
     /**
-     * Shortcode def
+     * Shortcode def for Full Calendar
      *
      * @param $atts
      * @return string
@@ -101,6 +101,8 @@ class EAFullCalendar
             'default_date'         => date('Y-m-d'),
             'min_date'             => null,
             'max_date'             => null,
+            'time_format'          => 'h(:mm)t',
+            'display_event_end'    => '0',
             'show_remaining_slots' => '0',
             'show_week'            => '0',
             'title_field'          => 'name',
@@ -139,6 +141,8 @@ class EAFullCalendar
         $service_param = $code_params['service'] !== null ? "service: '{$code_params['service']}'," : '';
         $worker_param = $code_params['worker'] !== null ? "worker: '{$code_params['worker']}'," : '';
 
+        $display_end_time = $code_params['display_event_end'] ? 'true' : 'false';
+
         $script = <<<EOT
   jQuery(document).ready(function() {
   
@@ -165,6 +169,8 @@ class EAFullCalendar
       isRTL: {$is_rtl},
       defaultView: '{$code_params['default_view']}',
       showNonCurrentDates: false,
+      timeFormat: '{$code_params['time_format']}',
+      displayEventEnd: {$display_end_time},
       weekNumbers: {$show_week_numbers},
       firstDay: {$code_params['start_of_week']},
       defaultDate: '{$code_params['default_date']}',
@@ -222,7 +228,9 @@ EOT;
     }
 
     /**
-     * @param $array
+     * Formatting JS values for Calendar
+     *
+     * @param $arrayString
      * @return string
      */
     protected function convert_csv_to_js_array_of_strings($arrayString)

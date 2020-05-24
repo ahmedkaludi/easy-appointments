@@ -579,6 +579,8 @@ class EAFrontend
         }
 
         $hide_price = $this->options->get_option_value('price.hide', '0');
+        $hide_price_service = $this->options->get_option_value('price.hide.service', '0');
+
         $before = $this->options->get_option_value('currency.before', '0');
         $currency = $this->options->get_option_value('trans.currency', '$');
 
@@ -646,6 +648,12 @@ class EAFrontend
             } else if ($type == 'services') {
                 $name = $row->name;
                 $name_price = ($before == '1') ? $name . ' ' . $currency . $row->price : $name . ' ' . $row->price . $currency;
+
+                // maybe we want to hide price in service option
+                if ($hide_price_service) {
+                    $name_price = $name;
+                }
+
                 echo "<option data-duration='{$row->duration}' data-slot_step='{$row->slot_step}' value='{$row->id}'$price>{$name_price}</option>";
             } else {
                 echo "<option value='{$row->id}'>{$row->name}</option>";

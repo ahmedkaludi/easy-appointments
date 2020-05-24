@@ -594,31 +594,31 @@
             <div class="tab-selection">
                 <div class="tabs-list">
                     <a data-tab="tab-connections" class="selected" href="#">
-                    	<span class="icon icon-general"></span><span class="text-label"><?php _e('General', 'easy-appointments'); ?></span>
+                        <span class="icon icon-general"></span><span class="text-label"><?php _e('General', 'easy-appointments'); ?></span>
                     </a>
                     <a data-tab="tab-mail" href="#">
-                    	<span class="icon icon-mail"></span><span class="text-label"><?php _e('Mail Notifications', 'easy-appointments'); ?></span>
+                        <span class="icon icon-mail"></span><span class="text-label"><?php _e('Mail Notifications', 'easy-appointments'); ?></span>
                     </a>
                     <a data-tab="tab-labels" href="#">
-                    	<span class="icon icon-label"></span><span class="text-label"><?php _e('Labels', 'easy-appointments'); ?></span>
+                        <span class="icon icon-label"></span><span class="text-label"><?php _e('Labels', 'easy-appointments'); ?></span>
                     </a>
                     <a data-tab="tab-date-time" href="#">
-                    	<span class="icon icon-date"></span><span class="text-label"><?php _e('Date & Time', 'easy-appointments'); ?></span>
+                        <span class="icon icon-date"></span><span class="text-label"><?php _e('Date & Time', 'easy-appointments'); ?></span>
                     </a>
                     <a data-tab="tab-fields" href="#">
-                    	<span class="icon icon-fields"></span><span class="text-label"><?php _e('Custom Form Fields', 'easy-appointments'); ?></span>
+                        <span class="icon icon-fields"></span><span class="text-label"><?php _e('Custom Form Fields', 'easy-appointments'); ?></span>
                     </a>
                     <a data-tab="tab-captcha" href="#">
-                    	<span class="icon icon-recaptcha"></span><span class="text-label"><?php _e('Google reCAPTCHA v2', 'easy-appointments'); ?></span>
+                        <span class="icon icon-recaptcha"></span><span class="text-label"><?php _e('Google reCAPTCHA v2', 'easy-appointments'); ?></span>
                     </a>
                     <a data-tab="tab-form" href="#">
-                    	<span class="icon icon-redirect"></span><span class="text-label"><?php _e('Form Style & Redirect', 'easy-appointments'); ?></span>
+                        <span class="icon icon-redirect"></span><span class="text-label"><?php _e('Form Style & Redirect', 'easy-appointments'); ?></span>
                     </a>
                     <a data-tab="tab-gdpr" href="#">
-                    	<span class="icon icon-gdpr"></span><span class="text-label"><?php _e('GDPR', 'easy-appointments'); ?></span>
+                        <span class="icon icon-gdpr"></span><span class="text-label"><?php _e('GDPR', 'easy-appointments'); ?></span>
                     </a>
                     <a data-tab="tab-money" href="#">
-                    	<span class="icon icon-money"></span><span class="text-label"><?php _e('Money Format', 'easy-appointments'); ?></span>
+                        <span class="icon icon-money"></span><span class="text-label"><?php _e('Money Format', 'easy-appointments'); ?></span>
                     </a>
                 </div>
                 <div class="button-wrap">
@@ -1139,7 +1139,7 @@
                                value="<%- _.findWhere(settings, {ea_key:'trans.currency'}).ea_value %>">
                     </div>
                     <div class="form-item">
-                        <label for="send.worker.email"><?php _e('Currency before price', 'easy-appointments'); ?></label>
+                        <label for="currency.before"><?php _e('Currency before price', 'easy-appointments'); ?></label>
                         <div class="field-wrap">
                             <input class="field" data-key="currency.before" name="currency.before"
                                    type="checkbox" <% if (_.findWhere(settings,
@@ -1147,7 +1147,19 @@
                         </div>
                     </div>
                     <div class="form-item">
-                        <label for="send.worker.email"><?php _e('Hide price', 'easy-appointments'); ?></label>
+                        <label for="price.hide.service"><?php _e('Hide price in service select', 'easy-appointments'); ?></label>
+                        <div class="field-wrap">
+                            <input class="field" data-key="price.hide.service" name="price.hide.service"
+                                   type="checkbox" <% if (_.findWhere(settings,
+                            {ea_key:'price.hide.service'}).ea_value == "1") { %>checked<% } %>>
+                        </div>
+                    </div>
+                    <div class="form-item">
+                        <div class="label-with-tooltip">
+                            <label for="price.hide"><?php _e('Hide price', 'easy-appointments'); ?></label>
+                            <span class="tooltip tooltip-right"
+                                  data-tooltip="<?php _e('Hide price in whole customers form.', 'easy-appointments'); ?>"></span>
+                        </div>
                         <div class="field-wrap">
                             <input class="field" data-key="price.hide" name="price.hide"
                                    type="checkbox" <% if (_.findWhere(settings,

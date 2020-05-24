@@ -380,15 +380,18 @@
                     var name = element.name;
                     var $option = jQuery('<option value="' + element.id + '">' + name + '</option>');
 
-                    if ('price' in element && ea_settings['price.hide'] !== '1') {
-                        // see if currency is before price or now
-                        if (ea_settings['currency.before'] == '1') {
-                            $option.text(element.name + ' - ' + next_element.data('currency') + element.price);
-                        } else {
-                            $option.text(element.name + ' - ' + element.price + next_element.data('currency'));
-                        }
-
+                    if ('price' in element) {
+                        // set price for service
                         $option.data('price', element.price);
+
+                        if (ea_settings['price.hide'] !== '1' && ea_settings['price.hide.service'] !== '1') {
+                            // see if currency is before price or now
+                            if (ea_settings['currency.before'] === '1') {
+                                $option.text(element.name + ' - ' + next_element.data('currency') + element.price);
+                            } else {
+                                $option.text(element.name + ' - ' + element.price + next_element.data('currency'));
+                            }
+                        }
                     }
 
                     if ('slot_step' in element) {
