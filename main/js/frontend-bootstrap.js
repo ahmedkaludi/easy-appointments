@@ -454,7 +454,7 @@
         getCurrentStatus: function () {
             var options = jQuery(this.element).find('select').not('.custom-field');
         },
-        blurNextSteps: function (current, dontScroll, initialCall) {
+        blurNextSteps: function (current, dontScroll) {
 
             // check if there is scroll param
             dontScroll = dontScroll || false;
@@ -477,10 +477,7 @@
 
                 var calendar = this.$element.find('.date');
 
-                // skip auto select date if
-                if (!initialCall || ea_settings.cal_auto_select !== '1') {
-                    this.selectChange();
-                }
+                this.selectChange();
 
                 if (!dontScroll) {
                     this.scrollToElement(calendar);
@@ -609,7 +606,6 @@
                 var $firstDay = this.$element.find('[data-handler="selectDay"]:first');
                 month = parseInt($firstDay.data('month')) + 1;
                 year = $firstDay.data('year');
-
             }
 
             simulateClick = true;
@@ -637,7 +633,10 @@
 
                         // it's free day after refresh
                         if ($cDay.hasClass('free')) {
-                            $cDay.click();
+                            // but only if auto select is off
+                            if (ea_settings.cal_auto_select !== '0') {
+                                $cDay.click();
+                            }
                         } else {
                             // remove time slots row
                             self.$element.find('.time-row').remove();

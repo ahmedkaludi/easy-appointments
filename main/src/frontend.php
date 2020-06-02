@@ -436,7 +436,7 @@ class EAFrontend
             'max_date'             => null,
             'show_remaining_slots' => '0',
             'show_week'            => '0',
-            'cal_auto_select'      => '0'
+            'cal_auto_select'      => '1'
         ), $atts);
 
         // check params
