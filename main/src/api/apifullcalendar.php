@@ -47,7 +47,16 @@ class EAApiFullCalendar
                 'permission_callback' => array( $this, 'get_items_permissions_check' ),
                 'args'                => $this->arguments_definition(),
             )
-        ) );
+        ));
+
+        register_rest_route( $this->namespace, '/appointment/(?P<id>\d+)', array(
+            array(
+                'methods'             => WP_REST_Server::READABLE,
+                'callback'            => array( $this, 'get_item' ),
+                'permission_callback' => array( $this, 'get_items_permissions_check' ),
+                'args'                => $this->get_item_arguments_definition(),
+            )
+        ));
     }
     /**
      * Check permissions for the read.
@@ -119,6 +128,8 @@ class EAApiFullCalendar
                 'start'  => $element->date . 'T' . $element->start,
                 'end'    => $element->end_date . 'T' . $element->end,
                 'status' => $element->status,
+                'id'     => $element->id,
+                'hash'   => md5($element->id . wp_salt()),
             );
 
             $result['title'] = $element->{$title_key};
@@ -227,9 +238,33 @@ class EAApiFullCalendar
         return $args;
     }
 
-    public function validate_date_string($string) {
-
+    /**
+     * @param WP_REST_Request $request get data from request.
+     */
+    public function get_item($request) {
+        header('Content-Type: text/plain');
+        echo '<b>RESPONSE</b>';
+        exit();
     }
 
+    /**
+     * @return array
+     */
+    public function get_item_arguments_definition() {
+        $args = array();
 
+        $args['id'] = array(
+            'description' => esc_html__( 'Appointments id', 'easy-appointments' ),
+            'type'        => 'integer',
+            'required'    => true,
+        );
+
+        $args['hash'] = array(
+            'description' => esc_html__( 'Appointments hash', 'easy-appointments' ),
+            'type'        => 'string',
+            'required'    => true,
+        );
+
+        return $args;
+    }
 }

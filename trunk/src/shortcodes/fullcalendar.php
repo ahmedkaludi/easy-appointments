@@ -67,7 +67,7 @@ class EAFullCalendar
         wp_register_script(
             'ea-full-calendar',
             EA_PLUGIN_URL . 'js/libs/fullcalendar/fullcalendar.min.js',
-            array('jquery', 'ea-momentjs', 'wp-api'),
+            array('jquery', 'ea-momentjs', 'wp-api', 'thickbox'),
             '2.0.0',
             true
         );
@@ -119,6 +119,9 @@ class EAFullCalendar
         wp_enqueue_script('underscore');
         wp_enqueue_script('ea-validator');
         wp_enqueue_script('ea-full-calendar');
+
+        // add thickbox styles
+        wp_enqueue_style('thickbox.css', includes_url('/js/thickbox/thickbox.css'), null, '1.0');
 
         wp_enqueue_style('ea-full-calendar-style');
         wp_enqueue_style('ea-full-calendar-custom-css');
@@ -201,6 +204,9 @@ class EAFullCalendar
         },
         textColor: 'white' // a non-ajax option
       },
+      eventClick: function(calEvent, jsEvent, view) {
+        console.log(calEvent, jsEvent, view);
+      },
       eventRender: function(event, element) {
         var statusMapping = {
           canceled: 'graffit',
@@ -208,7 +214,10 @@ class EAFullCalendar
           pending: 'grape',
           reserved: 'darkblue'
         }
+        
         element.addClass(statusMapping[event.status]);
+        element.addClass('thickbox');
+        element.attr('href', wpApiSettings.root + 'easy-appointments/v1/appointment/' + event.id + '?hash=' + event.hash + '_wpnonce=' + wpApiSettings.nonce);
       }
     });
   });

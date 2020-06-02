@@ -478,7 +478,7 @@
                 var calendar = this.$element.find('.date');
 
                 // skip auto select date if
-                if (!initialCall || ea_settings.cal_auto_select !== '1') {
+                if (!initialCall || ea_settings.cal_auto_select !== '0') {
                     this.selectChange();
                 }
 
