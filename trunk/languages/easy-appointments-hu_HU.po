@@ -3,12 +3,12 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.5.4\n"
+"X-Generator: Poedit 2.0.8\n"
 "Project-Id-Version: easy appointments\n"
 "Language: hu_HU\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-02-07 10:13+0000\n"
-"PO-Revision-Date: 2017-02-11 11:48+0100\n"
+"PO-Revision-Date: 2020-06-13 18:44+0200\n"
 "Last-Translator: Lakatos Tibor <lakatos.tibor@tbg.hu>\n"
 "Language-Team: Hungarian\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
@@ -54,8 +54,7 @@ msgid "Date & time"
 msgstr "Dátum és idő"
 
 #: src/frontend.php:154 src/frontend.php:338 src/templates/admin.tpl.php:127
-#: src/templates/appointments.tpl.php:86
-#: src/templates/appointments.tpl.php:213
+#: src/templates/appointments.tpl.php:86 src/templates/appointments.tpl.php:213
 #: src/templates/mail.notification.tpl.php:40
 msgid "Price"
 msgstr "Ár"
@@ -149,9 +148,14 @@ msgstr "foglalás"
 msgid "abandoned"
 msgstr "abbahagyott"
 
-#: src/logic.php:306
-msgid "canceled"
-msgstr "lemondott"
+#: src/logic.php:306 src/templates/admin.tpl.php:492
+#, fuzzy
+msgid "cancelled"
+msgstr ""
+"#-#-#-#-#  catalog.po (easy appointments)  #-#-#-#-#\n"
+"lemondott\n"
+"#-#-#-#-#  catalog.po (easy appointments)  #-#-#-#-#\n"
+"Lemondott"
 
 #: src/logic.php:307
 msgid "confirmed"
@@ -174,15 +178,15 @@ msgid "Appointment has been confirmed."
 msgstr "Időpont ellenőrizve."
 
 #: src/mail.php:123
-msgid "Appointment can't be canceled!"
+msgid "Appointment can't be cancelled!"
 msgstr "Időpont nem törölhető!"
 
 #: src/mail.php:139
-msgid "Appointment can't be canceled"
+msgid "Appointment can't be cancelled"
 msgstr "Időpont nem törölhető"
 
 #: src/mail.php:143
-msgid "Appointment has been canceled"
+msgid "Appointment has been cancelled"
 msgstr "Időpont törölve"
 
 #: src/mail.php:282
@@ -292,16 +296,14 @@ msgstr "Új kapcsolat hozzáadása"
 
 #: src/templates/admin.tpl.php:247 src/templates/admin.tpl.php:343
 #: src/templates/admin.tpl.php:593 src/templates/appointments.tpl.php:20
-#: src/templates/appointments.tpl.php:82
-#: src/templates/appointments.tpl.php:152
+#: src/templates/appointments.tpl.php:82 src/templates/appointments.tpl.php:152
 #: src/templates/mail.notification.tpl.php:16 src/templates/report.tpl.php:39
 msgid "Service"
 msgstr "Szolgáltatás"
 
 #: src/templates/admin.tpl.php:247 src/templates/admin.tpl.php:355
 #: src/templates/admin.tpl.php:609 src/templates/appointments.tpl.php:29
-#: src/templates/appointments.tpl.php:82
-#: src/templates/appointments.tpl.php:162
+#: src/templates/appointments.tpl.php:82 src/templates/appointments.tpl.php:162
 #: src/templates/mail.notification.tpl.php:20 src/templates/report.tpl.php:46
 msgid "Worker"
 msgstr "Munkás"
@@ -466,10 +468,6 @@ msgstr "Folyamatban"
 #: src/templates/admin.tpl.php:491
 msgid "Reservation"
 msgstr "Foglalás"
-
-#: src/templates/admin.tpl.php:492
-msgid "Canceled"
-msgstr "Lemondott"
 
 #: src/templates/admin.tpl.php:493
 msgid "Confirmed"

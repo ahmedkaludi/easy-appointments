@@ -2,24 +2,20 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Easy Appointments\n"
 "POT-Creation-Date: 2017-08-26 22:26+0200\n"
-"PO-Revision-Date: 2017-08-26 22:38+0200\n"
-"Last-Translator: Joerg Knoerchen Sensorgrafie.de (YogieAnamCara) "
-"<news@sensorgrafie.de>\n"
-"Language-Team: Joerg Knoerchen Sensorgrafie.de (YogieAnamCara) "
-"<news@sensorgrafie.de>\n"
+"PO-Revision-Date: 2020-06-13 18:48+0200\n"
+"Last-Translator: Joerg Knoerchen Sensorgrafie.de (YogieAnamCara) <news@sensorgrafie.de>\n"
+"Language-Team: Joerg Knoerchen Sensorgrafie.de (YogieAnamCara) <news@sensorgrafie.de>\n"
 "Language: de_DE\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.0.3\n"
+"X-Generator: Poedit 2.0.8\n"
 "X-Poedit-Basepath: ..\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Poedit-Flags-xgettext: --add-comments=translators:\n"
 "X-Poedit-WPHeader: main.php\n"
 "X-Poedit-SourceCharset: UTF-8\n"
-"X-Poedit-KeywordsList: __;_e;_n:1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;esc_attr__;"
-"esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c;_n_noop:1,2;"
-"_nx_noop:3c,1,2;__ngettext_noop:1,2\n"
+"X-Poedit-KeywordsList: __;_e;_n:1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;esc_attr__;esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c;_n_noop:1,2;_nx_noop:3c,1,2;__ngettext_noop:1,2\n"
 "X-Poedit-SearchPath-0: .\n"
 "X-Poedit-SearchPathExcluded-0: *.js\n"
 
@@ -76,9 +72,7 @@ msgstr "Preis"
 
 #: src/frontend.php:183 src/frontend.php:392
 msgid "Form validation code expired. Please refresh page in order to continue."
-msgstr ""
-"Formular Validierungscode ist abgelaufen. Bitte aktualisieren Sie die Seite, "
-"um fortzufahren."
+msgstr "Formular Validierungscode ist abgelaufen. Bitte aktualisieren Sie die Seite, um fortzufahren."
 
 #: src/frontend.php:184 src/frontend.php:393
 msgid "Internal error. Please try again later."
@@ -90,9 +84,7 @@ msgstr "Persönliche Daten"
 
 #: src/frontend.php:247 src/frontend.php:378
 msgid "Fields with * are required"
-msgstr ""
-"Erforderliche Formularfelder sind mit einem <span class=\"ea-required\">*</"
-"span> gekennzeichnet"
+msgstr "Erforderliche Formularfelder sind mit einem <span class=\"ea-required\">*</span> gekennzeichnet"
 
 #: src/frontend.php:251 src/frontend.php:384
 msgid "Booking overview"
@@ -152,9 +144,7 @@ msgstr "Kommentar"
 
 #: src/frontend.php:383
 msgid "Please check your appointment details below and confirm:"
-msgstr ""
-"Bitte prüfen Sie die nachfolgenden Reservierungsdetails und bestätigen Sie "
-"diese abschließend:"
+msgstr "Bitte prüfen Sie die nachfolgenden Reservierungsdetails und bestätigen Sie diese abschließend:"
 
 #: src/install.php:712
 msgid "EMail"
@@ -165,11 +155,8 @@ msgid "Description"
 msgstr "Beschreibung"
 
 #: src/logic.php:233
-msgid ""
-"Daily limit of booking request has been reached. Please contact us by email!"
-msgstr ""
-"Die maximale Anzahl täglicher Reservierungsanfragen ist überschritten. Bitte "
-"nehmen Sie telefonisch Kontakt auf oder schreiben Sie uns eine E-Mail!"
+msgid "Daily limit of booking request has been reached. Please contact us by email!"
+msgstr "Die maximale Anzahl täglicher Reservierungsanfragen ist überschritten. Bitte nehmen Sie telefonisch Kontakt auf oder schreiben Sie uns eine E-Mail!"
 
 #: src/logic.php:318
 msgid "pending"
@@ -182,10 +169,6 @@ msgstr "Reservierung"
 #: src/logic.php:320
 msgid "abandoned"
 msgstr "Verlassen"
-
-#: src/logic.php:321
-msgid "canceled"
-msgstr "abgesagt"
 
 #: src/logic.php:322
 msgid "confirmed"
@@ -208,15 +191,15 @@ msgid "Appointment has been confirmed."
 msgstr "Termin bestätigt."
 
 #: src/mail.php:156
-msgid "Appointment can't be canceled!"
+msgid "Appointment can't be cancelled!"
 msgstr "Termin konnte nicht abgesagt werden!"
 
 #: src/mail.php:172
-msgid "Appointment can't be canceled"
+msgid "Appointment can't be cancelled"
 msgstr "Termin konnte nicht abgesagt werden"
 
 #: src/mail.php:176
-msgid "Appointment has been canceled"
+msgid "Appointment has been cancelled"
 msgstr "Termin abgesagt"
 
 #: src/mail.php:323
@@ -436,43 +419,24 @@ msgid "Multiple work"
 msgstr "Mehrere Arbeiten"
 
 #: src/templates/admin.tpl.php:540
-msgid ""
-"Mark this option if you want to calculate free worker slots only by current "
-"service and location. If it's not marked system will check if worker is "
-"working on any location and service at current time."
-msgstr ""
-"Markieren Sie diese Option, wenn freie Mitarbeiter-Zeitslots ausschließlich "
-"nach dem aktuell gewählten Dienst und Standort berechnen werden sollen. Wenn "
-"diese Option nicht markiert ist, prüft das System ob ein Mitarbeiten an "
-"irgendeinem Standort und Dienst zur ausgewählten Zeit bereits arbeitet."
+msgid "Mark this option if you want to calculate free worker slots only by current service and location. If it's not marked system will check if worker is working on any location and service at current time."
+msgstr "Markieren Sie diese Option, wenn freie Mitarbeiter-Zeitslots ausschließlich nach dem aktuell gewählten Dienst und Standort berechnen werden sollen. Wenn diese Option nicht markiert ist, prüft das System ob ein Mitarbeiten an irgendeinem Standort und Dienst zur ausgewählten Zeit bereits arbeitet."
 
 #: src/templates/admin.tpl.php:545
 msgid "Compatibility mode"
 msgstr "Kompatibilitätsmodus"
 
 #: src/templates/admin.tpl.php:552
-msgid ""
-"If you can't <strong>EDIT</strong> or <strong>DELETE</strong> conecntion or "
-"any other settings, you should mark this option. NOTE: <strong>After saving "
-"this options you must refresh page!</strong>"
-msgstr ""
-"Wenn Sie \"Connections\" nicht <strong>EDITIEREN</strong> oder "
-"<strong>LÖSCHEN</strong> können, sollten Sie diese Option aktivieren. "
-"HINWEIS: <strong>Nach dem Speichern dieser Option müssen Sie die Seite neu "
-"laden!</strong>"
+msgid "If you can't <strong>EDIT</strong> or <strong>DELETE</strong> conecntion or any other settings, you should mark this option. NOTE: <strong>After saving this options you must refresh page!</strong>"
+msgstr "Wenn Sie \"Connections\" nicht <strong>EDITIEREN</strong> oder <strong>LÖSCHEN</strong> können, sollten Sie diese Option aktivieren. HINWEIS: <strong>Nach dem Speichern dieser Option müssen Sie die Seite neu laden!</strong>"
 
 #: src/templates/admin.tpl.php:557
 msgid "Max number of appointments"
 msgstr "Max. Anzahl Reservierungen"
 
 #: src/templates/admin.tpl.php:565
-msgid ""
-"Number of appointments that one visitor can make reservation before limit "
-"alert is shown. Appointments are counted during one day."
-msgstr ""
-"Max. Anzahl von Reservierungen, die ein Besucher tätigen kann, bevor ein "
-"Warnhinweis bzgl. Limit-Überschreitung erscheint. Die Reservierungen werden "
-"innerhalb eines Tages gezählt."
+msgid "Number of appointments that one visitor can make reservation before limit alert is shown. Appointments are counted during one day."
+msgstr "Max. Anzahl von Reservierungen, die ein Besucher tätigen kann, bevor ein Warnhinweis bzgl. Limit-Überschreitung erscheint. Die Reservierungen werden innerhalb eines Tages gezählt."
 
 #: src/templates/admin.tpl.php:570
 msgid "Auto reservation"
@@ -511,7 +475,7 @@ msgid "Reservation"
 msgstr "Reservierung"
 
 #: src/templates/admin.tpl.php:617
-msgid "Canceled"
+msgid "cancelled"
 msgstr "Abgesagt"
 
 #: src/templates/admin.tpl.php:619
@@ -527,12 +491,8 @@ msgid "Pending notification emails"
 msgstr "E-Mail-Benachrichtigung über unbestätigte Reservierungsanfragen"
 
 #: src/templates/admin.tpl.php:660
-msgid ""
-"Enter email adress that will receive new reservation notification. Separate "
-"multiple emails with , (comma)"
-msgstr ""
-"E-Mail-Adressen angeben, die über neue Reservierungen informiert werden "
-"sollen. Mehrere E-Mail-Adressen können mit , (Komma) getrennt werden."
+msgid "Enter email adress that will receive new reservation notification. Separate multiple emails with , (comma)"
+msgstr "E-Mail-Adressen angeben, die über neue Reservierungen informiert werden sollen. Mehrere E-Mail-Adressen können mit , (Komma) getrennt werden."
 
 #: src/templates/admin.tpl.php:665
 msgid "Admin notification subject"
@@ -540,9 +500,7 @@ msgstr "Betreff Adminhinweise"
 
 #: src/templates/admin.tpl.php:673 src/templates/admin.tpl.php:686
 msgid "You can use any tag that is available as in custom email notifications."
-msgstr ""
-"Sie können beliebige Tags verwenden, die in der benutzerspezifischen E-Mail-"
-"Benachrichtigung verfügbar sind."
+msgstr "Sie können beliebige Tags verwenden, die in der benutzerspezifischen E-Mail-Benachrichtigung verfügbar sind."
 
 #: src/templates/admin.tpl.php:678
 msgid "Visitor notification subject"
@@ -553,35 +511,24 @@ msgid "Send email to worker"
 msgstr "Sende E-Mail an Angestellten"
 
 #: src/templates/admin.tpl.php:698
-msgid ""
-"Mark this option if you want to employee receive admin email after filing "
-"the form."
-msgstr ""
-"Markiere diese Option wenn der Angestellte eine E-Mail nach dem ausfüllen "
-"des Formulars erhalten soll."
+msgid "Mark this option if you want to employee receive admin email after filing the form."
+msgstr "Markiere diese Option wenn der Angestellte eine E-Mail nach dem ausfüllen des Formulars erhalten soll."
 
 #: src/templates/admin.tpl.php:703
 msgid "Send email to user"
 msgstr "Sende E-Mail an Nutzer"
 
 #: src/templates/admin.tpl.php:710
-msgid ""
-"Mark this option if you want to user receive email after filing the form."
-msgstr ""
-"Markiere diese Option wenn der Kunde eine E-Mail nach dem ausfüllen des "
-"Formulars erhalten soll."
+msgid "Mark this option if you want to user receive email after filing the form."
+msgstr "Markiere diese Option wenn der Kunde eine E-Mail nach dem ausfüllen des Formulars erhalten soll."
 
 #: src/templates/admin.tpl.php:715
 msgid "Send from"
 msgstr "Gesendet von"
 
 #: src/templates/admin.tpl.php:722
-msgid ""
-"Send from email adress (Example: Name &lt;name@domain.com&gt;). Leave blank "
-"to use default address."
-msgstr ""
-"\"Gesendet von\" E-Mail-Adresse (z.B. max@mustermann.de). Leer lassen um die "
-"Standard-Adresse zu verwenden."
+msgid "Send from email adress (Example: Name &lt;name@domain.com&gt;). Leave blank to use default address."
+msgstr "\"Gesendet von\" E-Mail-Adresse (z.B. max@mustermann.de). Leer lassen um die Standard-Adresse zu verwenden."
 
 #: src/templates/admin.tpl.php:728
 msgid "Labels"
@@ -604,12 +551,8 @@ msgid "Time format"
 msgstr "Zeit-Format"
 
 #: src/templates/admin.tpl.php:791
-msgid ""
-"Notice : date/time formating for email notification are done by <b>Settings "
-"> General</b>."
-msgstr ""
-"Hinweis: Datum/Zeit-Format für E-Mail-Benachrichtigungen können in den <b>"
-"\"allgemeinen Einstellungen\"</b> vorgenommen werden."
+msgid "Notice : date/time formating for email notification are done by <b>Settings > General</b>."
+msgstr "Hinweis: Datum/Zeit-Format für E-Mail-Benachrichtigungen können in den <b>\"allgemeinen Einstellungen\"</b> vorgenommen werden."
 
 #: src/templates/admin.tpl.php:796
 msgid "Calendar localization"
@@ -620,12 +563,8 @@ msgid "Block time"
 msgstr "Sperrzeit"
 
 #: src/templates/admin.tpl.php:822
-msgid ""
-"(in minutes). Prevent visitor from making an appointment if there are less "
-"minutes than this."
-msgstr ""
-"(in Minuten). Verhindere, dass Kunden einen Termin buchen können, wenn "
-"weniger als die angegebenen Minuten zur Verfügung stehen."
+msgid "(in minutes). Prevent visitor from making an appointment if there are less minutes than this."
+msgstr "(in Minuten). Verhindere, dass Kunden einen Termin buchen können, wenn weniger als die angegebenen Minuten zur Verfügung stehen."
 
 #: src/templates/admin.tpl.php:828
 msgid "Custom form fields"
@@ -636,24 +575,16 @@ msgid "Add"
 msgstr "Hinzufügen"
 
 #: src/templates/admin.tpl.php:853
-msgid ""
-"To use using the email notification for user there must be field named "
-"\"email\" or \"e-mail\""
-msgstr ""
-"Für die E-Mail-Benachrichtigung von Kunden muss ein Formularfeld mit einer "
-"der folgenden Bezeichnungen vorhanden sein \"email\" oder \"e-email\""
+msgid "To use using the email notification for user there must be field named \"email\" or \"e-mail\""
+msgstr "Für die E-Mail-Benachrichtigung von Kunden muss ein Formularfeld mit einer der folgenden Bezeichnungen vorhanden sein \"email\" oder \"e-email\""
 
 #: src/templates/admin.tpl.php:864
 msgid "Custom style"
 msgstr "Benutzerspezifischer Stil"
 
 #: src/templates/admin.tpl.php:870
-msgid ""
-"Place here custom css styles here. This will be included in both standard "
-"and bootstrap widget."
-msgstr ""
-"Hier können individuelle CSS Styles eingebunden werden, die dann im Standard "
-"und Bootstrap Widget genutzt werden."
+msgid "Place here custom css styles here. This will be included in both standard and bootstrap widget."
+msgstr "Hier können individuelle CSS Styles eingebunden werden, die dann im Standard und Bootstrap Widget genutzt werden."
 
 #: src/templates/admin.tpl.php:875
 msgid "Turn off css files"
@@ -664,13 +595,8 @@ msgid "I agree field"
 msgstr "\"Ich bestätige\" Feld"
 
 #: src/templates/admin.tpl.php:896
-msgid ""
-"I agree option at the end of form. If this is marked user must confirm \"I "
-"agree\" checkbox."
-msgstr ""
-"Am Ende des Formulars einen Hinaus auf \"Nutzungsbedingungen akzeptieren\" "
-"aktivieren. Falls aktiviert, muss ein entsprechendes Häkchen für die "
-"Einverständniserklärung gesetzt werden."
+msgid "I agree option at the end of form. If this is marked user must confirm \"I agree\" checkbox."
+msgstr "Am Ende des Formulars einen Hinaus auf \"Nutzungsbedingungen akzeptieren\" aktivieren. Falls aktiviert, muss ein entsprechendes Häkchen für die Einverständniserklärung gesetzt werden."
 
 #: src/templates/admin.tpl.php:901
 msgid "After cancel go to"
@@ -681,12 +607,8 @@ msgid "Go to page"
 msgstr "Gehe zu Seite"
 
 #: src/templates/admin.tpl.php:928
-msgid ""
-"After a visitor creates an appointment on the front-end form. Leave blank to "
-"turn off redirect."
-msgstr ""
-"Seite nachdem ein Kunde einen Termin gebucht hat. Leer lassen, um den "
-"Redirect zu deaktivieren."
+msgid "After a visitor creates an appointment on the front-end form. Leave blank to turn off redirect."
+msgstr "Seite nachdem ein Kunde einen Termin gebucht hat. Leer lassen, um den Redirect zu deaktivieren."
 
 #: src/templates/admin.tpl.php:938
 msgid "Currency"
@@ -705,12 +627,8 @@ msgid "Test Email"
 msgstr "Test E-Mail"
 
 #: src/templates/admin.tpl.php:1017
-msgid ""
-"Test if the mail service is working fine on this site by generating a test "
-"email that will be send to provided address."
-msgstr ""
-"Testet den Maildienst der Seite auf Funktionalität durch Erzeugen einer Test-"
-"E-Mail an die angegebene Adresse."
+msgid "Test if the mail service is working fine on this site by generating a test email that will be send to provided address."
+msgstr "Testet den Maildienst der Seite auf Funktionalität durch Erzeugen einer Test-E-Mail an die angegebene Adresse."
 
 #: src/templates/admin.tpl.php:1021 src/templates/appointments.tpl.php:53
 #: src/templates/report.tpl.php:65
@@ -817,9 +735,7 @@ msgstr "Neue Reports folgen bald!"
 
 #: src/templates/report.tpl.php:66
 msgid "Export data to CSV, can be imported to MS Excel, OpenOffice Calc... "
-msgstr ""
-"Daten als CSV exportieren (kann in MS Excel, OpenOffice, ... importiert "
-"werden) "
+msgstr "Daten als CSV exportieren (kann in MS Excel, OpenOffice, ... importiert werden) "
 
 #: src/templates/report.tpl.php:67
 msgid "Export data"

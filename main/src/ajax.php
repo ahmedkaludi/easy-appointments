@@ -837,7 +837,7 @@ class EAAjax
         $locationsTmp = $response = $this->models->get_all_rows('ea_locations');
         $servicesTmp = $response = $this->models->get_all_rows('ea_services');
 
-        $app_fields = array('id', 'location', 'service', 'worker', 'date', 'start', 'end', 'end_date', 'status', 'user', 'price', 'ip', 'session');
+        $app_fields = array('id', 'location', 'service', 'worker', 'date', 'start', 'end', 'end_date', 'status', 'user', 'price', 'ip', 'created', 'session');
         $meta_fields_tmp = $this->models->get_all_rows('ea_meta_fields');
 
         $workers = array();

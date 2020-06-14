@@ -39,18 +39,25 @@ class EAMail
     protected $time_zone;
 
     /**
+     * @var EAUtils
+     */
+    protected $utils;
+
+    /**
      * EAMail constructor.
      * @param wpdb $wpdb
      * @param EADBModels $models
      * @param EALogic $logic
      * @param EAOptions $options
+     * @param EAUtils $utils
      */
-    function __construct($wpdb, $models, $logic, $options)
+    function __construct($wpdb, $models, $logic, $options, $utils)
     {
         $this->wpdb = $wpdb;
         $this->models = $models;
         $this->logic = $logic;
         $this->options = $options;
+        $this->utils = $utils;
     }
 
     /**
@@ -142,10 +149,12 @@ EOT;
      */
     public function parse_mail_link()
     {
+        // do nothing if those values are not set
         if (empty($_GET['_ea-action']) || empty($_GET['_ea-app']) || empty($_GET['_ea-t'])) {
             return;
         }
 
+        // simple user agent check
         if ($this->is_bot()) {
             wp_redirect(get_home_url());
             return;
@@ -154,6 +163,11 @@ EOT;
         $app_id = (int)$_GET['_ea-app'];
 
         $data = $this->models->get_appintment_by_id($app_id);
+
+        // check maybe it is a two step process
+        if (empty($_POST['confirmed']) && $_POST['confirmed'] !== 'true') {
+            $this->link_action_additional_step($_GET['_ea-action'], $data);
+        }
 
         if (empty($data)) {
             header('Refresh:3; url=' . get_home_url());
@@ -208,7 +222,7 @@ EOT;
 
             // only pending and confirmed appointments can be canceled
             if ($data['status'] != 'pending' && $data['status'] != 'confirmed') {
-                wp_die(__('Appointment can\'t be canceled!', 'easy-appointments'));
+                wp_die(__('Appointment can\'t be cancelled!', 'easy-appointments'));
             }
 
             $response = $this->models->replace($table, $app_data, true);
@@ -226,14 +240,46 @@ EOT;
                 $url = apply_filters( 'ea_cant_be_canceled_redirect_url', get_home_url());
 
                 header('Refresh:3; url=' . $url);
-                wp_die(__('Appointment can\'t be canceled', 'easy-appointments'));
+                wp_die(__('Appointment can\'t be cancelled', 'easy-appointments'));
             }
 
             $url = apply_filters( 'ea_cancel_redirect_url', get_home_url());
 
             header('Refresh:3; url=' . $url);
-            wp_die(__('Appointment has been canceled', 'easy-appointments'));
+            wp_die(__('Appointment has been cancelled', 'easy-appointments'));
         }
+    }
+
+    /**
+     * @param $action
+     */
+    private function link_action_additional_step($action, $data)
+    {
+        $is_two_step = $this->options->get_option_value('mail.action.two_step');
+
+        if (empty($is_two_step)) {
+            return;
+        }
+
+        $template_path = '';
+
+        switch ($action) {
+            case 'confirm':
+                $template_path = $this->utils->get_template_path('mail.confirm.tpl.php');
+                break;
+            case 'cancel':
+                $template_path = $this->utils->get_template_path('mail.cancel.tpl.php');
+                break;
+            default:
+                return;
+        }
+
+        // parse template
+        ob_start();
+        require $template_path;
+        $content = ob_get_clean();
+
+        wp_die($content);
     }
 
     /**

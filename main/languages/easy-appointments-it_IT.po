@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Easy Appointments\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-29 14:20+0000\n"
-"PO-Revision-Date: 2020-05-17 20:16+0200\n"
+"PO-Revision-Date: 2020-06-13 18:44+0200\n"
 "Last-Translator: Massimo Scolari\n"
 "Language-Team: Italiano\n"
 "Language: it_IT\n"
@@ -15,33 +15,20 @@ msgstr ""
 "X-Loco-Version: 2.3.3; wp-5.4.1\n"
 
 #: src/templates/admin.tpl.php:933
-msgid ""
-"(in minutes). Prevent visitor from making an appointment if there are less "
-"minutes than this."
-msgstr ""
-"(in minuti). Impedire ai visitatori di fissare un appuntamento se ci sono "
-"meno minuti di questo."
+msgid "(in minutes). Prevent visitor from making an appointment if there are less minutes than this."
+msgstr "(in minuti). Impedire ai visitatori di fissare un appuntamento se ci sono meno minuti di questo."
 
 #: src/templates/admin.tpl.php:983
 msgid "* Google reCAPTCHA key can be generated via"
 msgstr "* La chiave Google reCAPTCHA può essere generata tramite"
 
 #: src/templates/admin.tpl.php:993
-msgid ""
-"* If you want to use Captcha you must have auto reservation option turned "
-"off. If you don't want to use Captcha just leave fields empty."
-msgstr ""
-"* Se si desidera utilizzare Captcha, è necessario disattivare l'opzione di "
-"prenotazione automatica. Se non si desidera utilizzare Captcha, lasciare "
-"vuoti i campi."
+msgid "* If you want to use Captcha you must have auto reservation option turned off. If you don't want to use Captcha just leave fields empty."
+msgstr "* Se si desidera utilizzare Captcha, è necessario disattivare l'opzione di prenotazione automatica. Se non si desidera utilizzare Captcha, lasciare vuoti i campi."
 
 #: src/templates/admin.tpl.php:968
-msgid ""
-"* To use using the email notification for user there must be field named "
-"\"email\" or \"e-mail\" or field with type \"email\""
-msgstr ""
-"* Per utilizzare la notifica e-mail per l'utente è necessario che ci sia un "
-"campo chiamato \"e-mail\" o \"e-mail\" o un campo con il tipo \"e-mail\""
+msgid "* To use using the email notification for user there must be field named \"email\" or \"e-mail\" or field with type \"email\""
+msgstr "* Per utilizzare la notifica e-mail per l'utente è necessario che ci sia un campo chiamato \"e-mail\" o \"e-mail\" o un campo con il tipo \"e-mail\""
 
 #: src/logic.php:375
 msgid "abandoned"
@@ -113,12 +100,8 @@ msgid "Advance Go to"
 msgstr "Reindirizzamento"
 
 #: src/templates/admin.tpl.php:1051
-msgid ""
-"After a visitor creates an appointment on the front-end form. Leave blank to "
-"turn off redirect."
-msgstr ""
-"Dopo che un visitatore crea un appuntamento sul modulo front-end. Lascia "
-"vuoto per disattivare il reindirizzamento."
+msgid "After a visitor creates an appointment on the front-end form. Leave blank to turn off redirect."
+msgstr "Dopo che un visitatore crea un appuntamento sul modulo front-end. Lascia vuoto per disattivare il reindirizzamento."
 
 #: src/templates/admin.tpl.php:1031
 msgid "After cancel go to"
@@ -129,11 +112,11 @@ msgid "Allow public access to FullCalendar shortcode"
 msgstr "Consentire l'accesso del pubblico allo shortcode FullCalendar"
 
 #: src/mail.php:229
-msgid "Appointment can't be canceled"
+msgid "Appointment can't be cancelled"
 msgstr "L'appuntamento non può essere cancellato"
 
 #: src/mail.php:211
-msgid "Appointment can't be canceled!"
+msgid "Appointment can't be cancelled!"
 msgstr "L'appuntamento non può essere cancellato"
 
 #: src/mail.php:184
@@ -141,7 +124,7 @@ msgid "Appointment can't be confirmed!"
 msgstr "L'appuntamento non può essere confermato!"
 
 #: src/mail.php:235
-msgid "Appointment has been canceled"
+msgid "Appointment has been cancelled"
 msgstr "L'appuntamento è stato annullato"
 
 #: src/mail.php:202
@@ -185,13 +168,8 @@ msgid "Bulk Add New Connections"
 msgstr "Aggiunta collettiva di Nuove Connessioni"
 
 #: src/templates/admin.tpl.php:712
-msgid ""
-"By default only logged in users can see data in FullCalendar. Mark this "
-"option if you want to allow public access for all."
-msgstr ""
-"Per impostazione predefinita, solo gli utenti che hanno effettuato l'accesso "
-"possono visualizzare i dati in FullCalendar. Selezionare questa opzione se "
-"si desidera consentire l'accesso pubblico a tutti."
+msgid "By default only logged in users can see data in FullCalendar. Mark this option if you want to allow public access for all."
+msgstr "Per impostazione predefinita, solo gli utenti che hanno effettuato l'accesso possono visualizzare i dati in FullCalendar. Selezionare questa opzione se si desidera consentire l'accesso pubblico a tutti."
 
 #: src/templates/admin.tpl.php:915
 msgid "Calendar localization"
@@ -209,12 +187,8 @@ msgid "Cancel appointment"
 msgstr "Cancella Appuntamento"
 
 #: src/templates/admin.tpl.php:756
-msgid "Canceled"
+msgid "cancelled"
 msgstr "Cancellato"
-
-#: src/logic.php:376
-msgid "canceled"
-msgstr "cancellato"
 
 #: src/templates/report.tpl.php:78
 msgid "Click to customize columns for export"
@@ -282,11 +256,8 @@ msgid "Customize"
 msgstr "Personalizzare"
 
 #: src/logic.php:255
-msgid ""
-"Daily limit of booking request has been reached. Please contact us by email!"
-msgstr ""
-"È stato raggiunto il limite giornaliero di richiesta di prenotazione. Vi "
-"preghiamo di contattarci via email."
+msgid "Daily limit of booking request has been reached. Please contact us by email!"
+msgstr "È stato raggiunto il limite giornaliero di richiesta di prenotazione. Vi preghiamo di contattarci via email."
 
 #: src/templates/appointments.tpl.php:213 src/templates/admin.tpl.php:313
 #: src/templates/mail.notification.tpl.php:30
@@ -376,12 +347,8 @@ msgid "ends at"
 msgstr "finisce a"
 
 #: src/templates/admin.tpl.php:799
-msgid ""
-"Enter email adress that will receive new reservation notification. Separate "
-"multiple emails with , (comma)"
-msgstr ""
-"Inserisci l'indirizzo email che riceverà la nuova notifica di prenotazione. "
-"Separa più e-mail con, (virgola)"
+msgid "Enter email adress that will receive new reservation notification. Separate multiple emails with , (comma)"
+msgstr "Inserisci l'indirizzo email che riceverà la nuova notifica di prenotazione. Separa più e-mail con, (virgola)"
 
 #: src/templates/admin.tpl.php:1256
 msgid "Error log"
@@ -401,13 +368,11 @@ msgstr "Esporta dati"
 
 #: src/templates/report.tpl.php:18
 msgid "Export data in Excel CSV format for selected time period."
-msgstr ""
-"Esporta i dati in formato CSV Excel per il periodo di tempo selezionato."
+msgstr "Esporta i dati in formato CSV Excel per il periodo di tempo selezionato."
 
 #: src/templates/report.tpl.php:98
 msgid "Export data to CSV, can be imported to MS Excel, OpenOffice Calc... "
-msgstr ""
-"Esporta dati in CSV, può essere importato in MS Excel, OpenOffice Calc ..."
+msgstr "Esporta dati in CSV, può essere importato in MS Excel, OpenOffice Calc ..."
 
 #: src/api/apifullcalendar.php:181
 msgid "Field that will be used as title"
@@ -427,8 +392,7 @@ msgstr "Stile modulo e reindirizzamento"
 
 #: src/frontend.php:230 src/frontend.php:490
 msgid "Form validation code expired. Please refresh page in order to continue."
-msgstr ""
-"Codice di convalida del modulo scaduto. Aggiorna la pagina per continuare."
+msgstr "Codice di convalida del modulo scaduto. Aggiorna la pagina per continuare."
 
 #: src/templates/admin.tpl.php:357 src/templates/admin.tpl.php:441
 #: src/templates/admin.tpl.php:525
@@ -461,8 +425,7 @@ msgstr "Google reCAPTCHA v2"
 
 #: src/templates/report.tpl.php:8
 msgid "Have Calendar overview of all bookings and free slots. "
-msgstr ""
-"Avere una panoramica del calendario di tutte le prenotazioni e slot gratuiti."
+msgstr "Avere una panoramica del calendario di tutte le prenotazioni e slot gratuiti."
 
 #: src/templates/admin.tpl.php:1150
 msgid "Hide price"
@@ -481,12 +444,8 @@ msgid "I agree field"
 msgstr "Sono d'accordo sul campo"
 
 #: src/templates/admin.tpl.php:1021
-msgid ""
-"I agree option at the end of form. If this is marked user must confirm \"I "
-"agree\" checkbox."
-msgstr ""
-"Accetto l'opzione alla fine del modulo. Se questo è contrassegnato, l'utente "
-"deve confermare la casella di controllo \"Accetto\"."
+msgid "I agree option at the end of form. If this is marked user must confirm \"I agree\" checkbox."
+msgstr "Accetto l'opzione alla fine del modulo. Se questo è contrassegnato, l'utente deve confermare la casella di controllo \"Accetto\"."
 
 #: src/frontend.php:309 src/frontend.php:486
 msgid "I agree with terms and conditions"
@@ -498,21 +457,12 @@ msgid "Id"
 msgstr "Id"
 
 #: src/templates/admin.tpl.php:648
-msgid ""
-"If you can't EDIT or DELETE conecntion or any other settings, you should "
-"mark this option. NOTE: After saving this options you must refresh page!"
-msgstr ""
-"Se non riesci a MODIFICARE o ELIMINARE la connessione o qualsiasi altra "
-"impostazione, dovresti contrassegnare questa opzione. NOTA: dopo aver "
-"salvato queste opzioni è necessario aggiornare la pagina!"
+msgid "If you can't EDIT or DELETE conecntion or any other settings, you should mark this option. NOTE: After saving this options you must refresh page!"
+msgstr "Se non riesci a MODIFICARE o ELIMINARE la connessione o qualsiasi altra impostazione, dovresti contrassegnare questa opzione. NOTA: dopo aver salvato queste opzioni è necessario aggiornare la pagina!"
 
 #: src/templates/admin.tpl.php:683
-msgid ""
-"if you have issues with validation code that is expired in form you can turn "
-"off nonce but you are doing that on your own risk."
-msgstr ""
-"in caso di problemi con il codice di convalida scaduto nella forma, è "
-"possibile disattivare la verifica ma lo si sta facendo a proprio rischio."
+msgid "if you have issues with validation code that is expired in form you can turn off nonce but you are doing that on your own risk."
+msgstr "in caso di problemi con il codice di convalida scaduto nella forma, è possibile disattivare la verifica ma lo si sta facendo a proprio rischio."
 
 #: src/templates/admin.tpl.php:955
 msgid "Input"
@@ -587,30 +537,16 @@ msgid "Make reservation at moment user select date and time!"
 msgstr "Prenota al momento l'utente seleziona la data e l'ora!"
 
 #: src/templates/admin.tpl.php:636
-msgid ""
-"Mark this option if you want to calculate free worker slots only by current "
-"service and location. If it's not marked system will check if worker is "
-"working on any location and service at current time."
-msgstr ""
-"Selezionare questa opzione se si desidera calcolare le aree di lavoro "
-"gratuite solo per servizio e posizione correnti. Se non è contrassegnato, il "
-"sistema verificherà se il lavoratore sta lavorando in qualsiasi posizione e "
-"servizio in questo momento."
+msgid "Mark this option if you want to calculate free worker slots only by current service and location. If it's not marked system will check if worker is working on any location and service at current time."
+msgstr "Selezionare questa opzione se si desidera calcolare le aree di lavoro gratuite solo per servizio e posizione correnti. Se non è contrassegnato, il sistema verificherà se il lavoratore sta lavorando in qualsiasi posizione e servizio in questo momento."
 
 #: src/templates/admin.tpl.php:829
-msgid ""
-"Mark this option if you want to employee receive admin email after filing "
-"the form."
-msgstr ""
-"Selezionare questa opzione se si desidera che i dipendenti ricevano l'e-mail "
-"di amministrazione dopo aver compilato il modulo."
+msgid "Mark this option if you want to employee receive admin email after filing the form."
+msgstr "Selezionare questa opzione se si desidera che i dipendenti ricevano l'e-mail di amministrazione dopo aver compilato il modulo."
 
 #: src/templates/admin.tpl.php:842
-msgid ""
-"Mark this option if you want to user receive email after filing the form."
-msgstr ""
-"Selezionare questa opzione se si desidera che l'utente riceva e-mail dopo "
-"aver compilato il modulo."
+msgid "Mark this option if you want to user receive email after filing the form."
+msgstr "Selezionare questa opzione se si desidera che l'utente riceva e-mail dopo aver compilato il modulo."
 
 #: src/templates/admin.tpl.php:659
 msgid "Max number of appointments"
@@ -665,25 +601,16 @@ msgid "Nonce"
 msgstr "Verifca"
 
 #: src/templates/admin.tpl.php:901
-msgid ""
-"Notice : date/time formating for email notification are done by Settings > "
-"General."
-msgstr ""
-"Avviso: la formattazione di data / ora per la notifica via e-mail viene "
-"eseguita da Impostazioni> Generale."
+msgid "Notice : date/time formating for email notification are done by Settings > General."
+msgstr "Avviso: la formattazione di data / ora per la notifica via e-mail viene eseguita da Impostazioni> Generale."
 
 #: src/templates/admin.tpl.php:742
 msgid "Notifications"
 msgstr "Notifiche"
 
 #: src/templates/admin.tpl.php:661
-msgid ""
-"Number of appointments that one visitor can make reservation before limit "
-"alert is shown. Appointments are counted during one day."
-msgstr ""
-"Numero di appuntamenti che un visitatore può prenotare prima che venga "
-"visualizzato l'avviso di limite. Gli appuntamenti vengono conteggiati "
-"durante un giorno."
+msgid "Number of appointments that one visitor can make reservation before limit alert is shown. Appointments are counted during one day."
+msgstr "Numero di appuntamenti che un visitatore può prenotare prima che venga visualizzato l'avviso di limite. Gli appuntamenti vengono conteggiati durante un giorno."
 
 #: src/templates/admin.tpl.php:349 src/templates/admin.tpl.php:432
 msgid "Number of slots"
@@ -727,12 +654,8 @@ msgid "Place fields separate by , for example: id,name,email"
 msgstr "Posizionare i campi separati, ad esempio: id, nome, e-mail"
 
 #: src/templates/admin.tpl.php:1005
-msgid ""
-"Place here custom css styles. This will be included in both standard and "
-"bootstrap widget."
-msgstr ""
-"Inserisci qui stili CSS personalizzati. Questo sarà incluso in entrambi i "
-"widget standard e bootstrap."
+msgid "Place here custom css styles. This will be included in both standard and bootstrap widget."
+msgstr "Inserisci qui stili CSS personalizzati. Questo sarà incluso in entrambi i widget standard e bootstrap."
 
 #: src/frontend.php:480
 msgid "Please check your appointment details below and confirm:"
@@ -846,12 +769,8 @@ msgid "Send from"
 msgstr "Invia da"
 
 #: src/templates/admin.tpl.php:854
-msgid ""
-"Send from email adress (Example: Name &lt;name@domain.com&gt;). Leave blank "
-"to use default address."
-msgstr ""
-"Invia da indirizzo e-mail (Esempio: Nome <nome@dominio.com>). Lascia vuoto "
-"per utilizzare l'indirizzo predefinito."
+msgid "Send from email adress (Example: Name &lt;name@domain.com&gt;). Leave blank to use default address."
+msgstr "Invia da indirizzo e-mail (Esempio: Nome <nome@dominio.com>). Lascia vuoto per utilizzare l'indirizzo predefinito."
 
 #: src/templates/report.tpl.php:44 src/templates/appointments.tpl.php:20
 #: src/templates/appointments.tpl.php:95 src/templates/appointments.tpl.php:164
@@ -879,9 +798,7 @@ msgstr "Valori condivisi"
 
 #. Description of the plugin
 msgid "Simple and easy to use management system for Appointments and Bookings"
-msgstr ""
-"Sistema di gestione semplice e facile da usare per appuntamenti e "
-"prenotazioni"
+msgstr "Sistema di gestione semplice e facile da usare per appuntamenti e prenotazioni"
 
 #: src/templates/admin.tpl.php:977
 msgid "Site key"
@@ -935,12 +852,8 @@ msgid "Test Email"
 msgstr "Email di prova"
 
 #: src/templates/admin.tpl.php:1235
-msgid ""
-"Test if the mail service is working fine on this site by generating a test "
-"email that will be send to provided address."
-msgstr ""
-"Verifica se il servizio di posta funziona correttamente su questo sito "
-"generando un'email di prova che verrà inviata all'indirizzo fornito."
+msgid "Test if the mail service is working fine on this site by generating a test email that will be send to provided address."
+msgstr "Verifica se il servizio di posta funziona correttamente su questo sito generando un'email di prova che verrà inviata all'indirizzo fornito."
 
 #: src/templates/admin.tpl.php:957
 msgid "Textarea"
@@ -1020,8 +933,7 @@ msgstr "Attiva la casella di controllo"
 
 #: src/frontend.php:232 src/frontend.php:492
 msgid "Unable to make ajax request. Please try again later."
-msgstr ""
-"Impossibile effettuare la richiesta Ajax. Per favore riprova più tardi."
+msgstr "Impossibile effettuare la richiesta Ajax. Per favore riprova più tardi."
 
 #: src/templates/admin.tpl.php:817
 msgid "Visitor notification subject"
@@ -1033,13 +945,8 @@ msgid "Wednesday"
 msgstr "Mercoledì"
 
 #: src/templates/admin.tpl.php:725
-msgid ""
-"WordPress can add auto paragraph html element for each line break. This "
-"option prevents WP from doing that on EA shortcode."
-msgstr ""
-"WordPress può aggiungere l'elemento html di paragrafo automatico per ogni "
-"interruzione di riga. Questa opzione impedisce a WP di farlo con lo "
-"shortcode EA."
+msgid "WordPress can add auto paragraph html element for each line break. This option prevents WP from doing that on EA shortcode."
+msgstr "WordPress può aggiungere l'elemento html di paragrafo automatico per ogni interruzione di riga. Questa opzione impedisce a WP di farlo con lo shortcode EA."
 
 #: src/templates/report.tpl.php:53 src/templates/appointments.tpl.php:29
 #: src/templates/appointments.tpl.php:95 src/templates/appointments.tpl.php:174
@@ -1050,8 +957,7 @@ msgstr "Lavoratore"
 
 #: src/api/apifullcalendar.php:174
 msgid "Worker id that will be used for getting free / taken slots"
-msgstr ""
-"ID lavoratore che verrà utilizzato per ottenere slot liberi / acquisiti"
+msgstr "ID lavoratore che verrà utilizzato per ottenere slot liberi / acquisiti"
 
 #: src/templates/admin.tpl.php:22 src/templates/admin.tpl.php:506
 msgid "Workers"
@@ -1065,18 +971,11 @@ msgstr "Sì"
 
 #: src/templates/admin.tpl.php:809 src/templates/admin.tpl.php:819
 msgid "You can use any tag that is available as in custom email notifications."
-msgstr ""
-"Puoi utilizzare qualsiasi tag disponibile come nelle notifiche e-mail "
-"personalizzate."
+msgstr "Puoi utilizzare qualsiasi tag disponibile come nelle notifiche e-mail personalizzate."
 
 #: src/templates/admin.tpl.php:744
-msgid ""
-"You can use this tags inside email content. Just place for example #id# "
-"inside mail template and that value will be replaced with value."
-msgstr ""
-"Puoi utilizzare questi tag all'interno del contenuto dell'email. Posiziona "
-"ad esempio # id # all'interno del modello di posta e quel valore verrà "
-"sostituito con valore."
+msgid "You can use this tags inside email content. Just place for example #id# inside mail template and that value will be replaced with value."
+msgstr "Puoi utilizzare questi tag all'interno del contenuto dell'email. Posiziona ad esempio # id # all'interno del modello di posta e quel valore verrà sostituito con valore."
 
 #: src/frontend.php:488
 msgid "You can't select this time slot!'"

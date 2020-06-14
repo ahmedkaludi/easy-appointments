@@ -794,6 +794,18 @@
                     </div>
                     <div class="form-item">
                         <div class="label-with-tooltip">
+                            <label for="mail.action.two_step"><?php _e('Two step action links in email', 'easy-appointments'); ?></label>
+                            <span class="tooltip tooltip-right"
+                                  data-tooltip="<?php _e('Sometimes Mail servers can open links from email for inspection. That will trigger actions such as #link_confirm#, #link_cancel#. Mark this option if you want to have additional prompt for user action via links.', 'easy-appointments'); ?>"></span>
+                        </div>
+                        <div class="field-wrap">
+                            <input class="field" data-key="mail.action.two_step" name="mail.action.two_step"
+                                   type="checkbox" <% if (_.findWhere(settings,
+                            {ea_key:'mail.action.two_step'}).ea_value == "1") { %>checked<% } %>>
+                        </div>
+                    </div>
+                    <div class="form-item">
+                        <div class="label-with-tooltip">
                             <label for=""><?php _e('Pending notification emails', 'easy-appointments'); ?></label>
                             <span class="tooltip tooltip-right"
                                   data-tooltip="<?php _e('Enter email adress that will receive new reservation notification. Separate multiple emails with , (comma)', 'easy-appointments'); ?>"></span>
@@ -1063,21 +1075,21 @@
                         </div>
                     </div>
                     <div class="form-item">
-                    	<label for=""><?php _e('Service', 'easy-appointments'); ?></label>
-                    	<select id="redirect-service" class="field">
+                        <label for=""><?php _e('Service', 'easy-appointments'); ?></label>
+                        <select id="redirect-service" class="field">
                             <% _.each(eaData.Services,function(item,key,list){ %>
                             <option value="<%= _.escape(item.id) %>"><%= _.escape(item.name) %></option>
                             <% });%>
                         </select>
                     </div>
                     <div class="form-item inline-fields">
-                    	<div class="form-item">
-	                    	<label for=""><?php _e('Redirect to', 'easy-appointments'); ?></label>
-	                    	<input id="redirect-url" name="redirect-url" type="text">
-	                    </div>
-	                    <button class="button button-primary btn-add-redirect button-field"><?php _e('Add advance redirect', 'easy-appointments'); ?></button>
+                        <div class="form-item">
+                            <label for=""><?php _e('Redirect to', 'easy-appointments'); ?></label>
+                            <input id="redirect-url" name="redirect-url" type="text">
+                        </div>
+                        <button class="button button-primary btn-add-redirect button-field"><?php _e('Add advance redirect', 'easy-appointments'); ?></button>
                     </div>
-                	<input type="hidden" id="advance-redirect" data-key="advance.redirect" class="field" name="advance.redirect" value="<%= _.escape(ea_settings['advance.redirect']) %>">
+                    <input type="hidden" id="advance-redirect" data-key="advance.redirect" class="field" name="advance.redirect" value="<%= _.escape(ea_settings['advance.redirect']) %>">
                     <div class="form-item">
                         <ul id="custom-redirect-list" class="list-form-item"></ul>
                     </div>

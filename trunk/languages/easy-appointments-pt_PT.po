@@ -3,15 +3,15 @@ msgstr ""
 "Project-Id-Version: Easy Appointments\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-01-03 22:58+0000\n"
-"PO-Revision-Date: 2017-01-03 23:59+0000\n"
+"PO-Revision-Date: 2020-06-13 18:46+0200\n"
 "Last-Translator: admin <geral.kma@gmail.com>\n"
 "Language-Team: Portuguese (Portugal)\n"
-"Language: pt-PT\n"
-"Plural-Forms: nplurals=2; plural=n != 1\n"
+"Language: pt_PT\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Loco - https://localise.biz/"
+"X-Generator: Poedit 2.0.8\n"
 
 #: src/logic.php:303
 msgid "pending"
@@ -25,9 +25,14 @@ msgstr "reserva"
 msgid "abandoned"
 msgstr "abandonado"
 
-#: src/logic.php:306
-msgid "canceled"
-msgstr "cancelado"
+#: src/logic.php:306 src/templates/admin.tpl.php:492
+#, fuzzy
+msgid "cancelled"
+msgstr ""
+"#-#-#-#-#  catalog.po (Easy Appointments)  #-#-#-#-#\n"
+"cancelado\n"
+"#-#-#-#-#  catalog.po (Easy Appointments)  #-#-#-#-#\n"
+"Cancelado"
 
 #: src/logic.php:307
 msgid "confirmed"
@@ -63,15 +68,15 @@ msgid "Appointment has been confirmed."
 msgstr "Marcação confirmada"
 
 #: src/mail.php:123
-msgid "Appointment can't be canceled!"
+msgid "Appointment can't be cancelled!"
 msgstr "Marcação não pode ser cancelada"
 
 #: src/mail.php:139
-msgid "Appointment can't be canceled"
+msgid "Appointment can't be cancelled"
 msgstr "Marcação não pode ser cancelada"
 
 #: src/mail.php:143
-msgid "Appointment has been canceled"
+msgid "Appointment has been cancelled"
 msgstr "Marcação foi cancelada"
 
 #: src/mail.php:282
@@ -102,14 +107,13 @@ msgstr "Relatórios"
 msgid "Please select another day"
 msgstr "Por favor selecione outro dia"
 
-#: src/frontend.php:154 src/frontend.php:339 
+#: src/frontend.php:154 src/frontend.php:339
 #: src/templates/appointments.tpl.php:85
 msgid "Date & time"
 msgstr "Data & hora"
 
-#: src/frontend.php:155 src/frontend.php:342 src/templates/admin.tpl.php:127 
-#: src/templates/appointments.tpl.php:86 
-#: src/templates/appointments.tpl.php:213 
+#: src/frontend.php:155 src/frontend.php:342 src/templates/admin.tpl.php:127
+#: src/templates/appointments.tpl.php:86 src/templates/appointments.tpl.php:213
 #: src/templates/mail.notification.tpl.php:40
 msgid "Price"
 msgstr "Preço"
@@ -138,13 +142,13 @@ msgstr "Tem que concordar com os termos e condições"
 msgid "Submit"
 msgstr "Enviar"
 
-#: src/frontend.php:237 src/frontend.php:341 src/templates/admin.tpl.php:104 
-#: src/templates/admin.tpl.php:162 src/templates/admin.tpl.php:226 
+#: src/frontend.php:237 src/frontend.php:341 src/templates/admin.tpl.php:104
+#: src/templates/admin.tpl.php:162 src/templates/admin.tpl.php:226
 #: src/templates/admin.tpl.php:412 src/templates/appointments.tpl.php:225
 msgid "Cancel"
 msgstr "Cancelar"
 
-#: src/frontend.php:265 src/frontend.php:270 src/frontend.php:286 
+#: src/frontend.php:265 src/frontend.php:270 src/frontend.php:286
 #: src/frontend.php:328
 msgid "This field is required."
 msgstr "Este campo é obrigatório"
@@ -165,7 +169,7 @@ msgstr "Por favor insira pelo menos 3 digitos."
 msgid "Email"
 msgstr "Email"
 
-#: src/frontend.php:334 src/install.php:692 src/templates/admin.tpl.php:67 
+#: src/frontend.php:334 src/install.php:692 src/templates/admin.tpl.php:67
 #: src/templates/admin.tpl.php:125 src/templates/admin.tpl.php:184
 msgid "Name"
 msgstr "Nome"
@@ -210,33 +214,32 @@ msgstr "Clique no icon do menu para abrir o relatório"
 msgid "New reports are comming soon!"
 msgstr "Novos relatórios em breve!"
 
-#: src/templates/report.tpl.php:32 src/templates/admin.tpl.php:69 
-#: src/templates/admin.tpl.php:247 src/templates/admin.tpl.php:332 
-#: src/templates/admin.tpl.php:601 src/templates/appointments.tpl.php:11 
-#: src/templates/appointments.tpl.php:82 
-#: src/templates/appointments.tpl.php:142 
+#: src/templates/report.tpl.php:32 src/templates/admin.tpl.php:69
+#: src/templates/admin.tpl.php:247 src/templates/admin.tpl.php:332
+#: src/templates/admin.tpl.php:601 src/templates/appointments.tpl.php:11
+#: src/templates/appointments.tpl.php:82 src/templates/appointments.tpl.php:142
 #: src/templates/mail.notification.tpl.php:12
 msgid "Location"
 msgstr "Localização"
 
-#: src/templates/report.tpl.php:39 src/templates/admin.tpl.php:247 
-#: src/templates/admin.tpl.php:343 src/templates/admin.tpl.php:593 
-#: src/templates/appointments.tpl.php:20 src/templates/appointments.tpl.php:82 
-#: src/templates/appointments.tpl.php:152 
+#: src/templates/report.tpl.php:39 src/templates/admin.tpl.php:247
+#: src/templates/admin.tpl.php:343 src/templates/admin.tpl.php:593
+#: src/templates/appointments.tpl.php:20 src/templates/appointments.tpl.php:82
+#: src/templates/appointments.tpl.php:152
 #: src/templates/mail.notification.tpl.php:16
 msgid "Service"
 msgstr "Serviço"
 
-#: src/templates/report.tpl.php:46 src/templates/admin.tpl.php:247 
-#: src/templates/admin.tpl.php:355 src/templates/admin.tpl.php:609 
-#: src/templates/appointments.tpl.php:29 src/templates/appointments.tpl.php:82 
-#: src/templates/appointments.tpl.php:162 
+#: src/templates/report.tpl.php:46 src/templates/admin.tpl.php:247
+#: src/templates/admin.tpl.php:355 src/templates/admin.tpl.php:609
+#: src/templates/appointments.tpl.php:29 src/templates/appointments.tpl.php:82
+#: src/templates/appointments.tpl.php:162
 #: src/templates/mail.notification.tpl.php:20
 msgid "Worker"
 msgstr "Colaborador"
 
-#: src/templates/report.tpl.php:54 src/templates/admin.tpl.php:59 
-#: src/templates/admin.tpl.php:117 src/templates/admin.tpl.php:176 
+#: src/templates/report.tpl.php:54 src/templates/admin.tpl.php:59
+#: src/templates/admin.tpl.php:117 src/templates/admin.tpl.php:176
 #: src/templates/admin.tpl.php:240 src/templates/appointments.tpl.php:74
 msgid "Refresh"
 msgstr "Actualizar"
@@ -252,8 +255,8 @@ msgstr "Para"
 #: src/templates/report.tpl.php:66
 msgid "Export data to CSV, can be imported to MS Excel, OpenOffice Calc... "
 msgstr ""
-"Exportar dados para CSV, pode ser importado para MS Excel, OpenOffice Calc .."
-"."
+"Exportar dados para CSV, pode ser importado para MS Excel, OpenOffice "
+"Calc ..."
 
 #: src/templates/report.tpl.php:67
 msgid "Export data"
@@ -291,25 +294,25 @@ msgstr "Adicionar nova localização"
 msgid "Address"
 msgstr "Morada"
 
-#: src/templates/admin.tpl.php:70 src/templates/admin.tpl.php:128 
+#: src/templates/admin.tpl.php:70 src/templates/admin.tpl.php:128
 #: src/templates/admin.tpl.php:188 src/templates/admin.tpl.php:256
 msgid "Actions"
 msgstr "Acções"
 
-#: src/templates/admin.tpl.php:92 src/templates/admin.tpl.php:150 
-#: src/templates/admin.tpl.php:213 src/templates/admin.tpl.php:322 
+#: src/templates/admin.tpl.php:92 src/templates/admin.tpl.php:150
+#: src/templates/admin.tpl.php:213 src/templates/admin.tpl.php:322
 #: src/templates/appointments.tpl.php:129
 msgid "Edit"
 msgstr "Editar"
 
-#: src/templates/admin.tpl.php:93 src/templates/admin.tpl.php:151 
-#: src/templates/admin.tpl.php:214 src/templates/admin.tpl.php:323 
+#: src/templates/admin.tpl.php:93 src/templates/admin.tpl.php:151
+#: src/templates/admin.tpl.php:214 src/templates/admin.tpl.php:323
 #: src/templates/appointments.tpl.php:130
 msgid "Delete"
 msgstr "Apagar"
 
-#: src/templates/admin.tpl.php:103 src/templates/admin.tpl.php:161 
-#: src/templates/admin.tpl.php:225 src/templates/admin.tpl.php:411 
+#: src/templates/admin.tpl.php:103 src/templates/admin.tpl.php:161
+#: src/templates/admin.tpl.php:225 src/templates/admin.tpl.php:411
 #: src/templates/admin.tpl.php:799 src/templates/appointments.tpl.php:224
 msgid "Save"
 msgstr "Salvar"
@@ -338,7 +341,7 @@ msgstr "Dias da semana"
 msgid "Time"
 msgstr "Hora"
 
-#: src/templates/admin.tpl.php:253 src/templates/appointments.tpl.php:197 
+#: src/templates/admin.tpl.php:253 src/templates/appointments.tpl.php:197
 #: src/templates/mail.notification.tpl.php:24
 msgid "Date"
 msgstr "Data"
@@ -391,12 +394,12 @@ msgstr "Activo desde"
 msgid "to"
 msgstr "para"
 
-#: src/templates/admin.tpl.php:315 src/templates/admin.tpl.php:402 
+#: src/templates/admin.tpl.php:315 src/templates/admin.tpl.php:402
 #: src/templates/admin.tpl.php:405
 msgid "No"
 msgstr "Não"
 
-#: src/templates/admin.tpl.php:317 src/templates/admin.tpl.php:403 
+#: src/templates/admin.tpl.php:317 src/templates/admin.tpl.php:403
 #: src/templates/admin.tpl.php:406
 msgid "Yes"
 msgstr "Sim"
@@ -491,10 +494,6 @@ msgstr "Pendente"
 msgid "Reservation"
 msgstr "Reserva"
 
-#: src/templates/admin.tpl.php:492
-msgid "Canceled"
-msgstr "Cancelado"
-
 #: src/templates/admin.tpl.php:493
 msgid "Confirmed"
 msgstr "Confirmado"
@@ -582,8 +581,8 @@ msgstr "Formato hora"
 
 #: src/templates/admin.tpl.php:643
 msgid ""
-"Notice : date/time formating for email notification are done by <b>Settings >"
-" General</b>."
+"Notice : date/time formating for email notification are done by <b>Settings "
+"> General</b>."
 msgstr ""
 "Observação: a formatação de data / hora para notificação por e-mail é feita "
 "por <b> Configurações> Geral </ b>."
@@ -679,7 +678,7 @@ msgstr "Log de Erros"
 msgid "Loading..."
 msgstr "A carregar..."
 
-#: src/templates/appointments.tpl.php:42 src/templates/appointments.tpl.php:86 
+#: src/templates/appointments.tpl.php:42 src/templates/appointments.tpl.php:86
 #: src/templates/mail.notification.tpl.php:8
 msgid "Status"
 msgstr "Estado"
@@ -716,7 +715,7 @@ msgstr "Cliente"
 msgid "Descrtiption"
 msgstr "Descrição"
 
-#: src/templates/appointments.tpl.php:86 
+#: src/templates/appointments.tpl.php:86
 #: src/templates/mail.notification.tpl.php:36
 msgid "Created"
 msgstr "Criado"

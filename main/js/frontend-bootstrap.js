@@ -492,6 +492,13 @@
 
             calendarEl = jQuery(calendar.dpDiv).parents('.date');
 
+            if (plugin.settings.currentDate === dateString && calendarEl.find('.time-row').length > 0) {
+                calendarEl.find('.time-row').remove();
+                return;
+            }
+
+            plugin.settings.currentDate = dateString;
+
             calendarEl.parent().next().addClass('disabled');
 
             var options = this.getPrevousOptions(calendarEl);

@@ -1,17 +1,16 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/easy-"
-"appointments\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/easy-appointments\n"
 "POT-Creation-Date: 2016-11-18 15:58+0100\n"
-"PO-Revision-Date: 2018-04-15 22:50+0200\n"
+"PO-Revision-Date: 2020-06-13 18:43+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fr_FR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.0.6\n"
+"X-Generator: Poedit 2.0.8\n"
 "X-Poedit-Basepath: .\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
@@ -32,8 +31,7 @@ msgid "Reports"
 msgstr "Rapports"
 
 #: src/ajax.php:175
-msgid ""
-"Daily limit of booking request has been reached. Please contact us by email!"
+msgid "Daily limit of booking request has been reached. Please contact us by email!"
 msgstr "Le nombre max de rdv journalier a été atteint"
 
 #: src/ajax.php:185
@@ -143,10 +141,6 @@ msgstr "accepté"
 msgid "abandoned"
 msgstr "abandon"
 
-#: src/logic.php:280
-msgid "canceled"
-msgstr "annulé"
-
 #: src/logic.php:281
 msgid "confirmed"
 msgstr "confirmé"
@@ -168,15 +162,15 @@ msgid "Appointment has been confirmed."
 msgstr "Le rendez-vous a été confirmé"
 
 #: src/mail.php:83
-msgid "Appointment can't be canceled!"
+msgid "Appointment can't be cancelled!"
 msgstr "Le rendez-vous ne peut pas être annulé"
 
 #: src/mail.php:96
-msgid "Appointment can't be canceled"
+msgid "Appointment can't be cancelled"
 msgstr "Le rendez-vous ne peut pas être annulé"
 
 #: src/mail.php:100
-msgid "Appointment has been canceled"
+msgid "Appointment has been cancelled"
 msgstr "Le rendez-vous a été annulé"
 
 #: src/metafields.php:19
@@ -374,39 +368,23 @@ msgid "Multiple work"
 msgstr "Prestations multiples"
 
 #: src/templates/admin.tpl.php:423
-msgid ""
-"Mark this option if you want to calculate free worker slots only by current "
-"service and location. If it's not marked system will check if worker is "
-"working on any location and service at current time."
-msgstr ""
-"Cochez cette option si vous voulez trouver des créneaux en vérifiant les "
-"disponibilités de l'employé pour un seul lieu uniquement et ses prestations. "
-"Décochez si vous voulez que le système trouve un créneau en vérifiant les "
-"disponibilités de l'employé sur tous les lieux et toutes les prestations."
+msgid "Mark this option if you want to calculate free worker slots only by current service and location. If it's not marked system will check if worker is working on any location and service at current time."
+msgstr "Cochez cette option si vous voulez trouver des créneaux en vérifiant les disponibilités de l'employé pour un seul lieu uniquement et ses prestations. Décochez si vous voulez que le système trouve un créneau en vérifiant les disponibilités de l'employé sur tous les lieux et toutes les prestations."
 
 #: src/templates/admin.tpl.php:428
 msgid "Compatibility mode"
 msgstr "Mode compatibilité"
 
 #: src/templates/admin.tpl.php:434
-msgid ""
-"If you can't <strong>EDIT</strong> or <strong>DELETE</strong> conecntion or "
-"any other settings, you should mark this option. NOTE: <strong>After saving "
-"this options you must refresh page!</strong>"
-msgstr ""
-"Si vous ne pouvez pas <strong>éditer</strong> ou <strong>supprimer</strong> "
-"les connections ou les autres réglages vous devez cochez cette option. "
-"Note : <strong>après après sauvegardée cette option, rechargez la page</"
-"strong>"
+msgid "If you can't <strong>EDIT</strong> or <strong>DELETE</strong> conecntion or any other settings, you should mark this option. NOTE: <strong>After saving this options you must refresh page!</strong>"
+msgstr "Si vous ne pouvez pas <strong>éditer</strong> ou <strong>supprimer</strong> les connections ou les autres réglages vous devez cochez cette option. Note : <strong>après après sauvegardée cette option, rechargez la page</strong>"
 
 #: src/templates/admin.tpl.php:439
 msgid "Max number of appointments"
 msgstr "Nombre de rendez-vous maximum"
 
 #: src/templates/admin.tpl.php:445
-msgid ""
-"Number of appointments that one visitor can make reservation before limit "
-"alert is shown. Appointments are count during one day."
+msgid "Number of appointments that one visitor can make reservation before limit alert is shown. Appointments are count during one day."
 msgstr "Nombre de rendez-vous maximum par visiteur et par jour"
 
 #: src/templates/admin.tpl.php:450
@@ -438,7 +416,7 @@ msgid "Reservation"
 msgstr ""
 
 #: src/templates/admin.tpl.php:479
-msgid "Canceled"
+msgid "cancelled"
 msgstr "Annulée"
 
 #: src/templates/admin.tpl.php:483
@@ -450,12 +428,8 @@ msgid "Pending notification emails"
 msgstr "Email de notification des demandes"
 
 #: src/templates/admin.tpl.php:499
-msgid ""
-"Enter email adress that will recive new reservation notification. Separate "
-"multiple emails with , (comma)"
-msgstr ""
-"Email qui reçoit les demandes de rendez-vous. Séparer les emails par une "
-"virgule (si plusieurs)"
+msgid "Enter email adress that will recive new reservation notification. Separate multiple emails with , (comma)"
+msgstr "Email qui reçoit les demandes de rendez-vous. Séparer les emails par une virgule (si plusieurs)"
 
 #: src/templates/admin.tpl.php:504
 msgid "Admin notification subject"
@@ -474,20 +448,15 @@ msgid "Send email to user"
 msgstr "Envoyer le mail au client"
 
 #: src/templates/admin.tpl.php:532
-msgid ""
-"Mark this option if you want to user recive email after filing the form."
-msgstr ""
-"Cocher si vous souhaiter que le client reçoive ce mail après avoir rempli le "
-"formulaire"
+msgid "Mark this option if you want to user recive email after filing the form."
+msgstr "Cocher si vous souhaiter que le client reçoive ce mail après avoir rempli le formulaire"
 
 #: src/templates/admin.tpl.php:537
 msgid "Send from"
 msgstr "Email d'envoi"
 
 #: src/templates/admin.tpl.php:543
-msgid ""
-"Send from email adress (Example: Name &lt;name@domain.com&gt;). Leave blank "
-"to use default address."
+msgid "Send from email adress (Example: Name &lt;name@domain.com&gt;). Leave blank to use default address."
 msgstr "Adresse de laquelle est envoyé le mail (si vide, email WP par défaut)"
 
 #: src/templates/admin.tpl.php:549
@@ -511,12 +480,8 @@ msgid "Time format"
 msgstr "Format de l'heure"
 
 #: src/templates/admin.tpl.php:604
-msgid ""
-"Notice : date/time formating for email notification are done by <b>Settings "
-"> General</b>."
-msgstr ""
-"Note : le format de la date et de l'heure pour l'email de notification sont "
-"gérés par WP (Réglages > Général)"
+msgid "Notice : date/time formating for email notification are done by <b>Settings > General</b>."
+msgstr "Note : le format de la date et de l'heure pour l'email de notification sont gérés par WP (Réglages > Général)"
 
 #: src/templates/admin.tpl.php:609
 msgid "Calendar localization"
@@ -527,9 +492,7 @@ msgid "Block time"
 msgstr "Temps restant minimum"
 
 #: src/templates/admin.tpl.php:634
-msgid ""
-"(in minutes). Prevent visitor to make appointment if there are less minutes "
-"that this."
+msgid "(in minutes). Prevent visitor to make appointment if there are less minutes that this."
 msgstr "(en minutes). Empêche de prendre un rdv s'il reste moins que ..."
 
 #: src/templates/admin.tpl.php:640
@@ -541,22 +504,16 @@ msgid "Add"
 msgstr "Ajouter"
 
 #: src/templates/admin.tpl.php:663
-msgid ""
-"For using the email notification for user there must be field named \"Email\""
-msgstr ""
-"Pour utiliser la notification par email du client il faut un champs \"Email\""
+msgid "For using the email notification for user there must be field named \"Email\""
+msgstr "Pour utiliser la notification par email du client il faut un champs \"Email\""
 
 #: src/templates/admin.tpl.php:674
 msgid "Custom style"
 msgstr "Style personnalisé"
 
 #: src/templates/admin.tpl.php:680
-msgid ""
-"Place here custom css styles. This will be included in both standard and "
-"bootstrap widget."
-msgstr ""
-"Ecrivez ici des styles CSS personnalisés. Ils seront repris dans les widgets "
-"standard et Bootstrap"
+msgid "Place here custom css styles. This will be included in both standard and bootstrap widget."
+msgstr "Ecrivez ici des styles CSS personnalisés. Ils seront repris dans les widgets standard et Bootstrap"
 
 #: src/templates/admin.tpl.php:685
 msgid "Turn off css files"
@@ -567,12 +524,8 @@ msgid "I agree field"
 msgstr "Champs \"J'accepte les conditions\""
 
 #: src/templates/admin.tpl.php:703
-msgid ""
-"I agree option at the end of form. If this is marked user must confirme \"I "
-"agree\" checkbox."
-msgstr ""
-"\"J'accepte les conditions\" à la fin du formulaire. Si cette option est "
-"cohée, le client devra accepter les conditions pour valider le formulaire"
+msgid "I agree option at the end of form. If this is marked user must confirme \"I agree\" checkbox."
+msgstr "\"J'accepte les conditions\" à la fin du formulaire. Si cette option est cohée, le client devra accepter les conditions pour valider le formulaire"
 
 #: src/templates/admin.tpl.php:708
 msgid "After cancel go to"
@@ -583,12 +536,8 @@ msgid "Go to page"
 msgstr "Aller à la page"
 
 #: src/templates/admin.tpl.php:733
-msgid ""
-"after visitor create appointment on front-end form. Leave blank to turn off "
-"redirect."
-msgstr ""
-"Après que le client ait validé son rendez-vous. Pas de redirection si laissé "
-"blanc"
+msgid "after visitor create appointment on front-end form. Leave blank to turn off redirect."
+msgstr "Après que le client ait validé son rendez-vous. Pas de redirection si laissé blanc"
 
 #: src/templates/admin.tpl.php:743
 msgid "Currency"
