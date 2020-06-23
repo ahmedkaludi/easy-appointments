@@ -600,7 +600,7 @@
                     	<span class="icon icon-mail"></span><span class="text-label"><?php _e('Mail Notifications', 'easy-appointments'); ?></span>
                     </a>
                     <a data-tab="tab-full-calendar" href="#">
-                      <span class="icon icon-fullcalendar"></span><span class="text-label"><?php _e('FullCalendar Settings', 'easy-appointments'); ?></span>
+                      <span class="icon icon-fullcalendar"></span><span class="text-label"><?php _e('FullCalendar Shortcode', 'easy-appointments'); ?></span>
                     </a>
                     <a data-tab="tab-labels" href="#">
                     	<span class="icon icon-label"></span><span class="text-label"><?php _e('Labels', 'easy-appointments'); ?></span>
