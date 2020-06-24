@@ -85,7 +85,7 @@ class EAFullCalendar
     }
 
     /**
-     * Shortcode def
+     * Shortcode def for Full Calendar
      *
      * @param $atts
      * @return string
@@ -101,6 +101,8 @@ class EAFullCalendar
             'default_date'         => date('Y-m-d'),
             'min_date'             => null,
             'max_date'             => null,
+            'time_format'          => 'h(:mm)t',
+            'display_event_end'    => '0',
             'show_remaining_slots' => '0',
             'show_week'            => '0',
             'title_field'          => 'name',
@@ -109,7 +111,8 @@ class EAFullCalendar
             'day_names_short'      => 'Sun,Mon,Tue,Wed,Thu,Fri,Sat',
             'day_names'            => 'Sunday,Monday,Tuesday,Wednesday,Thursday,Friday,Saturday',
             'month_names_short'    => 'Jan,Feb,Mar,Apr,May,Jun,Jul,Aug,Sep,Oct,Nov,Dec',
-            'month_names'          => 'January,February,March,April,May,June,July,August,September,October,November,December'
+            'month_names'          => 'January,February,March,April,May,June,July,August,September,October,November,December',
+            'button_labels'        => 'today,month,week,day,list'
         ), $atts);
 
         // scripts that are going to be used
@@ -133,11 +136,14 @@ class EAFullCalendar
         $day_names = $this->convert_csv_to_js_array_of_strings($code_params['day_names']);
         $month_names_short = $this->convert_csv_to_js_array_of_strings($code_params['month_names_short']);
         $month_names = $this->convert_csv_to_js_array_of_strings($code_params['month_names']);
+        $button_labels = explode(',', $code_params['button_labels']);
 
         // set it as optional
         $location_param = $code_params['location'] !== null ? "location: '{$code_params['location']}'," : '';
         $service_param = $code_params['service'] !== null ? "service: '{$code_params['service']}'," : '';
         $worker_param = $code_params['worker'] !== null ? "worker: '{$code_params['worker']}'," : '';
+
+        $display_end_time = $code_params['display_event_end'] ? 'true' : 'false';
 
         $script = <<<EOT
   jQuery(document).ready(function() {
@@ -162,9 +168,18 @@ class EAFullCalendar
       dayNames: {$day_names},
       monthNamesShort: {$month_names_short},
       monthNames: {$month_names},
+      buttonText: {
+        today: '{$button_labels[0]}',
+        month: '{$button_labels[1]}',
+        week:  '{$button_labels[2]}',
+        day:   '{$button_labels[3]}',
+        list:  '{$button_labels[4]}'
+      },
       isRTL: {$is_rtl},
       defaultView: '{$code_params['default_view']}',
       showNonCurrentDates: false,
+      timeFormat: '{$code_params['time_format']}',
+      displayEventEnd: {$display_end_time},
       weekNumbers: {$show_week_numbers},
       firstDay: {$code_params['start_of_week']},
       defaultDate: '{$code_params['default_date']}',
@@ -222,7 +237,9 @@ EOT;
     }
 
     /**
-     * @param $array
+     * Formatting JS values for Calendar
+     *
+     * @param $arrayString
      * @return string
      */
     protected function convert_csv_to_js_array_of_strings($arrayString)

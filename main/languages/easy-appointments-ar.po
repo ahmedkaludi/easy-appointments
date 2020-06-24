@@ -9,9 +9,9 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2017-04-23 10:50+0100\n"
+"PO-Revision-Date: 2020-06-13 18:38+0200\n"
 "Language-Team: \n"
-"X-Generator: Poedit 1.5.4\n"
+"X-Generator: Poedit 2.0.8\n"
 "Last-Translator: \n"
 "Plural-Forms: nplurals=6; plural=(n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
 "&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5);\n"
@@ -58,8 +58,7 @@ msgid "Date & time"
 msgstr "التاريخ والوقت"
 
 #: src/frontend.php:154 src/frontend.php:338 src/templates/admin.tpl.php:127
-#: src/templates/appointments.tpl.php:86
-#: src/templates/appointments.tpl.php:213
+#: src/templates/appointments.tpl.php:86 src/templates/appointments.tpl.php:213
 #: src/templates/mail.notification.tpl.php:40
 msgid "Price"
 msgstr "الســعر"
@@ -152,8 +151,8 @@ msgstr "حجز"
 msgid "abandoned"
 msgstr "مستبعد"
 
-#: src/logic.php:306
-msgid "canceled"
+#: src/logic.php:306 src/templates/admin.tpl.php:492
+msgid "cancelled"
 msgstr "ملغى"
 
 #: src/logic.php:307
@@ -177,15 +176,15 @@ msgid "Appointment has been confirmed."
 msgstr "تم تأكيد الموعد."
 
 #: src/mail.php:123
-msgid "Appointment can't be canceled!"
+msgid "Appointment can't be cancelled!"
 msgstr "لا يمكن إلغاء الموعد!"
 
 #: src/mail.php:139
-msgid "Appointment can't be canceled"
+msgid "Appointment can't be cancelled"
 msgstr "لا يمكن إلغاء الموعد"
 
 #: src/mail.php:143
-msgid "Appointment has been canceled"
+msgid "Appointment has been cancelled"
 msgstr "تم إلغاء الموعد"
 
 #: src/mail.php:282
@@ -295,16 +294,14 @@ msgstr "أضف اتصال جديد"
 
 #: src/templates/admin.tpl.php:247 src/templates/admin.tpl.php:343
 #: src/templates/admin.tpl.php:593 src/templates/appointments.tpl.php:20
-#: src/templates/appointments.tpl.php:82
-#: src/templates/appointments.tpl.php:152
+#: src/templates/appointments.tpl.php:82 src/templates/appointments.tpl.php:152
 #: src/templates/mail.notification.tpl.php:16 src/templates/report.tpl.php:39
 msgid "Service"
 msgstr "الخدمة"
 
 #: src/templates/admin.tpl.php:247 src/templates/admin.tpl.php:355
 #: src/templates/admin.tpl.php:609 src/templates/appointments.tpl.php:29
-#: src/templates/appointments.tpl.php:82
-#: src/templates/appointments.tpl.php:162
+#: src/templates/appointments.tpl.php:82 src/templates/appointments.tpl.php:162
 #: src/templates/mail.notification.tpl.php:20 src/templates/report.tpl.php:46
 msgid "Worker"
 msgstr "العامل"
@@ -467,10 +464,6 @@ msgstr "للمراجعة"
 #: src/templates/admin.tpl.php:491
 msgid "Reservation"
 msgstr "حجز"
-
-#: src/templates/admin.tpl.php:492
-msgid "Canceled"
-msgstr "ملغى"
 
 #: src/templates/admin.tpl.php:493
 msgid "Confirmed"

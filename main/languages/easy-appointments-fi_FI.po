@@ -3,20 +3,24 @@ msgstr ""
 "Project-Id-Version: Easy Appointments 1.8.13\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-06-05 12:19:51+00:00\n"
-"PO-Revision-Date: Fri Jul 29 2016 11:56:31 GMT+0200\n"
+"PO-Revision-Date: 2020-06-13 18:42+0200\n"
 "Last-Translator: wp_user <mail@vodel.de>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: German\n"
-"Plural-Forms: nplurals=2; plural=n != 1\n"
+"Language: de\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-Basepath: .\n"
-"X-Poedit-SearchPath-0: ..\n"
-"X-Poedit-KeywordsList: _:1;gettext:1;dgettext:2;ngettext:1,2;dngettext:2,3;__:1;_e:1;_c:1;_n:1,2;_n_noop:1,2;_nc:1,2;__ngettext:1,2;__ngettext_noop:1,2;_x:1,2c;_ex:1,2c;_nx:1,2,4c;_nx_noop:1,2,3c;_n_js:1,2;_nx_js:1,2,3c;esc_attr__:1;esc_html__:1;esc_attr_e:1;esc_html_e:1;esc_attr_x:1,2c;esc_html_x:1,2c;comments_number_link:2,3;t:1;st:1;trans:1;transChoice:1,2\n"
+"X-Poedit-KeywordsList: _:1;gettext:1;dgettext:2;ngettext:1,2;dngettext:2,3;"
+"__:1;_e:1;_c:1;_n:1,2;_n_noop:1,2;_nc:1,2;__ngettext:1,2;__ngettext_noop:1,2;"
+"_x:1,2c;_ex:1,2c;_nx:1,2,4c;_nx_noop:1,2,3c;_n_js:1,2;_nx_js:1,2,3c;"
+"esc_attr__:1;esc_html__:1;esc_attr_e:1;esc_html_e:1;esc_attr_x:1,2c;"
+"esc_html_x:1,2c;comments_number_link:2,3;t:1;st:1;trans:1;transChoice:1,2\n"
 "X-Loco-Target-Locale: de_DE\n"
-"X-Generator: Loco - https://localise.biz/\n"
+"X-Generator: Poedit 2.0.8\n"
+"Language-Team: \n"
+"X-Poedit-SearchPath-0: ..\n"
 
 #: src/mail.php:39
 msgid "No appointment."
@@ -35,15 +39,15 @@ msgid "Appointment has been confirmed."
 msgstr "Varaus on vahvistettu."
 
 #: src/mail.php:83
-msgid "Appointment can't be canceled!"
+msgid "Appointment can't be cancelled!"
 msgstr "Varausta ei voida peruuttaa"
 
 #: src/mail.php:96
-msgid "Appointment can't be canceled"
+msgid "Appointment can't be cancelled"
 msgstr "Varausta ei voida peruuttaa"
 
 #: src/mail.php:100
-msgid "Appointment has been canceled"
+msgid "Appointment has been cancelled"
 msgstr "Varaus peruuttu"
 
 #: src/templates/admin.tpl.php:450
@@ -95,8 +99,11 @@ msgid "Reports"
 msgstr "Raportit"
 
 #: src/ajax.php:175
-msgid "Daily limit of booking request has been reached. Please contact us by email!"
-msgstr "Varauksien enimmäisraja on ylitetty. Olkaa hyvä ja ottakaa meihin yhteyttä sähköpostitse!"
+msgid ""
+"Daily limit of booking request has been reached. Please contact us by email!"
+msgstr ""
+"Varauksien enimmäisraja on ylitetty. Olkaa hyvä ja ottakaa meihin yhteyttä "
+"sähköpostitse!"
 
 #: src/ajax.php:185
 msgid "Something went wrong! Please try again."
@@ -205,9 +212,14 @@ msgstr "varaus"
 msgid "abandoned"
 msgstr "hylätty"
 
-#: src/logic.php:280
-msgid "canceled"
-msgstr "peruuttu"
+#: src/logic.php:280 src/templates/admin.tpl.php:479
+#, fuzzy
+msgid "cancelled"
+msgstr ""
+"#-#-#-#-#  catalog.po (Easy Appointments 1.8.13)  #-#-#-#-#\n"
+"peruuttu\n"
+"#-#-#-#-#  catalog.po (Easy Appointments 1.8.13)  #-#-#-#-#\n"
+"Peruuttu"
 
 #: src/logic.php:281
 msgid "confirmed"
@@ -408,24 +420,39 @@ msgid "Multiple work"
 msgstr "Samanaikainen työ"
 
 #: src/templates/admin.tpl.php:423
-msgid "Mark this option if you want to calculate free worker slots only by current service and location. If it's not marked system will check if worker is working on any location and service at current time."
-msgstr "Valitse tämä vaihtoehto, jos työntekijä voi olla töissä saman aikaan eri palveluissa ja toimipaikoissa. "
+msgid ""
+"Mark this option if you want to calculate free worker slots only by current "
+"service and location. If it's not marked system will check if worker is "
+"working on any location and service at current time."
+msgstr ""
+"Valitse tämä vaihtoehto, jos työntekijä voi olla töissä saman aikaan eri "
+"palveluissa ja toimipaikoissa. "
 
 #: src/templates/admin.tpl.php:428
 msgid "Compatibility mode"
 msgstr "Yhteensopivuustila"
 
 #: src/templates/admin.tpl.php:434
-msgid "If you can't <strong>EDIT</strong> or <strong>DELETE</strong> conecntion or any other settings, you should mark this option. NOTE: <strong>After saving this options you must refresh page!</strong>"
-msgstr "Valitse tämä vaihtoehto, jos Varausvaihtoehtoja tai muita asetuksia ei voi MUOKATA tai POISTAA. HUOM:  <strong>Päivitä sivu sen jälkeen kun olet tallentanut asetukset!</strong>"
+msgid ""
+"If you can't <strong>EDIT</strong> or <strong>DELETE</strong> conecntion or "
+"any other settings, you should mark this option. NOTE: <strong>After saving "
+"this options you must refresh page!</strong>"
+msgstr ""
+"Valitse tämä vaihtoehto, jos Varausvaihtoehtoja tai muita asetuksia ei voi "
+"MUOKATA tai POISTAA. HUOM:  <strong>Päivitä sivu sen jälkeen kun olet "
+"tallentanut asetukset!</strong>"
 
 #: src/templates/admin.tpl.php:439
 msgid "Max number of appointments"
 msgstr "Varauksien enimmäismäärä"
 
 #: src/templates/admin.tpl.php:445
-msgid "Number of appointments that one visitor can make reservation before limit alert is shown. Appointments are count during one day."
-msgstr "Enimmäismäärä varauksia per käyttäjä per päivä. Enimmäismäärän ylitettyä käyttälle näytetään varoitus."
+msgid ""
+"Number of appointments that one visitor can make reservation before limit "
+"alert is shown. Appointments are count during one day."
+msgstr ""
+"Enimmäismäärä varauksia per käyttäjä per päivä. Enimmäismäärän ylitettyä "
+"käyttälle näytetään varoitus."
 
 #: src/templates/admin.tpl.php:462
 msgid "Mail"
@@ -447,10 +474,6 @@ msgstr "Käsittelyssä"
 msgid "Reservation"
 msgstr "Varaus"
 
-#: src/templates/admin.tpl.php:479
-msgid "Canceled"
-msgstr "Peruuttu"
-
 #: src/templates/admin.tpl.php:483
 msgid "Confirmed"
 msgstr "Vahvistettu"
@@ -460,8 +483,12 @@ msgid "Pending notification emails"
 msgstr "Käsittelyssä olevat sähköposti-ilmoitukset"
 
 #: src/templates/admin.tpl.php:499
-msgid "Enter email adress that will recive new reservation notification. Separate multiple emails with , (comma)"
-msgstr "Anna sähköpostiosoite, johon varausilmoitus lähetetään. Erota useampi osoite pilkulla"
+msgid ""
+"Enter email adress that will recive new reservation notification. Separate "
+"multiple emails with , (comma)"
+msgstr ""
+"Anna sähköpostiosoite, johon varausilmoitus lähetetään. Erota useampi osoite "
+"pilkulla"
 
 #: src/templates/admin.tpl.php:504
 msgid "Admin notification subject"
@@ -480,16 +507,23 @@ msgid "Send email to user"
 msgstr "Lähetä viesti asiakkaalle"
 
 #: src/templates/admin.tpl.php:532
-msgid "Mark this option if you want to user recive email after filing the form."
-msgstr "Valitse tämä vaihtoehto, jos haluat asiakkaan saavan sähköpostiviestin lomakkeen täyttämisen jälkeen."
+msgid ""
+"Mark this option if you want to user recive email after filing the form."
+msgstr ""
+"Valitse tämä vaihtoehto, jos haluat asiakkaan saavan sähköpostiviestin "
+"lomakkeen täyttämisen jälkeen."
 
 #: src/templates/admin.tpl.php:537
 msgid "Send from"
 msgstr "Lähettäjän sähköposti"
 
 #: src/templates/admin.tpl.php:543
-msgid "Send from email adress (Example: Name &lt;name@domain.com&gt;). Leave blank to use default address."
-msgstr "Lähettäjän sähköpostiosoite (Esim. Matti &lt;matti@domain.com&gt; ). Jätä tyhjäks käyttääksesi oletusarvoa."
+msgid ""
+"Send from email adress (Example: Name &lt;name@domain.com&gt;). Leave blank "
+"to use default address."
+msgstr ""
+"Lähettäjän sähköpostiosoite (Esim. Matti &lt;matti@domain.com&gt; ). Jätä "
+"tyhjäks käyttääksesi oletusarvoa."
 
 #: src/templates/admin.tpl.php:549
 msgid "Labels"
@@ -512,8 +546,12 @@ msgid "Time format"
 msgstr "Ajan esitystapa"
 
 #: src/templates/admin.tpl.php:604
-msgid "Notice : date/time formating for email notification are done by <b>Settings > General</b>."
-msgstr "Huomaa: sähköpostissa esiintyvien päivämäärän ja ajan esitystapa määritellään <b>Settings > General</b>."
+msgid ""
+"Notice : date/time formating for email notification are done by <b>Settings "
+"> General</b>."
+msgstr ""
+"Huomaa: sähköpostissa esiintyvien päivämäärän ja ajan esitystapa "
+"määritellään <b>Settings > General</b>."
 
 #: src/templates/admin.tpl.php:609
 msgid "Calendar localization"
@@ -524,8 +562,12 @@ msgid "Block time"
 msgstr "Varauksen esto"
 
 #: src/templates/admin.tpl.php:634
-msgid "(in minutes). Prevent visitor to make appointment if there are less minutes that this."
-msgstr "(minuuteissa). Estä tekemästä varausta, jos varausajan kohtaan on vähemmän minuutteja kuin tässä."
+msgid ""
+"(in minutes). Prevent visitor to make appointment if there are less minutes "
+"that this."
+msgstr ""
+"(minuuteissa). Estä tekemästä varausta, jos varausajan kohtaan on vähemmän "
+"minuutteja kuin tässä."
 
 #: src/templates/admin.tpl.php:640
 msgid "Custom form fields"
@@ -536,16 +578,23 @@ msgid "Add"
 msgstr "Lisää"
 
 #: src/templates/admin.tpl.php:663
-msgid "For using the email notification for user there must be field named \"Email\""
-msgstr "Jotta käyttäjä saisi varausvahvistuksen sähköpostitse, sähköpostikentän nimen tulee olla \"Email\""
+msgid ""
+"For using the email notification for user there must be field named \"Email\""
+msgstr ""
+"Jotta käyttäjä saisi varausvahvistuksen sähköpostitse, sähköpostikentän "
+"nimen tulee olla \"Email\""
 
 #: src/templates/admin.tpl.php:674
 msgid "Custom style"
 msgstr "Mukautettu tyyli"
 
 #: src/templates/admin.tpl.php:680
-msgid "Place here custom css styles. This will be included in both standard and bootstrap widget."
-msgstr "Lisää tähän mukautetut tyylimääritykset. Ne otetaan huomioon tavallisessa ja bootstrap versiossa."
+msgid ""
+"Place here custom css styles. This will be included in both standard and "
+"bootstrap widget."
+msgstr ""
+"Lisää tähän mukautetut tyylimääritykset. Ne otetaan huomioon tavallisessa ja "
+"bootstrap versiossa."
 
 #: src/templates/admin.tpl.php:685
 msgid "Turn off css files"
@@ -556,8 +605,12 @@ msgid "I agree field"
 msgstr "\"Hyväksyn\" -kenttä"
 
 #: src/templates/admin.tpl.php:703
-msgid "I agree option at the end of form. If this is marked user must confirme \"I agree\" checkbox."
-msgstr "\"Hyväksyn\" -kenttä lomakkeen lopussa. Jos tämä vaihtoehto on valittu, käyttäjän tulee merkata \"Hyväksy\"-kenttä jatkaakseen."
+msgid ""
+"I agree option at the end of form. If this is marked user must confirme \"I "
+"agree\" checkbox."
+msgstr ""
+"\"Hyväksyn\" -kenttä lomakkeen lopussa. Jos tämä vaihtoehto on valittu, "
+"käyttäjän tulee merkata \"Hyväksy\"-kenttä jatkaakseen."
 
 #: src/templates/admin.tpl.php:708
 msgid "After cancel go to"
@@ -568,7 +621,9 @@ msgid "Go to page"
 msgstr "Siirry sivulle"
 
 #: src/templates/admin.tpl.php:733
-msgid "after visitor create appointment on front-end form. Leave blank to turn off redirect."
+msgid ""
+"after visitor create appointment on front-end form. Leave blank to turn off "
+"redirect."
 msgstr "sen jälkeen kun käyttäjä on lähettänyt varauksen."
 
 #: src/templates/admin.tpl.php:743
@@ -643,7 +698,9 @@ msgstr "Uudet raportit tulossa pian!"
 
 #: src/templates/report.tpl.php:66
 msgid "Export data to CSV, can be imported to MS Excel, OpenOffice Calc... "
-msgstr "Vie tiedot CSV-tiedostoon (voi käsitellä Excelissä, OpenOffice Calc:ssa ym taulukko-ohjelmissa)"
+msgstr ""
+"Vie tiedot CSV-tiedostoon (voi käsitellä Excelissä, OpenOffice Calc:ssa ym "
+"taulukko-ohjelmissa)"
 
 #: src/templates/report.tpl.php:67
 msgid "Export data"

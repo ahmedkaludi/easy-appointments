@@ -68,7 +68,7 @@
             <div class="form-group">
                 <div class="col-sm-8">
                     <% if(item.type === 'INPUT') { %>
-                    <input class="form-control custom-field" maxlength="499" type="text" name="<%= item.slug %>" placeholder="<%= item.mixed %>" <% if (item.required == "1") { %>data-rule-required="true" data-msg-required="<%= settings['trans.field-required'] %>"<% } %> <% if (item.validation == "email") { %>data-rule-email="true" data-msg-email="<%= settings['trans.error-email'] %>"<% } %>>
+                    <input class="form-control custom-field" maxlength="499" type="text" name="<%= item.slug %>" placeholder="<%= item.mixed %>" value="<%- item.default_value %>" <% if (item.required == "1") { %>data-rule-required="true" data-msg-required="<%= settings['trans.field-required'] %>"<% } %> <% if (item.validation == "email") { %>data-rule-email="true" data-msg-email="<%= settings['trans.error-email'] %>"<% } %>>
                     <% } else if(item.type === 'SELECT') { %>
                         <select class="form-control custom-field" name="<%= item.slug %>" <% if (item.required == "1") { %>aria-required="true" <% if (item.required == "1") { %>data-rule-required="true"<% } %> data-msg-required="<%= settings['trans.field-required'] %>"<% } %>>
                             <% _.each(item.mixed.split(','),function(i,k,l) { %>

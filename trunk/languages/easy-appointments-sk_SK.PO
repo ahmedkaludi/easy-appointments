@@ -3,15 +3,14 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Easy Appointments 1.8.10\n"
-"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/easy-"
-"appointments\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/easy-appointments\n"
 "POT-Creation-Date: 2016-05-24 23:04+0200\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2018-01-21 21:28+0100\n"
+"PO-Revision-Date: 2020-06-13 18:47+0200\n"
 "Language-Team: \n"
-"X-Generator: Poedit 2.0.6\n"
+"X-Generator: Poedit 2.0.8\n"
 "Last-Translator: \n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 "Language: sk_SK\n"
@@ -33,11 +32,8 @@ msgid "Reports"
 msgstr "Reporty"
 
 #: src/ajax.php:175
-msgid ""
-"Daily limit of booking request has been reached. Please contact us by email!"
-msgstr ""
-"Už bol dosiahnutý maximálny počet objednávok za deň. Prosím kontaktujte nás "
-"emailom alebo formulárom."
+msgid "Daily limit of booking request has been reached. Please contact us by email!"
+msgstr "Už bol dosiahnutý maximálny počet objednávok za deň. Prosím kontaktujte nás emailom alebo formulárom."
 
 #: src/ajax.php:185
 msgid "Something went wrong! Please try again."
@@ -147,7 +143,7 @@ msgid "abandoned"
 msgstr "zrušený abandoned"
 
 #: src/logic.php:280
-msgid "canceled"
+msgid "cancelled"
 msgstr "zrušený"
 
 #: src/logic.php:281
@@ -171,15 +167,15 @@ msgid "Appointment has been confirmed."
 msgstr "Termín bol potvrdený."
 
 #: src/mail.php:83
-msgid "Appointment can't be canceled!"
+msgid "Appointment can't be cancelled!"
 msgstr "Termín nemôže byť zrušený!"
 
 #: src/mail.php:96
-msgid "Appointment can't be canceled"
+msgid "Appointment can't be cancelled"
 msgstr "Termín nemôže byť zrušený"
 
 #: src/mail.php:100
-msgid "Appointment has been canceled"
+msgid "Appointment has been cancelled"
 msgstr "Termín bol zrušený"
 
 #: src/metafields.php:19
@@ -377,40 +373,24 @@ msgid "Multiple work"
 msgstr "Viacnásobná práca"
 
 #: src/templates/admin.tpl.php:423
-msgid ""
-"Mark this option if you want to calculate free worker slots only by current "
-"service and location. If it's not marked system will check if worker is "
-"working on any location and service at current time."
-msgstr ""
-"Túto voľbu označ ked chceš zobraziť volné sloty iba pre aktuálnu službu a "
-"miesto. Keď nie je zaškrtnuté, systém kontroluje či je personal dostupný pre "
-"ľubovoľné miesto a službu v danom čase."
+msgid "Mark this option if you want to calculate free worker slots only by current service and location. If it's not marked system will check if worker is working on any location and service at current time."
+msgstr "Túto voľbu označ ked chceš zobraziť volné sloty iba pre aktuálnu službu a miesto. Keď nie je zaškrtnuté, systém kontroluje či je personal dostupný pre ľubovoľné miesto a službu v danom čase."
 
 #: src/templates/admin.tpl.php:428
 msgid "Compatibility mode"
 msgstr "Kompatibilný režim"
 
 #: src/templates/admin.tpl.php:434
-msgid ""
-"If you can't <strong>EDIT</strong> or <strong>DELETE</strong> conecntion or "
-"any other settings, you should mark this option. NOTE: <strong>After saving "
-"this options you must refresh page!</strong>"
-msgstr ""
-"V prípade že nemôžeš <strong>EDITOVAT</strong> alebo <strong>VYMAZAT</"
-"strong> prepejenie alebo iné nastavenia, tak označ túto možnosť. POZOR: "
-"<strong>Po uložení treba urobiť refreš stránky!</strong>"
+msgid "If you can't <strong>EDIT</strong> or <strong>DELETE</strong> conecntion or any other settings, you should mark this option. NOTE: <strong>After saving this options you must refresh page!</strong>"
+msgstr "V prípade že nemôžeš <strong>EDITOVAT</strong> alebo <strong>VYMAZAT</strong> prepejenie alebo iné nastavenia, tak označ túto možnosť. POZOR: <strong>Po uložení treba urobiť refreš stránky!</strong>"
 
 #: src/templates/admin.tpl.php:439
 msgid "Max number of appointments"
 msgstr "Max počet termínov"
 
 #: src/templates/admin.tpl.php:445
-msgid ""
-"Number of appointments that one visitor can make reservation before limit "
-"alert is shown. Appointments are count during one day."
-msgstr ""
-"Počet termínov, ktoré môže jeden návštevník rezervovať pred zobrazením "
-"upozornenia. Termíny sa počítajú počas jedného dňa."
+msgid "Number of appointments that one visitor can make reservation before limit alert is shown. Appointments are count during one day."
+msgstr "Počet termínov, ktoré môže jeden návštevník rezervovať pred zobrazením upozornenia. Termíny sa počítajú počas jedného dňa."
 
 #: src/templates/admin.tpl.php:451
 msgid "Mail"
@@ -433,7 +413,7 @@ msgid "Reservation"
 msgstr "Obsadený termín"
 
 #: src/templates/admin.tpl.php:468
-msgid "Canceled"
+msgid "cancelled"
 msgstr "Zrušený"
 
 #: src/templates/admin.tpl.php:472
@@ -445,12 +425,8 @@ msgid "Pending notification emails"
 msgstr "čakajúce informačné emaily"
 
 #: src/templates/admin.tpl.php:488
-msgid ""
-"Enter email adress that will recive new reservation notification. Separate "
-"multiple emails with , (comma)"
-msgstr ""
-"Napíš emailovú adresu kam budú doručované notifikácie o nových rezerváciách. "
-"Viac emailov treba oddeliť , (čiarkou)"
+msgid "Enter email adress that will recive new reservation notification. Separate multiple emails with , (comma)"
+msgstr "Napíš emailovú adresu kam budú doručované notifikácie o nových rezerváciách. Viac emailov treba oddeliť , (čiarkou)"
 
 #: src/templates/admin.tpl.php:493
 msgid "Admin notification subject"
@@ -469,22 +445,16 @@ msgid "Send email to user"
 msgstr "Poslať email užívateľovi"
 
 #: src/templates/admin.tpl.php:521
-msgid ""
-"Mark this option if you want to user recive email after filing the form."
-msgstr ""
-"Označ túto voľbu keď chceš aby návštevník dostal email po vyplnení formulára."
+msgid "Mark this option if you want to user recive email after filing the form."
+msgstr "Označ túto voľbu keď chceš aby návštevník dostal email po vyplnení formulára."
 
 #: src/templates/admin.tpl.php:526
 msgid "Send from"
 msgstr "Odosielateľ"
 
 #: src/templates/admin.tpl.php:532
-msgid ""
-"Send from email adress (Example: Name &lt;name@domain.com&gt;). Leave blank "
-"to use default address."
-msgstr ""
-"Poslané z emailovej adresy (napríklad Meno &lt;meno@domena.sk&gt;). Nechajte "
-"prázdne a bude použitá štandardná adresa."
+msgid "Send from email adress (Example: Name &lt;name@domain.com&gt;). Leave blank to use default address."
+msgstr "Poslané z emailovej adresy (napríklad Meno &lt;meno@domena.sk&gt;). Nechajte prázdne a bude použitá štandardná adresa."
 
 #: src/templates/admin.tpl.php:538
 msgid "Labels"
@@ -507,12 +477,8 @@ msgid "Time format"
 msgstr "Formát času"
 
 #: src/templates/admin.tpl.php:593
-msgid ""
-"Notice : date/time formating for email notification are done by <b>Settings "
-"> General</b>."
-msgstr ""
-"Pozro: formátovanie dátum/čas pre emaily je nastavované v <b>Nastavenia > "
-"Všeobecné vo WP</b>."
+msgid "Notice : date/time formating for email notification are done by <b>Settings > General</b>."
+msgstr "Pozro: formátovanie dátum/čas pre emaily je nastavované v <b>Nastavenia > Všeobecné vo WP</b>."
 
 #: src/templates/admin.tpl.php:598
 msgid "Calendar localization"
@@ -523,12 +489,8 @@ msgid "Block time"
 msgstr "Nepovoľ termín "
 
 #: src/templates/admin.tpl.php:623
-msgid ""
-"(in minutes). Prevent visitor to make appointment if there are less minutes "
-"that this."
-msgstr ""
-"(v minútach). Návštevník nebude môcť zarezervovať termín pokiaľ je menej "
-"minút ako zadané."
+msgid "(in minutes). Prevent visitor to make appointment if there are less minutes that this."
+msgstr "(v minútach). Návštevník nebude môcť zarezervovať termín pokiaľ je menej minút ako zadané."
 
 #: src/templates/admin.tpl.php:629
 msgid "Custom form fields"
@@ -539,23 +501,16 @@ msgid "Add"
 msgstr "Pridať"
 
 #: src/templates/admin.tpl.php:652
-msgid ""
-"For using the email notification for user there must be field named \"Email\""
-msgstr ""
-"Na používanie emailovej notifikácie pre užívateľov musíš vyplniť pole \"Email"
-"\""
+msgid "For using the email notification for user there must be field named \"Email\""
+msgstr "Na používanie emailovej notifikácie pre užívateľov musíš vyplniť pole \"Email\""
 
 #: src/templates/admin.tpl.php:663
 msgid "Custom style"
 msgstr "Vlastný štýl"
 
 #: src/templates/admin.tpl.php:669
-msgid ""
-"Place here custom css styles. This will be included in both standard and "
-"bootstrap widget."
-msgstr ""
-"Tu môžeš dať svoj vlastný css kód. Tieto budú zahrnuté do oboch widgetov - "
-"standard aj bootstrap."
+msgid "Place here custom css styles. This will be included in both standard and bootstrap widget."
+msgstr "Tu môžeš dať svoj vlastný css kód. Tieto budú zahrnuté do oboch widgetov - standard aj bootstrap."
 
 #: src/templates/admin.tpl.php:674
 msgid "Turn off css files"
@@ -566,12 +521,8 @@ msgid "I agree field"
 msgstr "Políčko \"Súhlasím\""
 
 #: src/templates/admin.tpl.php:692
-msgid ""
-"I agree option at the end of form. If this is marked user must confirme \"I "
-"agree\" checkbox."
-msgstr ""
-"\"Súhlasím\" políčko na konci formulára. Pokiaľ je zaškrtnuté, užívateľ musí "
-"potvrdiť \"Súhlasím\" checkbox."
+msgid "I agree option at the end of form. If this is marked user must confirme \"I agree\" checkbox."
+msgstr "\"Súhlasím\" políčko na konci formulára. Pokiaľ je zaškrtnuté, užívateľ musí potvrdiť \"Súhlasím\" checkbox."
 
 #: src/templates/admin.tpl.php:697
 msgid "After cancel go to"
@@ -582,11 +533,8 @@ msgid "Go to page"
 msgstr "Choď na stránku"
 
 #: src/templates/admin.tpl.php:722
-msgid ""
-"after visitor create appointment on front-end form. Leave blank to turn off "
-"redirect."
-msgstr ""
-"potom čo návštevník vytvorí udalosť. Nechaj prázdne a vypneš presmerovanie."
+msgid "after visitor create appointment on front-end form. Leave blank to turn off redirect."
+msgstr "potom čo návštevník vytvorí udalosť. Nechaj prázdne a vypneš presmerovanie."
 
 #: src/templates/admin.tpl.php:732
 msgid "Currency"
@@ -680,8 +628,7 @@ msgstr "Nové reporty prídu čoskoro!"
 
 #: src/templates/report.tpl.php:66
 msgid "Export data to CSV, can be imported to MS Excel, OpenOffice Calc... "
-msgstr ""
-"Export dats do csv, môžeš  to importovať do MS Excel, OpenOffice Calc... "
+msgstr "Export dats do csv, môžeš  to importovať do MS Excel, OpenOffice Calc... "
 
 #: src/templates/report.tpl.php:67
 msgid "Export data"
@@ -706,3 +653,4 @@ msgstr "Nikola Loncar"
 #. Author URI of the plugin/theme
 msgid "http://nikolaloncar.com"
 msgstr "http://nikolaloncar.com"
+
