@@ -599,11 +599,14 @@
                     <a data-tab="tab-mail" href="#">
                         <span class="icon icon-mail"></span><span class="text-label"><?php _e('Mail Notifications', 'easy-appointments'); ?></span>
                     </a>
+                    <a data-tab="tab-full-calendar" href="#">
+                      <span class="icon icon-fullcalendar"></span><span class="text-label"><?php _e('FullCalendar Shortcode', 'easy-appointments'); ?></span>
+                    </a>
                     <a data-tab="tab-labels" href="#">
                         <span class="icon icon-label"></span><span class="text-label"><?php _e('Labels', 'easy-appointments'); ?></span>
                     </a>
                     <a data-tab="tab-date-time" href="#">
-                        <span class="icon icon-date"></span><span class="text-label"><?php _e('Date & Time', 'easy-appointments'); ?></span>
+                        <span class="icon icon-datetime"></span><span class="text-label"><?php _e('Date & Time', 'easy-appointments'); ?></span>
                     </a>
                     <a data-tab="tab-fields" href="#">
                         <span class="icon icon-fields"></span><span class="text-label"><?php _e('Custom Form Fields', 'easy-appointments'); ?></span>
@@ -804,6 +807,7 @@
                             {ea_key:'mail.action.two_step'}).ea_value == "1") { %>checked<% } %>>
                         </div>
                     </div>
+                    </div>
                     <div class="form-item">
                         <div class="label-with-tooltip">
                             <label for=""><?php _e('Pending notification emails', 'easy-appointments'); ?></label>
@@ -870,6 +874,13 @@
                                value="<%- _.findWhere(settings, {ea_key:'send.from.email'}).ea_value %>">
                     </div>
                 </div>
+            </div>
+
+            <div id="tab-full-calendar" class="form-section hidden">
+              <span class="separator vertical"></span>
+              <div class="form-container">
+
+              </div>
             </div>
 
             <div id="tab-labels" class="form-section hidden">

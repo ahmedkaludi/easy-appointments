@@ -102,3 +102,9 @@
 .icon-workers:before {
   content: "\e905";
 }
+.icon-datetime:before {
+  content: "\e916";
+}
+.icon-fullcalendar:before {
+  content: "\e917";
+}
