@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: EasyAppointments 2.8.0\n"
-"POT-Creation-Date: 2020-06-13 18:56+0200\n"
+"POT-Creation-Date: 2020-06-14 22:40+0200\n"
 "PO-Revision-Date: 2017-07-17 21:47+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -203,31 +203,43 @@ msgstr ""
 msgid "Invalid token."
 msgstr ""
 
-#: src/mail.php:198
+#: src/mail.php:199
+msgid "Appointment is already confirmed!"
+msgstr ""
+
+#: src/mail.php:204
 msgid "Appointment can't be confirmed!"
 msgstr ""
 
-#: src/mail.php:216
+#: src/mail.php:222
 msgid "Appointment has been confirmed."
 msgstr ""
 
-#: src/mail.php:225
+#: src/mail.php:230
+msgid "Appointment is already cancelled!"
+msgstr ""
+
+#: src/mail.php:235
 msgid "Appointment can't be cancelled!"
 msgstr ""
 
-#: src/mail.php:243
+#: src/mail.php:253
 msgid "Appointment can't be cancelled"
 msgstr ""
 
-#: src/mail.php:249
+#: src/mail.php:259
 msgid "Appointment has been cancelled"
 msgstr ""
 
-#: src/mail.php:446
+#: src/mail.php:274
+msgid "Appointment link action"
+msgstr ""
+
+#: src/mail.php:456
 msgid "Cancel appointment"
 msgstr ""
 
-#: src/mail.php:447
+#: src/mail.php:457
 msgid "Confirm appointment"
 msgstr ""
 
