@@ -3,8 +3,8 @@ Contributors: loncar
 Donate link: https://easy-appointments.net/
 Tags: appointment, appointments, Booking, calendar, plugin, reservation, reservations, wp appointment, reservation plugin, reservations, schedule
 Requires at least: 3.7
-Tested up to: 5.3
-Stable tag: 2.12.3
+Tested up to: 5.4
+Stable tag: 2.14.1
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -55,7 +55,8 @@ Can be used for : <strong>Lawyers</strong>, <strong>Salons</strong>, <strong>Mec
     - input
     - Make fields required
     - Drag and drop order
-    - Google reCAPTCHA v2 **NEW**
+    - Google reCAPTCHA v2
+    - **NEW** use current logged in user data sa default value for custom field.
 * **Internationalization** - support for translations (you can create your own translation <a href="https://easy-appointments.net/documentation/#translate">>> tutorial <<</a>)
     - German translation (thanks to Matthias)
     - Romanian translation (thanks to Vlad)
@@ -212,6 +213,42 @@ Note: you can have only one calendar on one page.
 25. Admin panel - Report - Export page
 
 == Changelog ==
+
+= 2.14.1 (2020-06-14) =
+* Added translatable title to email links prompt page introduced in 2.14
+* Updated translation files
+
+= 2.14.0 (2020-06-13) =
+* Added option for additional user prompt when using links from email such as ` #link_confirm#, #link_cancel#`. By using this option you will prevent unwanted actions from Mail servers that wants to check every link inside emial.
+* Fixed and updated labels and translations
+
+= 2.13.7 (2020-06-08) =
+* Fixed small issue introduced in previous release
+
+= 2.13.6 (2020-06-08) =
+* Added `Created` column for CSV export
+* Improved bootstrap version of form
+
+= 2.13.5 (2020-06-02) =
+* Fixed issue with auto select option on bootstrap calendar shortcode
+
+= 2.13.4 (2020-05-24) =
+* Added shortcode option to prevent date auto select day when calendar is first step (`ea_bootstrap`)
+* Added shortcode option for button label customization for full calendar (`ea_full_calendar`)
+
+= 2.13.3 (2020-05-17) =
+* Added new option for FullCalendar shortcode (`time_format`, `display_event_end`)
+* Added option to hide price in select field in customers form (shortcode ea_standard ea_bootdstrap)
+* Updated Italian translation (thanks to Massimo)
+
+= 2.13.2 (2020-04-28) =
+* Fixed issue with Phone field and pre selected country code
+
+= 2.13.1 (2020-04-27) =
+* Fixed issue with warning message when user is not logged in.
+
+= 2.13.0 (2020-04-26) =
+* NEW - Use current logged in user data sa default value for custom field. Available for bootstrap version of shortcode.
 
 = 2.12.3 (2020-03-28) =
 * Fixed issue with missing text field placeholder value in form

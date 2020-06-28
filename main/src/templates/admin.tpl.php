@@ -594,34 +594,34 @@
             <div class="tab-selection">
                 <div class="tabs-list">
                     <a data-tab="tab-connections" class="selected" href="#">
-                    	<span class="icon icon-general"></span><span class="text-label"><?php _e('General', 'easy-appointments'); ?></span>
+                        <span class="icon icon-general"></span><span class="text-label"><?php _e('General', 'easy-appointments'); ?></span>
                     </a>
                     <a data-tab="tab-mail" href="#">
-                    	<span class="icon icon-mail"></span><span class="text-label"><?php _e('Mail Notifications', 'easy-appointments'); ?></span>
+                        <span class="icon icon-mail"></span><span class="text-label"><?php _e('Mail Notifications', 'easy-appointments'); ?></span>
                     </a>
                     <a data-tab="tab-full-calendar" href="#">
                       <span class="icon icon-fullcalendar"></span><span class="text-label"><?php _e('FullCalendar Shortcode', 'easy-appointments'); ?></span>
                     </a>
                     <a data-tab="tab-labels" href="#">
-                    	<span class="icon icon-label"></span><span class="text-label"><?php _e('Labels', 'easy-appointments'); ?></span>
+                        <span class="icon icon-label"></span><span class="text-label"><?php _e('Labels', 'easy-appointments'); ?></span>
                     </a>
                     <a data-tab="tab-date-time" href="#">
-                    	<span class="icon icon-datetime"></span><span class="text-label"><?php _e('Date & Time', 'easy-appointments'); ?></span>
+                        <span class="icon icon-datetime"></span><span class="text-label"><?php _e('Date & Time', 'easy-appointments'); ?></span>
                     </a>
                     <a data-tab="tab-fields" href="#">
-                    	<span class="icon icon-fields"></span><span class="text-label"><?php _e('Custom Form Fields', 'easy-appointments'); ?></span>
+                        <span class="icon icon-fields"></span><span class="text-label"><?php _e('Custom Form Fields', 'easy-appointments'); ?></span>
                     </a>
                     <a data-tab="tab-captcha" href="#">
-                    	<span class="icon icon-recaptcha"></span><span class="text-label"><?php _e('Google reCAPTCHA v2', 'easy-appointments'); ?></span>
+                        <span class="icon icon-recaptcha"></span><span class="text-label"><?php _e('Google reCAPTCHA v2', 'easy-appointments'); ?></span>
                     </a>
                     <a data-tab="tab-form" href="#">
-                    	<span class="icon icon-redirect"></span><span class="text-label"><?php _e('Form Style & Redirect', 'easy-appointments'); ?></span>
+                        <span class="icon icon-redirect"></span><span class="text-label"><?php _e('Form Style & Redirect', 'easy-appointments'); ?></span>
                     </a>
                     <a data-tab="tab-gdpr" href="#">
-                    	<span class="icon icon-gdpr"></span><span class="text-label"><?php _e('GDPR', 'easy-appointments'); ?></span>
+                        <span class="icon icon-gdpr"></span><span class="text-label"><?php _e('GDPR', 'easy-appointments'); ?></span>
                     </a>
                     <a data-tab="tab-money" href="#">
-                    	<span class="icon icon-money"></span><span class="text-label"><?php _e('Money Format', 'easy-appointments'); ?></span>
+                        <span class="icon icon-money"></span><span class="text-label"><?php _e('Money Format', 'easy-appointments'); ?></span>
                     </a>
                 </div>
                 <div class="button-wrap">
@@ -794,6 +794,19 @@
                             </tbody>
                         </table>
                         <div><small><?php _e('Available tags', 'easy-appointments'); ?>: #id#, #date#, #start#, #end#, #status#, #created#, #price#, #ip#, #link_confirm#, #link_cancel#, #url_confirm#, #url_cancel#, #service_name#, #service_duration#, #service_price#, #worker_name#, #worker_email#, #worker_phone#, #location_name#, #location_address#, #location_location#, <?php echo implode(', ', EADBModels::get_custom_fields_tags()); ?></small></div>
+                    </div>
+                    <div class="form-item">
+                        <div class="label-with-tooltip">
+                            <label for="mail.action.two_step"><?php _e('Two step action links in email', 'easy-appointments'); ?></label>
+                            <span class="tooltip tooltip-right"
+                                  data-tooltip="<?php _e('Sometimes Mail servers can open links from email for inspection. That will trigger actions such as #link_confirm#, #link_cancel#. Mark this option if you want to have additional prompt for user action via links.', 'easy-appointments'); ?>"></span>
+                        </div>
+                        <div class="field-wrap">
+                            <input class="field" data-key="mail.action.two_step" name="mail.action.two_step"
+                                   type="checkbox" <% if (_.findWhere(settings,
+                            {ea_key:'mail.action.two_step'}).ea_value == "1") { %>checked<% } %>>
+                        </div>
+                    </div>
                     </div>
                     <div class="form-item">
                         <div class="label-with-tooltip">
@@ -1073,21 +1086,21 @@
                         </div>
                     </div>
                     <div class="form-item">
-                    	<label for=""><?php _e('Service', 'easy-appointments'); ?></label>
-                    	<select id="redirect-service" class="field">
+                        <label for=""><?php _e('Service', 'easy-appointments'); ?></label>
+                        <select id="redirect-service" class="field">
                             <% _.each(eaData.Services,function(item,key,list){ %>
                             <option value="<%= _.escape(item.id) %>"><%= _.escape(item.name) %></option>
                             <% });%>
                         </select>
                     </div>
                     <div class="form-item inline-fields">
-                    	<div class="form-item">
-	                    	<label for=""><?php _e('Redirect to', 'easy-appointments'); ?></label>
-	                    	<input id="redirect-url" name="redirect-url" type="text">
-	                    </div>
-	                    <button class="button button-primary btn-add-redirect button-field"><?php _e('Add advance redirect', 'easy-appointments'); ?></button>
+                        <div class="form-item">
+                            <label for=""><?php _e('Redirect to', 'easy-appointments'); ?></label>
+                            <input id="redirect-url" name="redirect-url" type="text">
+                        </div>
+                        <button class="button button-primary btn-add-redirect button-field"><?php _e('Add advance redirect', 'easy-appointments'); ?></button>
                     </div>
-                	<input type="hidden" id="advance-redirect" data-key="advance.redirect" class="field" name="advance.redirect" value="<%= _.escape(ea_settings['advance.redirect']) %>">
+                    <input type="hidden" id="advance-redirect" data-key="advance.redirect" class="field" name="advance.redirect" value="<%= _.escape(ea_settings['advance.redirect']) %>">
                     <div class="form-item">
                         <ul id="custom-redirect-list" class="list-form-item"></ul>
                     </div>
@@ -1149,7 +1162,7 @@
                                value="<%- _.findWhere(settings, {ea_key:'trans.currency'}).ea_value %>">
                     </div>
                     <div class="form-item">
-                        <label for="send.worker.email"><?php _e('Currency before price', 'easy-appointments'); ?></label>
+                        <label for="currency.before"><?php _e('Currency before price', 'easy-appointments'); ?></label>
                         <div class="field-wrap">
                             <input class="field" data-key="currency.before" name="currency.before"
                                    type="checkbox" <% if (_.findWhere(settings,
@@ -1157,7 +1170,19 @@
                         </div>
                     </div>
                     <div class="form-item">
-                        <label for="send.worker.email"><?php _e('Hide price', 'easy-appointments'); ?></label>
+                        <label for="price.hide.service"><?php _e('Hide price in service select', 'easy-appointments'); ?></label>
+                        <div class="field-wrap">
+                            <input class="field" data-key="price.hide.service" name="price.hide.service"
+                                   type="checkbox" <% if (_.findWhere(settings,
+                            {ea_key:'price.hide.service'}).ea_value == "1") { %>checked<% } %>>
+                        </div>
+                    </div>
+                    <div class="form-item">
+                        <div class="label-with-tooltip">
+                            <label for="price.hide"><?php _e('Hide price', 'easy-appointments'); ?></label>
+                            <span class="tooltip tooltip-right"
+                                  data-tooltip="<?php _e('Hide price in whole customers form.', 'easy-appointments'); ?>"></span>
+                        </div>
                         <div class="field-wrap">
                             <input class="field" data-key="price.hide" name="price.hide"
                                    type="checkbox" <% if (_.findWhere(settings,
@@ -1197,6 +1222,14 @@
         <label>Placeholder</label><input type="text" class="field-mixed" name="field-mixed"
                                            value="<%= _.escape(item.mixed) %>">
     </p>
+
+    <% if (item.type !== "PHONE" && item.type !== "SELECT") { %>
+    <p>
+        <label>Default value</label><input type="text" class="field-default_value" name="field-default_value"
+                                         value="<%- item.default_value %>">
+        <small>You can put values from logged in user (list of keys: <?php echo EAUserFieldMapper::all_field_keys(); ?>)</small>
+    </p>
+    <% } %>
 
     <% if (item.type === "PHONE") { %>
     <p>

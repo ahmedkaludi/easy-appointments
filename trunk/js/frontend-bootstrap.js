@@ -163,7 +163,7 @@
             });
 
             // init blur next steps
-            this.blurNextSteps(this.$element.find('.step:visible:first'), true);
+            this.blurNextSteps(this.$element.find('.step:visible:first'), true, true);
 
             if (ea_settings['pre.reservation'] === '1') {
                 this.$element.find('.ea-submit').on('click', jQuery.proxy( plugin.finalComformation, plugin ));
@@ -380,15 +380,18 @@
                     var name = element.name;
                     var $option = jQuery('<option value="' + element.id + '">' + name + '</option>');
 
-                    if ('price' in element && ea_settings['price.hide'] !== '1') {
-                        // see if currency is before price or now
-                        if (ea_settings['currency.before'] == '1') {
-                            $option.text(element.name + ' - ' + next_element.data('currency') + element.price);
-                        } else {
-                            $option.text(element.name + ' - ' + element.price + next_element.data('currency'));
-                        }
-
+                    if ('price' in element) {
+                        // set price for service
                         $option.data('price', element.price);
+
+                        if (ea_settings['price.hide'] !== '1' && ea_settings['price.hide.service'] !== '1') {
+                            // see if currency is before price or now
+                            if (ea_settings['currency.before'] === '1') {
+                                $option.text(element.name + ' - ' + next_element.data('currency') + element.price);
+                            } else {
+                                $option.text(element.name + ' - ' + element.price + next_element.data('currency'));
+                            }
+                        }
                     }
 
                     if ('slot_step' in element) {
@@ -488,6 +491,13 @@
             var plugin = this, next_element, calendarEl;
 
             calendarEl = jQuery(calendar.dpDiv).parents('.date');
+
+            if (plugin.settings.currentDate === dateString && calendarEl.find('.time-row').length > 0) {
+                calendarEl.find('.time-row').remove();
+                return;
+            }
+
+            plugin.settings.currentDate = dateString;
 
             calendarEl.parent().next().addClass('disabled');
 
@@ -603,7 +613,6 @@
                 var $firstDay = this.$element.find('[data-handler="selectDay"]:first');
                 month = parseInt($firstDay.data('month')) + 1;
                 year = $firstDay.data('year');
-
             }
 
             simulateClick = true;
@@ -631,7 +640,10 @@
 
                         // it's free day after refresh
                         if ($cDay.hasClass('free')) {
-                            $cDay.click();
+                            // but only if auto select is off
+                            if (ea_settings.cal_auto_select !== '0') {
+                                $cDay.click();
+                            }
                         } else {
                             // remove time slots row
                             self.$element.find('.time-row').remove();
