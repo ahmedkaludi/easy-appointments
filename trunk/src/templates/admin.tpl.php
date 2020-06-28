@@ -606,7 +606,7 @@
                         <span class="icon icon-label"></span><span class="text-label"><?php _e('Labels', 'easy-appointments'); ?></span>
                     </a>
                     <a data-tab="tab-date-time" href="#">
-                    	<span class="icon icon-datetime"></span><span class="text-label"><?php _e('Date & Time', 'easy-appointments'); ?></span>
+                        <span class="icon icon-datetime"></span><span class="text-label"><?php _e('Date & Time', 'easy-appointments'); ?></span>
                     </a>
                     <a data-tab="tab-fields" href="#">
                         <span class="icon icon-fields"></span><span class="text-label"><?php _e('Custom Form Fields', 'easy-appointments'); ?></span>
@@ -756,7 +756,7 @@
                                         <a class="mail-tab"
                                            data-textarea="#mail-reservation"><?php _e('Reservation', 'easy-appointments'); ?></a>
                                         <a class="mail-tab"
-                                           data-textarea="#mail-canceled"><?php _e('Canceled', 'easy-appointments'); ?></a>
+                                           data-textarea="#mail-canceled"><?php _e('Cancelled', 'easy-appointments'); ?></a>
                                         <a class="mail-tab"
                                            data-textarea="#mail-confirmed"><?php _e('Confirmed', 'easy-appointments'); ?></a>
                                         <a class="mail-tab"

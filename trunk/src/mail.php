@@ -193,6 +193,12 @@ EOT;
         // confirm appointment
         if ($_GET['_ea-action'] == 'confirm') {
 
+
+            if ($data['status'] === 'confirm') {
+                header('Refresh:3; url=' . get_home_url());
+                wp_die(__('Appointment is already confirmed!', 'easy-appointments'));
+            }
+
             if ($data['status'] != 'pending') {
                 header('Refresh:3; url=' . get_home_url());
                 wp_die(__('Appointment can\'t be confirmed!', 'easy-appointments'));
@@ -219,6 +225,10 @@ EOT;
         // cancel appointment
         if ($_GET['_ea-action'] == 'cancel') {
             $app_data['status'] = 'canceled';
+
+            if ($data['status'] === 'canceled') {
+                wp_die(__('Appointment is already cancelled!', 'easy-appointments'));
+            }
 
             // only pending and confirmed appointments can be canceled
             if ($data['status'] != 'pending' && $data['status'] != 'confirmed') {
@@ -261,7 +271,7 @@ EOT;
             return;
         }
 
-        $template_path = '';
+        $title = __('Appointment link action', 'easy-appointments');
 
         switch ($action) {
             case 'confirm':
@@ -279,7 +289,7 @@ EOT;
         require $template_path;
         $content = ob_get_clean();
 
-        wp_die($content);
+        wp_die($content, $title);
     }
 
     /**
