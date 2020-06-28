@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Easy Appointments\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-06-14 22:40+0200\n"
-"PO-Revision-Date: 2020-06-14 22:46+0200\n"
+"PO-Revision-Date: 2020-06-28 20:05+0200\n"
 "Last-Translator: Perry Germani <mergermani@gmail.com>\n"
 "Language-Team: Greek\n"
 "Language: el\n"
@@ -187,12 +187,8 @@ msgstr "εγκαταλελλειμένος"
 
 #: src/logic.php:376
 #, fuzzy
-msgid "canceled"
-msgstr ""
-"#-#-#-#-#  catalog.po (Easy Appointments)  #-#-#-#-#\n"
-"Ακυρώθηκε\n"
-"#-#-#-#-#  catalog.po (Easy Appointments)  #-#-#-#-#\n"
-"ακυρώθηκε"
+msgid "cancelled"
+msgstr "ακυρώθηκε"
 
 #: src/logic.php:377
 msgid "confirmed"

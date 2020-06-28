@@ -756,7 +756,7 @@
                                         <a class="mail-tab"
                                            data-textarea="#mail-reservation"><?php _e('Reservation', 'easy-appointments'); ?></a>
                                         <a class="mail-tab"
-                                           data-textarea="#mail-canceled"><?php _e('Canceled', 'easy-appointments'); ?></a>
+                                           data-textarea="#mail-canceled"><?php _e('Cancelled', 'easy-appointments'); ?></a>
                                         <a class="mail-tab"
                                            data-textarea="#mail-confirmed"><?php _e('Confirmed', 'easy-appointments'); ?></a>
                                         <a class="mail-tab"

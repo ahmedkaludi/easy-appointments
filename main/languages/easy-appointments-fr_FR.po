@@ -4,7 +4,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/easy-"
 "appointments\n"
 "POT-Creation-Date: 2020-06-14 22:40+0200\n"
-"PO-Revision-Date: 2020-06-14 22:47+0200\n"
+"PO-Revision-Date: 2020-06-28 20:04+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fr_FR\n"
@@ -675,7 +675,7 @@ msgstr ""
 #, fuzzy
 #| msgid "Cancel"
 msgid "Canceled"
-msgstr "Annuler"
+msgstr "Annulée"
 
 #: src/templates/admin.tpl.php:758
 msgid "Confirmed"

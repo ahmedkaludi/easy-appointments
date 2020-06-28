@@ -188,7 +188,7 @@ msgid "abandoned"
 msgstr ""
 
 #: src/logic.php:376
-msgid "canceled"
+msgid "cancelled"
 msgstr ""
 
 #: src/logic.php:377
@@ -619,7 +619,7 @@ msgid "Reservation"
 msgstr ""
 
 #: src/templates/admin.tpl.php:756
-msgid "Canceled"
+msgid "Cancelled"
 msgstr ""
 
 #: src/templates/admin.tpl.php:758

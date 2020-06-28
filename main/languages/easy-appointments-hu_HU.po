@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: easy appointments\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-06-14 22:40+0200\n"
-"PO-Revision-Date: 2020-06-14 22:47+0200\n"
+"PO-Revision-Date: 2020-06-28 20:04+0200\n"
 "Last-Translator: Lakatos Tibor <lakatos.tibor@tbg.hu>\n"
 "Language-Team: Hungarian\n"
 "Language: hu_HU\n"
@@ -192,12 +192,8 @@ msgstr "abbahagyott"
 
 #: src/logic.php:376
 #, fuzzy
-msgid "canceled"
-msgstr ""
-"#-#-#-#-#  catalog.po (easy appointments)  #-#-#-#-#\n"
-"lemondott\n"
-"#-#-#-#-#  catalog.po (easy appointments)  #-#-#-#-#\n"
-"Lemondott"
+msgid "cancelled"
+msgstr "Lemondott"
 
 #: src/logic.php:377
 msgid "confirmed"
@@ -676,7 +672,7 @@ msgstr "Foglalás"
 #: src/templates/admin.tpl.php:756
 #, fuzzy
 #| msgid "Cancel"
-msgid "Canceled"
+msgid "Cancelled"
 msgstr "Mégse"
 
 #: src/templates/admin.tpl.php:758

@@ -4,7 +4,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/easy-"
 "appointments\n"
 "POT-Creation-Date: 2020-06-14 22:40+0200\n"
-"PO-Revision-Date: 2020-06-14 22:47+0200\n"
+"PO-Revision-Date: 2020-06-28 20:04+0200\n"
 "Last-Translator: admin5949 <queen_bmb@hotmail.com>\n"
 "Language-Team: \n"
 "Language: gl\n"
@@ -199,12 +199,8 @@ msgstr "rexeitada"
 
 #: src/logic.php:376
 #, fuzzy
-msgid "canceled"
-msgstr ""
-"#-#-#-#-#  catalog.po (Easy Appointments 1.8.3)  #-#-#-#-#\n"
-"cancelada\n"
-"#-#-#-#-#  catalog.po (Easy Appointments 1.8.3)  #-#-#-#-#\n"
-"Cancelada"
+msgid "cancelled"
+msgstr "Cancelada"
 
 #: src/logic.php:377
 msgid "confirmed"
@@ -686,7 +682,7 @@ msgstr "Reserva"
 #: src/templates/admin.tpl.php:756
 #, fuzzy
 #| msgid "Cancel"
-msgid "Canceled"
+msgid "Cancelled"
 msgstr "Cancelar"
 
 #: src/templates/admin.tpl.php:758

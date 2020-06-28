@@ -756,7 +756,7 @@
                                         <a class="mail-tab"
                                            data-textarea="#mail-reservation"><?php _e('Reservation', 'easy-appointments'); ?></a>
                                         <a class="mail-tab"
-                                           data-textarea="#mail-canceled"><?php _e('Canceled', 'easy-appointments'); ?></a>
+                                           data-textarea="#mail-canceled"><?php _e('Cancelled', 'easy-appointments'); ?></a>
                                         <a class="mail-tab"
                                            data-textarea="#mail-confirmed"><?php _e('Confirmed', 'easy-appointments'); ?></a>
                                         <a class="mail-tab"
@@ -806,7 +806,6 @@
                                    type="checkbox" <% if (_.findWhere(settings,
                             {ea_key:'mail.action.two_step'}).ea_value == "1") { %>checked<% } %>>
                         </div>
-                    </div>
                     </div>
                     <div class="form-item">
                         <div class="label-with-tooltip">

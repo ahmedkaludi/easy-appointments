@@ -6,7 +6,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/easy-"
 "appointments\n"
 "POT-Creation-Date: 2020-06-14 22:40+0200\n"
-"PO-Revision-Date: 2020-06-14 22:41+0200\n"
+"PO-Revision-Date: 2020-06-28 20:05+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: ar\n"
@@ -196,7 +196,7 @@ msgstr "مستبعد"
 #: src/logic.php:376
 #, fuzzy
 #| msgid "cancelled"
-msgid "canceled"
+msgid "cancelled"
 msgstr "ملغى"
 
 #: src/logic.php:377
@@ -674,7 +674,7 @@ msgstr "حجز"
 #: src/templates/admin.tpl.php:756
 #, fuzzy
 #| msgid "Cancel"
-msgid "Canceled"
+msgid "Cancelled"
 msgstr "إلغاء"
 
 #: src/templates/admin.tpl.php:758

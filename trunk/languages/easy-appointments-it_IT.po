@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Easy Appointments\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-06-14 22:40+0200\n"
-"PO-Revision-Date: 2020-06-14 22:48+0200\n"
+"PO-Revision-Date: 2020-06-28 20:04+0200\n"
 "Last-Translator: Massimo Scolari\n"
 "Language-Team: Italiano\n"
 "Language: it_IT\n"
@@ -187,7 +187,7 @@ msgstr "abbandonato"
 #: src/logic.php:376
 #, fuzzy
 #| msgid "cancelled"
-msgid "canceled"
+msgid "cancelled"
 msgstr "Cancellato"
 
 #: src/logic.php:377
@@ -655,7 +655,7 @@ msgstr "Prenotazione"
 #: src/templates/admin.tpl.php:756
 #, fuzzy
 #| msgid "Cancel"
-msgid "Canceled"
+msgid "Cancelled"
 msgstr "Cancella"
 
 #: src/templates/admin.tpl.php:758

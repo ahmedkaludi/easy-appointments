@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Easy Appointments 1.8.13\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-06-14 22:40+0200\n"
-"PO-Revision-Date: 2020-06-14 22:46+0200\n"
+"PO-Revision-Date: 2020-06-28 20:04+0200\n"
 "Last-Translator: wp_user <mail@vodel.de>\n"
 "Language-Team: \n"
 "Language: de\n"
@@ -200,7 +200,7 @@ msgstr "hylätty"
 
 #: src/logic.php:376
 #, fuzzy
-msgid "canceled"
+msgid "cancelled"
 msgstr ""
 "#-#-#-#-#  catalog.po (Easy Appointments 1.8.13)  #-#-#-#-#\n"
 "peruuttu\n"
@@ -685,7 +685,7 @@ msgstr "Varaus"
 #: src/templates/admin.tpl.php:756
 #, fuzzy
 #| msgid "Cancel"
-msgid "Canceled"
+msgid "Cancelled"
 msgstr "Peruuta"
 
 #: src/templates/admin.tpl.php:758

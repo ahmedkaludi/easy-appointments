@@ -213,7 +213,6 @@ Note: you can have only one calendar on one page.
 25. Admin panel - Report - Export page
 
 == Changelog ==
-
 = 2.14.1 (2020-06-14) =
 * Added translatable title to email links prompt page introduced in 2.14
 * Updated translation files

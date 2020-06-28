@@ -1,10 +1,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Easy Appointments 1.8.3\n"
-"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/easy-"
-"appointments\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/easy-appointments\n"
 "POT-Creation-Date: 2020-06-14 22:40+0200\n"
-"PO-Revision-Date: 2020-06-14 22:48+0200\n"
+"PO-Revision-Date: 2020-06-28 20:03+0200\n"
 "Last-Translator: Perenate <renatereitler@hotmail.com>\n"
 "Language-Team: \n"
 "Language: nl\n"
@@ -14,11 +13,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-Basepath: .\n"
-"X-Poedit-KeywordsList: _:1;gettext:1;dgettext:2;ngettext:1,2;dngettext:2,3;"
-"__:1;_e:1;_c:1;_n:1,2;_n_noop:1,2;_nc:1,2;__ngettext:1,2;__ngettext_noop:1,2;"
-"_x:1,2c;_ex:1,2c;_nx:1,2,4c;_nx_noop:1,2,3c;_n_js:1,2;_nx_js:1,2,3c;"
-"esc_attr__:1;esc_html__:1;esc_attr_e:1;esc_html_e:1;esc_attr_x:1,2c;"
-"esc_html_x:1,2c;comments_number_link:2,3;t:1;st:1;trans:1;transChoice:1,2\n"
+"X-Poedit-KeywordsList: _:1;gettext:1;dgettext:2;ngettext:1,2;dngettext:2,3;__:1;_e:1;_c:1;_n:1,2;_n_noop:1,2;_nc:1,2;__ngettext:1,2;__ngettext_noop:1,2;_x:1,2c;_ex:1,2c;_nx:1,2,4c;_nx_noop:1,2,3c;_n_js:1,2;_nx_js:1,2,3c;esc_attr__:1;esc_html__:1;esc_attr_e:1;esc_html_e:1;esc_attr_x:1,2c;esc_html_x:1,2c;comments_number_link:2,3;t:1;st:1;trans:1;transChoice:1,2\n"
 "X-Loco-Target-Locale: nl_NL\n"
 "X-Generator: Poedit 2.0.8\n"
 "X-Poedit-SearchPath-0: ..\n"
@@ -179,10 +174,8 @@ msgid "Description"
 msgstr "Omschrijving"
 
 #: src/logic.php:255
-msgid ""
-"Daily limit of booking request has been reached. Please contact us by email!"
-msgstr ""
-"Dagelijks limiet van reserveringen bereikt. Neem contact op via de mail!"
+msgid "Daily limit of booking request has been reached. Please contact us by email!"
+msgstr "Dagelijks limiet van reserveringen bereikt. Neem contact op via de mail!"
 
 #: src/logic.php:373
 msgid "pending"
@@ -199,7 +192,7 @@ msgstr "Afgebroken"
 #: src/logic.php:376
 #, fuzzy
 #| msgid "cancelled"
-msgid "canceled"
+msgid "cancelled"
 msgstr "Geannuleerd"
 
 #: src/logic.php:377
@@ -569,10 +562,7 @@ msgid "Multiple work"
 msgstr ""
 
 #: src/templates/admin.tpl.php:636
-msgid ""
-"Mark this option if you want to calculate free worker slots only by current "
-"service and location. If it's not marked system will check if worker is "
-"working on any location and service at current time."
+msgid "Mark this option if you want to calculate free worker slots only by current service and location. If it's not marked system will check if worker is working on any location and service at current time."
 msgstr ""
 
 #: src/templates/admin.tpl.php:646
@@ -580,9 +570,7 @@ msgid "Compatibility mode"
 msgstr ""
 
 #: src/templates/admin.tpl.php:648
-msgid ""
-"If you can't EDIT or DELETE conecntion or any other settings, you should "
-"mark this option. NOTE: After saving this options you must refresh page!"
+msgid "If you can't EDIT or DELETE conecntion or any other settings, you should mark this option. NOTE: After saving this options you must refresh page!"
 msgstr ""
 
 #: src/templates/admin.tpl.php:659
@@ -590,9 +578,7 @@ msgid "Max number of appointments"
 msgstr ""
 
 #: src/templates/admin.tpl.php:661
-msgid ""
-"Number of appointments that one visitor can make reservation before limit "
-"alert is shown. Appointments are counted during one day."
+msgid "Number of appointments that one visitor can make reservation before limit alert is shown. Appointments are counted during one day."
 msgstr ""
 
 #: src/templates/admin.tpl.php:669
@@ -610,9 +596,7 @@ msgid "Turn nonce off"
 msgstr ""
 
 #: src/templates/admin.tpl.php:683
-msgid ""
-"if you have issues with validation code that is expired in form you can turn "
-"off nonce but you are doing that on your own risk."
+msgid "if you have issues with validation code that is expired in form you can turn off nonce but you are doing that on your own risk."
 msgstr ""
 
 #: src/templates/admin.tpl.php:693
@@ -628,9 +612,7 @@ msgid "Allow public access to FullCalendar shortcode"
 msgstr ""
 
 #: src/templates/admin.tpl.php:712
-msgid ""
-"By default only logged in users can see data in FullCalendar. Mark this "
-"option if you want to allow public access for all."
+msgid "By default only logged in users can see data in FullCalendar. Mark this option if you want to allow public access for all."
 msgstr ""
 
 #: src/templates/admin.tpl.php:723
@@ -638,9 +620,7 @@ msgid "Compress shortcode output (removes new lines from templates)."
 msgstr ""
 
 #: src/templates/admin.tpl.php:725
-msgid ""
-"WordPress can add auto paragraph html element for each line break. This "
-"option prevents WP from doing that on EA shortcode."
+msgid "WordPress can add auto paragraph html element for each line break. This option prevents WP from doing that on EA shortcode."
 msgstr ""
 
 #: src/templates/admin.tpl.php:742
@@ -648,9 +628,7 @@ msgid "Notifications"
 msgstr "Notificaties"
 
 #: src/templates/admin.tpl.php:744
-msgid ""
-"You can use this tags inside email content. Just place for example #id# "
-"inside mail template and that value will be replaced with value."
+msgid "You can use this tags inside email content. Just place for example #id# inside mail template and that value will be replaced with value."
 msgstr ""
 
 #: src/templates/admin.tpl.php:752
@@ -664,7 +642,7 @@ msgstr "Reservering"
 #: src/templates/admin.tpl.php:756
 #, fuzzy
 #| msgid "Cancel"
-msgid "Canceled"
+msgid "Cancelled"
 msgstr "Annuleren"
 
 #: src/templates/admin.tpl.php:758
@@ -684,10 +662,7 @@ msgid "Two step action links in email"
 msgstr ""
 
 #: src/templates/admin.tpl.php:799
-msgid ""
-"Sometimes Mail servers can open links from email for inspection. That will "
-"trigger actions such as #link_confirm#, #link_cancel#. Mark this option if "
-"you want to have additional prompt for user action via links."
+msgid "Sometimes Mail servers can open links from email for inspection. That will trigger actions such as #link_confirm#, #link_cancel#. Mark this option if you want to have additional prompt for user action via links."
 msgstr ""
 
 #: src/templates/admin.tpl.php:809
@@ -695,9 +670,7 @@ msgid "Pending notification emails"
 msgstr "E-mailadres voor notificaties"
 
 #: src/templates/admin.tpl.php:811
-msgid ""
-"Enter email adress that will receive new reservation notification. Separate "
-"multiple emails with , (comma)"
+msgid "Enter email adress that will receive new reservation notification. Separate multiple emails with , (comma)"
 msgstr ""
 
 #: src/templates/admin.tpl.php:819
@@ -719,9 +692,7 @@ msgid "Send email to worker"
 msgstr "Verzend e-mail naar klant"
 
 #: src/templates/admin.tpl.php:841
-msgid ""
-"Mark this option if you want to employee receive admin email after filing "
-"the form."
+msgid "Mark this option if you want to employee receive admin email after filing the form."
 msgstr ""
 
 #: src/templates/admin.tpl.php:852
@@ -729,8 +700,7 @@ msgid "Send email to user"
 msgstr "Verzend e-mail naar klant"
 
 #: src/templates/admin.tpl.php:854
-msgid ""
-"Mark this option if you want to user receive email after filing the form."
+msgid "Mark this option if you want to user receive email after filing the form."
 msgstr ""
 
 #: src/templates/admin.tpl.php:864
@@ -738,9 +708,7 @@ msgid "Send from"
 msgstr "Afzender e-mail"
 
 #: src/templates/admin.tpl.php:866
-msgid ""
-"Send from email adress (Example: Name &lt;name@domain.com&gt;). Leave blank "
-"to use default address."
+msgid "Send from email adress (Example: Name &lt;name@domain.com&gt;). Leave blank to use default address."
 msgstr ""
 
 #: src/templates/admin.tpl.php:895
@@ -756,9 +724,7 @@ msgid "Time format"
 msgstr "Tijdsnotatie"
 
 #: src/templates/admin.tpl.php:913
-msgid ""
-"Notice : date/time formating for email notification are done by Settings > "
-"General."
+msgid "Notice : date/time formating for email notification are done by Settings > General."
 msgstr ""
 
 #: src/templates/admin.tpl.php:927
@@ -770,9 +736,7 @@ msgid "Block time"
 msgstr "Bloktijd (min)"
 
 #: src/templates/admin.tpl.php:945
-msgid ""
-"(in minutes). Prevent visitor from making an appointment if there are less "
-"minutes than this."
+msgid "(in minutes). Prevent visitor from making an appointment if there are less minutes than this."
 msgstr ""
 
 #: src/templates/admin.tpl.php:969
@@ -786,9 +750,7 @@ msgid "Add"
 msgstr "Voeg toe"
 
 #: src/templates/admin.tpl.php:980
-msgid ""
-"* To use using the email notification for user there must be field named "
-"\"email\" or \"e-mail\" or field with type \"email\""
+msgid "* To use using the email notification for user there must be field named \"email\" or \"e-mail\" or field with type \"email\""
 msgstr ""
 
 #: src/templates/admin.tpl.php:989
@@ -804,9 +766,7 @@ msgid "Secret key"
 msgstr ""
 
 #: src/templates/admin.tpl.php:1005
-msgid ""
-"* If you want to use Captcha you must have auto reservation option turned "
-"off. If you don't want to use Captcha just leave fields empty."
+msgid "* If you want to use Captcha you must have auto reservation option turned off. If you don't want to use Captcha just leave fields empty."
 msgstr ""
 
 #: src/templates/admin.tpl.php:1015
@@ -814,9 +774,7 @@ msgid "Custom style"
 msgstr "Aangepaste stijl"
 
 #: src/templates/admin.tpl.php:1017
-msgid ""
-"Place here custom css styles. This will be included in both standard and "
-"bootstrap widget."
+msgid "Place here custom css styles. This will be included in both standard and bootstrap widget."
 msgstr ""
 
 #: src/templates/admin.tpl.php:1022
@@ -828,9 +786,7 @@ msgid "I agree field"
 msgstr "Veld akkoord voorwaarden"
 
 #: src/templates/admin.tpl.php:1033
-msgid ""
-"I agree option at the end of form. If this is marked user must confirm \"I "
-"agree\" checkbox."
+msgid "I agree option at the end of form. If this is marked user must confirm \"I agree\" checkbox."
 msgstr ""
 
 #: src/templates/admin.tpl.php:1043
@@ -842,9 +798,7 @@ msgid "Go to page"
 msgstr "Ga naar pagina"
 
 #: src/templates/admin.tpl.php:1063
-msgid ""
-"After a visitor creates an appointment on the front-end form. Leave blank to "
-"turn off redirect."
+msgid "After a visitor creates an appointment on the front-end form. Leave blank to turn off redirect."
 msgstr ""
 
 #: src/templates/admin.tpl.php:1072
@@ -928,9 +882,7 @@ msgid "Test Email"
 msgstr "E-mail"
 
 #: src/templates/admin.tpl.php:1259
-msgid ""
-"Test if the mail service is working fine on this site by generating a test "
-"email that will be send to provided address."
+msgid "Test if the mail service is working fine on this site by generating a test email that will be send to provided address."
 msgstr ""
 
 #: src/templates/admin.tpl.php:1263 src/templates/appointments.tpl.php:53
