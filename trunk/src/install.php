@@ -41,7 +41,6 @@ class EAInstallTools
      */
     function __construct($wpdb, $models, $options)
     {
-//        $this->easy_app_db_version = '1.9.11';
         $this->easy_app_db_version = EASY_APPOINTMENTS_VERSION;
 
         $this->wpdb = $wpdb;
@@ -226,6 +225,13 @@ EOT;
      */
     public function init_data()
     {
+        // safety check if we already have meta fields
+        $count_query = "SELECT count(*) FROM {$this->wpdb->prefix}ea_meta_fields";
+        $num = (int) $this->wpdb->get_var($count_query);
+        if ($num > 0) {
+            return;
+        }
+
         // options table
         $table_name = $this->wpdb->prefix . 'ea_options';
 
@@ -911,47 +917,6 @@ EOT;
                 array('id' => 1, 'name' => 'Car wash', 'duration' => 60, 'price' => 25),
                 array('id' => 2, 'name' => 'Car polishing', 'duration' =>  45, 'price' => 10)
             ),
-//            'ea_connections' => array(
-//                array(1, 0, 2, 2, 2, 'Monday,Tuesday,Wednesday,Thursday,Friday', '07:00:00', '18:00:00', '2015-01-01', '2020-01-01', 1),
-//                array(2, 0, 2, 1, 2, 'Monday,Tuesday,Wednesday,Thursday,Friday', '07:00:00', '18:00:00', '2015-01-01', '2020-01-01', 1),
-//                array(3, 0, 1, 1, 2, 'Monday,Tuesday,Wednesday,Thursday,Friday', '07:00:00', '18:00:00', '2015-01-01', '2020-01-01', 1),
-//                array(4, 0, 1, 2, 2, 'Monday,Tuesday,Wednesday,Thursday,Friday', '07:00:00', '18:00:00', '2015-01-01', '2020-01-01', 1),
-//                array(5, 0, 2, 2, 1, 'Monday,Tuesday,Wednesday,Thursday,Friday', '07:00:00', '18:00:00', '2015-01-01', '2020-01-01', 1),
-//                array(6, 0, 1, 1, 1, 'Monday,Tuesday,Wednesday,Thursday,Friday', '07:00:00', '18:00:00', '2015-01-01', '2020-01-01', 1),
-//                array(7, 0, 2, 2, 1, 'Monday,Tuesday,Wednesday,Thursday,Friday', '07:00:00', '18:00:00', '2015-01-01', '2020-01-01', 1),
-//                array(8, 0, 2, 2, 1, 'Monday,Tuesday,Wednesday,Thursday,Friday', '07:00:00', '18:00:00', '2015-01-01', '2020-01-01', 1)
-//            ),
-//            'ea_options' => array(
-//                array(1, 'mail.pending', 'pending', 'default'),
-//                array(2, 'mail.reservation', 'reservation', 'default'),
-//                array(3, 'mail.canceled', 'canceled', 'default'),
-//                array(4, 'mail.confirmed', 'confirmed', 'default'),
-//                array(5, 'trans.service', 'Service', 'default'),
-//                array(6, 'trans.location', 'Location', 'default'),
-//                array(7, 'trans.worker', 'Worker', 'default'),
-//                array(8, 'trans.done_message', 'Done', 'default'),
-//                array(9, 'time_format', 'am-pm', 'default'),
-//                array(10, 'trans.currency', '$', 'default'),
-//                array(11, 'pending.email', 'nikolanbg@gmail.com', 'default'),
-//                array(12, 'price.hide', '0', 'default'),
-//                array(13, 'datepicker', 'en-US', 'default'),
-//                array(14, 'send.user.email', '0', 'default'),
-//                array(15, 'custom.css', 'body .site-header { padding-top: 0; } body .entry-content .calendar a { box-shadow: 0 0 0 0; }', 'default'),
-//                array(16, 'show.iagree', '1', 'default'),
-//                array(17, 'cancel.scroll', 'calendar', 'default'),
-//                array(18, 'multiple.work', '1', 'default'),
-//                array(19, 'compatibility.mode', '0', 'default'),
-//                array(20, 'pending.subject.email', 'New Reservation #id#', 'default'),
-//                array(21, 'send.from.email', '', 'default'),
-//                array(22, 'css.off', '0', 'default'),
-//                array(23, 'submit.redirect', '', 'default'),
-//                array(24, 'pending.subject.visitor.email', 'Reservation #id#', 'default'),
-//                array(25, 'block.time', '0', 'default'),
-//                array(26, 'max.appointments', '5', 'default'),
-//                array(27, 'pre.reservation', '1', 'default'),
-//                array(28, 'default.status', 'pending', 'default'),
-//                array(29, 'send.worker.email', '0', 'default')
-//            )
         );
 
         foreach ($data as $table => $rows) {

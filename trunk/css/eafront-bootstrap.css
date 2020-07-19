@@ -351,3 +351,31 @@
 .ea-bootstrap .ui-datepicker td span, .ui-datepicker td a {
 	text-align: center;
 }
+
+/* BOOTSRAP FORM FIELDS LABEL ABOVE THE FIELD - START */
+.ea-form-v2 .form-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 5px;
+}
+
+.ea-form-v2 .form-horizontal .control-label {
+  width: 100%;
+  text-align: left;
+  font-weight: normal;
+}
+
+.ea-form-v2 .form-group div.col-sm-8 {
+  width: 100%;  
+}
+
+@media (min-width: 768px) {
+  .ea-form-v2 .form-horizontal .control-label {
+    text-align: left;
+  }
+/*
+  .ea-form-v2 .form-group div.col-sm-8 {
+    width: 100%;  
+  }*/
+}
+/* BOOTSRAP FORM FIELDS LABEL ABOVE THE FIELD - END */

@@ -5,6 +5,7 @@ if (!defined('WPINC')) {
     die;
 }
 
+
 /**
  * Class responsible for App logic
  * reservation, free times...
@@ -373,7 +374,7 @@ class EALogic
             'pending'     => __('pending', 'easy-appointments'),
             'reservation' => __('reservation', 'easy-appointments'),
             'abandoned'   => __('abandoned', 'easy-appointments'),
-            'canceled'    => __('canceled', 'easy-appointments'),
+            'canceled'    => __('cancelled', 'easy-appointments'),
             'confirmed'   => __('confirmed', 'easy-appointments'),
         );
     }

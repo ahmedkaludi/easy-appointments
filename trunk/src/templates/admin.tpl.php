@@ -599,11 +599,14 @@
                     <a data-tab="tab-mail" href="#">
                         <span class="icon icon-mail"></span><span class="text-label"><?php _e('Mail Notifications', 'easy-appointments'); ?></span>
                     </a>
+                    <a data-tab="tab-full-calendar" href="#">
+                      <span class="icon icon-fullcalendar"></span><span class="text-label"><?php _e('FullCalendar Shortcode', 'easy-appointments'); ?></span>
+                    </a>
                     <a data-tab="tab-labels" href="#">
                         <span class="icon icon-label"></span><span class="text-label"><?php _e('Labels', 'easy-appointments'); ?></span>
                     </a>
                     <a data-tab="tab-date-time" href="#">
-                        <span class="icon icon-date"></span><span class="text-label"><?php _e('Date & Time', 'easy-appointments'); ?></span>
+                        <span class="icon icon-datetime"></span><span class="text-label"><?php _e('Date & Time', 'easy-appointments'); ?></span>
                     </a>
                     <a data-tab="tab-fields" href="#">
                         <span class="icon icon-fields"></span><span class="text-label"><?php _e('Custom Form Fields', 'easy-appointments'); ?></span>
@@ -707,19 +710,6 @@
                     </div>
                     <div class="form-item">
                         <div class="label-with-tooltip">
-                            <label for=""><?php _e('Allow public access to FullCalendar shortcode', 'easy-appointments'); ?></label>
-                            <span class="tooltip tooltip-right"
-                                  data-tooltip="<?php _e('By default only logged in users can see data in FullCalendar. Mark this option if you want to allow public access for all.', 'easy-appointments'); ?>"></span>
-                        </div>
-                        <div class="field-wrap">
-                            <input class="field" data-key="fullcalendar.public"
-                                   name="fullcalendar.public" type="checkbox" <% if
-                            (_.findWhere(settings, {ea_key:'fullcalendar.public'}).ea_value == "1") {
-                            %>checked<% } %>>
-                        </div>
-                    </div>
-                    <div class="form-item">
-                        <div class="label-with-tooltip">
                             <label for=""><?php _e('Compress shortcode output (removes new lines from templates).', 'easy-appointments'); ?></label>
                             <span class="tooltip tooltip-right"
                                   data-tooltip="<?php _e('WordPress can add auto paragraph html element for each line break. This option prevents WP from doing that on EA shortcode.', 'easy-appointments'); ?>"></span>
@@ -753,7 +743,7 @@
                                         <a class="mail-tab"
                                            data-textarea="#mail-reservation"><?php _e('Reservation', 'easy-appointments'); ?></a>
                                         <a class="mail-tab"
-                                           data-textarea="#mail-canceled"><?php _e('Canceled', 'easy-appointments'); ?></a>
+                                           data-textarea="#mail-canceled"><?php _e('Cancelled', 'easy-appointments'); ?></a>
                                         <a class="mail-tab"
                                            data-textarea="#mail-confirmed"><?php _e('Confirmed', 'easy-appointments'); ?></a>
                                         <a class="mail-tab"
@@ -791,6 +781,18 @@
                             </tbody>
                         </table>
                         <div><small><?php _e('Available tags', 'easy-appointments'); ?>: #id#, #date#, #start#, #end#, #status#, #created#, #price#, #ip#, #link_confirm#, #link_cancel#, #url_confirm#, #url_cancel#, #service_name#, #service_duration#, #service_price#, #worker_name#, #worker_email#, #worker_phone#, #location_name#, #location_address#, #location_location#, <?php echo implode(', ', EADBModels::get_custom_fields_tags()); ?></small></div>
+                    </div>
+                    <div class="form-item">
+                        <div class="label-with-tooltip">
+                            <label for="mail.action.two_step"><?php _e('Two step action links in email', 'easy-appointments'); ?></label>
+                            <span class="tooltip tooltip-right"
+                                  data-tooltip="<?php _e('Sometimes Mail servers can open links from email for inspection. That will trigger actions such as #link_confirm#, #link_cancel#. Mark this option if you want to have additional prompt for user action via links.', 'easy-appointments'); ?>"></span>
+                        </div>
+                        <div class="field-wrap">
+                            <input class="field" data-key="mail.action.two_step" name="mail.action.two_step"
+                                   type="checkbox" <% if (_.findWhere(settings,
+                            {ea_key:'mail.action.two_step'}).ea_value == "1") { %>checked<% } %>>
+                        </div>
                     </div>
                     <div class="form-item">
                         <div class="label-with-tooltip">
@@ -858,6 +860,33 @@
                                value="<%- _.findWhere(settings, {ea_key:'send.from.email'}).ea_value %>">
                     </div>
                 </div>
+            </div>
+
+            <div id="tab-full-calendar" class="form-section hidden">
+              <span class="separator vertical"></span>
+              <div class="form-container">
+                  <div class="form-item">
+                      <div class="label-with-tooltip">
+                          <label for=""><?php _e('Allow public access to FullCalendar shortcode', 'easy-appointments'); ?></label>
+                          <span class="tooltip tooltip-right"
+                                data-tooltip="<?php _e('By default only logged in users can see data in FullCalendar. Mark this option if you want to allow public access for all.', 'easy-appointments'); ?>"></span>
+                      </div>
+                      <div class="field-wrap">
+                          <input class="field" data-key="fullcalendar.public"
+                                 name="fullcalendar.public" type="checkbox" <% if
+                          (_.findWhere(settings, {ea_key:'fullcalendar.public'}).ea_value == "1") {
+                          %>checked<% } %>>
+                      </div>
+                  </div>
+                  <div class="form-item" style="display: none;">
+                      <div class="label-with-tooltip">
+                          <label for=""><?php _e('Event content in popup', 'easy-appointments'); ?></label>
+                          <span class="tooltip tooltip-right"
+                                data-tooltip="<?php _e('Event content when clicked on event', 'easy-appointments'); ?>"></span>
+                      </div>
+                      <textarea class="field"></textarea>
+                  </div>
+              </div>
             </div>
 
             <div id="tab-labels" class="form-section hidden">
@@ -1063,21 +1092,21 @@
                         </div>
                     </div>
                     <div class="form-item">
-                    	<label for=""><?php _e('Service', 'easy-appointments'); ?></label>
-                    	<select id="redirect-service" class="field">
+                        <label for=""><?php _e('Service', 'easy-appointments'); ?></label>
+                        <select id="redirect-service" class="field">
                             <% _.each(eaData.Services,function(item,key,list){ %>
                             <option value="<%= _.escape(item.id) %>"><%= _.escape(item.name) %></option>
                             <% });%>
                         </select>
                     </div>
                     <div class="form-item inline-fields">
-                    	<div class="form-item">
-	                    	<label for=""><?php _e('Redirect to', 'easy-appointments'); ?></label>
-	                    	<input id="redirect-url" name="redirect-url" type="text">
-	                    </div>
-	                    <button class="button button-primary btn-add-redirect button-field"><?php _e('Add advance redirect', 'easy-appointments'); ?></button>
+                        <div class="form-item">
+                            <label for=""><?php _e('Redirect to', 'easy-appointments'); ?></label>
+                            <input id="redirect-url" name="redirect-url" type="text">
+                        </div>
+                        <button class="button button-primary btn-add-redirect button-field"><?php _e('Add advance redirect', 'easy-appointments'); ?></button>
                     </div>
-                	<input type="hidden" id="advance-redirect" data-key="advance.redirect" class="field" name="advance.redirect" value="<%= _.escape(ea_settings['advance.redirect']) %>">
+                    <input type="hidden" id="advance-redirect" data-key="advance.redirect" class="field" name="advance.redirect" value="<%= _.escape(ea_settings['advance.redirect']) %>">
                     <div class="form-item">
                         <ul id="custom-redirect-list" class="list-form-item"></ul>
                     </div>

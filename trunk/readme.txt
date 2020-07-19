@@ -4,7 +4,7 @@ Donate link: https://easy-appointments.net/
 Tags: appointment, appointments, Booking, calendar, plugin, reservation, reservations, wp appointment, reservation plugin, reservations, schedule
 Requires at least: 3.7
 Tested up to: 5.4
-Stable tag: 2.13.4
+Stable tag: 2.14.3
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -213,6 +213,32 @@ Note: you can have only one calendar on one page.
 25. Admin panel - Report - Export page
 
 == Changelog ==
+= 2.14.3 (2020-07-13) =
+* Added option for Header customization on full calendar view for month, week, day
+* Improvements regarding `fancy-select` issue
+
+= 2.14.2 (2020-07-08) =
+* Fixed issue with duplicated custom fields when you re-activate plugin
+* Fixed issue when there is `fancy-select` active on page
+
+= 2.14.1 (2020-06-14) =
+* Added translatable title to email links prompt page introduced in 2.14
+* Updated translation files
+
+= 2.14.0 (2020-06-13) =
+* Added option for additional user prompt when using links from email such as ` #link_confirm#, #link_cancel#`. By using this option you will prevent unwanted actions from Mail servers that wants to check every link inside emial.
+* Fixed and updated labels and translations
+
+= 2.13.7 (2020-06-08) =
+* Fixed small issue introduced in previous release
+
+= 2.13.6 (2020-06-08) =
+* Added `Created` column for CSV export
+* Improved bootstrap version of form
+
+= 2.13.5 (2020-06-02) =
+* Fixed issue with auto select option on bootstrap calendar shortcode
+
 = 2.13.4 (2020-05-24) =
 * Added shortcode option to prevent date auto select day when calendar is first step (`ea_bootstrap`)
 * Added shortcode option for button label customization for full calendar (`ea_full_calendar`)

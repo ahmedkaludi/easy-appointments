@@ -63,7 +63,7 @@
                     <% if (item.visible == "0") { return; } %>
                     <div class="form-group">
                         <label class="col-sm-4 control-label"><%= _.escape(item.label) %> <% if (item.required == "1") { %>*<% }
-                            %> : </label>
+                            %></label>
                         <div class="col-sm-8">
                             <!-- INPUT TYPE -->
                             <% if(item.type === 'INPUT') { %>

@@ -2,284 +2,168 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Easy Appointments\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-04-29 14:20+0000\n"
-"PO-Revision-Date: 2020-05-17 20:16+0200\n"
+"POT-Creation-Date: 2020-06-14 22:40+0200\n"
+"PO-Revision-Date: 2020-06-28 20:04+0200\n"
 "Last-Translator: Massimo Scolari\n"
 "Language-Team: Italiano\n"
 "Language: it_IT\n"
-"Plural-Forms: nplurals=2; plural=n != 1;\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Poedit 2.0.8\n"
 "X-Loco-Version: 2.3.3; wp-5.4.1\n"
-
-#: src/templates/admin.tpl.php:933
-msgid ""
-"(in minutes). Prevent visitor from making an appointment if there are less "
-"minutes than this."
-msgstr ""
-"(in minuti). Impedire ai visitatori di fissare un appuntamento se ci sono "
-"meno minuti di questo."
-
-#: src/templates/admin.tpl.php:983
-msgid "* Google reCAPTCHA key can be generated via"
-msgstr "* La chiave Google reCAPTCHA può essere generata tramite"
-
-#: src/templates/admin.tpl.php:993
-msgid ""
-"* If you want to use Captcha you must have auto reservation option turned "
-"off. If you don't want to use Captcha just leave fields empty."
-msgstr ""
-"* Se si desidera utilizzare Captcha, è necessario disattivare l'opzione di "
-"prenotazione automatica. Se non si desidera utilizzare Captcha, lasciare "
-"vuoti i campi."
-
-#: src/templates/admin.tpl.php:968
-msgid ""
-"* To use using the email notification for user there must be field named "
-"\"email\" or \"e-mail\" or field with type \"email\""
-msgstr ""
-"* Per utilizzare la notifica e-mail per l'utente è necessario che ci sia un "
-"campo chiamato \"e-mail\" o \"e-mail\" o un campo con il tipo \"e-mail\""
-
-#: src/logic.php:375
-msgid "abandoned"
-msgstr "abbandonato"
-
-#: src/templates/appointments.tpl.php:100
-msgid "Action"
-msgstr "Azione"
-
-#: src/templates/admin.tpl.php:83 src/templates/admin.tpl.php:156
-#: src/templates/admin.tpl.php:243 src/templates/admin.tpl.php:316
-msgid "Actions"
-msgstr "Azioni"
-
-#: src/templates/admin.tpl.php:373
-msgid "Active from"
-msgstr "Attivo da"
-
-#: src/templates/admin.tpl.php:548
-msgid "Active from date"
-msgstr "Attivo dalla data"
-
-#: src/templates/admin.tpl.php:962
-msgid "Add"
-msgstr "Aggiungi"
-
-#: src/templates/admin.tpl.php:1078
-msgid "Add advance redirect"
-msgstr "Aggiungi reindirizzamento avanzato"
-
-#: src/templates/admin.tpl.php:1062
-msgid "Add custom redirect based on service."
-msgstr "Aggiungi reindirizzamento personalizzato in base al servizio."
-
-#: src/templates/appointments.tpl.php:70
-msgid "Add New Appointment"
-msgstr "Aggiungi Nuovo Appuntamento"
-
-#: src/templates/admin.tpl.php:291
-msgid "Add New Connection"
-msgstr "Aggiungi Nuova Connessione"
-
-#: src/templates/admin.tpl.php:54
-msgid "Add New Location"
-msgstr "Aggiungi Nuova Posizione"
-
-#: src/templates/admin.tpl.php:124
-msgid "Add New Service"
-msgstr "Aggiungi Nuovo Servizio"
-
-#: src/templates/admin.tpl.php:212
-msgid "Add New Worker"
-msgstr "Aggiungi Nuovo Lavoratore"
-
-#: src/templates/admin.tpl.php:81
-msgid "Address"
-msgstr "Indirizzo"
-
-#: src/templates/admin.tpl.php:760
-msgid "Admin"
-msgstr "Admin"
-
-#: src/templates/admin.tpl.php:807
-msgid "Admin notification subject"
-msgstr "Oggetto della notifica dell'amministratore"
-
-#: src/templates/admin.tpl.php:1060
-msgid "Advance Go to"
-msgstr "Reindirizzamento"
-
-#: src/templates/admin.tpl.php:1051
-msgid ""
-"After a visitor creates an appointment on the front-end form. Leave blank to "
-"turn off redirect."
-msgstr ""
-"Dopo che un visitatore crea un appuntamento sul modulo front-end. Lascia "
-"vuoto per disattivare il reindirizzamento."
-
-#: src/templates/admin.tpl.php:1031
-msgid "After cancel go to"
-msgstr "Dopo l'annullamento vai a"
-
-#: src/templates/admin.tpl.php:710
-msgid "Allow public access to FullCalendar shortcode"
-msgstr "Consentire l'accesso del pubblico allo shortcode FullCalendar"
-
-#: src/mail.php:229
-msgid "Appointment can't be canceled"
-msgstr "L'appuntamento non può essere cancellato"
-
-#: src/mail.php:211
-msgid "Appointment can't be canceled!"
-msgstr "L'appuntamento non può essere cancellato"
-
-#: src/mail.php:184
-msgid "Appointment can't be confirmed!"
-msgstr "L'appuntamento non può essere confermato!"
-
-#: src/mail.php:235
-msgid "Appointment has been canceled"
-msgstr "L'appuntamento è stato annullato"
-
-#: src/mail.php:202
-msgid "Appointment has been confirmed."
-msgstr "L'appuntamento è stato confermato."
 
 #: src/admin.php:319 src/admin.php:320 src/templates/appointments.tpl.php:6
 msgid "Appointments"
 msgstr "Appuntamenti"
 
-#: src/templates/admin.tpl.php:669
-msgid "Auto reservation"
-msgstr "Prenotazione Automatica"
+#: src/admin.php:329 src/admin.php:330
+msgid "Settings"
+msgstr "Impostazioni"
 
-#: src/templates/admin.tpl.php:793
-msgid "Available tags"
-msgstr "Tag disponibili"
+#: src/admin.php:339
+msgid "Overview"
+msgstr "Panoramica"
 
-#: src/templates/report.tpl.php:22
-msgid "Back to Reports"
-msgstr "Torna ai Rapporti"
+#: src/admin.php:340
+msgid "Reports"
+msgstr "Rapporti"
 
-#: src/templates/admin.tpl.php:154
-msgid "Block after (in minutes)"
-msgstr "Blocca dopo (in minuti)"
+#: src/ajax.php:253
+msgid "Slot is taken"
+msgstr "Slot occupato"
 
-#: src/templates/admin.tpl.php:153
-msgid "Block before (in minutes)"
-msgstr "Blocca prima (in minuti)"
+#: src/ajax.php:284
+msgid "Something went wrong! Please try again."
+msgstr "Qualcosa è andato storto! Per favore riprova."
 
-#: src/templates/admin.tpl.php:931
-msgid "Block time"
-msgstr "Tempo di blocco"
+#: src/ajax.php:745
+msgid "Invalid email address!"
+msgstr "Indirizzo email non valido!"
 
-#: src/frontend.php:304 src/frontend.php:481
+#: src/ajax.php:749
+msgid "Only admin user can test mail!"
+msgstr "Solo l'utente amministratore può testare la posta!"
+
+#: src/ajax.php:772
+msgid "Request completed, please check email."
+msgstr "Richiesta completata, si prega di controllare l'e-mail."
+
+#: src/ajax.php:1179
+msgid "Invalid captcha!"
+msgstr "CAPTCHA non valido!"
+
+#: src/frontend.php:221 src/frontend.php:471
+msgid "Please select another day"
+msgstr "Seleziona un altro giorno"
+
+#: src/frontend.php:222 src/frontend.php:484
+#: src/templates/appointments.tpl.php:80 src/templates/appointments.tpl.php:98
+msgid "Date & time"
+msgstr "Data e Ora"
+
+#: src/frontend.php:223 src/frontend.php:487 src/templates/admin.tpl.php:155
+#: src/templates/appointments.tpl.php:99 src/templates/appointments.tpl.php:229
+#: src/templates/mail.notification.tpl.php:46
+msgid "Price"
+msgstr "Prezzo"
+
+#: src/frontend.php:230 src/frontend.php:492
+msgid "Form validation code expired. Please refresh page in order to continue."
+msgstr ""
+"Codice di convalida del modulo scaduto. Aggiorna la pagina per continuare."
+
+#: src/frontend.php:231 src/frontend.php:493
+msgid "Internal error. Please try again later."
+msgstr "Errore interno. Per favore riprova più tardi."
+
+#: src/frontend.php:232 src/frontend.php:494
+msgid "Unable to make ajax request. Please try again later."
+msgstr ""
+"Impossibile effettuare la richiesta Ajax. Per favore riprova più tardi."
+
+#: src/frontend.php:299 src/frontend.php:472
+msgid "Personal information"
+msgstr "Informazioni Personali"
+
+#: src/frontend.php:300 src/frontend.php:477
+msgid "Fields with * are required"
+msgstr "* campi obbligatori"
+
+#: src/frontend.php:304 src/frontend.php:483
 msgid "Booking overview"
 msgstr "Dettaglio Prenotazione"
 
-#: src/templates/admin.tpl.php:295
-msgid "Bulk Add New Connections"
-msgstr "Aggiunta collettiva di Nuove Connessioni"
+#: src/frontend.php:309 src/frontend.php:488
+msgid "I agree with terms and conditions"
+msgstr "Accetto i Termini e le Condizioni"
 
-#: src/templates/admin.tpl.php:712
-msgid ""
-"By default only logged in users can see data in FullCalendar. Mark this "
-"option if you want to allow public access for all."
-msgstr ""
-"Per impostazione predefinita, solo gli utenti che hanno effettuato l'accesso "
-"possono visualizzare i dati in FullCalendar. Selezionare questa opzione se "
-"si desidera consentire l'accesso pubblico a tutti."
+#: src/frontend.php:312 src/frontend.php:489
+msgid "You must agree with terms and conditions"
+msgstr "Devi accettare i termini e le condizioni"
 
-#: src/templates/admin.tpl.php:915
-msgid "Calendar localization"
-msgstr "Localizzazione del calendario"
+#: src/frontend.php:332 src/frontend.php:485
+msgid "Submit"
+msgstr "Invia"
 
-#: src/frontend.php:333 src/frontend.php:484
-#: src/templates/appointments.tpl.php:241 src/templates/admin.tpl.php:115
+#: src/frontend.php:333 src/frontend.php:486 src/templates/admin.tpl.php:115
 #: src/templates/admin.tpl.php:202 src/templates/admin.tpl.php:281
-#: src/templates/admin.tpl.php:480
+#: src/templates/admin.tpl.php:480 src/templates/appointments.tpl.php:241
 msgid "Cancel"
 msgstr "Cancella"
 
-#: src/mail.php:400
-msgid "Cancel appointment"
-msgstr "Cancella Appuntamento"
+#: src/frontend.php:378 src/frontend.php:383 src/frontend.php:388
+#: src/frontend.php:404 src/frontend.php:473
+msgid "This field is required."
+msgstr "Questo campo è obbligatorio."
 
-#: src/templates/admin.tpl.php:756
-msgid "Canceled"
-msgstr "Cancellato"
+#: src/frontend.php:379 src/frontend.php:384 src/frontend.php:474
+msgid "Please enter a valid email address"
+msgstr "Si prega di inserire un indirizzo email valido"
 
-#: src/logic.php:376
-msgid "canceled"
-msgstr "cancellato"
+#: src/frontend.php:475
+msgid "Please enter at least 3 characters."
+msgstr "Inserisci almeno 3 caratteri."
 
-#: src/templates/report.tpl.php:78
-msgid "Click to customize columns for export"
-msgstr "Fare clic per personalizzare le colonne per l'esportazione"
+#: src/frontend.php:476
+msgid "Please enter at least 3 digits."
+msgstr "Inserisci almeno 3 cifre."
 
-#: src/templates/appointments.tpl.php:143 src/templates/admin.tpl.php:390
-msgid "Clone"
-msgstr "Duplica"
+#: src/frontend.php:478 src/metafields.php:30 src/templates/admin.tpl.php:241
+#: src/templates/admin.tpl.php:971
+msgid "Email"
+msgstr "Email"
 
-#: src/frontend.php:479
+#: src/frontend.php:479 src/install.php:799 src/templates/admin.tpl.php:80
+#: src/templates/admin.tpl.php:150 src/templates/admin.tpl.php:239
+msgid "Name"
+msgstr "Nome"
+
+#: src/frontend.php:480 src/install.php:800 src/metafields.php:29
+#: src/templates/admin.tpl.php:242 src/templates/admin.tpl.php:970
+msgid "Phone"
+msgstr "Telefono"
+
+#: src/frontend.php:481
 msgid "Comment"
 msgstr "Commento"
 
-#: src/templates/admin.tpl.php:646
-msgid "Compatibility mode"
-msgstr "Modalità di compatibilità"
+#: src/frontend.php:482
+msgid "Please check your appointment details below and confirm:"
+msgstr "Controlla i dettagli dell'appuntamento di seguito e conferma:"
 
-#: src/templates/admin.tpl.php:723
-msgid "Compress shortcode output (removes new lines from templates)."
-msgstr "Comprimi output shortcode (rimuove nuove righe dai template)."
+#: src/frontend.php:490
+msgid "You can't select this time slot!'"
+msgstr "Non puoi selezionare questa fascia oraria! "
 
-#: src/mail.php:401
-msgid "Confirm appointment"
-msgstr "Conferma Appuntamento"
+#: src/install.php:798
+msgid "EMail"
+msgstr "Email"
 
-#: src/templates/admin.tpl.php:758
-msgid "Confirmed"
-msgstr "Confermato"
-
-#: src/logic.php:377
-msgid "confirmed"
-msgstr "confermato"
-
-#: src/templates/admin.tpl.php:28
-msgid "Connections"
-msgstr "Connessioni"
-
-#: src/templates/appointments.tpl.php:81 src/templates/appointments.tpl.php:99
-#: src/templates/mail.notification.tpl.php:42
-msgid "Created"
-msgstr "Creata"
-
-#: src/templates/admin.tpl.php:1137
-msgid "Currency"
-msgstr "Corrente"
-
-#: src/templates/admin.tpl.php:1142
-msgid "Currency before price"
-msgstr "Valuta prima del prezzo"
-
-#: src/templates/admin.tpl.php:609
-msgid "Custom Form Fields"
-msgstr "Campi modulo"
-
-#: src/templates/admin.tpl.php:1003
-msgid "Custom style"
-msgstr "Stile personalizzato"
-
-#: src/templates/appointments.tpl.php:96
-msgid "Customer"
-msgstr "Cliente"
-
-#: src/templates/admin.tpl.php:34
-msgid "Customize"
-msgstr "Personalizzare"
+#: src/install.php:801 src/templates/admin.tpl.php:240
+msgid "Description"
+msgstr "Descrizione"
 
 #: src/logic.php:255
 msgid ""
@@ -288,303 +172,373 @@ msgstr ""
 "È stato raggiunto il limite giornaliero di richiesta di prenotazione. Vi "
 "preghiamo di contattarci via email."
 
-#: src/templates/appointments.tpl.php:213 src/templates/admin.tpl.php:313
-#: src/templates/mail.notification.tpl.php:30
-msgid "Date"
-msgstr "Data"
+#: src/logic.php:373
+msgid "pending"
+msgstr "in sospeso"
 
-#: src/templates/admin.tpl.php:606
-msgid "Date & Time"
-msgstr "Data e Ora"
+#: src/logic.php:374
+msgid "reservation"
+msgstr "prenotazione"
 
-#: src/frontend.php:222 src/frontend.php:482
-#: src/templates/appointments.tpl.php:80 src/templates/appointments.tpl.php:98
-msgid "Date & time"
-msgstr "Data e Ora"
+#: src/logic.php:375
+msgid "abandoned"
+msgstr "abbandonato"
 
-#: src/templates/admin.tpl.php:308 src/templates/admin.tpl.php:518
-msgid "Days of week"
-msgstr "Giorni della settimana"
+#: src/logic.php:376
+#, fuzzy
+#| msgid "cancelled"
+msgid "cancelled"
+msgstr "Cancellato"
 
-#: src/templates/admin.tpl.php:693
-msgid "Default status"
-msgstr "Stato predefinito"
+#: src/logic.php:377
+msgid "confirmed"
+msgstr "confermato"
 
-#: src/templates/admin.tpl.php:695
-msgid "Default status of Appointment made by visitor."
-msgstr "Stato predefinito dell'appuntamento effettuato dal visitatore."
+#: src/mail.php:174
+msgid "No appointment."
+msgstr "Nessun appuntamento."
 
-#: src/templates/appointments.tpl.php:142 src/templates/admin.tpl.php:104
-#: src/templates/admin.tpl.php:188 src/templates/admin.tpl.php:269
-#: src/templates/admin.tpl.php:389
-msgid "Delete"
-msgstr "Elimina"
-
-#: src/install.php:801 src/templates/admin.tpl.php:240
-msgid "Description"
-msgstr "Descrizione"
-
-#: src/templates/appointments.tpl.php:97
-msgid "Descrtiption"
-msgstr "Descrizione"
-
-#: src/templates/admin.tpl.php:883
-msgid "Done message"
-msgstr "Fatto Messaggio"
-
-#: src/templates/admin.tpl.php:151
-msgid "Duration (in minutes)"
-msgstr "Durata (minuti)"
-
-#: src/templates/admin.tpl.php:487
-msgid "each combination will be one connection"
-msgstr "ogni combinazione sarà una connessione"
-
-#. Name of the plugin
-msgid "Easy Appointments"
-msgstr "Easy Appointments"
-
-#: src/templates/appointments.tpl.php:141 src/templates/admin.tpl.php:103
-#: src/templates/admin.tpl.php:187 src/templates/admin.tpl.php:268
-#: src/templates/admin.tpl.php:388
-msgid "Edit"
-msgstr "Modifica"
-
-#: src/install.php:798
-msgid "EMail"
-msgstr "Email"
-
-#: src/frontend.php:476 src/templates/admin.tpl.php:241
-#: src/templates/admin.tpl.php:959
-msgid "Email"
-msgstr "Email"
-
-#: src/templates/admin.tpl.php:1240
-msgid "Email address"
-msgstr "Indirizzo Email"
-
-#: src/templates/admin.tpl.php:458 src/templates/mail.notification.tpl.php:38
-msgid "End"
-msgstr "Fine"
-
-#: src/api/apifullcalendar.php:201
-msgid "End filter from"
-msgstr "Fine filtra da"
-
-#: src/templates/admin.tpl.php:369
-msgid "ends at"
-msgstr "finisce a"
-
-#: src/templates/admin.tpl.php:799
-msgid ""
-"Enter email adress that will receive new reservation notification. Separate "
-"multiple emails with , (comma)"
-msgstr ""
-"Inserisci l'indirizzo email che riceverà la nuova notifica di prenotazione. "
-"Separa più e-mail con, (virgola)"
-
-#: src/templates/admin.tpl.php:1256
-msgid "Error log"
-msgstr "Errori Log"
-
-#: src/templates/admin.tpl.php:1123
-msgid "Error message"
-msgstr "Messaggio di errore"
-
-#: src/templates/report.tpl.php:17
-msgid "Export"
-msgstr "Esporta"
-
-#: src/templates/report.tpl.php:99
-msgid "Export data"
-msgstr "Esporta dati"
-
-#: src/templates/report.tpl.php:18
-msgid "Export data in Excel CSV format for selected time period."
-msgstr ""
-"Esporta i dati in formato CSV Excel per il periodo di tempo selezionato."
-
-#: src/templates/report.tpl.php:98
-msgid "Export data to CSV, can be imported to MS Excel, OpenOffice Calc... "
-msgstr ""
-"Esporta dati in CSV, può essere importato in MS Excel, OpenOffice Calc ..."
-
-#: src/api/apifullcalendar.php:181
-msgid "Field that will be used as title"
-msgstr "Campo che verrà utilizzato come titolo"
-
-#: src/templates/report.tpl.php:76
-msgid "Fields"
-msgstr "Campi"
-
-#: src/frontend.php:300 src/frontend.php:475
-msgid "Fields with * are required"
-msgstr "* campi obbligatori"
-
-#: src/templates/admin.tpl.php:615
-msgid "Form Style & Redirect"
-msgstr "Stile modulo e reindirizzamento"
-
-#: src/frontend.php:230 src/frontend.php:490
-msgid "Form validation code expired. Please refresh page in order to continue."
-msgstr ""
-"Codice di convalida del modulo scaduto. Aggiorna la pagina per continuare."
-
-#: src/templates/admin.tpl.php:357 src/templates/admin.tpl.php:441
-#: src/templates/admin.tpl.php:525
-msgid "Friday"
-msgstr "Venerdì"
-
-#: src/templates/report.tpl.php:91 src/templates/appointments.tpl.php:51
-msgid "From"
-msgstr "Da"
-
-#: src/templates/admin.tpl.php:618
-msgid "GDPR"
-msgstr "GDPR"
-
-#: src/templates/admin.tpl.php:1094
-msgid "GDPR section checkbox."
-msgstr "Casella di controllo GDPR."
-
-#: src/templates/admin.tpl.php:597
-msgid "General"
-msgstr "Generale"
-
-#: src/templates/admin.tpl.php:1049
-msgid "Go to page"
-msgstr "Vai alla pagina"
-
-#: src/templates/admin.tpl.php:612
-msgid "Google reCAPTCHA v2"
-msgstr "Google reCAPTCHA v2"
-
-#: src/templates/report.tpl.php:8
-msgid "Have Calendar overview of all bookings and free slots. "
-msgstr ""
-"Avere una panoramica del calendario di tutte le prenotazioni e slot gratuiti."
-
-#: src/templates/admin.tpl.php:1150
-msgid "Hide price"
-msgstr "Nascondi prezzo"
-
-#. Author URI of the plugin
-msgid "http://nikolaloncar.com"
-msgstr "http://nikolaloncar.com"
-
-#. URI of the plugin
-msgid "https://easy-appointments.net/"
-msgstr "https://easy-appointments.net/"
-
-#: src/templates/admin.tpl.php:1019
-msgid "I agree field"
-msgstr "Sono d'accordo sul campo"
-
-#: src/templates/admin.tpl.php:1021
-msgid ""
-"I agree option at the end of form. If this is marked user must confirm \"I "
-"agree\" checkbox."
-msgstr ""
-"Accetto l'opzione alla fine del modulo. Se questo è contrassegnato, l'utente "
-"deve confermare la casella di controllo \"Accetto\"."
-
-#: src/frontend.php:309 src/frontend.php:486
-msgid "I agree with terms and conditions"
-msgstr "Accetto i Termini e le Condizioni"
-
-#: src/templates/appointments.tpl.php:79
-#: src/templates/mail.notification.tpl.php:10
-msgid "Id"
-msgstr "Id"
-
-#: src/templates/admin.tpl.php:648
-msgid ""
-"If you can't EDIT or DELETE conecntion or any other settings, you should "
-"mark this option. NOTE: After saving this options you must refresh page!"
-msgstr ""
-"Se non riesci a MODIFICARE o ELIMINARE la connessione o qualsiasi altra "
-"impostazione, dovresti contrassegnare questa opzione. NOTA: dopo aver "
-"salvato queste opzioni è necessario aggiornare la pagina!"
-
-#: src/templates/admin.tpl.php:683
-msgid ""
-"if you have issues with validation code that is expired in form you can turn "
-"off nonce but you are doing that on your own risk."
-msgstr ""
-"in caso di problemi con il codice di convalida scaduto nella forma, è "
-"possibile disattivare la verifica ma lo si sta facendo a proprio rischio."
-
-#: src/templates/admin.tpl.php:955
-msgid "Input"
-msgstr "Input"
-
-#: src/frontend.php:231 src/frontend.php:491
-msgid "Internal error. Please try again later."
-msgstr "Errore interno. Per favore riprova più tardi."
-
-#: src/ajax.php:1179
-msgid "Invalid captcha!"
-msgstr "CAPTCHA non valido!"
-
-#: src/ajax.php:745
-msgid "Invalid email address!"
-msgstr "Indirizzo email non valido!"
-
-#: src/mail.php:166
+#: src/mail.php:180
 msgid "Invalid token."
 msgstr "Token non valido."
 
-#: src/templates/admin.tpl.php:556
-msgid "Is Working"
-msgstr "Sta lavorando"
+#: src/mail.php:199
+#, fuzzy
+#| msgid "Appointment can't be confirmed!"
+msgid "Appointment is already confirmed!"
+msgstr "L'appuntamento non può essere confermato!"
 
-#: src/templates/admin.tpl.php:315
-msgid "Is working"
-msgstr "Sta lavorando"
+#: src/mail.php:204
+msgid "Appointment can't be confirmed!"
+msgstr "L'appuntamento non può essere confermato!"
 
-#: src/templates/admin.tpl.php:1105
-msgid "Label"
-msgstr "Etichetta"
+#: src/mail.php:222
+msgid "Appointment has been confirmed."
+msgstr "L'appuntamento è stato confermato."
 
-#: src/templates/admin.tpl.php:1107
-msgid "Label next to checkbox."
-msgstr "Etichetta accanto alla casella di controllo."
+#: src/mail.php:230
+#, fuzzy
+#| msgid "Appointment has been cancelled"
+msgid "Appointment is already cancelled!"
+msgstr "L'appuntamento è stato annullato"
 
-#: src/templates/admin.tpl.php:603
-msgid "Labels"
-msgstr "Etichette"
+#: src/mail.php:235
+msgid "Appointment can't be cancelled!"
+msgstr "L'appuntamento non può essere cancellato"
 
-#: src/templates/admin.tpl.php:1116
-msgid "Link to page with GDPR content."
-msgstr "Link alla pagina con contenuto GDPR."
+#: src/mail.php:253
+msgid "Appointment can't be cancelled"
+msgstr "L'appuntamento non può essere cancellato"
 
-#: src/templates/admin.tpl.php:1258
-msgid "Loading..."
-msgstr "Caricamento in corso..."
+#: src/mail.php:259
+msgid "Appointment has been cancelled"
+msgstr "L'appuntamento è stato annullato"
 
-#: src/templates/report.tpl.php:35 src/templates/appointments.tpl.php:11
-#: src/templates/appointments.tpl.php:95 src/templates/appointments.tpl.php:154
-#: src/templates/admin.tpl.php:82 src/templates/admin.tpl.php:306
-#: src/templates/admin.tpl.php:398 src/templates/admin.tpl.php:872
-#: src/templates/mail.notification.tpl.php:18
-msgid "Location"
-msgstr "Posizione"
+#: src/mail.php:274
+#, fuzzy
+#| msgid "Appointment can't be confirmed!"
+msgid "Appointment link action"
+msgstr "L'appuntamento non può essere confermato!"
 
-#: src/api/apifullcalendar.php:160
-msgid "Location id that will be used for getting free / taken slots"
-msgstr "ID posizione che verrà utilizzato per ottenere slot liberi / occupati"
+#: src/mail.php:456
+msgid "Cancel appointment"
+msgstr "Cancella Appuntamento"
+
+#: src/mail.php:457
+msgid "Confirm appointment"
+msgstr "Conferma Appuntamento"
+
+#: src/metafields.php:26 src/templates/admin.tpl.php:967
+msgid "Input"
+msgstr "Input"
+
+#: src/metafields.php:27 src/templates/admin.tpl.php:968
+msgid "Select"
+msgstr "Selezionare"
+
+#: src/metafields.php:28
+#, fuzzy
+#| msgid "Textarea"
+msgid "Text"
+msgstr "Textarea"
+
+#: src/shortcodes/fullcalendar.php:220 src/templates/appointments.tpl.php:42
+#: src/templates/appointments.tpl.php:99
+#: src/templates/mail.notification.tpl.php:14
+msgid "Status"
+msgstr "Stato"
 
 #: src/templates/admin.tpl.php:10 src/templates/admin.tpl.php:490
 msgid "Locations"
 msgstr "Posizioni"
 
+#: src/templates/admin.tpl.php:16 src/templates/admin.tpl.php:498
+msgid "Services"
+msgstr "Servizi"
+
+#: src/templates/admin.tpl.php:22 src/templates/admin.tpl.php:506
+msgid "Workers"
+msgstr "Lavoratori"
+
+#: src/templates/admin.tpl.php:28
+msgid "Connections"
+msgstr "Connessioni"
+
+#: src/templates/admin.tpl.php:34
+msgid "Customize"
+msgstr "Personalizzare"
+
+#: src/templates/admin.tpl.php:40
+msgid "Tools"
+msgstr "Utensili"
+
+#: src/templates/admin.tpl.php:54
+msgid "Add New Location"
+msgstr "Aggiungi Nuova Posizione"
+
+#: src/templates/admin.tpl.php:58 src/templates/admin.tpl.php:128
+#: src/templates/admin.tpl.php:216 src/templates/admin.tpl.php:299
+#: src/templates/appointments.tpl.php:74 src/templates/report.tpl.php:62
+msgid "Refresh"
+msgstr "Ricaricare"
+
+#: src/templates/admin.tpl.php:61
+#, fuzzy
+#| msgid "Locations"
+msgid "Sort Locations By"
+msgstr "Posizioni"
+
+#: src/templates/admin.tpl.php:68 src/templates/admin.tpl.php:138
+#: src/templates/admin.tpl.php:227 src/templates/appointments.tpl.php:83
+msgid "Order by"
+msgstr ""
+
+#: src/templates/admin.tpl.php:81
+msgid "Address"
+msgstr "Indirizzo"
+
+#: src/templates/admin.tpl.php:82 src/templates/admin.tpl.php:306
+#: src/templates/admin.tpl.php:398 src/templates/admin.tpl.php:884
+#: src/templates/appointments.tpl.php:11 src/templates/appointments.tpl.php:95
+#: src/templates/appointments.tpl.php:154
+#: src/templates/mail.notification.tpl.php:18 src/templates/report.tpl.php:35
+msgid "Location"
+msgstr "Posizione"
+
+#: src/templates/admin.tpl.php:83 src/templates/admin.tpl.php:156
+#: src/templates/admin.tpl.php:243 src/templates/admin.tpl.php:316
+msgid "Actions"
+msgstr "Azioni"
+
+#: src/templates/admin.tpl.php:103 src/templates/admin.tpl.php:187
+#: src/templates/admin.tpl.php:268 src/templates/admin.tpl.php:388
+#: src/templates/appointments.tpl.php:141
+msgid "Edit"
+msgstr "Modifica"
+
+#: src/templates/admin.tpl.php:104 src/templates/admin.tpl.php:188
+#: src/templates/admin.tpl.php:269 src/templates/admin.tpl.php:389
+#: src/templates/appointments.tpl.php:142
+msgid "Delete"
+msgstr "Elimina"
+
+#: src/templates/admin.tpl.php:114 src/templates/admin.tpl.php:201
+#: src/templates/admin.tpl.php:280 src/templates/admin.tpl.php:479
+#: src/templates/admin.tpl.php:625 src/templates/appointments.tpl.php:240
+msgid "Save"
+msgstr "Salva"
+
+#: src/templates/admin.tpl.php:124
+msgid "Add New Service"
+msgstr "Aggiungi Nuovo Servizio"
+
+#: src/templates/admin.tpl.php:131
+#, fuzzy
+#| msgid "Services"
+msgid "Sort Services By"
+msgstr "Servizi"
+
+#: src/templates/admin.tpl.php:151
+msgid "Duration (in minutes)"
+msgstr "Durata (minuti)"
+
+#: src/templates/admin.tpl.php:152
+msgid "Slot step (in minutes)"
+msgstr "Slot step (in minuti)"
+
+#: src/templates/admin.tpl.php:153
+msgid "Block before (in minutes)"
+msgstr "Blocca prima (in minuti)"
+
+#: src/templates/admin.tpl.php:154
+msgid "Block after (in minutes)"
+msgstr "Blocca dopo (in minuti)"
+
+#: src/templates/admin.tpl.php:212
+msgid "Add New Worker"
+msgstr "Aggiungi Nuovo Lavoratore"
+
+#: src/templates/admin.tpl.php:219
+#, fuzzy
+#| msgid "Workers"
+msgid "Sort Workers By"
+msgstr "Lavoratori"
+
+#: src/templates/admin.tpl.php:291
+msgid "Add New Connection"
+msgstr "Aggiungi Nuova Connessione"
+
+#: src/templates/admin.tpl.php:295
+msgid "Bulk Add New Connections"
+msgstr "Aggiunta collettiva di Nuove Connessioni"
+
+#: src/templates/admin.tpl.php:307 src/templates/admin.tpl.php:409
+#: src/templates/admin.tpl.php:879 src/templates/admin.tpl.php:1078
+#: src/templates/appointments.tpl.php:20 src/templates/appointments.tpl.php:95
+#: src/templates/appointments.tpl.php:164
+#: src/templates/mail.notification.tpl.php:22 src/templates/report.tpl.php:44
+msgid "Service"
+msgstr "Servizio"
+
+#: src/templates/admin.tpl.php:307 src/templates/admin.tpl.php:421
+#: src/templates/admin.tpl.php:889 src/templates/appointments.tpl.php:29
+#: src/templates/appointments.tpl.php:95 src/templates/appointments.tpl.php:174
+#: src/templates/mail.notification.tpl.php:26 src/templates/report.tpl.php:53
+msgid "Worker"
+msgstr "Lavoratore"
+
+#: src/templates/admin.tpl.php:308 src/templates/admin.tpl.php:518
+msgid "Days of week"
+msgstr "Giorni della settimana"
+
+#: src/templates/admin.tpl.php:310 src/templates/appointments.tpl.php:215
+msgid "Time"
+msgstr "Ora"
+
+#: src/templates/admin.tpl.php:313 src/templates/appointments.tpl.php:213
+#: src/templates/mail.notification.tpl.php:30
+msgid "Date"
+msgstr "Data"
+
+#: src/templates/admin.tpl.php:315
+msgid "Is working"
+msgstr "Sta lavorando"
+
+#: src/templates/admin.tpl.php:349 src/templates/admin.tpl.php:432
+msgid "Number of slots"
+msgstr "Numero di slot"
+
+#: src/templates/admin.tpl.php:367
+msgid "Starts at"
+msgstr "Inizia a"
+
+#: src/templates/admin.tpl.php:369
+msgid "ends at"
+msgstr "finisce a"
+
+#: src/templates/admin.tpl.php:373
+msgid "Active from"
+msgstr "Attivo da"
+
+#: src/templates/admin.tpl.php:375 src/templates/admin.tpl.php:541
+msgid "to"
+msgstr "per"
+
+#: src/templates/admin.tpl.php:381 src/templates/admin.tpl.php:470
+#: src/templates/admin.tpl.php:473 src/templates/admin.tpl.php:559
+#: src/templates/admin.tpl.php:562
+msgid "No"
+msgstr "No"
+
+#: src/templates/admin.tpl.php:383 src/templates/admin.tpl.php:471
+#: src/templates/admin.tpl.php:474 src/templates/admin.tpl.php:560
+#: src/templates/admin.tpl.php:563
+msgid "Yes"
+msgstr "Sì"
+
+#: src/templates/admin.tpl.php:390 src/templates/appointments.tpl.php:143
+msgid "Clone"
+msgstr "Duplica"
+
+#: src/templates/admin.tpl.php:456 src/templates/mail.notification.tpl.php:34
+msgid "Start"
+msgstr "Inizio"
+
+#: src/templates/admin.tpl.php:458 src/templates/mail.notification.tpl.php:38
+msgid "End"
+msgstr "Fine"
+
+#: src/templates/admin.tpl.php:487
+msgid "Split groups"
+msgstr "Dividi gruppi"
+
+#: src/templates/admin.tpl.php:487
+msgid "each combination will be one connection"
+msgstr "ogni combinazione sarà una connessione"
+
+#: src/templates/admin.tpl.php:515
+msgid "Shared values"
+msgstr "Valori condivisi"
+
+#: src/templates/admin.tpl.php:515
+msgid "same for each combination"
+msgstr "lo stesso per ogni combinazione"
+
+#: src/templates/admin.tpl.php:536
+msgid "Time from"
+msgstr "Ora da"
+
+#: src/templates/admin.tpl.php:548
+msgid "Active from date"
+msgstr "Attivo dalla data"
+
+#: src/templates/admin.tpl.php:552
+msgid "to date"
+msgstr "per data"
+
+#: src/templates/admin.tpl.php:556
+msgid "Is Working"
+msgstr "Sta lavorando"
+
+#: src/templates/admin.tpl.php:597
+msgid "General"
+msgstr "Generale"
+
 #: src/templates/admin.tpl.php:600
 msgid "Mail Notifications"
 msgstr "Notifiche di posta"
 
-#: src/templates/admin.tpl.php:671
-msgid "Make reservation at moment user select date and time!"
-msgstr "Prenota al momento l'utente seleziona la data e l'ora!"
+#: src/templates/admin.tpl.php:603
+msgid "Labels"
+msgstr "Etichette"
+
+#: src/templates/admin.tpl.php:606
+msgid "Date & Time"
+msgstr "Data e Ora"
+
+#: src/templates/admin.tpl.php:609
+msgid "Custom Form Fields"
+msgstr "Campi modulo"
+
+#: src/templates/admin.tpl.php:612
+msgid "Google reCAPTCHA v2"
+msgstr "Google reCAPTCHA v2"
+
+#: src/templates/admin.tpl.php:615
+msgid "Form Style & Redirect"
+msgstr "Stile modulo e reindirizzamento"
+
+#: src/templates/admin.tpl.php:618
+msgid "GDPR"
+msgstr "GDPR"
+
+#: src/templates/admin.tpl.php:621
+msgid "Money Format"
+msgstr "Formato Valuta"
+
+#: src/templates/admin.tpl.php:634
+msgid "Multiple work"
+msgstr "Lavoro multiplo"
 
 #: src/templates/admin.tpl.php:636
 msgid ""
@@ -597,84 +551,22 @@ msgstr ""
 "sistema verificherà se il lavoratore sta lavorando in qualsiasi posizione e "
 "servizio in questo momento."
 
-#: src/templates/admin.tpl.php:829
-msgid ""
-"Mark this option if you want to employee receive admin email after filing "
-"the form."
-msgstr ""
-"Selezionare questa opzione se si desidera che i dipendenti ricevano l'e-mail "
-"di amministrazione dopo aver compilato il modulo."
+#: src/templates/admin.tpl.php:646
+msgid "Compatibility mode"
+msgstr "Modalità di compatibilità"
 
-#: src/templates/admin.tpl.php:842
+#: src/templates/admin.tpl.php:648
 msgid ""
-"Mark this option if you want to user receive email after filing the form."
+"If you can't EDIT or DELETE conecntion or any other settings, you should "
+"mark this option. NOTE: After saving this options you must refresh page!"
 msgstr ""
-"Selezionare questa opzione se si desidera che l'utente riceva e-mail dopo "
-"aver compilato il modulo."
+"Se non riesci a MODIFICARE o ELIMINARE la connessione o qualsiasi altra "
+"impostazione, dovresti contrassegnare questa opzione. NOTA: dopo aver "
+"salvato queste opzioni è necessario aggiornare la pagina!"
 
 #: src/templates/admin.tpl.php:659
 msgid "Max number of appointments"
 msgstr "Numero massimo di appuntamenti"
-
-#: src/templates/admin.tpl.php:1125
-msgid "Message if user don't mark the GDPR checkbox."
-msgstr "Messaggio se l'utente non contrassegna la casella di controllo GDPR."
-
-#: src/templates/admin.tpl.php:885
-msgid "Message that user receive after completing appointment"
-msgstr "Messaggio che l'utente riceve dopo aver completato l'appuntamento"
-
-#: src/templates/admin.tpl.php:353 src/templates/admin.tpl.php:437
-#: src/templates/admin.tpl.php:521
-msgid "Monday"
-msgstr "Lunedi"
-
-#: src/templates/report.tpl.php:12
-msgid "Money"
-msgstr "Valuta"
-
-#: src/templates/admin.tpl.php:621
-msgid "Money Format"
-msgstr "Formato Valuta"
-
-#: src/templates/admin.tpl.php:634
-msgid "Multiple work"
-msgstr "Lavoro multiplo"
-
-#: src/install.php:799 src/frontend.php:477 src/templates/admin.tpl.php:80
-#: src/templates/admin.tpl.php:150 src/templates/admin.tpl.php:239
-msgid "Name"
-msgstr "Nome"
-
-#. Author of the plugin
-msgid "Nikola Loncar"
-msgstr "Nikola Loncar"
-
-#: src/templates/admin.tpl.php:381 src/templates/admin.tpl.php:470
-#: src/templates/admin.tpl.php:473 src/templates/admin.tpl.php:559
-#: src/templates/admin.tpl.php:562
-msgid "No"
-msgstr "No"
-
-#: src/mail.php:160
-msgid "No appointment."
-msgstr "Nessun appuntamento."
-
-#: src/api/apifullcalendar.php:154
-msgid "Nonce"
-msgstr "Verifca"
-
-#: src/templates/admin.tpl.php:901
-msgid ""
-"Notice : date/time formating for email notification are done by Settings > "
-"General."
-msgstr ""
-"Avviso: la formattazione di data / ora per la notifica via e-mail viene "
-"eseguita da Impostazioni> Generale."
-
-#: src/templates/admin.tpl.php:742
-msgid "Notifications"
-msgstr "Notifiche"
 
 #: src/templates/admin.tpl.php:661
 msgid ""
@@ -685,352 +577,50 @@ msgstr ""
 "visualizzato l'avviso di limite. Gli appuntamenti vengono conteggiati "
 "durante un giorno."
 
-#: src/templates/admin.tpl.php:349 src/templates/admin.tpl.php:432
-msgid "Number of slots"
-msgstr "Numero di slot"
-
-#: src/ajax.php:749
-msgid "Only admin user can test mail!"
-msgstr "Solo l'utente amministratore può testare la posta!"
-
-#: src/admin.php:339
-msgid "Overview"
-msgstr "Panoramica"
-
-#: src/templates/admin.tpl.php:1114
-msgid "Page with GDPR content"
-msgstr "Pagina con contenuto GDPR"
-
-#: src/templates/admin.tpl.php:752
-msgid "Pending"
-msgstr "In sospeso"
-
-#: src/logic.php:373
-msgid "pending"
-msgstr "in sospeso"
-
-#: src/templates/admin.tpl.php:797
-msgid "Pending notification emails"
-msgstr "Email di notifica in sospeso"
-
-#: src/frontend.php:299 src/frontend.php:470
-msgid "Personal information"
-msgstr "Informazioni Personali"
-
-#: src/install.php:800 src/frontend.php:478 src/templates/admin.tpl.php:242
-#: src/templates/admin.tpl.php:958
-msgid "Phone"
-msgstr "Telefono"
-
-#: src/templates/report.tpl.php:81
-msgid "Place fields separate by , for example: id,name,email"
-msgstr "Posizionare i campi separati, ad esempio: id, nome, e-mail"
-
-#: src/templates/admin.tpl.php:1005
-msgid ""
-"Place here custom css styles. This will be included in both standard and "
-"bootstrap widget."
-msgstr ""
-"Inserisci qui stili CSS personalizzati. Questo sarà incluso in entrambi i "
-"widget standard e bootstrap."
-
-#: src/frontend.php:480
-msgid "Please check your appointment details below and confirm:"
-msgstr "Controlla i dettagli dell'appuntamento di seguito e conferma:"
-
-#: src/frontend.php:379 src/frontend.php:384 src/frontend.php:472
-msgid "Please enter a valid email address"
-msgstr "Si prega di inserire un indirizzo email valido"
-
-#: src/frontend.php:473
-msgid "Please enter at least 3 characters."
-msgstr "Inserisci almeno 3 caratteri."
-
-#: src/frontend.php:474
-msgid "Please enter at least 3 digits."
-msgstr "Inserisci almeno 3 cifre."
-
-#: src/frontend.php:221 src/frontend.php:469
-msgid "Please select another day"
-msgstr "Seleziona un altro giorno"
-
-#: src/frontend.php:223 src/frontend.php:485
-#: src/templates/appointments.tpl.php:99 src/templates/appointments.tpl.php:229
-#: src/templates/admin.tpl.php:155 src/templates/mail.notification.tpl.php:46
-msgid "Price"
-msgstr "Prezzo"
-
-#: src/templates/appointments.tpl.php:55
-msgid "Quick time filter"
-msgstr "Filtro tempi rapidi"
-
-#: src/templates/admin.tpl.php:1075
-msgid "Redirect to"
-msgstr "Reindirizza a"
-
-#: src/templates/report.tpl.php:62 src/templates/appointments.tpl.php:74
-#: src/templates/admin.tpl.php:58 src/templates/admin.tpl.php:128
-#: src/templates/admin.tpl.php:216 src/templates/admin.tpl.php:299
-msgid "Refresh"
-msgstr "Ricaricare"
-
-#: src/admin.php:340
-msgid "Reports"
-msgstr "Rapporti"
-
-#: src/ajax.php:772
-msgid "Request completed, please check email."
-msgstr "Richiesta completata, si prega di controllare l'e-mail."
-
-#: src/templates/admin.tpl.php:754
-msgid "Reservation"
-msgstr "Prenotazione"
-
-#: src/logic.php:374
-msgid "reservation"
-msgstr "prenotazione"
-
-#: src/templates/admin.tpl.php:515
-msgid "same for each combination"
-msgstr "lo stesso per ogni combinazione"
-
-#: src/templates/admin.tpl.php:358 src/templates/admin.tpl.php:442
-#: src/templates/admin.tpl.php:526
-msgid "Saturday"
-msgstr "Sabato"
-
-#: src/templates/appointments.tpl.php:240 src/templates/admin.tpl.php:114
-#: src/templates/admin.tpl.php:201 src/templates/admin.tpl.php:280
-#: src/templates/admin.tpl.php:479 src/templates/admin.tpl.php:625
-msgid "Save"
-msgstr "Salva"
-
-#: src/templates/report.tpl.php:83
-msgid "Save settings"
-msgstr "Salva le impostazioni"
-
-#: src/templates/admin.tpl.php:987
-msgid "Secret key"
-msgstr "Chiave segreta"
-
-#: src/templates/admin.tpl.php:956
-msgid "Select"
-msgstr "Selezionare"
-
-#: src/templates/appointments.tpl.php:57
-msgid "Select period"
-msgstr "Seleziona il periodo"
-
-#: src/templates/admin.tpl.php:1249
-msgid "Send a Test Email"
-msgstr "Invia un'e-mail di prova"
-
-#: src/templates/admin.tpl.php:1250
-msgid "Send a Test Email (native)"
-msgstr "Invia un'e-mail di prova (nativa)"
-
-#: src/templates/appointments.tpl.php:236
-msgid "Send email notification :"
-msgstr "Invia notifica via email:"
-
-#: src/templates/admin.tpl.php:840
-msgid "Send email to user"
-msgstr "Invia e-mail all'utente"
-
-#: src/templates/admin.tpl.php:827
-msgid "Send email to worker"
-msgstr "Invia email al lavoratore"
-
-#: src/templates/admin.tpl.php:852
-msgid "Send from"
-msgstr "Invia da"
-
-#: src/templates/admin.tpl.php:854
-msgid ""
-"Send from email adress (Example: Name &lt;name@domain.com&gt;). Leave blank "
-"to use default address."
-msgstr ""
-"Invia da indirizzo e-mail (Esempio: Nome <nome@dominio.com>). Lascia vuoto "
-"per utilizzare l'indirizzo predefinito."
-
-#: src/templates/report.tpl.php:44 src/templates/appointments.tpl.php:20
-#: src/templates/appointments.tpl.php:95 src/templates/appointments.tpl.php:164
-#: src/templates/admin.tpl.php:307 src/templates/admin.tpl.php:409
-#: src/templates/admin.tpl.php:867 src/templates/admin.tpl.php:1066
-#: src/templates/mail.notification.tpl.php:22
-msgid "Service"
-msgstr "Servizio"
-
-#: src/api/apifullcalendar.php:167
-msgid "Service id that will be used for getting free / taken slots"
-msgstr "ID servizio che verrà utilizzato per ottenere slot liberi / acquisiti"
-
-#: src/templates/admin.tpl.php:16 src/templates/admin.tpl.php:498
-msgid "Services"
-msgstr "Servizi"
-
-#: src/admin.php:329 src/admin.php:330
-msgid "Settings"
-msgstr "Impostazioni"
-
-#: src/templates/admin.tpl.php:515
-msgid "Shared values"
-msgstr "Valori condivisi"
-
-#. Description of the plugin
-msgid "Simple and easy to use management system for Appointments and Bookings"
-msgstr ""
-"Sistema di gestione semplice e facile da usare per appuntamenti e "
-"prenotazioni"
-
-#: src/templates/admin.tpl.php:977
-msgid "Site key"
-msgstr "Sito chiave"
-
-#: src/ajax.php:253
-msgid "Slot is taken"
-msgstr "Slot occupato"
-
-#: src/templates/admin.tpl.php:152
-msgid "Slot step (in minutes)"
-msgstr "Slot step (in minuti)"
-
-#: src/ajax.php:284
-msgid "Something went wrong! Please try again."
-msgstr "Qualcosa è andato storto! Per favore riprova."
-
-#: src/templates/admin.tpl.php:487
-msgid "Split groups"
-msgstr "Dividi gruppi"
-
-#: src/templates/admin.tpl.php:456 src/templates/mail.notification.tpl.php:34
-msgid "Start"
-msgstr "Inizio"
-
-#: src/api/apifullcalendar.php:187
-msgid "Start filter from"
-msgstr "Inizia filtro da"
-
-#: src/templates/admin.tpl.php:367
-msgid "Starts at"
-msgstr "Inizia a"
-
-#: src/templates/appointments.tpl.php:42 src/templates/appointments.tpl.php:99
-#: src/templates/mail.notification.tpl.php:14
-#: src/shortcodes/fullcalendar.php:205
-msgid "Status"
-msgstr "Stato"
-
-#: src/frontend.php:332 src/frontend.php:483
-msgid "Submit"
-msgstr "Invia"
-
-#: src/templates/admin.tpl.php:359 src/templates/admin.tpl.php:443
-#: src/templates/admin.tpl.php:527
-msgid "Sunday"
-msgstr "Domenica"
-
-#: src/templates/admin.tpl.php:1234
-msgid "Test Email"
-msgstr "Email di prova"
-
-#: src/templates/admin.tpl.php:1235
-msgid ""
-"Test if the mail service is working fine on this site by generating a test "
-"email that will be send to provided address."
-msgstr ""
-"Verifica se il servizio di posta funziona correttamente su questo sito "
-"generando un'email di prova che verrà inviata all'indirizzo fornito."
-
-#: src/templates/admin.tpl.php:957
-msgid "Textarea"
-msgstr "Textarea"
-
-#: src/frontend.php:378 src/frontend.php:383 src/frontend.php:388
-#: src/frontend.php:404 src/frontend.php:471
-msgid "This field is required."
-msgstr "Questo campo è obbligatorio."
-
-#: src/templates/appointments.tpl.php:59
-msgid "This month"
-msgstr "Questo mese"
-
-#: src/templates/appointments.tpl.php:58
-msgid "This week"
-msgstr "Questa settimana"
-
-#: src/templates/admin.tpl.php:356 src/templates/admin.tpl.php:440
-#: src/templates/admin.tpl.php:524
-msgid "Thursday"
-msgstr "Giovedi"
-
-#: src/templates/appointments.tpl.php:215 src/templates/admin.tpl.php:310
-msgid "Time"
-msgstr "Ora"
-
-#: src/templates/admin.tpl.php:899
-msgid "Time format"
-msgstr "Formato Ora"
-
-#: src/templates/admin.tpl.php:536
-msgid "Time from"
-msgstr "Ora da"
-
-#: src/templates/report.tpl.php:7
-msgid "Time table"
-msgstr "Ora tabella"
-
-#: src/templates/report.tpl.php:95 src/templates/appointments.tpl.php:53
-#: src/templates/admin.tpl.php:1239
-msgid "To"
-msgstr "Per"
-
-#: src/templates/admin.tpl.php:375 src/templates/admin.tpl.php:541
-msgid "to"
-msgstr "per"
-
-#: src/templates/admin.tpl.php:552
-msgid "to date"
-msgstr "per data"
-
-#: src/templates/appointments.tpl.php:60
-msgid "Today"
-msgstr "Oggi"
-
-#: src/templates/admin.tpl.php:40
-msgid "Tools"
-msgstr "Utensili"
-
-#: src/templates/admin.tpl.php:354 src/templates/admin.tpl.php:438
-#: src/templates/admin.tpl.php:522
-msgid "Tuesday"
-msgstr "Martedì"
+#: src/templates/admin.tpl.php:669
+msgid "Auto reservation"
+msgstr "Prenotazione Automatica"
+
+#: src/templates/admin.tpl.php:671
+msgid "Make reservation at moment user select date and time!"
+msgstr "Prenota al momento l'utente seleziona la data e l'ora!"
 
 #: src/templates/admin.tpl.php:681
 msgid "Turn nonce off"
 msgstr "Disattiva verifica"
 
-#: src/templates/admin.tpl.php:1010
-msgid "Turn off css files"
-msgstr "Disattiva i file CSS"
-
-#: src/templates/admin.tpl.php:1092
-msgid "Turn on checkbox"
-msgstr "Attiva la casella di controllo"
-
-#: src/frontend.php:232 src/frontend.php:492
-msgid "Unable to make ajax request. Please try again later."
+#: src/templates/admin.tpl.php:683
+msgid ""
+"if you have issues with validation code that is expired in form you can turn "
+"off nonce but you are doing that on your own risk."
 msgstr ""
-"Impossibile effettuare la richiesta Ajax. Per favore riprova più tardi."
+"in caso di problemi con il codice di convalida scaduto nella forma, è "
+"possibile disattivare la verifica ma lo si sta facendo a proprio rischio."
 
-#: src/templates/admin.tpl.php:817
-msgid "Visitor notification subject"
-msgstr "Oggetto della notifica dei Visitatori"
+#: src/templates/admin.tpl.php:693
+msgid "Default status"
+msgstr "Stato predefinito"
 
-#: src/templates/admin.tpl.php:355 src/templates/admin.tpl.php:439
-#: src/templates/admin.tpl.php:523
-msgid "Wednesday"
-msgstr "Mercoledì"
+#: src/templates/admin.tpl.php:695
+msgid "Default status of Appointment made by visitor."
+msgstr "Stato predefinito dell'appuntamento effettuato dal visitatore."
+
+#: src/templates/admin.tpl.php:710
+msgid "Allow public access to FullCalendar shortcode"
+msgstr "Consentire l'accesso del pubblico allo shortcode FullCalendar"
+
+#: src/templates/admin.tpl.php:712
+msgid ""
+"By default only logged in users can see data in FullCalendar. Mark this "
+"option if you want to allow public access for all."
+msgstr ""
+"Per impostazione predefinita, solo gli utenti che hanno effettuato l'accesso "
+"possono visualizzare i dati in FullCalendar. Selezionare questa opzione se "
+"si desidera consentire l'accesso pubblico a tutti."
+
+#: src/templates/admin.tpl.php:723
+msgid "Compress shortcode output (removes new lines from templates)."
+msgstr "Comprimi output shortcode (rimuove nuove righe dai template)."
 
 #: src/templates/admin.tpl.php:725
 msgid ""
@@ -1041,33 +631,9 @@ msgstr ""
 "interruzione di riga. Questa opzione impedisce a WP di farlo con lo "
 "shortcode EA."
 
-#: src/templates/report.tpl.php:53 src/templates/appointments.tpl.php:29
-#: src/templates/appointments.tpl.php:95 src/templates/appointments.tpl.php:174
-#: src/templates/admin.tpl.php:307 src/templates/admin.tpl.php:421
-#: src/templates/admin.tpl.php:877 src/templates/mail.notification.tpl.php:26
-msgid "Worker"
-msgstr "Lavoratore"
-
-#: src/api/apifullcalendar.php:174
-msgid "Worker id that will be used for getting free / taken slots"
-msgstr ""
-"ID lavoratore che verrà utilizzato per ottenere slot liberi / acquisiti"
-
-#: src/templates/admin.tpl.php:22 src/templates/admin.tpl.php:506
-msgid "Workers"
-msgstr "Lavoratori"
-
-#: src/templates/admin.tpl.php:383 src/templates/admin.tpl.php:471
-#: src/templates/admin.tpl.php:474 src/templates/admin.tpl.php:560
-#: src/templates/admin.tpl.php:563
-msgid "Yes"
-msgstr "Sì"
-
-#: src/templates/admin.tpl.php:809 src/templates/admin.tpl.php:819
-msgid "You can use any tag that is available as in custom email notifications."
-msgstr ""
-"Puoi utilizzare qualsiasi tag disponibile come nelle notifiche e-mail "
-"personalizzate."
+#: src/templates/admin.tpl.php:742
+msgid "Notifications"
+msgstr "Notifiche"
 
 #: src/templates/admin.tpl.php:744
 msgid ""
@@ -1078,10 +644,518 @@ msgstr ""
 "ad esempio # id # all'interno del modello di posta e quel valore verrà "
 "sostituito con valore."
 
-#: src/frontend.php:488
-msgid "You can't select this time slot!'"
-msgstr "Non puoi selezionare questa fascia oraria! "
+#: src/templates/admin.tpl.php:752
+msgid "Pending"
+msgstr "In sospeso"
 
-#: src/frontend.php:312 src/frontend.php:487
-msgid "You must agree with terms and conditions"
-msgstr "Devi accettare i termini e le condizioni"
+#: src/templates/admin.tpl.php:754
+msgid "Reservation"
+msgstr "Prenotazione"
+
+#: src/templates/admin.tpl.php:756
+#, fuzzy
+#| msgid "Cancel"
+msgid "Cancelled"
+msgstr "Cancella"
+
+#: src/templates/admin.tpl.php:758
+msgid "Confirmed"
+msgstr "Confermato"
+
+#: src/templates/admin.tpl.php:760
+msgid "Admin"
+msgstr "Admin"
+
+#: src/templates/admin.tpl.php:793
+msgid "Available tags"
+msgstr "Tag disponibili"
+
+#: src/templates/admin.tpl.php:797
+msgid "Two step action links in email"
+msgstr ""
+
+#: src/templates/admin.tpl.php:799
+msgid ""
+"Sometimes Mail servers can open links from email for inspection. That will "
+"trigger actions such as #link_confirm#, #link_cancel#. Mark this option if "
+"you want to have additional prompt for user action via links."
+msgstr ""
+
+#: src/templates/admin.tpl.php:809
+msgid "Pending notification emails"
+msgstr "Email di notifica in sospeso"
+
+#: src/templates/admin.tpl.php:811
+msgid ""
+"Enter email adress that will receive new reservation notification. Separate "
+"multiple emails with , (comma)"
+msgstr ""
+"Inserisci l'indirizzo email che riceverà la nuova notifica di prenotazione. "
+"Separa più e-mail con, (virgola)"
+
+#: src/templates/admin.tpl.php:819
+msgid "Admin notification subject"
+msgstr "Oggetto della notifica dell'amministratore"
+
+#: src/templates/admin.tpl.php:821 src/templates/admin.tpl.php:831
+msgid "You can use any tag that is available as in custom email notifications."
+msgstr ""
+"Puoi utilizzare qualsiasi tag disponibile come nelle notifiche e-mail "
+"personalizzate."
+
+#: src/templates/admin.tpl.php:829
+msgid "Visitor notification subject"
+msgstr "Oggetto della notifica dei Visitatori"
+
+#: src/templates/admin.tpl.php:839
+msgid "Send email to worker"
+msgstr "Invia email al lavoratore"
+
+#: src/templates/admin.tpl.php:841
+msgid ""
+"Mark this option if you want to employee receive admin email after filing "
+"the form."
+msgstr ""
+"Selezionare questa opzione se si desidera che i dipendenti ricevano l'e-mail "
+"di amministrazione dopo aver compilato il modulo."
+
+#: src/templates/admin.tpl.php:852
+msgid "Send email to user"
+msgstr "Invia e-mail all'utente"
+
+#: src/templates/admin.tpl.php:854
+msgid ""
+"Mark this option if you want to user receive email after filing the form."
+msgstr ""
+"Selezionare questa opzione se si desidera che l'utente riceva e-mail dopo "
+"aver compilato il modulo."
+
+#: src/templates/admin.tpl.php:864
+msgid "Send from"
+msgstr "Invia da"
+
+#: src/templates/admin.tpl.php:866
+msgid ""
+"Send from email adress (Example: Name &lt;name@domain.com&gt;). Leave blank "
+"to use default address."
+msgstr ""
+"Invia da indirizzo e-mail (Esempio: Nome <nome@dominio.com>). Lascia vuoto "
+"per utilizzare l'indirizzo predefinito."
+
+#: src/templates/admin.tpl.php:895
+msgid "Done message"
+msgstr "Fatto Messaggio"
+
+#: src/templates/admin.tpl.php:897
+msgid "Message that user receive after completing appointment"
+msgstr "Messaggio che l'utente riceve dopo aver completato l'appuntamento"
+
+#: src/templates/admin.tpl.php:911
+msgid "Time format"
+msgstr "Formato Ora"
+
+#: src/templates/admin.tpl.php:913
+msgid ""
+"Notice : date/time formating for email notification are done by Settings > "
+"General."
+msgstr ""
+"Avviso: la formattazione di data / ora per la notifica via e-mail viene "
+"eseguita da Impostazioni> Generale."
+
+#: src/templates/admin.tpl.php:927
+msgid "Calendar localization"
+msgstr "Localizzazione del calendario"
+
+#: src/templates/admin.tpl.php:943
+msgid "Block time"
+msgstr "Tempo di blocco"
+
+#: src/templates/admin.tpl.php:945
+msgid ""
+"(in minutes). Prevent visitor from making an appointment if there are less "
+"minutes than this."
+msgstr ""
+"(in minuti). Impedire ai visitatori di fissare un appuntamento se ci sono "
+"meno minuti di questo."
+
+#: src/templates/admin.tpl.php:969
+msgid "Textarea"
+msgstr "Textarea"
+
+#: src/templates/admin.tpl.php:974
+msgid "Add"
+msgstr "Aggiungi"
+
+#: src/templates/admin.tpl.php:980
+msgid ""
+"* To use using the email notification for user there must be field named "
+"\"email\" or \"e-mail\" or field with type \"email\""
+msgstr ""
+"* Per utilizzare la notifica e-mail per l'utente è necessario che ci sia un "
+"campo chiamato \"e-mail\" o \"e-mail\" o un campo con il tipo \"e-mail\""
+
+#: src/templates/admin.tpl.php:989
+msgid "Site key"
+msgstr "Sito chiave"
+
+#: src/templates/admin.tpl.php:995
+msgid "* Google reCAPTCHA key can be generated via"
+msgstr "* La chiave Google reCAPTCHA può essere generata tramite"
+
+#: src/templates/admin.tpl.php:999
+msgid "Secret key"
+msgstr "Chiave segreta"
+
+#: src/templates/admin.tpl.php:1005
+msgid ""
+"* If you want to use Captcha you must have auto reservation option turned "
+"off. If you don't want to use Captcha just leave fields empty."
+msgstr ""
+"* Se si desidera utilizzare Captcha, è necessario disattivare l'opzione di "
+"prenotazione automatica. Se non si desidera utilizzare Captcha, lasciare "
+"vuoti i campi."
+
+#: src/templates/admin.tpl.php:1015
+msgid "Custom style"
+msgstr "Stile personalizzato"
+
+#: src/templates/admin.tpl.php:1017
+msgid ""
+"Place here custom css styles. This will be included in both standard and "
+"bootstrap widget."
+msgstr ""
+"Inserisci qui stili CSS personalizzati. Questo sarà incluso in entrambi i "
+"widget standard e bootstrap."
+
+#: src/templates/admin.tpl.php:1022
+msgid "Turn off css files"
+msgstr "Disattiva i file CSS"
+
+#: src/templates/admin.tpl.php:1031
+msgid "I agree field"
+msgstr "Sono d'accordo sul campo"
+
+#: src/templates/admin.tpl.php:1033
+msgid ""
+"I agree option at the end of form. If this is marked user must confirm \"I "
+"agree\" checkbox."
+msgstr ""
+"Accetto l'opzione alla fine del modulo. Se questo è contrassegnato, l'utente "
+"deve confermare la casella di controllo \"Accetto\"."
+
+#: src/templates/admin.tpl.php:1043
+msgid "After cancel go to"
+msgstr "Dopo l'annullamento vai a"
+
+#: src/templates/admin.tpl.php:1061
+msgid "Go to page"
+msgstr "Vai alla pagina"
+
+#: src/templates/admin.tpl.php:1063
+msgid ""
+"After a visitor creates an appointment on the front-end form. Leave blank to "
+"turn off redirect."
+msgstr ""
+"Dopo che un visitatore crea un appuntamento sul modulo front-end. Lascia "
+"vuoto per disattivare il reindirizzamento."
+
+#: src/templates/admin.tpl.php:1072
+msgid "Advance Go to"
+msgstr "Reindirizzamento"
+
+#: src/templates/admin.tpl.php:1074
+msgid "Add custom redirect based on service."
+msgstr "Aggiungi reindirizzamento personalizzato in base al servizio."
+
+#: src/templates/admin.tpl.php:1087
+msgid "Redirect to"
+msgstr "Reindirizza a"
+
+#: src/templates/admin.tpl.php:1090
+msgid "Add advance redirect"
+msgstr "Aggiungi reindirizzamento avanzato"
+
+#: src/templates/admin.tpl.php:1104
+msgid "Turn on checkbox"
+msgstr "Attiva la casella di controllo"
+
+#: src/templates/admin.tpl.php:1106
+msgid "GDPR section checkbox."
+msgstr "Casella di controllo GDPR."
+
+#: src/templates/admin.tpl.php:1117
+msgid "Label"
+msgstr "Etichetta"
+
+#: src/templates/admin.tpl.php:1119
+msgid "Label next to checkbox."
+msgstr "Etichetta accanto alla casella di controllo."
+
+#: src/templates/admin.tpl.php:1126
+msgid "Page with GDPR content"
+msgstr "Pagina con contenuto GDPR"
+
+#: src/templates/admin.tpl.php:1128
+msgid "Link to page with GDPR content."
+msgstr "Link alla pagina con contenuto GDPR."
+
+#: src/templates/admin.tpl.php:1135
+msgid "Error message"
+msgstr "Messaggio di errore"
+
+#: src/templates/admin.tpl.php:1137
+msgid "Message if user don't mark the GDPR checkbox."
+msgstr "Messaggio se l'utente non contrassegna la casella di controllo GDPR."
+
+#: src/templates/admin.tpl.php:1149
+msgid "Currency"
+msgstr "Corrente"
+
+#: src/templates/admin.tpl.php:1154
+msgid "Currency before price"
+msgstr "Valuta prima del prezzo"
+
+#: src/templates/admin.tpl.php:1162
+msgid "Hide price in service select"
+msgstr ""
+
+#: src/templates/admin.tpl.php:1171
+msgid "Hide price"
+msgstr "Nascondi prezzo"
+
+#: src/templates/admin.tpl.php:1173
+msgid "Hide price in whole customers form."
+msgstr ""
+
+#: src/templates/admin.tpl.php:1258
+msgid "Test Email"
+msgstr "Email di prova"
+
+#: src/templates/admin.tpl.php:1259
+msgid ""
+"Test if the mail service is working fine on this site by generating a test "
+"email that will be send to provided address."
+msgstr ""
+"Verifica se il servizio di posta funziona correttamente su questo sito "
+"generando un'email di prova che verrà inviata all'indirizzo fornito."
+
+#: src/templates/admin.tpl.php:1263 src/templates/appointments.tpl.php:53
+#: src/templates/report.tpl.php:95
+msgid "To"
+msgstr "Per"
+
+#: src/templates/admin.tpl.php:1264
+msgid "Email address"
+msgstr "Indirizzo Email"
+
+#: src/templates/admin.tpl.php:1273
+msgid "Send a Test Email"
+msgstr "Invia un'e-mail di prova"
+
+#: src/templates/admin.tpl.php:1274
+msgid "Send a Test Email (native)"
+msgstr "Invia un'e-mail di prova (nativa)"
+
+#: src/templates/admin.tpl.php:1280
+msgid "Error log"
+msgstr "Errori Log"
+
+#: src/templates/admin.tpl.php:1282
+msgid "Loading..."
+msgstr "Caricamento in corso..."
+
+#: src/templates/appointments.tpl.php:51 src/templates/report.tpl.php:91
+msgid "From"
+msgstr "Da"
+
+#: src/templates/appointments.tpl.php:55
+msgid "Quick time filter"
+msgstr "Filtro tempi rapidi"
+
+#: src/templates/appointments.tpl.php:57
+msgid "Select period"
+msgstr "Seleziona il periodo"
+
+#: src/templates/appointments.tpl.php:58
+msgid "This week"
+msgstr "Questa settimana"
+
+#: src/templates/appointments.tpl.php:59
+msgid "This month"
+msgstr "Questo mese"
+
+#: src/templates/appointments.tpl.php:60
+msgid "Today"
+msgstr "Oggi"
+
+#: src/templates/appointments.tpl.php:70
+msgid "Add New Appointment"
+msgstr "Aggiungi Nuovo Appuntamento"
+
+#: src/templates/appointments.tpl.php:77
+msgid "Sort By"
+msgstr ""
+
+#: src/templates/appointments.tpl.php:79
+#: src/templates/mail.notification.tpl.php:10
+msgid "Id"
+msgstr "Id"
+
+#: src/templates/appointments.tpl.php:81 src/templates/appointments.tpl.php:99
+#: src/templates/mail.notification.tpl.php:42
+msgid "Created"
+msgstr "Creata"
+
+#: src/templates/appointments.tpl.php:96
+msgid "Customer"
+msgstr "Cliente"
+
+#: src/templates/appointments.tpl.php:97
+msgid "Descrtiption"
+msgstr "Descrizione"
+
+#: src/templates/appointments.tpl.php:100
+msgid "Action"
+msgstr "Azione"
+
+#: src/templates/appointments.tpl.php:236
+msgid "Send email notification :"
+msgstr "Invia notifica via email:"
+
+#: src/templates/mail.cancel.tpl.php:2
+#, fuzzy
+#| msgid "Cancel appointment"
+msgid "Do you want to Cancel appointment?"
+msgstr "Cancella Appuntamento"
+
+#: src/templates/mail.cancel.tpl.php:5
+#, fuzzy
+#| msgid "Cancel appointment"
+msgid "Yes, I want to Cancel appointment."
+msgstr "Cancella Appuntamento"
+
+#: src/templates/mail.confirm.tpl.php:2
+#, fuzzy
+#| msgid "Confirm appointment"
+msgid "Do you want to Confirm appointment?"
+msgstr "Conferma Appuntamento"
+
+#: src/templates/mail.confirm.tpl.php:5
+#, fuzzy
+#| msgid "Confirm appointment"
+msgid "Yes, I want to Confirm appointment."
+msgstr "Conferma Appuntamento"
+
+#: src/templates/report.tpl.php:7
+msgid "Time table"
+msgstr "Ora tabella"
+
+#: src/templates/report.tpl.php:8
+msgid "Have Calendar overview of all bookings and free slots. "
+msgstr ""
+"Avere una panoramica del calendario di tutte le prenotazioni e slot gratuiti."
+
+#: src/templates/report.tpl.php:12
+msgid "Money"
+msgstr "Valuta"
+
+#: src/templates/report.tpl.php:17
+msgid "Export"
+msgstr "Esporta"
+
+#: src/templates/report.tpl.php:18
+msgid "Export data in Excel CSV format for selected time period."
+msgstr ""
+"Esporta i dati in formato CSV Excel per il periodo di tempo selezionato."
+
+#: src/templates/report.tpl.php:22
+msgid "Back to Reports"
+msgstr "Torna ai Rapporti"
+
+#: src/templates/report.tpl.php:76
+msgid "Fields"
+msgstr "Campi"
+
+#: src/templates/report.tpl.php:78
+msgid "Click to customize columns for export"
+msgstr "Fare clic per personalizzare le colonne per l'esportazione"
+
+#: src/templates/report.tpl.php:81
+msgid "Place fields separate by , for example: id,name,email"
+msgstr "Posizionare i campi separati, ad esempio: id, nome, e-mail"
+
+#: src/templates/report.tpl.php:83
+msgid "Save settings"
+msgstr "Salva le impostazioni"
+
+#: src/templates/report.tpl.php:98
+msgid "Export data to CSV, can be imported to MS Excel, OpenOffice Calc... "
+msgstr ""
+"Esporta dati in CSV, può essere importato in MS Excel, OpenOffice Calc ..."
+
+#: src/templates/report.tpl.php:99
+msgid "Export data"
+msgstr "Esporta dati"
+
+#~ msgid "Easy Appointments"
+#~ msgstr "Easy Appointments"
+
+#~ msgid "End filter from"
+#~ msgstr "Fine filtra da"
+
+#~ msgid "Field that will be used as title"
+#~ msgstr "Campo che verrà utilizzato come titolo"
+
+#~ msgid "Friday"
+#~ msgstr "Venerdì"
+
+#~ msgid "http://nikolaloncar.com"
+#~ msgstr "http://nikolaloncar.com"
+
+#~ msgid "https://easy-appointments.net/"
+#~ msgstr "https://easy-appointments.net/"
+
+#~ msgid "Location id that will be used for getting free / taken slots"
+#~ msgstr ""
+#~ "ID posizione che verrà utilizzato per ottenere slot liberi / occupati"
+
+#~ msgid "Monday"
+#~ msgstr "Lunedi"
+
+#~ msgid "Nikola Loncar"
+#~ msgstr "Nikola Loncar"
+
+#~ msgid "Nonce"
+#~ msgstr "Verifca"
+
+#~ msgid "Saturday"
+#~ msgstr "Sabato"
+
+#~ msgid "Service id that will be used for getting free / taken slots"
+#~ msgstr ""
+#~ "ID servizio che verrà utilizzato per ottenere slot liberi / acquisiti"
+
+#~ msgid ""
+#~ "Simple and easy to use management system for Appointments and Bookings"
+#~ msgstr ""
+#~ "Sistema di gestione semplice e facile da usare per appuntamenti e "
+#~ "prenotazioni"
+
+#~ msgid "Start filter from"
+#~ msgstr "Inizia filtro da"
+
+#~ msgid "Sunday"
+#~ msgstr "Domenica"
+
+#~ msgid "Thursday"
+#~ msgstr "Giovedi"
+
+#~ msgid "Tuesday"
+#~ msgstr "Martedì"
+
+#~ msgid "Wednesday"
+#~ msgstr "Mercoledì"
+
+#~ msgid "Worker id that will be used for getting free / taken slots"
+#~ msgstr ""
+#~ "ID lavoratore che verrà utilizzato per ottenere slot liberi / acquisiti"

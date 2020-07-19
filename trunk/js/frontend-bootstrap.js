@@ -302,9 +302,10 @@
             var data_prev = step.prevAll('.step');
 
             data_prev.each(function (index, elem) {
-                var option = jQuery(elem).find('select,input').first();
+                // var option = jQuery(elem).find('select,input').first();
+                var input_field = jQuery(elem).find('.filter').filter('input, select');
 
-                options[jQuery(option).data('c')] = option.val();
+                options[jQuery(input_field).data('c')] = input_field.val();
             });
 
             return options;
@@ -454,7 +455,7 @@
         getCurrentStatus: function () {
             var options = jQuery(this.element).find('select').not('.custom-field');
         },
-        blurNextSteps: function (current, dontScroll, initialCall) {
+        blurNextSteps: function (current, dontScroll) {
 
             // check if there is scroll param
             dontScroll = dontScroll || false;
@@ -494,6 +495,13 @@
             var plugin = this, next_element, calendarEl;
 
             calendarEl = jQuery(calendar.dpDiv).parents('.date');
+
+            if (plugin.settings.currentDate === dateString && calendarEl.find('.time-row').length > 0) {
+                calendarEl.find('.time-row').remove();
+                return;
+            }
+
+            plugin.settings.currentDate = dateString;
 
             calendarEl.parent().next().addClass('disabled');
 
@@ -609,7 +617,6 @@
                 var $firstDay = this.$element.find('[data-handler="selectDay"]:first');
                 month = parseInt($firstDay.data('month')) + 1;
                 year = $firstDay.data('year');
-
             }
 
             simulateClick = true;
@@ -637,7 +644,10 @@
 
                         // it's free day after refresh
                         if ($cDay.hasClass('free')) {
-                            $cDay.click();
+                            // but only if auto select is off
+                            if (ea_settings.cal_auto_select !== '0') {
+                                $cDay.click();
+                            }
                         } else {
                             // remove time slots row
                             self.$element.find('.time-row').remove();
@@ -659,7 +669,7 @@
                     }
 
                     plugin.removeLoader();
-                })
+                });
             }
         },
         /**

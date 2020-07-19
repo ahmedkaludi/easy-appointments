@@ -34,6 +34,7 @@ class EAOptions
             'mail.canceled'                 => 'canceled',
             'mail.confirmed'                => 'confirmed',
             'mail.admin'                    => '',
+            'mail.action.two_step'          => '0',
             'trans.service'                 => 'Service',
             'trans.location'                => 'Location',
             'trans.worker'                  => 'Worker',
