@@ -4,7 +4,7 @@
  * Plugin Name: Easy Appointments
  * Plugin URI: https://easy-appointments.net/
  * Description: Simple and easy to use management system for Appointments and Bookings
- * Version: 2.14.1
+ * Version: 2.14.3
  * Author: Nikola Loncar
  * Author URI: http://nikolaloncar.com
  * Text Domain: easy-appointments
@@ -19,7 +19,7 @@ if (!defined('WPINC')) {
 /**
  * Currently plugin version.
  */
-define( 'EASY_APPOINTMENTS_VERSION', '2.14.1' );
+define( 'EASY_APPOINTMENTS_VERSION', '2.14.2' );
 
 // path for source files
 define('EA_SRC_DIR', dirname(__FILE__) . '/src/');
@@ -80,7 +80,7 @@ class EasyAppointment
         // on register hook
         register_activation_hook(__FILE__, array($this, 'install'));
 
-        // registe uninstall hook
+        // register uninstall hook
         register_uninstall_hook(__FILE__, array('EasyAppointment', 'uninstall'));
 
         // register deactivation hook
@@ -191,7 +191,6 @@ class EasyAppointment
         $this->container['user_field_mapper'] = function ($container) {
             return new EAUserFieldMapper();
         };
-
     }
 
     /**
@@ -210,8 +209,10 @@ class EasyAppointment
         /** @var EAInstallTools $install */
         $install = $this->container['install_tools'];
 
+        file_put_contents('/tmp/log.txt', $install->easy_app_db_version . '$' . get_option('easy_app_db_version'));
+
         // skip update if db version are the same
-        if ($install->easy_app_db_version != get_option('easy_app_db_version')) {
+        if ($install->easy_app_db_version !== get_option('easy_app_db_version')) {
             $install->init_db();
             $install->init_data();
         }

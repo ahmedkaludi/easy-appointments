@@ -302,9 +302,10 @@
             var data_prev = step.prevAll('.step');
 
             data_prev.each(function (index, elem) {
-                var option = jQuery(elem).find('select,input').first();
+                // var option = jQuery(elem).find('select,input').first();
+                var input_field = jQuery(elem).find('.filter').filter('input, select');
 
-                options[jQuery(option).data('c')] = option.val();
+                options[jQuery(input_field).data('c')] = input_field.val();
             });
 
             return options;
@@ -665,7 +666,7 @@
                     }
 
                     plugin.removeLoader();
-                })
+                });
             }
         },
         /**

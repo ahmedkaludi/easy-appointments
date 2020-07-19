@@ -56,6 +56,7 @@ class EAFullCalendar
 
         // allow public access for FullCalendar
         $is_public = $this->options->get_option_value('fullcalendar.public', '0');
+
         if (!empty($is_public)) {
             add_filter('ea_calendar_public_access', function() { return true; });
         }
@@ -112,7 +113,10 @@ class EAFullCalendar
             'day_names'            => 'Sunday,Monday,Tuesday,Wednesday,Thursday,Friday,Saturday',
             'month_names_short'    => 'Jan,Feb,Mar,Apr,May,Jun,Jul,Aug,Sep,Oct,Nov,Dec',
             'month_names'          => 'January,February,March,April,May,June,July,August,September,October,November,December',
-            'button_labels'        => 'today,month,week,day,list'
+            'button_labels'        => 'today,month,week,day,list',
+            'month_header_format'  => 'MMM YYYY',
+            'week_header_format'   => 'MMM DD, YYYY',
+            'day_header_format'    => 'MMM DD, YYYY',
         ), $atts);
 
         // scripts that are going to be used
@@ -174,6 +178,17 @@ class EAFullCalendar
         week:  '{$button_labels[2]}',
         day:   '{$button_labels[3]}',
         list:  '{$button_labels[4]}'
+      },
+      views: {
+        month: {
+          titleFormat: '{$code_params['month_header_format']}',
+        },
+        week: {
+          titleFormat: '{$code_params['week_header_format']}',
+        },
+        day: {
+          titleFormat: '{$code_params['day_header_format']}',
+        }
       },
       isRTL: {$is_rtl},
       defaultView: '{$code_params['default_view']}',

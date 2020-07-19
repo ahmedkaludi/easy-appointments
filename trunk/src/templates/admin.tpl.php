@@ -710,19 +710,6 @@
                     </div>
                     <div class="form-item">
                         <div class="label-with-tooltip">
-                            <label for=""><?php _e('Allow public access to FullCalendar shortcode', 'easy-appointments'); ?></label>
-                            <span class="tooltip tooltip-right"
-                                  data-tooltip="<?php _e('By default only logged in users can see data in FullCalendar. Mark this option if you want to allow public access for all.', 'easy-appointments'); ?>"></span>
-                        </div>
-                        <div class="field-wrap">
-                            <input class="field" data-key="fullcalendar.public"
-                                   name="fullcalendar.public" type="checkbox" <% if
-                            (_.findWhere(settings, {ea_key:'fullcalendar.public'}).ea_value == "1") {
-                            %>checked<% } %>>
-                        </div>
-                    </div>
-                    <div class="form-item">
-                        <div class="label-with-tooltip">
                             <label for=""><?php _e('Compress shortcode output (removes new lines from templates).', 'easy-appointments'); ?></label>
                             <span class="tooltip tooltip-right"
                                   data-tooltip="<?php _e('WordPress can add auto paragraph html element for each line break. This option prevents WP from doing that on EA shortcode.', 'easy-appointments'); ?>"></span>
@@ -878,7 +865,27 @@
             <div id="tab-full-calendar" class="form-section hidden">
               <span class="separator vertical"></span>
               <div class="form-container">
-
+                  <div class="form-item">
+                      <div class="label-with-tooltip">
+                          <label for=""><?php _e('Allow public access to FullCalendar shortcode', 'easy-appointments'); ?></label>
+                          <span class="tooltip tooltip-right"
+                                data-tooltip="<?php _e('By default only logged in users can see data in FullCalendar. Mark this option if you want to allow public access for all.', 'easy-appointments'); ?>"></span>
+                      </div>
+                      <div class="field-wrap">
+                          <input class="field" data-key="fullcalendar.public"
+                                 name="fullcalendar.public" type="checkbox" <% if
+                          (_.findWhere(settings, {ea_key:'fullcalendar.public'}).ea_value == "1") {
+                          %>checked<% } %>>
+                      </div>
+                  </div>
+                  <div class="form-item" style="display: none;">
+                      <div class="label-with-tooltip">
+                          <label for=""><?php _e('Event content in popup', 'easy-appointments'); ?></label>
+                          <span class="tooltip tooltip-right"
+                                data-tooltip="<?php _e('Event content when clicked on event', 'easy-appointments'); ?>"></span>
+                      </div>
+                      <textarea class="field"></textarea>
+                  </div>
               </div>
             </div>
 

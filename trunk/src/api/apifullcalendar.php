@@ -226,10 +226,4 @@ class EAApiFullCalendar
 
         return $args;
     }
-
-    public function validate_date_string($string) {
-
-    }
-
-
 }
