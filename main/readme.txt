@@ -4,7 +4,8 @@ Donate link: https://easy-appointments.net/
 Tags: appointment, appointments, Booking, calendar, plugin, reservation, reservations, wp appointment, reservation plugin, reservations, schedule
 Requires at least: 3.7
 Tested up to: 5.4
-Stable tag: 2.14.3
+Requires PHP: 5.3
+Stable tag: 3.0.1
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -213,6 +214,14 @@ Note: you can have only one calendar on one page.
 25. Admin panel - Report - Export page
 
 == Changelog ==
+
+= 3.0.1 (2020-07-28) =
+* Fixed issue on bootstrap form with `initialCall` error inside console that prevented bookings
+
+= 3.0.0 (2020-07-26) =
+* Added template engine for Event preview in FullCalendar short-code. Now you have custom preview and add complex logic like IF-ELSE based on event data, current language etc
+* PHP Requirements are now 5.3+!
+
 = 2.14.3 (2020-07-13) =
 * Added option for Header customization on full calendar view for month, week, day
 * Improvements regarding `fancy-select` issue

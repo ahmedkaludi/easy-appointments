@@ -455,10 +455,12 @@
         getCurrentStatus: function () {
             var options = jQuery(this.element).find('select').not('.custom-field');
         },
-        blurNextSteps: function (current, dontScroll) {
+        blurNextSteps: function (current, dontScroll, initialCall) {
 
             // check if there is scroll param
             dontScroll = dontScroll || false;
+
+            initialCall = initialCall || false;
 
             current.removeClass('disabled');
 

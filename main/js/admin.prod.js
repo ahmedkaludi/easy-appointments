@@ -1970,9 +1970,10 @@
 
             tinymce.init( {
                 mode : "exact",
-                elements : 'mail-template',
+                elements : 'mail-template,fullcalendar-event-template',
                 theme: "modern",
                 skin: "lightgray",
+                height : "250",
                 menubar : false,
                 statusbar : false,
                 relative_urls : false,
@@ -2020,8 +2021,18 @@
             this.$el.find($prevTemplate.data('textarea')).val(prevContent);
         },
 
+        updateFullCalendarTemplate: function() {
+            if (!this.tinymceOn) {
+                return;
+            }
+
+            var template = tinymce.get('fullcalendar-event-template').getContent();
+            this.$el.find('#fullcalendar-event-template').val(template);
+        },
+
         saveSettings: function() {
             this.updateMailTemplate();
+            this.updateFullCalendarTemplate();
 
             var fields = this.$el.find('.field');
 

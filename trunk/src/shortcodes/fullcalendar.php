@@ -152,6 +152,18 @@ class EAFullCalendar
 
         $display_end_time = $code_params['display_event_end'] ? 'true' : 'false';
 
+        $event_click_link = '';
+
+        // event link
+        if (!empty($this->options->get_option_value('fullcalendar.event.show'))) {
+            $event_click_link = <<<EOT
+        element.addClass('thickbox');
+        element.attr('href', wpApiSettings.root + 'easy-appointments/v1/appointment/' + event.id + '?hash=' + event.hash + '&_wpnonce=' + wpApiSettings.nonce);
+        element.attr('title', '#' + event.id + ' - ' + event.title);
+EOT;
+
+        }
+
         $script = <<<EOT
   jQuery(document).ready(function() {
   
@@ -202,7 +214,7 @@ class EAFullCalendar
       firstDay: {$code_params['start_of_week']},
       defaultDate: '{$code_params['default_date']}',
       navLinks: true, // can click day/week names to navigate views
-      editable: true,
+      editable: false,
       eventLimit: true, // allow "more" link when too many events
       events: {
         url: wpApiSettings.root + 'easy-appointments/v1/appointments',
@@ -220,7 +232,7 @@ class EAFullCalendar
         textColor: 'white' // a non-ajax option
       },
       eventClick: function(calEvent, jsEvent, view) {
-        console.log(calEvent, jsEvent, view);
+        // console.log(calEvent, jsEvent, view);
       },
       eventRender: function(event, element) {
         var statusMapping = {
@@ -229,10 +241,9 @@ class EAFullCalendar
           pending: 'grape',
           reserved: 'darkblue'
         }
-        
+ 
         element.addClass(statusMapping[event.status]);
-        element.addClass('thickbox');
-        element.attr('href', wpApiSettings.root + 'easy-appointments/v1/appointment/' + event.id + '?hash=' + event.hash + '_wpnonce=' + wpApiSettings.nonce);
+        {$event_click_link}
       }
     });
   });

@@ -878,13 +878,30 @@
                           %>checked<% } %>>
                       </div>
                   </div>
-                  <div class="form-item" style="display: none;">
+                  <div class="form-item">
+                      <div class="label-with-tooltip">
+                          <label for=""><?php _e('Show event content in popup', 'easy-appointments'); ?></label>
+                          <span class="tooltip tooltip-right"
+                                data-tooltip="<?php _e('Popup dialog for event content.', 'easy-appointments'); ?>"></span>
+                      </div>
+                      <div class="field-wrap">
+                          <input class="field" data-key="fullcalendar.event.show"
+                                 name="fullcalendar.event.show" type="checkbox" <% if
+                          (_.findWhere(settings, {ea_key:'fullcalendar.event.show'}).ea_value == "1") {
+                          %>checked<% } %>>
+                      </div>
+                  </div>
+                  <div class="form-item">
                       <div class="label-with-tooltip">
                           <label for=""><?php _e('Event content in popup', 'easy-appointments'); ?></label>
                           <span class="tooltip tooltip-right"
                                 data-tooltip="<?php _e('Event content when clicked on event', 'easy-appointments'); ?>"></span>
                       </div>
-                      <textarea class="field"></textarea>
+                      <textarea id="fullcalendar-event-template" class="field" name="fullcalendar.event.template" data-key="fullcalendar.event.template"><%- (_.findWhere(settings, {ea_key:'fullcalendar.event.template'})).ea_value %></textarea>
+                      <small><?php _e('Example', 'easy-appointments'); ?> : (<a href="https://easy-appointments.net/documentation/templates/" target="_blank"><?php _e('Full documentation', 'easy-appointments');?></a>)</small>
+                      <div style="display: inline-block"><code>{= event.location_name}</code><small> / </small><code>{= language}</code></div>
+                      <small><?php _e('To get all available options use', 'easy-appointments'); ?> :</small>
+                      <code>{= __CONTEXT__ | raw}</code>
                   </div>
               </div>
             </div>

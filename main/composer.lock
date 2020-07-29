@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a576b837553714995b136015df137b61",
+    "content-hash": "cdb12330e6a82d7096f1bbebda83668d",
     "packages": [
         {
             "name": "jaybizzle/crawler-detect",
@@ -97,6 +97,61 @@
             ],
             "description": "A PHP 5.2 compatible dependency injection container.",
             "time": "2019-10-14T08:27:38+00:00"
+        },
+        {
+            "name": "text/template",
+            "version": "v2.6.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/dermatthes/text-template.git",
+                "reference": "fd77c2aeb9c749426c7f6b5f7ab93c8de90a7cbc"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/dermatthes/text-template/zipball/fd77c2aeb9c749426c7f6b5f7ab93c8de90a7cbc",
+                "reference": "fd77c2aeb9c749426c7f6b5f7ab93c8de90a7cbc",
+                "shasum": ""
+            },
+            "require": {
+                "ext-pcre": "*",
+                "php": ">=5.4"
+            },
+            "require-dev": {
+                "nette/tester": "*",
+                "phpunit/phpcov": "^2.0",
+                "satooshi/php-coveralls": "*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Leuffen\\TextTemplate\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Matthias Leuffen",
+                    "email": "matthes@leuffen.de"
+                }
+            ],
+            "description": "Simple and secure string-template-engine (Twig-like syntax) with nested if/elseif/else, loops, filters. Simple OOP api: Just one class doing the job (2-lines of code). Fast and secure: No code-generation, no eval'ed() code. Extensible by callbacks. Fully tested. Rich examples included.",
+            "homepage": "http://text-template.pub.leuffen.de",
+            "keywords": [
+                "filter",
+                "for",
+                "if",
+                "loop",
+                "mail",
+                "render",
+                "smarty",
+                "template",
+                "text",
+                "twig"
+            ],
+            "time": "2020-06-02T22:43:47+00:00"
         },
         {
             "name": "xrstf/composer-php52",

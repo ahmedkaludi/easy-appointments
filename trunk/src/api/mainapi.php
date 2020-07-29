@@ -8,7 +8,7 @@ class EAMainApi
      */
     public function __construct($container)
     {
-        $controller = new EAApiFullCalendar($container['db_models']);
+        $controller = new EAApiFullCalendar($container['db_models'], $container['options']);
         $controller->register_routes();
     }
 

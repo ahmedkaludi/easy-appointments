@@ -77,6 +77,8 @@ class EAOptions
             'captcha.site-key'              => '',
             'captcha.secret-key'            => '',
             'fullcalendar.public'           => '0',
+            'fullcalendar.event.show'       => '0',
+            'fullcalendar.event.template'   => '',
             'shortcode.compress'            => '1',
         );
     }
