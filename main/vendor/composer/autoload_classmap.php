@@ -15,6 +15,7 @@ return array(
     'EAFrontend' => $baseDir . '/src/frontend.php',
     'EAFullCalendar' => $baseDir . '/src/shortcodes/fullcalendar.php',
     'EAInstallTools' => $baseDir . '/src/install.php',
+    'EALogActions' => $baseDir . '/src/api/logactions.php',
     'EALogic' => $baseDir . '/src/logic.php',
     'EAMail' => $baseDir . '/src/mail.php',
     'EAMainApi' => $baseDir . '/src/api/mainapi.php',

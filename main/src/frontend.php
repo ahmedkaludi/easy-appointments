@@ -436,7 +436,9 @@ class EAFrontend
             'max_date'             => null,
             'show_remaining_slots' => '0',
             'show_week'            => '0',
-            'cal_auto_select'      => '1'
+            'cal_auto_select'      => '1',
+            'block_days'           => null,
+            'block_days_tooltip'   => ''
         ), $atts);
 
         // check params
@@ -466,8 +468,11 @@ class EAFrontend
         $settings['show_week']             = $code_params['show_week'];
         $settings['save_form_content']     = $code_params['save_form_content'];
         $settings['cal_auto_select']       = $code_params['cal_auto_select'];
+        $settings['block_days']            = $code_params['block_days'] !== null ? explode(',', $code_params['block_days']) : null;
+        $settings['block_days_tooltip']    = $code_params['block_days_tooltip'];
 
-        // LOCALIZATION
+
+            // LOCALIZATION
         $settings['trans.please-select-new-date'] = __('Please select another day', 'easy-appointments');
         $settings['trans.personal-informations'] = __('Personal information', 'easy-appointments');
         $settings['trans.field-required'] = __('This field is required.', 'easy-appointments');

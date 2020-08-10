@@ -1892,7 +1892,8 @@
             "click .mail-tab": "selectMailNotification",
             "click .tab-selection a": "tabClicked",
             "click .btn-add-redirect": "addAdvanceRedirect",
-            "click .remove-advance-redirect": "removeAdvanceRedirect"
+            "click .remove-advance-redirect": "removeAdvanceRedirect",
+            "change #ea-select-status": "defaultStatusChange"
         },
 
         initialize: function () {
@@ -1954,6 +1955,9 @@
 
             // init tiny mce
             this.initTinyMCE();
+
+            // render status change
+            this.defaultStatusChange();
 
             return this;
         },
@@ -2373,6 +2377,17 @@
             this.$el.find('#' + tabId).removeClass('hidden');
 
             return false;
+        },
+
+        defaultStatusChange: function () {
+            var status = jQuery('#ea-select-status').val();
+
+            if (status === 'reservation') {
+                jQuery('#ea-select-status-notification').show();
+                return;
+            }
+
+            jQuery('#ea-select-status-notification').hide();
         }
     });    // Main tamplate
     EA.ToolsView = Backbone.View.extend({
@@ -2382,7 +2397,8 @@
 
         events: {
             "click #test-wp-mail" : "testWPMail",
-            "click #test-mail" : "testMail"
+            "click #test-mail" : "testMail",
+            "click #ea-clear-log" : "clearLog"
         },
 
         initialize: function () {
@@ -2456,6 +2472,22 @@
             // Remove view from DOM
             this.remove();
             Backbone.View.prototype.remove.call(this);
+        },
+
+        /**
+         * Clear email log records from DB
+         */
+        clearLog: function () {
+            var endpoint = ea_settings.rest_url + 'easy-appointments/v1/mail_log?_wpnonce=' + wpApiSettings.nonce;
+            jQuery.ajax({
+                url: endpoint,
+                type: 'DELETE',
+                success: function(result) {
+                    alert(result);
+
+                    this.$el.find('#ea-error-log').val('');
+                }
+            });
         }
     });    /**
      * Main Admin View

@@ -3,9 +3,9 @@ Contributors: loncar
 Donate link: https://easy-appointments.net/
 Tags: appointment, appointments, Booking, calendar, plugin, reservation, reservations, wp appointment, reservation plugin, reservations, schedule
 Requires at least: 3.7
-Tested up to: 5.4
+Tested up to: 5.5
 Requires PHP: 5.3
-Stable tag: 3.0.1
+Stable tag: 3.0.3
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -214,6 +214,15 @@ Note: you can have only one calendar on one page.
 25. Admin panel - Report - Export page
 
 == Changelog ==
+
+= 3.0.3 (2020-08-08) =
+* Added clear log button on EA Settings > Tools page
+* Added attribute option for FullCalendar shortcode
+* Added Reservation as short term status to default status list
+* Added Swedish translation files (thanks to Daniel Moqvist)
+
+= 3.0.2 (2020-07-29) =
+* Added `block_days` and `block_days_tooltip` attr for bootstrap shortcode. Now you can add array of days that you want to block on customers form.
 
 = 3.0.1 (2020-07-28) =
 * Fixed issue on bootstrap form with `initialCall` error inside console that prevented bookings

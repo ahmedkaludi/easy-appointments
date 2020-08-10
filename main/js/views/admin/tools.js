@@ -6,7 +6,8 @@ EA.ToolsView = Backbone.View.extend({
 
     events: {
         "click #test-wp-mail" : "testWPMail",
-        "click #test-mail" : "testMail"
+        "click #test-mail" : "testMail",
+        "click #ea-clear-log" : "clearLog"
     },
 
     initialize: function () {
@@ -80,5 +81,21 @@ EA.ToolsView = Backbone.View.extend({
         // Remove view from DOM
         this.remove();
         Backbone.View.prototype.remove.call(this);
+    },
+
+    /**
+     * Clear email log records from DB
+     */
+    clearLog: function () {
+        var endpoint = ea_settings.rest_url + 'easy-appointments/v1/mail_log?_wpnonce=' + wpApiSettings.nonce;
+        jQuery.ajax({
+            url: endpoint,
+            type: 'DELETE',
+            success: function(result) {
+                alert(result);
+
+                this.$el.find('#ea-error-log').val('');
+            }
+        });
     }
 });

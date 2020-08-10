@@ -124,6 +124,7 @@ class EAAdminPanel
                 'underscore',
                 'jquery-ui-sortable',
                 'jquery-chosen',
+                'wp-api',
                 'thickbox'
             ),
             EASY_APPOINTMENTS_VERSION,
@@ -421,6 +422,7 @@ class EAAdminPanel
         }
 
         $settings = $this->options->get_options();
+        $settings['rest_url'] = get_rest_url();
         wp_localize_script('ea-settings', 'ea_settings', $settings);
 
         $screen = get_current_screen();

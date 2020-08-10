@@ -117,6 +117,7 @@ class EAFullCalendar
             'month_header_format'  => 'MMM YYYY',
             'week_header_format'   => 'MMM DD, YYYY',
             'day_header_format'    => 'MMM DD, YYYY',
+            'column_header_format' => null,
         ), $atts);
 
         // scripts that are going to be used
@@ -161,7 +162,12 @@ class EAFullCalendar
         element.attr('href', wpApiSettings.root + 'easy-appointments/v1/appointment/' + event.id + '?hash=' + event.hash + '&_wpnonce=' + wpApiSettings.nonce);
         element.attr('title', '#' + event.id + ' - ' + event.title);
 EOT;
+        }
 
+        $column_header_format = '';
+
+        if ($code_params['column_header_format'] !== null) {
+            $column_header_format = "columnHeaderFormat: '{$code_params['column_header_format']}',";
         }
 
         $script = <<<EOT
@@ -209,6 +215,7 @@ EOT;
       defaultView: '{$code_params['default_view']}',
       showNonCurrentDates: false,
       timeFormat: '{$code_params['time_format']}',
+      {$column_header_format}
       displayEventEnd: {$display_end_time},
       weekNumbers: {$show_week_numbers},
       firstDay: {$code_params['start_of_week']},

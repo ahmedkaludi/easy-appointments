@@ -18,7 +18,8 @@ EA.CustumizeView = Backbone.View.extend({
         "click .mail-tab": "selectMailNotification",
         "click .tab-selection a": "tabClicked",
         "click .btn-add-redirect": "addAdvanceRedirect",
-        "click .remove-advance-redirect": "removeAdvanceRedirect"
+        "click .remove-advance-redirect": "removeAdvanceRedirect",
+        "change #ea-select-status": "defaultStatusChange"
     },
 
     initialize: function () {
@@ -80,6 +81,9 @@ EA.CustumizeView = Backbone.View.extend({
 
         // init tiny mce
         this.initTinyMCE();
+
+        // render status change
+        this.defaultStatusChange();
 
         return this;
     },
@@ -499,5 +503,16 @@ EA.CustumizeView = Backbone.View.extend({
         this.$el.find('#' + tabId).removeClass('hidden');
 
         return false;
+    },
+
+    defaultStatusChange: function () {
+        var status = jQuery('#ea-select-status').val();
+
+        if (status === 'reservation') {
+            jQuery('#ea-select-status-notification').show();
+            return;
+        }
+
+        jQuery('#ea-select-status-notification').hide();
     }
 });

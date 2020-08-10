@@ -10,6 +10,9 @@ class EAMainApi
     {
         $controller = new EAApiFullCalendar($container['db_models'], $container['options']);
         $controller->register_routes();
+
+        $logController = new EALogActions($container['db_models']);
+        $logController->register_routes();
     }
 
 }

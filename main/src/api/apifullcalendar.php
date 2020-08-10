@@ -79,6 +79,7 @@ class EAApiFullCalendar
         if ( ! current_user_can( 'read' ) && !$have_access ) {
             return new WP_Error( 'rest_forbidden', esc_html__( 'You cannot view the category resource.' ), array( 'status' => $this->authorization_status_code() ) );
         }
+
         return true;
     }
 
@@ -273,7 +274,6 @@ class EAApiFullCalendar
         ];
 
         $template = new Leuffen\TextTemplate\TextTemplate($tplStr);
-//        $template->addFunction('demo', )
         try {
             echo $template->apply($data);
         } catch (\Leuffen\TextTemplate\TemplateParsingException $e) {

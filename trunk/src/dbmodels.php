@@ -611,6 +611,10 @@ class EADBModels
         return $this->wpdb->insert($table_name, $option);
     }
 
+    public function get_wpdb() {
+        return $this->wpdb;
+    }
+
     /**
      * @param string $table_name
      * @param bool $as_string

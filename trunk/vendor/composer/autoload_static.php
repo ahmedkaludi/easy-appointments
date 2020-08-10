@@ -55,6 +55,7 @@ class ComposerStaticInit6454aa61d36164254036b36c455b0d68
         'EAFrontend' => __DIR__ . '/../..' . '/src/frontend.php',
         'EAFullCalendar' => __DIR__ . '/../..' . '/src/shortcodes/fullcalendar.php',
         'EAInstallTools' => __DIR__ . '/../..' . '/src/install.php',
+        'EALogActions' => __DIR__ . '/../..' . '/src/api/logactions.php',
         'EALogic' => __DIR__ . '/../..' . '/src/logic.php',
         'EAMail' => __DIR__ . '/../..' . '/src/mail.php',
         'EAMainApi' => __DIR__ . '/../..' . '/src/api/mainapi.php',

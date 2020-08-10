@@ -697,7 +697,7 @@
                             <span class="tooltip tooltip-right"
                                   data-tooltip="<?php _e('Default status of Appointment made by visitor.', 'easy-appointments'); ?>"></span>
                         </div>
-                        <select class="field" name="ea-select-status" data-key="default.status">
+                        <select id="ea-select-status" class="field" name="ea-select-status" data-key="default.status">
                             <option value="pending"
                             <% if (_.findWhere(settings, {ea_key:'default.status'}).ea_value ==
                             "pending") {
@@ -706,7 +706,12 @@
                             <% if (_.findWhere(settings, {ea_key:'default.status'}).ea_value ==
                             "confirmed") {
                             %>selected="selected"<% } %>><%= eaData.Status.confirmed %></option>
+                            <option value="reservation"
+                            <% if (_.findWhere(settings, {ea_key:'default.status'}).ea_value ==
+                            "reservation") {
+                            %>selected="selected"<% } %>><%= eaData.Status.reservation %></option>
                         </select>
+                        <div id="ea-select-status-notification" style="display: none"><?php _e('Reservation status is short term, if you don\'t change it within 5 minutes it will be set to cancelled' , 'easy-appointments');?></div>
                     </div>
                     <div class="form-item">
                         <div class="label-with-tooltip">
@@ -1315,7 +1320,8 @@
 		<div style="text-align: center;">
 			<textarea id="ea-error-log" style="font-family: monospace;width: 100%;min-height: 400px;"><?php _e('Loading...', 'easy-appointments'); ?></textarea>
 		</div>
-		<br/>
+        <div><button id="ea-clear-log" class="button button-primary"><?php _e('Clear log', 'easy-appointments');?></button></div>
+        <br/>
 	</div>
 </script>
 

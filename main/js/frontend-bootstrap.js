@@ -88,7 +88,17 @@
                         days = '0' + days;
                     }
 
-                    return [true, date.getFullYear() + '-' + month + '-' + days, ''];
+                    var dateString = date.getFullYear() + '-' + month + '-' + days;
+                    var selecteble = true;
+                    var tooltip = '';
+
+                    if (Array.isArray(ea_settings.block_days) && ea_settings.block_days.includes(dateString)) {
+                        selecteble = false;
+                        dateString = 'blocked';
+                        tooltip = ea_settings.block_days_tooltip;
+                    }
+
+                    return [selecteble, dateString, tooltip];
                 }
             });
 
