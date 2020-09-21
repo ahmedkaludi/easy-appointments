@@ -99,6 +99,9 @@
             align-items: center;
             box-sizing: border-box;
             padding: 0 10px; }
+            .wp-filter .custom-tab-view .form-section .form-container .form-item .field-wrap.button {
+              padding-top: 30px;
+              padding-bottom: 30px; }
           .wp-filter .custom-tab-view .form-section .form-container .form-item input[type="text"] {
             width: 100%;
             height: 32px;

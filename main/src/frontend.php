@@ -438,7 +438,8 @@ class EAFrontend
             'show_week'            => '0',
             'cal_auto_select'      => '1',
             'block_days'           => null,
-            'block_days_tooltip'   => ''
+            'block_days_tooltip'   => '',
+            'select_placeholder'   => '-'
         ), $atts);
 
         // check params
@@ -470,7 +471,6 @@ class EAFrontend
         $settings['cal_auto_select']       = $code_params['cal_auto_select'];
         $settings['block_days']            = $code_params['block_days'] !== null ? explode(',', $code_params['block_days']) : null;
         $settings['block_days_tooltip']    = $code_params['block_days_tooltip'];
-
 
             // LOCALIZATION
         $settings['trans.please-select-new-date'] = __('Please select another day', 'easy-appointments');
@@ -509,6 +509,10 @@ class EAFrontend
         $customCss = str_replace(array('<?php', '?>', "\t"), array('', '', ''), $customCss);
 
         unset($settings['custom.css']);
+
+        if ($settings['form.label.above'] === '1') {
+            $settings['form_class'] = 'ea-form-v2';
+        }
 
         $rows = $this->models->get_all_rows("ea_meta_fields", array(), array('position' => 'ASC'));
 
@@ -579,7 +583,7 @@ class EAFrontend
      * @param null $service_id
      * @param null $worker_id
      */
-    private function get_options($type, $location_id = null, $service_id = null, $worker_id = null)
+    private function get_options($type, $location_id = null, $service_id = null, $worker_id = null, $placeholder = '-')
     {
         if (!$this->generate_next_option) {
             return;
@@ -636,7 +640,9 @@ class EAFrontend
             }
         }
 
-        echo "<option value='' selected='selected'>-</option>";
+        // option
+        $default_value = esc_html($placeholder);
+        echo "<option value='' selected='selected'>{$default_value}</option>";
 
         foreach ($rows as $row) {
             $price = !empty($row->price) ? " data-price='{$row->price}'" : '';

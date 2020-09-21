@@ -5,7 +5,7 @@ Tags: appointment, appointments, Booking, calendar, plugin, reservation, reserva
 Requires at least: 3.7
 Tested up to: 5.5
 Requires PHP: 5.3
-Stable tag: 3.0.3
+Stable tag: 3.0.5
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -214,6 +214,13 @@ Note: you can have only one calendar on one page.
 25. Admin panel - Report - Export page
 
 == Changelog ==
+
+= 3.0.5 (2020-09-21) =
+* Added option for custom default label for Select field in [ea_bootstrap] shortcode called `select_placeholder`. Default value is '-'
+
+= 3.0.4 (2020-08-23) =
+* Added option for labels above fields for [ea_bootstrap] shortcode
+* Added action to delete customers data older then 6 months (gdpr section)
 
 = 3.0.3 (2020-08-08) =
 * Added clear log button on EA Settings > Tools page

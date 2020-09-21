@@ -14,6 +14,7 @@ return array(
     'EADateTime' => $baseDir . '/src/datetime.php',
     'EAFrontend' => $baseDir . '/src/frontend.php',
     'EAFullCalendar' => $baseDir . '/src/shortcodes/fullcalendar.php',
+    'EAGDPRActions' => $baseDir . '/src/api/gdpr.php',
     'EAInstallTools' => $baseDir . '/src/install.php',
     'EALogActions' => $baseDir . '/src/api/logactions.php',
     'EALogic' => $baseDir . '/src/logic.php',

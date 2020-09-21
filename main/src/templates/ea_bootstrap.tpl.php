@@ -2,11 +2,12 @@
     var ea_ajaxurl = '<?php echo admin_url("admin-ajax.php"); ?>';
 </script>
 <script type="text/template" id="ea-bootstrap-main">
-    <div class="ea-bootstrap" style="max-width: <%= settings.width %>;">
+    <div class="ea-bootstrap <%- settings.form_class %>" style="max-width: <%- settings.width %>;">
         <form class="form-horizontal">
             <% if (settings.layout_cols === '2') { %>
             <div class="col-md-6" style="padding-top: 25px;">
                 <% } %>
+                <!-- LOCATION -->
                 <div class="step form-group">
                     <div class="block"></div>
                     <label class="ea-label col-sm-4 control-label">
@@ -14,10 +15,11 @@
                     </label>
                     <div class="col-sm-8">
                         <select name="location" data-c="location" class="filter form-control">
-                            <?php $this->get_options('locations', $location_id, $service_id, $worker_id); ?>
+                            <?php $this->get_options('locations', $location_id, $service_id, $worker_id, $code_params['select_placeholder']); ?>
                         </select>
                     </div>
                 </div>
+                <!-- WORKER -->
                 <div class="step form-group">
                     <div class="block"></div>
                     <label class="ea-label col-sm-4 control-label">
@@ -26,10 +28,11 @@
                     <div class="col-sm-8">
                         <select name="service" data-c="service" class="filter form-control"
                                 data-currency="<?php echo $this->options->get_option_value("trans.currency"); ?>">
-                            <?php $this->get_options('services', $location_id, $service_id, $worker_id) ?>
+                            <?php $this->get_options('services', $location_id, $service_id, $worker_id, $code_params['select_placeholder']) ?>
                         </select>
                     </div>
                 </div>
+                <!-- SERVICE -->
                 <div class="step form-group">
                     <div class="block"></div>
                     <label class="ea-label col-sm-4 control-label">
@@ -37,7 +40,7 @@
                     </label>
                     <div class="col-sm-8">
                         <select name="worker" data-c="worker" class="filter form-control">
-                            <?php $this->get_options('staff', $location_id, $service_id, $worker_id) ?>
+                            <?php $this->get_options('staff', $location_id, $service_id, $worker_id, $code_params['select_placeholder']) ?>
                         </select>
                     </div>
                 </div>
@@ -56,8 +59,8 @@
                 <div class="step final">
                     <% } %>
                     <div class="block"></div>
-                    <h3><%= settings['trans.personal-informations'] %></h3>
-                    <small><%= settings['trans.fields'] %></small>
+                    <h3><%- settings['trans.personal-informations'] %></h3>
+                    <small><%- settings['trans.fields'] %></small>
 
                     <% _.each(settings.MetaFields, function(item,key,list) { %>
                     <% if (item.visible == "0") { return; } %>
@@ -67,7 +70,7 @@
                         <div class="col-sm-8">
                             <!-- INPUT TYPE -->
                             <% if(item.type === 'INPUT') { %>
-                            <input class="form-control custom-field" maxlength="499" type="text" name="<%= item.slug %>" placeholder="<%= _.escape(item.mixed) %>" value="<%- item.default_value %>"
+                            <input id="<%- item.slug %>"  class="form-control custom-field" maxlength="499" type="text" name="<%= item.slug %>" placeholder="<%= _.escape(item.mixed) %>" value="<%- item.default_value %>"
                             <% if (item.required == "1") { %>data-rule-required="true" data-msg-required="<%=
                             settings['trans.field-required'] %>"<% } %> <% if (item.validation == "email") {
                             %>data-rule-email="true" data-msg-email="<%= settings['trans.error-email'] %>"<% } %>>
@@ -110,7 +113,7 @@
                                 <label>
                                     <input id="ea-iagree" name="iagree" type="checkbox" data-rule-required="true"
                                            data-msg-required="<%= settings['trans.field-iagree'] %>">
-                                    <%= settings['trans.iagree'] %>
+                                    <%- settings['trans.iagree'] %>
                                 </label>
                             </div>
                         </div>
@@ -126,9 +129,9 @@
                                     <input id="ea-gdpr" name="gdpr" type="checkbox" data-rule-required="true"
                                            data-msg-required="<%= settings['gdpr.message'] %>">
                                     <% if (settings['gdpr.link'] != '') { %>
-                                        <a href="<%= settings['gdpr.link'] %>" target="_blank"><%= settings['gdpr.label'] %></a>
+                                        <a href="<%= settings['gdpr.link'] %>" target="_blank"><%- settings['gdpr.label'] %></a>
                                     <% } else {%>
-                                        <%= settings['gdpr.label'] %>
+                                        <%- settings['gdpr.label'] %>
                                     <% } %>
                                 </label>
                             </div>

@@ -13,6 +13,9 @@ class EAMainApi
 
         $logController = new EALogActions($container['db_models']);
         $logController->register_routes();
+
+        $gdpr = new EAGDPRActions($container['db_models']);
+        $gdpr->register_routes();
     }
 
 }

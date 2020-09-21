@@ -54,6 +54,7 @@ class ComposerStaticInit6454aa61d36164254036b36c455b0d68
         'EADateTime' => __DIR__ . '/../..' . '/src/datetime.php',
         'EAFrontend' => __DIR__ . '/../..' . '/src/frontend.php',
         'EAFullCalendar' => __DIR__ . '/../..' . '/src/shortcodes/fullcalendar.php',
+        'EAGDPRActions' => __DIR__ . '/../..' . '/src/api/gdpr.php',
         'EAInstallTools' => __DIR__ . '/../..' . '/src/install.php',
         'EALogActions' => __DIR__ . '/../..' . '/src/api/logactions.php',
         'EALogic' => __DIR__ . '/../..' . '/src/logic.php',

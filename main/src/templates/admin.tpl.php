@@ -1067,6 +1067,20 @@
                     </div>
                     <div class="form-item">
                         <div class="label-with-tooltip">
+                            <label for="form.label.above"><?php _e('Form label style', 'easy-appointments'); ?></label>
+                            <span class="tooltip tooltip-right"
+                                  data-tooltip="<?php _e('Show labels above or inline with fields option on [ea_bootstrap] shortcode.', 'easy-appointments'); ?>"></span>
+                        </div>
+                        <div>
+                            <img data-value="0" class="form-label-option" title="inline" src="<?php echo plugin_dir_url( __DIR__ ) . '../img/label-inline.png';?>"/>
+                            <img data-value="1" class="form-label-option" title="above" src="<?php echo plugin_dir_url( __DIR__ ) . '../img/label-above.png';?>"/>
+                            <input class="field" type="hidden" name="form.label.above"
+                                   data-key="form.label.above" value="<%- _.findWhere(settings,
+                            {ea_key:'form.label.above'}).ea_value %>" />
+                        </div>
+                    </div>
+                    <div class="form-item">
+                        <div class="label-with-tooltip">
                             <label for="send.worker.email"><?php _e('I agree field', 'easy-appointments'); ?></label>
                             <span class="tooltip tooltip-right"
                                   data-tooltip="<?php _e('I agree option at the end of form. If this is marked user must confirm "I agree" checkbox.', 'easy-appointments'); ?>"></span>
@@ -1177,6 +1191,16 @@
                         </div>
                         <input class="field" data-key="gdpr.message" name="gdpr.message" type="text"
                                value="<%- _.findWhere(settings, {ea_key:'gdpr.message'}).ea_value %>">
+                    </div>
+                    <div class="form-item">
+                        <div class="label-with-tooltip">
+                            <label for=""><?php _e('Clear customer data older then 6 months', 'easy-appointments'); ?></label>
+                            <span class="tooltip tooltip-right"
+                                  data-tooltip="<?php _e('This action will remove custom form field values older then 6 months. After that appointments older then 6 months will not hold any customer related data.', 'easy-appointments'); ?>"></span>
+                        </div>
+                        <div class="field-wrap button">
+                            <button class="button button-primary btn-gdpr-delete-data button-field"><?php _e('Remove data', 'easy-appointments'); ?></button>
+                        </div>
                     </div>
                 </div>
             </div>
