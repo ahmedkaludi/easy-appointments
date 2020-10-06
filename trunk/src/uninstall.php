@@ -69,4 +69,9 @@ class EAUninstallTools
         $wpdb->query("SET FOREIGN_KEY_CHECKS=1;");
         $wpdb->query("COMMIT;");
     }
+
+    public function clear_cron()
+    {
+        wp_clear_scheduled_hook('ea_gdpr_auto_delete');
+    }
 }

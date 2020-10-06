@@ -111,6 +111,9 @@
                     // plugin.$element.find('.step').addClass('disabled');
                     plugin.$element.find('.final').removeClass('disabled');
                     plugin.scrollToElement(plugin.$element.find('.final'));
+
+                    // trigger global event when time slot is selected
+                    jQuery(document).trigger('ea-timeslot:selected');
                 }
             });
 

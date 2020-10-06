@@ -25,6 +25,26 @@ class EAOptions
     public function __construct($wpdb)
     {
         $this->wpdb = $wpdb;
+
+        add_action('ea_update_options', array($this, 'manage_gdpr_cron'));
+    }
+
+    public function manage_gdpr_cron($options) {
+        $set_cron = false;
+
+        foreach ($options as $option) {
+            if ($option['ea_key'] === 'gdpr.auto_remove' && !empty($option['ea_value'])) {
+                $set_cron = true;
+                break;
+            }
+        }
+        // remove cron
+        wp_clear_scheduled_hook('ea_gdpr_auto_delete');
+
+        if ($set_cron) {
+            // set cron
+            wp_schedule_event(time(), 'daily', 'ea_gdpr_auto_delete');
+        }
     }
 
     public function get_default_options() {
@@ -69,6 +89,7 @@ class EAOptions
             'gdpr.label'                    => 'By using this form you agree with the storage and handling of your data by this website.',
             'gdpr.link'                     => '',
             'gdpr.message'                  => 'You need to accept the privacy checkbox',
+            'gdpr.auto_remove'              => '0',
             'sort.workers-by'               => 'id',
             'sort.services-by'              => 'id',
             'sort.locations-by'             => 'id',

@@ -235,7 +235,11 @@ class EAFrontend
         $customCss = strip_tags($customCss);
         $customCss = str_replace(array('<?php', '?>', "\t"), array('', '', ''), $customCss);
 
-        wp_localize_script('ea-front-end', 'ea_settings', $settings);
+        wp_localize_script(
+            'ea-front-end',
+            'ea_settings',
+            EATableColumns::clear_settings_data_frontend($settings)
+        );
 
         wp_enqueue_script('underscore');
         wp_enqueue_script('ea-validator');
@@ -522,7 +526,11 @@ class EAFrontend
         $rows = apply_filters( 'ea_form_rows', $rows);
         $settings['MetaFields'] = $rows;
 
-        wp_localize_script('ea-front-bootstrap', 'ea_settings', $settings);
+        wp_localize_script(
+            'ea-front-bootstrap',
+            'ea_settings',
+            EATableColumns::clear_settings_data_frontend($settings)
+        );
 
         wp_enqueue_script('underscore');
         wp_enqueue_script('ea-validator');

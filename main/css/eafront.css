@@ -209,3 +209,8 @@ input.error, textarea.error, select.error {
 	background-color: inherit;
 	cursor: default;
 }
+
+.ea-checkout-section {
+	width: 100%;
+	max-width: 800px;
+}

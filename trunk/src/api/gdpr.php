@@ -40,7 +40,6 @@ class EAGDPRActions {
     public function clear_old_custome_data() {
         $table_app = $this->db_models->get_wpdb()->prefix . 'ea_appointments';
         $table_fields = $this->db_models->get_wpdb()->prefix . 'ea_fields';
-        $table_fields = $this->db_models->get_wpdb()->prefix . 'ea_fields';
         $query = "DELETE f FROM $table_app a INNER JOIN $table_fields f ON (a.id = f.app_id) WHERE a.end_date <= (now() - interval 6 month) AND a.end_date IS NOT NULL";
         $this->db_models->get_wpdb()->query($query);
 

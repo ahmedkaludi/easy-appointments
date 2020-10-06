@@ -1199,7 +1199,10 @@
                                   data-tooltip="<?php _e('This action will remove custom form field values older then 6 months. After that appointments older then 6 months will not hold any customer related data.', 'easy-appointments'); ?>"></span>
                         </div>
                         <div class="field-wrap button">
-                            <button class="button button-primary btn-gdpr-delete-data button-field"><?php _e('Remove data', 'easy-appointments'); ?></button>
+                            <input class="field" type="checkbox" name="gdpr.auto_remove" style="margin-right: 10px;" data-key="gdpr.auto_remove"<%
+                            if (typeof _.findWhere(settings, {ea_key:'gdpr.auto_remove'}) !== 'undefined' &&
+                            _.findWhere(settings, {ea_key:'gdpr.auto_remove'}).ea_value == '1') { %>checked<%
+                            } %> /> <?php _e('Auto remove data via Cron that runs once a day','easy-appointments');?><button class="button button-primary btn-gdpr-delete-data button-field" style="margin-left: 10px"><?php _e('Remove data now', 'easy-appointments'); ?></button>
                         </div>
                     </div>
                 </div>

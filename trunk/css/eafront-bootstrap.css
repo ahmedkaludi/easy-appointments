@@ -352,6 +352,11 @@
 	text-align: center;
 }
 
+.ea-checkout-section {
+	width: 100%;
+	max-width: 800px;
+}
+
 /* BOOTSRAP FORM FIELDS LABEL ABOVE THE FIELD - START */
 .ea-form-v2 .form-group {
   display: flex;

@@ -450,6 +450,9 @@ class EAAjax
 
         // case of update
         if (array_key_exists('options', $data)) {
+
+            do_action('ea_update_options', $data['options']);
+
             foreach ($data['options'] as $option) {
                 // update single option
                 $response['options'][] = $this->models->replace('ea_options', $option);

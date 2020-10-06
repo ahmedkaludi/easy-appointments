@@ -909,15 +909,16 @@
 
             this.$el.find('.time-start').change();
 
-            jQuery.each(this.$el.find('input, select, textarea'), function(index, elem){
+            jQuery.each(this.$el.find('input, select, textarea'), function(index, elem) {
                 var $elem = jQuery(elem);
-
 
                 if ($elem.data('prop') === 'date') {
                     appointment.set($elem.data('prop'), moment(jQuery(elem).datepicker('getDate')).format('YYYY-MM-DD'));
                     appointment.set('end_date', moment(jQuery(elem).datepicker('getDate')).format('YYYY-MM-DD'));
                 } else {
-                    appointment.set($elem.data('prop'), $elem.val());
+                    if (!$(elem).is(':disabled')) {
+                        appointment.set($elem.data('prop'), $elem.val());
+                    }
                 }
 
                 if($elem.attr('name') === 'send-mail' && $elem.is(':checked')) {
@@ -1075,7 +1076,7 @@
         },
 
         serviceChange: function() {
-            if(!this.model.isNew()) {
+            if (!this.model.isNew()) {
                 return;
             }
 

@@ -5,7 +5,7 @@ Tags: appointment, appointments, Booking, calendar, plugin, reservation, reserva
 Requires at least: 3.7
 Tested up to: 5.5
 Requires PHP: 5.3
-Stable tag: 3.0.5
+Stable tag: 3.0.7
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -214,6 +214,14 @@ Note: you can have only one calendar on one page.
 25. Admin panel - Report - Export page
 
 == Changelog ==
+
+= 3.0.7 (2020-10-06) =
+* Added GDPR options that auto remove customers data older then 6 months
+* Settings improvement
+* Block empty start time save for Appointments in Admin Panel
+
+= 3.0.6 (2020-09-27) =
+* Small Style improvements
 
 = 3.0.5 (2020-09-21) =
 * Added option for custom default label for Select field in [ea_bootstrap] shortcode called `select_placeholder`. Default value is '-'

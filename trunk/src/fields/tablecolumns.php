@@ -111,4 +111,89 @@ class EATableColumns
             }
         }
     }
+
+    public static function clear_settings_data_frontend($ea_settings) {
+        $white_list = array(
+            'MetaFields',
+            'advance.redirect',
+            'block.time',
+            'block_days',
+            'block_days_tooltip',
+            'cal_auto_select',
+            'cancel.scroll',
+            'captcha.site-key',
+            'check',
+            'compatibility.mode',
+            'css.off',
+            'currency.before',
+            'date_format',
+            'datepicker',
+            'default_date',
+            'default_datetime_format',
+            'form.label.above',
+            'gdpr.label',
+            'gdpr.link',
+            'gdpr.message',
+            'gdpr.on',
+            'layout_cols',
+            'max.appointments',
+            'max_date',
+            'min_date',
+            'order.locations-by',
+            'order.services-by',
+            'order.workers-by',
+            'pre.reservation',
+            'price.hide',
+            'price.hide.service',
+            'rtl',
+            'save_form_content',
+            'scroll_off',
+            'show.iagree',
+            'show_remaining_slots',
+            'show_week',
+            'sort.locations-by',
+            'sort.services-by',
+            'sort.workers-by',
+            'start_of_week',
+            'submit.redirect',
+            'time_format',
+            'trans.ajax-call-not-available',
+            'trans.booking-overview',
+            'trans.cancel',
+            'trans.comment',
+            'trans.currency',
+            'trans.date-time',
+            'trans.done_message',
+            'trans.email',
+            'trans.error-email',
+            'trans.error-name',
+            'trans.error-phone',
+            'trans.field-iagree',
+            'trans.field-required',
+            'trans.fields',
+            'trans.iagree',
+            'trans.internal-error',
+            'trans.location',
+            'trans.name',
+            'trans.nonce-expired',
+            'trans.overview-message',
+            'trans.personal-informations',
+            'trans.phone',
+            'trans.please-select-new-date',
+            'trans.price',
+            'trans.service',
+            'trans.slot-not-selectable',
+            'trans.submit',
+            'trans.worker',
+            'width',
+        );
+
+        foreach ($ea_settings as $key => $value) {
+            if (!in_array($key, $white_list)) {
+                unset($ea_settings[$key]);
+            }
+        }
+
+        return $ea_settings;
+    }
 }
