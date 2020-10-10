@@ -1,18 +1,81 @@
 {
-  "name": "js-react",
-  "version": "0.1.0",
-  "private": true,
+  "name": "carolina-react-admin-dashboard-pro",
+  "version": "1.0.0",
+  "title": "Carolina React Admin Dashboard with Material-UI PRO",
+  "homepage": "https://demo.uifort.com/carolina-react-admin-dashboard-pro",
+  "description": "With this premium admin dashboard template you can create intuitive products following Google&#39;s Material Design specifications. Fully responsive and powered by React and Material-UI components framework.",
+  "author": {
+    "name": "UiFort.com",
+    "url": "https://uifort.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/uifort/carolina-react-admin-dashboard-pro"
+  },
   "dependencies": {
-    "cra-template": "1.0.3",
-    "react": "^16.13.1",
-    "react-dom": "^16.13.1",
-    "react-scripts": "3.4.3"
+    "react-dom": "16.12.0",
+    "react-router": "5.1.2",
+    "react-router-dom": "5.1.2",
+    "react-redux": "7.2.0",
+    "clsx": "1.1.0",
+    "react-scripts": "3.4.0",
+    "@material-ui/core": "4.9.2",
+    "@material-ui/lab": "4.0.0-alpha.43",
+    "@material-ui/icons": "4.5.1",
+    "framer-motion": "1.8.4",
+    "react-apexcharts": "1.3.6",
+    "apexcharts": "3.15.6",
+    "react-dropzone": "10.2.1",
+    "react-draft-wysiwyg": "1.14.4",
+    "draft-js": "0.11.4",
+    "draftjs-to-html": "0.9.1",
+    "html-to-draftjs": "01.5.0",
+    "react-gauge-chart": "0.2.5",
+    "react-circle": "1.1.1",
+    "react-joyride": "2.2.1",
+    "react-big-calendar": "0.24.0",
+    "react-slick": "0.25.2",
+    "react-chartjs-2": "2.9.0",
+    "chart.js": "2.9.3",
+    "react-contextmenu": "2.13.0",
+    "react-countup": "4.3.3",
+    "immutability-helper": "3.0.1",
+    "react-dnd": "10.0.2",
+    "react-dnd-html5-backend": "10.0.2",
+    "react-color": "2.18.0",
+    "react-copy-to-clipboard": "5.0.2",
+    "react-text-mask": "5.4.3",
+    "react-number-format": "4.3.1",
+    "react-cropper": "1.3.0",
+    "react-spinners": "0.8.0",
+    "react-leaflet": "2.6.1",
+    "leaflet": "1.6.0",
+    "google-map-react": "1.1.6",
+    "react-feather": "2.0.3",
+    "@fortawesome/free-regular-svg-icons": "5.12.1",
+    "@fortawesome/free-solid-svg-icons": "5.12.1",
+    "@fortawesome/free-brands-svg-icons": "5.12.1",
+    "@fortawesome/react-fontawesome": "0.1.8",
+    "@fortawesome/fontawesome-svg-core": "1.2.27",
+    "react-ionicons": "3.1.4",
+    "react-flag-kit": "0.3.1",
+    "pe7-icon": "1.0.4",
+    "react-perfect-scrollbar": "1.5.8",
+    "hamburgers": "1.1.3",
+    "react-infinite-scroll-component": "5.0.4",
+    "react-trend": "1.2.5",
+    "react-sparklines": "1.7.0",
+    "date-fns": "2.9.0",
+    "@date-io/date-fns": "1.3.13",
+    "@material-ui/pickers": "3.2.10",
+    "react": "16.12.0"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "format": "./node_modules/.bin/eslint --fix --ignore-path .gitignore ."
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -28,5 +91,16 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "eslint": "6.8.0",
+    "eslint-plugin-prettier": "3.1.2",
+    "eslint-plugin-react": "7.18.3",
+    "eslint-plugin-unused-imports": "0.1.2",
+    "prettier": "1.19.1",
+    "prettier-eslint": "9.0.1",
+    "prettier-eslint-cli": "5.0.0",
+    "node-sass": "4.13.1",
+    "sass-vars-to-js-loader": "2.1.1"
   }
 }

@@ -53,6 +53,10 @@ cp ./main/js/report.prod.js ./trunk/js/
 cp ./main/js/settings.prod.js ./trunk/js/
 cp ./main/js/backbone.sync.fix.js ./trunk/js/
 cp ./main/js/formater.js ./trunk/js/
+cp ./main/js-react/build/static/js/bundle.js ./trunk/js/
+#cp -R ./main/js-react/src/assets/  ./trunk/css/theme/
+cp -R ./main/js-react/build/static/css/main.css ./trunk/css/theme/
+cp -R ./main/js-react/build/static/css/main.css.map ./trunk/css/theme/
 
 # set dist dir
 cd ./trunk
