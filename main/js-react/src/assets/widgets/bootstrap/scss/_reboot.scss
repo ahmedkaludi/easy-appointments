@@ -43,15 +43,19 @@ article, aside, figcaption, figure, footer, header, hgroup, main, nav, section {
 // 3. Set an explicit initial text-align value so that we can later use
 //    the `inherit` value on things like `<th>` elements.
 
-body {
+body .easy-appointments {
   margin: 0; // 1
+  padding-top: 50px;
+  padding-right: 50px;
+  padding-left: 30px;
   font-family: $font-family-base;
   @include font-size($font-size-base);
   font-weight: $font-weight-base;
   line-height: $line-height-base;
   color: $body-color;
   text-align: left; // 3
-  background-color: $body-bg; // 2
+  //background-color: $body-bg; // 2
+  background-color: transparent; // 2
 }
 
 // Future-proof rule: in browsers that support :focus-visible, suppress the focus outline

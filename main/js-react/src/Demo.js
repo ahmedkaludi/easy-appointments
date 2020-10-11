@@ -6,7 +6,7 @@ import { Provider } from 'react-redux';
 import './assets/base.scss';
 
 import DashboardDefault from './example-pages/DashboardDefault';
-import { PresentationLayout } from './layout-blueprints';
+import { MinimalLayout } from './layout-blueprints';
 
 import { library } from '@fortawesome/fontawesome-svg-core';
 import {
@@ -261,11 +261,9 @@ export const Demo = () => {
   return (
     <Provider store={store}>
       <ThemeProvider theme={MuiTheme}>
-        <div style={{ padding: '80px' }}>
-          <PresentationLayout>
-            <DashboardDefault />
-          </PresentationLayout>
-        </div>
+        <MinimalLayout>
+          <DashboardDefault />
+        </MinimalLayout>
       </ThemeProvider>
     </Provider>
   );
