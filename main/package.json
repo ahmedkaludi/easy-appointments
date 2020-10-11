@@ -7,17 +7,13 @@
     "test": "tests"
   },
   "dependencies": {
-    "gulp": "^3.9.1",
-    "gulp-exec": "^2.1.2",
-    "gulp-shell": "^0.5.2",
+    "metascript": "^1.0.0",
     "node-sass": "^4.12.0"
-  },
-  "devDependencies": {
-    "gulp-watch": "^4.3.11"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "scss": "node-sass css/scss -o ../trunk/css/scss"
+    "scss": "node-sass css/scss -o ../trunk/css/scss",
+    "build": "sh build.sh"
   },
   "author": "Nikola Loncar",
   "license": "ISC"

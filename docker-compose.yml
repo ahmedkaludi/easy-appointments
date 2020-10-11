@@ -3,16 +3,16 @@ version: '3.4'
 services:
 
 # BUILD PROCESS FOR JS
-  ea-build-js:
-    build: ./main/.docker/buildjs/
-    container_name: easy-appointments-buildjs
-    working_dir: /easy-appointments/main
-    volumes:
-      - .:/easy-appointments
+#  ea-build-js:
+#    build: ./main/.docker/buildjs/
+#    container_name: easy-appointments-buildjs
+#    working_dir: /easy-appointments/main
+#    volumes:
+#      - .:/easy-appointments
 #   command: bash -c "sh build.sh && gulp default"
-    command: bash -c "npm install && gulp watch"
-    depends_on:
-      - ea-wordpress
+#    command: bash -c "npm install && gulp watch"
+#    depends_on:
+#      - ea-wordpress
 
 # PHP CONTAINER FOR WORDPRESS
   ea-wordpress:

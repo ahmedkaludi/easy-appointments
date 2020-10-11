@@ -15,13 +15,15 @@ mkdir ./trunk/vendor
 mkdir ./trunk/fonts
 mkdir ./trunk/languages
 
-# meta script
-metascript ./main/js/admin.js > ./main/js/admin.prod.js
-metascript ./main/js/report.js > ./main/js/report.prod.js
-metascript ./main/js/settings.js > ./main/js/settings.prod.js
-
 cd ./main
-npm run scss
+
+# meta script
+metascript ./js/admin.js > ./js/admin.prod.js
+metascript ./js/report.js > ./js/report.prod.js
+metascript ./js/settings.js > ./js/settings.prod.js
+
+#npm run scss
+node-sass css/scss -o ../trunk/css/scss
 cd ../
 
 cp ./main/main.php ./trunk/
@@ -55,8 +57,8 @@ cp ./main/js/backbone.sync.fix.js ./trunk/js/
 cp ./main/js/formater.js ./trunk/js/
 cp ./main/js-react/build/static/js/bundle.js ./trunk/js/
 #cp -R ./main/js-react/src/assets/  ./trunk/css/theme/
-cp -R ./main/js-react/build/static/css/main.css ./trunk/css/theme/
-cp -R ./main/js-react/build/static/css/main.css.map ./trunk/css/theme/
+mkdir ./trunk/css/theme
+cp ./main/js-react/build/static/css/main.css ./trunk/css/theme/
 
 # set dist dir
 cd ./trunk

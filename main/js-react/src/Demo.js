@@ -1,11 +1,12 @@
-import React, { Component } from 'react';
-import { BrowserRouter } from 'react-router-dom';
+import MuiTheme from './theme';
+import { ThemeProvider } from '@material-ui/styles';
+import React from 'react';
 import configureStore from './config/configureStore';
 import { Provider } from 'react-redux';
-import Routes from './Routes';
-import ScrollToTop from './utils/ScrollToTop';
 import './assets/base.scss';
-import CssBaseline from '@material-ui/core/CssBaseline';
+
+import DashboardDefault from './example-pages/DashboardDefault';
+import { PresentationLayout } from './layout-blueprints';
 
 import { library } from '@fortawesome/fontawesome-svg-core';
 import {
@@ -130,6 +131,7 @@ import {
   faSignOutAlt,
   faLink
 } from '@fortawesome/free-solid-svg-icons';
+
 library.add(
   far,
   faSquare,
@@ -255,19 +257,16 @@ library.add(
 
 const store = configureStore();
 
-class App extends Component {
-  render() {
-    return (
-      <Provider store={store}>
-        <BrowserRouter basename="/">
-          <CssBaseline />
-          <ScrollToTop>
-            <Routes />
-          </ScrollToTop>
-        </BrowserRouter>
-      </Provider>
-    );
-  }
-}
-
-export default App;
+export const Demo = () => {
+  return (
+    <Provider store={store}>
+      <ThemeProvider theme={MuiTheme}>
+        <div style={{ padding: '80px' }}>
+          <PresentationLayout>
+            <DashboardDefault />
+          </PresentationLayout>
+        </div>
+      </ThemeProvider>
+    </Provider>
+  );
+};

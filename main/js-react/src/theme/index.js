@@ -36,6 +36,11 @@ const MuiTheme = createMuiTheme({
     borderRadius: '0.5rem'
   },
   overrides: {
+    MuiDialog: {
+      root: {
+        zIndex: '10000 !Important'
+      }
+    },
     MuiButton: {
       text: {
         paddingLeft: '14px',

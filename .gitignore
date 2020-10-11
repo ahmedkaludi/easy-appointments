@@ -2,6 +2,7 @@
 /latest
 /easy-appointments-connect
 /main/node_modules
+/main/js-react/node_moduls
 /main/composer.phar
 /wordpress
 .DS_Store
