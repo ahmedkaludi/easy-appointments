@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-// import App from './Ap/p';
-import { Demo } from './Demo';
+import EasyApp from './EasyApp';
+// import { Demo } from './Demo';
 
-ReactDOM.render(<Demo />, document.getElementById('ea-admin-vacation'));
+ReactDOM.render(<EasyApp />, document.getElementById('ea-admin-vacation'));
