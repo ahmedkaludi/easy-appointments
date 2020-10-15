@@ -1,5 +1,13 @@
 
 .app-page-title {
+  &.easy {
+    padding: 2rem;
+
+    .MuiButton-root {
+      text-transform: none;
+    }
+  }
+
   .easy-branding {
     flex-grow: 1;
     display: flex;

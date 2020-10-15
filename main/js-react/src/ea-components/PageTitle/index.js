@@ -4,10 +4,10 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 
 import { connect } from 'react-redux';
-// import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import logo from '../../assets/images/logo.png';
 
-import { Paper, Box, Divider } from '@material-ui/core';
+import { Paper, Box, Divider, Button } from '@material-ui/core';
 
 const PageTitle = ({
   pageTitleStyle,
@@ -15,16 +15,19 @@ const PageTitle = ({
   pageTitleShadow,
   pageTitleBreadcrumb,
   pageTitleIconBox,
-  pageTitleDescription,
   titleHeading,
-  titleDescription
+  action
 }) => {
   return (
     <Fragment>
       <Paper
         square
         elevation={pageTitleShadow ? 6 : 2}
-        className={clsx('app-page-title', pageTitleStyle, pageTitleBackground)}>
+        className={clsx(
+          'app-page-title easy',
+          pageTitleStyle,
+          pageTitleBackground
+        )}>
         <div>
           <Box className="app-page-title--first">
             <Box className="easy-branding">
@@ -41,6 +44,20 @@ const PageTitle = ({
             </div>
           </Box>
         </div>
+
+        {action ? (
+          <div className="d-flex align-items-center">
+            <Button
+              onClick={action.callback}
+              variant="contained"
+              color="primary">
+              <span className="btn-wrapper--icon">
+                <FontAwesomeIcon icon={['far', `${action.icon}`]} />
+              </span>
+              <span className="btn-wrapper--label">{action.text}</span>
+            </Button>
+          </div>
+        ) : null}
       </Paper>
     </Fragment>
   );
@@ -48,11 +65,11 @@ const PageTitle = ({
 
 PageTitle.propTypes = {
   titleHeading: PropTypes.string.isRequired,
-  titleDescription: PropTypes.string
+  action: PropTypes.objectOf(PropTypes.any)
 };
 
 PageTitle.defaultProps = {
-  titleDescription: ''
+  action: null
 };
 
 const mapStateToProps = state => ({
@@ -60,8 +77,7 @@ const mapStateToProps = state => ({
   pageTitleBackground: state.ThemeOptions.pageTitleBackground,
   pageTitleShadow: state.ThemeOptions.pageTitleShadow,
   pageTitleBreadcrumb: state.ThemeOptions.pageTitleBreadcrumb,
-  pageTitleIconBox: state.ThemeOptions.pageTitleIconBox,
-  pageTitleDescription: state.ThemeOptions.pageTitleDescription
+  pageTitleIconBox: state.ThemeOptions.pageTitleIconBox
 });
 
 export default connect(mapStateToProps)(PageTitle);

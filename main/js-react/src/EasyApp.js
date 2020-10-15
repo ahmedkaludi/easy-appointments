@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import { BrowserRouter } from 'react-router-dom';
+import { ThemeProvider } from '@material-ui/styles';
+import MuiTheme from './theme';
 
 import configureStore from './config/configureStore';
 import { Provider } from 'react-redux';
@@ -261,12 +263,14 @@ class EasyApp extends Component {
   render() {
     return (
       <Provider store={store}>
-        <BrowserRouter basename="/">
-          <CssBaseline />
-          <ScrollToTop>
-            <Vacation />
-          </ScrollToTop>
-        </BrowserRouter>
+        <ThemeProvider theme={MuiTheme}>
+          <BrowserRouter basename="/">
+            <CssBaseline />
+            <ScrollToTop>
+              <Vacation />
+            </ScrollToTop>
+          </BrowserRouter>
+        </ThemeProvider>
       </Provider>
     );
   }
