@@ -1,16 +1,13 @@
 import React, { Fragment } from 'react';
 
-import { PageTitle } from '../layout-components';
+import { PageTitle } from '../ea-components';
 
 // const DATA = window.eaData;
 
 const Vacation = () => {
   return (
     <Fragment>
-      <PageTitle
-        titleHeading="Vacation manager"
-        titleDescription="Manage workers' vacation days"
-      />
+      <PageTitle titleHeading="Vacations" />
       <span>Beginning of Vacation page</span>
     </Fragment>
   );
