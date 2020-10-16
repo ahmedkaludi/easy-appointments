@@ -352,7 +352,8 @@ module.exports = function(webpackEnv) {
               loader: require.resolve('url-loader'),
               options: {
                 limit: imageInlineSizeLimit,
-                name: 'static/media/[name].[ext]'
+                // name: 'static/media/[name].[ext]'
+                name: 'wp-content/plugins/easy-appointments/static/media/[name].[ext]'
               }
             },
             // Process application JS with Babel.
