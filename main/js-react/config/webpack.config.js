@@ -34,7 +34,7 @@ const shouldUseSourceMap = process.env.GENERATE_SOURCEMAP !== 'false';
 const shouldInlineRuntimeChunk = process.env.INLINE_RUNTIME_CHUNK !== 'false';
 
 const imageInlineSizeLimit = parseInt(
-  process.env.IMAGE_INLINE_SIZE_LIMIT || '10000'
+  process.env.IMAGE_INLINE_SIZE_LIMIT || '20000'
 );
 
 // Check if TypeScript is setup
@@ -352,7 +352,7 @@ module.exports = function(webpackEnv) {
               loader: require.resolve('url-loader'),
               options: {
                 limit: imageInlineSizeLimit,
-                name: 'static/media/[name].[hash:8].[ext]'
+                name: 'static/media/[name].[ext]'
               }
             },
             // Process application JS with Babel.
@@ -494,7 +494,8 @@ module.exports = function(webpackEnv) {
               // by webpacks internal loaders.
               exclude: [/\.(js|mjs|jsx|ts|tsx)$/, /\.html$/, /\.json$/],
               options: {
-                name: 'static/media/[name].[hash:8].[ext]'
+                // name: 'static/media/[name].[ext]'
+                name: 'wp-content/plugins/easy-appointments/static/media/[name].[ext]'
               }
             }
             // ** STOP ** Are you adding a new loader?

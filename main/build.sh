@@ -47,6 +47,8 @@ cp -R ./main/js/libs/jquery.validate.min.js ./trunk/js/libs/
 cp -R ./main/js/libs/jquery-ui-i18n.min.js ./trunk/js/libs/
 cp -R ./main/js/libs/fullcalendar/* ./trunk/js/libs/fullcalendar/
 
+cp -R ./main/js-react/build/wp-content/plugins/easy-appointments/ ./trunk/
+
 cp ./main/js/admin-router.js ./trunk/js/
 cp ./main/js/admin.prod.js ./trunk/js/
 cp ./main/js/frontend.js ./trunk/js/
