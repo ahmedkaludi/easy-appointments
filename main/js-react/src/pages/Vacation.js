@@ -15,7 +15,11 @@ const Vacation = () => {
   return (
     <Fragment>
       <PageTitle titleHeading="Vacations" action={headerAction} />
-      <EmptyState />
+      <EmptyState
+        type="vacation"
+        message="There are no scheduled vacation days yet."
+        hint={`Use the 'Add vacation' button to add new vacation days.`}
+      />
     </Fragment>
   );
 };
