@@ -1,6 +1,7 @@
 import React, { Fragment } from 'react';
 
 import { PageTitle } from '../ea-components';
+import { EmptyState } from '../ea-components';
 
 // const DATA = window.eaData;
 
@@ -14,7 +15,7 @@ const Vacation = () => {
   return (
     <Fragment>
       <PageTitle titleHeading="Vacations" action={headerAction} />
-      <span>Beginning of Vacation page</span>
+      <EmptyState />
     </Fragment>
   );
 };

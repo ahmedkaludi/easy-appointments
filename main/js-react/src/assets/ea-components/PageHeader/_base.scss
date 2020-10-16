@@ -34,6 +34,9 @@
 
   &--description.easy {
     margin: 0 0 0 .5rem;
+    color: #0073aa;
+    opacity: 1;
+    text-transform: uppercase;
 
     @include media-breakpoint-down(md) {
       margin: .5rem 0 0;
