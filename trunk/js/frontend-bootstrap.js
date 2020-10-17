@@ -357,7 +357,7 @@
             //only visible step
             var nextStep = step.nextAll('.step:visible:first');
 
-            next = jQuery(nextStep).find('select,input');
+            var next = jQuery(nextStep).find('select,input');
 
             if (next.length === 0) {
                 this.blurNextSteps(nextStep);
