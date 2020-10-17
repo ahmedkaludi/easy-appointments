@@ -1,13 +1,18 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useState } from 'react';
 
 import { PageTitle } from '../ea-components';
 import { EmptyState } from '../ea-components';
+import { Sidebar } from '../ea-components';
 
 // const DATA = window.eaData;
 
 const Vacation = () => {
+  const [open, setOpen] = useState(false);
+
+  const toggleSidebar = () => setOpen(!open);
+
   const headerAction = {
-    callback: () => {},
+    callback: toggleSidebar,
     icon: 'calendar-plus',
     text: 'Add vacation'
   };
@@ -20,6 +25,7 @@ const Vacation = () => {
         message="There are no scheduled vacation days yet."
         hint={`Use the 'Add vacation' button to add new vacation days.`}
       />
+      <Sidebar open={open} onClose={toggleSidebar} />
     </Fragment>
   );
 };
