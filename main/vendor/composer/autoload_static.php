@@ -67,6 +67,7 @@ class ComposerStaticInit6454aa61d36164254036b36c455b0d68
         'EAUninstallTools' => __DIR__ . '/../..' . '/src/uninstall.php',
         'EAUserFieldMapper' => __DIR__ . '/../..' . '/src/services/UserFieldMapper.php',
         'EAUtils' => __DIR__ . '/../..' . '/src/utils.php',
+        'EAVacationActions' => __DIR__ . '/../..' . '/src/api/vacation.php',
         'Jaybizzle\\CrawlerDetect\\CrawlerDetect' => __DIR__ . '/..' . '/jaybizzle/crawler-detect/src/CrawlerDetect.php',
         'Jaybizzle\\CrawlerDetect\\Fixtures\\AbstractProvider' => __DIR__ . '/..' . '/jaybizzle/crawler-detect/src/Fixtures/AbstractProvider.php',
         'Jaybizzle\\CrawlerDetect\\Fixtures\\Crawlers' => __DIR__ . '/..' . '/jaybizzle/crawler-detect/src/Fixtures/Crawlers.php',

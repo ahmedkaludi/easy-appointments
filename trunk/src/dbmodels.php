@@ -548,11 +548,12 @@ class EADBModels
         return $this->wpdb->get_results($query);
     }
 
-    public function clear_options()
+    public function clear_options($type = 'default')
     {
         $table = $this->wpdb->prefix . 'ea_options';
 
-        $this->wpdb->query("DELETE FROM $table");
+        $query = $this->wpdb->prepare("DELETE FROM $table WHERE `type` = %s", $type);
+        $this->wpdb->query($query);
     }
 
     /**

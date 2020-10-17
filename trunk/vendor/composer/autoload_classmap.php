@@ -27,6 +27,7 @@ return array(
     'EAUninstallTools' => $baseDir . '/src/uninstall.php',
     'EAUserFieldMapper' => $baseDir . '/src/services/UserFieldMapper.php',
     'EAUtils' => $baseDir . '/src/utils.php',
+    'EAVacationActions' => $baseDir . '/src/api/vacation.php',
     'Jaybizzle\\CrawlerDetect\\CrawlerDetect' => $vendorDir . '/jaybizzle/crawler-detect/src/CrawlerDetect.php',
     'Jaybizzle\\CrawlerDetect\\Fixtures\\AbstractProvider' => $vendorDir . '/jaybizzle/crawler-detect/src/Fixtures/AbstractProvider.php',
     'Jaybizzle\\CrawlerDetect\\Fixtures\\Crawlers' => $vendorDir . '/jaybizzle/crawler-detect/src/Fixtures/Crawlers.php',
