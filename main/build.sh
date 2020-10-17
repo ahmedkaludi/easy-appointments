@@ -26,6 +26,8 @@ metascript ./js/settings.js > ./js/settings.prod.js
 node-sass css/scss -o ../trunk/css/scss
 cd ../
 
+cp -R ./main/js-react/build/wp-content/plugins/easy-appointments/ ./trunk/
+
 cp ./main/main.php ./trunk/
 cp ./main/readme.txt ./trunk/
 cp -R ./main/css ./trunk/
@@ -46,8 +48,6 @@ cp -R ./main/js/libs/mce.plugin.code.min.js ./trunk/js/libs/
 cp -R ./main/js/libs/jquery.validate.min.js ./trunk/js/libs/
 cp -R ./main/js/libs/jquery-ui-i18n.min.js ./trunk/js/libs/
 cp -R ./main/js/libs/fullcalendar/* ./trunk/js/libs/fullcalendar/
-
-cp -R ./main/js-react/build/wp-content/plugins/easy-appointments/ ./trunk/
 
 cp ./main/js/admin-router.js ./trunk/js/
 cp ./main/js/admin.prod.js ./trunk/js/

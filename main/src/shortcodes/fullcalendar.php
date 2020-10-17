@@ -131,6 +131,10 @@ class EAFullCalendar
         wp_enqueue_style('ea-full-calendar-style');
         wp_enqueue_style('ea-full-calendar-custom-css');
 
+        $customCss = $this->options->get_option_value('custom.css', '');
+        // add custom CSS
+        wp_add_inline_style( 'ea-full-calendar-custom-css', $customCss );
+
         $id = uniqid();
 
         $show_week_numbers = $code_params['show_week'] === '1' ? 'true' : 'false';
