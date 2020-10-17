@@ -1,18 +1,13 @@
 .ea-sidebar {
   .MuiPaper-root {
     position: inherit;
+  }
 
-    &.MuiDrawer-paper {
-      margin-top: 32px;
-      min-width: 540px;
-      width: 540px;
-
-      /*@include media-breakpoint-down(xs) {
-        margin-top: 46px;
-        min-width: 100px;
-        width: 100%;
-      }*/
-    }
+  &--content {
+    margin-top: 32px;
+    min-width: 540px;
+    width: 540px;
+    height: 100%;
   }
 }
 
@@ -20,12 +15,10 @@
   .ea-sidebar {
     z-index: 99999 !important;
 
-    .MuiPaper-root {
-      &.MuiDrawer-paper {
-        margin-top: 0;
-        min-width: 100px;
-        width: 100%;
-      }
+    &--content {
+      margin-top: 0;
+      min-width: 100px;
+      width: 100vw;
     }
   }
 }
