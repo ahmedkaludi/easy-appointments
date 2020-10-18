@@ -77,7 +77,8 @@ class EAVacationActions
      */
     public function update_vacations($request)
     {
-        $data = $request->get_body();
+        $input = $request->get_body();
+        $data = $this->process_data($input);
 
         $option = array(
             'ea_key'   => 'vacations',
@@ -88,5 +89,46 @@ class EAVacationActions
         $result = $this->db_models->update_option($option);
 
         wp_send_json(array('result' => $result));
+    }
+
+    /**
+     * Checks if array of data is valid
+     *
+     * @param $data
+     * @return false|float|int|mixed|Services_JSON_Error|string|void
+     */
+    private function process_data($data)
+    {
+        $array = json_decode($data,true);
+
+        if (!is_array($array)) {
+            return '[]';
+        }
+
+        $result = array();
+        $keys = array('name', 'tooltip', 'workers', 'days');
+
+        foreach ($array as $item) {
+            if (!is_array($item)) {
+                continue;
+            }
+
+            $is_valid = true;
+            // check for name, tooltip, workers, days
+            foreach ($keys as $key) {
+                if (array_key_exists($keys, $item)) {
+                    continue;
+                }
+
+                $is_valid = false;
+                break;
+            }
+
+            if ($is_valid) {
+                $result[] = $item;
+            }
+        }
+
+        return json_encode($result);
     }
 }
