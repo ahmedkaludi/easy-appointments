@@ -25,7 +25,9 @@ const Vacation = () => {
         message="There are no scheduled vacation days yet."
         hint={`Use the 'Add vacation' button to add new vacation days.`}
       />
-      <Sidebar open={open} onClose={toggleSidebar} />
+      <Sidebar open={open} onClose={toggleSidebar} title="Add vacation">
+        <span>Sidebar body</span>
+      </Sidebar>
     </Fragment>
   );
 };
