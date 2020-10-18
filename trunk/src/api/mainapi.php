@@ -16,6 +16,9 @@ class EAMainApi
 
         $gdpr = new EAGDPRActions($container['db_models']);
         $gdpr->register_routes();
+
+        $vacation = new EAVacationActions($container['db_models'], $container['options']);
+        $vacation->register_routes();
     }
 
 }

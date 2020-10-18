@@ -23,6 +23,39 @@
     }
 
     jQuery.extend(Plugin.prototype, {
+        vacation: function(workerId, day) {
+            var response = [true, day, ''];
+
+            // block days from shortcode
+            if (Array.isArray(ea_settings.block_days) && ea_settings.block_days.includes(day)) {
+                return [
+                    false,
+                    'blocked',
+                    ea_settings.block_days_tooltip
+                ];
+            }
+
+            if (!Array.isArray(ea_vacations) || ea_vacations.length === 0) {
+                return response;
+            }
+
+            jQuery.each(ea_vacations, function(vacation) {
+                // Check events
+                if (vacation.workers.length > 0 && jQuery.inArray(workerId, vacation.workers) === -1) {
+                    return true;
+                }
+
+                if (jQuery.inArray(day, vacation.days) === -1) {
+                    return true;
+                }
+
+                response = [false, 'blocked', vacation.tooltip];
+
+                return false;
+            });
+
+            return response;
+        },
         /**
          * Plugin init
          */
@@ -89,16 +122,9 @@
                     }
 
                     var dateString = date.getFullYear() + '-' + month + '-' + days;
-                    var selecteble = true;
-                    var tooltip = '';
+                    var workerId = plugin.$element.find('[name="worker"]').val();
 
-                    if (Array.isArray(ea_settings.block_days) && ea_settings.block_days.includes(dateString)) {
-                        selecteble = false;
-                        dateString = 'blocked';
-                        tooltip = ea_settings.block_days_tooltip;
-                    }
-
-                    return [selecteble, dateString, tooltip];
+                    return plugin.vacation(workerId, dateString);
                 }
             });
 
