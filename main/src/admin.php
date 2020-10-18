@@ -476,13 +476,13 @@ class EAAdminPanel
             return;
         }
 
+        wp_enqueue_style('ea-vacation-css');
+        wp_enqueue_script('ea-vacation');
+
         $settings = $this->options->get_options();
         $settings['rest_url'] = get_rest_url();
         $settings['rest_url_vacation'] = EAVacationActions::get_url();
-        wp_localize_script('ea-settings', 'ea_settings', $settings);
-
-        wp_enqueue_style('ea-vacation-css');
-        wp_enqueue_script('ea-vacation');
+        wp_localize_script('ea-vacation', 'ea_settings', $settings);
 
         $screen = get_current_screen();
         $screen->add_help_tab(array(

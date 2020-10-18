@@ -125,17 +125,6 @@
                     var workerId = plugin.$element.find('[name="worker"]').val();
 
                     return plugin.vacation(workerId, dateString);
-
-                    // var selecteble = true;
-                    // var tooltip = '';
-                    //
-                    // if (Array.isArray(ea_settings.block_days) && ea_settings.block_days.includes(dateString)) {
-                    //     selecteble = false;
-                    //     dateString = 'blocked';
-                    //     tooltip = ea_settings.block_days_tooltip;
-                    // }
-                    //
-                    // return [selecteble, dateString, tooltip];
                 }
             });
 
