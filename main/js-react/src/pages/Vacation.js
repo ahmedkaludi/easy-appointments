@@ -1,8 +1,6 @@
 import React, { Fragment, useState } from 'react';
 
-import { PageTitle } from '../ea-components';
-import { EmptyState } from '../ea-components';
-import { Sidebar } from '../ea-components';
+import { PageTitle, EmptyState, Sidebar, Form } from '../ea-components';
 
 // const DATA = window.eaData;
 
@@ -17,6 +15,12 @@ const Vacation = () => {
     text: 'Add vacation'
   };
 
+  const renderVacationForm = () => (
+    <Form>
+      <span>Sidebar body</span>
+    </Form>
+  );
+
   return (
     <Fragment>
       <PageTitle titleHeading="Vacations" action={headerAction} />
@@ -26,7 +30,7 @@ const Vacation = () => {
         hint={`Use the 'Add vacation' button to add new vacation days.`}
       />
       <Sidebar open={open} onClose={toggleSidebar} title="Add vacation">
-        <span>Sidebar body</span>
+        {renderVacationForm()}
       </Sidebar>
     </Fragment>
   );

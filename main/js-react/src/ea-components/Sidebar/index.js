@@ -2,12 +2,13 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import { Drawer, Box, Tooltip, IconButton, Divider } from '@material-ui/core';
+import PerfectScrollbar from 'react-perfect-scrollbar';
 import { X } from 'react-feather';
 
 const Sidebar = ({ open, onClose, children, title }) => {
   return (
     <Drawer className="ea-sidebar" anchor="right" open={open}>
-      <div className="ea-sidebar--wrapper">
+      <PerfectScrollbar className="ea-sidebar--wrapper">
         <div className="ea-sidebar--content">
           <Box className="ea-sidebar--header">
             <div className="ea-sidebar--header-title font-size-lg flex-grow-1">
@@ -27,7 +28,7 @@ const Sidebar = ({ open, onClose, children, title }) => {
           <Divider />
           <Box className="ea-sidebar--body flex-grow-1">{children}</Box>
         </div>
-      </div>
+      </PerfectScrollbar>
     </Drawer>
   );
 };

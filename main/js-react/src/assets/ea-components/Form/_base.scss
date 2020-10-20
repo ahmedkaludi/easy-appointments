@@ -1,0 +1,25 @@
+.ea-form {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+
+  &--fields {
+    margin-bottom: auto;
+    padding-bottom: 20px;
+  }
+
+  &--footer {
+    justify-content: space-between;
+    position: -webkit-sticky;
+    position: sticky;
+    bottom: 0px;
+    background: $white;
+    z-index: 999;
+    width: 100%;
+    margin: 0 auto;
+  }
+
+  &--actions {
+    padding: 20px 0;
+  }
+}
