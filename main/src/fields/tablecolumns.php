@@ -186,6 +186,8 @@ class EATableColumns
             'trans.submit',
             'trans.worker',
             'width',
+            'form.label.above',
+            'form_class',
         );
 
         foreach ($ea_settings as $key => $value) {
