@@ -6,7 +6,7 @@ import MuiTheme from './theme';
 import configureStore from './config/configureStore';
 import { Provider } from 'react-redux';
 import ScrollToTop from './utils/ScrollToTop';
-import { Vacation } from './pages/Vacation';
+import { VacationPage } from './pages';
 
 import './assets/base.scss';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -267,7 +267,7 @@ class EasyApp extends Component {
           <BrowserRouter basename="/">
             <CssBaseline />
             <ScrollToTop>
-              <Vacation />
+              <VacationPage />
             </ScrollToTop>
           </BrowserRouter>
         </ThemeProvider>
