@@ -93,7 +93,9 @@ select.field {
 	display: none;
 }
 
-.ea-row:hover .btn-edit, .ea-row:hover .btn-del, .ea-row:hover .btn-clone {
+.ea-row:hover .btn-edit, .ea-row:hover .btn-del, .ea-row:hover .btn-clone,
+.ea-row:focus .btn-edit, .ea-row:focus .btn-del, .ea-row:focus .btn-clone,
+.ea-row:focus-within .btn-edit, .ea-row:focus-within .btn-del, .ea-row:focus-within .btn-clone {
 	display: inline-block;
 	cursor: pointer;
 }
