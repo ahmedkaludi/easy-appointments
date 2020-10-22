@@ -12,7 +12,7 @@ const Worker = ({ value, updateValue, name }) => {
 
     workersData = workersData
       ? workersData.map(worker => ({ value: worker.id, label: worker.name }))
-      : null;
+      : [];
 
     setWorkers(workersData);
   };
