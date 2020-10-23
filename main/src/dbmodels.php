@@ -247,7 +247,6 @@ class EADBModels
      */
     public function replace($table_name, $data, $json = false, $forceStrings = false)
     {
-
         // strip out fields that are not mapped inside table
         $this->table_columns->clear_data($table_name, $data);
 

@@ -87,7 +87,8 @@ class EATableColumns
                 'description',
                 'email',
                 'phone'
-            )
+            ),
+            'ea_fields' => array()
         );
 
 

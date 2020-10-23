@@ -1,7 +1,8 @@
 #!/bin/bash
 
 #set plugin dir
-cd /easy-appointments
+#cd /easy-appointments
+cd ..
 
 rm -r ./trunk/*
 mkdir ./trunk/img
@@ -16,12 +17,13 @@ mkdir ./trunk/fonts
 mkdir ./trunk/languages
 
 # meta script
-metascript ./main/js/admin.js > ./main/js/admin.prod.js
-metascript ./main/js/report.js > ./main/js/report.prod.js
-metascript ./main/js/settings.js > ./main/js/settings.prod.js
+# metascript ./main/js/admin.js > ./main/js/admin.prod.js
+# metascript ./main/js/report.js > ./main/js/report.prod.js
+# metascript ./main/js/settings.js > ./main/js/settings.prod.js
 
 cd ./main
 npm run scss
+npm run meta-script
 cd ../
 
 cp ./main/main.php ./trunk/

@@ -5,7 +5,7 @@ Tags: appointment, appointments, Booking, calendar, plugin, reservation, reserva
 Requires at least: 3.7
 Tested up to: 5.5
 Requires PHP: 5.3
-Stable tag: 3.0.10
+Stable tag: 3.0.11
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -214,6 +214,10 @@ Note: you can have only one calendar on one page.
 25. Admin panel - Report - Export page
 
 == Changelog ==
+
+= 3.0.11 (2020-10-23) =
+* Fixed issue with PHP NOTICE message on Appointment creation
+* Improvements regarding invalid date on Appointments overview
 
 = 3.0.10 (2020-10-21) =
 * Admin appointments page now can be navigate via Tab key (edit, clone, delete appointment)
