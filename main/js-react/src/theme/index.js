@@ -55,6 +55,11 @@ const MuiTheme = createMuiTheme({
         fontWeight: 'normal'
       }
     },
+    MuiPopover: {
+      paper: {
+        width: 'fit-content'
+      }
+    },
     MuiTooltip: {
       tooltip: {
         backgroundColor: vars.second,

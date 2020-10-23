@@ -10,6 +10,7 @@ import DashboardDefaultSection5 from '../../example-components/DashboardDefault/
 import DashboardDefaultSection6 from '../../example-components/DashboardDefault/DashboardDefaultSection6';
 import DashboardDefaultSection7 from '../../example-components/DashboardDefault/DashboardDefaultSection7';
 import DashboardDefaultSection8 from '../../example-components/DashboardDefault/DashboardDefaultSection8';
+import LivePreviewExample from '../../example-components/Dropdowns/DropdownsBasic';
 export default function DashboardDefault() {
   return (
     <Fragment>
@@ -18,6 +19,7 @@ export default function DashboardDefault() {
         titleDescription="This is a dashboard page example built using this template."
       />
 
+      <LivePreviewExample />
       <DashboardDefaultSection1 />
       <DashboardDefaultSection2 />
       <DashboardDefaultSection3 />

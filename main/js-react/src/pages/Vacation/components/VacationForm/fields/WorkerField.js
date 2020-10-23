@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 
 import { DataService } from '../../../../../services';
-import { Field, Select } from '../../../../../ea-components';
+import { Field, MultiSelect } from '../../../../../ea-components';
 
 const Worker = ({ value, updateValue, name }) => {
   const [workers, setWorkers] = useState([]);
@@ -24,9 +24,9 @@ const Worker = ({ value, updateValue, name }) => {
   const onChange = val => updateValue(name, val);
 
   return (
-    <Select
+    <MultiSelect
       label="Worker"
-      value={value || ''}
+      value={value || []}
       onChange={e => onChange(e.target.value)}
       options={workers}
     />
