@@ -41,6 +41,16 @@ const MuiTheme = createMuiTheme({
         zIndex: '10000 !Important'
       }
     },
+    MuiOutlinedInput: {
+      root: {
+        borderRadius: '4px'
+      }
+      // input: {
+      //   padding: '5px 14px',
+      //   border: 'none',
+      //   backgroundColor: 'transparent'
+      // }
+    },
     MuiButton: {
       text: {
         paddingLeft: '14px',
@@ -52,7 +62,8 @@ const MuiTheme = createMuiTheme({
       },
       root: {
         textTransform: 'none',
-        fontWeight: 'normal'
+        fontWeight: 'normal',
+        borderRadius: '4px'
       }
     },
     MuiPopover: {

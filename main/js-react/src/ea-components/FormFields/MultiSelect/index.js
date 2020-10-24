@@ -36,6 +36,17 @@ const MultiSelect = ({ value, onChange, options, label, disabled }) => {
         multiple
         value={value}
         onChange={onChange}
+        MenuProps={{
+          anchorOrigin: {
+            vertical: 'bottom',
+            horizontal: 'left'
+          },
+          transformOrigin: {
+            vertical: 'top',
+            horizontal: 'left'
+          },
+          getContentAnchorEl: null
+        }}
         input={
           <OutlinedInput
             size="small"
