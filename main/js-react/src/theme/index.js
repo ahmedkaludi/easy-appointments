@@ -45,11 +45,6 @@ const MuiTheme = createMuiTheme({
       root: {
         borderRadius: '4px'
       }
-      // input: {
-      //   padding: '5px 14px',
-      //   border: 'none',
-      //   backgroundColor: 'transparent'
-      // }
     },
     MuiButton: {
       text: {

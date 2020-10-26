@@ -41,10 +41,10 @@ const MultiSelect = ({ value, onChange, options, label, disabled }) => {
             vertical: 'bottom',
             horizontal: 'left'
           },
-          transformOrigin: {
-            vertical: 'top',
-            horizontal: 'left'
-          },
+          // transformOrigin: {
+          //   vertical: 'top',
+          //   horizontal: 'left'
+          // },
           getContentAnchorEl: null
         }}
         input={
@@ -58,7 +58,15 @@ const MultiSelect = ({ value, onChange, options, label, disabled }) => {
         renderValue={selected => (
           <div className="cls">
             {selected.map(value => (
-              <Chip key={value} label={label} className="chip" />
+              <Chip
+                key={value}
+                label={label}
+                className="chip"
+                variant="outlined"
+                size="small"
+                onDelete={f => f}
+                color="primary"
+              />
             ))}
           </div>
         )}

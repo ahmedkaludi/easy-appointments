@@ -1,6 +1,68 @@
+@mixin fieldsetBorders {
+  &.Mui-focused {
+    .MuiOutlinedInput-notchedOutline {
+      border-color: $primary;
+    }
+  }
+
+  &.Mui-disabled {
+    .MuiOutlinedInput-notchedOutline,
+    &:hover .MuiOutlinedInput-notchedOutline {
+      border-color: rgba(0, 0, 0, 0.26);
+    }
+  }
+
+  &.Mui-focused .MuiOutlinedInput-notchedOutline,
+  &:hover .MuiOutlinedInput-notchedOutline {
+    border-color: $primary;
+    border-width: 1px;
+  }
+}
+
 .ea-form-field {
   margin-bottom: 15px;
-  .MuiFormControl-root {
-    width: 100%;
+
+  .ea-input {
+    .MuiInputLabel-formControl {
+      transform: translate(14px, 14px) scale(1);
+
+      &.MuiInputLabel-shrink {
+        transform: translate(14px, -6px) scale(0.75);
+      }
+    }
+
+    .MuiOutlinedInput-root {
+      .MuiOutlinedInput-input {
+        padding: 6px 10px;
+        font-size: 14px;
+        color: #333333;
+      }
+
+      input[type=text] {
+        background-color: transparent;
+        box-shadow: none;
+        border: none;
+      }
+
+      @include fieldsetBorders;
+    }
+  }
+
+  .ea-select {
+    .MuiInputLabel-outlined {
+      transform: translate(14px, 14px) scale(1);
+
+      &.MuiInputLabel-shrink {
+        transform: translate(14px, -6px) scale(0.75);
+      }
+    }
+
+    .MuiOutlinedInput-root {
+      .MuiOutlinedInput-input {
+        padding: 13px 14px;
+      }
+
+      @include fieldsetBorders;
+    }
   }
 }

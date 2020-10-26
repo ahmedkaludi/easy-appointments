@@ -25,7 +25,7 @@ const Worker = ({ value, updateValue, name }) => {
 
   return (
     <MultiSelect
-      label="Worker"
+      label="Workers"
       value={value || []}
       onChange={e => onChange(e.target.value)}
       options={workers}
