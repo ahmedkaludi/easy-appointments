@@ -27,6 +27,32 @@ const MultiSelect = ({ value, onChange, options, label, disabled }) => {
       </MenuItem>
     ));
 
+  const handleChipDelete = chipToDelete => {
+    // setChipData((chips) => chips.filter((chip) => chip.key !== chipToDelete.key));
+    console.log('OBRISI', chipToDelete);
+  };
+
+  const renderChips = selected => {
+    console.log('=======', selected);
+
+    return (
+      <div className="cls">
+        {selected.map(val => (
+          <Chip
+            key={val}
+            label={label}
+            clickable
+            className="chip"
+            variant="outlined"
+            size="small"
+            onDelete={handleChipDelete}
+            color="primary"
+          />
+        ))}
+      </div>
+    );
+  };
+
   return (
     <FormControl variant="outlined" fullWidth className="ea-select">
       <InputLabel ref={inputLabelRef} htmlFor="select-multiple-chip">
@@ -55,21 +81,7 @@ const MultiSelect = ({ value, onChange, options, label, disabled }) => {
             rows={1}
           />
         }
-        renderValue={selected => (
-          <div className="cls">
-            {selected.map(value => (
-              <Chip
-                key={value}
-                label={label}
-                className="chip"
-                variant="outlined"
-                size="small"
-                onDelete={f => f}
-                color="primary"
-              />
-            ))}
-          </div>
-        )}
+        renderValue={renderChips}
         disabled={disabled}>
         {renderOptions()}
       </MuiSelect>

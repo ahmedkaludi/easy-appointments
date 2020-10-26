@@ -6,4 +6,5 @@ export { default as Field } from './Form/Field';
 export { default as Button } from './FormFields/Button';
 export { default as Input } from './FormFields/Input';
 export { default as Select } from './FormFields/Select';
+export { default as Autocomplete } from './FormFields/Autocomplete';
 export { default as MultiSelect } from './FormFields/MultiSelect';
