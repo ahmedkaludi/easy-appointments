@@ -5,32 +5,45 @@ import { DataService } from '../../../../../services';
 import { Field, Autocomplete } from '../../../../../ea-components';
 
 const Workers = ({ value, updateValue, name }) => {
+  const [options, setOptions] = useState([]);
   const [workers, setWorkers] = useState([]);
 
   const loadWorkers = () => {
     let workersData = DataService.get('Workers');
+    setWorkers(workersData || []);
 
     workersData = workersData
       ? workersData.map(worker => ({ value: worker.id, label: worker.name }))
       : [];
 
-    setWorkers(workersData);
+    setOptions(workersData);
   };
 
   useEffect(() => {
     loadWorkers();
   }, []);
 
-  const onChange = (e, val) => updateValue(name, val);
-  console.log('Workers =========> ', workers);
+  // const onChange = (e, val) => updateValue(name, val);
+  const onChange = (e, newVal) => {
+    const newValIds = newVal.map(val => val.value);
+    const selected = workers.filter(wrk => newValIds.includes(wrk.id));
+    updateValue('workers', selected);
+    console.log('======', selected);
+  };
+
+  const selected = value
+    ? value.map(worker => ({ value: worker.id, label: worker.name }))
+    : [];
+
+  console.log('VALUE IS', selected);
 
   return (
     <Autocomplete
       label="Workers"
       placeholder="Worker..."
-      value={value || []}
-      onChange={e => onChange(e.target.value)}
-      options={workers}
+      value={selected}
+      onChange={onChange}
+      options={options}
     />
   );
 };

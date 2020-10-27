@@ -10,33 +10,44 @@ const Autocomplete = ({
   options,
   label,
   disabled,
-  placeholder
-}) => (
-  <MuiAutocomplete
-    multiple
-    className="ea-autocomplete"
-    options={options}
-    getOptionLabel={option => option.label}
-    filterSelectedOptions
-    size="small"
-    limitTags={4}
-    defaultValue={[]}
-    renderInput={params => (
-      <TextField
-        {...params}
-        fullWidth
-        variant="outlined"
-        label={label}
-        placeholder={placeholder}
-      />
-    )}
-    ChipProps={{
-      variant: 'outlined',
-      size: 'small',
-      color: 'primary'
-    }}
-  />
-);
+  placeholder,
+  limitTags
+}) => {
+  const filterOptions = (opts, state) => {
+    const selected = value.map(val => val.value);
+    const ret = opts.filter(opt => !selected.includes(opt.value));
+    return ret;
+  };
+
+  return (
+    <MuiAutocomplete
+      multiple
+      className="ea-autocomplete"
+      options={options}
+      getOptionLabel={option => option.label}
+      filterSelectedOptions
+      filterOptions={filterOptions}
+      size="small"
+      limitTags={limitTags}
+      value={value}
+      onChange={onChange}
+      renderInput={params => (
+        <TextField
+          {...params}
+          fullWidth
+          variant="outlined"
+          label={label}
+          placeholder={placeholder}
+        />
+      )}
+      ChipProps={{
+        variant: 'outlined',
+        size: 'small',
+        color: 'primary'
+      }}
+    />
+  );
+};
 
 Autocomplete.propTypes = {
   label: PropTypes.string,
@@ -44,7 +55,8 @@ Autocomplete.propTypes = {
   value: PropTypes.arrayOf(PropTypes.objectOf(PropTypes.any)),
   onChange: PropTypes.func,
   options: PropTypes.arrayOf(PropTypes.any).isRequired,
-  disabled: PropTypes.bool
+  disabled: PropTypes.bool,
+  limitTags: PropTypes.number
 };
 
 Autocomplete.defaultProps = {
@@ -52,7 +64,8 @@ Autocomplete.defaultProps = {
   placeholder: '',
   value: null,
   onChange: f => f,
-  disabled: false
+  disabled: false,
+  limitTags: -1
 };
 
 export default Autocomplete;
