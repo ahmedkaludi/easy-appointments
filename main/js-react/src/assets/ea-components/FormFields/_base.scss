@@ -22,6 +22,7 @@
 .ea-form-field {
   margin-bottom: 15px;
 
+  /* INPUT FIELD */
   .ea-input {
     .MuiInputLabel-formControl {
       transform: translate(14px, 14px) scale(1);
@@ -48,6 +49,7 @@
     }
   }
 
+  /* SELECT FIELD */
   .ea-select {
     .MuiInputLabel-outlined {
       transform: translate(14px, 14px) scale(1);
@@ -60,6 +62,33 @@
     .MuiOutlinedInput-root {
       .MuiOutlinedInput-input {
         padding: 13px 14px;
+      }
+
+      @include fieldsetBorders;
+    }
+  }
+
+  /* AUTOCOMPLETE FIELD */
+  .ea-autocomplete {
+    .MuiInputLabel-outlined {
+      transform: translate(14px, 14px) scale(1);
+
+      &.MuiInputLabel-shrink {
+        transform: translate(14px, -6px) scale(0.75);
+      }
+    }
+
+    .MuiOutlinedInput-root {
+      .MuiOutlinedInput-input {
+        &.MuiAutocomplete-input {
+          padding: 0 6px;
+        }
+      }
+
+      input[type=text] {
+        background-color: transparent;
+        box-shadow: none;
+        border: none;
       }
 
       @include fieldsetBorders;
