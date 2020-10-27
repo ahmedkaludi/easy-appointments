@@ -15,7 +15,14 @@ const Autocomplete = ({
 }) => {
   const filterOptions = (opts, state) => {
     const selected = value.map(val => val.value);
-    const ret = opts.filter(opt => !selected.includes(opt.value));
+    let ret = opts.filter(opt => !selected.includes(opt.value));
+
+    if (state?.inputValue && state.inputValue.length) {
+      ret = ret.filter(opt =>
+        opt.label.toLowerCase().includes(state.inputValue.toLowerCase())
+      );
+    }
+
     return ret;
   };
 
