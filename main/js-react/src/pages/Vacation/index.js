@@ -9,6 +9,11 @@ const Vacation = () => {
 
   const toggleSidebar = () => setOpen(!open);
 
+  const save = model => {
+    console.log('========', model);
+    toggleSidebar();
+  };
+
   const headerAction = {
     callback: toggleSidebar,
     icon: 'calendar-plus',
@@ -24,7 +29,7 @@ const Vacation = () => {
         hint={`Use the 'Add vacation' button to add new vacation days.`}
       />
       <Sidebar open={open} onClose={toggleSidebar} title="Add vacation">
-        <VacationForm onSave={toggleSidebar} onCancel={toggleSidebar} />
+        <VacationForm onSave={save} onCancel={toggleSidebar} />
       </Sidebar>
     </Fragment>
   );

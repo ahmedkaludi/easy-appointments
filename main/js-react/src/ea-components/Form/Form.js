@@ -111,7 +111,7 @@ class Form extends Component {
   }
 
   async onSave() {
-    await this.props.onSave();
+    await this.props.onSave(this.state.model);
     this.clearForm();
   }
 

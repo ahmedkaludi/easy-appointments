@@ -23,19 +23,15 @@ const Workers = ({ value, updateValue, name }) => {
     loadWorkers();
   }, []);
 
-  // const onChange = (e, val) => updateValue(name, val);
   const onChange = (e, newVal) => {
     const newValIds = newVal.map(val => val.value);
     const selected = workers.filter(wrk => newValIds.includes(wrk.id));
     updateValue('workers', selected);
-    console.log('======', selected);
   };
 
   const selected = value
     ? value.map(worker => ({ value: worker.id, label: worker.name }))
     : [];
-
-  console.log('VALUE IS', selected);
 
   return (
     <Autocomplete
