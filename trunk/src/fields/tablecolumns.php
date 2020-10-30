@@ -95,6 +95,21 @@ class EATableColumns
         return $columns[$table_name];
     }
 
+    public function validate_next_step($next) {
+        $options = array(
+            'location',
+            'service',
+            'worker',
+            'stuff',
+        );
+
+        if (in_array($next, $options)) {
+            return $next;
+        }
+
+        return $options[0];
+    }
+
     /**
      * @param string $table_name
      * @param array $params

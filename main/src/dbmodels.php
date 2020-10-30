@@ -349,6 +349,8 @@ class EADBModels
     {
         $table_name = $this->wpdb->prefix . 'ea_connections';
 
+        $options['next'] = $this->table_columns->validate_next_step($options['next']);
+
         $vars = '';
         $values = array();
 
