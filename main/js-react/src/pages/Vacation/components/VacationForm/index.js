@@ -5,12 +5,14 @@ import { Form } from '../../../../ea-components';
 import { TitleField } from './fields/TitleField';
 import { TooltipField } from './fields/TooltipField';
 import { WorkersField } from './fields/WorkersField';
+import { DatesField } from './fields/DatesField';
 
 export const VacationForm = ({ onSave, onCancel }) => (
   <Form onCancel={onCancel} onSave={onSave}>
     <TitleField />
     <TooltipField />
     <WorkersField />
+    <DatesField />
   </Form>
 );
 

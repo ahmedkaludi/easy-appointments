@@ -33,6 +33,8 @@ const Autocomplete = ({
       options={options}
       getOptionLabel={option => option.label}
       filterSelectedOptions
+      disableCloseOnSelect
+      disablePortal
       filterOptions={filterOptions}
       size="small"
       limitTags={limitTags}

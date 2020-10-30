@@ -22,6 +22,25 @@
 .ea-form-field {
   margin-bottom: 15px;
 
+  /* FIELD SET */
+  .ea-fieldset {
+    width: 100%;
+
+    .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline {
+      border-color: rgba(0, 0, 0, 0.23);
+    }
+
+    .MuiPickersStaticWrapper-staticWrapperRoot {
+      min-width: 270px;
+
+      .MuiPickersBasePicker-pickerView {
+        max-width: 300px;
+        min-width: 260px;
+        min-height: 260px;
+      }
+    }
+  }
+
   /* INPUT FIELD */
   .ea-input {
     .MuiInputLabel-formControl {
@@ -94,4 +113,15 @@
       @include fieldsetBorders;
     }
   }
+
+  .MuiAutocomplete-popperDisablePortal {
+    .MuiAutocomplete-paper,
+    .MuiAutocomplete-listbox,
+    .MuiAutocomplete-option {
+      width: 100%;
+    }
+  }
+
+  /* DATE PICKER FIELD */
+
 }
