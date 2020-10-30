@@ -498,7 +498,7 @@
             booking_data.price = this.$element.find('[name="service"] > option:selected').data('price');
 
             var format = ea_settings['date_format'] + ' ' + ea_settings['time_format'];
-            booking_data.date_time = moment(booking_data.date + ' ' + booking_data.time, ea_settings['default_datetime_format']).format(format);
+            booking_data.date_time = moment(booking_data.date + 'T' + booking_data.time, ea_settings['default_datetime_format']).format(format);
 
             jQuery.get(ea_ajaxurl, options, function (response) {
 

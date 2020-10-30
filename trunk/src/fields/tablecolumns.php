@@ -87,11 +87,27 @@ class EATableColumns
                 'description',
                 'email',
                 'phone'
-            )
+            ),
+            'ea_fields' => array()
         );
 
 
         return $columns[$table_name];
+    }
+
+    public function validate_next_step($next) {
+        $options = array(
+            'location',
+            'service',
+            'worker',
+            'stuff',
+        );
+
+        if (in_array($next, $options)) {
+            return $next;
+        }
+
+        return $options[0];
     }
 
     /**
@@ -186,6 +202,8 @@ class EATableColumns
             'trans.submit',
             'trans.worker',
             'width',
+            'form.label.above',
+            'form_class',
         );
 
         foreach ($ea_settings as $key => $value) {

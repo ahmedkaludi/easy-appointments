@@ -13,7 +13,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "scss": "node-sass css/scss -o ../trunk/css/scss",
-    "build": "sh build.sh"
+    "build": "sh build.sh",
+    "meta-script": "metascript ./js/admin.js > ./js/admin.prod.js && metascript ./js/report.js > ./js/report.prod.js && metascript ./js/settings.js > ./js/settings.prod.js"
   },
   "author": "Nikola Loncar",
   "license": "ISC"
