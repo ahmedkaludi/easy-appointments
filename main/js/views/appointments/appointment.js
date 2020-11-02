@@ -52,6 +52,7 @@ EA.AppointmentView = Backbone.View.extend({
         this.setDefaults();
 
         this.$el.addClass('ea-row');
+        this.$el.attr('tabindex', '0');
 
         this.locationChanged();
         this.serviceChanged();

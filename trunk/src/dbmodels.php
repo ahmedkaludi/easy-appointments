@@ -247,7 +247,6 @@ class EADBModels
      */
     public function replace($table_name, $data, $json = false, $forceStrings = false)
     {
-
         // strip out fields that are not mapped inside table
         $this->table_columns->clear_data($table_name, $data);
 
@@ -349,6 +348,8 @@ class EADBModels
     public function get_next($options, $order = '')
     {
         $table_name = $this->wpdb->prefix . 'ea_connections';
+
+        $options['next'] = $this->table_columns->validate_next_step($options['next']);
 
         $vars = '';
         $values = array();

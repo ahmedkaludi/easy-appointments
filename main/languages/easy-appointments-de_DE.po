@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Easy Appointments\n"
 "POT-Creation-Date: 2020-06-14 22:41+0200\n"
-"PO-Revision-Date: 2020-06-28 20:05+0200\n"
+"PO-Revision-Date: 2020-10-20 21:56+0200\n"
 "Last-Translator: Joerg Knoerchen Sensorgrafie.de (YogieAnamCara) <news@sensorgrafie.de>\n"
 "Language-Team: Joerg Knoerchen Sensorgrafie.de (YogieAnamCara) <news@sensorgrafie.de>\n"
 "Language: de_DE\n"
@@ -132,7 +132,7 @@ msgstr "Persönliche Daten"
 
 #: src/frontend.php:300 src/frontend.php:477
 msgid "Fields with * are required"
-msgstr "Erforderliche Formularfelder sind mit einem <span class=\"ea-required\">*</span> gekennzeichnet"
+msgstr "Erforderliche Formularfelder sind mit einem * gekennzeichnet"
 
 #: src/frontend.php:304 src/frontend.php:483
 msgid "Booking overview"

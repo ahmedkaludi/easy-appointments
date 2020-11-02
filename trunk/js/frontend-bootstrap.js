@@ -158,7 +158,7 @@
                     booking_data.price = plugin.$element.find('[name="service"] > option:selected').data('price');
 
                     var format = ea_settings['date_format'] + ' ' + ea_settings['time_format'];
-                    booking_data.date_time = moment(booking_data.date + ' ' + booking_data.time, ea_settings['defult_detafime_format']).format(format);
+                    booking_data.date_time = moment(booking_data.date + 'T' + booking_data.time, ea_settings['defult_detafime_format']).format(format);
 
                     // set overview cancel_appointment
                     var overview_content = '';

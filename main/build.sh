@@ -1,7 +1,8 @@
 #!/bin/bash
 
 #set plugin dir
-cd /easy-appointments
+#cd /easy-appointments
+cd ..
 
 rm -r ./trunk/*
 mkdir ./trunk/img
@@ -15,15 +16,17 @@ mkdir ./trunk/vendor
 mkdir ./trunk/fonts
 mkdir ./trunk/languages
 
+# meta script
+# metascript ./main/js/admin.js > ./main/js/admin.prod.js
+# metascript ./main/js/report.js > ./main/js/report.prod.js
+# metascript ./main/js/settings.js > ./main/js/settings.prod.js
+
+# shellcheck disable=SC2164
 cd ./main
 
-# meta script
-metascript ./js/admin.js > ./js/admin.prod.js
-metascript ./js/report.js > ./js/report.prod.js
-metascript ./js/settings.js > ./js/settings.prod.js
+npm run scss
+npm run meta-script
 
-#npm run scss
-node-sass css/scss -o ../trunk/css/scss
 cd ../
 
 cp -R ./main/js-react/build/wp-content/plugins/easy-appointments/ ./trunk/
