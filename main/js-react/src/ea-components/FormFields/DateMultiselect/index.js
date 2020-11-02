@@ -1,22 +1,28 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 import DateFnsUtils from '@date-io/date-fns';
-import { MuiPickersUtilsProvider, DatePicker } from '@material-ui/pickers';
+import { MuiPickersUtilsProvider, DatePicker, Day } from '@material-ui/pickers';
 import FieldSet from '../FieldSet';
 
-const DateMultiselect = props => {
-  const [selectedDate, handleDateChange] = useState(new Date());
+const style = {
+  content: {
+    display: 'flex',
+    flexWrap: 'wrap'
+  },
+  dates: {
+    backgroundColor: '#f9f9f9',
+    flex: '1'
+  }
+};
 
-  const style = {
-    content: {
-      display: 'flex',
-      flexWrap: 'wrap'
-    },
-    dates: {
-      backgroundColor: 'red',
-      flex: '1'
-    }
-  };
+const DateMultiselect = ({ value, onChange }) => {
+  // const [selectedDate, handleDateChange] = useState(new Date());
+  const renderDayComponent = (
+    day,
+    selectedDate,
+    isInCurrentMonth,
+    dayComponent
+  ) => <Day>{dayComponent}</Day>;
 
   return (
     <MuiPickersUtilsProvider utils={DateFnsUtils}>
@@ -26,8 +32,9 @@ const DateMultiselect = props => {
             className="ea-date-multiselect"
             disableToolbar
             variant="static"
-            value={selectedDate}
-            onChange={handleDateChange}
+            value={value}
+            onChange={onChange}
+            renderDay={renderDayComponent}
           />
           <div style={style.dates} />
         </div>
