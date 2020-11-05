@@ -5,7 +5,7 @@ Tags: appointment, appointments, Booking, calendar, plugin, reservation, reserva
 Requires at least: 3.7
 Tested up to: 5.5
 Requires PHP: 5.3
-Stable tag: 3.0.13
+Stable tag: 3.0.14
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -214,6 +214,9 @@ Note: you can have only one calendar on one page.
 25. Admin panel - Report - Export page
 
 == Changelog ==
+
+= 3.0.14 (2020-11-03) =
+* Fixed issue with `captcha` warning message
 
 = 3.0.13 (2020-10-30) =
 * Fixed issue with Worker and Location mixed in form
