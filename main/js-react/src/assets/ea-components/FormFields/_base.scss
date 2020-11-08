@@ -26,8 +26,12 @@
   .ea-fieldset {
     width: 100%;
 
-    .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline {
-      border-color: rgba(0, 0, 0, 0.23);
+    .MuiOutlinedInput-root {
+      &:hover .MuiOutlinedInput-notchedOutline {
+        border-color: rgba(0, 0, 0, 0.23);
+      }
+
+      @include fieldsetBorders;
     }
 
     .MuiPickersStaticWrapper-staticWrapperRoot {

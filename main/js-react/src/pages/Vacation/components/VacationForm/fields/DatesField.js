@@ -4,15 +4,15 @@ import PropTypes from 'prop-types';
 import { Field, DateMultiselect } from '../../../../../ea-components';
 
 const Dates = ({ value, updateValue, name }) => {
-  const onChange = selected => {
-    console.log('==========', selected);
-  };
+  const onChange = selected => updateValue(name, selected);
+
+  console.log('>>>> VALUE >>>>', value);
 
   return <DateMultiselect value={value} onChange={onChange} />;
 };
 
 Dates.propTypes = {
-  value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  value: PropTypes.arrayOf(PropTypes.string),
   updateValue: PropTypes.func,
   name: PropTypes.string
 };
