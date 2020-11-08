@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 import DateFnsUtils from '@date-io/date-fns';
-import { MuiPickersUtilsProvider, DatePicker, Day } from '@material-ui/pickers';
+import { MuiPickersUtilsProvider, DatePicker } from '@material-ui/pickers';
 import FieldSet from '../FieldSet';
 
 const style = {
@@ -16,9 +16,6 @@ const style = {
 };
 
 const newValueArray = (selected, arr) => {
-  console.log('ARR:', arr);
-  console.log('SELECTED:', selected);
-
   const freshArr = arr.includes(selected)
     ? arr.filter(item => item !== selected)
     : [...arr, selected];
@@ -26,7 +23,7 @@ const newValueArray = (selected, arr) => {
   return freshArr.length ? freshArr : null;
 };
 
-const formatSelected = date => {
+const formatDate = date => {
   date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
   return date.toJSON().slice(0, 10);
 };
@@ -50,20 +47,8 @@ const sortSelected = selected => {
 const DateMultiselect = ({ value, onChange }) => {
   const [selectedDate, handleDateChange] = useState(new Date());
 
-  const renderDayComponent = (
-    day,
-    selectedDate,
-    isInCurrentMonth,
-    dayComponent
-  ) => {
-    // console.log('====== Day =======', day, selectedDate, isInCurrentMonth);
-    return <Day>{dayComponent}</Day>;
-  };
-
   const handleChange = selected => {
-    // console.log('==========', selected);
-
-    const formatted = formatSelected(selected);
+    const formatted = formatDate(selected);
     let freshVal = value ? newValueArray(formatted, [...value]) : [formatted];
 
     if (freshVal && freshVal.length > 1) {
@@ -72,6 +57,19 @@ const DateMultiselect = ({ value, onChange }) => {
 
     onChange(freshVal);
     handleDateChange(selected);
+  };
+
+  const renderDayComponent = (
+    day,
+    selectedDate,
+    isInCurrentMonth,
+    dayComponent
+  ) => {
+    const isSelected = value && value.includes(formatDate(day));
+
+    return (
+      <div className={`${isSelected ? 'ea-selected' : ''}`}>{dayComponent}</div>
+    );
   };
 
   return (

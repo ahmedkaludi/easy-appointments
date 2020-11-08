@@ -26,7 +26,7 @@ const Workers = ({ value, updateValue, name }) => {
   const onChange = (e, newVal) => {
     const newValIds = newVal.map(val => val.value);
     const selected = workers.filter(wrk => newValIds.includes(wrk.id));
-    updateValue('workers', selected);
+    updateValue(name, selected);
   };
 
   const selected = value

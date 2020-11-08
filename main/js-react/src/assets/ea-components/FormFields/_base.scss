@@ -1,7 +1,9 @@
+//  Core
+
 @mixin fieldsetBorders {
   &.Mui-focused {
     .MuiOutlinedInput-notchedOutline {
-      border-color: $primary;
+      border-color: $eaprimary;
     }
   }
 
@@ -14,7 +16,7 @@
 
   &.Mui-focused .MuiOutlinedInput-notchedOutline,
   &:hover .MuiOutlinedInput-notchedOutline {
-    border-color: $primary;
+    border-color: $eaprimary;
     border-width: 1px;
   }
 }
@@ -32,16 +34,6 @@
       }
 
       @include fieldsetBorders;
-    }
-
-    .MuiPickersStaticWrapper-staticWrapperRoot {
-      min-width: 270px;
-
-      .MuiPickersBasePicker-pickerView {
-        max-width: 300px;
-        min-width: 260px;
-        min-height: 260px;
-      }
     }
   }
 
@@ -127,5 +119,34 @@
   }
 
   /* DATE PICKER FIELD */
+  .ea-fieldset {
+    .MuiPickersStaticWrapper-staticWrapperRoot {
+      min-width: 270px;
 
+      .MuiPickersBasePicker-pickerView {
+        max-width: 300px;
+        min-width: 260px;
+        min-height: 260px;
+
+        .MuiPickersCalendar-transitionContainer {
+          .ea-selected {
+            .MuiPickersDay-day {
+              color: $white;
+              font-weight: 500;
+              background-color: $eaprimary;
+
+              &:hover {
+                background-color: $eaprimary;
+              }
+            }
+          }
+
+          .MuiPickersDay-daySelected {
+            background-color: transparent;
+            color: rgba(0, 0, 0, 0.87);
+          }
+        }
+      }
+    }
+  }
 }

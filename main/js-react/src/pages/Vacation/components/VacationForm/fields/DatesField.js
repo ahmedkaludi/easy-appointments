@@ -6,7 +6,7 @@ import { Field, DateMultiselect } from '../../../../../ea-components';
 const Dates = ({ value, updateValue, name }) => {
   const onChange = selected => updateValue(name, selected);
 
-  console.log('>>>> VALUE >>>>', value);
+  // console.log('>>>> VALUE >>>>', value);
 
   return <DateMultiselect value={value} onChange={onChange} />;
 };
