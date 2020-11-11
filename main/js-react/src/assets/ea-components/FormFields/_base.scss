@@ -118,33 +118,69 @@
     }
   }
 
-  /* DATE PICKER FIELD */
+  /* MULTI DATE PICKER FIELD */
   .ea-fieldset {
-    .MuiPickersStaticWrapper-staticWrapperRoot {
-      min-width: 270px;
+    .datepicker-chips-wrapper {
+      display: flex;
+      flex-wrap: wrap;
+    
+      .MuiPickersStaticWrapper-staticWrapperRoot {
+        min-width: 270px;
 
-      .MuiPickersBasePicker-pickerView {
-        max-width: 300px;
-        min-width: 260px;
-        min-height: 260px;
+        .MuiPickersBasePicker-pickerView {
+          max-width: 300px;
+          min-width: 260px;
+          min-height: 260px;
 
-        .MuiPickersCalendar-transitionContainer {
-          .ea-selected {
-            .MuiPickersDay-day {
-              color: $white;
-              font-weight: 500;
-              background-color: $eaprimary;
-
-              &:hover {
+          .MuiPickersCalendar-transitionContainer {
+            .ea-selected {
+              .MuiPickersDay-day {
+                color: $white;
+                font-weight: 500;
                 background-color: $eaprimary;
+
+                &:hover {
+                  background-color: $eaprimary;
+                }
               }
             }
-          }
 
-          .MuiPickersDay-daySelected {
-            background-color: transparent;
-            color: rgba(0, 0, 0, 0.87);
+            .MuiPickersDay-daySelected {
+              background-color: transparent;
+              color: rgba(0, 0, 0, 0.87);
+            }
           }
+        }
+      }
+
+      .dates-chips {
+        background-color: #f9f9f9;
+        flex: 1;
+        margin-left: 10px;
+        /*min-width: 170px;*/
+        min-height: 304px;
+        max-height: 304px;
+
+        ul {
+          padding: 20px;
+          li {
+            margin: 5px;
+            display: inline-block;
+          }
+        }
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 520px) {
+  .ea-form-field {
+    .ea-fieldset {
+      .datepicker-chips-wrapper {
+        flex-direction: column;
+
+        .dates-chips {
+          min-height: auto;
         }
       }
     }

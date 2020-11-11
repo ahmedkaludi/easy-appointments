@@ -1,19 +1,10 @@
 import React, { useState } from 'react';
 
+import PerfectScrollbar from 'react-perfect-scrollbar';
 import DateFnsUtils from '@date-io/date-fns';
 import { MuiPickersUtilsProvider, DatePicker } from '@material-ui/pickers';
+import { Chip } from '@material-ui/core';
 import FieldSet from '../FieldSet';
-
-const style = {
-  content: {
-    display: 'flex',
-    flexWrap: 'wrap'
-  },
-  dates: {
-    backgroundColor: '#f9f9f9',
-    flex: '1'
-  }
-};
 
 const newValueArray = (selected, arr) => {
   const freshArr = arr.includes(selected)
@@ -30,15 +21,8 @@ const formatDate = date => {
 
 const sortSelected = selected => {
   return selected.sort(function(a, b) {
-    a = a
-      .split('-')
-      .reverse()
-      .join('');
-
-    b = b
-      .split('-')
-      .reverse()
-      .join('');
+    a = a.split('-').join('');
+    b = b.split('-').join('');
 
     return a > b ? 1 : a < b ? -1 : 0;
   });
@@ -59,6 +43,11 @@ const DateMultiselect = ({ value, onChange }) => {
     handleDateChange(selected);
   };
 
+  const onChipDelete = dateChip => {
+    const freshVal = newValueArray(dateChip, [...value]);
+    onChange(freshVal);
+  };
+
   const renderDayComponent = (
     day,
     selectedDate,
@@ -72,10 +61,26 @@ const DateMultiselect = ({ value, onChange }) => {
     );
   };
 
+  const renderChips = () => (
+    <ul>
+      {value.map(val => (
+        <li>
+          <Chip
+            label={val}
+            onDelete={() => onChipDelete(val)}
+            color="primary"
+            variant="outlined"
+            size="small"
+          />
+        </li>
+      ))}
+    </ul>
+  );
+
   return (
     <MuiPickersUtilsProvider utils={DateFnsUtils}>
       <FieldSet label="Dates">
-        <div style={style.content}>
+        <div className="datepicker-chips-wrapper">
           <DatePicker
             className="ea-date-multiselect"
             disableToolbar
@@ -84,7 +89,9 @@ const DateMultiselect = ({ value, onChange }) => {
             onChange={handleChange}
             renderDay={renderDayComponent}
           />
-          <div style={style.dates} />
+          <PerfectScrollbar className="dates-chips">
+            {value ? renderChips() : null}
+          </PerfectScrollbar>
         </div>
       </FieldSet>
     </MuiPickersUtilsProvider>
