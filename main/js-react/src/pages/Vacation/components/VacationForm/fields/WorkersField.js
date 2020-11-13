@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { DataService } from '../../../../../services';
 import { Field, Autocomplete } from '../../../../../ea-components';
 
-const Workers = ({ value, updateValue, name }) => {
+const Workers = ({ value, updateFieldValue, error }) => {
   const [options, setOptions] = useState([]);
   const [workers, setWorkers] = useState([]);
 
@@ -26,7 +26,7 @@ const Workers = ({ value, updateValue, name }) => {
   const onChange = (e, newVal) => {
     const newValIds = newVal.map(val => val.value);
     const selected = workers.filter(wrk => newValIds.includes(wrk.id));
-    updateValue(name, selected);
+    updateFieldValue(selected);
   };
 
   const selected = value
@@ -35,27 +35,27 @@ const Workers = ({ value, updateValue, name }) => {
 
   return (
     <Autocomplete
-      label="Workers"
+      label="Workers *"
       placeholder="Worker..."
       value={selected}
       onChange={onChange}
       options={options}
+      error={error}
     />
   );
 };
 
 Workers.propTypes = {
   value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-  updateValue: PropTypes.func,
-  name: PropTypes.string
+  updateFieldValue: PropTypes.func,
+  error: PropTypes.bool.isRequired
 };
 
 Workers.defaultProps = {
   value: null,
-  updateValue: f => f,
-  name: ''
+  updateFieldValue: f => f
 };
 
 export const WorkersField = () => (
-  <Field name="workers" component={props => <Workers {...props} />} />
+  <Field required name="workers" component={props => <Workers {...props} />} />
 );

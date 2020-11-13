@@ -3,26 +3,26 @@ import PropTypes from 'prop-types';
 
 import { Field, Input } from '../../../../../ea-components';
 
-const Title = ({ value, updateValue, name }) => (
+const Title = ({ value, updateFieldValue, error }) => (
   <Input
-    label="Title"
+    label="Name *"
     value={value || ''}
-    onChange={val => updateValue(name, val)}
+    onChange={val => updateFieldValue(val)}
+    error={error}
   />
 );
 
 Title.propTypes = {
   value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-  updateValue: PropTypes.func,
-  name: PropTypes.string
+  updateFieldValue: PropTypes.func,
+  error: PropTypes.bool.isRequired
 };
 
 Title.defaultProps = {
   value: null,
-  updateValue: f => f,
-  name: ''
+  updateFieldValue: f => f
 };
 
 export const TitleField = () => (
-  <Field name="title" component={props => <Title {...props} />} />
+  <Field required name="title" component={props => <Title {...props} />} />
 );

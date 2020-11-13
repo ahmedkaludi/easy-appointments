@@ -7,12 +7,13 @@ const InputComponent = ({ inputRef, ...other }) => (
   <div className="fieldset-content" {...other} />
 );
 
-const FieldSet = ({ children, label }) => {
+const FieldSet = ({ children, label, error }) => {
   return (
     <TextField
       variant="outlined"
       className="ea-fieldset"
       label={label}
+      error={error}
       multiline
       InputLabelProps={{ shrink: true }}
       InputProps={{
@@ -29,7 +30,8 @@ FieldSet.propTypes = {
     PropTypes.node,
     PropTypes.element,
     PropTypes.arrayOf(PropTypes.element)
-  ])
+  ]),
+  error: PropTypes.bool.isRequired
 };
 
 FieldSet.defaultProps = {

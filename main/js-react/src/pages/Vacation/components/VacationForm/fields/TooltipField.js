@@ -3,26 +3,26 @@ import PropTypes from 'prop-types';
 
 import { Field, Input } from '../../../../../ea-components';
 
-const Tooltip = ({ value, updateValue, name }) => (
+const Tooltip = ({ value, updateFieldValue, error }) => (
   <Input
-    label="Tooltip"
+    label="Tooltip *"
     value={value || ''}
-    onChange={val => updateValue(name, val)}
+    onChange={val => updateFieldValue(val)}
+    error={error}
   />
 );
 
 Tooltip.propTypes = {
   value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-  updateValue: PropTypes.func,
-  name: PropTypes.string
+  updateFieldValue: PropTypes.func,
+  error: PropTypes.bool.isRequired
 };
 
 Tooltip.defaultProps = {
   value: null,
-  updateValue: f => f,
-  name: ''
+  updateFieldValue: f => f
 };
 
 export const TooltipField = () => (
-  <Field name="tooltip" component={props => <Tooltip {...props} />} />
+  <Field required name="tooltip" component={props => <Tooltip {...props} />} />
 );

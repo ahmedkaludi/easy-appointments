@@ -28,7 +28,7 @@ const sortSelected = selected => {
   });
 };
 
-const DateMultiselect = ({ value, onChange }) => {
+const DateMultiselect = ({ value, onChange, error }) => {
   const [selectedDate, handleDateChange] = useState(new Date());
 
   const handleChange = selected => {
@@ -79,7 +79,7 @@ const DateMultiselect = ({ value, onChange }) => {
 
   return (
     <MuiPickersUtilsProvider utils={DateFnsUtils}>
-      <FieldSet label="Dates">
+      <FieldSet label="Dates" error={error}>
         <div className="datepicker-chips-wrapper">
           <DatePicker
             className="ea-date-multiselect"

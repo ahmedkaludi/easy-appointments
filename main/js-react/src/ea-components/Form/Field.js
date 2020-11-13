@@ -1,6 +1,7 @@
 import React, { useContext, useEffect } from 'react';
 import PropTypes from 'prop-types';
 
+import { FormHelperText } from '@material-ui/core';
 import { FormContext } from './Form';
 
 const Field = ({ name, required, component, validationFunc }) => {
@@ -9,18 +10,14 @@ const Field = ({ name, required, component, validationFunc }) => {
     updateValue,
     subscribeValidator,
     unsubscribeValidator,
-    validate,
     setFieldErrors,
     fieldErrors,
     setLoading
   } = useContext(FormContext);
 
-  const errors = fieldErrors[name] ?? [];
+  // const errors = fieldErrors[name] ?? [];
 
   useEffect(() => {
-    if (!required) {
-      return;
-    }
     subscribeValidator(name, () => requiredValidator(model));
 
     return () => unsubscribeValidator(name);
@@ -37,35 +34,36 @@ const Field = ({ name, required, component, validationFunc }) => {
 
   const requiredValidator = data => {
     if (required && !data[name]) {
-      setFieldErrors(name, ['Required field!']);
+      setFieldErrors(name, 'Required field!');
       return false;
     }
 
     if (validationFunc && data[name] && !customValidation(data[name])) {
-      setFieldErrors(name, ['Entered value is not in the right format!']);
+      setFieldErrors(name, 'Entered value is not in the right format!');
       return false;
     }
 
     return true;
   };
 
+  const updateFieldValue = val => updateValue(name, val);
+
+  const error = fieldErrors[name] ?? null;
+
   const props = {
     name,
     model,
+    updateFieldValue,
     updateValue,
     value: model[name] || null,
     setLoading,
-    validate
+    error: !!error
   };
 
   return (
-    <div className={`ea-form-field ${errors.length ? 'error' : ''}`}>
+    <div className="ea-form-field">
       {component(props)}
-      {errors.map(error => (
-        <div key={error} className="field-error">
-          {error}
-        </div>
-      ))}
+      <FormHelperText error={!!error}>{error}</FormHelperText>
     </div>
   );
 };

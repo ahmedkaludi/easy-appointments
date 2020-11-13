@@ -11,7 +11,8 @@ const Autocomplete = ({
   label,
   disabled,
   placeholder,
-  limitTags
+  limitTags,
+  error
 }) => {
   const filterOptions = (opts, state) => {
     const selected = value.map(val => val.value);
@@ -47,6 +48,7 @@ const Autocomplete = ({
           variant="outlined"
           label={label}
           placeholder={placeholder}
+          error={error}
         />
       )}
       ChipProps={{
@@ -64,6 +66,7 @@ Autocomplete.propTypes = {
   value: PropTypes.arrayOf(PropTypes.objectOf(PropTypes.any)),
   onChange: PropTypes.func,
   options: PropTypes.arrayOf(PropTypes.any).isRequired,
+  error: PropTypes.bool.isRequired,
   disabled: PropTypes.bool,
   limitTags: PropTypes.number
 };

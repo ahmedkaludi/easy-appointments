@@ -22,7 +22,15 @@
 }
 
 .ea-form-field {
-  margin-bottom: 15px;
+  margin-bottom: 20px;
+  position: relative;
+
+  .MuiFormHelperText-root {
+    position: absolute;
+    top: 100%;
+    font-size: 9px;
+    margin-top: 0;
+  }
 
   /* FIELD SET */
   .ea-fieldset {

@@ -25,7 +25,9 @@ const Input = ({
 
   return (
     <FormControl fullWidth className="ea-input">
-      <InputLabel ref={inputLabelRef}>{label}</InputLabel>
+      <InputLabel error={!!error} ref={inputLabelRef}>
+        {label}
+      </InputLabel>
       <OutlinedInput
         placeholder={placeholder}
         labelWidth={labelWidth}
@@ -36,7 +38,7 @@ const Input = ({
         onChange={event => onChange(event.target.value)}
         value={value}
         disabled={disabled}
-        error={error}
+        error={!!error}
         autoFocus={autoFocus}
       />
     </FormControl>
