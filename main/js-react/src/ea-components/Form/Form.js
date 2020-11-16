@@ -1,7 +1,7 @@
-import React, { createContext, Component } from 'react';
+import React, { createContext, Fragment, Component } from 'react';
 import PropTypes from 'prop-types';
 
-import { Divider } from '@material-ui/core';
+import { Divider, CircularProgress } from '@material-ui/core';
 import Button from '../FormFields/Button';
 
 export const FormContext = createContext({});
@@ -115,8 +115,17 @@ class Form extends Component {
       return;
     }
 
-    await this.props.onSave(this.state.model);
-    this.clearForm();
+    this.setState({ loading: true });
+    try {
+      setTimeout(() => {
+        this.props.onSave(this.state.model);
+        this.clearForm();
+      }, 2000);
+      // await this.props.onSave(this.state.model);
+      // this.clearForm();
+    } catch (e) {
+      // Some error display in the bottom of the form
+    }
   }
 
   async onCancel() {
@@ -131,6 +140,16 @@ class Form extends Component {
 
     return (
       <FormContext.Provider value={this.state}>
+        {loading && (
+          <Fragment>
+            <div className="ea-overlay">
+              <div className="loader-wrap">
+                <CircularProgress size={44} />
+              </div>
+            </div>
+          </Fragment>
+        )}
+
         <div className={`ea-form ${classes}`}>
           <div className="ea-form--fields">{children}</div>
           <div className="ea-form--footer">
@@ -140,8 +159,15 @@ class Form extends Component {
                 label="Cancel"
                 variant="outlined"
                 onClick={this.onCancel}
+                disabled={loading}
               />
-              <Button label="Save" color="primary" onClick={this.onSave} />
+              <Button
+                label="Save"
+                color="primary"
+                onClick={this.onSave}
+                disabled={loading}
+                loading={loading}
+              />
             </div>
           </div>
         </div>

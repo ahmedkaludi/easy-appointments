@@ -7,6 +7,7 @@ import { FormContext } from './Form';
 const Field = ({ name, required, component, validationFunc }) => {
   const {
     model,
+    loading,
     updateValue,
     subscribeValidator,
     unsubscribeValidator,
@@ -14,8 +15,6 @@ const Field = ({ name, required, component, validationFunc }) => {
     fieldErrors,
     setLoading
   } = useContext(FormContext);
-
-  // const errors = fieldErrors[name] ?? [];
 
   useEffect(() => {
     subscribeValidator(name, () => requiredValidator(model));
@@ -34,12 +33,12 @@ const Field = ({ name, required, component, validationFunc }) => {
 
   const requiredValidator = data => {
     if (required && !data[name]) {
-      setFieldErrors(name, 'Required field!');
+      setFieldErrors(name, ['Required field!']);
       return false;
     }
 
     if (validationFunc && data[name] && !customValidation(data[name])) {
-      setFieldErrors(name, 'Entered value is not in the right format!');
+      setFieldErrors(name, ['Entered value is not in the right format!']);
       return false;
     }
 
@@ -53,6 +52,7 @@ const Field = ({ name, required, component, validationFunc }) => {
   const props = {
     name,
     model,
+    loading,
     updateFieldValue,
     updateValue,
     value: model[name] || null,
