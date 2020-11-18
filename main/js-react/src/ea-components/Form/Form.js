@@ -117,12 +117,12 @@ class Form extends Component {
 
     this.setState({ loading: true });
     try {
-      setTimeout(() => {
-        this.props.onSave(this.state.model);
-        this.clearForm();
-      }, 2000);
-      // await this.props.onSave(this.state.model);
-      // this.clearForm();
+      // setTimeout(() => {
+      //   this.props.onSave(this.state.model);
+      //   this.clearForm();
+      // }, 2000);
+      await this.props.onSave(this.state.model);
+      this.clearForm();
     } catch (e) {
       // Some error display in the bottom of the form
     }

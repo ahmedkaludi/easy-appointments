@@ -65,9 +65,9 @@ class EAVacationActions
 
     public function get_vacations()
     {
-        $options = $this->options->get_option_value('vacations');
+        $vacations = $this->options->get_option_value('vacations');
 
-        $result = $options === null ? array() : json_decode($options['ea_value']);
+        $result = $vacations === null ? array() : json_decode($vacations);
 
         wp_send_json($result);
     }
@@ -99,14 +99,14 @@ class EAVacationActions
      */
     private function process_data($data)
     {
-        $array = json_decode($data,true);
+        $array = json_decode($data, true);
 
         if (!is_array($array)) {
             return '[]';
         }
 
         $result = array();
-        $keys = array('name', 'tooltip', 'workers', 'days');
+        $keys = array('title', 'tooltip', 'workers', 'days');
 
         foreach ($array as $item) {
             if (!is_array($item)) {
@@ -116,7 +116,7 @@ class EAVacationActions
             $is_valid = true;
             // check for name, tooltip, workers, days
             foreach ($keys as $key) {
-                if (array_key_exists($keys, $item)) {
+                if (array_key_exists($key, $item)) {
                     continue;
                 }
 
