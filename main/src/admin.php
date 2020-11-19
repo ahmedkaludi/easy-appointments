@@ -114,7 +114,7 @@ class EAAdminPanel
         wp_register_script(
             'ea-vacation',
             EA_PLUGIN_URL . 'js/bundle.js',
-            array(),
+            array('jquery', 'wp-api'),
             EASY_APPOINTMENTS_VERSION,
             true
         );
