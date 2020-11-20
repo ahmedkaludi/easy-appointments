@@ -84,6 +84,7 @@ const DateMultiselect = ({ value, onChange, error }) => {
           <DatePicker
             className="ea-date-multiselect"
             disableToolbar
+            disablePast
             variant="static"
             value={selectedDate}
             onChange={handleChange}
