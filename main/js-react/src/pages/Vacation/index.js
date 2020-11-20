@@ -4,12 +4,6 @@ import { PageTitle, EmptyState, Sidebar } from '../../ea-components';
 import { VacationsCommunicator } from '../../communicators';
 import { VacationForm } from './components/VacationForm';
 
-// TODO put in separate communicator
-// const vacationUrl = window.ea_settings.rest_url_vacation;
-// const jQuery = window.jQuery;
-// const nonce = window.wpApiSettings.nonce;
-// const url = `${vacationUrl}?_wpnonce=${nonce}`;
-
 const Vacation = () => {
   const [open, setOpen] = useState(false);
   const [vacations, setVacations] = useState([]);
@@ -41,10 +35,6 @@ const Vacation = () => {
 
   const save = model => {
     onCreate(model);
-    // return jQuery.post(url, JSON.stringify([model, ...vacations])).then(() => {
-    //   toggleSidebar();
-    //   setVacations([model, ...vacations]);
-    // });
   };
 
   const headerAction = {
@@ -53,7 +43,7 @@ const Vacation = () => {
     text: 'Add vacation'
   };
 
-  console.log('=========', vacations);
+  // console.log('=========', vacations);
 
   return (
     <Fragment>
