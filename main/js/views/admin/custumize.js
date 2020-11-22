@@ -278,7 +278,7 @@ EA.CustumizeView = Backbone.View.extend({
         e.preventDefault();
         var $btn = jQuery(e.currentTarget);
         var $li = $btn.closest('li');
-        var name = $li.data('name');
+        var name = '' + $li.data('name');
         var element = this.fields.findWhere({label: name});
 
         if ($btn.find('i').hasClass('fa-chevron-down')) {
@@ -335,7 +335,7 @@ EA.CustumizeView = Backbone.View.extend({
 
         var $btn = jQuery(e.currentTarget);
         var $li = $btn.closest('li');
-        var name = $li.data('name');
+        var name = '' + $li.data('name');
         var element = this.fields.findWhere({label:name});
 
         var options = [];
@@ -379,7 +379,7 @@ EA.CustumizeView = Backbone.View.extend({
 
         var $btn = jQuery(e.currentTarget);
         var $li = $btn.closest('li');
-        var name = $li.data('name');
+        var name = '' + $li.data('name');
         var element = this.fields.findWhere({label:name});
 
         this.fields.remove(element);

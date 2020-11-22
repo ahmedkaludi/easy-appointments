@@ -124,6 +124,10 @@ select.field {
 	width: 180px;
 }
 
+select.time-start option:disabled {
+	background-color: grey;
+}
+
 .table-row-td p {
 	margin-top: 2px !important;
 	margin-bottom: 2px !important;

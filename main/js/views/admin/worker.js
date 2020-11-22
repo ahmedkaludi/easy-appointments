@@ -38,6 +38,7 @@ EA.WorkerView = Backbone.View.extend({
         jQuery(this.el).html( renderedContent );
         
         this.$el.addClass('ea-row');
+        this.$el.attr('tabindex', '0');
 
         return this;
     },
