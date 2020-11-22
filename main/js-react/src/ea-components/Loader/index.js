@@ -7,7 +7,7 @@ import loaderImg from '../../assets/images/loader.svg';
 
 export default function Loader({ size, text }) {
   return (
-    <Box className="ea-loader mx-auto text-center">
+    <Box className="ea-loader m-auto text-center">
       <div className="d-flex flex-column m-auto">
         <img
           className="m-auto d-block img-fluid"

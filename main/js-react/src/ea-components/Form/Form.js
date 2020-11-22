@@ -1,8 +1,10 @@
 import React, { createContext, Fragment, Component } from 'react';
 import PropTypes from 'prop-types';
 
-import { Divider, CircularProgress } from '@material-ui/core';
+// import { Divider, CircularProgress } from '@material-ui/core';
+import { Divider } from '@material-ui/core';
 import Button from '../FormFields/Button';
+import Loader from '../Loader';
 
 export const FormContext = createContext({});
 
@@ -139,9 +141,7 @@ class Form extends Component {
         {loading && (
           <Fragment>
             <div className="ea-overlay">
-              <div className="loader-wrap">
-                <CircularProgress size={44} />
-              </div>
+              <Loader text="Processing..." />
             </div>
           </Fragment>
         )}

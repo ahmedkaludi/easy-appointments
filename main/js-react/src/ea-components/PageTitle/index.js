@@ -5,7 +5,8 @@ import clsx from 'clsx';
 
 import { connect } from 'react-redux';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import logo from '../../assets/images/logo.png';
+// import logo from '../../assets/images/logo.png';
+import logo from '../../assets/images/logo.svg';
 
 import { Paper, Box, Divider, Button } from '@material-ui/core';
 
