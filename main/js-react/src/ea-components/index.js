@@ -10,3 +10,4 @@ export { default as Select } from './FormFields/Select';
 export { default as Autocomplete } from './FormFields/Autocomplete';
 export { default as MultiSelect } from './FormFields/MultiSelect';
 export { default as DateMultiselect } from './FormFields/DateMultiselect';
+export { default as Loader } from './Loader';

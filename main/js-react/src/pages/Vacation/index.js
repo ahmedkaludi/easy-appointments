@@ -1,11 +1,12 @@
 import React, { Fragment, useState, useEffect } from 'react';
 
-import { PageTitle, EmptyState, Sidebar } from '../../ea-components';
+import { PageTitle, EmptyState, Sidebar, Loader } from '../../ea-components';
 import { VacationsCommunicator } from '../../communicators';
 import { VacationForm } from './components/VacationForm';
 
 const Vacation = () => {
   const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [vacations, setVacations] = useState([]);
 
   const toggleSidebar = () => setOpen(!open);
@@ -14,6 +15,7 @@ const Vacation = () => {
     try {
       const records = await VacationsCommunicator.fetch();
       setVacations(records);
+      setLoading(false);
     } catch (e) {
       throw new Error(e);
     }
@@ -48,17 +50,19 @@ const Vacation = () => {
   return (
     <Fragment>
       <PageTitle titleHeading="Vacations" action={headerAction} />
-      {/* TODO initial loader */}
-      {vacations.length === 0 && (
+
+      {loading ? (
+        <Loader text="Loading vacations" />
+      ) : !vacations.length ? (
         <EmptyState
           type="vacation"
           message="There are no scheduled vacation days yet."
           hint={`Use the 'Add vacation' button to add new vacation days.`}
         />
+      ) : (
+        vacations.map(vacation => <div>{vacation.title}</div>)
       )}
-      {vacations.map(vacation => (
-        <div>{vacation.title}</div>
-      ))}
+
       <Sidebar open={open} onClose={toggleSidebar} title="Add vacation">
         <VacationForm onSave={save} onCancel={toggleSidebar} />
       </Sidebar>

@@ -18,7 +18,7 @@ export default function EmptyState({ type, message, hint }) {
       sm={12}
       className="ea-empty-state px-4 px-lg-0 mx-auto text-center text-black">
       <Box>
-        <div className="easy-logo">
+        <div className="ea-empty-imgwrap">
           <img
             alt="..."
             className="w-50 mx-auto d-block my-5 img-fluid"
