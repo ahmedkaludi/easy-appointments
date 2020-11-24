@@ -3,6 +3,7 @@ import React, { Fragment, useState, useEffect } from 'react';
 import { PageTitle, EmptyState, Sidebar, Loader } from '../../ea-components';
 import { VacationsCommunicator } from '../../communicators';
 import { VacationForm } from './components/VacationForm';
+import { VacationTable } from './components/VacationTable';
 
 const Vacation = () => {
   const [open, setOpen] = useState(false);
@@ -45,8 +46,6 @@ const Vacation = () => {
     text: 'Add vacation'
   };
 
-  // console.log('=========', vacations);
-
   return (
     <Fragment>
       <PageTitle titleHeading="Vacations" action={headerAction} />
@@ -60,7 +59,7 @@ const Vacation = () => {
           hint={`Use the 'Add vacation' button to add new vacation days.`}
         />
       ) : (
-        vacations.map(vacation => <div>{vacation.title}</div>)
+        <VacationTable data={vacations} />
       )}
 
       <Sidebar open={open} onClose={toggleSidebar} title="Add vacation">

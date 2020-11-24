@@ -11,3 +11,5 @@ export { default as Autocomplete } from './FormFields/Autocomplete';
 export { default as MultiSelect } from './FormFields/MultiSelect';
 export { default as DateMultiselect } from './FormFields/DateMultiselect';
 export { default as Loader } from './Loader';
+export { default as ContentBox } from './ContentBox';
+export { default as BasicTable } from './Table/BasicTable';
