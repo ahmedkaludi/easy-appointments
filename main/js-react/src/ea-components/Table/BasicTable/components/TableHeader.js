@@ -14,11 +14,11 @@ export const TableHeader = ({ config }) => {
     );
   };
 
-  return (
+  return config ? (
     <thead>
       <tr>{config.map(item => generateTh(item))}</tr>
     </thead>
-  );
+  ) : null;
 };
 
 TableHeader.propTypes = {
