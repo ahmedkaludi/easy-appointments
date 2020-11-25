@@ -9,7 +9,7 @@ export const TableHeader = ({ config }) => {
   const generateTh = item => {
     return (
       <th className={`text-${item.position}`} style={item.style ?? {}}>
-        {item.text}
+        {item.header}
       </th>
     );
   };

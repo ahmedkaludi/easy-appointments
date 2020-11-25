@@ -4,17 +4,16 @@ import PropTypes from 'prop-types';
 import { ContentBox, BasicTable } from '../../../../ea-components';
 
 const VACATION_CONFIG = {
-  headers: [
-    { text: 'Title', position: 'left' },
-    { text: 'Tooltip', position: 'left' },
-    { text: 'Workers', position: 'center' },
-    { text: 'Dates', position: 'center' },
-    { text: 'Actions', position: 'center' }
-  ],
-  cells: {
-    name: { type: 'text', class: 'font-weight-bold' },
-    tooltip: { type: 'text', class: 'font-weight-bold' }
-  }
+  title: {
+    header: 'Title',
+    position: 'left',
+    type: 'text',
+    cellClass: 'font-weight-bold'
+  },
+  tooltip: { header: 'Tooltip', position: 'left', type: 'text' },
+  workers: { header: 'Workers', position: 'center' },
+  dates: { header: 'Dates', position: 'center' },
+  actions: { header: 'Actions', position: 'center' }
 };
 
 export const VacationTable = ({ data }) => (
