@@ -6,6 +6,7 @@ import { TableRow } from './components/TableRow';
 
 const BasicTable = ({ data, config }) => {
   const headerConfig = Object.values(config);
+
   return (
     <div className="table-responsive">
       <table className="table table-hover text-nowrap mb-0">

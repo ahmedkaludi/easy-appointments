@@ -11,21 +11,28 @@ const VACATION_CONFIG = {
     cellClass: 'font-weight-bold'
   },
   tooltip: { header: 'Tooltip', position: 'left', type: 'text' },
-  workers: { header: 'Workers', position: 'center' },
+  workers: { header: 'Workers', position: 'center', type: 'avatar' },
   dates: { header: 'Dates', position: 'center' },
   actions: { header: 'Actions', position: 'center' }
 };
 
-export const VacationTable = ({ data }) => (
-  <ContentBox>
-    <BasicTable data={data} config={VACATION_CONFIG} />
-  </ContentBox>
-);
+export const VacationTable = ({ data }) => {
+  const adaptedData = data.map(record => ({
+    ...record,
+    workers: record.workers.map(worker => worker.name)
+  }));
+
+  return (
+    <ContentBox>
+      <BasicTable data={adaptedData} config={VACATION_CONFIG} />
+    </ContentBox>
+  );
+};
 
 VacationTable.propTypes = {
   data: PropTypes.arrayOf(PropTypes.objectOf(PropTypes.any))
 };
 
 VacationTable.defaultProps = {
-  data: null
+  data: []
 };
