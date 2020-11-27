@@ -1,6 +1,12 @@
 import React from 'react';
 
-import { Avatar, Tooltip, Chip, makeStyles } from '@material-ui/core';
+import {
+  Avatar,
+  Tooltip,
+  Chip,
+  IconButton,
+  makeStyles
+} from '@material-ui/core';
 import AvatarGroup from '@material-ui/lab/AvatarGroup';
 import {
   teal,
@@ -13,12 +19,20 @@ import {
   blue,
   lightBlue
 } from '@material-ui/core/colors';
-// import CalendarTodayIcon from '@material-ui/icons/CalendarToday';
+
+import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
+import EditIcon from '@material-ui/icons/Edit';
 
 const CELL_TYPES = {
   TEXT: 'text',
   AVATARS: 'avatar',
-  CHIPS: 'chips'
+  CHIPS: 'chips',
+  ACTIONS: 'actions'
+};
+
+const ICON_TYPES = {
+  edit: <EditIcon />,
+  delete: <DeleteOutlineIcon />
 };
 
 const COLORS = [
@@ -118,6 +132,26 @@ const ChipsCell = (config, data) => {
   );
 };
 
+/**
+ * ex. config {type: 'actions', position: 'center', cellClass: 'some class'}
+ */
+const ActionsCell = (config, data) => {
+  const { cellClass, position } = config;
+
+  return (
+    <td className={`text-${position} ${cellClass ?? ''}`}>
+      {data &&
+        data.map(action => (
+          <Tooltip arrow title={action.tooltip}>
+            <IconButton className={action.className} onClick={action.action}>
+              {ICON_TYPES[action.icon]}
+            </IconButton>
+          </Tooltip>
+        ))}
+    </td>
+  );
+};
+
 export const renderCell = (config, data) => {
   switch (config.type) {
     case CELL_TYPES.TEXT:
@@ -126,6 +160,8 @@ export const renderCell = (config, data) => {
       return AvatarsCell(config, data);
     case CELL_TYPES.CHIPS:
       return ChipsCell(config, data);
+    case CELL_TYPES.ACTIONS:
+      return ActionsCell(config, data);
     default:
       return null;
   }

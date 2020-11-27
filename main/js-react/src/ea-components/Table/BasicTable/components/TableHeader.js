@@ -3,12 +3,12 @@ import PropTypes from 'prop-types';
 
 /**
  * Generating table header from config arr
- * ex. [{ text: 'Text', position: 'left', style: { width: 180 }}]
+ * ex. [{ header: 'Text', position: 'left', headerStyle: { width: 180 }}]
  */
 export const TableHeader = ({ config }) => {
   const generateTh = item => {
     return (
-      <th className={`text-${item.position}`} style={{ minWidth: '200px' }}>
+      <th className={`text-${item.position}`} style={item?.headerStyle ?? {}}>
         {item.header}
       </th>
     );
