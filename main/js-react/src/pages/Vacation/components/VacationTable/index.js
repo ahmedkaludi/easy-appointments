@@ -12,7 +12,7 @@ const VACATION_CONFIG = {
   },
   tooltip: { header: 'Tooltip', position: 'left', type: 'text' },
   workers: { header: 'Workers', position: 'center', type: 'avatar' },
-  dates: { header: 'Dates', position: 'center' },
+  days: { header: 'Dates', position: 'center', type: 'chips' },
   actions: { header: 'Actions', position: 'center' }
 };
 

@@ -8,7 +8,7 @@ import PropTypes from 'prop-types';
 export const TableHeader = ({ config }) => {
   const generateTh = item => {
     return (
-      <th className={`text-${item.position}`} style={item.style ?? {}}>
+      <th className={`text-${item.position}`} style={{ minWidth: '200px' }}>
         {item.header}
       </th>
     );
