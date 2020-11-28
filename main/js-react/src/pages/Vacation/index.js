@@ -10,6 +10,7 @@ const Vacation = () => {
   const [loading, setLoading] = useState(true);
   const [vacations, setVacations] = useState([]);
   const [activeVacation, setActiveVacation] = useState(null);
+  const [processing, setProcessing] = useState(null);
 
   const loadVacations = async () => {
     try {
@@ -45,25 +46,37 @@ const Vacation = () => {
 
   const onEdit = async model => {
     try {
-      // const 
-      await VacationsCommunicator.save([model, ...vacations]);
+      const data = vacations.map(record =>
+        record.id === model.id ? model : record
+      );
+      await VacationsCommunicator.save(data);
       toggleSidebar();
-      setVacations([model, ...vacations]);
+      setVacations(data);
     } catch (e) {
       throw new Error(e);
     }
   };
 
-  const save = model => {
-    onCreate(model);
-  };
+  const save = (model, isEdit) => (isEdit ? onEdit(model) : onCreate(model));
 
-  const onEditClick = record => {
-    setActiveVacation(record);
+  const onEditClick = row => {
+    setActiveVacation(row);
     toggleSidebar();
   };
 
-  const onDeleteClick = record => record;
+  const onDeleteClick = async row => {
+    setProcessing(row?.id);
+
+    try {
+      const data = vacations.filter(record => record.id !== row.id);
+      await VacationsCommunicator.save(data);
+      setVacations(data);
+    } catch (e) {
+      throw new Error(e);
+    }
+
+    setProcessing(null);
+  };
 
   const headerAction = {
     callback: toggleSidebar,
@@ -88,6 +101,7 @@ const Vacation = () => {
           data={vacations}
           onEdit={onEditClick}
           onDelete={onDeleteClick}
+          processing={processing}
         />
       )}
 

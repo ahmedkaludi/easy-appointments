@@ -5,6 +5,7 @@ import {
   Tooltip,
   Chip,
   IconButton,
+  CircularProgress,
   makeStyles
 } from '@material-ui/core';
 import AvatarGroup from '@material-ui/lab/AvatarGroup';
@@ -32,7 +33,8 @@ const CELL_TYPES = {
 
 const ICON_TYPES = {
   edit: <EditIcon />,
-  delete: <DeleteOutlineIcon />
+  delete: <DeleteOutlineIcon />,
+  processing: <CircularProgress size="1em" />
 };
 
 const COLORS = [

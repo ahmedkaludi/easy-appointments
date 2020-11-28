@@ -19,3 +19,31 @@
   text-overflow: ellipsis;
   max-width: 300px;
 }
+
+.ea-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.7);
+  width: 100%;
+  height: 100%;
+  z-index: 9999;
+  display: flex;
+
+  .loader-wrap {
+    margin: auto;
+  }
+}
+
+.ea-transparent-mask {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 9999;
+}

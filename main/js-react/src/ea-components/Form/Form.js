@@ -2,6 +2,7 @@ import React, { createContext, Fragment, Component } from 'react';
 import PropTypes from 'prop-types';
 
 // import { Divider, CircularProgress } from '@material-ui/core';
+import { v4 as uuidv4 } from 'uuid';
 import { Divider } from '@material-ui/core';
 import Button from '../FormFields/Button';
 import Loader from '../Loader';
@@ -117,9 +118,12 @@ class Form extends Component {
       return;
     }
 
+    const { model } = this.state;
     this.setState({ loading: true });
+
     try {
-      await this.props.onSave(this.state.model);
+      const data = { ...model, id: model.id ?? uuidv4() };
+      await this.props.onSave(data, !!model.id);
       this.clearForm();
     } catch (e) {
       // Some error display in the bottom of the form

@@ -22,7 +22,7 @@ const VACATION_CONFIG = {
   actions: { header: 'Actions', position: 'center', type: 'actions' }
 };
 
-export const VacationTable = ({ data, onEdit, onDelete }) => {
+export const VacationTable = ({ data, onEdit, onDelete, processing }) => {
   const adaptedData = data.map(record => ({
     ...record,
     workers: record.workers.map(worker => worker.name),
@@ -36,7 +36,7 @@ export const VacationTable = ({ data, onEdit, onDelete }) => {
       {
         tooltip: 'Delete',
         className: 'text-danger',
-        icon: 'delete',
+        icon: processing === record.id ? 'processing' : 'delete',
         action: () => onDelete(record)
       }
     ]
@@ -44,6 +44,7 @@ export const VacationTable = ({ data, onEdit, onDelete }) => {
 
   return (
     <ContentBox>
+      {processing && <div className="ea-transparent-mask" />}
       <BasicTable data={adaptedData} config={VACATION_CONFIG} />
     </ContentBox>
   );
@@ -52,9 +53,11 @@ export const VacationTable = ({ data, onEdit, onDelete }) => {
 VacationTable.propTypes = {
   data: PropTypes.arrayOf(PropTypes.objectOf(PropTypes.any)),
   onEdit: PropTypes.func.isRequired,
-  onDelete: PropTypes.func.isRequired
+  onDelete: PropTypes.func.isRequired,
+  processing: PropTypes.string
 };
 
 VacationTable.defaultProps = {
-  data: []
+  data: [],
+  disabled: null
 };
