@@ -106,7 +106,7 @@ class EAVacationActions
         }
 
         $result = array();
-        $keys = array('title', 'tooltip', 'workers', 'days');
+        $keys = array('id', 'title', 'tooltip', 'workers', 'days');
 
         foreach ($array as $item) {
             if (!is_array($item)) {
