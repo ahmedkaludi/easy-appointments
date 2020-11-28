@@ -58,7 +58,7 @@
                     return true;
                 }
 
-                response = [false, 'blocked', vacation.tooltip];
+                response = [false, 'blocked vacation', vacation.tooltip];
 
                 return false;
             });
