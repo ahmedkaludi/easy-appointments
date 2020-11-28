@@ -9,8 +9,7 @@ const Vacation = () => {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [vacations, setVacations] = useState([]);
-
-  const toggleSidebar = () => setOpen(!open);
+  const [activeVacation, setActiveVacation] = useState(null);
 
   const loadVacations = async () => {
     try {
@@ -20,6 +19,18 @@ const Vacation = () => {
     } catch (e) {
       throw new Error(e);
     }
+  };
+
+  useEffect(() => {
+    loadVacations();
+  }, []);
+
+  const toggleSidebar = () => {
+    if (open && activeVacation) {
+      setActiveVacation(null);
+    }
+
+    setOpen(!open);
   };
 
   const onCreate = async model => {
@@ -32,13 +43,27 @@ const Vacation = () => {
     }
   };
 
-  useEffect(() => {
-    loadVacations();
-  }, []);
+  const onEdit = async model => {
+    try {
+      // const 
+      await VacationsCommunicator.save([model, ...vacations]);
+      toggleSidebar();
+      setVacations([model, ...vacations]);
+    } catch (e) {
+      throw new Error(e);
+    }
+  };
 
   const save = model => {
     onCreate(model);
   };
+
+  const onEditClick = record => {
+    setActiveVacation(record);
+    toggleSidebar();
+  };
+
+  const onDeleteClick = record => record;
 
   const headerAction = {
     callback: toggleSidebar,
@@ -59,11 +84,22 @@ const Vacation = () => {
           hint={`Use the 'Add vacation' button to add new vacation days.`}
         />
       ) : (
-        <VacationTable data={vacations} />
+        <VacationTable
+          data={vacations}
+          onEdit={onEditClick}
+          onDelete={onDeleteClick}
+        />
       )}
 
-      <Sidebar open={open} onClose={toggleSidebar} title="Add vacation">
-        <VacationForm onSave={save} onCancel={toggleSidebar} />
+      <Sidebar
+        title={`${activeVacation ? 'Edit' : 'Add'} vacation`}
+        open={open}
+        onClose={toggleSidebar}>
+        <VacationForm
+          model={activeVacation}
+          onSave={save}
+          onCancel={toggleSidebar}
+        />
       </Sidebar>
     </Fragment>
   );

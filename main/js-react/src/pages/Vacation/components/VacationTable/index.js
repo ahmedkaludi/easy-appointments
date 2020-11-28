@@ -22,7 +22,7 @@ const VACATION_CONFIG = {
   actions: { header: 'Actions', position: 'center', type: 'actions' }
 };
 
-export const VacationTable = ({ data }) => {
+export const VacationTable = ({ data, onEdit, onDelete }) => {
   const adaptedData = data.map(record => ({
     ...record,
     workers: record.workers.map(worker => worker.name),
@@ -31,13 +31,13 @@ export const VacationTable = ({ data }) => {
         tooltip: 'Edit',
         className: 'text-success',
         icon: 'edit',
-        action: f => f
+        action: () => onEdit(record)
       },
       {
         tooltip: 'Delete',
         className: 'text-danger',
         icon: 'delete',
-        action: f => f
+        action: () => onDelete(record)
       }
     ]
   }));
@@ -50,7 +50,9 @@ export const VacationTable = ({ data }) => {
 };
 
 VacationTable.propTypes = {
-  data: PropTypes.arrayOf(PropTypes.objectOf(PropTypes.any))
+  data: PropTypes.arrayOf(PropTypes.objectOf(PropTypes.any)),
+  onEdit: PropTypes.func.isRequired,
+  onDelete: PropTypes.func.isRequired
 };
 
 VacationTable.defaultProps = {
