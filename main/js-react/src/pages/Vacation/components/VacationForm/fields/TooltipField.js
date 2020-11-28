@@ -9,6 +9,7 @@ const Tooltip = ({ value, updateFieldValue, error }) => (
     value={value || ''}
     onChange={val => updateFieldValue(val)}
     error={error}
+    multiline
   />
 );
 

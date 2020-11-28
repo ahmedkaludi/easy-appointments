@@ -40,6 +40,7 @@ const Input = ({
         disabled={disabled}
         error={!!error}
         autoFocus={autoFocus}
+        rowsMax={10}
       />
     </FormControl>
   );

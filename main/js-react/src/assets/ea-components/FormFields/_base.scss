@@ -55,11 +55,23 @@
       }
     }
 
+    .MuiOutlinedInput-multiline {
+      padding: 0;
+    }
+
     .MuiOutlinedInput-root {
       .MuiOutlinedInput-input {
         padding: 6px 10px;
         font-size: 14px;
         color: #333333;
+      }
+
+      .MuiOutlinedInput-inputMultiline {
+        line-height: 2;
+        &:focus {
+          border: none;
+          box-shadow: none;
+        }
       }
 
       input[type=text] {
