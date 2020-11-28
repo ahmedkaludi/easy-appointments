@@ -39,10 +39,19 @@
                 return response;
             }
 
-            jQuery.each(ea_vacations, function(vacation) {
+            jQuery.each(ea_vacations, function(index, vacation) {
                 // Check events
-                if (vacation.workers.length > 0 && jQuery.inArray(workerId, vacation.workers) === -1) {
-                    return true;
+                // Case we have workers selected
+                if (vacation.workers.length > 0) {
+                    // extract worker ids
+                    var workerIds = jQuery.map(vacation.workers, function(worker) {
+                        return worker.id;
+                    });
+                    // selected worker is not in vacation list exit
+                    if (jQuery.inArray(workerId, workerIds) === -1) {
+                        return true;
+                    }
+
                 }
 
                 if (jQuery.inArray(day, vacation.days) === -1) {
@@ -515,6 +524,9 @@
             if (current.hasClass('calendar')) {
 
                 var calendar = this.$element.find('.date');
+
+                // refresh calendar
+                calendar.datepicker("refresh");
 
                 // skip auto select date if
                 if (!initialCall || ea_settings.cal_auto_select !== '0') {
