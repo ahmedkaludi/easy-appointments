@@ -1131,7 +1131,7 @@ class EAAjax
         $site_key = $this->options->get_option_value('captcha.site-key');
         $secret   = $this->options->get_option_value('captcha.secret-key');
 
-        $captcha = $_REQUEST['captcha'];
+        $captcha = array_key_exists('captcha', $_REQUEST) ? $_REQUEST['captcha'] : '';
 
         if (empty($secret) || empty($site_key)) {
             return;

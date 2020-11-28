@@ -278,6 +278,7 @@
             jQuery(this.el).html( renderedContent );
 
             this.$el.addClass('ea-row');
+            this.$el.attr('tabindex', '0');
 
             return this;
         },
@@ -558,6 +559,7 @@
             jQuery(this.el).html( renderedContent );
 
             this.$el.addClass('ea-row');
+            this.$el.attr('tabindex', '0');
 
             return this;
         },
@@ -847,6 +849,7 @@
             jQuery(this.el).html( renderedContent );
 
             this.$el.addClass('ea-row');
+            this.$el.attr('tabindex', '0');
 
             return this;
         },
@@ -2152,7 +2155,7 @@
             e.preventDefault();
             var $btn = jQuery(e.currentTarget);
             var $li = $btn.closest('li');
-            var name = $li.data('name');
+            var name = '' + $li.data('name');
             var element = this.fields.findWhere({label: name});
 
             if ($btn.find('i').hasClass('fa-chevron-down')) {
@@ -2209,7 +2212,7 @@
 
             var $btn = jQuery(e.currentTarget);
             var $li = $btn.closest('li');
-            var name = $li.data('name');
+            var name = '' + $li.data('name');
             var element = this.fields.findWhere({label:name});
 
             var options = [];
@@ -2253,7 +2256,7 @@
 
             var $btn = jQuery(e.currentTarget);
             var $li = $btn.closest('li');
-            var name = $li.data('name');
+            var name = '' + $li.data('name');
             var element = this.fields.findWhere({label:name});
 
             this.fields.remove(element);

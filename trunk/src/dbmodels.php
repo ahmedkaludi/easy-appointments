@@ -682,4 +682,13 @@ class EADBModels
 
         return $fields;
     }
+
+    public function get_worker_id_by_email($email)
+    {
+        $table_name = $this->wpdb->prefix . 'ea_staff';
+
+        $query = $this->wpdb->prepare("SELECT id FROM {$table_name} WHERE email = %s", array($email));
+
+        return $this->wpdb->get_var($query);
+    }
 }

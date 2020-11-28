@@ -127,6 +127,24 @@ class EAApiFullCalendar
             unset($params['service']);
         }
 
+        /**
+         * Process current logged user and show only his/her events
+         */
+        if ($params['worker'] === 'logged') {
+            $params['worker'] = '0';
+
+            $current_user = wp_get_current_user();
+            $current_id = $this->db_models->get_worker_id_by_email($current_user->user_email);
+
+            if ($current_id !== null) {
+                $params['worker'] = (int)$current_id;
+            }
+
+            if ($current_user->has_cap('manage_options')) {
+                unset($params['worker']);
+            }
+        }
+
         $res = $this->db_models->get_all_appointments($params);
 
         $fields = $this->db_models->get_all_rows('ea_meta_fields', array(), array('position' => 'ASC'));
@@ -195,9 +213,15 @@ class EAApiFullCalendar
 
         $args['worker'] = array(
             'description'       => esc_html__( 'Worker id that will be used for getting free / taken slots', 'easy-appointments' ),
-            'type'              => 'integer',
+            'type'              => 'string',
 //            'required'          => true,
-            'sanitize_callback' => 'absint',
+            'validate_callback' => function($param, $request, $key) {
+                if ($param === 'logged') {
+                    return true;
+                }
+
+                return is_numeric($param);
+            }
         );
 
         $args['title_field'] = array(
