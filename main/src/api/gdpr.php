@@ -29,7 +29,7 @@ class EAGDPRActions {
         register_rest_route( $this->namespace, '/' . $mail_log, array(
             array(
                 'methods'             => WP_REST_Server::DELETABLE,
-                'callback'            => array( $this, 'clear_old_custome_data' ),
+                'callback'            => array( $this, 'clear_old_custom_data' ),
                 'permission_callback' => function () {
                     return current_user_can( 'manage_options' );
                 }
@@ -37,7 +37,7 @@ class EAGDPRActions {
         ));
     }
 
-    public function clear_old_custome_data() {
+    public function clear_old_custom_data() {
         $table_app = $this->db_models->get_wpdb()->prefix . 'ea_appointments';
         $table_fields = $this->db_models->get_wpdb()->prefix . 'ea_fields';
         $query = "DELETE f FROM $table_app a INNER JOIN $table_fields f ON (a.id = f.app_id) WHERE a.end_date <= (now() - interval 6 month) AND a.end_date IS NOT NULL";

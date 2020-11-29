@@ -5,7 +5,7 @@ var watch = require('gulp-watch');
 var fileFilter = ['**/*.js', '**/*.php', '!**/*prod.js', '**/*.scss', '**/*.css' ];
 
 gulp.task('watch', function(cb) {
-	watch(fileFilter, function() {
+	watch(fileFilter, {delay: 2000}, function() {
         exec('sh build.sh', function (err, stdout, stderr) {
             console.log(stdout);
         });

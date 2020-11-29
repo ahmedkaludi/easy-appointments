@@ -6,8 +6,8 @@ cd ..
 
 rm -r ./trunk/*
 mkdir ./trunk/img
-mkdir ./trunk/css
-mkdir ./trunk/css/scss
+mkdir -p ./trunk/css
+mkdir -p ./trunk/css/scss
 mkdir ./trunk/js
 mkdir ./trunk/js/libs
 mkdir ./trunk/js/libs/fullcalendar
@@ -21,10 +21,15 @@ mkdir ./trunk/languages
 # metascript ./main/js/report.js > ./main/js/report.prod.js
 # metascript ./main/js/settings.js > ./main/js/settings.prod.js
 
+# shellcheck disable=SC2164
 cd ./main
+
 npm run scss
 npm run meta-script
+
 cd ../
+
+cp -R ./main/js-react/build/wp-content/plugins/easy-appointments/ ./trunk/
 
 cp ./main/main.php ./trunk/
 cp ./main/readme.txt ./trunk/
@@ -55,6 +60,10 @@ cp ./main/js/report.prod.js ./trunk/js/
 cp ./main/js/settings.prod.js ./trunk/js/
 cp ./main/js/backbone.sync.fix.js ./trunk/js/
 cp ./main/js/formater.js ./trunk/js/
+cp ./main/js-react/build/static/js/bundle.js ./trunk/js/
+#cp -R ./main/js-react/src/assets/  ./trunk/css/theme/
+mkdir -p ./trunk/css/theme
+cp ./main/js-react/build/static/css/main.css ./trunk/css/theme/
 
 # set dist dir
 cd ./trunk

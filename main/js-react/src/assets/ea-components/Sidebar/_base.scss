@@ -1,0 +1,51 @@
+.ea-sidebar {
+  .MuiPaper-root {
+    position: inherit;
+  }
+
+  &--wrapper {
+    margin-top: 32px;
+    min-width: 540px;
+    width: 540px;
+    height: 100%;
+    padding: 24px;
+    padding-bottom: 0px;
+  }
+
+  &--content {
+    min-height: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+  }
+
+  &--header {
+    display: flex;
+    align-items: center;
+    padding-bottom: 16px;
+
+    &-close {
+      .MuiIconButton-root {
+        padding: 0;
+      }
+    }
+  }
+
+  &--body {
+    padding-top: 16px;
+    display: flex;
+  }
+}
+
+@media screen and (max-width: 782px) {
+  .ea-sidebar {
+    z-index: 99999 !important;
+
+    &--wrapper {
+      margin-top: 0;
+      min-width: 100px;
+      width: 100vw;
+    }
+  }
+}

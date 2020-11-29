@@ -1,0 +1,208 @@
+//  Core
+
+@mixin fieldsetBorders {
+  &.Mui-focused {
+    .MuiOutlinedInput-notchedOutline {
+      border-color: $eaprimary;
+    }
+  }
+
+  &.Mui-disabled {
+    .MuiOutlinedInput-notchedOutline,
+    &:hover .MuiOutlinedInput-notchedOutline {
+      border-color: rgba(0, 0, 0, 0.26);
+    }
+  }
+
+  &.Mui-focused .MuiOutlinedInput-notchedOutline,
+  &:hover .MuiOutlinedInput-notchedOutline {
+    border-color: $eaprimary;
+    border-width: 1px;
+  }
+}
+
+.ea-form-field {
+  margin-bottom: 20px;
+  position: relative;
+
+  .MuiFormHelperText-root {
+    position: absolute;
+    top: 100%;
+    font-size: 9px;
+    margin-top: 0;
+  }
+
+  /* FIELD SET */
+  .ea-fieldset {
+    width: 100%;
+
+    .MuiOutlinedInput-root {
+      &:hover .MuiOutlinedInput-notchedOutline {
+        border-color: rgba(0, 0, 0, 0.23);
+      }
+
+      @include fieldsetBorders;
+    }
+  }
+
+  /* INPUT FIELD */
+  .ea-input {
+    .MuiInputLabel-formControl {
+      transform: translate(14px, 14px) scale(1);
+
+      &.MuiInputLabel-shrink {
+        transform: translate(14px, -6px) scale(0.75);
+      }
+    }
+
+    .MuiOutlinedInput-multiline {
+      padding: 0;
+    }
+
+    .MuiOutlinedInput-root {
+      .MuiOutlinedInput-input {
+        padding: 6px 10px;
+        font-size: 14px;
+        color: #333333;
+      }
+
+      .MuiOutlinedInput-inputMultiline {
+        line-height: 2;
+        &:focus {
+          border: none;
+          box-shadow: none;
+        }
+      }
+
+      input[type=text] {
+        background-color: transparent;
+        box-shadow: none;
+        border: none;
+      }
+
+      @include fieldsetBorders;
+    }
+  }
+
+  /* SELECT FIELD */
+  .ea-select {
+    .MuiInputLabel-outlined {
+      transform: translate(14px, 14px) scale(1);
+
+      &.MuiInputLabel-shrink {
+        transform: translate(14px, -6px) scale(0.75);
+      }
+    }
+
+    .MuiOutlinedInput-root {
+      .MuiOutlinedInput-input {
+        padding: 13px 14px;
+      }
+
+      @include fieldsetBorders;
+    }
+  }
+
+  /* AUTOCOMPLETE FIELD */
+  .ea-autocomplete {
+    .MuiInputLabel-outlined {
+      transform: translate(14px, 14px) scale(1);
+
+      &.MuiInputLabel-shrink {
+        transform: translate(14px, -6px) scale(0.75);
+      }
+    }
+
+    .MuiOutlinedInput-root {
+      .MuiOutlinedInput-input {
+        &.MuiAutocomplete-input {
+          padding: 0 6px;
+        }
+      }
+
+      input[type=text] {
+        background-color: transparent;
+        box-shadow: none;
+        border: none;
+      }
+
+      @include fieldsetBorders;
+    }
+  }
+
+  .MuiAutocomplete-popperDisablePortal {
+    .MuiAutocomplete-paper,
+    .MuiAutocomplete-listbox,
+    .MuiAutocomplete-option {
+      width: 100%;
+    }
+  }
+
+  /* MULTI DATE PICKER FIELD */
+  .ea-fieldset {
+    .datepicker-chips-wrapper {
+      display: flex;
+      flex-wrap: wrap;
+    
+      .MuiPickersStaticWrapper-staticWrapperRoot {
+        min-width: 270px;
+
+        .MuiPickersBasePicker-pickerView {
+          max-width: 300px;
+          min-width: 260px;
+          min-height: 260px;
+
+          .MuiPickersCalendar-transitionContainer {
+            .ea-selected {
+              .MuiPickersDay-day {
+                color: $white;
+                font-weight: 500;
+                background-color: $eaprimary;
+
+                &:hover {
+                  background-color: $eaprimary;
+                }
+              }
+            }
+
+            .MuiPickersDay-daySelected {
+              background-color: transparent;
+              color: rgba(0, 0, 0, 0.87);
+            }
+          }
+        }
+      }
+
+      .dates-chips {
+        background-color: #f9f9f9;
+        flex: 1;
+        margin-left: 10px;
+        /*min-width: 170px;*/
+        min-height: 304px;
+        max-height: 304px;
+
+        ul {
+          padding: 20px;
+          li {
+            margin: 5px;
+            display: inline-block;
+          }
+        }
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 520px) {
+  .ea-form-field {
+    .ea-fieldset {
+      .datepicker-chips-wrapper {
+        flex-direction: column;
+
+        .dates-chips {
+          min-height: auto;
+        }
+      }
+    }
+  }
+}

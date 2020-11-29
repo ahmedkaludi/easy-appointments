@@ -1,0 +1,45 @@
+.app-page-title {
+  &.easy {
+    padding: 2rem;
+    margin: -2rem -2rem 1rem;
+
+    .MuiButton-root {
+      text-transform: none;
+    }
+  }
+
+  .easy-branding {
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+
+    .easy-logo {
+      margin: 0 .5rem 0 0;
+      height: 40px;
+      width: 40px;
+
+      img {
+        width: 100%;
+        height: 100%;
+        display: block;
+      }
+    }
+
+    .page-title--heading.easy {
+      h6 {
+        margin: 0 .5rem 0 0;
+      }
+    }
+  }
+
+  &--description.easy {
+    margin: 0 0 0 .5rem;
+    color: #0073aa;
+    opacity: 1;
+    text-transform: uppercase;
+
+    @include media-breakpoint-down(md) {
+      margin: .5rem 0 0;
+    }
+  }
+}

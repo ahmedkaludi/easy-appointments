@@ -446,6 +446,10 @@ class EAAjax
             $this->send_ok_json_result($response);
         }
 
+        $keys = array_map(function($options) {
+           return $options['ea_key'];
+        });
+
         $this->models->clear_options();
 
         // case of update

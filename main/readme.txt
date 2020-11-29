@@ -5,7 +5,7 @@ Tags: appointment, appointments, Booking, calendar, plugin, reservation, reserva
 Requires at least: 3.7
 Tested up to: 5.5
 Requires PHP: 5.3
-Stable tag: 3.0.15
+Stable tag: 3.1.0
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -214,6 +214,9 @@ Note: you can have only one calendar on one page.
 25. Admin panel - Report - Export page
 
 == Changelog ==
+
+= 3.1.0 (2020-11-29) =
+* Added Vacation settings in Admin panel. Now you can select vacation days for employees that will be block on `ea_bootstrap` shortcode.
 
 = 3.0.15 (2020-11-22) =
 * Added option for fullcalendar shortcode to select current logged employee `worker="logged"`
