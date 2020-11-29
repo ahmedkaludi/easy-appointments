@@ -8,6 +8,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import logo from '../../assets/images/logo.svg';
 
 import { Paper, Box, Divider, Button } from '@material-ui/core';
+import { getSettings } from '../../services';
+
+const imageBase = getSettings('image_base', '');
 
 const PageTitle = ({
   pageTitleStyle,
@@ -32,7 +35,7 @@ const PageTitle = ({
           <Box className="app-page-title--first">
             <Box className="easy-branding">
               <div className="easy-logo">
-                <img alt="..." src={logo} />
+                <img alt="..." src={imageBase + logo} />
               </div>
               <div className="page-title--heading easy">
                 <h6>Easy Appointments</h6>

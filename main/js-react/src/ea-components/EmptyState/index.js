@@ -1,12 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-
 import { Box, Grid } from '@material-ui/core';
 
+import { getSettings } from '../../services';
 import vacationImg from '../../assets/images/empty-states/empty-vacation.svg';
 
+const imageBase = getSettings('image_base', '');
+
 const imgSources = {
-  vacation: vacationImg
+  vacation: imageBase + vacationImg
 };
 
 export default function EmptyState({ type, message, hint }) {
