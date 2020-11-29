@@ -59,8 +59,16 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const getRandomColor = () => {
-  const rand = Math.floor(Math.random() * COLORS.length);
+const getRandomColor = title => {
+  let hash = 0;
+  title
+    .toUpperCase()
+    .split('')
+    .forEach(function(alphabet) {
+      hash += alphabet.charCodeAt(0) - 64;
+    });
+
+  const rand = Math.floor(hash % COLORS.length);
   return COLORS[rand];
 };
 
@@ -92,7 +100,7 @@ const AvatarsCell = (config, data) => {
           <Tooltip arrow title={single}>
             <Avatar
               src="/broken-image.jpg"
-              style={{ backgroundColor: getRandomColor() }}
+              style={{ backgroundColor: getRandomColor(single) }}
             />
           </Tooltip>
         ))}
@@ -120,7 +128,7 @@ const ChipsCell = (config, data) => {
     <td className={`text-${position} ${cellClass ?? ''}`}>
       <div className={classes.chipsWrap}>
         <Chip size="small" label={visible} color="primary" />
-        {hidden.length && (
+        {hidden.length > 1 && (
           <Tooltip title={hidden.join(' • ')}>
             <Chip
               size="small"
