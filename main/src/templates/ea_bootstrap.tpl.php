@@ -74,6 +74,9 @@
                             <% if (item.required == "1") { %>data-rule-required="true" data-msg-required="<%=
                             settings['trans.field-required'] %>"<% } %> <% if (item.validation == "email") {
                             %>data-rule-email="true" data-msg-email="<%= settings['trans.error-email'] %>"<% } %>>
+                            <!-- INPUT MASKED -->
+                            <% } else if(item.type === 'MASKED') { %>
+                            <input id="<%- item.slug %>" class="form-control custom-field masked-field" type="text" name="<%= item.slug %>" placeholder="<%= _.escape(item.mixed) %>" data-inputmask="'mask':'<%- item.default_value %>'" />
                             <!-- PHONE TYPE -->
                             <% } else if(item.type === 'PHONE') { %>
                                 <?php require __DIR__ . '/phone.field.tpl.php';?>

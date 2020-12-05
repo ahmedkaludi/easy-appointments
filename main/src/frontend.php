@@ -98,6 +98,14 @@ class EAFrontend
             true
         );
 
+        wp_register_script(
+            'ea-masked',
+            EA_PLUGIN_URL . 'js/libs/jquery.inputmask.min.js',
+            array('jquery'),
+            EASY_APPOINTMENTS_VERSION,
+            true
+        );
+
         // frontend standard script
         wp_register_script(
             'ea-front-end',
@@ -257,6 +265,20 @@ class EAFrontend
         }
 
         $meta = $this->models->get_all_rows("ea_meta_fields", array(), array('position' => 'ASC'));
+
+        $add_maks_js = false;
+        foreach ($meta as $row) {
+            // we need to add masked js
+            if ($row->type === 'MASKED') {
+                $add_maks_js = true;
+            }
+        }
+
+        if ($add_maks_js) {
+            wp_add_inline_script('ea-masked', "jQuery('.masked-field').inputmask()");
+            wp_enqueue_script('ea-masked');
+        }
+
         $custom_form = $this->generate_custom_fields($meta);
 
         // add custom CSS
@@ -383,6 +405,8 @@ class EAFrontend
                 $email = ($item->validation == 'email') ? 'data-msg-email="' . __('Please enter a valid email address', 'easy-appointments') . '" data-rule-email="true"' : '';
 
                 $html .= '<input class="custom-field" type="text" name="' . $item->slug . '" ' . $msg . ' ' . $email . ' />';
+            } else if ($item->type == 'MASKED') {
+                $html .= '<input class="custom-field masked-field" type="text" name="' . $item->slug . '" data-inputmask="\'mask\':\'' . $item->default_value . '\'" />';
             } else if ($item->type == 'EMAIL') {
                 $msg = ($r) ? 'data-rule-required="true" data-msg-required="' . __('This field is required.', 'easy-appointments') . '"' : '';
                 $email = 'data-msg-email="' . __('Please enter a valid email address', 'easy-appointments') . '" data-rule-email="true"';
@@ -519,9 +543,15 @@ class EAFrontend
         }
 
         $rows = $this->models->get_all_rows("ea_meta_fields", array(), array('position' => 'ASC'));
+        $add_maks_js = false;
 
         foreach ($rows as $key => $row) {
             $rows[$key]->label = __($row->label, 'easy-appointments');
+
+            // we need to add masked js
+            if ($row->type === 'MASKED') {
+                $add_maks_js = true;
+            }
         }
         $rows = apply_filters( 'ea_form_rows', $rows);
         $settings['MetaFields'] = $rows;
@@ -544,6 +574,11 @@ class EAFrontend
         // wp_enqueue_script( 'ea-datepicker-localization' );
         // wp_enqueue_script( 'ea-bootstrap-select' );
         wp_enqueue_script('ea-front-bootstrap');
+
+        if ($add_maks_js) {
+            wp_add_inline_script('ea-masked', "jQuery('.masked-field').inputmask()");
+            wp_enqueue_script('ea-masked');
+        }
 
         if (empty($settings['css.off'])) {
             wp_enqueue_style('ea-bootstrap');
