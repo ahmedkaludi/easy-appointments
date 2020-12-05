@@ -1004,6 +1004,7 @@
                             <label for="">Type</label>
                             <select>
                                 <option value="INPUT"><?php _e('Input', 'easy-appointments'); ?></option>
+                                <option value="MASKED"><?php _e('Masked Input', 'easy-appointments'); ?></option>
                                 <option value="SELECT"><?php _e('Select', 'easy-appointments'); ?></option>
                                 <option value="TEXTAREA"><?php _e('Textarea', 'easy-appointments'); ?></option>
                                 <option value="PHONE"><?php _e('Phone', 'easy-appointments'); ?></option>
@@ -1273,12 +1274,15 @@
         <label>Label</label><input type="text" class="field-label" name="field-label"
                                      value="<%= _.escape(item.label) %>">
     </p>
+
+    <% if (item.type !== "PHONE" && item.type !== "SELECT" && item.type !== "MASKED") { %>
     <p>
         <label>Placeholder</label><input type="text" class="field-mixed" name="field-mixed"
                                            value="<%= _.escape(item.mixed) %>">
     </p>
+    <% } %>
 
-    <% if (item.type !== "PHONE" && item.type !== "SELECT") { %>
+    <% if (item.type !== "PHONE" && item.type !== "SELECT" && item.type !== "MASKED") { %>
     <p>
         <label>Default value</label><input type="text" class="field-default_value" name="field-default_value"
                                          value="<%- item.default_value %>">
@@ -1291,6 +1295,17 @@
         <label>Default value</label><select class="field-default_value" name="field-default_value"><?php require __DIR__ . '/phone.list.tpl.php';?></select>
     </p>
     <% } %>
+
+    <% if (item.type === "MASKED") { %>
+    <p>
+        <label>Mask</label><input type="text" class="field-default_value" name="field-default_value" value="<%- item.default_value %>">
+        <p><?php _e('Mask options', 'easy-appointments');?> : </p>
+        <code>9 : numeric</code> , <code>a : alphabetical</code> , <code>* : alphanumeric</code>
+        <p><?php _e('Example', 'easy-appointments');?> : </p>
+        <code>(99) 9999[9]-9999</code> , <code>999-999-9999</code> , <code>aa-9{1,4}</code>
+    </p>
+    <% } %>
+
     <% if (item.type === "SELECT") { %>
     <p>
         <label>Options :</label>

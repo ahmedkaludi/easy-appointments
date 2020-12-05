@@ -49,6 +49,8 @@ cp -R ./main/js/libs/chosen.jquery.min.js ./trunk/js/libs/
 cp -R ./main/js/libs/mce.plugin.code.min.js ./trunk/js/libs/
 cp -R ./main/js/libs/mce.plugin.code.min.js ./trunk/js/libs/
 cp -R ./main/js/libs/jquery.validate.min.js ./trunk/js/libs/
+cp -R ./main/js/libs/jquery.inputmask.js ./trunk/js/libs/
+cp -R ./main/js/libs/jquery.inputmask.min.js ./trunk/js/libs/
 cp -R ./main/js/libs/jquery-ui-i18n.min.js ./trunk/js/libs/
 cp -R ./main/js/libs/fullcalendar/* ./trunk/js/libs/fullcalendar/
 

@@ -183,7 +183,7 @@
 				</td>
 				<td colspan="2">
 					<% _.each(cache.MetaFields,function(item,key,list) { %>
-						<% if(item.type === 'INPUT') { %>
+						<% if(item.type === 'INPUT' || item.type === 'MASKED') { %>
 						<input type="text" data-prop="<%= item.slug %>" placeholder="<%= _.escape( item.label ) %>" value="<% if (typeof row[item.slug] !== "undefined") { %><%= _.escape( row[item.slug] ) %><% } %>"><br>
                         <% } else if(item.type === 'PHONE') { %>
                         <input type="text" data-prop="<%= item.slug %>" placeholder="<%= _.escape( item.label ) %>" value="<% if (typeof row[item.slug] !== "undefined") { %><%= _.escape( row[item.slug] ) %><% } %>"><br>
