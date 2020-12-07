@@ -24,7 +24,7 @@ class EAUserFieldMapper
             // clear field template values
             foreach ($fields as $field) {
                 // skip phone field
-                if ($field->type === 'PHONE') {
+                if ($field->type === 'PHONE' || $field->type === 'MASKED') {
                     continue;
                 }
 

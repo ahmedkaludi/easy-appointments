@@ -576,7 +576,7 @@ class EAFrontend
         wp_enqueue_script('ea-front-bootstrap');
 
         if ($add_maks_js) {
-            wp_add_inline_script('ea-masked', "jQuery('.masked-field').inputmask()");
+            wp_add_inline_script('ea-masked', "jQuery('.masked-field').inputmask();");
             wp_enqueue_script('ea-masked');
         }
 

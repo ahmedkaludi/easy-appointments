@@ -5,7 +5,7 @@ Tags: appointment, appointments, Booking, calendar, plugin, reservation, reserva
 Requires at least: 3.7
 Tested up to: 5.5
 Requires PHP: 5.3
-Stable tag: 3.1.2
+Stable tag: 3.1.3
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -214,6 +214,9 @@ Note: you can have only one calendar on one page.
 25. Admin panel - Report - Export page
 
 == Changelog ==
+
+* 3.1.3 (2020-12-07) =
+* Fixed issues with masked field when you are not logged in.
 
 = 3.1.2 (2020-12-04) =
 * Added new field type - Masked input field. Now you can create your own format of input field. Useful for area code, phone numbers etc.
