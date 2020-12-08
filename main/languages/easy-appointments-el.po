@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Easy Appointments\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-06-14 22:40+0200\n"
-"PO-Revision-Date: 2020-06-28 20:05+0200\n"
+"PO-Revision-Date: 2020-12-08 08:29+0100\n"
 "Last-Translator: Perry Germani <mergermani@gmail.com>\n"
 "Language-Team: Greek\n"
 "Language: el\n"
@@ -11,7 +11,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Poedit 2.0.8\n"
+"X-Generator: Poedit 2.4.1\n"
 
 #: src/admin.php:319 src/admin.php:320 src/templates/appointments.tpl.php:6
 msgid "Appointments"
@@ -662,7 +662,7 @@ msgstr "Κράτηση"
 #: src/templates/admin.tpl.php:756
 #, fuzzy
 #| msgid "Cancel"
-msgid "Canceled"
+msgid "Cancelled"
 msgstr "Ματαίωση"
 
 #: src/templates/admin.tpl.php:758
