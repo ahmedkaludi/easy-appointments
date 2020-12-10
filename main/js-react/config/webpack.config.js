@@ -353,7 +353,8 @@ module.exports = function(webpackEnv) {
               options: {
                 limit: imageInlineSizeLimit,
                 // name: 'static/media/[name].[ext]'
-                name: 'wp-content/plugins/easy-appointments/static/media/[name].[ext]'
+                name:
+                  'wp-content/plugins/easy-appointments/static/media/[name].[ext]'
               }
             },
             // Process application JS with Babel.
@@ -496,7 +497,8 @@ module.exports = function(webpackEnv) {
               exclude: [/\.(js|mjs|jsx|ts|tsx)$/, /\.html$/, /\.json$/],
               options: {
                 // name: 'static/media/[name].[ext]'
-                name: 'wp-content/plugins/easy-appointments/static/media/[name].[ext]'
+                name:
+                  'wp-content/plugins/easy-appointments/static/media/[name].[ext]'
               }
             }
             // ** STOP ** Are you adding a new loader?

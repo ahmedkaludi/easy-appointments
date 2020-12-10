@@ -351,6 +351,36 @@ class EAAdminPanel
             array($this, 'vacation_page')
         );
 
+        // locations page
+        $page_settings_suffix = add_submenu_page(
+            'easy_app_top_level',
+            __('Locations', 'easy-appointments'),
+            __('Locations', 'easy-appointments'),
+            'manage_options',
+            'easy_app_locations',
+            array($this, 'locations_page')
+        );
+
+        // settings
+        $page_settings_suffix = add_submenu_page(
+            'easy_app_top_level',
+            __('Employees', 'easy-appointments'),
+            __('Employees', 'easy-appointments'),
+            'manage_options',
+            'easy_app_workers',
+            array($this, 'workers_page')
+        );
+
+        // services
+        $page_settings_suffix = add_submenu_page(
+            'easy_app_top_level',
+            __('Services', 'easy-appointments'),
+            __('Services', 'easy-appointments'),
+            'manage_options',
+            'easy_app_services',
+            array($this, 'services_page')
+        );
+
         // settings
         $page_settings_suffix = add_submenu_page(
             'easy_app_top_level',
@@ -499,6 +529,116 @@ class EAAdminPanel
         $screen->set_help_sidebar('<a href="https://easy-appointments.net/documentation/">More info!</a>');
 
         require_once EA_SRC_DIR . 'templates/vacation.tpl.php';
+        require_once EA_SRC_DIR . 'templates/inlinedata.tpl.php';
+    }
+
+    /**
+     * Content of top menu page
+     */
+    public function locations_page()
+    {
+        // check if APS tags are on
+        if ($this->is_asp_tags_are_on()) {
+            require_once EA_SRC_DIR . 'templates/asp_tag_message.tpl.php';
+            return;
+        }
+
+        wp_enqueue_style('ea-vacation-css');
+        wp_enqueue_script('ea-vacation');
+
+        $settings = $this->options->get_options();
+        $settings['rest_url'] = get_rest_url();
+//        $settings['rest_url_vacation'] = EAVacationActions::get_url();
+
+        $wpurl = get_bloginfo('wpurl');
+        $url   = get_bloginfo('url');
+
+        $settings['image_base'] = $wpurl === $url ? '' : $wpurl;
+        wp_localize_script('ea-vacation', 'ea_settings', $settings);
+
+//        $screen = get_current_screen();
+//        $screen->add_help_tab(array(
+//            'id'    => 'easyapp_settings_help'
+//        , 'title'   => 'Settings'
+//        , 'content' => '<p>You need to define at least one location, worker and service! Without that widget won\'t work.</p>'
+//        ));
+
+//        $screen->set_help_sidebar('<a href="https://easy-appointments.net/documentation/">More info!</a>');
+
+        require_once EA_SRC_DIR . 'templates/locations.tpl.php';
+        require_once EA_SRC_DIR . 'templates/inlinedata.tpl.php';
+    }
+
+    /**
+     * Content of top menu page
+     */
+    public function workers_page()
+    {
+        // check if APS tags are on
+        if ($this->is_asp_tags_are_on()) {
+            require_once EA_SRC_DIR . 'templates/asp_tag_message.tpl.php';
+            return;
+        }
+
+        wp_enqueue_style('ea-vacation-css');
+        wp_enqueue_script('ea-vacation');
+
+        $settings = $this->options->get_options();
+        $settings['rest_url'] = get_rest_url();
+//        $settings['rest_url_vacation'] = EAVacationActions::get_url();
+
+        $wpurl = get_bloginfo('wpurl');
+        $url   = get_bloginfo('url');
+
+        $settings['image_base'] = $wpurl === $url ? '' : $wpurl;
+        wp_localize_script('ea-vacation', 'ea_settings', $settings);
+
+//        $screen = get_current_screen();
+//        $screen->add_help_tab(array(
+//            'id'    => 'easyapp_settings_help'
+//        , 'title'   => 'Settings'
+//        , 'content' => '<p>You need to define at least one location, worker and service! Without that widget won\'t work.</p>'
+//        ));
+//
+//        $screen->set_help_sidebar('<a href="https://easy-appointments.net/documentation/">More info!</a>');
+
+        require_once EA_SRC_DIR . 'templates/workers.tpl.php';
+        require_once EA_SRC_DIR . 'templates/inlinedata.tpl.php';
+    }
+
+    /**
+     * Content of top menu page
+     */
+    public function services_page()
+    {
+        // check if APS tags are on
+        if ($this->is_asp_tags_are_on()) {
+            require_once EA_SRC_DIR . 'templates/asp_tag_message.tpl.php';
+            return;
+        }
+
+        wp_enqueue_style('ea-vacation-css');
+        wp_enqueue_script('ea-vacation');
+
+        $settings = $this->options->get_options();
+        $settings['rest_url'] = get_rest_url();
+
+        $wpurl = get_bloginfo('wpurl');
+        $url   = get_bloginfo('url');
+
+        $settings['image_base'] = $wpurl === $url ? '' : $wpurl;
+        wp_localize_script('ea-vacation', 'ea_settings', $settings);
+
+//        $screen = get_current_screen();
+//        $screen->add_help_tab(array(
+//            'id'    => 'easyapp_settings_help'
+//        , 'title'   => 'Settings'
+//        , 'content' => '<p>You need to define at least one location, worker and service! Without that widget won\'t work.</p>'
+//        ));
+//
+//        $screen->set_help_sidebar('<a href="https://easy-appointments.net/documentation/">More info!</a>');
+
+        require_once EA_SRC_DIR . 'templates/services.tpl.php';
         require_once EA_SRC_DIR . 'templates/inlinedata.tpl.php';
     }
 
