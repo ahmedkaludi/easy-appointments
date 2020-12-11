@@ -8,7 +8,10 @@ import vacationImg from '../../assets/images/empty-states/empty-vacation.svg';
 const imageBase = getSettings('image_base', '');
 
 const imgSources = {
-  vacation: imageBase + vacationImg
+  vacation: imageBase + vacationImg,
+  location: imageBase + vacationImg,
+  service: imageBase + vacationImg,
+  worker: imageBase + vacationImg
 };
 
 export default function EmptyState({ type, message, hint }) {

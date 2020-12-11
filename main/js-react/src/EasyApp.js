@@ -6,7 +6,13 @@ import MuiTheme from './theme';
 import configureStore from './config/configureStore';
 import { Provider } from 'react-redux';
 import ScrollToTop from './utils/ScrollToTop';
-import { VacationPage } from './pages';
+
+import {
+  VacationPage,
+  LocationsPage,
+  ServicesPage,
+  WorkersPage
+} from './pages';
 
 import './assets/base.scss';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -259,6 +265,13 @@ library.add(
 
 const store = configureStore();
 
+const PAGES = {
+  vacations: <VacationPage />,
+  locations: <LocationsPage />,
+  services: <ServicesPage />,
+  workers: <WorkersPage />
+};
+
 class EasyApp extends Component {
   render() {
     return (
@@ -266,9 +279,7 @@ class EasyApp extends Component {
         <ThemeProvider theme={MuiTheme}>
           <BrowserRouter basename="/">
             <CssBaseline />
-            <ScrollToTop>
-              <VacationPage />
-            </ScrollToTop>
+            <ScrollToTop>{PAGES[this.props.page] ?? null}</ScrollToTop>
           </BrowserRouter>
         </ThemeProvider>
       </Provider>
