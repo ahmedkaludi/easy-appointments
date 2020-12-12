@@ -8,7 +8,7 @@ const ServicesPage = () => {
 
   const headerAction = {
     callback: f => f,
-    icon: 'calendar-plus',
+    icon: 'briefcase',
     text: 'Add service'
   };
 
@@ -16,7 +16,7 @@ const ServicesPage = () => {
     <Fragment>
       <PageTitle titleHeading="Services" action={headerAction} />
 
-      {loading ? (
+      {!loading ? (
         <Loader text="Loading services" />
       ) : !services.length ? (
         <EmptyState

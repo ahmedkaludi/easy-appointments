@@ -8,7 +8,7 @@ const LocationsPage = () => {
 
   const headerAction = {
     callback: f => f,
-    icon: 'calendar-plus',
+    icon: 'map-marker-alt',
     text: 'Add location'
   };
 
@@ -16,7 +16,7 @@ const LocationsPage = () => {
     <Fragment>
       <PageTitle titleHeading="Locations" action={headerAction} />
 
-      {loading ? (
+      {!loading ? (
         <Loader text="Loading locations" />
       ) : !locations.length ? (
         <EmptyState

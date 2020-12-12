@@ -8,7 +8,7 @@ const WorkersPage = () => {
 
   const headerAction = {
     callback: f => f,
-    icon: 'calendar-plus',
+    icon: 'user-plus',
     text: 'Add employee'
   };
 
@@ -16,7 +16,7 @@ const WorkersPage = () => {
     <Fragment>
       <PageTitle titleHeading="Employees" action={headerAction} />
 
-      {loading ? (
+      {!loading ? (
         <Loader text="Loading employees" />
       ) : !workers.length ? (
         <EmptyState

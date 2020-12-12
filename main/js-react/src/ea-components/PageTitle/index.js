@@ -55,7 +55,7 @@ const PageTitle = ({
               variant="contained"
               color="primary">
               <span className="btn-wrapper--icon">
-                <FontAwesomeIcon icon={['far', `${action.icon}`]} />
+                <FontAwesomeIcon icon={['fas', `${action.icon}`]} />
               </span>
               <span className="btn-wrapper--label">{action.text}</span>
             </Button>
