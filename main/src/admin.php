@@ -548,22 +548,12 @@ class EAAdminPanel
 
         $settings = $this->options->get_options();
         $settings['rest_url'] = get_rest_url();
-//        $settings['rest_url_vacation'] = EAVacationActions::get_url();
 
         $wpurl = get_bloginfo('wpurl');
         $url   = get_bloginfo('url');
 
         $settings['image_base'] = $wpurl === $url ? '' : $wpurl;
         wp_localize_script('ea-vacation', 'ea_settings', $settings);
-
-//        $screen = get_current_screen();
-//        $screen->add_help_tab(array(
-//            'id'    => 'easyapp_settings_help'
-//        , 'title'   => 'Settings'
-//        , 'content' => '<p>You need to define at least one location, worker and service! Without that widget won\'t work.</p>'
-//        ));
-
-//        $screen->set_help_sidebar('<a href="https://easy-appointments.net/documentation/">More info!</a>');
 
         require_once EA_SRC_DIR . 'templates/locations.tpl.php';
         require_once EA_SRC_DIR . 'templates/inlinedata.tpl.php';
@@ -585,22 +575,12 @@ class EAAdminPanel
 
         $settings = $this->options->get_options();
         $settings['rest_url'] = get_rest_url();
-//        $settings['rest_url_vacation'] = EAVacationActions::get_url();
 
         $wpurl = get_bloginfo('wpurl');
         $url   = get_bloginfo('url');
 
         $settings['image_base'] = $wpurl === $url ? '' : $wpurl;
         wp_localize_script('ea-vacation', 'ea_settings', $settings);
-
-//        $screen = get_current_screen();
-//        $screen->add_help_tab(array(
-//            'id'    => 'easyapp_settings_help'
-//        , 'title'   => 'Settings'
-//        , 'content' => '<p>You need to define at least one location, worker and service! Without that widget won\'t work.</p>'
-//        ));
-//
-//        $screen->set_help_sidebar('<a href="https://easy-appointments.net/documentation/">More info!</a>');
 
         require_once EA_SRC_DIR . 'templates/workers.tpl.php';
         require_once EA_SRC_DIR . 'templates/inlinedata.tpl.php';
@@ -628,15 +608,6 @@ class EAAdminPanel
 
         $settings['image_base'] = $wpurl === $url ? '' : $wpurl;
         wp_localize_script('ea-vacation', 'ea_settings', $settings);
-
-//        $screen = get_current_screen();
-//        $screen->add_help_tab(array(
-//            'id'    => 'easyapp_settings_help'
-//        , 'title'   => 'Settings'
-//        , 'content' => '<p>You need to define at least one location, worker and service! Without that widget won\'t work.</p>'
-//        ));
-//
-//        $screen->set_help_sidebar('<a href="https://easy-appointments.net/documentation/">More info!</a>');
 
         require_once EA_SRC_DIR . 'templates/services.tpl.php';
         require_once EA_SRC_DIR . 'templates/inlinedata.tpl.php';
