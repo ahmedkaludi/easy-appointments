@@ -108,6 +108,7 @@
     "react-spinners": "0.8.0",
     "react-text-mask": "5.4.3",
     "react-trend": "1.2.5",
+    "redux": "^4.0.5",
     "resolve": "1.15.0",
     "resolve-url-loader": "3.1.1",
     "sass-loader": "8.0.2",
