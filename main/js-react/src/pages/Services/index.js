@@ -1,10 +1,25 @@
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, useState, useEffect } from 'react';
 
 import { PageTitle, EmptyState, Loader } from '../../ea-components';
+import { ServicesCommunicator } from '../../communicators';
 
 const ServicesPage = () => {
-  const [loading] = useState(true);
-  const [services] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [services, setServices] = useState([]);
+
+  const loadServices = async () => {
+    try {
+      const records = await ServicesCommunicator.fetchAll();
+      setServices(records);
+      setLoading(false);
+    } catch (e) {
+      throw new Error(e);
+    }
+  };
+
+  useEffect(() => {
+    loadServices();
+  }, []);
 
   const headerAction = {
     callback: f => f,
@@ -16,7 +31,7 @@ const ServicesPage = () => {
     <Fragment>
       <PageTitle titleHeading="Services" action={headerAction} />
 
-      {!loading ? (
+      {loading ? (
         <Loader text="Loading services" />
       ) : !services.length ? (
         <EmptyState

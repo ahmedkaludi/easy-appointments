@@ -1,10 +1,25 @@
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, useState, useEffect } from 'react';
 
 import { PageTitle, EmptyState, Loader } from '../../ea-components';
+import { LocationsCommunicator } from '../../communicators';
 
 const LocationsPage = () => {
-  const [loading] = useState(true);
-  const [locations] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [locations, setLocations] = useState([]);
+
+  const loadLocations = async () => {
+    try {
+      const records = await LocationsCommunicator.fetchAll();
+      setLocations(records);
+      setLoading(false);
+    } catch (e) {
+      throw new Error(e);
+    }
+  };
+
+  useEffect(() => {
+    loadLocations();
+  }, []);
 
   const headerAction = {
     callback: f => f,
@@ -16,7 +31,7 @@ const LocationsPage = () => {
     <Fragment>
       <PageTitle titleHeading="Locations" action={headerAction} />
 
-      {!loading ? (
+      {loading ? (
         <Loader text="Loading locations" />
       ) : !locations.length ? (
         <EmptyState
