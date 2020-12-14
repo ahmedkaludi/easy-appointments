@@ -18,7 +18,8 @@ class Form extends Component {
     customClass: PropTypes.string,
     onCancel: PropTypes.func,
     onSave: PropTypes.func,
-    model: PropTypes.objectOf(PropTypes.any)
+    model: PropTypes.objectOf(PropTypes.any),
+    customId: PropTypes.bool
   };
 
   static defaultProps = {
@@ -26,7 +27,8 @@ class Form extends Component {
     customClass: '',
     onCancel: f => f,
     onSave: f => f,
-    model: null
+    model: null,
+    customId: false
   };
 
   constructor(props) {
@@ -119,10 +121,11 @@ class Form extends Component {
     }
 
     const { model } = this.state;
+    const customId = this.props.customId ? uuidv4() : null;
     this.setState({ loading: true });
 
     try {
-      const data = { ...model, id: model.id ?? uuidv4() };
+      const data = { ...model, id: model.id ?? customId };
       await this.props.onSave(data, !!model.id);
       this.clearForm();
     } catch (e) {

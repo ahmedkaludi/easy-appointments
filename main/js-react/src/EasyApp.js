@@ -16,10 +16,12 @@ import {
 } from './pages';
 
 import './assets/base.scss';
-// import CssBaseline from '@material-ui/core/CssBaseline';
-// import configureStore from './config/configureStore';
 
-// import { library } from '@fortawesome/fontawesome-svg-core';
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { fas } from '@fortawesome/free-solid-svg-icons';
+
+// import CssBaseline from '@material-ui/core/CssBaseline';
+
 // import {
 //   fab,
 //   faFacebook,
@@ -267,6 +269,8 @@ import './assets/base.scss';
 //   faLink
 // );
 //
+library.add(fas);
+
 const store = configureStore();
 
 const PAGES = {
