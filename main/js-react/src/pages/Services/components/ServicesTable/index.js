@@ -12,25 +12,25 @@ const SERVICES_CONFIG = {
     cellClass: 'font-weight-bold'
   },
   duration: {
-    header: 'Duration (in minutes)',
+    header: 'Duration *',
     headerStyle: { minWidth: '150px' },
     position: 'left',
     type: 'text'
   },
   slot_step: {
-    header: 'Slot step (in minutes)',
+    header: 'Slot step *',
     headerStyle: { minWidth: '150px' },
     position: 'left',
     type: 'text'
   },
   block_before: {
-    header: 'Block before (in minutes)',
+    header: 'Block before *',
     headerStyle: { minWidth: '150px' },
     position: 'left',
     type: 'text'
   },
   block_after: {
-    header: 'Block before (in minutes)',
+    header: 'Block after *',
     headerStyle: { minWidth: '150px' },
     position: 'left',
     type: 'text'
@@ -63,9 +63,17 @@ export const ServicesTable = ({ data, onEdit, onDelete, processing }) => {
     ]
   }));
 
+  const tableHeader = (
+    <div className="px-3 py-4 d-flex justify-content-between align-items-center">
+      <span />
+      <span className="text-ea font-size-xs">* value in minutes</span>
+    </div>
+  );
+
   return (
     <ContentBox>
       {processing && <div className="ea-transparent-mask" />}
+      {tableHeader}
       <BasicTable data={adaptedData} config={SERVICES_CONFIG} />
     </ContentBox>
   );
