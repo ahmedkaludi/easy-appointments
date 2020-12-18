@@ -1,7 +1,12 @@
 import React, { useRef, useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 
-import { OutlinedInput, InputLabel, FormControl } from '@material-ui/core';
+import {
+  OutlinedInput,
+  InputLabel,
+  FormControl,
+  InputAdornment
+} from '@material-ui/core';
 
 const Input = ({
   placeholder,
@@ -13,15 +18,25 @@ const Input = ({
   disabled,
   error,
   multiline,
-  rows
+  rows,
+  adornment
 }) => {
   const [labelWidth, setLabelWidth] = useState(0);
   let inputLabelRef = useRef(null);
+  const otherProps = {};
 
   useEffect(() => {
     const offset = inputLabelRef.current.offsetWidth;
     setLabelWidth(offset);
   }, []);
+
+  if (adornment && adornment?.position && adornment?.text) {
+    otherProps[`${adornment.position}Adornment`] = (
+      <InputAdornment position={adornment.position}>
+        {adornment.text}
+      </InputAdornment>
+    );
+  }
 
   return (
     <FormControl fullWidth className="ea-input">
@@ -41,6 +56,7 @@ const Input = ({
         error={!!error}
         autoFocus={autoFocus}
         rowsMax={10}
+        {...otherProps}
       />
     </FormControl>
   );
@@ -56,7 +72,8 @@ Input.propTypes = {
   disabled: PropTypes.bool,
   error: PropTypes.bool,
   multiline: PropTypes.bool,
-  rows: PropTypes.number
+  rows: PropTypes.number,
+  adornment: PropTypes.objectOf(PropTypes.any)
 };
 
 Input.defaultProps = {
@@ -69,7 +86,8 @@ Input.defaultProps = {
   disabled: false,
   error: false,
   multiline: false,
-  rows: 1
+  rows: 1,
+  adornment: null
 };
 
 export default Input;
