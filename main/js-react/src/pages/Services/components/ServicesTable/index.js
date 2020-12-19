@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import { ContentBox, BasicTable, TableSorter } from '../../../../ea-components';
+import { SortCommunicator } from '../../../../communicators';
 
 const SERVICES_CONFIG = {
   name: {
@@ -44,7 +45,22 @@ const SERVICES_CONFIG = {
   actions: { header: 'Actions', position: 'center', type: 'actions' }
 };
 
-export const ServicesTable = ({ data, onEdit, onDelete, processing }) => {
+const COLUMNS = [
+  { value: 'name', label: 'Name' },
+  { value: 'duration', label: 'Duration' },
+  { value: 'slot_step', label: 'Slot step' },
+  { value: 'block_before', label: 'Block before' },
+  { value: 'block_after', label: 'Block after' },
+  { value: 'price', label: 'Price' }
+];
+
+export const ServicesTable = ({
+  data,
+  onEdit,
+  onDelete,
+  onSort,
+  processing
+}) => {
   const adaptedData = data.map(record => ({
     ...record,
     actions: [
@@ -63,17 +79,15 @@ export const ServicesTable = ({ data, onEdit, onDelete, processing }) => {
     ]
   }));
 
-  const tableHeader = (
-    <div className="px-3 py-4 d-flex justify-content-between align-items-center">
-      <TableSorter columns={[]} sortingFunc={f => f} onSortingDone={f => f} />
-      <span className="text-ea font-size-xs">* value in minutes</span>
-    </div>
-  );
-
   return (
     <ContentBox>
       {processing && <div className="ea-transparent-mask" />}
-      {tableHeader}
+      <TableSorter
+        columns={COLUMNS}
+        sortingFunc={SortCommunicator.saveSortServices}
+        onSortingDone={onSort}
+        hint="* value in minutes"
+      />
       <BasicTable data={adaptedData} config={SERVICES_CONFIG} />
     </ContentBox>
   );
@@ -83,6 +97,7 @@ ServicesTable.propTypes = {
   data: PropTypes.arrayOf(PropTypes.objectOf(PropTypes.any)),
   onEdit: PropTypes.func.isRequired,
   onDelete: PropTypes.func.isRequired,
+  onSort: PropTypes.func.isRequired,
   processing: PropTypes.string
 };
 

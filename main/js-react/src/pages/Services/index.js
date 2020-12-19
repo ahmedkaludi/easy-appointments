@@ -105,6 +105,7 @@ const ServicesPage = () => {
           data={services}
           onEdit={onEditClick}
           onDelete={onDeleteClick}
+          onSort={loadServices}
           processing={processing}
         />
       )}

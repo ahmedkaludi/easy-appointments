@@ -5,7 +5,9 @@ import { MenuItem, TextField } from '@material-ui/core';
 // import { MenuItem, InputLabel, FormControl } from '@material-ui/core';
 // import { Select as MuiSelect } from '@material-ui/core';
 
-const Select = ({ value, onChange, options, label, disabled }) => {
+const Select = ({ value, onChange, options, label, disabled, customClass }) => {
+  const selectClass = `ea-select ${customClass ?? ''}`;
+
   const renderOptions = () =>
     options.map(option => (
       <MenuItem value={option.value} key={`option-${option.value}`}>
@@ -16,7 +18,7 @@ const Select = ({ value, onChange, options, label, disabled }) => {
   return (
     <TextField
       id="outlined-select"
-      className="ea-select"
+      className={selectClass}
       fullWidth
       select
       label={label}

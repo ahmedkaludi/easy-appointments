@@ -22,7 +22,7 @@ export class SortCommunicator {
       type: 'json'
     };
 
-    return await http.post(this.url, JSON.stringify(data));
+    return await http.post(SortCommunicator.url, JSON.stringify(data));
   }
 
   /**
@@ -32,8 +32,8 @@ export class SortCommunicator {
    * @returns {Promise<boolean>}
    */
   static async saveSortLocations(column, order) {
-    const saveKey = await this.save('sort.locations-by', column);
-    const saveOrder = await this.save('order.locations-by', order);
+    const saveKey = await SortCommunicator.save('sort.locations-by', column);
+    const saveOrder = await SortCommunicator.save('order.locations-by', order);
 
     return saveKey === saveOrder;
   }
@@ -45,8 +45,8 @@ export class SortCommunicator {
    * @returns {Promise<boolean>}
    */
   static async saveSortWorkers(column, order) {
-    const saveKey = await this.save('sort.workers-by', column);
-    const saveOrder = await this.save('order.workers-by', order);
+    const saveKey = await SortCommunicator.save('sort.workers-by', column);
+    const saveOrder = await SortCommunicator.save('order.workers-by', order);
 
     return saveKey === saveOrder;
   }
@@ -58,8 +58,8 @@ export class SortCommunicator {
    * @returns {Promise<boolean>}
    */
   static async saveSortServices(column, order) {
-    const saveKey = await this.save('sort.services-by', column);
-    const saveOrder = await this.save('order.services-by', order);
+    const saveKey = await SortCommunicator.save('sort.services-by', column);
+    const saveOrder = await SortCommunicator.save('order.services-by', order);
 
     return saveKey === saveOrder;
   }

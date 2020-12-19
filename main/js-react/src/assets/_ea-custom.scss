@@ -16,8 +16,16 @@
 
 // CUSTOM CLASSES
 
-.text-ea {
+.ea-text {
   color: $eaprimary;
+}
+
+.ea-min-width-100 {
+  min-width: 100px;
+}
+
+.ea-min-width-130 {
+  min-width: 130px;
 }
 
 .ea-ellipsis {

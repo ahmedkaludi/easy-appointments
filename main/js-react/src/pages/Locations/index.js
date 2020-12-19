@@ -105,6 +105,7 @@ const LocationsPage = () => {
           data={locations}
           onEdit={onEditClick}
           onDelete={onDeleteClick}
+          onSort={loadLocations}
           processing={processing}
         />
       )}

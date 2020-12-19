@@ -194,6 +194,14 @@
   }
 }
 
+.standalone {
+  &.ea-select {
+    .MuiOutlinedInput-root {
+      @include fieldsetBorders;
+    }
+  }
+}
+
 @media screen and (max-width: 520px) {
   .ea-form-field {
     .ea-fieldset {

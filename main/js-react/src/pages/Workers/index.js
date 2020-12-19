@@ -105,6 +105,7 @@ const WorkersPage = () => {
           data={workers}
           onEdit={onEditClick}
           onDelete={onDeleteClick}
+          onSort={loadWorkers}
           processing={processing}
         />
       )}

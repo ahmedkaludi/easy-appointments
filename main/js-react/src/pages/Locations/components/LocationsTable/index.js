@@ -1,7 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { ContentBox, BasicTable } from '../../../../ea-components';
+import { ContentBox, BasicTable, TableSorter } from '../../../../ea-components';
+import { SortCommunicator } from '../../../../communicators';
 
 const LOCATIONS_CONFIG = {
   name: {
@@ -26,7 +27,19 @@ const LOCATIONS_CONFIG = {
   actions: { header: 'Actions', position: 'center', type: 'actions' }
 };
 
-export const LocationsTable = ({ data, onEdit, onDelete, processing }) => {
+const COLUMNS = [
+  { value: 'name', label: 'Name' },
+  { value: 'address', label: 'Address' },
+  { value: 'location', label: 'Location' }
+];
+
+export const LocationsTable = ({
+  data,
+  onEdit,
+  onDelete,
+  onSort,
+  processing
+}) => {
   const adaptedData = data.map(record => ({
     ...record,
     actions: [
@@ -48,6 +61,11 @@ export const LocationsTable = ({ data, onEdit, onDelete, processing }) => {
   return (
     <ContentBox>
       {processing && <div className="ea-transparent-mask" />}
+      <TableSorter
+        columns={COLUMNS}
+        sortingFunc={SortCommunicator.saveSortLocations}
+        onSortingDone={onSort}
+      />
       <BasicTable data={adaptedData} config={LOCATIONS_CONFIG} />
     </ContentBox>
   );
@@ -57,6 +75,7 @@ LocationsTable.propTypes = {
   data: PropTypes.arrayOf(PropTypes.objectOf(PropTypes.any)),
   onEdit: PropTypes.func.isRequired,
   onDelete: PropTypes.func.isRequired,
+  onSort: PropTypes.func.isRequired,
   processing: PropTypes.string
 };
 
