@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-// import { MenuItem, TextField } from '@material-ui/core';
-import { MenuItem, InputLabel, FormControl } from '@material-ui/core';
-import { Select as MuiSelect } from '@material-ui/core';
+import { MenuItem, TextField } from '@material-ui/core';
+// import { MenuItem, InputLabel, FormControl } from '@material-ui/core';
+// import { Select as MuiSelect } from '@material-ui/core';
 
 const Select = ({ value, onChange, options, label, disabled }) => {
   const renderOptions = () =>
@@ -13,34 +13,35 @@ const Select = ({ value, onChange, options, label, disabled }) => {
       </MenuItem>
     ));
 
-  // return (
-  //   <TextField
-  //     id="outlined-select"
-  //     className="ea-select"
-  //     fullWidth
-  //     select
-  //     label={label}
-  //     value={value}
-  //     onChange={onChange}
-  //     variant="outlined"
-  //     disabled={disabled}>
-  //     {renderOptions()}
-  //   </TextField>
-  // );
-
   return (
-    <FormControl variant="outlined" className="ea-select">
-      <InputLabel>{label}</InputLabel>
-      <MuiSelect
-        id="demo-simple-select-outlined"
-        value={value}
-        onChange={onChange}
-        label={label}
-        disabled={disabled}>
-        {renderOptions()}
-      </MuiSelect>
-    </FormControl>
+    <TextField
+      id="outlined-select"
+      className="ea-select"
+      fullWidth
+      select
+      label={label}
+      value={value}
+      onChange={onChange}
+      variant="outlined"
+      size="small"
+      disabled={disabled}>
+      {renderOptions()}
+    </TextField>
   );
+
+  // return (
+  //   <FormControl variant="outlined" className="ea-select">
+  //     <InputLabel>{label}</InputLabel>
+  //     <MuiSelect
+  //       id="demo-simple-select-outlined"
+  //       value={value}
+  //       onChange={onChange}
+  //       label={label}
+  //       disabled={disabled}>
+  //       {renderOptions()}
+  //     </MuiSelect>
+  //   </FormControl>
+  // );
 };
 
 Select.propTypes = {

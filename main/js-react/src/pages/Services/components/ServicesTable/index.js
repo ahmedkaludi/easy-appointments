@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { ContentBox, BasicTable } from '../../../../ea-components';
+import { ContentBox, BasicTable, TableSorter } from '../../../../ea-components';
 
 const SERVICES_CONFIG = {
   name: {
@@ -65,7 +65,7 @@ export const ServicesTable = ({ data, onEdit, onDelete, processing }) => {
 
   const tableHeader = (
     <div className="px-3 py-4 d-flex justify-content-between align-items-center">
-      <span />
+      <TableSorter columns={[]} sortingFunc={f => f} onSortingDone={f => f} />
       <span className="text-ea font-size-xs">* value in minutes</span>
     </div>
   );
