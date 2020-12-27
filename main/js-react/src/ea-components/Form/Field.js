@@ -20,7 +20,13 @@ const Field = ({ name, required, component, validationFunc }) => {
     subscribeValidator(name, () => requiredValidator(model));
 
     return () => unsubscribeValidator(name);
-  }, [model]);
+  }, [
+    model,
+    name,
+    requiredValidator,
+    subscribeValidator,
+    unsubscribeValidator
+  ]);
 
   const customValidation = val => {
     if (typeof validationFunc === 'function') {

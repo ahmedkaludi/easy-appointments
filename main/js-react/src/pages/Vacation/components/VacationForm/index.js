@@ -8,7 +8,7 @@ import { WorkersField } from './fields/WorkersField';
 import { DatesField } from './fields/DatesField';
 
 export const VacationForm = ({ model, onSave, onCancel }) => (
-  <Form model={model} onCancel={onCancel} onSave={onSave}>
+  <Form model={model} onCancel={onCancel} onSave={onSave} customId>
     <TitleField />
     <TooltipField />
     <WorkersField />

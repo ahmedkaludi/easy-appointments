@@ -13,3 +13,4 @@ export { default as DateMultiselect } from './FormFields/DateMultiselect';
 export { default as Loader } from './Loader';
 export { default as ContentBox } from './ContentBox';
 export { default as BasicTable } from './Table/BasicTable';
+export { default as TableSorter } from './Table/TableSorter';

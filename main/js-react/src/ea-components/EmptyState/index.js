@@ -4,11 +4,17 @@ import { Box, Grid } from '@material-ui/core';
 
 import { getSettings } from '../../services';
 import vacationImg from '../../assets/images/empty-states/empty-vacation.svg';
+import locationsImg from '../../assets/images/empty-states/empty-locations.svg';
+import employeesImg from '../../assets/images/empty-states/empty-employees.svg';
+import servicesImg from '../../assets/images/empty-states/empty-services.svg';
 
 const imageBase = getSettings('image_base', '');
 
 const imgSources = {
-  vacation: imageBase + vacationImg
+  vacation: imageBase + vacationImg,
+  location: imageBase + locationsImg,
+  service: imageBase + servicesImg,
+  worker: imageBase + employeesImg
 };
 
 export default function EmptyState({ type, message, hint }) {

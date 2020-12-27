@@ -114,7 +114,7 @@ class EAAdminPanel
         wp_register_script(
             'ea-vacation',
             EA_PLUGIN_URL . 'js/bundle.js',
-            array('jquery', 'wp-api'),
+            array('jquery', 'wp-api', 'wp-i18n'),
             EASY_APPOINTMENTS_VERSION,
             true
         );
@@ -341,24 +341,54 @@ class EAAdminPanel
             array($this, 'top_level_appointments')
         );
 
-        // settings
-        $page_settings_suffix = add_submenu_page(
+        // locations page
+        $page_location_suffix = add_submenu_page(
             'easy_app_top_level',
-            __('Vacation', 'easy-appointments'),
-            __('Vacation', 'easy-appointments'),
+            __('Locations', 'easy-appointments'),
+            '1. ' . __('Locations', 'easy-appointments'),
             'manage_options',
-            'easy_app_vacation',
-            array($this, 'vacation_page')
+            'easy_app_locations',
+            array($this, 'locations_page')
+        );
+
+        // services
+        $page_services_suffix = add_submenu_page(
+            'easy_app_top_level',
+            __('Services', 'easy-appointments'),
+            '2. ' . __('Services', 'easy-appointments'),
+            'manage_options',
+            'easy_app_services',
+            array($this, 'services_page')
+        );
+
+        // Workers
+        $page_worker_suffix = add_submenu_page(
+            'easy_app_top_level',
+            __('Employees', 'easy-appointments'),
+            '3. ' . __('Employees', 'easy-appointments'),
+            'manage_options',
+            'easy_app_workers',
+            array($this, 'workers_page')
         );
 
         // settings
         $page_settings_suffix = add_submenu_page(
             'easy_app_top_level',
             __('Settings', 'easy-appointments'),
-            __('Settings', 'easy-appointments'),
+            '4. ' . __('Settings', 'easy-appointments'),
             'manage_options',
             'easy_app_settings',
             array($this, 'top_settings_menu')
+        );
+
+        // vacation page
+        $page_vacation_suffix = add_submenu_page(
+            'easy_app_top_level',
+            __('Vacation', 'easy-appointments'),
+            __('Vacation', 'easy-appointments'),
+            'manage_options',
+            'easy_app_vacation',
+            array($this, 'vacation_page')
         );
 
         // Overview - report
@@ -489,6 +519,8 @@ class EAAdminPanel
         $settings['image_base'] = $wpurl === $url ? '' : $wpurl;
         wp_localize_script('ea-vacation', 'ea_settings', $settings);
 
+        wp_set_script_translations('ea-vacation', 'easy-appointments');
+
         $screen = get_current_screen();
         $screen->add_help_tab(array(
             'id'    => 'easyapp_settings_help'
@@ -499,6 +531,93 @@ class EAAdminPanel
         $screen->set_help_sidebar('<a href="https://easy-appointments.net/documentation/">More info!</a>');
 
         require_once EA_SRC_DIR . 'templates/vacation.tpl.php';
+        require_once EA_SRC_DIR . 'templates/inlinedata.tpl.php';
+    }
+
+    /**
+     * Content of top menu page
+     */
+    public function locations_page()
+    {
+        // check if APS tags are on
+        if ($this->is_asp_tags_are_on()) {
+            require_once EA_SRC_DIR . 'templates/asp_tag_message.tpl.php';
+            return;
+        }
+
+        wp_enqueue_style('ea-vacation-css');
+        wp_enqueue_script('ea-vacation');
+
+        $settings = $this->options->get_options();
+        $settings['rest_url'] = get_rest_url();
+
+        $wpurl = get_bloginfo('wpurl');
+        $url   = get_bloginfo('url');
+
+        $settings['image_base'] = $wpurl === $url ? '' : $wpurl;
+        wp_localize_script('ea-vacation', 'ea_settings', $settings);
+
+        wp_set_script_translations('ea-vacation', 'easy-appointments');
+
+        require_once EA_SRC_DIR . 'templates/locations.tpl.php';
+        require_once EA_SRC_DIR . 'templates/inlinedata.tpl.php';
+    }
+
+    /**
+     * Content of top menu page
+     */
+    public function workers_page()
+    {
+        // check if APS tags are on
+        if ($this->is_asp_tags_are_on()) {
+            require_once EA_SRC_DIR . 'templates/asp_tag_message.tpl.php';
+            return;
+        }
+
+        wp_enqueue_style('ea-vacation-css');
+        wp_enqueue_script('ea-vacation');
+
+        $settings = $this->options->get_options();
+        $settings['rest_url'] = get_rest_url();
+
+        $wpurl = get_bloginfo('wpurl');
+        $url   = get_bloginfo('url');
+
+        $settings['image_base'] = $wpurl === $url ? '' : $wpurl;
+        wp_localize_script('ea-vacation', 'ea_settings', $settings);
+
+        wp_set_script_translations('ea-vacation', 'easy-appointments');
+
+        require_once EA_SRC_DIR . 'templates/workers.tpl.php';
+        require_once EA_SRC_DIR . 'templates/inlinedata.tpl.php';
+    }
+
+    /**
+     * Content of top menu page
+     */
+    public function services_page()
+    {
+        // check if APS tags are on
+        if ($this->is_asp_tags_are_on()) {
+            require_once EA_SRC_DIR . 'templates/asp_tag_message.tpl.php';
+            return;
+        }
+
+        wp_enqueue_style('ea-vacation-css');
+        wp_enqueue_script('ea-vacation');
+
+        $settings = $this->options->get_options();
+        $settings['rest_url'] = get_rest_url();
+
+        $wpurl = get_bloginfo('wpurl');
+        $url   = get_bloginfo('url');
+
+        $settings['image_base'] = $wpurl === $url ? '' : $wpurl;
+        wp_localize_script('ea-vacation', 'ea_settings', $settings);
+
+        wp_set_script_translations('ea-vacation', 'easy-appointments');
+
+        require_once EA_SRC_DIR . 'templates/services.tpl.php';
         require_once EA_SRC_DIR . 'templates/inlinedata.tpl.php';
     }
 

@@ -10,8 +10,23 @@
 // PAGES
 
 @import "pages/Vacation/base";
+@import "pages/Locations/base";
+@import "pages/Services/base";
+@import "pages/Workers/base";
 
 // CUSTOM CLASSES
+
+.ea-text {
+  color: $eaprimary;
+}
+
+.ea-min-width-100 {
+  min-width: 100px;
+}
+
+.ea-min-width-130 {
+  min-width: 130px;
+}
 
 .ea-ellipsis {
   overflow: hidden;
