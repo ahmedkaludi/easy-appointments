@@ -1,12 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { __ } from '../../../../services/Localization';
+import { __, _x } from '../../../../services/Localization';
 import { ContentBox, BasicTable } from '../../../../ea-components';
 
 const VACATION_CONFIG = {
   title: {
-    header: __('Title', 'easy-appointments'),
+    header: _x('Title', 'vacation', 'easy-appointments'),
     headerStyle: { minWidth: '200px' },
     position: 'left',
     type: 'text',

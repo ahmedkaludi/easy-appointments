@@ -1,13 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { __ } from '../../../../services/Localization';
+import { __, _x } from '../../../../services/Localization';
 import { SortCommunicator } from '../../../../communicators';
 import { ContentBox, BasicTable, TableSorter } from '../../../../ea-components';
 
 const SERVICES_CONFIG = {
   name: {
-    header: __('Name', 'easy-appointments'),
+    header: _x('Name', 'service', 'easy-appointments'),
     headerStyle: { minWidth: '200px' },
     position: 'left',
     type: 'text',
@@ -51,7 +51,7 @@ const SERVICES_CONFIG = {
 };
 
 const COLUMNS = [
-  { value: 'name', label: __('Name', 'easy-appointments') },
+  { value: 'name', label: _x('Name', 'service', 'easy-appointments') },
   { value: 'duration', label: __('Duration', 'easy-appointments') },
   { value: 'slot_step', label: __('Slot step', 'easy-appointments') },
   { value: 'block_before', label: __('Block before', 'easy-appointments') },

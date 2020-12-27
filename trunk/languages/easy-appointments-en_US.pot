@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: EasyAppointments 2.8.0\n"
-"POT-Creation-Date: 2020-12-27 17:32+0100\n"
+"POT-Creation-Date: 2020-12-27 21:47+0100\n"
 "PO-Revision-Date: 2017-07-17 21:47+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -24,24 +24,260 @@ msgstr ""
 "X-Poedit-SearchPathExcluded-5: js\n"
 "X-Poedit-SearchPathExcluded-6: js-react/node_modules\n"
 
+#: js-react/src/pages/Locations/components/LocationsForm/fields/AddressField.js:9
+msgid "Address *"
+msgstr ""
+
+#: js-react/src/pages/Locations/components/LocationsForm/fields/LocationField.js:9
+msgid "Location *"
+msgstr ""
+
+#: js-react/src/pages/Locations/components/LocationsTable/index.js:17
+#: js-react/src/pages/Locations/components/LocationsTable/index.js:37
+msgid "Address"
+msgstr ""
+
+#: js-react/src/pages/Locations/components/LocationsTable/index.js:23
+#: js-react/src/pages/Locations/components/LocationsTable/index.js:38
+#: src/templates/admin.tpl.php:52 src/templates/admin.tpl.php:144
+#: src/templates/admin.tpl.php:669 src/templates/appointments.tpl.php:11
+#: src/templates/appointments.tpl.php:95 src/templates/appointments.tpl.php:154
+#: src/templates/mail.notification.tpl.php:18 src/templates/report.tpl.php:35
+msgid "Location"
+msgstr ""
+
+#: js-react/src/pages/Locations/components/LocationsTable/index.js:29
+#: js-react/src/pages/Services/components/ServicesTable/index.js:47
+#: js-react/src/pages/Vacation/components/VacationTable/index.js:32
+#: js-react/src/pages/Workers/components/WorkersTable/index.js:35
+#: src/templates/admin.tpl.php:62
+msgid "Actions"
+msgstr ""
+
+#: js-react/src/pages/Locations/components/LocationsTable/index.js:52
+#: js-react/src/pages/Services/components/ServicesTable/index.js:73
+#: js-react/src/pages/Vacation/components/VacationTable/index.js:44
+#: src/templates/admin.tpl.php:134 src/templates/appointments.tpl.php:141
+msgid "Edit"
+msgstr ""
+
+#: js-react/src/pages/Locations/components/LocationsTable/index.js:58
+#: js-react/src/pages/Services/components/ServicesTable/index.js:79
+#: js-react/src/pages/Vacation/components/VacationTable/index.js:50
+#: src/templates/admin.tpl.php:135 src/templates/appointments.tpl.php:142
+msgid "Delete"
+msgstr ""
+
+#: js-react/src/pages/Locations/index.js:89
+#: js-react/src/pages/Locations/index.js:94
+msgid "Add location"
+msgstr ""
+
+#: js-react/src/pages/Locations/index.js:93
+msgid "Edit location"
+msgstr ""
+
+#: js-react/src/pages/Locations/index.js:101
+msgid "Loading locations"
+msgstr ""
+
+#: js-react/src/pages/Locations/index.js:106
+msgid "There are no available locations yet."
+msgstr ""
+
+#: js-react/src/pages/Locations/index.js:110
+msgid "Use the 'Add location' button to add new location."
+msgstr ""
+
+#: js-react/src/pages/Services/components/ServicesForm/fields/MinutesField.js:21
+msgid "minutes"
+msgstr ""
+
+#: js-react/src/pages/Services/components/ServicesForm/fields/PriceField.js:13
+msgid "Price *"
+msgstr ""
+
+#: js-react/src/pages/Services/components/ServicesForm/index.js:15
+#: js-react/src/pages/Services/components/ServicesTable/index.js:17
+msgid "Duration *"
+msgstr ""
+
+#: js-react/src/pages/Services/components/ServicesForm/index.js:19
+#: js-react/src/pages/Services/components/ServicesTable/index.js:23
+msgid "Slot step *"
+msgstr ""
+
+#: js-react/src/pages/Services/components/ServicesForm/index.js:23
+#: js-react/src/pages/Services/components/ServicesTable/index.js:29
+msgid "Block before *"
+msgstr ""
+
+#: js-react/src/pages/Services/components/ServicesForm/index.js:27
+#: js-react/src/pages/Services/components/ServicesTable/index.js:35
+msgid "Block after *"
+msgstr ""
+
+#: js-react/src/pages/Services/components/ServicesTable/index.js:41
+#: js-react/src/pages/Services/components/ServicesTable/index.js:59
+#: src/frontend.php:231 src/frontend.php:520
+#: src/templates/appointments.tpl.php:99 src/templates/appointments.tpl.php:229
+#: src/templates/mail.notification.tpl.php:46
+msgid "Price"
+msgstr ""
+
+#: js-react/src/pages/Services/components/ServicesTable/index.js:55
+msgid "Duration"
+msgstr ""
+
+#: js-react/src/pages/Services/components/ServicesTable/index.js:56
+msgid "Slot step"
+msgstr ""
+
+#: js-react/src/pages/Services/components/ServicesTable/index.js:57
+msgid "Block before"
+msgstr ""
+
+#: js-react/src/pages/Services/components/ServicesTable/index.js:58
+msgid "Block after"
+msgstr ""
+
+#: js-react/src/pages/Services/components/ServicesTable/index.js:94
+msgid "* value in minutes"
+msgstr ""
+
+#: js-react/src/pages/Services/index.js:89
+msgid "Add service"
+msgstr ""
+
+#: js-react/src/pages/Services/index.js:93
+msgid "Edit services"
+msgstr ""
+
+#: js-react/src/pages/Services/index.js:94
+msgid "Add services"
+msgstr ""
+
+#: js-react/src/pages/Services/index.js:99 src/admin.php:357 src/admin.php:358
+#: src/templates/admin.tpl.php:244
+msgid "Services"
+msgstr ""
+
+#: js-react/src/pages/Services/index.js:104
+msgid "Loading services"
+msgstr ""
+
+#: js-react/src/pages/Services/index.js:109
+msgid "There are no available services yet."
+msgstr ""
+
+#: js-react/src/pages/Services/index.js:113
+msgid "Use the 'Add service' button to add new service."
+msgstr ""
+
+#: js-react/src/pages/Vacation/components/VacationForm/fields/TooltipField.js:9
+msgid "Tooltip *"
+msgstr ""
+
+#: js-react/src/pages/Vacation/components/VacationForm/fields/WorkersField.js:39
+msgid "Workers *"
+msgstr ""
+
+#: js-react/src/pages/Vacation/components/VacationForm/fields/WorkersField.js:40
+msgid "Worker..."
+msgstr ""
+
+#: js-react/src/pages/Vacation/components/VacationTable/index.js:16
+msgid "Tooltip"
+msgstr ""
+
+#: js-react/src/pages/Vacation/components/VacationTable/index.js:22
+#: src/templates/admin.tpl.php:252
+msgid "Workers"
+msgstr ""
+
+#: js-react/src/pages/Vacation/components/VacationTable/index.js:27
+msgid "Dates"
+msgstr ""
+
 #: js-react/src/pages/Vacation/index.js:85
+#: js-react/src/pages/Vacation/index.js:90
 msgid "Add vacation"
 msgstr ""
 
-#: js-react/src/pages/Vacation/index.js:91
+#: js-react/src/pages/Vacation/index.js:89
+msgid "Edit vacation"
+msgstr ""
+
+#: js-react/src/pages/Vacation/index.js:95
 msgid "Vacations"
 msgstr ""
 
-#: js-react/src/pages/Vacation/index.js:96
+#: js-react/src/pages/Vacation/index.js:100
 msgid "Loading vacations"
 msgstr ""
 
-#: js-react/src/pages/Vacation/index.js:101
+#: js-react/src/pages/Vacation/index.js:105
 msgid "There are no scheduled vacation days yet."
 msgstr ""
 
-#: js-react/src/pages/Vacation/index.js:105
+#: js-react/src/pages/Vacation/index.js:109
 msgid "Use the 'Add vacation' button to add new vacation days."
+msgstr ""
+
+#: js-react/src/pages/Workers/components/WorkersForm/fields/DescriptionField.js:9
+msgid "Description *"
+msgstr ""
+
+#: js-react/src/pages/Workers/components/WorkersForm/fields/EmailField.js:9
+msgid "Email *"
+msgstr ""
+
+#: js-react/src/pages/Workers/components/WorkersForm/fields/PhoneField.js:9
+msgid "Phone *"
+msgstr ""
+
+#: js-react/src/pages/Workers/components/WorkersTable/index.js:17
+#: js-react/src/pages/Workers/components/WorkersTable/index.js:43
+#: src/install.php:807 src/templates/appointments.tpl.php:97
+msgid "Description"
+msgstr ""
+
+#: js-react/src/pages/Workers/components/WorkersTable/index.js:23
+#: js-react/src/pages/Workers/components/WorkersTable/index.js:44
+#: src/frontend.php:511 src/metafields.php:30 src/templates/admin.tpl.php:757
+msgid "Email"
+msgstr ""
+
+#: js-react/src/pages/Workers/components/WorkersTable/index.js:29
+#: js-react/src/pages/Workers/components/WorkersTable/index.js:45
+#: src/frontend.php:513 src/install.php:806 src/metafields.php:29
+#: src/templates/admin.tpl.php:756
+msgid "Phone"
+msgstr ""
+
+#: js-react/src/pages/Workers/index.js:89
+#: js-react/src/pages/Workers/index.js:94
+msgid "Add employee"
+msgstr ""
+
+#: js-react/src/pages/Workers/index.js:93
+msgid "Edit employee"
+msgstr ""
+
+#: js-react/src/pages/Workers/index.js:99 src/admin.php:367 src/admin.php:368
+msgid "Employees"
+msgstr ""
+
+#: js-react/src/pages/Workers/index.js:104
+msgid "Loading employees"
+msgstr ""
+
+#: js-react/src/pages/Workers/index.js:108
+msgid "There are no employees yet."
+msgstr ""
+
+#: js-react/src/pages/Workers/index.js:110
+msgid "Use the 'Add employee' button to add new employee."
 msgstr ""
 
 #: src/admin.php:337 src/admin.php:338 src/templates/appointments.tpl.php:6
@@ -50,14 +286,6 @@ msgstr ""
 
 #: src/admin.php:347 src/admin.php:348 src/templates/admin.tpl.php:236
 msgid "Locations"
-msgstr ""
-
-#: src/admin.php:357 src/admin.php:358 src/templates/admin.tpl.php:244
-msgid "Services"
-msgstr ""
-
-#: src/admin.php:367 src/admin.php:368
-msgid "Employees"
 msgstr ""
 
 #: src/admin.php:377 src/admin.php:378
@@ -121,12 +349,6 @@ msgstr ""
 msgid "Date & time"
 msgstr ""
 
-#: src/frontend.php:231 src/frontend.php:520
-#: src/templates/appointments.tpl.php:99 src/templates/appointments.tpl.php:229
-#: src/templates/mail.notification.tpl.php:46
-msgid "Price"
-msgstr ""
-
 #: src/frontend.php:238 src/frontend.php:525
 msgid "Form validation code expired. Please refresh page in order to continue."
 msgstr ""
@@ -185,17 +407,8 @@ msgstr ""
 msgid "Please enter at least 3 digits."
 msgstr ""
 
-#: src/frontend.php:511 src/metafields.php:30 src/templates/admin.tpl.php:757
-msgid "Email"
-msgstr ""
-
 #: src/frontend.php:512 src/install.php:805
 msgid "Name"
-msgstr ""
-
-#: src/frontend.php:513 src/install.php:806 src/metafields.php:29
-#: src/templates/admin.tpl.php:756
-msgid "Phone"
 msgstr ""
 
 #: src/frontend.php:514
@@ -212,10 +425,6 @@ msgstr ""
 
 #: src/install.php:804
 msgid "EMail"
-msgstr ""
-
-#: src/install.php:807 src/templates/appointments.tpl.php:97
-msgid "Description"
 msgstr ""
 
 #: src/logic.php:256
@@ -334,13 +543,6 @@ msgstr ""
 msgid "Refresh"
 msgstr ""
 
-#: src/templates/admin.tpl.php:52 src/templates/admin.tpl.php:144
-#: src/templates/admin.tpl.php:669 src/templates/appointments.tpl.php:11
-#: src/templates/appointments.tpl.php:95 src/templates/appointments.tpl.php:154
-#: src/templates/mail.notification.tpl.php:18 src/templates/report.tpl.php:35
-msgid "Location"
-msgstr ""
-
 #: src/templates/admin.tpl.php:53 src/templates/admin.tpl.php:155
 #: src/templates/admin.tpl.php:664 src/templates/admin.tpl.php:878
 #: src/templates/appointments.tpl.php:20 src/templates/appointments.tpl.php:95
@@ -371,10 +573,6 @@ msgstr ""
 
 #: src/templates/admin.tpl.php:61
 msgid "Is working"
-msgstr ""
-
-#: src/templates/admin.tpl.php:62
-msgid "Actions"
 msgstr ""
 
 #: src/templates/admin.tpl.php:95 src/templates/admin.tpl.php:178
@@ -409,14 +607,6 @@ msgstr ""
 msgid "Yes"
 msgstr ""
 
-#: src/templates/admin.tpl.php:134 src/templates/appointments.tpl.php:141
-msgid "Edit"
-msgstr ""
-
-#: src/templates/admin.tpl.php:135 src/templates/appointments.tpl.php:142
-msgid "Delete"
-msgstr ""
-
 #: src/templates/admin.tpl.php:136 src/templates/appointments.tpl.php:143
 msgid "Clone"
 msgstr ""
@@ -440,10 +630,6 @@ msgstr ""
 
 #: src/templates/admin.tpl.php:233
 msgid "each combination will be one connection"
-msgstr ""
-
-#: src/templates/admin.tpl.php:252
-msgid "Workers"
 msgstr ""
 
 #: src/templates/admin.tpl.php:261

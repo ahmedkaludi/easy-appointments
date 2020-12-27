@@ -1,12 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { __ } from '../../../../../services/Localization';
+import { _x } from '../../../../../services/Localization';
 import { Field, Input } from '../../../../../ea-components';
 
 const Name = ({ value, updateFieldValue, error }) => (
   <Input
-    label={__('Name *', 'easy-appointments')}
+    label={_x('Name *', 'worker', 'easy-appointments')}
     value={value || ''}
     onChange={val => updateFieldValue(val)}
     error={error}
