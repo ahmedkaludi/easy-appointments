@@ -303,7 +303,7 @@ class EasyAppointment
     public function delete_old_data()
     {
         $gdpr = new EAGDPRActions($this->container['db_models']);
-        $gdpr->clear_old_custome_data();
+        $gdpr->clear_old_custom_data();
     }
 }
 

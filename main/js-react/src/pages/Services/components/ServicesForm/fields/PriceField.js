@@ -1,15 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import NumberFormat from 'react-number-format';
 import { TextField } from '@material-ui/core';
+import NumberFormat from 'react-number-format';
 import { Field } from '../../../../../ea-components';
+import { __ } from '../../../../../services/Localization';
 
 const Price = ({ value, updateFieldValue, error }) => {
   const textFieldProps = {
     className: 'ea-input',
     fullWidth: true,
-    label: 'Price *',
+    label: __('Price *', 'easy-appointments'),
     variant: 'outlined',
     error: !!error
   };

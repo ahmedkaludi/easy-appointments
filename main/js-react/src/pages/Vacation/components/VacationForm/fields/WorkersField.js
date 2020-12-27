@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 
 import { DataService } from '../../../../../services';
+import { __ } from '../../../../../services/Localization';
 import { Field, Autocomplete } from '../../../../../ea-components';
 
 const Workers = ({ value, updateFieldValue, error }) => {
@@ -35,8 +36,8 @@ const Workers = ({ value, updateFieldValue, error }) => {
 
   return (
     <Autocomplete
-      label="Workers *"
-      placeholder="Worker..."
+      label={__('Workers *', 'easy-appointments')}
+      placeholder={__('Worker...', 'easy-appointments')}
       value={selected}
       onChange={onChange}
       options={options}

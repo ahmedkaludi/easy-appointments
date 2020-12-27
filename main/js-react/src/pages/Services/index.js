@@ -1,9 +1,10 @@
 import React, { Fragment, useState, useEffect } from 'react';
 
-import { PageTitle, EmptyState, Loader, Sidebar } from '../../ea-components';
-import { ServicesCommunicator } from '../../communicators';
+import { __ } from '../../services/Localization';
 import { ServicesForm } from './components/ServicesForm';
 import { ServicesTable } from './components/ServicesTable';
+import { ServicesCommunicator } from '../../communicators';
+import { PageTitle, EmptyState, Loader, Sidebar } from '../../ea-components';
 
 const ServicesPage = () => {
   const [open, setOpen] = useState(false);
@@ -85,20 +86,33 @@ const ServicesPage = () => {
   const headerAction = {
     callback: toggleSidebar,
     icon: 'briefcase',
-    text: 'Add service'
+    text: __('Add service', 'easy-appointments')
   };
+
+  const title = activeService
+    ? __('Edit services', 'easy-appointments')
+    : __('Add services', 'easy-appointments');
 
   return (
     <Fragment>
-      <PageTitle titleHeading="Services" action={headerAction} />
+      <PageTitle
+        titleHeading={__('Services', 'easy-appointments')}
+        action={headerAction}
+      />
 
       {loading ? (
-        <Loader text="Loading services" />
+        <Loader text={__('Loading services', 'easy-appointments')} />
       ) : !services.length ? (
         <EmptyState
           type="service"
-          message="There are no available services yet."
-          hint={`Use the 'Add service' button to add new service.`}
+          message={__(
+            'There are no available services yet.',
+            'easy-appointments'
+          )}
+          hint={__(
+            `Use the 'Add service' button to add new service.`,
+            'easy-appointments'
+          )}
         />
       ) : (
         <ServicesTable
@@ -110,10 +124,7 @@ const ServicesPage = () => {
         />
       )}
 
-      <Sidebar
-        title={`${activeService ? 'Edit' : 'Add'} services`}
-        open={open}
-        onClose={toggleSidebar}>
+      <Sidebar title={title} open={open} onClose={toggleSidebar}>
         <ServicesForm
           model={activeService}
           onSave={save}

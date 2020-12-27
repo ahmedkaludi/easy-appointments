@@ -1,57 +1,62 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { ContentBox, BasicTable, TableSorter } from '../../../../ea-components';
+import { __ } from '../../../../services/Localization';
 import { SortCommunicator } from '../../../../communicators';
+import { ContentBox, BasicTable, TableSorter } from '../../../../ea-components';
 
 const SERVICES_CONFIG = {
   name: {
-    header: 'Name',
+    header: __('Name', 'easy-appointments'),
     headerStyle: { minWidth: '200px' },
     position: 'left',
     type: 'text',
     cellClass: 'font-weight-bold'
   },
   duration: {
-    header: 'Duration *',
+    header: __('Duration *', 'easy-appointments'),
     headerStyle: { minWidth: '150px' },
     position: 'left',
     type: 'text'
   },
   slot_step: {
-    header: 'Slot step *',
+    header: __('Slot step *', 'easy-appointments'),
     headerStyle: { minWidth: '150px' },
     position: 'left',
     type: 'text'
   },
   block_before: {
-    header: 'Block before *',
+    header: __('Block before *', 'easy-appointments'),
     headerStyle: { minWidth: '150px' },
     position: 'left',
     type: 'text'
   },
   block_after: {
-    header: 'Block after *',
+    header: __('Block after *', 'easy-appointments'),
     headerStyle: { minWidth: '150px' },
     position: 'left',
     type: 'text'
   },
   price: {
-    header: 'Price',
+    header: __('Price', 'easy-appointments'),
     headerStyle: { minWidth: '150px' },
     position: 'left',
     type: 'text'
   },
-  actions: { header: 'Actions', position: 'center', type: 'actions' }
+  actions: {
+    header: __('Actions', 'easy-appointments'),
+    position: 'center',
+    type: 'actions'
+  }
 };
 
 const COLUMNS = [
-  { value: 'name', label: 'Name' },
-  { value: 'duration', label: 'Duration' },
-  { value: 'slot_step', label: 'Slot step' },
-  { value: 'block_before', label: 'Block before' },
-  { value: 'block_after', label: 'Block after' },
-  { value: 'price', label: 'Price' }
+  { value: 'name', label: __('Name', 'easy-appointments') },
+  { value: 'duration', label: __('Duration', 'easy-appointments') },
+  { value: 'slot_step', label: __('Slot step', 'easy-appointments') },
+  { value: 'block_before', label: __('Block before', 'easy-appointments') },
+  { value: 'block_after', label: __('Block after', 'easy-appointments') },
+  { value: 'price', label: __('Price', 'easy-appointments') }
 ];
 
 export const ServicesTable = ({
@@ -65,13 +70,13 @@ export const ServicesTable = ({
     ...record,
     actions: [
       {
-        tooltip: 'Edit',
+        tooltip: __('Edit', 'easy-appointments'),
         className: 'text-success',
         icon: 'edit',
         action: () => onEdit(record)
       },
       {
-        tooltip: 'Delete',
+        tooltip: __('Delete', 'easy-appointments'),
         className: 'text-danger',
         icon: processing === record.id ? 'processing' : 'delete',
         action: () => onDelete(record)
@@ -86,7 +91,7 @@ export const ServicesTable = ({
         columns={COLUMNS}
         sortingFunc={SortCommunicator.saveSortServices}
         onSortingDone={onSort}
-        hint="* value in minutes"
+        hint={__('* value in minutes', 'easy-appointments')}
       />
       <BasicTable data={adaptedData} config={SERVICES_CONFIG} />
     </ContentBox>

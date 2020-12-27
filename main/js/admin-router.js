@@ -2,13 +2,10 @@ EA.AppRouter = Backbone.Router.extend({
     current: null,
     routes: {
     	"custumize":"custumize",
-        "staff/": "staff",
-        "services/": "services",
         "connection/": "connections",
-        "locations/": "location",
         "custumize/": "custumize",
         "tools/": "tools",
-        "": 'location'
+        "": "connections"
     },
 
     initialize: function () {
@@ -31,7 +28,7 @@ EA.AppRouter = Backbone.Router.extend({
         var hash = window.location.hash;
 
         if(hash === '') {
-            hash = '#locations/';
+            hash = '#connection/';
         }
     
         var tab = mainView.$el.find('[href="' + hash + '"]')[0];
@@ -43,39 +40,6 @@ EA.AppRouter = Backbone.Router.extend({
 
 // Instantiate the router
 var app_router = new EA.AppRouter;
-
-// Services
-app_router.on('route:services', function () {
-    this.clearState();
-
-    var services = new EA.ServicesView({
-        el: '#tab-content'
-    });
-
-    this.setState(services);
-});
-
-// Locations
-app_router.on('route:location', function () {
-    this.clearState();
-
-    var locations = new EA.LocationsView({
-        el: '#tab-content'
-    });
-
-    this.setState(locations);
-});
-
-// Staff
-app_router.on('route:staff', function () {
-    this.clearState();
-
-    var staff = new EA.StaffView({
-        el: '#tab-content'
-    });
-
-    this.setState(staff);
-});
 
 // Connections
 app_router.on('route:connections', function () {

@@ -1,9 +1,10 @@
 import React, { Fragment, useState, useEffect } from 'react';
 
-import { PageTitle, EmptyState, Loader, Sidebar } from '../../ea-components';
-import { LocationsCommunicator } from '../../communicators';
+import { __ } from '../../services/Localization';
 import { LocationsForm } from './components/LocationsForm';
+import { LocationsCommunicator } from '../../communicators';
 import { LocationsTable } from './components/LocationsTable';
+import { PageTitle, EmptyState, Loader, Sidebar } from '../../ea-components';
 
 const LocationsPage = () => {
   const [open, setOpen] = useState(false);
@@ -85,20 +86,30 @@ const LocationsPage = () => {
   const headerAction = {
     callback: toggleSidebar,
     icon: 'map-marker-alt',
-    text: 'Add location'
+    text: __('Add location', 'easy-appointments')
   };
+
+  const title = activeLocation
+    ? __('Edit location', 'easy-appointments')
+    : __('Add location', 'easy-appointments');
 
   return (
     <Fragment>
       <PageTitle titleHeading="Locations" action={headerAction} />
 
       {loading ? (
-        <Loader text="Loading locations" />
+        <Loader text={__('Loading locations', 'easy-appointments')} />
       ) : !locations.length ? (
         <EmptyState
           type="location"
-          message="There are no available locations yet."
-          hint={`Use the 'Add location' button to add new location.`}
+          message={__(
+            'There are no available locations yet.',
+            'easy-appointments'
+          )}
+          hint={__(
+            `Use the 'Add location' button to add new location.`,
+            'easy-appointments'
+          )}
         />
       ) : (
         <LocationsTable
@@ -110,10 +121,7 @@ const LocationsPage = () => {
         />
       )}
 
-      <Sidebar
-        title={`${activeLocation ? 'Edit' : 'Add'} location`}
-        open={open}
-        onClose={toggleSidebar}>
+      <Sidebar title={title} open={open} onClose={toggleSidebar}>
         <LocationsForm
           model={activeLocation}
           onSave={save}

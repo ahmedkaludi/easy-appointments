@@ -1,36 +1,41 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { ContentBox, BasicTable, TableSorter } from '../../../../ea-components';
+import { __ } from '../../../../services/Localization';
 import { SortCommunicator } from '../../../../communicators';
+import { ContentBox, BasicTable, TableSorter } from '../../../../ea-components';
 
 const LOCATIONS_CONFIG = {
   name: {
-    header: 'Name',
+    header: __('Name', 'easy-appointment'),
     headerStyle: { minWidth: '200px' },
     position: 'left',
     type: 'text',
     cellClass: 'font-weight-bold'
   },
   address: {
-    header: 'Address',
+    header: __('Address', 'easy-appointments'),
     headerStyle: { minWidth: '200px' },
     position: 'left',
     type: 'text'
   },
   location: {
-    header: 'Location',
+    header: __('Location', 'easy-appointments'),
     headerStyle: { minWidth: '200px' },
     position: 'left',
     type: 'text'
   },
-  actions: { header: 'Actions', position: 'center', type: 'actions' }
+  actions: {
+    header: __('Actions', 'easy-appointments'),
+    position: 'center',
+    type: 'actions'
+  }
 };
 
 const COLUMNS = [
-  { value: 'name', label: 'Name' },
-  { value: 'address', label: 'Address' },
-  { value: 'location', label: 'Location' }
+  { value: 'name', label: __('Name', 'easy-appointments') },
+  { value: 'address', label: __('Address', 'easy-appointments') },
+  { value: 'location', label: __('Location', 'easy-appointments') }
 ];
 
 export const LocationsTable = ({
@@ -44,13 +49,13 @@ export const LocationsTable = ({
     ...record,
     actions: [
       {
-        tooltip: 'Edit',
+        tooltip: __('Edit', 'easy-appointments'),
         className: 'text-success',
         icon: 'edit',
         action: () => onEdit(record)
       },
       {
-        tooltip: 'Delete',
+        tooltip: __('Delete', 'easy-appointments'),
         className: 'text-danger',
         icon: processing === record.id ? 'processing' : 'delete',
         action: () => onDelete(record)

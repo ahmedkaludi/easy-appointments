@@ -1,9 +1,10 @@
 import React, { Fragment, useState, useEffect } from 'react';
 
-import { PageTitle, EmptyState, Sidebar, Loader } from '../../ea-components';
-import { VacationsCommunicator } from '../../communicators';
+import { __ } from '../../services/Localization';
 import { VacationForm } from './components/VacationForm';
 import { VacationTable } from './components/VacationTable';
+import { VacationsCommunicator } from '../../communicators';
+import { PageTitle, EmptyState, Sidebar, Loader } from '../../ea-components';
 
 const Vacation = () => {
   const [open, setOpen] = useState(false);
@@ -81,20 +82,33 @@ const Vacation = () => {
   const headerAction = {
     callback: toggleSidebar,
     icon: 'calendar-plus',
-    text: 'Add vacation'
+    text: __('Add vacation', 'easy-appointments')
   };
+
+  const title = activeVacation
+    ? __('Edit vacation', 'easy-appointments')
+    : __('Add vacation', 'easy-appointments');
 
   return (
     <Fragment>
-      <PageTitle titleHeading="Vacations" action={headerAction} />
+      <PageTitle
+        titleHeading={__('Vacations', 'easy-appointments')}
+        action={headerAction}
+      />
 
       {loading ? (
-        <Loader text="Loading vacations" />
+        <Loader text={__('Loading vacations', 'easy-appointments')} />
       ) : !vacations.length ? (
         <EmptyState
           type="vacation"
-          message="There are no scheduled vacation days yet."
-          hint={`Use the 'Add vacation' button to add new vacation days.`}
+          message={__(
+            'There are no scheduled vacation days yet.',
+            'easy-appointments'
+          )}
+          hint={__(
+            `Use the 'Add vacation' button to add new vacation days.`,
+            'easy-appointments'
+          )}
         />
       ) : (
         <VacationTable
@@ -105,10 +119,7 @@ const Vacation = () => {
         />
       )}
 
-      <Sidebar
-        title={`${activeVacation ? 'Edit' : 'Add'} vacation`}
-        open={open}
-        onClose={toggleSidebar}>
+      <Sidebar title={title} open={open} onClose={toggleSidebar}>
         <VacationForm
           model={activeVacation}
           onSave={save}

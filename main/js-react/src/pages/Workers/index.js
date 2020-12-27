@@ -1,9 +1,10 @@
 import React, { Fragment, useState, useEffect } from 'react';
 
-import { PageTitle, EmptyState, Loader, Sidebar } from '../../ea-components';
-import { WorkersCommunicator } from '../../communicators';
+import { __ } from '../../services/Localization';
 import { WorkersForm } from './components/WorkersForm';
 import { WorkersTable } from './components/WorkersTable';
+import { WorkersCommunicator } from '../../communicators';
+import { PageTitle, EmptyState, Loader, Sidebar } from '../../ea-components';
 
 const WorkersPage = () => {
   const [open, setOpen] = useState(false);
@@ -85,20 +86,30 @@ const WorkersPage = () => {
   const headerAction = {
     callback: toggleSidebar,
     icon: 'user-plus',
-    text: 'Add employee'
+    text: __('Add employee', 'easy-appointments')
   };
+
+  const title = activeWorker
+    ? __('Edit employee', 'easy-appointments')
+    : __('Add employee', 'easy-appointments');
 
   return (
     <Fragment>
-      <PageTitle titleHeading="Employees" action={headerAction} />
+      <PageTitle
+        titleHeading={__('Employees', 'easy-appointments')}
+        action={headerAction}
+      />
 
       {loading ? (
-        <Loader text="Loading employees" />
+        <Loader text={__('Loading employees', 'easy-appointments')} />
       ) : !workers.length ? (
         <EmptyState
           type="worker"
-          message="There are no employees yet."
-          hint={`Use the 'Add employee' button to add new employee.`}
+          message={__('There are no employees yet.', 'easy-appointments')}
+          hint={__(
+            `Use the 'Add employee' button to add new employee.`,
+            'easy-appointments'
+          )}
         />
       ) : (
         <WorkersTable
@@ -110,10 +121,7 @@ const WorkersPage = () => {
         />
       )}
 
-      <Sidebar
-        title={`${activeWorker ? 'Edit' : 'Add'} employee`}
-        open={open}
-        onClose={toggleSidebar}>
+      <Sidebar title={title} open={open} onClose={toggleSidebar}>
         <WorkersForm
           model={activeWorker}
           onSave={save}

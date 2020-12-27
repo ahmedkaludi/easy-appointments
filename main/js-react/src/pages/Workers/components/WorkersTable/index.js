@@ -1,43 +1,48 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { ContentBox, BasicTable, TableSorter } from '../../../../ea-components';
+import { __ } from '../../../../services/Localization';
 import { SortCommunicator } from '../../../../communicators';
+import { ContentBox, BasicTable, TableSorter } from '../../../../ea-components';
 
 const WORKERS_CONFIG = {
   name: {
-    header: 'Name',
+    header: __('Name', 'easy-appointments'),
     headerStyle: { minWidth: '200px' },
     position: 'left',
     type: 'text',
     cellClass: 'font-weight-bold'
   },
   description: {
-    header: 'Description',
+    header: __('Description', 'easy-appointments'),
     headerStyle: { minWidth: '200px' },
     position: 'left',
     type: 'text'
   },
   email: {
-    header: 'Email',
+    header: __('Email', 'easy-appointments'),
     headerStyle: { minWidth: '200px' },
     position: 'left',
     type: 'text'
   },
   phone: {
-    header: 'Phone',
+    header: __('Phone', 'easy-appointments'),
     headerStyle: { minWidth: '200px' },
     position: 'left',
     type: 'text'
   },
-  actions: { header: 'Actions', position: 'center', type: 'actions' }
+  actions: {
+    header: __('Actions', 'easy-appointments'),
+    position: 'center',
+    type: 'actions'
+  }
 };
 
 const COLUMNS = [
-  { value: 'name', label: 'Name' },
-  { value: 'description', label: 'Description' },
-  { value: 'email', label: 'Email' },
-  { value: 'phone', label: 'Phone' }
+  { value: 'name', label: __('Name', 'easy-appointments') },
+  { value: 'description', label: __('Description', 'easy-appointments') },
+  { value: 'email', label: __('Email', 'easy-appointments') },
+  { value: 'phone', label: __('Phone', 'easy-appointments') }
 ];
 
 export const WorkersTable = ({
