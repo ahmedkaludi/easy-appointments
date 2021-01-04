@@ -1,20 +1,14 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 
 import { Field, Input } from '../../../../../ea-components';
 import { __ } from '../../../../../services/Localization';
 
 const Minutes = ({ value, updateFieldValue, error, label }) => {
-  useEffect(() => {
-    if (!value) {
-      updateFieldValue('0');
-    }
-  }, [updateFieldValue, value]);
-
   return (
     <Input
       label={label}
-      value={value || ''}
+      value={value || '0'}
       onChange={val => updateFieldValue(val)}
       error={error}
       type="number"

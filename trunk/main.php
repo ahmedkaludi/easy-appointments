@@ -4,7 +4,7 @@
  * Plugin Name: Easy Appointments
  * Plugin URI: https://easy-appointments.net/
  * Description: Simple and easy to use management system for Appointments and Bookings
- * Version: 3.2.0
+ * Version: 3.2.1
  * Requires PHP: 5.3
  * Author: Nikola Loncar
  * Author URI: http://nikolaloncar.com

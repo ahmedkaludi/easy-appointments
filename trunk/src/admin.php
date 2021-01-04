@@ -519,7 +519,9 @@ class EAAdminPanel
         $settings['image_base'] = $wpurl === $url ? '' : $wpurl;
         wp_localize_script('ea-vacation', 'ea_settings', $settings);
 
-        wp_set_script_translations('ea-vacation', 'easy-appointments');
+        if (function_exists('wp_set_script_translations')) {
+            wp_set_script_translations('ea-vacation', 'easy-appointments');
+        }
 
         $screen = get_current_screen();
         $screen->add_help_tab(array(
@@ -557,7 +559,9 @@ class EAAdminPanel
         $settings['image_base'] = $wpurl === $url ? '' : $wpurl;
         wp_localize_script('ea-vacation', 'ea_settings', $settings);
 
-        wp_set_script_translations('ea-vacation', 'easy-appointments');
+        if (function_exists('wp_set_script_translations')) {
+            wp_set_script_translations('ea-vacation', 'easy-appointments');
+        }
 
         require_once EA_SRC_DIR . 'templates/locations.tpl.php';
         require_once EA_SRC_DIR . 'templates/inlinedata.tpl.php';
@@ -586,7 +590,9 @@ class EAAdminPanel
         $settings['image_base'] = $wpurl === $url ? '' : $wpurl;
         wp_localize_script('ea-vacation', 'ea_settings', $settings);
 
-        wp_set_script_translations('ea-vacation', 'easy-appointments');
+        if (function_exists('wp_set_script_translations')) {
+            wp_set_script_translations('ea-vacation', 'easy-appointments');
+        }
 
         require_once EA_SRC_DIR . 'templates/workers.tpl.php';
         require_once EA_SRC_DIR . 'templates/inlinedata.tpl.php';
@@ -615,7 +621,9 @@ class EAAdminPanel
         $settings['image_base'] = $wpurl === $url ? '' : $wpurl;
         wp_localize_script('ea-vacation', 'ea_settings', $settings);
 
-        wp_set_script_translations('ea-vacation', 'easy-appointments');
+        if (function_exists('wp_set_script_translations')) {
+            wp_set_script_translations('ea-vacation', 'easy-appointments');
+        }
 
         require_once EA_SRC_DIR . 'templates/services.tpl.php';
         require_once EA_SRC_DIR . 'templates/inlinedata.tpl.php';
