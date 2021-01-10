@@ -6,6 +6,12 @@ import { SortCommunicator } from '../../../../communicators';
 import { ContentBox, BasicTable, TableSorter } from '../../../../ea-components';
 
 const SERVICES_CONFIG = {
+  id: {
+    header: __('Id', 'easy-appointments'),
+    headerStyle: { maxWidth: '50px' },
+    position: 'left',
+    type: 'text'
+  },
   name: {
     header: _x('Name', 'service', 'easy-appointments'),
     headerStyle: { minWidth: '200px' },
@@ -51,6 +57,7 @@ const SERVICES_CONFIG = {
 };
 
 const COLUMNS = [
+  { value: 'id', label: _x('Id', 'id', 'easy-appointments') },
   { value: 'name', label: _x('Name', 'service', 'easy-appointments') },
   { value: 'duration', label: __('Duration', 'easy-appointments') },
   { value: 'slot_step', label: __('Slot step', 'easy-appointments') },
