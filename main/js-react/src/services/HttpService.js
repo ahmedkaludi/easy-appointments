@@ -1,6 +1,10 @@
 const jQuery = window.jQuery;
 
 class HttpService {
+  get(url, data) {
+    return jQuery.get(url, data);
+  }
+
   getJSON(url) {
     return jQuery.getJSON(url);
   }

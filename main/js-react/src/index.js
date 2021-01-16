@@ -37,3 +37,10 @@ if (document.getElementById('ea-admin-connections')) {
     document.getElementById('ea-admin-connections')
   );
 }
+
+if (document.getElementById('ea-admin-tools')) {
+  ReactDOM.render(
+    <EasyApp page="tools" />,
+    document.getElementById('ea-admin-tools')
+  );
+}

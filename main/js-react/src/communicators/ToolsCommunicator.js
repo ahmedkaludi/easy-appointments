@@ -1,0 +1,31 @@
+import { http } from '../services';
+
+const ajaxUrl = window?.ajaxurl ?? '';
+const nonce = window?.wpApiSettings?.nonce ?? '';
+
+/**
+ * Locations
+ */
+export class ToolsCommunicator {
+  static url = `${ajaxUrl}?&_wpnonce=${nonce}`;
+
+  /**
+   * Fetch all errors
+   *
+   * @returns {Promise<[]>}
+   */
+  static async fetchAllErrors() {
+    const url = `${this.url}&action=ea_errors`;
+
+    return http.getJSON(url);
+  }
+
+  /**
+
+   */
+  static async testEmail(address, native = '0') {
+    let url = `${this.url}&action=ea_test_wp_mail`;
+
+    return await http.get(url, { address, native });
+  }
+}

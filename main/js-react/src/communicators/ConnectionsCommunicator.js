@@ -12,7 +12,7 @@ export class ConnectionsCommunicator {
   /**
    * Fetch all connections
    *
-   * @returns {Promise<EALocation[]>}
+   * @returns {Promise<EAConnection[]>}
    */
   static async fetchAll() {
     const url = `${this.url}&action=ea_connections`;
@@ -23,7 +23,7 @@ export class ConnectionsCommunicator {
   /**
    * Save entity NEW / UPDATE
    *
-   * @param {EALocation} data
+   * @param {EAConnection} data
    * @returns {Promise<{ id: string}>}
    */
   static async save(data) {
@@ -38,7 +38,7 @@ export class ConnectionsCommunicator {
   }
 
   /**
-   * Delete EALocation
+   * Delete EAConnection
    *
    * @param {String} id
    * @returns {Promise<{Boolean}>}
