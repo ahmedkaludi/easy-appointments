@@ -1,4 +1,5 @@
 export { default as PageTitle } from './PageTitle';
+export { PageContentWrap, PAGE_KEYS } from './PageContentWrap';
 export { default as EmptyState } from './EmptyState';
 export { default as Sidebar } from './Sidebar';
 export { default as Form } from './Form/Form';
