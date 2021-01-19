@@ -7,6 +7,8 @@ import vacationImg from '../../assets/images/empty-states/empty-vacation.svg';
 import locationsImg from '../../assets/images/empty-states/empty-locations.svg';
 import employeesImg from '../../assets/images/empty-states/empty-employees.svg';
 import servicesImg from '../../assets/images/empty-states/empty-services.svg';
+import connectionsImg from '../../assets/images/empty-states/empty-connections.svg';
+import toolsImg from '../../assets/images/empty-states/empty-tools.svg';
 
 const imageBase = getSettings('image_base', '');
 
@@ -14,7 +16,9 @@ const imgSources = {
   vacation: imageBase + vacationImg,
   location: imageBase + locationsImg,
   service: imageBase + servicesImg,
-  worker: imageBase + employeesImg
+  worker: imageBase + employeesImg,
+  connection: imageBase + connectionsImg,
+  tools: imageBase + toolsImg
 };
 
 export default function EmptyState({ type, message, hint }) {
