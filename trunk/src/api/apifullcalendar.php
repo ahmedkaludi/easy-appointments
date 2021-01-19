@@ -32,15 +32,21 @@ class EAApiFullCalendar
     private $options;
 
     /**
+     * @var EAMail
+     */
+    private $mail;
+
+    /**
      * Category_List_Rest constructor.
      * @param $db_models
      * @param $options
      */
-    public function __construct($db_models, $options) {
+    public function __construct($db_models, $options, $mail) {
         $this->namespace = 'easy-appointments/v1';
         $this->rest_base = 'appointments';
         $this->db_models = $db_models;
         $this->options = $options;
+        $this->mail = $mail;
     }
 
     /**
@@ -295,6 +301,8 @@ class EAApiFullCalendar
             'is_admin'     => is_admin(),
             'is_logged_in' => is_user_logged_in(),
             'language'     => get_locale(),
+            'link_cancel'  => $this->mail->generate_link_element($app, 'cancel', __('Cancel appointment', 'easy-appointments')),
+            'link_confirm' => $this->mail->generate_link_element($app, 'confirm', __('Confirm appointment', 'easy-appointments')),
         ];
 
         $template = new Leuffen\TextTemplate\TextTemplate($tplStr);

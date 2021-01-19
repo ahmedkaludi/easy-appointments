@@ -5,7 +5,7 @@ Tags: appointment, appointments, Booking, calendar, plugin, reservation, reserva
 Requires at least: 3.7
 Tested up to: 5.6
 Requires PHP: 5.3
-Stable tag: 3.2.3
+Stable tag: 3.2.4
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -214,6 +214,9 @@ Note: you can have only one calendar on one page.
 25. Admin panel - Report - Export page
 
 == Changelog ==
+
+= 3.2.4 (2021-01-19) =
+* Added values for cancel and confirm links to FullCalendar event template
 
 = 3.2.3 (2021-01-10) =
 * Added Id column to Locations, Services and Workers admin page
