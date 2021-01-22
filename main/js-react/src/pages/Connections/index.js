@@ -1,6 +1,7 @@
 import React, { Fragment, useEffect, useState } from 'react';
 
 import { __ } from '../../services/Localization';
+import { ConnectionsForm } from './components/ConnectionsForm';
 import { ConnectionsCommunicator } from '../../communicators/ConnectionsCommunicator';
 import {
   PageTitle,
@@ -21,6 +22,7 @@ const ConnectionsPage = () => {
       const records = await ConnectionsCommunicator.fetchAll();
       setConnections(records);
       setLoading(false);
+      console.log(records);
     } catch (e) {
       throw new Error(e);
     }
@@ -37,6 +39,12 @@ const ConnectionsPage = () => {
 
     setOpen(!open);
   };
+
+  const onCreate = () => {};
+
+  const onEdit = () => {};
+
+  const save = (model, isEdit) => (isEdit ? onEdit(model) : onCreate(model));
 
   const headerAction = {
     callback: toggleSidebar,
@@ -59,7 +67,13 @@ const ConnectionsPage = () => {
         <span>Connections loaded</span>
       </PageContentWrap>
 
-      <Sidebar title={title} open={open} onClose={toggleSidebar} />
+      <Sidebar title={title} open={open} onClose={toggleSidebar}>
+        <ConnectionsForm
+          model={activeConnection}
+          onSave={save}
+          onCancel={toggleSidebar}
+        />
+      </Sidebar>
     </Fragment>
   );
 };
