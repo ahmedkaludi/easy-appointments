@@ -215,3 +215,16 @@
     }
   }
 }
+
+.ea-double-field {
+  display: flex;
+  justify-content: space-between;
+
+  .ea-form-field {
+    width: 48%;
+
+    @media screen and (max-width: 450px) {
+      width: 100%;
+    }
+  }
+}
