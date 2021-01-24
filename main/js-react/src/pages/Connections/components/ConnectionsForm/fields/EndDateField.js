@@ -10,20 +10,37 @@ const formatDate = date => {
 };
 
 const getNextDay = date => {
-  const tomorrow = new Date();
+  const tomorrow = new Date(date);
   tomorrow.setDate(date.getDate() + 1);
   return tomorrow;
 };
 
-const EndDate = ({ value, updateFieldValue, error }) => {
+const startGreaterThanEnd = (a, b) => {
+  if (!b) {
+    return true;
+  }
+
+  const dateA = a.split('-').join('');
+  const dateB = b.split('-').join('');
+  return !!(dateA > dateB);
+};
+
+const EndDate = ({ value, updateFieldValue, error, model }) => {
+  const fromDate = model.day_from;
+
   useEffect(() => {
-    if (!value) {
-      const end = getNextDay(new Date());
+    if (!fromDate) {
+      return;
+    }
+    if (startGreaterThanEnd(fromDate, value)) {
+      const end = getNextDay(new Date(fromDate));
       updateFieldValue(formatDate(end));
     }
-  }, [value]);
+  }, [fromDate]);
 
-  const onChange = date => updateFieldValue(date);
+  const onChange = date => updateFieldValue(formatDate(date));
+
+  const minDate = fromDate ? { minDate: new Date(fromDate) } : {};
 
   return (
     <DatePicker
@@ -31,6 +48,7 @@ const EndDate = ({ value, updateFieldValue, error }) => {
       value={value}
       onChange={onChange}
       error={error}
+      {...minDate}
     />
   );
 };
