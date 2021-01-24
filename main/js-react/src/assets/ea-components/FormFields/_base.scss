@@ -162,6 +162,10 @@
         border: none;
       }
 
+      .MuiInputAdornment-root {
+        color: rgba(0, 0, 0, 0.26);
+      }
+
       @include fieldsetBorders;
     }
   }
@@ -246,6 +250,9 @@
 .ea-double-field {
   display: flex;
   justify-content: space-between;
+  @media screen and (max-width: 450px) {
+    flex-direction: column;
+  }
 
   .ea-form-field {
     width: 48%;
