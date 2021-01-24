@@ -6,6 +6,8 @@ import { DaysOfWeekField } from './fields/DaysOfWeekField';
 import { SelectField } from './fields/SelectField';
 import { NumberOfSlotsField } from './fields/NumberOfSlotsField';
 import { IsWorkingField } from './fields/IsWorkingField';
+import { StartDateField } from './fields/StartDateField';
+import { EndDateField } from './fields/EndDateField';
 
 export const ConnectionsForm = ({ model, onSave, onCancel }) => (
   <Form model={model} onCancel={onCancel} onSave={onSave}>
@@ -14,11 +16,11 @@ export const ConnectionsForm = ({ model, onSave, onCancel }) => (
     <SelectField name="worker" label="Worker *" dataKey="Workers" />
     <NumberOfSlotsField />
     <DaysOfWeekField />
-    <IsWorkingField />
     <DoubleField>
-      <span>Jedan</span>
-      <span>Dva</span>
+      <StartDateField />
+      <EndDateField />
     </DoubleField>
+    <IsWorkingField />
   </Form>
 );
 

@@ -139,6 +139,33 @@
     }
   }
 
+  /* DATE PICKER FIELD */
+  .ea-date-picker {
+    .MuiInputLabel-outlined {
+      transform: translate(14px, 14px) scale(1);
+
+      &.MuiInputLabel-shrink {
+        transform: translate(14px, -6px) scale(0.75);
+      }
+    }
+
+    .MuiOutlinedInput-root {
+      .MuiOutlinedInput-input {
+        padding: 6px 10px;
+        font-size: 14px;
+        color: #333333;
+      }
+
+      input[type=text] {
+        background-color: transparent;
+        box-shadow: none;
+        border: none;
+      }
+
+      @include fieldsetBorders;
+    }
+  }
+
   /* MULTI DATE PICKER FIELD */
   .ea-fieldset {
     .datepicker-chips-wrapper {
