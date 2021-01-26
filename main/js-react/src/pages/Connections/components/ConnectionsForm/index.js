@@ -8,6 +8,8 @@ import { NumberOfSlotsField } from './fields/NumberOfSlotsField';
 import { IsWorkingField } from './fields/IsWorkingField';
 import { StartDateField } from './fields/StartDateField';
 import { EndDateField } from './fields/EndDateField';
+import { StartTimeField } from './fields/StartTimeField';
+import { EndTimeField } from './fields/EndTimeField';
 
 export const ConnectionsForm = ({ model, onSave, onCancel }) => (
   <Form model={model} onCancel={onCancel} onSave={onSave}>
@@ -19,6 +21,10 @@ export const ConnectionsForm = ({ model, onSave, onCancel }) => (
     <DoubleField>
       <StartDateField />
       <EndDateField />
+    </DoubleField>
+    <DoubleField>
+      <StartTimeField />
+      <EndTimeField />
     </DoubleField>
     <IsWorkingField />
   </Form>
