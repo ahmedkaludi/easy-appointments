@@ -81,7 +81,10 @@ There is extension plugin that you can buy and add to your Easy Appointments plu
 
 * Google Calendar with 2 way sync
 * iCalendar
-* Twilio SMS notifications
+* Notifications SMS & Mail (custom template for each status as well for reminder and follow up messages)
+    - Twilio SMS
+    - Omnicom SMS (Greece 🇬🇷)
+    - Mail
 * WooCommerce integration
 * PayPal integration
 
