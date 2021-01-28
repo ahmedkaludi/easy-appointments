@@ -40,7 +40,9 @@ const ConnectionsPage = () => {
     setOpen(!open);
   };
 
-  const onCreate = () => {};
+  const onCreate = model => {
+    console.log(model);
+  };
 
   const onEdit = () => {};
 
