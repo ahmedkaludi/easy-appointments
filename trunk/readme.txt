@@ -5,7 +5,7 @@ Tags: appointment, appointments, Booking, calendar, plugin, reservation, reserva
 Requires at least: 3.7
 Tested up to: 5.6
 Requires PHP: 5.3
-Stable tag: 3.2.4
+Stable tag: 3.2.5
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -76,7 +76,7 @@ Can be used for : <strong>Lawyers</strong>, <strong>Salons</strong>, <strong>Mec
     - Time table overview
     - **Export to CSV (for Calc, Excel...)**
 
-= Need even more like Google Calendar, iCalendar, WooCommerce or Twilio SMS support? =
+= Need even more like Google Calendar, iCalendar, WooCommerce or SMS support? =
 There is extension plugin that you can buy and add to your Easy Appointments plugin :
 
 * Google Calendar with 2 way sync
@@ -217,6 +217,9 @@ Note: you can have only one calendar on one page.
 25. Admin panel - Report - Export page
 
 == Changelog ==
+
+= 3.2.5 (2021-01-28) =
+* Fixed issue with cutting price value on large numbers > 1000
 
 = 3.2.4 (2021-01-19) =
 * Added values for cancel and confirm links to FullCalendar event template

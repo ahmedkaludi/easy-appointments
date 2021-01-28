@@ -34,6 +34,8 @@ export class ServicesCommunicator {
       url = `${url}&id=${data.id}&_method=PUT`;
     }
 
+    data.price = data.price.replaceAll(',', '');
+
     return await http.post(url, JSON.stringify(data));
   }
 
