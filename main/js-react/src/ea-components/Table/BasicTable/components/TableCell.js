@@ -23,6 +23,7 @@ import {
 
 import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
 import EditIcon from '@material-ui/icons/Edit';
+import FileCopyOutlinedIcon from '@material-ui/icons/FileCopyOutlined';
 
 const CELL_TYPES = {
   TEXT: 'text',
@@ -34,6 +35,7 @@ const CELL_TYPES = {
 const ICON_TYPES = {
   edit: <EditIcon />,
   delete: <DeleteOutlineIcon />,
+  clone: <FileCopyOutlinedIcon />,
   processing: <CircularProgress size="1em" />
 };
 

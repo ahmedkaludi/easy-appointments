@@ -2,6 +2,7 @@ import React, { Fragment, useEffect, useState } from 'react';
 
 import { __ } from '../../services/Localization';
 import { ConnectionsForm } from './components/ConnectionsForm';
+import { ConnectionsTable } from './components/ConnectionsTable';
 import { ConnectionsCommunicator } from '../../communicators/ConnectionsCommunicator';
 import {
   PageTitle,
@@ -15,7 +16,7 @@ const ConnectionsPage = () => {
   const [loading, setLoading] = useState(true);
   const [connections, setConnections] = useState([]);
   const [activeConnection, setActiveConnection] = useState(null);
-  // const [processing, setProcessing] = useState(null);
+  const [processing, setProcessing] = useState(null);
 
   const loadConnections = async () => {
     try {
@@ -40,13 +41,49 @@ const ConnectionsPage = () => {
     setOpen(!open);
   };
 
-  const onCreate = model => {
+  const onCreate = async model => {
     console.log(model);
   };
 
-  const onEdit = () => {};
+  const onEdit = async model => {
+    console.log(model);
+  };
 
   const save = (model, isEdit) => (isEdit ? onEdit(model) : onCreate(model));
+
+  const onEditClick = row => {
+    setActiveConnection(row);
+    toggleSidebar();
+  };
+
+  const onDeleteClick = async row => {
+    setProcessing(row?.id);
+
+    try {
+      const data = connections.filter(record => record.id !== row.id);
+      const result = await ConnectionsCommunicator.delete(row.id);
+
+      if (result) {
+        setConnections(data);
+      }
+    } catch (e) {
+      throw new Error(e);
+    }
+
+    setProcessing(null);
+  };
+
+  const onCloneClick = async row => {
+    try {
+      const copied = { ...row };
+      delete copied.id;
+
+      const result = await ConnectionsCommunicator.save(copied);
+      setConnections([{ ...copied, id: result.id }, ...connections]);
+    } catch (e) {
+      throw new Error(e);
+    }
+  };
 
   const headerAction = {
     callback: toggleSidebar,
@@ -66,7 +103,13 @@ const ConnectionsPage = () => {
         pageKey={PAGE_KEYS.CONNECTIONS}
         loading={loading}
         condition={connections.length}>
-        <span>Connections loaded</span>
+        <ConnectionsTable
+          data={connections}
+          onEdit={onEditClick}
+          onDelete={onDeleteClick}
+          onClone={onCloneClick}
+          processing={processing}
+        />
       </PageContentWrap>
 
       <Sidebar title={title} open={open} onClose={toggleSidebar}>
