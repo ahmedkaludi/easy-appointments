@@ -42,11 +42,27 @@ const ConnectionsPage = () => {
   };
 
   const onCreate = async model => {
-    console.log(model);
+    try {
+      const result = await ConnectionsCommunicator.save(model);
+      toggleSidebar();
+      setConnections([{ ...model, id: result.id }, ...connections]);
+    } catch (e) {
+      throw new Error(e);
+    }
   };
 
   const onEdit = async model => {
-    console.log(model);
+    try {
+      await ConnectionsCommunicator.save(model);
+
+      const data = connections.map(record =>
+        record.id === model.id ? model : record
+      );
+      toggleSidebar();
+      setConnections(data);
+    } catch (e) {
+      throw new Error(e);
+    }
   };
 
   const save = (model, isEdit) => (isEdit ? onEdit(model) : onCreate(model));
