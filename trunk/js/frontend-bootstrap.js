@@ -227,6 +227,11 @@
             var slot_step = serviceData.slot_step;
 
             var takeSlots = parseInt(duration) / parseInt(slot_step);
+
+            if (ea_settings["label.from_to"] == "1") {
+                takeSlots = 1;
+            }
+
             var $nextSlots = $element.nextAll();
 
             var forSelection = [];
@@ -568,6 +573,13 @@
                 next_element = jQuery(document.createElement('div'))
                     .addClass('time well well-lg');
 
+                var fromTo = ea_settings["label.from_to"] == "1";
+                var classAMPM = (ea_settings["time_format"] == "am-pm") ? ' am-pm' : '';
+
+                if (fromTo) {
+                    next_element.addClass('time well well-lg col-50');
+                }
+
                 // sort response by value 11:00, 12:00, 13:00...
                 response.sort(function (a, b) {
                     var a1 = a.value, b1 = b.value;
@@ -582,21 +594,20 @@
 
                 // TR > TD WITH TIME SLOTS
                 jQuery.each(response, function (index, element) {
-                    var classAMPM = (ea_settings["time_format"] == "am-pm") ? ' am-pm' : '';
+                    var selectLabel = fromTo ? element.show + ' - ' + element.ends : element.show;
 
                     if (element.count > 0) {
                         // show remaining slots or not
                         if (ea_settings['show_remaining_slots'] === '1') {
-                            next_element.append('<a href="#" class="time-value slots' + classAMPM + '" data-val="' + element.value + '">' + element.show + ' (' + element.count + ')</a>');
+                            next_element.append('<a href="#" class="time-value slots' + classAMPM + '" data-val="' + element.value + '">' + selectLabel + ' (' + element.count + ')</a>');
                         } else {
-                            next_element.append('<a href="#" class="time-value' + classAMPM + '" data-val="' + element.value + '">' + element.show + '</a>');
+                            next_element.append('<a href="#" class="time-value' + classAMPM + '" data-val="' + element.value + '">' + selectLabel + '</a>');
                         }
                     } else {
-
                         if (ea_settings['show_remaining_slots'] === '1') {
-                            next_element.append('<a class="time-disabled slots' + classAMPM + '">' + element.show + ' (0)</a>');
+                            next_element.append('<a class="time-disabled slots' + classAMPM + '">' + selectLabel + ' (0)</a>');
                         } else {
-                            next_element.append('<a class="time-disabled' + classAMPM + '">' + element.show + '</a>');
+                            next_element.append('<a class="time-disabled' + classAMPM + '">' + selectLabel + '</a>');
                         }
                     }
                 });

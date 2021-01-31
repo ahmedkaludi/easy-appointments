@@ -21,6 +21,7 @@ EA.CustumizeView = Backbone.View.extend({
         "click .remove-advance-redirect": "removeAdvanceRedirect",
         "change #ea-select-status": "defaultStatusChange",
         "click .form-label-option": "changeFormLabelStyle",
+        "click .select-label-option": "changeSelectLabelStyle",
         "click .btn-gdpr-delete-data": "gdprDeleteData",
     },
 
@@ -88,6 +89,7 @@ EA.CustumizeView = Backbone.View.extend({
         this.defaultStatusChange();
 
         this.changeFormLabelStyleInit();
+        this.changeSelectLabelStyleInit();
 
         return this;
     },
@@ -530,6 +532,16 @@ EA.CustumizeView = Backbone.View.extend({
 
     },
 
+    changeSelectLabelStyle: function (e) {
+        var selected = jQuery(e.currentTarget);
+        var value = selected.data('value');
+
+        this.$el.find('[name="label.from_to"]').val(value);
+
+        this.$el.find('.select-label-option').toggleClass('selected');
+
+    },
+
     changeFormLabelStyleInit: function () {
         var initValue = this.$el.find('[name="form.label.above"]').val();
 
@@ -539,6 +551,17 @@ EA.CustumizeView = Backbone.View.extend({
         }
 
         this.$el.find('.form-label-option').last().addClass('selected');
+    },
+
+    changeSelectLabelStyleInit: function () {
+        var initValue = this.$el.find('[name="label.from_to"]').val();
+
+        if (initValue !== '1') {
+            this.$el.find('.select-label-option').first().addClass('selected');
+            return;
+        }
+
+        this.$el.find('.select-label-option').last().addClass('selected');
     },
 
     gdprDeleteData: function() {

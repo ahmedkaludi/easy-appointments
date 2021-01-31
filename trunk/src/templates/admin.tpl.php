@@ -828,6 +828,20 @@
                     </div>
                     <div class="form-item">
                         <div class="label-with-tooltip">
+                            <label for="label.from_to"><?php _e('Select label style', 'easy-appointments'); ?></label>
+                            <span class="tooltip tooltip-right"
+                                  data-tooltip="<?php _e('Show From or From-To label on time slot in [ea_bootstrap] shortcode.', 'easy-appointments'); ?>"></span>
+                        </div>
+                        <div>
+                            <img data-value="1" class="select-label-option" title="From - To" width="200px" src="<?php echo plugin_dir_url( __DIR__ ) . '../img/label-from-to.png';?>"/>
+                            <img data-value="0" class="select-label-option" title="From" width="200px" src="<?php echo plugin_dir_url( __DIR__ ) . '../img/label-from.png';?>"/>
+                            <input class="field" type="hidden" name="label.from_to"
+                                   data-key="label.from_to" value="<%- _.findWhere(settings,
+                            {ea_key:'label.from_to'}).ea_value %>" />
+                        </div>
+                    </div>
+                    <div class="form-item">
+                        <div class="label-with-tooltip">
                             <label for="send.worker.email"><?php _e('I agree field', 'easy-appointments'); ?></label>
                             <span class="tooltip tooltip-right"
                                   data-tooltip="<?php _e('I agree option at the end of form. If this is marked user must confirm "I agree" checkbox.', 'easy-appointments'); ?>"></span>
