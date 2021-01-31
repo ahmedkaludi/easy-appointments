@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-// import { __, _x } from '../../../../services/Localization';
 import { __ } from '../../../../services/Localization';
 import { ContentBox, BasicTable } from '../../../../ea-components';
 import { DataService } from '../../../../services';
@@ -18,7 +17,7 @@ const CONNECTIONS_CONFIG = {
     type: 'text'
   },
   connection: {
-    header: __('Location / Service / Worker', 'location', 'easy-appointment'),
+    header: __('Location / Service / Employee', 'location', 'easy-appointment'),
     headerStyle: { minWidth: '200px' },
     position: 'left',
     type: 'text'
@@ -35,7 +34,7 @@ const CONNECTIONS_CONFIG = {
     type: 'chips'
   },
   time: {
-    header: __('Time', 'easy-appointments'),
+    header: __('Working Hours', 'easy-appointments'),
     headerStyle: { maxWidth: '100px' },
     position: 'left',
     type: 'text_with_label'
@@ -105,10 +104,30 @@ export const ConnectionsTable = ({
     ]
   }));
 
+  const applyClassToRow = ({ date, is_working }) => {
+    const currentDate = new Date().toISOString().slice(0, 10);
+    const formatClassName = name => ({ className: name });
+
+    // case when we don't have active connection
+    if (currentDate < date[0].text || currentDate > date[1].text) {
+      return formatClassName('not-active');
+    }
+
+    if (is_working === 'Yes') {
+      return formatClassName('working');
+    }
+
+    return formatClassName('not-working');
+  };
+
   return (
     <ContentBox>
       {processing && <div className="ea-transparent-mask" />}
-      <BasicTable data={adaptedData} config={CONNECTIONS_CONFIG} />
+      <BasicTable
+        data={adaptedData}
+        config={CONNECTIONS_CONFIG}
+        rowCallback={applyClassToRow}
+      />
     </ContentBox>
   );
 };

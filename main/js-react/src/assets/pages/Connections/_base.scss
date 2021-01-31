@@ -1,0 +1,13 @@
+div#ea-admin-connections {
+  tr.working {
+    background-color: lighten($green, 50%);
+  }
+
+  tr.not-working {
+    background-color: lighten($red, 35%);
+  }
+
+  tr.not-active {
+    background-color: lighten($dark, 40%);
+  }
+}
