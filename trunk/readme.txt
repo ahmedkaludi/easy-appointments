@@ -5,7 +5,7 @@ Tags: appointment, appointments, Booking, calendar, plugin, reservation, reserva
 Requires at least: 3.7
 Tested up to: 5.6
 Requires PHP: 5.3
-Stable tag: 3.2.5
+Stable tag: 3.3.1
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -217,6 +217,13 @@ Note: you can have only one calendar on one page.
 25. Admin panel - Report - Export page
 
 == Changelog ==
+
+= 3.3.1 (2021-02-03) =
+* Added hook for time selection in form `easyappslotselects`.
+
+= 3.3.0 (2021-01-31) =
+* Added option to style Slot select field in form as (from-to) time. Example `10:00 am - 11:00 am`
+* Added `id` values for custom form fields
 
 = 3.2.5 (2021-01-28) =
 * Fixed issue with cutting price value on large numbers > 1000

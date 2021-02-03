@@ -147,6 +147,8 @@
 
                 var result = plugin.selectTimes(jQuery(this));
 
+                plugin.triggerSlotSelectEvent();
+
                 // check if we can select that field
                 if (!result) {
                     alert(ea_settings['trans.slot-not-selectable']);
@@ -1022,7 +1024,7 @@
             }, plugin));
         },
         /**
-         *
+         * Event when new appointment is booked
          */
         triggerEvent: function () {
             // Create the event.
@@ -1030,6 +1032,17 @@
 
             // Define that the event name is 'easyappnewappointment'.
             event.initEvent('easyappnewappointment', true, true);
+
+            // send event to document
+            document.dispatchEvent(event);
+        },
+
+        /**
+         * Event when customer select time slot
+         */
+        triggerSlotSelectEvent: function () {
+            // Create the event.
+            var event = new Event('easyappslotselect');
 
             // send event to document
             document.dispatchEvent(event);

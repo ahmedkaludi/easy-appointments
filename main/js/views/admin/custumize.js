@@ -556,7 +556,7 @@ EA.CustumizeView = Backbone.View.extend({
     changeSelectLabelStyleInit: function () {
         var initValue = this.$el.find('[name="label.from_to"]').val();
 
-        if (initValue !== '1') {
+        if (initValue === '1') {
             this.$el.find('.select-label-option').first().addClass('selected');
             return;
         }
