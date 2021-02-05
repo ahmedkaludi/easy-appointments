@@ -5,7 +5,7 @@ Tags: appointment, appointments, Booking, calendar, plugin, reservation, reserva
 Requires at least: 3.7
 Tested up to: 5.6
 Requires PHP: 5.3
-Stable tag: 3.3.1
+Stable tag: 3.3.2
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -217,6 +217,9 @@ Note: you can have only one calendar on one page.
 25. Admin panel - Report - Export page
 
 == Changelog ==
+
+= 3.3.2 (2021-02-05) =
+* Masked field can be set as required
 
 = 3.3.1 (2021-02-03) =
 * Added hook for time selection in form `easyappslotselects`.
