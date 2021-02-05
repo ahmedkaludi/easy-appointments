@@ -58,6 +58,27 @@ const CONNECTIONS_CONFIG = {
   }
 };
 
+const TableLegend = () => (
+  <div className="p-3 d-flex justify-content-end">
+    <div className="connections-legend d-flex align-items-center">
+      <div className="d-flex align-items-center">
+        <span className="p-2 ea-not-active rounded-circle" />
+        <span className="font-size-xs pl-1 ea-table-cell-label">Inactive</span>
+      </div>
+      <div className="d-flex align-items-center ml-3">
+        <span className="p-2 ea-working rounded-circle" />
+        <span className="font-size-xs pl-1 ea-table-cell-label">Working</span>
+      </div>
+      <div className="d-flex align-items-center ml-3">
+        <span className="p-2 ea-not-working rounded-circle" />
+        <span className="font-size-xs pl-1 ea-table-cell-label">
+          Not working
+        </span>
+      </div>
+    </div>
+  </div>
+);
+
 export const ConnectionsTable = ({
   data,
   onEdit,
@@ -110,19 +131,20 @@ export const ConnectionsTable = ({
 
     // case when we don't have active connection
     if (currentDate < date[0].text || currentDate > date[1].text) {
-      return formatClassName('not-active');
+      return formatClassName('ea-not-active');
     }
 
     if (is_working === 'Yes') {
-      return formatClassName('working');
+      return formatClassName('ea-working');
     }
 
-    return formatClassName('not-working');
+    return formatClassName('ea-not-working');
   };
 
   return (
     <ContentBox>
       {processing && <div className="ea-transparent-mask" />}
+      <TableLegend />
       <BasicTable
         data={adaptedData}
         config={CONNECTIONS_CONFIG}
