@@ -21,6 +21,7 @@ import './assets/base.scss';
 
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { fas } from '@fortawesome/free-solid-svg-icons';
+import { far } from '@fortawesome/free-regular-svg-icons';
 
 // import CssBaseline from '@material-ui/core/CssBaseline';
 
@@ -272,6 +273,7 @@ import { fas } from '@fortawesome/free-solid-svg-icons';
 // );
 //
 library.add(fas);
+library.add(far);
 
 const store = configureStore();
 
