@@ -29,11 +29,11 @@ const CONFIG = {
     esMessage: 'There are no employees yet.',
     esHint: `Use the 'Add employee' button to add new employee.`
   },
-  TOOLS: {
-    loadingText: 'Loading tools',
-    esType: 'tools',
-    esMessage: 'There are no available tools yet.',
-    esHint: `Use the 'Add tool' button to add new tool.`
+  ERROR_LOG: {
+    loadingText: 'Checking error log',
+    esType: 'errlog',
+    esMessage: 'Error log is empty',
+    esHint: ''
   },
   CONNECTIONS: {
     loadingText: 'Loading connections',

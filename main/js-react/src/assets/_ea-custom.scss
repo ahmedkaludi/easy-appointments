@@ -6,6 +6,7 @@
 @import "ea-components/FormFields/base";
 @import "ea-components/Loader/base";
 @import "ea-components/ContentBox/base";
+@import "ea-components/MuiFields/base";
 
 // PAGES
 
@@ -14,11 +15,16 @@
 @import "pages/Services/base";
 @import "pages/Workers/base";
 @import "pages/Connections/base";
+@import "pages/Tools/base";
 
 // CUSTOM CLASSES
 
 .ea-text {
   color: $eaprimary;
+}
+
+.ea-margin-fix {
+  margin: 0 -2rem 2rem;
 }
 
 .ea-min-width-100 {

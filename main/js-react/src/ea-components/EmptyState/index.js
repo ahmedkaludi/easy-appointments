@@ -9,6 +9,7 @@ import employeesImg from '../../assets/images/empty-states/empty-employees.svg';
 import servicesImg from '../../assets/images/empty-states/empty-services.svg';
 import connectionsImg from '../../assets/images/empty-states/empty-connections.svg';
 import toolsImg from '../../assets/images/empty-states/empty-tools.svg';
+import noErrorImg from '../../assets/images/empty-states/empty-err-log.svg';
 
 const imageBase = getSettings('image_base', '');
 
@@ -18,7 +19,8 @@ const imgSources = {
   service: imageBase + servicesImg,
   worker: imageBase + employeesImg,
   connection: imageBase + connectionsImg,
-  tools: imageBase + toolsImg
+  tools: imageBase + toolsImg,
+  errlog: imageBase + noErrorImg
 };
 
 export default function EmptyState({ type, message, hint }) {
