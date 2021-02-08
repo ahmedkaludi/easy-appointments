@@ -15,7 +15,7 @@ export class ToolsCommunicator {
    * @returns {Promise<[]>}
    */
   static async fetchAllErrors() {
-    const url = `${this.url}&action=ea_errors`;
+    const url = `${ToolsCommunicator.url}&action=ea_errors`;
 
     return http.getJSON(url);
   }
@@ -24,7 +24,7 @@ export class ToolsCommunicator {
 
    */
   static async testEmail(address, native = '0') {
-    let url = `${this.url}&action=ea_test_wp_mail`;
+    let url = `${ToolsCommunicator.url}&action=ea_test_wp_mail`;
 
     return await http.get(url, { address, native });
   }

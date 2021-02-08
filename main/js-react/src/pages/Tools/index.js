@@ -41,10 +41,10 @@ const Tools = () => {
 
         <span className="d-block text-black-50 font-size-sm my-3">
           Test if the mail service is working fine on this site by generating a
-          test email that will be send to provided address.
+          test email that will be sent to provided address.
         </span>
 
-        <TestMail />
+        <TestMail test={ToolsCommunicator.testEmail} />
       </ContentBox>
 
       <div className="d-flex mb-3 ea-margin-fix align-items-center justify-content-between">
