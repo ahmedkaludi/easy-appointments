@@ -1,6 +1,7 @@
 import { http } from '../services';
 
 const ajaxUrl = window?.ajaxurl ?? '';
+const removeLogUrl = window?.ea_settings?.rest_url_clear_log;
 const nonce = window?.wpApiSettings?.nonce ?? '';
 
 /**
@@ -27,5 +28,11 @@ export class ToolsCommunicator {
     let url = `${ToolsCommunicator.url}&action=ea_test_wp_mail`;
 
     return await http.get(url, { address, native });
+  }
+
+  static clearLogs() {
+    let url = `${removeLogUrl}?&_wpnonce=${nonce}`;
+
+    return http.delete(url);
   }
 }

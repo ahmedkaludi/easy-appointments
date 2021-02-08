@@ -380,7 +380,7 @@ EOT;
             $link_text = $link;
         }
 
-        return "<a href='$link'>$link_text</a>";
+        return "<a href='$link' target='_blank'>$link_text</a>";
     }
 
     /**

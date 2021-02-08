@@ -693,6 +693,7 @@ class EAAdminPanel
 
         $settings = $this->options->get_options();
         $settings['rest_url'] = get_rest_url();
+        $settings['rest_url_clear_log'] = EALogActions::clear_error_url();
 
         $wpurl = get_bloginfo('wpurl');
         $url   = get_bloginfo('url');

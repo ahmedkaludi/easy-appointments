@@ -102,6 +102,7 @@ class EAOptions
             'fullcalendar.event.show'       => '0',
             'fullcalendar.event.template'   => '',
             'shortcode.compress'            => '1',
+            'label.from_to'                 => '0',
         );
     }
 

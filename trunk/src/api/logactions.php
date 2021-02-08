@@ -56,6 +56,11 @@ class EALogActions {
         return __('Log records deleted', 'easy-appointments');
     }
 
+    public static function clear_error_url()
+    {
+        return rest_url('easy-appointments/v1/mail_log');
+    }
+
     public function clear_log_file() {
         do_action('EA_CLEAR_LOG');
 

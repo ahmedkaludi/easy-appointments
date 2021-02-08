@@ -251,7 +251,7 @@
 	if(app.start === item.value) { %>
 	<option value="<%= item.value %>" selected="selected"><%= item.show %></option>
 	<% } else { %>
-		<option value="<%= item.value %>" <% if(item.count < 1) {%>disabled<% } %>><%= item.show %></option>
+		<option value="<%= item.value %>" <% if(item.count < 1) {%>disabled<% } %>><%= item.show %> - <%= item.ends %></option>
 	<% } %>
 <% });%>
 </script>

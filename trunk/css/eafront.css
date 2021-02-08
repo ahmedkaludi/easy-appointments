@@ -89,6 +89,10 @@
 	background-color: #ccc;
 }
 
+.ea-standard .col-50 .time-value, .ea-standard .col-50 .time-disabled {
+	width: 50%;
+}
+
 .ea-standard .time-value.am-pm, .ea-standard .time-disabled.am-pm {
 	padding-left: 6px;
 	padding-right: 6px;
