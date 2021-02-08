@@ -25,6 +25,12 @@ const Tools = () => {
     });
   }, []);
 
+  const clearLogs = () => {
+    ToolsCommunicator.clearLogs().then(() => {
+      setErrors([]);
+    });
+  };
+
   return (
     <Fragment>
       <PageTitle titleHeading="Tools" />
@@ -53,7 +59,7 @@ const Tools = () => {
           {__('Error log', 'easy-appointments')}
         </h5>
         {errors.length ? (
-          <Button onClick={f => f} variant="outlined" color="primary">
+          <Button onClick={clearLogs} variant="outlined" color="primary">
             {__('Clear log', 'easy-appointments')}
           </Button>
         ) : null}

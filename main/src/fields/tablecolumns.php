@@ -204,6 +204,7 @@ class EATableColumns
             'width',
             'form.label.above',
             'form_class',
+            'label.from_to'
         );
 
         foreach ($ea_settings as $key => $value) {

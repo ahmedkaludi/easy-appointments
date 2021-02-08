@@ -165,7 +165,7 @@ class EALogic
         $this->remove_reserved_slots($working_hours, $location, $service, $worker, $day, $service_duration, $app_id);
 
         // format time
-        return $this->format_time($working_hours);
+        return $this->format_time($working_hours, $serviceObj->duration);
     }
 
     /**
@@ -396,10 +396,11 @@ class EALogic
     /**
      * Time format function
      *
-     * @param  array &$times Array of slots
+     * @param array &$times Array of slots
+     * @param int $service_duration
      * @return array         Result times array
      */
-    public function format_time(&$times)
+    public function format_time(&$times, $service_duration)
     {
         $result = array();
 
@@ -411,14 +412,16 @@ class EALogic
                     $result[] = array(
                         'count' => $count,
                         'value' => $time,
-                        'show'  => $time
+                        'show'  => $time,
+                        'ends'  => date('G:i', strtotime("{$time} + $service_duration minute"))
                     );
                     break;
                 case 'am-pm':
                     $result[] = array(
                         'count' => $count,
                         'value' => $time,
-                        'show'  => date("h:i a", strtotime($time))
+                        'show'  => date( 'h:i a', strtotime($time)),
+                        'ends'  => date('h:i a', strtotime("{$time} + $service_duration minute"))
                     );
                     break;
                 default:

@@ -650,7 +650,7 @@
                       </div>
                       <textarea id="fullcalendar-event-template" class="field" name="fullcalendar.event.template" data-key="fullcalendar.event.template"><%- (_.findWhere(settings, {ea_key:'fullcalendar.event.template'})).ea_value %></textarea>
                       <small><?php _e('Example', 'easy-appointments'); ?> : (<a href="https://easy-appointments.net/documentation/templates/" target="_blank"><?php _e('Full documentation', 'easy-appointments');?></a>)</small>
-                      <div style="display: inline-block"><code>{= event.location_name}</code><small> / </small><code>{= language}</code></div>
+                      <div style="display: inline-block"><code>{= event.location_name}</code><small> / </small><code>{= language}</code><small> / </small><code>{= link_confirm}</code></div>
                       <small><?php _e('To get all available options use', 'easy-appointments'); ?> :</small>
                       <code>{= __CONTEXT__ | raw}</code>
                   </div>
@@ -824,6 +824,20 @@
                             <input class="field" type="hidden" name="form.label.above"
                                    data-key="form.label.above" value="<%- _.findWhere(settings,
                             {ea_key:'form.label.above'}).ea_value %>" />
+                        </div>
+                    </div>
+                    <div class="form-item">
+                        <div class="label-with-tooltip">
+                            <label for="label.from_to"><?php _e('Select label style', 'easy-appointments'); ?></label>
+                            <span class="tooltip tooltip-right"
+                                  data-tooltip="<?php _e('Show From or From-To label on time slot in [ea_bootstrap] shortcode.', 'easy-appointments'); ?>"></span>
+                        </div>
+                        <div>
+                            <img data-value="1" class="select-label-option" title="From - To" width="200px" src="<?php echo plugin_dir_url( __DIR__ ) . '../img/label-from-to.png';?>"/>
+                            <img data-value="0" class="select-label-option" title="From" width="200px" src="<?php echo plugin_dir_url( __DIR__ ) . '../img/label-from.png';?>"/>
+                            <input class="field" type="hidden" name="label.from_to"
+                                   data-key="label.from_to" value="<%- _.findWhere(settings,
+                            {ea_key:'label.from_to'}).ea_value %>" />
                         </div>
                     </div>
                     <div class="form-item">

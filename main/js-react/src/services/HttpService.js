@@ -12,6 +12,13 @@ class HttpService {
   post(url, data = {}) {
     return jQuery.post(url, data);
   }
+
+  delete(url) {
+    return jQuery.ajax({
+      url,
+      type: 'DELETE'
+    });
+  }
 }
 
 export const http = new HttpService();

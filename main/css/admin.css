@@ -433,13 +433,13 @@ textarea[data-key="custom.css"] {
 	padding-top: 8px;
 }
 
-.form-label-option {
+.form-label-option, .select-label-option {
 	height: 75px;
 	margin-right: 10px;
 	border: 4px solid #ccc;
 	cursor: pointer;
 }
 
-.form-label-option.selected {
+.form-label-option.selected, .select-label-option.selected {
 	border: 4px solid #0073aa;
 }

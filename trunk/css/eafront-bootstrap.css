@@ -184,6 +184,11 @@
 	flex-grow: 4;
 }
 
+.ea-bootstrap .col-50 .time-value, .ea-bootstrap .col-50 .time-disabled {
+	min-width: 50%;
+	max-width: 50%;
+}
+
 .ea-bootstrap.ea-bootstrap .selected-time, .ea-bootstrap.ea-bootstrap .selected-time:hover {
 	background-color: green;
 	color: white;
