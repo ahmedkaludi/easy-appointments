@@ -46,13 +46,5 @@ EA.MainView = Backbone.View.extend({
         this.$el.find('#tab-header li').removeClass('tab-selected');
 
         element.parents('li:first').addClass('tab-selected');
-    },
-
-    // selectHash: function(hash) {
-    //     if(hash === '') {
-    //         hash = '#custumize/';
-    //     }
-    //
-    //     this.$el.find('[href="' + hash + '"]').click();
-    // }
+    }
 });

@@ -7,15 +7,7 @@
     var files = [
         "formater.js",
         "backbone.sync.fix.js",
-        "models/location.js",
-        "models/service.js",
-        "models/worker.js",
-        "models/connection.js",
         "models/appointment.js",
-        "collections/locations.js",
-        "collections/services.js",
-        "collections/workers.js",
-        "collections/connections.js",
         "collections/appointments.js",
         "views/appointments/main.js",
         "views/appointments/appointment.js"
