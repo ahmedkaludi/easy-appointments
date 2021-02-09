@@ -6,13 +6,13 @@ import { __ } from '../../../../../services/Localization';
 import { Field, Autocomplete } from '../../../../../ea-components';
 
 const WEEK_DAYS = [
-  { id: 0, value: 'Monday', label: 'Monday' },
-  { id: 1, value: 'Tuesday', label: 'Tuesday' },
-  { id: 2, value: 'Wednesday', label: 'Wednesday' },
-  { id: 3, value: 'Thursday', label: 'Thursday' },
-  { id: 4, value: 'Friday', label: 'Friday' },
-  { id: 5, value: 'Saturday', label: 'Saturday' },
-  { id: 6, value: 'Sunday', label: 'Sunday' }
+  { id: 0, value: 'Monday', label: __('Monday', 'easy-appointments') },
+  { id: 1, value: 'Tuesday', label: __('Tuesday', 'easy-appointments') },
+  { id: 2, value: 'Wednesday', label: __('Wednesday', 'easy-appointments') },
+  { id: 3, value: 'Thursday', label: __('Thursday', 'easy-appointments') },
+  { id: 4, value: 'Friday', label: __('Friday', 'easy-appointments') },
+  { id: 5, value: 'Saturday', label: __('Saturday', 'easy-appointments') },
+  { id: 6, value: 'Sunday', label: __('Sunday', 'easy-appointments') }
 ];
 
 const DaysOfWeek = ({ value, updateFieldValue, error }) => {

@@ -48,11 +48,11 @@ EA.MainView = Backbone.View.extend({
         element.parents('li:first').addClass('tab-selected');
     },
 
-    selectHash: function(hash) {
-        if(hash === '') {
-            hash = '#locations/';
-        }
-
-        this.$el.find('[href="' + hash + '"]').click();
-    }
+    // selectHash: function(hash) {
+    //     if(hash === '') {
+    //         hash = '#custumize/';
+    //     }
+    //
+    //     this.$el.find('[href="' + hash + '"]').click();
+    // }
 });

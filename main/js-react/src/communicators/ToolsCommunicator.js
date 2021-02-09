@@ -27,7 +27,7 @@ export class ToolsCommunicator {
   static async testEmail(address, native = '0') {
     let url = `${ToolsCommunicator.url}&action=ea_test_wp_mail`;
 
-    return await http.get(url, { address, native });
+    return await http.post(url, { address, native });
   }
 
   static clearLogs() {
