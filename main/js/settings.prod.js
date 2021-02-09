@@ -120,11 +120,101 @@
             return data;
         }
     });    /**
+     * Single location
+     */
+    EA.Location = Backbone.Model.extend({
+        defaults : {
+            name:"",
+            address: "",
+            location: "",
+            cord: null
+        },
+
+        url: function() { return ajaxurl+'?action=ea_location&id=' + encodeURIComponent(this.id) },
+
+        toJSON : function() {
+            var attrs = _.clone( this.attributes );
+            return attrs;
+        }
+    });    /**
+     * Service model
+     */
+    EA.Service = Backbone.Model.extend({
+        defaults : {
+            name:"",
+            duration: 60,
+            slot_step: 60,
+            block_before: 0,
+            block_after: 0,
+            price: 10
+        },
+        url : function() {
+            return ajaxurl+'?action=ea_service&id=' + this.id;
+        },
+        toJSON : function() {
+            var attrs = _.clone( this.attributes );
+            return attrs;
+        }
+    });    /**
+     * Service model
+     */
+    EA.Worker = Backbone.Model.extend({
+        defaults : {
+            name:"",
+            description : "",
+            email: "",
+            phone: ""
+        },
+        url : function() {
+            return ajaxurl+'?action=ea_worker&id=' + this.id;
+        },
+        toJSON : function() {
+            var attrs = _.clone( this.attributes );
+            return attrs;
+        }
+    });    /**
      * Appointments collection
      */
     EA.Appointments = Backbone.Collection.extend({
         url : ajaxurl+'?action=ea_appointments',
         model: EA.Appointment
+    });    /**
+     * Locations collection
+     */
+    EA.Locations = Backbone.Collection.extend({
+        url : ajaxurl+'?action=ea_locations',
+        model: EA.Location,
+        cacheData: function() {
+            if(typeof eaData !== 'undefined') {
+                eaData.Locations = this.toJSON();
+            }
+        }
+    });    /**
+     * Services collection
+     */
+    EA.Services = Backbone.Collection.extend({
+        url : ajaxurl+'?action=ea_services',
+        model: EA.Service,
+        parse: function(response) {
+            // console.log(response);
+            return response;
+        },
+        cacheData: function() {
+            if(typeof eaData !== 'undefined') {
+                eaData.Services = this.toJSON();
+            }
+        }
+    });    /**
+     * Workers collection
+     */
+    EA.Workers = Backbone.Collection.extend({
+        url : ajaxurl+'?action=ea_workers',
+        model: EA.Worker,
+        cacheData: function() {
+            if(typeof eaData !== 'undefined') {
+                eaData.Workers = this.toJSON();
+            }
+        }
     });    /**
      * Main Admin View
      * Renders Admin tab panel
