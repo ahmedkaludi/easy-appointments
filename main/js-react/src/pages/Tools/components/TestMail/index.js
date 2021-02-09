@@ -34,7 +34,7 @@ export const TestMail = ({ test }) => {
         label="Email address"
         variant="outlined"
         size="small"
-        className="standalone"
+        className="ea-standalone ea-text-field"
         style={{ width: '300px' }}
         value={mail}
         onChange={onChange}

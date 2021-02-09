@@ -20,8 +20,8 @@
 }
 
 // Text Field
-.MuiTextField-root {
-  &.standalone {
+.ea-standalone {
+  &.ea-text-field {
     .MuiInputLabel-formControl {
       transform: translate(14px, 14px) scale(1);
 
