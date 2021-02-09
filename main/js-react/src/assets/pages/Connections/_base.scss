@@ -1,4 +1,8 @@
 div#ea-admin-connections {
+  .ea-loader {
+    min-height: 300px;
+  }
+
   .ea-working {
     background-color: lighten($green, 50%);
   }
