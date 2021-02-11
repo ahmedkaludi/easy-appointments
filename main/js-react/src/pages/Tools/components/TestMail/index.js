@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
 import { Button, TextField } from '@material-ui/core';
+import { __ } from '../../../../services/Localization';
 
 export const TestMail = ({ test }) => {
   const [mail, setMail] = useState('');
@@ -31,7 +32,7 @@ export const TestMail = ({ test }) => {
   return (
     <div className="d-flex align-items-center align-items-md-start flex-sm-column flex-lg-row flex-md-row flex-column">
       <TextField
-        label="Email address"
+        label={__('Email address', 'easy-appointments')}
         variant="outlined"
         size="small"
         className="ea-standalone ea-text-field"

@@ -46,8 +46,10 @@ const Tools = () => {
         <div className="divider my-2" />
 
         <span className="d-block text-black-50 font-size-sm my-3">
-          Test if the mail service is working fine on this site by generating a
-          test email that will be sent to provided address.
+          {__(
+            'Test if the mail service is working fine on this site by generating a test email that will be sent to provided address.',
+            'easy-appointments'
+          )}
         </span>
 
         <TestMail test={ToolsCommunicator.testEmail} />
