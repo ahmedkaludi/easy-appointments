@@ -3,11 +3,11 @@ import PropTypes from 'prop-types';
 
 import { renderCell } from './TableCell';
 
-export const TableRow = ({ config, data }) => {
+export const TableRow = ({ config, data, ...props }) => {
   const generateTds = () =>
     Object.keys(config).map(key => renderCell(config[key], data[key]));
 
-  return <tr>{generateTds()}</tr>;
+  return <tr {...props}>{generateTds()}</tr>;
 };
 
 TableRow.propTypes = {

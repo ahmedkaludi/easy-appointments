@@ -4,7 +4,12 @@ import { __ } from '../../services/Localization';
 import { WorkersForm } from './components/WorkersForm';
 import { WorkersTable } from './components/WorkersTable';
 import { WorkersCommunicator } from '../../communicators';
-import { PageTitle, EmptyState, Loader, Sidebar } from '../../ea-components';
+import {
+  PageTitle,
+  Sidebar,
+  PageContentWrap,
+  PAGE_KEYS
+} from '../../ea-components';
 
 const WorkersPage = () => {
   const [open, setOpen] = useState(false);
@@ -100,18 +105,10 @@ const WorkersPage = () => {
         action={headerAction}
       />
 
-      {loading ? (
-        <Loader text={__('Loading employees', 'easy-appointments')} />
-      ) : !workers.length ? (
-        <EmptyState
-          type="worker"
-          message={__('There are no employees yet.', 'easy-appointments')}
-          hint={__(
-            `Use the 'Add employee' button to add new employee.`,
-            'easy-appointments'
-          )}
-        />
-      ) : (
+      <PageContentWrap
+        pageKey={PAGE_KEYS.WORKERS}
+        loading={loading}
+        condition={workers.length}>
         <WorkersTable
           data={workers}
           onEdit={onEditClick}
@@ -119,7 +116,7 @@ const WorkersPage = () => {
           onSort={loadWorkers}
           processing={processing}
         />
-      )}
+      </PageContentWrap>
 
       <Sidebar title={title} open={open} onClose={toggleSidebar}>
         <WorkersForm

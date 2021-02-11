@@ -8,7 +8,7 @@ EA.Worker = Backbone.Model.extend({
         email: "",
         phone: ""
     },
-    url : function() { 
+    url : function() {
         return ajaxurl+'?action=ea_worker&id=' + this.id;
     },
     toJSON : function() {

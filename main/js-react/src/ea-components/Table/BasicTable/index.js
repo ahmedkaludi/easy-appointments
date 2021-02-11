@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { TableHeader } from './components/TableHeader';
 import { TableRow } from './components/TableRow';
 
-const BasicTable = ({ data, config }) => {
+const BasicTable = ({ data, config, rowCallback }) => {
   const headerConfig = Object.values(config);
 
   return (
@@ -13,7 +13,13 @@ const BasicTable = ({ data, config }) => {
         <TableHeader config={headerConfig} />
         <tbody>
           {data &&
-            data.map(vacation => <TableRow data={vacation} config={config} />)}
+            data.map(rowData => (
+              <TableRow
+                data={rowData}
+                config={config}
+                {...rowCallback(rowData)}
+              />
+            ))}
         </tbody>
       </table>
     </div>
@@ -24,11 +30,13 @@ BasicTable.propTypes = {
   config: PropTypes.shape({
     headers: PropTypes.arrayOf(PropTypes.objectOf(PropTypes.any))
   }).isRequired,
-  data: PropTypes.arrayOf(PropTypes.objectOf(PropTypes.any))
+  data: PropTypes.arrayOf(PropTypes.objectOf(PropTypes.any)),
+  rowCallback: PropTypes.func
 };
 
 BasicTable.defaultProps = {
   config: {},
+  rowCallback: () => ({}),
   data: null
 };
 

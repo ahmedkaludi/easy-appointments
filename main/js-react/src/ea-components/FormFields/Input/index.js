@@ -38,6 +38,10 @@ const Input = ({
     );
   }
 
+  if (type === 'number') {
+    otherProps['inputProps'] = { min: 0 };
+  }
+
   return (
     <FormControl fullWidth className="ea-input">
       <InputLabel error={!!error} ref={inputLabelRef}>

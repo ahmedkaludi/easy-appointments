@@ -61,7 +61,7 @@ class Form extends Component {
 
   componentDidMount() {
     if (this.props.model) {
-      this.setState({ model: this.props.model });
+      setTimeout(() => this.setState({ model: this.props.model }), 100);
     }
   }
 

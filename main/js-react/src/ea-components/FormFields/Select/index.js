@@ -2,10 +2,16 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import { MenuItem, TextField } from '@material-ui/core';
-// import { MenuItem, InputLabel, FormControl } from '@material-ui/core';
-// import { Select as MuiSelect } from '@material-ui/core';
 
-const Select = ({ value, onChange, options, label, disabled, customClass }) => {
+const Select = ({
+  value,
+  onChange,
+  options,
+  label,
+  disabled,
+  customClass,
+  error
+}) => {
   const selectClass = `ea-select ${customClass ?? ''}`;
 
   const renderOptions = () =>
@@ -26,24 +32,11 @@ const Select = ({ value, onChange, options, label, disabled, customClass }) => {
       onChange={onChange}
       variant="outlined"
       size="small"
-      disabled={disabled}>
+      disabled={disabled}
+      error={!!error}>
       {renderOptions()}
     </TextField>
   );
-
-  // return (
-  //   <FormControl variant="outlined" className="ea-select">
-  //     <InputLabel>{label}</InputLabel>
-  //     <MuiSelect
-  //       id="demo-simple-select-outlined"
-  //       value={value}
-  //       onChange={onChange}
-  //       label={label}
-  //       disabled={disabled}>
-  //       {renderOptions()}
-  //     </MuiSelect>
-  //   </FormControl>
-  // );
 };
 
 Select.propTypes = {

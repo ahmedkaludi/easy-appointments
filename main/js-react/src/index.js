@@ -30,3 +30,17 @@ if (document.getElementById('ea-admin-workers')) {
     document.getElementById('ea-admin-workers')
   );
 }
+
+if (document.getElementById('ea-admin-connections')) {
+  ReactDOM.render(
+    <EasyApp page="connections" />,
+    document.getElementById('ea-admin-connections')
+  );
+}
+
+if (document.getElementById('ea-admin-tools')) {
+  ReactDOM.render(
+    <EasyApp page="tools" />,
+    document.getElementById('ea-admin-tools')
+  );
+}

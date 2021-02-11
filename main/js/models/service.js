@@ -10,7 +10,7 @@ EA.Service = Backbone.Model.extend({
         block_after: 0,
         price: 10
     },
-    url : function() { 
+    url : function() {
         return ajaxurl+'?action=ea_service&id=' + this.id;
     },
     toJSON : function() {

@@ -23,9 +23,11 @@ import {
 
 import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
 import EditIcon from '@material-ui/icons/Edit';
+import FileCopyOutlinedIcon from '@material-ui/icons/FileCopyOutlined';
 
 const CELL_TYPES = {
   TEXT: 'text',
+  TEXT_W_LABEL: 'text_with_label',
   AVATARS: 'avatar',
   CHIPS: 'chips',
   ACTIONS: 'actions'
@@ -34,6 +36,7 @@ const CELL_TYPES = {
 const ICON_TYPES = {
   edit: <EditIcon />,
   delete: <DeleteOutlineIcon />,
+  clone: <FileCopyOutlinedIcon />,
   processing: <CircularProgress size="1em" />
 };
 
@@ -80,7 +83,37 @@ const TextCell = (config, data) => {
 
   return (
     <td className={`ea-ellipsis text-${position} ${cellClass ?? ''}`}>
-      {data}
+      {Array.isArray(data) ? (
+        <div className="d-flex flex-column">
+          {data.map(single => (
+            <span className="ea-ellipsis">{single}</span>
+          ))}
+        </div>
+      ) : (
+        data
+      )}
+    </td>
+  );
+};
+
+/**
+ * ex. config {type: 'text', position: 'left', cellClass: 'some class'}
+ */
+const TextWithLabelCell = (config, data) => {
+  const { cellClass, position } = config;
+
+  return (
+    <td className={`text-${position} ${cellClass ?? ''}`}>
+      <div className="d-flex flex-column">
+        {data.map(single => (
+          <>
+            <span className="ea-table-cell-label ea-ellipsis">
+              {single.label}
+            </span>
+            <span className="ea-ellipsis">{single.text}</span>
+          </>
+        ))}
+      </div>
     </td>
   );
 };
@@ -166,6 +199,8 @@ export const renderCell = (config, data) => {
   switch (config.type) {
     case CELL_TYPES.TEXT:
       return TextCell(config, data);
+    case CELL_TYPES.TEXT_W_LABEL:
+      return TextWithLabelCell(config, data);
     case CELL_TYPES.AVATARS:
       return AvatarsCell(config, data);
     case CELL_TYPES.CHIPS:

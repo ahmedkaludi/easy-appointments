@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { FormHelperText } from '@material-ui/core';
 import { FormContext } from './Form';
 
-const Field = ({ name, required, component, validationFunc }) => {
+const Field = ({ name, required, component, validationFunc, errorMessage }) => {
   const {
     model,
     loading,
@@ -28,9 +28,11 @@ const Field = ({ name, required, component, validationFunc }) => {
     unsubscribeValidator
   ]);
 
+  const validationProps = { model, setFieldErrors };
+
   const customValidation = val => {
     if (typeof validationFunc === 'function') {
-      const result = validationFunc(val);
+      const result = validationFunc(val, validationProps);
       return typeof result === 'boolean' ? result : true;
     }
 
@@ -44,7 +46,9 @@ const Field = ({ name, required, component, validationFunc }) => {
     }
 
     if (validationFunc && data[name] && !customValidation(data[name])) {
-      setFieldErrors(name, ['Entered value is not in the right format!']);
+      setFieldErrors(name, [
+        errorMessage ?? 'Entered value is not in the right format!'
+      ]);
       return false;
     }
 
@@ -63,6 +67,7 @@ const Field = ({ name, required, component, validationFunc }) => {
     updateValue,
     value: model[name] || null,
     setLoading,
+    setFieldErrors,
     error: !!error
   };
 
@@ -78,14 +83,16 @@ Field.propTypes = {
   name: PropTypes.string,
   required: PropTypes.bool,
   component: PropTypes.func,
-  validationFunc: PropTypes.func
+  validationFunc: PropTypes.func,
+  errorMessage: PropTypes.string
 };
 
 Field.defaultProps = {
   name: '',
   required: false,
   component: f => f,
-  validationFunc: null
+  validationFunc: null,
+  errorMessage: null
 };
 
 export default Field;

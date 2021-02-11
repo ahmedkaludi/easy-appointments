@@ -4,7 +4,12 @@ import { __ } from '../../services/Localization';
 import { ServicesForm } from './components/ServicesForm';
 import { ServicesTable } from './components/ServicesTable';
 import { ServicesCommunicator } from '../../communicators';
-import { PageTitle, EmptyState, Loader, Sidebar } from '../../ea-components';
+import {
+  PageTitle,
+  Sidebar,
+  PageContentWrap,
+  PAGE_KEYS
+} from '../../ea-components';
 
 const ServicesPage = () => {
   const [open, setOpen] = useState(false);
@@ -100,21 +105,10 @@ const ServicesPage = () => {
         action={headerAction}
       />
 
-      {loading ? (
-        <Loader text={__('Loading services', 'easy-appointments')} />
-      ) : !services.length ? (
-        <EmptyState
-          type="service"
-          message={__(
-            'There are no available services yet.',
-            'easy-appointments'
-          )}
-          hint={__(
-            `Use the 'Add service' button to add new service.`,
-            'easy-appointments'
-          )}
-        />
-      ) : (
+      <PageContentWrap
+        pageKey={PAGE_KEYS.SERVICES}
+        loading={loading}
+        condition={services.length}>
         <ServicesTable
           data={services}
           onEdit={onEditClick}
@@ -122,7 +116,7 @@ const ServicesPage = () => {
           onSort={loadServices}
           processing={processing}
         />
-      )}
+      </PageContentWrap>
 
       <Sidebar title={title} open={open} onClose={toggleSidebar}>
         <ServicesForm

@@ -7,11 +7,11 @@ const InputComponent = ({ inputRef, ...other }) => (
   <div className="fieldset-content" {...other} />
 );
 
-const FieldSet = ({ children, label, error }) => {
+const FieldSet = ({ children, label, error, className }) => {
   return (
     <TextField
       variant="outlined"
-      className="ea-fieldset"
+      className={`ea-fieldset ${className ?? ''}`}
       label={label}
       error={error}
       multiline

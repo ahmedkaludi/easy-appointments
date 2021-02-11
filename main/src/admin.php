@@ -274,10 +274,7 @@ class EAAdminPanel
         wp_enqueue_style('thickbox');
         wp_enqueue_style('jquery-chosen');
         wp_enqueue_style('ea-admin-fonts-css');
-        
-
         // style editor
-
     }
 
     /**
@@ -371,14 +368,34 @@ class EAAdminPanel
             array($this, 'workers_page')
         );
 
+        // connections
+        $page_connections_suffix = add_submenu_page(
+            'easy_app_top_level',
+            __('Connections', 'easy-appointments'),
+            '4. ' . __('Connections', 'easy-appointments'),
+            'manage_options',
+            'easy_app_connections',
+            array($this, 'connections_page')
+        );
+
         // settings
         $page_settings_suffix = add_submenu_page(
             'easy_app_top_level',
             __('Settings', 'easy-appointments'),
-            '4. ' . __('Settings', 'easy-appointments'),
+            '5. ' . __('Settings', 'easy-appointments'),
             'manage_options',
             'easy_app_settings',
             array($this, 'top_settings_menu')
+        );
+
+        // vacation page
+        $page_vacation_suffix = add_submenu_page(
+            'easy_app_top_level',
+            __('Tools', 'easy-appointments'),
+            '6. ' . __('Tools', 'easy-appointments'),
+            'manage_options',
+            'easy_app_tools',
+            array($this, 'tools_page')
         );
 
         // vacation page
@@ -626,6 +643,69 @@ class EAAdminPanel
         }
 
         require_once EA_SRC_DIR . 'templates/services.tpl.php';
+        require_once EA_SRC_DIR . 'templates/inlinedata.tpl.php';
+    }
+
+    /**
+     * Content of top menu page
+     */
+    public function connections_page()
+    {
+        // check if APS tags are on
+        if ($this->is_asp_tags_are_on()) {
+            require_once EA_SRC_DIR . 'templates/asp_tag_message.tpl.php';
+            return;
+        }
+
+        wp_enqueue_style('ea-vacation-css');
+        wp_enqueue_script('ea-vacation');
+
+        $settings = $this->options->get_options();
+        $settings['rest_url'] = get_rest_url();
+
+        $wpurl = get_bloginfo('wpurl');
+        $url   = get_bloginfo('url');
+
+        $settings['image_base'] = $wpurl === $url ? '' : $wpurl;
+        wp_localize_script('ea-vacation', 'ea_settings', $settings);
+
+        if (function_exists('wp_set_script_translations')) {
+            wp_set_script_translations('ea-vacation', 'easy-appointments');
+        }
+
+        require_once EA_SRC_DIR . 'templates/connections.tpl.php';
+        require_once EA_SRC_DIR . 'templates/inlinedata.tpl.php';
+    }
+
+    /**
+     * Tools page
+     */
+    public function tools_page()
+    {
+        // check if APS tags are on
+        if ($this->is_asp_tags_are_on()) {
+            require_once EA_SRC_DIR . 'templates/asp_tag_message.tpl.php';
+            return;
+        }
+
+        wp_enqueue_style('ea-vacation-css');
+        wp_enqueue_script('ea-vacation');
+
+        $settings = $this->options->get_options();
+        $settings['rest_url'] = get_rest_url();
+        $settings['rest_url_clear_log'] = EALogActions::clear_error_url();
+
+        $wpurl = get_bloginfo('wpurl');
+        $url   = get_bloginfo('url');
+
+        $settings['image_base'] = $wpurl === $url ? '' : $wpurl;
+        wp_localize_script('ea-vacation', 'ea_settings', $settings);
+
+        if (function_exists('wp_set_script_translations')) {
+            wp_set_script_translations('ea-vacation', 'easy-appointments');
+        }
+
+        require_once EA_SRC_DIR . 'templates/tools.tpl.php';
         require_once EA_SRC_DIR . 'templates/inlinedata.tpl.php';
     }
 

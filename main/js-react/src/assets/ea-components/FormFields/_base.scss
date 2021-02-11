@@ -43,6 +43,21 @@
 
       @include fieldsetBorders;
     }
+
+    &.multiwrap {
+      & > div.MuiOutlinedInput-root {
+        &.Mui-focused {
+          .MuiOutlinedInput-notchedOutline {
+            border-color: rgba(0, 0, 0, 0.23);
+          }
+        }
+        &.Mui-focused .MuiOutlinedInput-notchedOutline,
+        &:hover .MuiOutlinedInput-notchedOutline {
+          border-color: rgba(0, 0, 0, 0.23);
+          border-width: 1px;
+        }
+      } 
+    }
   }
 
   /* INPUT FIELD */
@@ -139,6 +154,68 @@
     }
   }
 
+  /* DATE PICKER FIELD */
+  .ea-date-picker {
+    .MuiInputLabel-outlined {
+      transform: translate(14px, 14px) scale(1);
+
+      &.MuiInputLabel-shrink {
+        transform: translate(14px, -6px) scale(0.75);
+      }
+    }
+
+    .MuiOutlinedInput-root {
+      .MuiOutlinedInput-input {
+        padding: 6px 10px;
+        font-size: 14px;
+        color: #333333;
+      }
+
+      input[type=text] {
+        background-color: transparent;
+        box-shadow: none;
+        border: none;
+      }
+
+      .MuiInputAdornment-root {
+        color: rgba(0, 0, 0, 0.26);
+      }
+
+      @include fieldsetBorders;
+    }
+  }
+
+  /* TIME PICKER FIELD */
+  .ea-time-picker {
+    .MuiInputLabel-outlined {
+      transform: translate(14px, 14px) scale(1);
+
+      &.MuiInputLabel-shrink {
+        transform: translate(14px, -6px) scale(0.75);
+      }
+    }
+
+    .MuiOutlinedInput-root {
+      .MuiOutlinedInput-input {
+        padding: 6px 10px;
+        font-size: 14px;
+        color: #333333;
+      }
+
+      input[type=text] {
+        background-color: transparent;
+        box-shadow: none;
+        border: none;
+      }
+
+      .MuiInputAdornment-root {
+        color: rgba(0, 0, 0, 0.26);
+      }
+
+      @include fieldsetBorders;
+    }
+  }
+
   /* MULTI DATE PICKER FIELD */
   .ea-fieldset {
     .datepicker-chips-wrapper {
@@ -212,6 +289,22 @@
           min-height: auto;
         }
       }
+    }
+  }
+}
+
+.ea-double-field {
+  display: flex;
+  justify-content: space-between;
+  @media screen and (max-width: 450px) {
+    flex-direction: column;
+  }
+
+  .ea-form-field {
+    width: 48%;
+
+    @media screen and (max-width: 450px) {
+      width: 100%;
     }
   }
 }

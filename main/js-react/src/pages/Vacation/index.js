@@ -4,7 +4,12 @@ import { __ } from '../../services/Localization';
 import { VacationForm } from './components/VacationForm';
 import { VacationTable } from './components/VacationTable';
 import { VacationsCommunicator } from '../../communicators';
-import { PageTitle, EmptyState, Sidebar, Loader } from '../../ea-components';
+import {
+  PageTitle,
+  Sidebar,
+  PageContentWrap,
+  PAGE_KEYS
+} from '../../ea-components';
 
 const Vacation = () => {
   const [open, setOpen] = useState(false);
@@ -96,28 +101,17 @@ const Vacation = () => {
         action={headerAction}
       />
 
-      {loading ? (
-        <Loader text={__('Loading vacations', 'easy-appointments')} />
-      ) : !vacations.length ? (
-        <EmptyState
-          type="vacation"
-          message={__(
-            'There are no scheduled vacation days yet.',
-            'easy-appointments'
-          )}
-          hint={__(
-            `Use the 'Add vacation' button to add new vacation days.`,
-            'easy-appointments'
-          )}
-        />
-      ) : (
+      <PageContentWrap
+        pageKey={PAGE_KEYS.VACATIONS}
+        loading={loading}
+        condition={vacations.length}>
         <VacationTable
           data={vacations}
           onEdit={onEditClick}
           onDelete={onDeleteClick}
           processing={processing}
         />
-      )}
+      </PageContentWrap>
 
       <Sidebar title={title} open={open} onClose={toggleSidebar}>
         <VacationForm

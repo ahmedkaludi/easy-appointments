@@ -5,7 +5,7 @@ Tags: appointment, appointments, Booking, calendar, plugin, reservation, reserva
 Requires at least: 3.7
 Tested up to: 5.6
 Requires PHP: 5.3
-Stable tag: 3.3.2
+Stable tag: 3.4.0
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -190,10 +190,10 @@ Note: you can have only one calendar on one page.
 
 == Screenshots ==
 
-1. Responsive front end shortcode `[ea_bootstrap]` - part1
-2. Responsive front end shortcode `[ea_bootstrap]` - part2
-3. Responsive front end two column `[ea_bootstrap layout_cols="2"]` - part1
-4. Responsive front end two column `[ea_bootstrap layout_cols="2"]` - part2
+1. Responsive front end two column `[ea_bootstrap layout_cols="2"]` - part1
+2. Responsive front end two column `[ea_bootstrap layout_cols="2"]` - part2
+3. Responsive front end shortcode `[ea_bootstrap]` - part1
+4. Responsive front end shortcode `[ea_bootstrap]` - part2
 5. Standard front end form for Appointment `[ea_standard]`
 6. Full Calendar short code
 7. Admin panel - Appointments list
@@ -217,6 +217,9 @@ Note: you can have only one calendar on one page.
 25. Admin panel - Report - Export page
 
 == Changelog ==
+
+= 3.4.0 (2021-02-11) =
+* New design for Connections and Tools admin page
 
 = 3.3.2 (2021-02-05) =
 * Masked field can be set as required

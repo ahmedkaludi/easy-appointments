@@ -1,0 +1,62 @@
+@mixin fieldsetBorders {
+  &.Mui-focused {
+    .MuiOutlinedInput-notchedOutline {
+      border-color: $eaprimary;
+    }
+  }
+
+  &.Mui-disabled {
+    .MuiOutlinedInput-notchedOutline,
+    &:hover .MuiOutlinedInput-notchedOutline {
+      border-color: rgba(0, 0, 0, 0.26);
+    }
+  }
+
+  &.Mui-focused .MuiOutlinedInput-notchedOutline,
+  &:hover .MuiOutlinedInput-notchedOutline {
+    border-color: $eaprimary;
+    border-width: 1px;
+  }
+}
+
+// Text Field
+.ea-standalone {
+  &.ea-text-field {
+    .MuiInputLabel-formControl {
+      transform: translate(14px, 14px) scale(1);
+
+      &.MuiInputLabel-shrink {
+        transform: translate(14px, -6px) scale(0.75);
+      }
+    }
+
+    .MuiOutlinedInput-multiline {
+      padding: 0;
+    }
+
+    .MuiOutlinedInput-root {
+      .MuiOutlinedInput-input {
+        padding: 6px 10px;
+        font-size: 14px;
+        color: #333333;
+      }
+
+      .MuiOutlinedInput-inputMultiline {
+        line-height: 2;
+        &:focus {
+          border: none;
+          box-shadow: none;
+        }
+      }
+
+      input[type=text],
+      input[type=number], {
+        background-color: transparent;
+        box-shadow: none;
+        border: none;
+      }
+
+      @include fieldsetBorders;
+    }
+  }
+}

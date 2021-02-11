@@ -1,0 +1,17 @@
+div#ea-admin-connections {
+  .ea-loader {
+    min-height: 300px;
+  }
+
+  .ea-working {
+    background-color: lighten($green, 50%);
+  }
+
+  .ea-not-working {
+    background-color: lighten($red, 35%);
+  }
+
+  .ea-not-active {
+    background-color: lighten($dark, 40%);
+  }
+}

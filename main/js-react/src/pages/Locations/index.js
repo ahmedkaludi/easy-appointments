@@ -4,7 +4,12 @@ import { __ } from '../../services/Localization';
 import { LocationsForm } from './components/LocationsForm';
 import { LocationsCommunicator } from '../../communicators';
 import { LocationsTable } from './components/LocationsTable';
-import { PageTitle, EmptyState, Loader, Sidebar } from '../../ea-components';
+import {
+  PageTitle,
+  Sidebar,
+  PageContentWrap,
+  PAGE_KEYS
+} from '../../ea-components';
 
 const LocationsPage = () => {
   const [open, setOpen] = useState(false);
@@ -97,21 +102,10 @@ const LocationsPage = () => {
     <Fragment>
       <PageTitle titleHeading="Locations" action={headerAction} />
 
-      {loading ? (
-        <Loader text={__('Loading locations', 'easy-appointments')} />
-      ) : !locations.length ? (
-        <EmptyState
-          type="location"
-          message={__(
-            'There are no available locations yet.',
-            'easy-appointments'
-          )}
-          hint={__(
-            `Use the 'Add location' button to add new location.`,
-            'easy-appointments'
-          )}
-        />
-      ) : (
+      <PageContentWrap
+        pageKey={PAGE_KEYS.LOCATIONS}
+        loading={loading}
+        condition={locations.length}>
         <LocationsTable
           data={locations}
           onEdit={onEditClick}
@@ -119,7 +113,7 @@ const LocationsPage = () => {
           onSort={loadLocations}
           processing={processing}
         />
-      )}
+      </PageContentWrap>
 
       <Sidebar title={title} open={open} onClose={toggleSidebar}>
         <LocationsForm

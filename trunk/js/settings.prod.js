@@ -80,6 +80,46 @@
         var newArgs = _.extend(args, change);
         return Backbone.$.ajax.apply(Backbone.$, [newArgs]);
     };    /**
+     * Single Appointment
+     */
+    EA.Appointment = Backbone.Model.extend({
+        defaults : {
+            location    : null,
+            service     : null,
+            worker      : null,
+            // name        : '',
+            // email       : '',
+            // phone       : '',
+            date        : null,
+            start       : null,
+            end         : null,
+            end_date    : null,
+            description : null,
+            status      : null,
+            user        : null,
+            price       : 0
+        },
+
+        url: function() { return ajaxurl+'?action=ea_appointment&id=' + encodeURIComponent(this.id) },
+
+        toJSON : function() {
+            var attrs = _.clone( this.attributes );
+            return attrs;
+        },
+
+        parse: function(data, options) {
+
+            if(typeof data.start !== "undefined" && data.start != null && data.start.length === 8) {
+                data.start = data.start.substring(0, 5);
+            }
+
+            if(typeof data.created !== "undefined" && data.created.length === 19) {
+                data.created = data.created.substring(0, 16);
+            }
+
+            return data;
+        }
+    });    /**
      * Single location
      */
     EA.Location = Backbone.Model.extend({
@@ -133,103 +173,11 @@
             return attrs;
         }
     });    /**
-     * Single connection
+     * Appointments collection
      */
-    EA.Connection = Backbone.Model.extend({
-        defaults : {
-            group_id : null,
-            location : null,
-            service : null,
-            worker : null,
-            slot_count: 1,
-            day_of_week : [],
-            time_from : null,
-            time_to : null,
-            day_from : '2020-01-01',
-            day_to : '2021-12-31',
-            is_working : 0
-        },
-
-
-        url: function() { return ajaxurl + '?action=ea_connection&id=' + encodeURIComponent(this.id); },
-
-        toJSON: function() {
-            var attrs = _.clone( this.attributes );
-
-            return attrs;
-        },
-
-        parse: function(data, options) {
-
-            if(typeof data.day_of_week !== "undefined" && data.day_of_week != null) {
-                data.day_of_week = data.day_of_week.split(',');
-            } else {
-                // console.log(this.get('day_of_week').split(','));
-                this.set('day_of_week', this.get('day_of_week'));
-            }
-
-            if(typeof data.time_from !== "undefined" && typeof data.time_to !== "undefined") {
-
-                if(data.time_from.length === 8) {
-                    data.time_from = data.time_from.substring(0, 5);
-                }
-
-                if(data.time_to.length === 8) {
-                        data.time_to = data.time_to.substring(0, 5);
-                }
-            }
-
-            return data;
-        },
-
-        save: function(attrs, options) {
-            options || (options = {});
-            attrs || (attrs = _.clone(this.attributes));
-
-            attrs.day_of_week = attrs.day_of_week.join(',');
-
-            return Backbone.Model.prototype.save.call(this, attrs, options);
-        }
-    });    /**
-     * Single Appointment
-     */
-    EA.Appointment = Backbone.Model.extend({
-        defaults : {
-            location    : null,
-            service     : null,
-            worker      : null,
-            // name        : '',
-            // email       : '',
-            // phone       : '',
-            date        : null,
-            start       : null,
-            end         : null,
-            end_date    : null,
-            description : null,
-            status      : null,
-            user        : null,
-            price       : 0
-        },
-
-        url: function() { return ajaxurl+'?action=ea_appointment&id=' + encodeURIComponent(this.id) },
-
-        toJSON : function() {
-            var attrs = _.clone( this.attributes );
-            return attrs;
-        },
-
-        parse: function(data, options) {
-
-            if(typeof data.start !== "undefined" && data.start != null && data.start.length === 8) {
-                data.start = data.start.substring(0, 5);
-            }
-
-            if(typeof data.created !== "undefined" && data.created.length === 19) {
-                data.created = data.created.substring(0, 16);
-            }
-
-            return data;
-        }
+    EA.Appointments = Backbone.Collection.extend({
+        url : ajaxurl+'?action=ea_appointments',
+        model: EA.Appointment
     });    /**
      * Locations collection
      */
@@ -248,10 +196,10 @@
         url : ajaxurl+'?action=ea_services',
         model: EA.Service,
         parse: function(response) {
-        	// console.log(response);
-        	return response;
-      	},
-      	cacheData: function() {
+            // console.log(response);
+            return response;
+        },
+        cacheData: function() {
             if(typeof eaData !== 'undefined') {
                 eaData.Services = this.toJSON();
             }
@@ -267,18 +215,6 @@
                 eaData.Workers = this.toJSON();
             }
         }
-    });    /**
-     * Connections collection
-     */
-    EA.Connections = Backbone.Collection.extend({
-        url : ajaxurl+'?action=ea_connections',
-        model: EA.Connection
-    });    /**
-     * Appointments collection
-     */
-    EA.Appointments = Backbone.Collection.extend({
-        url : ajaxurl+'?action=ea_appointments',
-        model: EA.Appointment
     });    /**
      * Main Admin View
      * Renders Admin tab panel
