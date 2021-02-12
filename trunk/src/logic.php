@@ -306,8 +306,6 @@ class EALogic
 
         $appointments = $this->wpdb->get_results($query);
 
-        $serviceObj = $this->get_service($service);
-
         // check all no working times
         foreach ($appointments as $app) {
             $start = ($app->date == $day) ? $app->start : '00:00';
@@ -316,9 +314,12 @@ class EALogic
             $lower_time = strtotime($start);
             $upper_time = strtotime($end);
 
+            $serviceObj = $this->get_service($app->service);
             // add block before and after time
-            $lower_time -= $serviceObj->block_before;
-            $upper_time += $serviceObj->block_after;
+            if (!empty($serviceObj)) {
+                $lower_time -= ($serviceObj->block_before * 60);
+                $upper_time += ($serviceObj->block_after * 60);
+            }
 
             // all day event fix
             // if ($app->end === '00:00:00' || $upper_time < $lower_time) {
@@ -327,16 +328,11 @@ class EALogic
 
             // check slots
             foreach ($slots as $temp_time => $value) {
-                $current_time = strtotime($temp_time);
-                $current_time_end = strtotime("$temp_time + $service_duration minute");
+                $slot_time = strtotime($temp_time);
+                $slot_time_end = strtotime("$temp_time + $service_duration minute");
 
-
-                if ($lower_time < $current_time && $upper_time <= $current_time) {
-                    // before
-                } else if ($lower_time >= $current_time_end && $upper_time > $current_time_end) {
-                    // after
-                } else {
-
+                // before / after
+                if ($slot_time_end <= $lower_time || $upper_time <= $slot_time) { } else {
                     // Cross time - remove one slot
                     $slots[$temp_time] = $value - 1;
                 }
