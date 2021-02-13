@@ -22,7 +22,7 @@ export const ConnectionsForm = ({ model, onSave, onCancel }) => (
     <MultiFieldWrap
       label="Date range"
       className="ea-form-field"
-      info="Some text to explain this fieldset">
+      info="Define date range when this connection is going to be active">
       <DoubleField>
         <StartDateField />
         <EndDateField />
@@ -32,7 +32,7 @@ export const ConnectionsForm = ({ model, onSave, onCancel }) => (
     <MultiFieldWrap
       label="Time range"
       className="ea-form-field"
-      info="Some text to explain this fieldset">
+      info="Define working hours by selecting start and end time">
       <DoubleField>
         <StartTimeField />
         <EndTimeField />

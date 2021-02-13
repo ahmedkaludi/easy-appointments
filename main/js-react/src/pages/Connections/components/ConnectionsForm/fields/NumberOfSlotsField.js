@@ -1,16 +1,23 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 
 import { Field, Input } from '../../../../../ea-components';
 import { __ } from '../../../../../services/Localization';
 
 const NumberOfSlots = ({ value, updateFieldValue, error, label }) => {
+  useEffect(() => {
+    if (!value) {
+      updateFieldValue('1');
+    }
+  }, [value]);
+
   return (
     <Input
       label={__('Number of slots *', 'easy-appointments')}
-      value={value || '0'}
+      value={value || '1'}
       onChange={val => updateFieldValue(val)}
       error={error}
+      min={1}
       type="number"
     />
   );
