@@ -7,7 +7,7 @@
     var ea_ajaxurl = '<?php echo admin_url("admin-ajax.php"); ?>';
 </script>
 <script type="text/template" id="ea-bootstrap-main">
-<div class="ea-bootstrap" style="max-width: <%= settings.width %>;">
+<div class="ea-bootstrap" translate="no" style="max-width: <%= settings.width %>;">
     <form class="form-horizontal">
         <% if (settings.layout_cols === '2') { %>
         <div class="col-md-6" style="padding-top: 25px;">

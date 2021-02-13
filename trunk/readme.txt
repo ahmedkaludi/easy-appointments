@@ -5,7 +5,7 @@ Tags: appointment, appointments, Booking, calendar, plugin, reservation, reserva
 Requires at least: 3.7
 Tested up to: 5.6
 Requires PHP: 5.3
-Stable tag: 3.4.1
+Stable tag: 3.4.2
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -218,7 +218,11 @@ Note: you can have only one calendar on one page.
 
 == Changelog ==
 
-= 3.4.1 (2021-02-11) =
+= 3.4.2 (2021-02-13) =
+* Added responsive styles for FullCalendar popup window for small screens
+* Added `translate="no"` to avoid Google auto translate
+
+= 3.4.1 (2021-02-12) =
 * Fixed issue with block before/after service time
 
 = 3.4.0 (2021-02-11) =
