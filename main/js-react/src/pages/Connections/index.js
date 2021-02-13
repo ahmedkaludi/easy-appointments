@@ -23,7 +23,6 @@ const ConnectionsPage = () => {
       const records = await ConnectionsCommunicator.fetchAll();
       setConnections(records);
       setLoading(false);
-      console.log(records);
     } catch (e) {
       throw new Error(e);
     }
