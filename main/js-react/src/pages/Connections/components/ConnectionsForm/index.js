@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { Form, DoubleField } from '../../../../ea-components';
+import { Form, DoubleField, MultiFieldWrap } from '../../../../ea-components';
 import { DaysOfWeekField } from './fields/DaysOfWeekField';
 import { SelectField } from './fields/SelectField';
 import { NumberOfSlotsField } from './fields/NumberOfSlotsField';
@@ -18,14 +18,27 @@ export const ConnectionsForm = ({ model, onSave, onCancel }) => (
     <SelectField name="worker" label="Worker *" dataKey="Workers" />
     <NumberOfSlotsField />
     <DaysOfWeekField />
-    <DoubleField>
-      <StartDateField />
-      <EndDateField />
-    </DoubleField>
-    <DoubleField>
-      <StartTimeField />
-      <EndTimeField />
-    </DoubleField>
+
+    <MultiFieldWrap
+      label="Date range"
+      className="ea-form-field"
+      info="Define date range when this connection is going to be active">
+      <DoubleField>
+        <StartDateField />
+        <EndDateField />
+      </DoubleField>
+    </MultiFieldWrap>
+
+    <MultiFieldWrap
+      label="Time range"
+      className="ea-form-field"
+      info="Define working hours by selecting start and end time">
+      <DoubleField>
+        <StartTimeField />
+        <EndTimeField />
+      </DoubleField>
+    </MultiFieldWrap>
+
     <IsWorkingField />
   </Form>
 );

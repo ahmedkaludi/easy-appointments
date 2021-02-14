@@ -30,6 +30,10 @@
     top: 100%;
     font-size: 9px;
     margin-top: 0;
+
+    &.MuiFormHelperText-contained {
+      margin-left: 0;
+    }
   }
 
   /* FIELD SET */
@@ -42,21 +46,6 @@
       }
 
       @include fieldsetBorders;
-    }
-
-    &.multiwrap {
-      & > div.MuiOutlinedInput-root {
-        &.Mui-focused {
-          .MuiOutlinedInput-notchedOutline {
-            border-color: rgba(0, 0, 0, 0.23);
-          }
-        }
-        &.Mui-focused .MuiOutlinedInput-notchedOutline,
-        &:hover .MuiOutlinedInput-notchedOutline {
-          border-color: rgba(0, 0, 0, 0.23);
-          border-width: 1px;
-        }
-      } 
     }
   }
 
@@ -296,6 +285,12 @@
 .ea-double-field {
   display: flex;
   justify-content: space-between;
+  margin-bottom: 20px;
+
+  .ea-form-field {
+    margin-bottom: 0;
+  }
+
   @media screen and (max-width: 450px) {
     flex-direction: column;
   }
@@ -306,5 +301,57 @@
     @media screen and (max-width: 450px) {
       width: 100%;
     }
+  }
+}
+
+.ea-multi-wrap {
+  width: 100%;
+  position: relative;
+
+  &__content {
+    padding: 20px 10px 6px;
+    font-size: 14px;
+    color: #333;
+
+    .ea-form-field:last-child {
+      margin-bottom: 12px;
+    }
+    .ea-double-field:last-child {
+      margin-bottom: 12px;
+
+      .ea-form-field {
+        margin-bottom: 0;
+      }
+    }
+  }
+
+  &__fieldset {
+    border-color: rgba(0, 0, 0, 0.23);
+    margin: 0;
+    padding: 0;
+    border-style: solid;
+    border-width: 1px;
+    padding: 8px;
+    pointer-events: none;
+    border-radius: 4px;
+    width: 100%;
+    position: absolute;
+    top: -4px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+  }
+
+  &__label {
+    transform: translate(-3px,-1px) scale(.75);
+    cursor: default;
+    color: rgba(0,0,0,.54);
+    padding: 0;
+    font-size: 14px;
+    font-family: "Roboto","Helvetica","Arial",sans-serif;
+    font-weight: 400;
+    line-height: 1;
+    letter-spacing: .00938em;
+    width: auto;
   }
 }

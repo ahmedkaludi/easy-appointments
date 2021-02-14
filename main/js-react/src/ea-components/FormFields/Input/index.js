@@ -19,7 +19,8 @@ const Input = ({
   error,
   multiline,
   rows,
-  adornment
+  adornment,
+  min
 }) => {
   const [labelWidth, setLabelWidth] = useState(0);
   let inputLabelRef = useRef(null);
@@ -39,7 +40,7 @@ const Input = ({
   }
 
   if (type === 'number') {
-    otherProps['inputProps'] = { min: 0 };
+    otherProps['inputProps'] = { min: min ?? 0 };
   }
 
   return (
@@ -77,7 +78,8 @@ Input.propTypes = {
   error: PropTypes.bool,
   multiline: PropTypes.bool,
   rows: PropTypes.number,
-  adornment: PropTypes.objectOf(PropTypes.any)
+  adornment: PropTypes.objectOf(PropTypes.any),
+  min: PropTypes.number
 };
 
 Input.defaultProps = {
@@ -91,7 +93,8 @@ Input.defaultProps = {
   error: false,
   multiline: false,
   rows: 1,
-  adornment: null
+  adornment: null,
+  min: 0
 };
 
 export default Input;
