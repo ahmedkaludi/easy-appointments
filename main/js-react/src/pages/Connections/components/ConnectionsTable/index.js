@@ -86,7 +86,15 @@ export const ConnectionsTable = ({
   onClone,
   processing
 }) => {
-  const adaptedData = data.map(record => ({
+  // maybe we have connections for assets that are not longer there
+  const cleanData = data.filter(
+    record =>
+      LOCATIONS.some(loc => loc.id === record.location) &&
+      SERVICES.some(ser => ser.id === record.service) &&
+      WORKERS.some(work => work.id === record.worker)
+  );
+
+  const adaptedData = cleanData.map(record => ({
     ...record,
     connection: [
       LOCATIONS.find(loc => loc.id === record.location).name,

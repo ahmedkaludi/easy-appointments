@@ -36,6 +36,9 @@
                     <a data-tab="tab-captcha" href="#">
                         <span class="icon icon-recaptcha"></span><span class="text-label"><?php _e('Google reCAPTCHA v2', 'easy-appointments'); ?></span>
                     </a>
+                    <a data-tab="tab-captcha-3" href="#">
+                        <span class="icon icon-recaptcha"></span><span class="text-label"><?php _e('Google reCAPTCHA v3', 'easy-appointments'); ?></span>
+                    </a>
                     <a data-tab="tab-form" href="#">
                         <span class="icon icon-redirect"></span><span class="text-label"><?php _e('Form Style & Redirect', 'easy-appointments'); ?></span>
                     </a>
@@ -465,6 +468,34 @@
                     </div>
                     <div class="form-item">
                         <span class="pure-text hint"><?php _e('* If you want to use Captcha you must have auto reservation option turned off. If you don\'t want to use Captcha just leave fields empty.', 'easy-appointments'); ?></span>
+                    </div>
+                </div>
+            </div>
+
+            <div id="tab-captcha-3" class="form-section hidden">
+                <span class="separator vertical"></span>
+                <div class="form-container">
+                    <div class="form-item">
+                        <label for=""><?php _e('Site key', 'easy-appointments'); ?></label>
+                        <input style="width: 100%" class="field" data-key="captcha3.site-key"
+                               name="captcha3.site-key" type="text"
+                               value="<%- _.findWhere(settings, {ea_key:'captcha3.site-key'}).ea_value %>">
+                    </div>
+                    <div class="form-item">
+                        <span class="pure-text hint"><?php _e('* Google reCAPTCHA key can be generated via', 'easy-appointments'); ?> <a
+                                    href="https://www.google.com/recaptcha/admin" target="_blank">LINK</a></span>
+                    </div>
+                    <div class="form-item">
+                        <label for=""><?php _e('Secret key', 'easy-appointments'); ?></label>
+                        <input style="width: 100%" class="field" data-key="captcha3.secret-key"
+                               name="captcha3.secret-key" type="text"
+                               value="<%- _.findWhere(settings, {ea_key:'captcha3.secret-key'}).ea_value %>">
+                    </div>
+                    <div class="form-item">
+                        <span class="pure-text hint"><?php _e('* If you want to use Captcha you must have auto reservation option turned off. If you don\'t want to use Captcha just leave fields empty.', 'easy-appointments'); ?></span>
+                    </div>
+                    <div class="form-item">
+                        <span class="pure-text hint"><?php _e('* Only request with recaptcha score 0.5 or greater will be processed. Others will be rejected as bot calls.', 'easy-appointments'); ?></span>
                     </div>
                 </div>
             </div>

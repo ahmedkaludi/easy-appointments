@@ -592,6 +592,10 @@ class EAFrontend
             wp_enqueue_script('ea-google-recaptcha');
         }
 
+        if (!empty($settings['captcha3.site-key'])) {
+            wp_enqueue_script('ea-google-recaptcha-v3', "https://www.google.com/recaptcha/api.js?render={$settings['captcha3.site-key']}");
+        }
+
         // add custom CSS
         wp_add_inline_style( 'ea-bootstrap', $customCss );
 

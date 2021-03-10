@@ -1131,10 +1131,17 @@ class EAAjax
         $site_key = $this->options->get_option_value('captcha.site-key');
         $secret   = $this->options->get_option_value('captcha.secret-key');
 
+        $site_key3 = $this->options->get_option_value('captcha3.site-key');
+        $secret3   = $this->options->get_option_value('captcha3.secret-key');
+
         $captcha = array_key_exists('captcha', $_REQUEST) ? $_REQUEST['captcha'] : '';
 
-        if (empty($secret) || empty($site_key)) {
+        if (empty($site_key3) && empty($site_key)) {
             return;
+        }
+
+        if (!empty($site_key3)) {
+            $secret = $secret3;
         }
 
         // check if curl extension is loaded

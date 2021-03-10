@@ -1010,6 +1010,32 @@
                 options.captcha = this.$element.find('.g-recaptcha-response').val();
             }
 
+            // recaptcha v3
+            if (ea_settings['captcha3.site-key'] && grecaptcha) {
+                grecaptcha.ready(function() {
+                    grecaptcha.execute(ea_settings['captcha3.site-key'], { action: 'submit' }).then(function(token) {
+                        options.captcha = token;
+
+                        jQuery.get(ea_ajaxurl, options, function (response) {
+                            plugin.res_app = response.id;
+
+                            plugin.finalComformation(event);
+                        }, 'json')
+                            .fail(jQuery.proxy(function (response) {
+                                alert(response.responseJSON.message);
+                                this.$element.find('.ea-submit').prop('disabled', false);
+                            }, plugin))
+                            .always(jQuery.proxy(function () {
+                                plugin.removeLoader();
+                            }, plugin));
+                    });
+                });
+
+                return;
+            }
+
+
+            // simple call
             jQuery.get(ea_ajaxurl, options, function (response) {
                 plugin.res_app = response.id;
 

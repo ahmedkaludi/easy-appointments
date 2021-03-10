@@ -138,6 +138,7 @@ class EATableColumns
             'cal_auto_select',
             'cancel.scroll',
             'captcha.site-key',
+            'captcha3.site-key',
             'check',
             'compatibility.mode',
             'css.off',
