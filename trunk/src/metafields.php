@@ -33,7 +33,13 @@ class EAMetaFields
 
     static function parse_field_slug_name($data, $next_id)
     {
-        $slug = sanitize_title($data['label']);
+        $input = trim($data['slug']);
+
+        if (strlen($input) === 0) {
+            $input = $data['label'];
+        }
+
+        $slug = sanitize_title($input);
 
         // case if there are some utf8 chars in slug
         if (strpos($slug, '%') > -1) {

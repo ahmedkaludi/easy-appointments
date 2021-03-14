@@ -737,7 +737,12 @@
 
 <script type="text/template" id="ea-tpl-custom-form-options">
 <div class="field-settings">
-    <p><label>Slug :</label><strong><%- item.slug %></strong></p>
+    <% if (item.slug && item.slug.length > 0) { %>
+    <p><label>Slug :</label>
+        <input type="text" class="field-slug" name="field-slug"
+               value="<%- item.slug %>">
+    </p>
+    <% } %>
     <p>
         <label>Label</label><input type="text" class="field-label" name="field-label"
                                      value="<%= _.escape(item.label) %>">

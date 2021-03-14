@@ -249,6 +249,12 @@ class EAFrontend
             EATableColumns::clear_settings_data_frontend($settings)
         );
 
+        wp_localize_script(
+            'ea-front-end',
+            'ea_vacations',
+            json_decode($this->options->get_option_value('vacations', '[]'))
+        );
+
         wp_enqueue_script('underscore');
         wp_enqueue_script('ea-validator');
         wp_enqueue_script('ea-front-end');

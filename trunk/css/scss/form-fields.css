@@ -215,8 +215,5 @@
                 margin-right: 10px; }
           .wp-filter .custom-tab-view .form-section .form-container .form-item ul {
             width: 100%; }
-            .wp-filter .custom-tab-view .form-section .form-container .form-item ul .menu-item-handle,
-            .wp-filter .custom-tab-view .form-section .form-container .form-item ul .field-settings {
-              width: 100%; }
         .wp-filter .custom-tab-view .form-section .form-container .form-item .list-form-item .redirect-row span:first-child, .wp-filter .custom-tab-view .form-section .form-container .form-item .list-form-item .redirect-row button:last-child {
           flex: none; }
