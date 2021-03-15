@@ -1,3 +1,5 @@
+import axios from 'axios';
+
 const jQuery = window.jQuery;
 
 class HttpService {
@@ -6,18 +8,25 @@ class HttpService {
   }
 
   getJSON(url) {
-    return jQuery.getJSON(url);
+    return axios.get(url).then(response => response.data);
+  }
+
+  postJSON(url, data = {}) {
+    return axios
+      .post(url, data, {
+        headers: {
+          'content-type': 'text/json'
+        }
+      })
+      .then(response => response.data);
   }
 
   post(url, data = {}) {
-    return jQuery.post(url, data);
+    return axios.post(url, data).then(response => response.data);
   }
 
   delete(url) {
-    return jQuery.ajax({
-      url,
-      type: 'DELETE'
-    });
+    return axios.delete(url).then(response => response.data);
   }
 }
 

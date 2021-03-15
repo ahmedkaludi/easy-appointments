@@ -5,7 +5,7 @@ Tags: appointment, appointments, Booking, calendar, plugin, reservation, reserva
 Requires at least: 3.7
 Tested up to: 5.7
 Requires PHP: 5.3
-Stable tag: 3.4.5
+Stable tag: 3.4.6
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -218,6 +218,9 @@ Note: you can have only one calendar on one page.
 25. Admin panel - Report - Export page
 
 == Changelog ==
+
+= 3.4.6 (2021-03-15) =
+* Fixes issue with admin pages not responding to save action
 
 = 3.4.5 (2021-03-13) =
 * Vacation settings now works on ea_standard shortcode

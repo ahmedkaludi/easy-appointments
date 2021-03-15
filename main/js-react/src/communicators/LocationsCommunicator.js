@@ -34,7 +34,7 @@ export class LocationsCommunicator {
       url = `${url}&id=${data.id}&_method=PUT`;
     }
 
-    return await http.post(url, JSON.stringify(data));
+    return await http.postJSON(url, JSON.stringify(data));
   }
 
   /**

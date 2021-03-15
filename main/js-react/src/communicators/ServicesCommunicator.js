@@ -36,7 +36,7 @@ export class ServicesCommunicator {
 
     data.price = data.price.replaceAll(',', '');
 
-    return await http.post(url, JSON.stringify(data));
+    return await http.postJSON(url, JSON.stringify(data));
   }
 
   /**

@@ -12,7 +12,7 @@ export class VacationsCommunicator {
   }
 
   static async save(data) {
-    const response = await http.post(this.url, JSON.stringify(data));
+    const response = await http.postJSON(this.url, JSON.stringify(data));
     return response;
   }
 }
