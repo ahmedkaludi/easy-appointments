@@ -14,7 +14,8 @@ import {
   ServicesPage,
   WorkersPage,
   ConnectionsPage,
-  ToolsPage
+  ToolsPage,
+  ReportsPage
 } from './pages';
 
 import './assets/base.scss';
@@ -283,7 +284,8 @@ const PAGES = {
   services: <ServicesPage />,
   workers: <WorkersPage />,
   connections: <ConnectionsPage />,
-  tools: <ToolsPage />
+  tools: <ToolsPage />,
+  reports: <ReportsPage />
 };
 
 class EasyApp extends Component {

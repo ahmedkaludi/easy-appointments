@@ -44,3 +44,10 @@ if (document.getElementById('ea-admin-tools')) {
     document.getElementById('ea-admin-tools')
   );
 }
+
+if (document.getElementById('ea-admin-reports')) {
+  ReactDOM.render(
+    <EasyApp page="reports" />,
+    document.getElementById('ea-admin-reports')
+  );
+}
