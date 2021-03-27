@@ -208,7 +208,15 @@ class EADBModels
         $tmp = array();
 
         foreach ($order as $key => $value) {
+            if (empty($key) || empty($value)) {
+                continue;
+            }
+
             $tmp[] = "{$key} {$value}";
+        }
+
+        if (count($tmp) === 0) {
+            $tmp = 'id DESC';
         }
 
         $order = implode(',', $tmp);

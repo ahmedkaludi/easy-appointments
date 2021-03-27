@@ -15,7 +15,7 @@ class HttpService {
     return axios
       .post(url, data, {
         headers: {
-          'content-type': 'text/json'
+          'content-type': 'application/json'
         }
       })
       .then(response => response.data);
