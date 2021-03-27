@@ -5,7 +5,7 @@ Tags: appointment, appointments, Booking, calendar, plugin, reservation, reserva
 Requires at least: 3.7
 Tested up to: 5.7
 Requires PHP: 5.3
-Stable tag: 3.4.8
+Stable tag: 3.4.9
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -218,6 +218,9 @@ Note: you can have only one calendar on one page.
 25. Admin panel - Report - Export page
 
 == Changelog ==
+
+= 3.4.9 (2021-03-27) =
+* Added option to add custom redirect when customer hit cancel button for bootstrap shortcode
 
 = 3.4.8 (2021-03-24) =
 * Security update - for admin part users will need to have `edit_posts` capability in order to make calls

@@ -561,23 +561,6 @@
                         </div>
                     </div>
                     <div class="form-item">
-                        <label for=""><?php _e('After cancel go to', 'easy-appointments'); ?></label>
-                        <select data-key="cancel.scroll" class="field" name="cancel.scroll">
-                            <% var langs = [
-                            'calendar', 'worker', 'service', 'location'
-                            ];
-                            _.each(langs,function(item,key,list){
-                            if(typeof _.findWhere(settings, {ea_key:'cancel.scroll'}) !==
-                            'undefined' &&
-                            _.findWhere(settings, {ea_key:'cancel.scroll'}).ea_value === item) { %>
-                            <option value="<%- item %>" selected="selected"><%- item %></option>
-                            <% } else { %>
-                            <option value="<%- item %>"><%- item %></option>
-                            <% }
-                            });%>
-                        </select>
-                    </div>
-                    <div class="form-item">
                         <div class="label-with-tooltip">
                             <label for=""><?php _e('Go to page', 'easy-appointments'); ?></label>
                             <span class="tooltip tooltip-right"
@@ -587,7 +570,6 @@
                                type="text"
                                value="<%- _.findWhere(settings, {ea_key:'submit.redirect'}).ea_value %>">
                     </div>
-
                     <div class="form-item subgroup">
                         <div class="label-with-tooltip">
                             <label for=""><?php _e('Advance Go to', 'easy-appointments'); ?></label>
@@ -614,6 +596,50 @@
                     <div class="form-item">
                         <ul id="custom-redirect-list" class="list-form-item"></ul>
                     </div>
+                    <hr>
+                    <div class="form-item">
+                        <label for=""><?php _e('After cancel go to', 'easy-appointments'); ?></label>
+                        <select data-key="cancel.scroll" class="field" name="cancel.scroll">
+                            <% var langs = [
+                            'calendar', 'worker', 'service', 'location'
+                            ];
+                            _.each(langs,function(item,key,list){
+                            if(typeof _.findWhere(settings, {ea_key:'cancel.scroll'}) !==
+                            'undefined' &&
+                            _.findWhere(settings, {ea_key:'cancel.scroll'}).ea_value === item) { %>
+                            <option value="<%- item %>" selected="selected"><%- item %></option>
+                            <% } else { %>
+                            <option value="<%- item %>"><%- item %></option>
+                            <% }
+                            });%>
+                        </select>
+                    </div>
+                    <div class="form-item subgroup">
+                        <div class="label-with-tooltip">
+                            <label for=""><?php _e('Advance Go to on Cancel', 'easy-appointments'); ?></label>
+                            <span class="tooltip tooltip-right"
+                                  data-tooltip="<?php _e('Add custom cancels redirect based on service.', 'easy-appointments'); ?>"></span>
+                        </div>
+                    </div>
+                    <div class="form-item">
+                        <label for=""><?php _e('Service', 'easy-appointments'); ?></label>
+                        <select id="cancel-redirect-service" class="field">
+                            <% _.each(eaData.Services,function(item,key,list){ %>
+                            <option value="<%= _.escape(item.id) %>"><%= _.escape(item.name) %></option>
+                            <% });%>
+                        </select>
+                    </div>
+                    <div class="form-item inline-fields">
+                        <div class="form-item">
+                            <label for=""><?php _e('Redirect to', 'easy-appointments'); ?></label>
+                            <input id="cancel-redirect-url" name="cancel-redirect-url" type="text">
+                        </div>
+                        <button class="button button-primary btn-add-cancel-redirect button-field"><?php _e('Add advance redirect', 'easy-appointments'); ?></button>
+                    </div>
+                    <div class="form-item">
+                        <ul id="custom-cancel-redirect-list" class="list-form-item"></ul>
+                    </div>
+                    <input type="hidden" id="advance-cancel-redirect" data-key="advance_cancel.redirect" class="field" name="advance_cancel.redirect" value="<%= _.escape(ea_settings['advance_cancel.redirect']) %>">
                 </div>
             </div>
 

@@ -77,6 +77,7 @@ class EAOptions
             'css.off'                       => '0',
             'submit.redirect'               => '',
             'advance.redirect'              => '[]',
+            'advance_cancel.redirect'       => '[]',
             'pending.subject.visitor.email' => 'Reservation #id#',
             'block.time'                    => '0',
             'max.appointments'              => '5',

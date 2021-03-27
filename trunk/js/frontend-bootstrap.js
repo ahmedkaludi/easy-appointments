@@ -1112,6 +1112,23 @@
             var plugin = this;
             var $temp;
 
+            // if there i advance redirect do that
+            if (ea_settings['advance_cancel.redirect'] !== '') {
+                var data = JSON.parse(ea_settings['advance_cancel.redirect']);
+                var service = plugin.$element.find('[name="service"]').val();
+
+                var redirect = data.find(function(el) {
+                    return el.service === service;
+                });
+
+                if (redirect) {
+                    setTimeout(function () {
+                        window.location.href = redirect.url;
+                    }, 2000);
+                }
+                return;
+            }
+
             switch (ea_settings['cancel.scroll']) {
                 case 'calendar':
                     plugin.scrollToElement(plugin.$element.find('.date'));
