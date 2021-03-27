@@ -54,6 +54,10 @@
       .wp-filter .custom-tab-view .form-section .form-container {
         flex: 1;
         padding: 0 30px; }
+        .wp-filter .custom-tab-view .form-section .form-container hr {
+          margin-top: 15px;
+          width: 500px;
+          float: left; }
         .wp-filter .custom-tab-view .form-section .form-container .form-item {
           display: flex;
           flex-direction: column;
