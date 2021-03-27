@@ -75,6 +75,11 @@ class EAAjax
      */
     public function init()
     {
+        add_action('init', array($this, 'register_ajax_endpoints'));
+    }
+
+    public function register_ajax_endpoints()
+    {
         // Frontend ajax calls
         add_action('wp_ajax_nopriv_ea_next_step', array($this, 'ajax_front_end'));
         add_action('wp_ajax_ea_next_step', array($this, 'ajax_front_end'));
@@ -96,7 +101,12 @@ class EAAjax
         // end frontend
 
         // admin ajax section
-        if (is_admin()) {
+        if (is_admin() && is_user_logged_in()) {
+
+            // user must have at least edit posts capability in order to use those endpoints
+            if (!current_user_can('edit_posts')) {
+                return;
+            }
 
             add_action('wp_ajax_ea_save_custom_columns', array($this, 'save_custom_columns'));
 
