@@ -1,0 +1,23 @@
+div#ea-admin-reports {
+  .ea-report-card {
+    padding: 0;
+    height: 100%;
+    cursor: pointer;
+    box-shadow: 4px 3px 1px -5px rgba(0,0,0,0.1), 0px 2px 2px 0px rgba(0,0,0,0.1), 0px 1px 5px 0px rgba(0,0,0,0.1);
+
+    &.card-box-hover-rise:hover {
+      transform: translateY(-7px);
+    }
+
+    .card-body-avatar {
+      position: relative;
+      padding-top: calc(1.25rem + 20px);
+
+      .avatar-icon-wrapper {
+        margin: 0;
+        position: absolute;
+        top: -20px;
+      }
+    }
+  }
+}
