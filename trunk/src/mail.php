@@ -255,6 +255,21 @@ EOT;
 
             $url = apply_filters( 'ea_cancel_redirect_url', get_home_url());
 
+
+            // Parse redirect options
+
+            $redirect_mapping = json_decode($this->options->get_option_value('advance_cancel.redirect'));
+
+            if (is_array($redirect_mapping)) {
+                $service_id = $app_data['service'];
+                foreach ($redirect_mapping as $item) {
+                    if ($item->service == $service_id) {
+                        $url = $item->url;
+                        break;
+                    }
+                }
+            }
+
             header('Refresh:3; url=' . $url);
             wp_die(__('Appointment has been cancelled', 'easy-appointments'));
         }

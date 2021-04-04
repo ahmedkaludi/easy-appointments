@@ -52,6 +52,17 @@ EA.MainView = Backbone.View.extend({
 
         // Get data from server
         // this.collection.fetch( {reset:true} );
+
+        var period = localStorage.getItem('ea-appointments-period');
+
+        if (period) {
+            this.$el.find('#ea-period')
+                .val(period)
+                .change();
+
+            return;
+        }
+
         this.filterChange();
     },
 
@@ -150,7 +161,11 @@ EA.MainView = Backbone.View.extend({
     // Filter has changed
     filterChange: function (e) {
         if (typeof e !== 'undefined' && jQuery(e.currentTarget).is('#ea-period')) {
-            switch (jQuery(e.currentTarget).val()) {
+            var selected = jQuery(e.currentTarget).val();
+
+            localStorage.setItem('ea-appointments-period', selected);
+
+            switch (selected) {
                 case 'week':
                     this.setThisWeekPeriod();
                     break;
@@ -159,6 +174,15 @@ EA.MainView = Backbone.View.extend({
                     break;
                 case 'today':
                     this.setThisDayPeriod();
+                    break;
+                case 'tomorrow':
+                    this.setNextDayPeriod();
+                    break;
+                case '30d':
+                    this.setLastXPeriod(30);
+                    break;
+                case '7d':
+                    this.setLastXPeriod(7);
                     break;
                 default:
                     return;
@@ -342,6 +366,14 @@ EA.MainView = Backbone.View.extend({
         this.$el.find('#ea-filter-to').datepicker('setDate', lastDay);
     },
 
+    setLastXPeriod: function (days) {
+        var firstDay = new Date();
+        var lastDay = new Date(firstDay.getTime()+(1000*60*60*24*days));
+
+        this.$el.find('#ea-filter-from').datepicker('setDate', firstDay);
+        this.$el.find('#ea-filter-to').datepicker('setDate', lastDay);
+    },
+
     setThisWeekPeriod: function () {
         this.$el.find('#ea-filter-from').datepicker('setDate', this.getMonday(new Date()));
         this.$el.find('#ea-filter-to').datepicker('setDate', this.getSunday(new Date()));
@@ -352,6 +384,17 @@ EA.MainView = Backbone.View.extend({
         tomorrow.setDate(tomorrow.getDate() + 1);
         this.$el.find('#ea-filter-from').datepicker('setDate', new Date());
         this.$el.find('#ea-filter-to').datepicker('setDate', tomorrow);
+    },
+
+    setNextDayPeriod: function () {
+        var tomorrow = new Date();
+        tomorrow.setDate(tomorrow.getDate() + 1);
+
+        var nextDay = new Date();
+        nextDay.setDate(tomorrow.getDate() + 2);
+
+        this.$el.find('#ea-filter-from').datepicker('setDate', tomorrow);
+        this.$el.find('#ea-filter-to').datepicker('setDate', nextDay);
     },
 
     onSortChange: function() {

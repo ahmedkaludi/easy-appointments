@@ -5,10 +5,12 @@ import { Field, Input } from '../../../../../ea-components';
 import { __ } from '../../../../../services/Localization';
 
 const Minutes = ({ value, updateFieldValue, error, label }) => {
+  if (!value) updateFieldValue('0');
+
   return (
     <Input
       label={label}
-      value={value || '0'}
+      value={value}
       onChange={val => updateFieldValue(val)}
       error={error}
       type="number"

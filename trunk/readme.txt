@@ -5,7 +5,7 @@ Tags: appointment, appointments, Booking, calendar, plugin, reservation, reserva
 Requires at least: 3.7
 Tested up to: 5.7
 Requires PHP: 5.3
-Stable tag: 3.4.9
+Stable tag: 3.4.12
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -105,13 +105,8 @@ For more info follow the link for <a href="https://easy-appointments.net/#extens
 
 There is a really good non-official step-by-step video tutorial on https://www.youtube.com/watch?v=H7Hj4jfMDik
 
-= Shorcode =
+= Shortcode =
 In order to have Appointments form in your Page or Post insert following shortcode
-<code>
-[ea_standard]
-</code>
-
-For **NEW** bootstrap version :
 <code>
 [ea_bootstrap]
 </code>
@@ -121,6 +116,8 @@ Options :
 width : default value 400px
 scroll_off : default value off
 layout_cols : default value 1
+
+<a href="https://easy-appointments.net/documentation/#bootstrap">all available shortcode options</a>
 
 example : [ea_bootstrap width="800px" scroll_off="true" layout_cols="2"]
 
@@ -155,10 +152,6 @@ have that connection twice.
 Place following shortcode into your Page/Post content:
 
 <code>
-[ea_standard]
-</code>
-OR
-<code>
 [ea_bootstrap]
 </code>
 
@@ -166,6 +159,8 @@ For bootstrap there are options :
 width : default value 400px
 scroll_off : default value off
 layout_cols : default value 1
+
+<a href="https://easy-appointments.net/documentation/#bootstrap">all available shortcode options</a>
 
 Example :
 `[ea_bootstrap width="800px" scroll_off="true" layout_cols="2"]`
@@ -218,6 +213,20 @@ Note: you can have only one calendar on one page.
 25. Admin panel - Report - Export page
 
 == Changelog ==
+
+= 3.4.12 (2021-04-04) =
+* Improved Appointments page with new two time select period
+    - Tomorrow
+    - Next 7 days
+    - Next 30 days
+* Also selected time period is saved in browser so next page visit will have that time period preselected
+* Translation: Updated POT file
+
+= 3.4.11 (2021-03-31) =
+* Advance cancel redirect now also apply on cancel action from mail link.
+
+= 3.4.10 (2021-03-29) =
+* Fixed issue with default 0 values in Admin Service form
 
 = 3.4.9 (2021-03-27) =
 * Added option to add custom redirect when customer hit cancel button for bootstrap shortcode
