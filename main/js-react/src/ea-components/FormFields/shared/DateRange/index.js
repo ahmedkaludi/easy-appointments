@@ -5,11 +5,11 @@ import MultiFieldWrap from '../../MultiFieldWrap';
 import { StartDateField } from './StartDate';
 import { EndDateField } from './EndDate';
 
-const DateRangeField = ({ info }) => (
+const DateRangeField = ({ info, startName, endName }) => (
   <MultiFieldWrap label="Date range" className="ea-form-field" info={info}>
     <DoubleField>
-      <StartDateField />
-      <EndDateField />
+      <StartDateField name={startName} />
+      <EndDateField name={endName} startName={startName} />
     </DoubleField>
   </MultiFieldWrap>
 );

@@ -25,6 +25,7 @@ const StartDate = ({ value, updateFieldValue, error }) => {
       value={value}
       onChange={onChange}
       error={error}
+      disablePast={false}
       adornment
     />
   );
@@ -41,10 +42,6 @@ StartDate.defaultProps = {
   updateFieldValue: f => f
 };
 
-export const StartDateField = () => (
-  <Field
-    name="day_from"
-    component={props => <StartDate {...props} />}
-    required
-  />
+export const StartDateField = ({ name }) => (
+  <Field name={name} component={props => <StartDate {...props} />} required />
 );

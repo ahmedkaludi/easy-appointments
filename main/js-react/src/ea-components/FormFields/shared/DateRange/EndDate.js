@@ -26,8 +26,8 @@ const startGreaterThanEnd = (a, b) => {
   return !!(dateA > dateB);
 };
 
-const EndDate = ({ value, updateFieldValue, error, model }) => {
-  const fromDate = model.day_from;
+const EndDate = ({ value, updateFieldValue, error, model, startName }) => {
+  const fromDate = model[startName];
 
   useEffect(() => {
     if (!fromDate) {
@@ -49,6 +49,7 @@ const EndDate = ({ value, updateFieldValue, error, model }) => {
       value={value}
       onChange={onChange}
       error={error}
+      disablePast={false}
       adornment
       {...minDate}
     />
@@ -66,6 +67,10 @@ EndDate.defaultProps = {
   updateFieldValue: f => f
 };
 
-export const EndDateField = () => (
-  <Field name="day_to" component={props => <EndDate {...props} />} required />
+export const EndDateField = ({ name, startName }) => (
+  <Field
+    name={name}
+    component={props => <EndDate {...props} startName={startName} />}
+    required
+  />
 );

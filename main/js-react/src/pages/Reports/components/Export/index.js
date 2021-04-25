@@ -8,7 +8,7 @@ const imageSrc = `data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGlu
 
 export const Export = () => (
   <ContentBox customClass="mb-0 p-3">
-    <Grid container spacing={4} className="ea-grid-centered reports-grid">
+    <Grid container spacing={4} className="ea-grid-centered reports-grid p-5">
       <Grid item xs={12} lg={6}>
         <ExportsForm />
       </Grid>
