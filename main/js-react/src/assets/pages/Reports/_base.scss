@@ -20,4 +20,14 @@ div#ea-admin-reports {
       }
     }
   }
+
+  .reports-grid {
+    .MuiGrid-item {
+      max-width: 500px;
+
+      &:nth-child(2) {
+        max-width: 600px;
+      }
+    }
+  }
 }
