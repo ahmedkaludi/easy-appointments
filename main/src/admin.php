@@ -523,6 +523,8 @@ class EAAdminPanel
             return;
         }
 
+        load_plugin_textdomain('easy-appointments', false, EA_PLUGIN_DIR  . 'languages/');
+
         wp_enqueue_style('ea-admin-bundle-css');
         wp_enqueue_script('ea-admin-bundle');
 
@@ -537,8 +539,7 @@ class EAAdminPanel
         wp_localize_script('ea-admin-bundle', 'ea_settings', $settings);
 
         if (function_exists('wp_set_script_translations')) {
-            wp_set_script_translations('ea-admin-bundle', 'easy-appointments', EA_PLUGIN_DIR  . 'languages/');
-            load_plugin_textdomain('easy-appointments', false, EA_PLUGIN_DIR  . 'languages/');
+            wp_set_script_translations('ea-admin-bundle', 'easy-appointments', EA_PLUGIN_DIR  . 'languages');
         }
 
         $screen = get_current_screen();
@@ -565,6 +566,8 @@ class EAAdminPanel
             return;
         }
 
+        load_plugin_textdomain('easy-appointments', false, EA_PLUGIN_DIR  . 'languages/');
+
         wp_enqueue_style('ea-admin-bundle-css');
         wp_enqueue_script('ea-admin-bundle');
 
@@ -578,7 +581,7 @@ class EAAdminPanel
         wp_localize_script('ea-admin-bundle', 'ea_settings', $settings);
 
         if (function_exists('wp_set_script_translations')) {
-            wp_set_script_translations('ea-admin-bundle', 'easy-appointments');
+            wp_set_script_translations('ea-admin-bundle', 'easy-appointments', EA_PLUGIN_DIR  . 'languages');
         }
 
         require_once EA_SRC_DIR . 'templates/locations.tpl.php';
@@ -596,6 +599,8 @@ class EAAdminPanel
             return;
         }
 
+        load_plugin_textdomain('easy-appointments', false, EA_PLUGIN_DIR  . 'languages/');
+
         wp_enqueue_style('ea-admin-bundle-css');
         wp_enqueue_script('ea-admin-bundle');
 
@@ -609,7 +614,7 @@ class EAAdminPanel
         wp_localize_script('ea-admin-bundle', 'ea_settings', $settings);
 
         if (function_exists('wp_set_script_translations')) {
-            wp_set_script_translations('ea-admin-bundle', 'easy-appointments');
+            wp_set_script_translations('ea-admin-bundle', 'easy-appointments', EA_PLUGIN_DIR  . 'languages');
         }
 
         require_once EA_SRC_DIR . 'templates/workers.tpl.php';
@@ -627,6 +632,8 @@ class EAAdminPanel
             return;
         }
 
+        load_plugin_textdomain('easy-appointments', false, EA_PLUGIN_DIR  . 'languages/');
+
         wp_enqueue_style('ea-admin-bundle-css');
         wp_enqueue_script('ea-admin-bundle');
 
@@ -640,7 +647,7 @@ class EAAdminPanel
         wp_localize_script('ea-admin-bundle', 'ea_settings', $settings);
 
         if (function_exists('wp_set_script_translations')) {
-            wp_set_script_translations('ea-admin-bundle', 'easy-appointments');
+            wp_set_script_translations('ea-admin-bundle', 'easy-appointments', EA_PLUGIN_DIR  . 'languages');
         }
 
         require_once EA_SRC_DIR . 'templates/services.tpl.php';
@@ -658,6 +665,8 @@ class EAAdminPanel
             return;
         }
 
+        load_plugin_textdomain('easy-appointments', false, EA_PLUGIN_DIR  . 'languages/');
+
         wp_enqueue_style('ea-admin-bundle-css');
         wp_enqueue_script('ea-admin-bundle');
 
@@ -671,7 +680,7 @@ class EAAdminPanel
         wp_localize_script('ea-admin-bundle', 'ea_settings', $settings);
 
         if (function_exists('wp_set_script_translations')) {
-            wp_set_script_translations('ea-admin-bundle', 'easy-appointments');
+            wp_set_script_translations('ea-admin-bundle', 'easy-appointments', EA_PLUGIN_DIR  . 'languages');
         }
 
         require_once EA_SRC_DIR . 'templates/connections.tpl.php';
@@ -689,6 +698,8 @@ class EAAdminPanel
             return;
         }
 
+        load_plugin_textdomain('easy-appointments', false, EA_PLUGIN_DIR  . 'languages/');
+
         wp_enqueue_style('ea-admin-bundle-css');
         wp_enqueue_script('ea-admin-bundle');
 
@@ -703,7 +714,7 @@ class EAAdminPanel
         wp_localize_script('ea-admin-bundle', 'ea_settings', $settings);
 
         if (function_exists('wp_set_script_translations')) {
-            wp_set_script_translations('ea-admin-bundle', 'easy-appointments');
+            wp_set_script_translations('ea-admin-bundle', 'easy-appointments', EA_PLUGIN_DIR  . 'languages');
         }
 
         require_once EA_SRC_DIR . 'templates/tools.tpl.php';

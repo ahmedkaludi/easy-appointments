@@ -22,6 +22,7 @@ msgstr ""
 "X-Poedit-SearchPathExcluded-4: node_modules\n"
 "X-Poedit-SearchPathExcluded-5: js\n"
 "X-Poedit-SearchPathExcluded-6: js-react/node_modules\n"
+"X-Domain: easy-appointments\n"
 
 #: js-react/src/pages/Connections/components/ConnectionsTable/index.js:14
 #: js-react/src/pages/Locations/components/LocationsTable/index.js:10

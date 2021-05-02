@@ -23,6 +23,7 @@ msgstr ""
 "X-Poedit-SearchPathExcluded-4: node_modules\n"
 "X-Poedit-SearchPathExcluded-5: js\n"
 "X-Poedit-SearchPathExcluded-6: js-react/node_modules\n"
+"X-Domain: easy-appointments\n"
 
 #: js-react/src/pages/Connections/components/ConnectionsForm/fields/DaysOfWeekField.js:9
 msgid "Monday"
