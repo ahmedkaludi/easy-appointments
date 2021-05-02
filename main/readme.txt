@@ -5,7 +5,7 @@ Tags: appointment, appointments, Booking, calendar, plugin, reservation, reserva
 Requires at least: 3.7
 Tested up to: 5.7
 Requires PHP: 5.3
-Stable tag: 3.4.12
+Stable tag: 3.4.13
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -213,6 +213,10 @@ Note: you can have only one calendar on one page.
 25. Admin panel - Report - Export page
 
 == Changelog ==
+
+= 3.4.13 (2021-04-14) =
+* Fixed issue with saving of settings in some cases
+* Extended hook for custom mail template
 
 = 3.4.12 (2021-04-04) =
 * Improved Appointments page with new two time select period

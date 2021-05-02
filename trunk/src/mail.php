@@ -619,7 +619,7 @@ EOT;
         $body_template = $this->options->get_option_value('mail.' . $app->status, 'mail');
 
         // Hook for customize body of email template
-        $body_template = apply_filters( 'ea_customer_mail_template', $body_template);
+        $body_template = apply_filters( 'ea_customer_mail_template', $body_template, $app_array, $params );
 
         $send_from = $this->options->get_option_value('send.from.email', '');
 
