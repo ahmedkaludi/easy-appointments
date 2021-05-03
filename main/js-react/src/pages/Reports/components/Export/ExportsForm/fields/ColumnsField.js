@@ -2,6 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import { orderBy } from 'lodash';
+import { useSnackbar } from 'notistack';
+import { Tooltip, IconButton } from '@material-ui/core';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { __ } from '../../../../../../services/Localization';
 import { Field, Autocomplete } from '../../../../../../ea-components';
 
@@ -16,6 +19,8 @@ const WEEK_DAYS = [
 ];
 
 const Columns = ({ value, updateFieldValue, error }) => {
+  const { enqueueSnackbar } = useSnackbar();
+
   const onChange = (e, newVal) => {
     const newDays = orderBy(newVal, ['id'], ['asc'])
       .map(val => val.value)
@@ -23,19 +28,37 @@ const Columns = ({ value, updateFieldValue, error }) => {
     updateFieldValue(newDays);
   };
 
+  const saveSettings = () => {
+    enqueueSnackbar('Your columns settings are saved successfully!', {
+      variant: 'success'
+    });
+  };
+
   const selected = value
     ? value.split(',').map(day => WEEK_DAYS.find(opt => opt.value === day))
     : [];
 
   return (
-    <Autocomplete
-      label={__('Columns *', 'easy-appointments')}
-      placeholder={__('Column...', 'easy-appointments')}
-      value={selected}
-      onChange={onChange}
-      options={WEEK_DAYS}
-      error={error}
-    />
+    <div className="d-flex align-items-center">
+      <Autocomplete
+        label={__('Columns *', 'easy-appointments')}
+        placeholder={__('Column...', 'easy-appointments')}
+        value={selected}
+        onChange={onChange}
+        options={WEEK_DAYS}
+        error={error}
+        customClass="flex-fill mr-3"
+      />
+      <Tooltip title="Save settings" arrow>
+        <IconButton size="small" onClick={saveSettings}>
+          <FontAwesomeIcon
+            className="save-settings"
+            icon={['fas', 'save']}
+            size="lg"
+          />
+        </IconButton>
+      </Tooltip>
+    </div>
   );
 };
 

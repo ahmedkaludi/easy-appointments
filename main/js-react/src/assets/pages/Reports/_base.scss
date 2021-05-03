@@ -30,4 +30,12 @@ div#ea-admin-reports {
       }
     }
   }
+
+  .save-settings {
+    color: #808080;
+    transition: all .3s;
+    &:hover {
+      color: #0073aa;
+    }
+  }
 }

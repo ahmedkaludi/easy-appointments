@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Provider } from 'react-redux';
 
 import { ThemeProvider } from '@material-ui/styles';
+import { SnackbarProvider } from 'notistack';
 
 import MuiTheme from './theme';
 
@@ -293,7 +294,11 @@ class EasyApp extends Component {
     return (
       <Provider store={store}>
         <ThemeProvider theme={MuiTheme}>
-          {PAGES[this.props.page] ?? null}
+          <SnackbarProvider
+            anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+            maxSnack={5}>
+            {PAGES[this.props.page] ?? null}
+          </SnackbarProvider>
         </ThemeProvider>
       </Provider>
     );

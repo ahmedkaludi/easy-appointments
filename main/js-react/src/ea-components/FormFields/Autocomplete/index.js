@@ -12,7 +12,8 @@ const Autocomplete = ({
   disabled,
   placeholder,
   limitTags,
-  error
+  error,
+  customClass
 }) => {
   const filterOptions = (opts, state) => {
     const selected = value.map(val => val.value);
@@ -30,7 +31,7 @@ const Autocomplete = ({
   return (
     <MuiAutocomplete
       multiple
-      className="ea-autocomplete"
+      className={`ea-autocomplete ${customClass}`}
       options={options}
       getOptionLabel={option => option.label}
       filterSelectedOptions
@@ -68,7 +69,8 @@ Autocomplete.propTypes = {
   options: PropTypes.arrayOf(PropTypes.any).isRequired,
   error: PropTypes.bool.isRequired,
   disabled: PropTypes.bool,
-  limitTags: PropTypes.number
+  limitTags: PropTypes.number,
+  customClass: PropTypes.string
 };
 
 Autocomplete.defaultProps = {
@@ -77,7 +79,8 @@ Autocomplete.defaultProps = {
   value: null,
   onChange: f => f,
   disabled: false,
-  limitTags: -1
+  limitTags: -1,
+  customClass: ''
 };
 
 export default Autocomplete;
