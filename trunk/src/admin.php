@@ -742,21 +742,21 @@ class EAAdminPanel
             return;
         }
 
-        wp_enqueue_style('ea-vacation-css');
-        wp_enqueue_script('ea-vacation');
+        wp_enqueue_style('ea-admin-bundle-css');
+        wp_enqueue_script('ea-admin-bundle');
 
         $settings = $this->options->get_options();
         $settings['rest_url'] = get_rest_url();
-        $settings['rest_url_clear_log'] = EALogActions::clear_error_url();
+        $settings['export_tags'] = $this->models->get_all_tags_for_template();
 
         $wpurl = get_bloginfo('wpurl');
         $url   = get_bloginfo('url');
 
         $settings['image_base'] = $wpurl === $url ? '' : $wpurl;
-        wp_localize_script('ea-vacation', 'ea_settings', $settings);
+        wp_localize_script('ea-admin-bundle', 'ea_settings', $settings);
 
         if (function_exists('wp_set_script_translations')) {
-            wp_set_script_translations('ea-vacation', 'easy-appointments');
+            wp_set_script_translations('ea-admin-bundle', 'easy-appointments');
         }
 
         require_once EA_SRC_DIR . 'templates/reports.tpl.php';
