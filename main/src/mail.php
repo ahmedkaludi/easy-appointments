@@ -591,7 +591,10 @@ EOT;
             if ($key == 'start' || $key == 'end') {
                 $start_date = $app_array['date'] . ' ' . $app_array[$key];
                 $temp_date = DateTime::createFromFormat('Y-m-d H:i:s', $start_date, $this->get_wp_timezone());
-                $value = $temp_date->format($time_format);
+                // do that only if time is valid
+                if ($temp_date !== false) {
+                    $value = $temp_date->format($time_format);
+                }
             }
 
             if ($key == 'date') {

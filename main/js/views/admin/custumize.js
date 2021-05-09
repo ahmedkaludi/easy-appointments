@@ -352,7 +352,7 @@ EA.CustumizeView = Backbone.View.extend({
         element.set('label', $li.find('.field-label').val());
         element.set('slug', $li.find('.field-slug').val());
         element.set('required', $li.find('.required').is(":checked"));
-        element.set('visible', $li.find('.visible').is(":checked"));
+        element.set('visible', $li.find('.visible').val());
 
         if ($li.find('.field-mixed').length > 0) {
             element.set('mixed', $li.find('.field-mixed').val());

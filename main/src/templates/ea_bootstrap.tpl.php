@@ -64,6 +64,9 @@
 
                     <% _.each(settings.MetaFields, function(item,key,list) { %>
                     <% if (item.visible == "0") { return; } %>
+                    <% if (item.visible == "2") { %>
+                    <input id="<%- item.slug %>" name="<%= item.slug %>" type="hidden" value="<%- item.default_value %>" class="custom-field" />
+                    <% return; } %>
                     <div class="form-group">
                         <label class="col-sm-4 control-label"><%= _.escape(item.label) %> <% if (item.required == "1") { %>*<% }
                             %></label>

@@ -825,8 +825,18 @@
         %>checked<% } %>>
     </p>
     <p>
-        <label>Visible :</label><input type="checkbox" class="visible" name="visible" <% if (item.visible == "1") {
-        %>checked<% } %>>
+        <label>Visible: </label>
+        <select class="visible" name="visible">
+            <option value="0"
+            <% if (item.visible === "0") {
+            %>selected="selected"<% } %>>No</option>
+            <option value="1"
+            <% if (item.visible === "1") {
+            %>selected="selected"<% } %>>Yes</option>
+            <option value="2"
+            <% if (item.visible === "2") {
+            %>selected="selected"<% } %>>No, but rendered as hidden field</option>
+        </select>
     </p>
     <p><a href="#" class="deletion item-delete">Delete</a> | <a href="#" class="item-save">Apply</a></p>
 </div>

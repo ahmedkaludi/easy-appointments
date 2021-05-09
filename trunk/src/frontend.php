@@ -399,6 +399,11 @@ class EAFrontend
                 continue;
             }
 
+            if ($item->visible === "2") {
+                $html .= '<input class="custom-field" type="hidden" name="' . $item->slug . '" value="" />';
+                continue;
+            }
+
             $r = !empty($item->required);
 
             $star = ($r) ? ' * ' : ' ';
