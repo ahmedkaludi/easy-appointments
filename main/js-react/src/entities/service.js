@@ -2,17 +2,17 @@ export class EAService {
   /**
    * @type {String|null}
    */
-  block_after = null;
+  block_after = '0';
 
   /**
    * @type {String|null}
    */
-  block_before = null;
+  block_before = '0';
 
   /**
    * @type {String|null}
    */
-  duration = null;
+  duration = '0';
 
   /**
    * @type {String|null}
@@ -27,10 +27,10 @@ export class EAService {
   /**
    * @type {String|null}
    */
-  price = null;
+  price = '0';
 
   /**
    * @type {String|null}
    */
-  slot_step = null;
+  slot_step = '0';
 }

@@ -19,6 +19,8 @@ EA.CustumizeView = Backbone.View.extend({
         "click .tab-selection a": "tabClicked",
         "click .btn-add-redirect": "addAdvanceRedirect",
         "click .remove-advance-redirect": "removeAdvanceRedirect",
+        "click .btn-add-cancel-redirect": "addAdvanceCancelRedirect",
+        "click .remove-advance-cancel-redirect": "removeAdvanceCancelRedirect",
         "change #ea-select-status": "defaultStatusChange",
         "click .form-label-option": "changeFormLabelStyle",
         "click .select-label-option": "changeSelectLabelStyle",
@@ -46,6 +48,7 @@ EA.CustumizeView = Backbone.View.extend({
             plugin.render();
 
             plugin.showCustomRedirects();
+            plugin.showCustomCancelRedirects();
         });
 
         // if there is no data in cache
@@ -349,7 +352,7 @@ EA.CustumizeView = Backbone.View.extend({
         element.set('label', $li.find('.field-label').val());
         element.set('slug', $li.find('.field-slug').val());
         element.set('required', $li.find('.required').is(":checked"));
-        element.set('visible', $li.find('.visible').is(":checked"));
+        element.set('visible', $li.find('.visible').val());
 
         if ($li.find('.field-mixed').length > 0) {
             element.set('mixed', $li.find('.field-mixed').val());
@@ -461,6 +464,67 @@ EA.CustumizeView = Backbone.View.extend({
             }
 
             $list.append('<div class="list-item redirect-row"><span class="row-no">' + (index+1) + '.</span><span class="redirect-service-name">' + service.name + '</span><span class="redirect-url">' + element.url + '</span><button data-index="' + index + '" class="button button-primary remove-advance-redirect"> X </button></div>');
+        });
+    },
+
+
+    addAdvanceCancelRedirect: function() {
+        var $elData = this.$el.find('#advance-cancel-redirect');
+        var data = JSON.parse($elData.val());
+
+        if (!Array.isArray(data)) {
+            data = [];
+        }
+
+        var newItem = {
+            service: this.$el.find('#cancel-redirect-service').val(),
+            url: this.$el.find('#cancel-redirect-url').val()
+        };
+
+        data.push(newItem);
+
+        $elData.val(JSON.stringify(data));
+
+        this.showCustomCancelRedirects();
+    },
+
+    removeAdvanceCancelRedirect: function(e) {
+        var $btn = jQuery(e.currentTarget);
+        var index = $btn.data('index');
+
+        var $elData = this.$el.find('#advance-cancel-redirect');
+        var data = JSON.parse($elData.val());
+
+        data.splice(index, 1);
+
+        $elData.val(JSON.stringify(data));
+
+        this.showCustomCancelRedirects();
+    },
+
+    showCustomCancelRedirects: function() {
+        var $list = this.$el.find('#custom-cancel-redirect-list');
+        var $ulData = this.$el.find('#advance-cancel-redirect');
+        var data = JSON.parse($ulData.val());
+
+        if (!Array.isArray(data)) {
+            data = [];
+        }
+
+        $list.empty();
+
+        jQuery.each(data, function(index, element) {
+            var service = eaData.Services.find(function(el) {
+                return el.id === element.service;
+            });
+
+            if (!service) {
+                service = {
+                    name: 'REMOVED'
+                };
+            }
+
+            $list.append('<div class="list-item redirect-row"><span class="row-no">' + (index+1) + '.</span><span class="redirect-service-name">' + service.name + '</span><span class="redirect-url">' + element.url + '</span><button data-index="' + index + '" class="button button-primary remove-advance-cancel-redirect"> X </button></div>');
         });
     },
 

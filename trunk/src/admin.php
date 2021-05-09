@@ -112,7 +112,7 @@ class EAAdminPanel
 
         // vacation panel script
         wp_register_script(
-            'ea-vacation',
+            'ea-admin-bundle',
             EA_PLUGIN_URL . 'js/bundle.js',
             array('jquery', 'wp-api', 'wp-i18n'),
             EASY_APPOINTMENTS_VERSION,
@@ -121,7 +121,7 @@ class EAAdminPanel
 
         // vacation style
         wp_register_style(
-            'ea-vacation-css',
+            'ea-admin-bundle-css',
             EA_PLUGIN_URL . 'css/theme/main.css',
             array(),
             EASY_APPOINTMENTS_VERSION
@@ -533,8 +533,10 @@ class EAAdminPanel
             return;
         }
 
-        wp_enqueue_style('ea-vacation-css');
-        wp_enqueue_script('ea-vacation');
+        load_plugin_textdomain('easy-appointments', false, EA_PLUGIN_DIR  . 'languages/');
+
+        wp_enqueue_style('ea-admin-bundle-css');
+        wp_enqueue_script('ea-admin-bundle');
 
         $settings = $this->options->get_options();
         $settings['rest_url'] = get_rest_url();
@@ -544,10 +546,10 @@ class EAAdminPanel
         $url   = get_bloginfo('url');
 
         $settings['image_base'] = $wpurl === $url ? '' : $wpurl;
-        wp_localize_script('ea-vacation', 'ea_settings', $settings);
+        wp_localize_script('ea-admin-bundle', 'ea_settings', $settings);
 
         if (function_exists('wp_set_script_translations')) {
-            wp_set_script_translations('ea-vacation', 'easy-appointments');
+            wp_set_script_translations('ea-admin-bundle', 'easy-appointments', EA_PLUGIN_DIR  . 'languages');
         }
 
         $screen = get_current_screen();
@@ -574,8 +576,10 @@ class EAAdminPanel
             return;
         }
 
-        wp_enqueue_style('ea-vacation-css');
-        wp_enqueue_script('ea-vacation');
+        load_plugin_textdomain('easy-appointments', false, EA_PLUGIN_DIR  . 'languages/');
+
+        wp_enqueue_style('ea-admin-bundle-css');
+        wp_enqueue_script('ea-admin-bundle');
 
         $settings = $this->options->get_options();
         $settings['rest_url'] = get_rest_url();
@@ -584,10 +588,10 @@ class EAAdminPanel
         $url   = get_bloginfo('url');
 
         $settings['image_base'] = $wpurl === $url ? '' : $wpurl;
-        wp_localize_script('ea-vacation', 'ea_settings', $settings);
+        wp_localize_script('ea-admin-bundle', 'ea_settings', $settings);
 
         if (function_exists('wp_set_script_translations')) {
-            wp_set_script_translations('ea-vacation', 'easy-appointments');
+            wp_set_script_translations('ea-admin-bundle', 'easy-appointments', EA_PLUGIN_DIR  . 'languages');
         }
 
         require_once EA_SRC_DIR . 'templates/locations.tpl.php';
@@ -605,8 +609,10 @@ class EAAdminPanel
             return;
         }
 
-        wp_enqueue_style('ea-vacation-css');
-        wp_enqueue_script('ea-vacation');
+        load_plugin_textdomain('easy-appointments', false, EA_PLUGIN_DIR  . 'languages/');
+
+        wp_enqueue_style('ea-admin-bundle-css');
+        wp_enqueue_script('ea-admin-bundle');
 
         $settings = $this->options->get_options();
         $settings['rest_url'] = get_rest_url();
@@ -615,10 +621,10 @@ class EAAdminPanel
         $url   = get_bloginfo('url');
 
         $settings['image_base'] = $wpurl === $url ? '' : $wpurl;
-        wp_localize_script('ea-vacation', 'ea_settings', $settings);
+        wp_localize_script('ea-admin-bundle', 'ea_settings', $settings);
 
         if (function_exists('wp_set_script_translations')) {
-            wp_set_script_translations('ea-vacation', 'easy-appointments');
+            wp_set_script_translations('ea-admin-bundle', 'easy-appointments', EA_PLUGIN_DIR  . 'languages');
         }
 
         require_once EA_SRC_DIR . 'templates/workers.tpl.php';
@@ -636,8 +642,10 @@ class EAAdminPanel
             return;
         }
 
-        wp_enqueue_style('ea-vacation-css');
-        wp_enqueue_script('ea-vacation');
+        load_plugin_textdomain('easy-appointments', false, EA_PLUGIN_DIR  . 'languages/');
+
+        wp_enqueue_style('ea-admin-bundle-css');
+        wp_enqueue_script('ea-admin-bundle');
 
         $settings = $this->options->get_options();
         $settings['rest_url'] = get_rest_url();
@@ -646,10 +654,10 @@ class EAAdminPanel
         $url   = get_bloginfo('url');
 
         $settings['image_base'] = $wpurl === $url ? '' : $wpurl;
-        wp_localize_script('ea-vacation', 'ea_settings', $settings);
+        wp_localize_script('ea-admin-bundle', 'ea_settings', $settings);
 
         if (function_exists('wp_set_script_translations')) {
-            wp_set_script_translations('ea-vacation', 'easy-appointments');
+            wp_set_script_translations('ea-admin-bundle', 'easy-appointments', EA_PLUGIN_DIR  . 'languages');
         }
 
         require_once EA_SRC_DIR . 'templates/services.tpl.php';
@@ -667,8 +675,10 @@ class EAAdminPanel
             return;
         }
 
-        wp_enqueue_style('ea-vacation-css');
-        wp_enqueue_script('ea-vacation');
+        load_plugin_textdomain('easy-appointments', false, EA_PLUGIN_DIR  . 'languages/');
+
+        wp_enqueue_style('ea-admin-bundle-css');
+        wp_enqueue_script('ea-admin-bundle');
 
         $settings = $this->options->get_options();
         $settings['rest_url'] = get_rest_url();
@@ -677,10 +687,10 @@ class EAAdminPanel
         $url   = get_bloginfo('url');
 
         $settings['image_base'] = $wpurl === $url ? '' : $wpurl;
-        wp_localize_script('ea-vacation', 'ea_settings', $settings);
+        wp_localize_script('ea-admin-bundle', 'ea_settings', $settings);
 
         if (function_exists('wp_set_script_translations')) {
-            wp_set_script_translations('ea-vacation', 'easy-appointments');
+            wp_set_script_translations('ea-admin-bundle', 'easy-appointments', EA_PLUGIN_DIR  . 'languages');
         }
 
         require_once EA_SRC_DIR . 'templates/connections.tpl.php';
@@ -698,8 +708,10 @@ class EAAdminPanel
             return;
         }
 
-        wp_enqueue_style('ea-vacation-css');
-        wp_enqueue_script('ea-vacation');
+        load_plugin_textdomain('easy-appointments', false, EA_PLUGIN_DIR  . 'languages/');
+
+        wp_enqueue_style('ea-admin-bundle-css');
+        wp_enqueue_script('ea-admin-bundle');
 
         $settings = $this->options->get_options();
         $settings['rest_url'] = get_rest_url();
@@ -709,10 +721,10 @@ class EAAdminPanel
         $url   = get_bloginfo('url');
 
         $settings['image_base'] = $wpurl === $url ? '' : $wpurl;
-        wp_localize_script('ea-vacation', 'ea_settings', $settings);
+        wp_localize_script('ea-admin-bundle', 'ea_settings', $settings);
 
         if (function_exists('wp_set_script_translations')) {
-            wp_set_script_translations('ea-vacation', 'easy-appointments');
+            wp_set_script_translations('ea-admin-bundle', 'easy-appointments', EA_PLUGIN_DIR  . 'languages');
         }
 
         require_once EA_SRC_DIR . 'templates/tools.tpl.php';

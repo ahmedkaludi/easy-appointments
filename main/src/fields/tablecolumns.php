@@ -132,6 +132,7 @@ class EATableColumns
         $white_list = array(
             'MetaFields',
             'advance.redirect',
+            'advance_cancel.redirect',
             'block.time',
             'block_days',
             'block_days_tooltip',

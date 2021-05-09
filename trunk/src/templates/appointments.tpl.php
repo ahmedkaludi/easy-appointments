@@ -54,10 +54,13 @@
 					<td><input class="date-input" type="text" name="ea-filter-to" id="ea-filter-to" data-c="to"></td>
 					<td class="filter-label"><strong><?php _e('Quick time filter', 'easy-appointments');?>:</strong>
 						<select id="ea-period">
-							<option value=""><?php _e('Select period', 'easy-appointments');?></option>
-							<option value="week"><?php _e('This week', 'easy-appointments');?></option>
-							<option value="month"><?php _e('This month', 'easy-appointments');?></option>
-							<option value="today"><?php _e('Today', 'easy-appointments');?></option>
+                            <option value=""><?php _e('Select period', 'easy-appointments');?></option>
+                            <option value="today"><?php _e('Today', 'easy-appointments');?></option>
+                            <option value="tomorrow"><?php _e('Tomorrow', 'easy-appointments');?></option>
+                            <option value="7d"><?php _e('Next 7 days', 'easy-appointments');?></option>
+                            <option value="30d"><?php _e('Next 30 days', 'easy-appointments');?></option>
+                            <option value="week"><?php _e('This week', 'easy-appointments');?></option>
+                            <option value="month"><?php _e('This month', 'easy-appointments');?></option>
 						</select>
 					</td>
 					<td></td>

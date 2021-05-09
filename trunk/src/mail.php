@@ -255,6 +255,21 @@ EOT;
 
             $url = apply_filters( 'ea_cancel_redirect_url', get_home_url());
 
+
+            // Parse redirect options
+
+            $redirect_mapping = json_decode($this->options->get_option_value('advance_cancel.redirect'));
+
+            if (is_array($redirect_mapping)) {
+                $service_id = $app_data['service'];
+                foreach ($redirect_mapping as $item) {
+                    if ($item->service == $service_id) {
+                        $url = $item->url;
+                        break;
+                    }
+                }
+            }
+
             header('Refresh:3; url=' . $url);
             wp_die(__('Appointment has been cancelled', 'easy-appointments'));
         }
@@ -576,7 +591,10 @@ EOT;
             if ($key == 'start' || $key == 'end') {
                 $start_date = $app_array['date'] . ' ' . $app_array[$key];
                 $temp_date = DateTime::createFromFormat('Y-m-d H:i:s', $start_date, $this->get_wp_timezone());
-                $value = $temp_date->format($time_format);
+                // do that only if time is valid
+                if ($temp_date !== false) {
+                    $value = $temp_date->format($time_format);
+                }
             }
 
             if ($key == 'date') {
@@ -604,7 +622,7 @@ EOT;
         $body_template = $this->options->get_option_value('mail.' . $app->status, 'mail');
 
         // Hook for customize body of email template
-        $body_template = apply_filters( 'ea_customer_mail_template', $body_template);
+        $body_template = apply_filters( 'ea_customer_mail_template', $body_template, $app_array, $params );
 
         $send_from = $this->options->get_option_value('send.from.email', '');
 
