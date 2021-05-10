@@ -25,6 +25,6 @@ export class ReportExportCommunicator {
   static async getExportFile(from, to) {
     let url = `${ReportExportCommunicator.url}&action=ea_export&ea-export-from=${from}&ea-export-to=${to}`;
 
-    return await http.get(url);
+    return await http.getBlob(url);
   }
 }
