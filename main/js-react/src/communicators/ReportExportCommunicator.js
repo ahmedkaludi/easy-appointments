@@ -9,11 +9,11 @@ export class ReportExportCommunicator {
   /**
    * Save column settings
    */
-  static async saveExportColumns(columnsFields = []) {
+  static async saveExportColumns(columnsFields = '') {
     let url = `${ReportExportCommunicator.url}`;
 
     let formData = new FormData();
-    formData.append('fields', columnsFields.join(','));
+    formData.append('fields', columnsFields);
     formData.append('action', 'ea_save_custom_columns');
 
     return await http.post(url, formData);
