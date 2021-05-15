@@ -5,9 +5,9 @@ import { orderBy } from 'lodash';
 import { useSnackbar } from 'notistack';
 import { Tooltip, IconButton } from '@material-ui/core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { getSettings, __ } from '../../../../../../services';
-import { ReportExportCommunicator } from '../../../../../../communicators';
 import { Field, Autocomplete } from '../../../../../../ea-components';
+import { getSettings, __, setSettings } from '../../../../../../services';
+import { ReportExportCommunicator } from '../../../../../../communicators';
 
 const COLUMNS = getSettings('export_tags_list', []).map((col, index) => ({
   id: index,
@@ -24,15 +24,19 @@ const Columns = ({ value, updateFieldValue, error }) => {
   }, []);
 
   const onChange = (e, newVal) => {
-    const newDays = orderBy(newVal, ['id'], ['asc'])
+    const newColumns = orderBy(newVal, ['id'], ['asc'])
       .map(val => val.value)
       .join(',');
-    updateFieldValue(newDays);
+
+    // save form value
+    updateFieldValue(newColumns);
   };
 
   const saveSettings = async () => {
     try {
       await ReportExportCommunicator.saveExportColumns(value);
+
+      setSettings('saved_tags_list', value);
 
       enqueueSnackbar('Your columns settings are saved successfully!', {
         variant: 'success'
@@ -45,7 +49,7 @@ const Columns = ({ value, updateFieldValue, error }) => {
   };
 
   const selected = value
-    ? value.split(',').map(day => COLUMNS.find(opt => opt.value === day))
+    ? value.split(',').map(column => COLUMNS.find(opt => opt.value === column))
     : [];
 
   return (
