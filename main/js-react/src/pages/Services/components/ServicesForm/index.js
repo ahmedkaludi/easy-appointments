@@ -6,6 +6,7 @@ import { Form } from '../../../../ea-components';
 import { PriceField } from './fields/PriceField';
 import { MinutesField } from './fields/MinutesField';
 import { __ } from '../../../../services/Localization';
+import { SlotStepField } from './fields/SlotStepField';
 
 export const ServicesForm = ({ model, onSave, onCancel }) => (
   <Form model={model} onCancel={onCancel} onSave={onSave}>
@@ -14,10 +15,7 @@ export const ServicesForm = ({ model, onSave, onCancel }) => (
       name="duration"
       label={__('Duration *', 'easy-appointments')}
     />
-    <MinutesField
-      name="slot_step"
-      label={__('Slot step *', 'easy-appointments')}
-    />
+    <SlotStepField />
     <MinutesField
       name="block_before"
       label={__('Block before *', 'easy-appointments')}

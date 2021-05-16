@@ -11,7 +11,8 @@ const DatePickerField = ({
   onChange,
   error,
   minDate,
-  adornment
+  adornment,
+  disablePast
 }) => {
   const adornmentProps = adornment
     ? {
@@ -38,7 +39,7 @@ const DatePickerField = ({
         error={!!error}
         minDate={minDate}
         fullWidth
-        disablePast
+        disablePast={disablePast}
         disableToolbar
         {...adornmentProps}
       />

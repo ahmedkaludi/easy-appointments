@@ -49,6 +49,7 @@ const EndDate = ({ value, updateFieldValue, error, model }) => {
       onChange={onChange}
       error={error}
       adornment
+      disablePast={false}
       {...minDate}
     />
   );

@@ -5,7 +5,7 @@ Tags: appointment, appointments, Booking, calendar, plugin, reservation, reserva
 Requires at least: 3.7
 Tested up to: 5.7
 Requires PHP: 5.3
-Stable tag: 3.5.1
+Stable tag: 3.5.2
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -213,6 +213,10 @@ Note: you can have only one calendar on one page.
 25. Admin panel - Report - Export page
 
 == Changelog ==
+
+= 3.5.2 (2021-05-16) =
+* Improved Slot Step service field
+* Fixed issue with date selector in Connections forms
 
 = 3.5.1 (2021-05-08) =
 * Added option to render custom form fields as hidden in customers form
