@@ -38,4 +38,49 @@ div#ea-admin-reports {
       color: #0073aa;
     }
   }
+
+  .ea-timetable {
+    padding: 15px;
+
+    .rbc-calendar {
+      min-height: 800px;
+
+      .rbc-toolbar {
+        flex-direction: row;
+        background: #fff;
+        padding: 1rem 0;
+        @media only screen and (max-width: 700px) {
+          flex-direction: column;
+        }
+
+        button {
+          background: transparent;
+          box-shadow: none;
+          border: 1px solid #e2e6ec;
+          height: 36px;
+          padding: 0 16px;
+          text-transform: capitalize;
+          color: #333;
+
+          &:hover, &.rbc-active {
+            background: transparent;
+            color: #0073aa;
+            border: 1px solid #0073aa;
+          }
+        }
+
+        & > * > * {
+          &:not(:first-child) {
+            margin-left: .5em;
+          }
+        }
+      }
+
+      .rbc-month-view {
+        .rbc-date-cell {
+          font-size: 0.8rem;
+        }
+      }
+    }
+  }
 }

@@ -2,8 +2,7 @@ import React from 'react';
 
 import moment from 'moment';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
-
-import 'react-big-calendar/lib/css/react-big-calendar.css';
+import { ContentBox } from '../../../../ea-components';
 
 const localizer = momentLocalizer(moment);
 
@@ -19,14 +18,16 @@ export const TimeTable = () => {
   ];
 
   return (
-    <div>
-      <Calendar
-        localizer={localizer}
-        defaultDate={new Date()}
-        defaultView="month"
-        events={events}
-        style={{ height: '100vh' }}
-      />
-    </div>
+    <ContentBox customClass="mb-0">
+      <div className="ea-timetable">
+        <Calendar
+          localizer={localizer}
+          defaultDate={new Date()}
+          defaultView="month"
+          events={events}
+          style={{ height: '100vh' }}
+        />
+      </div>
+    </ContentBox>
   );
 };
