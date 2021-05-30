@@ -13,14 +13,23 @@ const localizer = momentLocalizer(moment);
 
 export const TimeTable = () => {
   const [open, setOpen] = React.useState(false);
+  // const [events, setEvents] = React.useState([]);
   const [filters, setFilters] = React.useState({});
+
+  React.useEffect(() => {
+    // Load events on init
+  }, []);
+
+  React.useEffect(() => {
+    // Do something on filters change
+  }, [filters]);
 
   const onChange = obj => {
     setFilters(obj);
     setOpen(false);
   };
 
-  const events = [
+  const eventsList = [
     {
       start: moment().toDate(),
       end: moment()
@@ -50,7 +59,7 @@ export const TimeTable = () => {
             localizer={localizer}
             defaultDate={new Date()}
             defaultView="month"
-            events={events}
+            events={eventsList}
             style={{ height: '100vh' }}
           />
         </div>
