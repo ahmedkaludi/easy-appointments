@@ -2,14 +2,23 @@ import React from 'react';
 
 import moment from 'moment';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
-import Drawer from '@material-ui/core/Drawer';
+import Button from '@material-ui/core/Button';
+import FilterListIcon from '@material-ui/icons/FilterList';
+import Divider from '@material-ui/core/Divider';
 import { ContentBox } from '../../../../ea-components';
-import { TimetableFilter } from './TimetableFilter';
+import { TimetableFilter } from './components/TimetableFilter';
+import { FilterChips } from './components/FilterChips';
 
 const localizer = momentLocalizer(moment);
 
 export const TimeTable = () => {
   const [open, setOpen] = React.useState(false);
+  const [filters, setFilters] = React.useState({});
+
+  const onChange = obj => {
+    setFilters(obj);
+    setOpen(false);
+  };
 
   const events = [
     {
@@ -23,18 +32,19 @@ export const TimeTable = () => {
 
   return (
     <ContentBox customClass="mb-0 p-3">
-      <span role="button" onClick={() => setOpen(!open)}>
-        CLICK
-      </span>
-      <div className="divider my-2" />
+      <div className="d-flex align-items-center">
+        <Button onClick={() => setOpen(true)} className="px-2">
+          <FilterListIcon />
+          {!Object.keys(filters).length ? 'Add filters' : 'Edit filters'}
+        </Button>
+        {!!Object.keys(filters).length && (
+          <Divider orientation="vertical" className="mx-2" flexItem />
+        )}
+        <FilterChips filters={filters} onChange={setFilters} disabled={open} />
+      </div>
+      <Divider variant="middle" className="my-2 mx-0" />
       <div className="ea-timetable">
-        <Drawer
-          className="drawer"
-          variant="persistent"
-          anchor="left"
-          open={open}>
-          <TimetableFilter />
-        </Drawer>
+        <TimetableFilter open={open} filters={filters} onChange={onChange} />
         <div className={`calendar-wrap ${open ? 'open' : ''}`}>
           <Calendar
             localizer={localizer}
