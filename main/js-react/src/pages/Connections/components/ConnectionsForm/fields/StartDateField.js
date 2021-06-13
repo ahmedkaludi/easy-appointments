@@ -25,6 +25,7 @@ const StartDate = ({ value, updateFieldValue, error }) => {
       onChange={onChange}
       error={error}
       adornment
+      disablePast={false}
     />
   );
 };
