@@ -10,7 +10,8 @@ const Select = ({
   label,
   disabled,
   customClass,
-  error
+  error,
+  fullWidth
 }) => {
   const selectClass = `ea-select ${customClass ?? ''}`;
 
@@ -25,7 +26,7 @@ const Select = ({
     <TextField
       id="outlined-select"
       className={selectClass}
-      fullWidth
+      fullWidth={fullWidth}
       select
       label={label}
       value={value}
@@ -44,14 +45,16 @@ Select.propTypes = {
   value: PropTypes.any,
   onChange: PropTypes.func,
   options: PropTypes.arrayOf(PropTypes.any).isRequired,
-  disabled: PropTypes.bool
+  disabled: PropTypes.bool,
+  fullWidth: PropTypes.bool
 };
 
 Select.defaultProps = {
   label: '',
   value: '',
   onChange: f => f,
-  disabled: false
+  disabled: false,
+  fullWidth: true
 };
 
 export default Select;

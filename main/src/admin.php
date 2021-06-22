@@ -411,8 +411,8 @@ class EAAdminPanel
         // Overview - report
         $page_report_suffix = add_submenu_page(
             'easy_app_top_level',
-            __('Reports', 'easy-appointments'),
-            __('Reports', 'easy-appointments'),
+            __('Reports *OLD*', 'easy-appointments'),
+            __('Reports *OLD*', 'easy-appointments'),
             'manage_options',
             'easy_app_reports',
             array($this, 'reports_page')
@@ -421,8 +421,8 @@ class EAAdminPanel
         // Overview - report
         $page_new_report_suffix = add_submenu_page(
             'easy_app_top_level',
-            __('New Reports', 'easy-appointments'),
-            __('New Reports', 'easy-appointments'),
+            __('Reports *NEW*', 'easy-appointments'),
+            __('Reports *NEW*', 'easy-appointments'),
             'manage_options',
             'easy_app_new_reports',
             array($this, 'new_reports_page')
@@ -747,6 +747,7 @@ class EAAdminPanel
 
         $settings = $this->options->get_options();
         $settings['rest_url'] = get_rest_url();
+        $settings['rest_url_fullcalendar'] = EAApiFullCalendar::get_url();
         $settings['export_tags_list'] = $this->models->get_all_tags_for_template();
         $settings['saved_tags_list'] = get_option('ea_excel_columns', '');
 
