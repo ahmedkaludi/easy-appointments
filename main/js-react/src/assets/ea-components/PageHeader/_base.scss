@@ -1,7 +1,9 @@
 .app-page-title {
+  background: hsla(0,0%,100%,1);
+
   &.easy {
-    padding: 2rem;
-    margin: -2rem -2rem 1rem;
+    padding: 1.5rem;
+    margin: -2rem -2rem 0.5rem;
 
     .MuiButton-root {
       text-transform: none;

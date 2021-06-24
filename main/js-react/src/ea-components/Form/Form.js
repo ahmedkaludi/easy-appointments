@@ -19,7 +19,8 @@ class Form extends Component {
     onCancel: PropTypes.func,
     onSave: PropTypes.func,
     model: PropTypes.objectOf(PropTypes.any),
-    customId: PropTypes.bool
+    customId: PropTypes.bool,
+    hideFooter: PropTypes.bool
   };
 
   static defaultProps = {
@@ -28,7 +29,8 @@ class Form extends Component {
     onCancel: f => f,
     onSave: f => f,
     model: null,
-    customId: false
+    customId: false,
+    hideFooter: false
   };
 
   constructor(props) {
@@ -66,7 +68,7 @@ class Form extends Component {
   }
 
   setLoading(isLoading) {
-    this.setState({ loading: isLoading });
+    this.setState(prev => ({ ...prev, loading: isLoading }));
   }
 
   updateValue(name, value) {
@@ -139,7 +141,7 @@ class Form extends Component {
   }
 
   render() {
-    const { children, customClass } = this.props;
+    const { children, customClass, hideFooter } = this.props;
     const { loading } = this.state;
     const classes = `${customClass}${loading ? ' loading' : ''}`;
 
@@ -155,24 +157,26 @@ class Form extends Component {
 
         <div className={`ea-form ${classes}`}>
           <div className="ea-form--fields">{children}</div>
-          <div className="ea-form--footer">
-            <Divider />
-            <div className="ea-form--actions">
-              <Button
-                label="Cancel"
-                variant="outlined"
-                onClick={this.onCancel}
-                disabled={loading}
-              />
-              <Button
-                label="Save"
-                color="primary"
-                onClick={this.onSave}
-                disabled={loading}
-                loading={loading}
-              />
+          {!hideFooter && (
+            <div className="ea-form--footer">
+              <Divider />
+              <div className="ea-form--actions">
+                <Button
+                  label="Cancel"
+                  variant="outlined"
+                  onClick={this.onCancel}
+                  disabled={loading}
+                />
+                <Button
+                  label="Save"
+                  color="primary"
+                  onClick={this.onSave}
+                  disabled={loading}
+                  loading={loading}
+                />
+              </div>
             </div>
-          </div>
+          )}
         </div>
       </FormContext.Provider>
     );

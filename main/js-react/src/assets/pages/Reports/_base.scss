@@ -1,0 +1,112 @@
+div#ea-admin-reports {
+  .ea-report-card {
+    padding: 0;
+    height: 100%;
+    cursor: pointer;
+    box-shadow: 4px 3px 1px -5px rgba(0,0,0,0.1), 0px 2px 2px 0px rgba(0,0,0,0.1), 0px 1px 5px 0px rgba(0,0,0,0.1);
+
+    &.card-box-hover-rise:hover {
+      transform: translateY(-7px);
+    }
+
+    .card-body-avatar {
+      position: relative;
+      padding-top: calc(1.25rem + 20px);
+
+      .avatar-icon-wrapper {
+        margin: 0;
+        position: absolute;
+        top: -20px;
+      }
+    }
+  }
+
+  .reports-grid {
+    .MuiGrid-item {
+      max-width: 500px;
+
+      &:nth-child(2) {
+        max-width: 600px;
+      }
+    }
+  }
+
+  .save-settings {
+    color: #808080;
+    transition: all .3s;
+    &:hover {
+      color: #0073aa;
+    }
+  }
+
+  .ea-timetable {
+    display: flex;
+    width: 100%;
+    overflow: hidden;
+
+    .drawer {
+      flex-shrink: 0;
+      width: 240px;
+    }
+
+    .calendar-wrap {
+      flex-grow: 1;
+      transition: all 195ms cubic-bezier(0.4, 0, 0.6, 1) 0ms;
+      margin-left: -240px;
+      overflow: auto;
+      padding-left: 0;
+
+      &.open {
+        transition: all 225ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
+        margin-left: 0;
+        padding-left: 15px;
+      }
+
+      .rbc-calendar {
+        min-height: 800px;
+        min-width: 720px;
+
+        .rbc-toolbar {
+          flex-direction: row;
+          background: #fff;
+          padding: 0;
+          @media only screen and (max-width: 700px) {
+            flex-direction: column;
+          }
+
+          .rbc-toolbar-label {
+            padding: 0.7rem 0;
+          }
+
+          button {
+            background: transparent;
+            box-shadow: none;
+            border: 1px solid #e2e6ec;
+            height: 36px;
+            padding: 0 16px;
+            text-transform: capitalize;
+            color: #333;
+
+            &:hover, &.rbc-active {
+              background: transparent;
+              color: #0073aa;
+              border: 1px solid #0073aa;
+            }
+          }
+
+          & > * > * {
+            &:not(:first-child) {
+              margin-left: .5em;
+            }
+          }
+        }
+
+        .rbc-month-view {
+          .rbc-date-cell {
+            font-size: 0.8rem;
+          }
+        }
+      }
+    }
+  }
+}

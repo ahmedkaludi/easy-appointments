@@ -5,7 +5,7 @@ Tags: appointment, appointments, Booking, calendar, plugin, reservation, reserva
 Requires at least: 3.7
 Tested up to: 5.7
 Requires PHP: 5.3
-Stable tag: 3.5.2
+Stable tag: 3.5.3
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -213,6 +213,10 @@ Note: you can have only one calendar on one page.
 25. Admin panel - Report - Export page
 
 == Changelog ==
+
+= 3.5.3 (2021-06-21) =
+* NEW Reports page - early access
+* Services - now it is possible to have slot step with values 3,4 if duration of service is less then 5 minutes
 
 = 3.5.2 (2021-05-16) =
 * Improved Slot Step service field

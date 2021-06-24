@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Provider } from 'react-redux';
 
 import { ThemeProvider } from '@material-ui/styles';
+import { SnackbarProvider } from 'notistack';
 
 import MuiTheme from './theme';
 
@@ -14,7 +15,8 @@ import {
   ServicesPage,
   WorkersPage,
   ConnectionsPage,
-  ToolsPage
+  ToolsPage,
+  ReportsPage
 } from './pages';
 
 import './assets/base.scss';
@@ -283,7 +285,8 @@ const PAGES = {
   services: <ServicesPage />,
   workers: <WorkersPage />,
   connections: <ConnectionsPage />,
-  tools: <ToolsPage />
+  tools: <ToolsPage />,
+  reports: <ReportsPage />
 };
 
 class EasyApp extends Component {
@@ -291,7 +294,11 @@ class EasyApp extends Component {
     return (
       <Provider store={store}>
         <ThemeProvider theme={MuiTheme}>
-          {PAGES[this.props.page] ?? null}
+          <SnackbarProvider
+            anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+            maxSnack={5}>
+            {PAGES[this.props.page] ?? null}
+          </SnackbarProvider>
         </ThemeProvider>
       </Provider>
     );

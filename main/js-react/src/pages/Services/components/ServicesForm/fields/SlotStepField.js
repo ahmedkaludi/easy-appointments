@@ -11,7 +11,7 @@ const calculateOptions = duration => {
   }
 
   for (let i = 1; i <= value; i++) {
-    if (value % i !== 0 || i < 5) {
+    if (value % i !== 0 || (i < 5 && value > 5) || i === 1) {
       continue;
     }
 

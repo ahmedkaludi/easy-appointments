@@ -71,6 +71,12 @@ class EAApiFullCalendar
             )
         ));
     }
+
+    public static function get_url()
+    {
+        return rest_url('easy-appointments/v1/appointments');
+    }
+
     /**
      * Check permissions for the read.
      *
@@ -206,21 +212,18 @@ class EAApiFullCalendar
         $args['location'] = array(
             'description'       => esc_html__( 'Location id that will be used for getting free / taken slots', 'easy-appointments' ),
             'type'              => 'integer',
-//            'required'          => true,
             'sanitize_callback' => 'absint',
         );
 
         $args['service'] = array(
             'description'       => esc_html__( 'Service id that will be used for getting free / taken slots', 'easy-appointments' ),
             'type'              => 'integer',
-//            'required'          => true,
             'sanitize_callback' => 'absint',
         );
 
         $args['worker'] = array(
             'description'       => esc_html__( 'Worker id that will be used for getting free / taken slots', 'easy-appointments' ),
             'type'              => 'string',
-//            'required'          => true,
             'validate_callback' => function($param, $request, $key) {
                 if ($param === 'logged') {
                     return true;
@@ -269,7 +272,7 @@ class EAApiFullCalendar
 
                 $diff = floor(($ts2-$ts1)/3600/24);
 
-                if ($diff >= 33) {
+                if ($diff >= 40) {
                     return false;
                 }
 

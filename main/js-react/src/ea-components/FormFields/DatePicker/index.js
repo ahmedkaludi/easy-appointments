@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import DateFnsUtils from '@date-io/date-fns';
 import EventIcon from '@material-ui/icons/Event';
@@ -45,6 +46,20 @@ const DatePickerField = ({
       />
     </MuiPickersUtilsProvider>
   );
+};
+
+DatePickerField.propTypes = {
+  value: PropTypes.string,
+  label: PropTypes.string,
+  onChange: PropTypes.func,
+  disablePast: PropTypes.bool
+};
+
+DatePickerField.defaultProps = {
+  value: null,
+  label: '',
+  onChange: f => f,
+  disablePast: true
 };
 
 export default DatePickerField;

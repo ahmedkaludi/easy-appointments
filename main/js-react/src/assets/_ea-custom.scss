@@ -16,11 +16,16 @@
 @import "pages/Workers/base";
 @import "pages/Connections/base";
 @import "pages/Tools/base";
+@import "pages/Reports/base";
 
 // CUSTOM CLASSES
 
 .ea-text {
   color: $eaprimary;
+}
+
+.ea-gray {
+  color: #808080;
 }
 
 .ea-margin-fix {
@@ -70,6 +75,11 @@
   z-index: 9999;
 }
 
+.ea-text-gray-1 {
+  color: #808080;
+  font-size: 0.9em;
+}
+
 .ea-table-cell-label {
   color: #808080;
   font-size: 10px;
@@ -83,4 +93,8 @@
 .ea-info-md {
   color: #808080;
   font-size: 15px;
+}
+
+.ea-grid-centered {
+  place-content: center;
 }

@@ -11,6 +11,12 @@ class HttpService {
     return axios.get(url).then(response => response.data);
   }
 
+  getBlob(url) {
+    return axios
+      .get(url, { responseType: 'blob' })
+      .then(response => response.data);
+  }
+
   postJSON(url, data = {}) {
     return axios
       .post(url, data, {

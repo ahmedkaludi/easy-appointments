@@ -411,11 +411,21 @@ class EAAdminPanel
         // Overview - report
         $page_report_suffix = add_submenu_page(
             'easy_app_top_level',
-            __('Overview', 'easy-appointments'),
-            __('Reports', 'easy-appointments'),
+            __('Reports *OLD*', 'easy-appointments'),
+            __('Reports *OLD*', 'easy-appointments'),
             'manage_options',
             'easy_app_reports',
             array($this, 'reports_page')
+        );
+
+        // Overview - report
+        $page_new_report_suffix = add_submenu_page(
+            'easy_app_top_level',
+            __('Reports *NEW*', 'easy-appointments'),
+            __('Reports *NEW*', 'easy-appointments'),
+            'manage_options',
+            'easy_app_new_reports',
+            array($this, 'new_reports_page')
         );
 
         add_action('load-' . $page_settings_suffix, array($this, 'add_settings_js'));
@@ -718,6 +728,40 @@ class EAAdminPanel
         }
 
         require_once EA_SRC_DIR . 'templates/tools.tpl.php';
+        require_once EA_SRC_DIR . 'templates/inlinedata.tpl.php';
+    }
+
+    /**
+     * Tools page
+     */
+    public function new_reports_page()
+    {
+        // check if APS tags are on
+        if ($this->is_asp_tags_are_on()) {
+            require_once EA_SRC_DIR . 'templates/asp_tag_message.tpl.php';
+            return;
+        }
+
+        wp_enqueue_style('ea-admin-bundle-css');
+        wp_enqueue_script('ea-admin-bundle');
+
+        $settings = $this->options->get_options();
+        $settings['rest_url'] = get_rest_url();
+        $settings['rest_url_fullcalendar'] = EAApiFullCalendar::get_url();
+        $settings['export_tags_list'] = $this->models->get_all_tags_for_template();
+        $settings['saved_tags_list'] = get_option('ea_excel_columns', '');
+
+        $wpurl = get_bloginfo('wpurl');
+        $url   = get_bloginfo('url');
+
+        $settings['image_base'] = $wpurl === $url ? '' : $wpurl;
+        wp_localize_script('ea-admin-bundle', 'ea_settings', $settings);
+
+        if (function_exists('wp_set_script_translations')) {
+            wp_set_script_translations('ea-admin-bundle', 'easy-appointments');
+        }
+
+        require_once EA_SRC_DIR . 'templates/reports.tpl.php';
         require_once EA_SRC_DIR . 'templates/inlinedata.tpl.php';
     }
 
