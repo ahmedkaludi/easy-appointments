@@ -78,7 +78,18 @@
                 plugin.parsePhoneField($(this));
             });
 
-            this.$element.find('form').validate();
+            // handle form validation with scroll to field with error
+            this.$element.find('form').validate({
+                focusInvalid: false,
+                invalidHandler: function(form, validator) {
+                    if (!validator.numberOfInvalids())
+                        return;
+                    $('html, body').animate({
+                        scrollTop: ($(validator.errorList[0].element).offset().top - 30)
+                    }, 1000);
+                }
+            });
+
             // select change event
             this.$element.find('select').change(jQuery.proxy( this.getNextOptions, this ));
 

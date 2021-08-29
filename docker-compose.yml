@@ -33,6 +33,7 @@ services:
       environment:
         MYSQL_DATABASE: wordpress
         WORDPRESS_DB_HOST: ea-mysql
+        WORDPRESS_DB_USER: root
         WORDPRESS_DB_PASSWORD: root
       depends_on:
          - ea-mailhog

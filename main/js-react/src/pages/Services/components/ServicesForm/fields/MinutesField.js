@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import { Field, Input } from '../../../../../ea-components';
-import { __ } from '../../../../../services/Localization';
+import { __ } from '../../../../../services';
 
 const Minutes = ({ value, updateFieldValue, error, label }) => {
   if (!value) updateFieldValue('0');

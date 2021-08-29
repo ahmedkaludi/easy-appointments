@@ -165,7 +165,7 @@ EOT;
         $data = $this->models->get_appintment_by_id($app_id);
 
         // check maybe it is a two step process
-        if (empty($_POST['confirmed']) && $_POST['confirmed'] !== 'true') {
+        if (empty($_POST['confirmed']) && (!empty($_POST['confirmed']) && $_POST['confirmed'] !== 'true')) {
             $this->link_action_additional_step($_GET['_ea-action'], $data);
         }
 
@@ -193,13 +193,15 @@ EOT;
         // confirm appointment
         if ($_GET['_ea-action'] == 'confirm') {
 
-
             if ($data['status'] === 'confirm') {
                 header('Refresh:3; url=' . get_home_url());
                 wp_die(__('Appointment is already confirmed!', 'easy-appointments'));
             }
 
-            if ($data['status'] != 'pending') {
+            // allow status change in case of pending and in some cases if reservation is in case
+            // allow status change if status is reservation in case it is default state
+            $default_status = $this->options->get_option_value('default.status');
+            if ($data['status'] !== 'pending' && $default_status !== 'reservation' && $data['status'] !== 'reservation') {
                 header('Refresh:3; url=' . get_home_url());
                 wp_die(__('Appointment can\'t be confirmed!', 'easy-appointments'));
             }

@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import moment from 'moment';
 
 import { __ } from '../../../../services/Localization';
 import { ContentBox, BasicTable } from '../../../../ea-components';
@@ -8,6 +9,9 @@ import { DataService } from '../../../../services';
 const LOCATIONS = DataService.get('Locations');
 const SERVICES = DataService.get('Services');
 const WORKERS = DataService.get('Workers');
+
+const dateFormat = window?.ea_settings?.date_format ?? 'YYYY-MM-DD';
+const timeFormat = window?.ea_settings?.time_format ?? 'HH:mm:ss';
 
 const CONNECTIONS_CONFIG = {
   id: {
@@ -103,12 +107,24 @@ export const ConnectionsTable = ({
     ],
     day_of_week: record.day_of_week.split(','),
     date: [
-      { label: 'Active from', text: record.day_from },
-      { label: 'to', text: record.day_to }
+      {
+        label: 'Active from',
+        text: moment(record.day_from, 'YYYY-MM-DD').format(dateFormat)
+      },
+      {
+        label: 'to',
+        text: moment(record.day_to, 'YYYY-MM-DD').format(dateFormat)
+      }
     ],
     time: [
-      { label: 'Starts at', text: record.time_from },
-      { label: 'Ends at', text: record.time_to }
+      {
+        label: 'Starts at',
+        text: moment(record.time_from, 'HH:mm:ss').format(timeFormat)
+      },
+      {
+        label: 'Ends at',
+        text: moment(record.time_to, 'HH:mm:ss').format(timeFormat)
+      }
     ],
     is_working: record.is_working === '1' ? 'Yes' : 'No',
     actions: [

@@ -151,6 +151,7 @@ CREATE TABLE {$table_prefix}ea_services (
   slot_step int(11) DEFAULT NULL,
   block_before int(11) DEFAULT 0,
   block_after int(11) DEFAULT 0,
+  daily_limit int(11) DEFAULT 0,
   price decimal(10,2) DEFAULT NULL,
   PRIMARY KEY  (id)
 ) $charset_collate ;
@@ -794,6 +795,21 @@ EOT;
             }
 
             $version = '2.10.2';
+        }
+
+        if (version_compare($version, '3.5.4', '<')) {
+            $table_queries = array();
+
+            $table_services = $this->wpdb->prefix . 'ea_services';
+
+            $table_queries[] = "ALTER TABLE `{$table_services}` ADD COLUMN `daily_limit` int(11) DEFAULT 0 AFTER `block_after`;";
+
+            // add relations
+            foreach ($table_queries as $query) {
+                $this->wpdb->query($query);
+            }
+
+            $version = '3.5.4';
         }
 
         update_option('easy_app_db_version', $version);

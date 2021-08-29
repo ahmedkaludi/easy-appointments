@@ -3,9 +3,9 @@ Contributors: loncar
 Donate link: https://easy-appointments.net/
 Tags: appointment, appointments, Booking, calendar, plugin, reservation, reservations, wp appointment, reservation plugin, reservations, schedule
 Requires at least: 3.7
-Tested up to: 5.7
+Tested up to: 5.8
 Requires PHP: 5.3
-Stable tag: 3.5.3
+Stable tag: 3.5.6
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -213,6 +213,18 @@ Note: you can have only one calendar on one page.
 25. Admin panel - Report - Export page
 
 == Changelog ==
+
+= 3.5.6 (2021-08-29) =
+* Now when form is not valid it will automatically scroll to first invalid input field.
+* Improved styles for New Reports > Time table
+* Fixed date/time format on Connections admin page in table
+
+= 3.5.5 (2021-08-04) =
+* NEW Allow confirmation by email link for bookings that have status reservation in case it is default status.
+
+= 3.5.4 (2021-07-25) =
+* NEW Daily limit option on service. You can now set hard limit for number of booking for particular service during one day
+* Fixed issue with warning message on Confirm/Cancel action from mail
 
 = 3.5.3 (2021-06-21) =
 * NEW Reports page - early access

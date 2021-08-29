@@ -682,6 +682,8 @@ class EAAdminPanel
 
         $settings = $this->options->get_options();
         $settings['rest_url'] = get_rest_url();
+        $settings['time_format'] = $this->datetime->convert_to_moment_format(get_option('time_format', 'H:i'));
+        $settings['date_format'] = $this->datetime->convert_to_moment_format(get_option('date_format', 'F j, Y'));
 
         $wpurl = get_bloginfo('wpurl');
         $url   = get_bloginfo('url');

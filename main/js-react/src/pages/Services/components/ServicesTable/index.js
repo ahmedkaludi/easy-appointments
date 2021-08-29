@@ -33,13 +33,19 @@ const SERVICES_CONFIG = {
   },
   block_before: {
     header: __('Block before *', 'easy-appointments'),
-    headerStyle: { minWidth: '150px' },
+    headerStyle: { minWidth: '100px' },
     position: 'left',
     type: 'text'
   },
   block_after: {
     header: __('Block after *', 'easy-appointments'),
-    headerStyle: { minWidth: '150px' },
+    headerStyle: { minWidth: '100px' },
+    position: 'left',
+    type: 'text'
+  },
+  daily_limit: {
+    header: __('Daily limit', 'easy-appointments'),
+    headerStyle: { minWidth: '100px' },
     position: 'left',
     type: 'text'
   },
@@ -63,6 +69,7 @@ const COLUMNS = [
   { value: 'slot_step', label: __('Slot step', 'easy-appointments') },
   { value: 'block_before', label: __('Block before', 'easy-appointments') },
   { value: 'block_after', label: __('Block after', 'easy-appointments') },
+  { value: 'daily_limit', label: __('Daily limit', 'easy-appointments') },
   { value: 'price', label: __('Price', 'easy-appointments') }
 ];
 

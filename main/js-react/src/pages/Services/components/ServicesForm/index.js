@@ -2,11 +2,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import { NameField } from './fields/NameField';
-import { Form } from '../../../../ea-components';
+import { Form, MultiFieldWrap } from '../../../../ea-components';
 import { PriceField } from './fields/PriceField';
 import { MinutesField } from './fields/MinutesField';
-import { __ } from '../../../../services/Localization';
+import { __ } from '../../../../services';
 import { SlotStepField } from './fields/SlotStepField';
+import { DailyLimitField } from './fields/DailyLimitField';
 
 export const ServicesForm = ({ model, onSave, onCancel }) => (
   <Form model={model} onCancel={onCancel} onSave={onSave}>
@@ -24,6 +25,12 @@ export const ServicesForm = ({ model, onSave, onCancel }) => (
       name="block_after"
       label={__('Block after *', 'easy-appointments')}
     />
+    <MultiFieldWrap
+      label="Limit of bookings per day"
+      className="ea-form-field"
+      info="Define hard limit for this service on how many times it can be booked during single day. To disable this check set to 0">
+      <DailyLimitField />
+    </MultiFieldWrap>
     <PriceField />
   </Form>
 );

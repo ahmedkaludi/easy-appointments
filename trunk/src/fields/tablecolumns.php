@@ -73,6 +73,7 @@ class EATableColumns
                 'slot_step',
                 'block_before',
                 'block_after',
+                'daily_limit',
                 'price'
             ),
             'ea_options' => array(

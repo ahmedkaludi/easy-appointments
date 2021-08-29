@@ -306,6 +306,18 @@ class EALogic
 
         $appointments = $this->wpdb->get_results($query);
 
+        // dailyLimit section
+        $currentService = $this->get_service($service);
+        $limit = $currentService->daily_limit ? (int) $currentService->daily_limit : 0;
+        $serviceCount = 0;
+        foreach ($appointments as $app) {
+            if ($service === $app->service) {
+                $serviceCount++;
+            }
+        }
+        $limitReached = $limit > 0 && $limit <= $serviceCount;
+        // dailyLimit section end
+
         // check all no working times
         foreach ($appointments as $app) {
             $start = ($app->date == $day) ? $app->start : '00:00';
@@ -328,6 +340,12 @@ class EALogic
 
             // check slots
             foreach ($slots as $temp_time => $value) {
+                // if we reached daily limit no point to go to calculation
+                if ($limitReached) {
+                    $slots[$temp_time] = 0;
+                    continue;
+                }
+
                 $slot_time = strtotime($temp_time);
                 $slot_time_end = strtotime("$temp_time + $service_duration minute");
 
