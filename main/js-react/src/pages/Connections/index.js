@@ -10,9 +10,12 @@ import {
   PageContentWrap,
   PAGE_KEYS
 } from '../../ea-components';
+import { BulkConnectionsForm } from './components/ConnectionsForm/BulkConnectionsForm';
+import { orderBy } from 'lodash';
 
 const ConnectionsPage = () => {
   const [open, setOpen] = useState(false);
+  const [isBulk, setIsBulk] = useState(false);
   const [loading, setLoading] = useState(true);
   const [connections, setConnections] = useState([]);
   const [activeConnection, setActiveConnection] = useState(null);
@@ -35,6 +38,10 @@ const ConnectionsPage = () => {
   const toggleSidebar = () => {
     if (open && activeConnection) {
       setActiveConnection(null);
+    }
+
+    if (open && isBulk) {
+      setIsBulk(false);
     }
 
     setOpen(!open);
@@ -65,6 +72,44 @@ const ConnectionsPage = () => {
   };
 
   const save = (model, isEdit) => (isEdit ? onEdit(model) : onCreate(model));
+
+  const bulkSave = async model => {
+    const { location, service, worker, ...other } = model;
+    const cons = [];
+
+    if (!location?.length || !service?.length || !worker?.length) {
+      return;
+    }
+
+    // make all combination
+    location.forEach(l => {
+      service.forEach(s => {
+        worker.forEach(w => {
+          cons.push({
+            location: l.value,
+            service: s.value,
+            worker: w.value,
+            ...other
+          });
+        });
+      });
+    });
+
+    const requests = cons.map(obj => {
+      return ConnectionsCommunicator.save(obj).then(result => ({
+        ...obj,
+        id: result.id
+      }));
+    });
+
+    const newConnections = await Promise.all(requests);
+
+    setConnections(
+      orderBy([...newConnections, ...connections], ['id'], ['desc'])
+    );
+
+    toggleSidebar();
+  };
 
   const onEditClick = row => {
     setActiveConnection(row);
@@ -100,13 +145,25 @@ const ConnectionsPage = () => {
     }
   };
 
-  const headerAction = {
-    callback: toggleSidebar,
-    icon: 'paperclip',
-    text: __('Add connection', 'easy-appointments')
-  };
+  const headerAction = [
+    {
+      callback: () => {
+        setIsBulk(true);
+        toggleSidebar();
+      },
+      icon: 'plus',
+      text: __('Add connections in bulk', 'easy-appointments')
+    },
+    {
+      callback: toggleSidebar,
+      icon: 'paperclip',
+      text: __('Add connection', 'easy-appointments')
+    }
+  ];
 
-  const title = activeConnection
+  const title = isBulk
+    ? __('Add connections in bulk', 'easy-appointments')
+    : activeConnection
     ? __('Edit connection', 'easy-appointments')
     : __('Add connection', 'easy-appointments');
 
@@ -128,11 +185,20 @@ const ConnectionsPage = () => {
       </PageContentWrap>
 
       <Sidebar title={title} open={open} onClose={toggleSidebar}>
-        <ConnectionsForm
-          model={activeConnection}
-          onSave={save}
-          onCancel={toggleSidebar}
-        />
+        {isBulk && (
+          <BulkConnectionsForm
+            model={{}}
+            onBulkSave={bulkSave}
+            onCancel={toggleSidebar}
+          />
+        )}
+        {!isBulk && (
+          <ConnectionsForm
+            model={activeConnection}
+            onSave={save}
+            onCancel={toggleSidebar}
+          />
+        )}
       </Sidebar>
     </Fragment>
   );

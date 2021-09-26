@@ -46,14 +46,36 @@ const PageTitle = ({
       </div>
 
       {action ? (
-        <div className="d-flex align-items-center">
-          <Button onClick={action.callback} variant="contained" color="primary">
-            <span className="btn-wrapper--icon">
-              <FontAwesomeIcon icon={['fas', `${action.icon}`]} />
-            </span>
-            <span className="btn-wrapper--label">{action.text}</span>
-          </Button>
-        </div>
+        // case it is array
+        Array.isArray(action) ? (
+          <div className="d-flex align-items-center">
+            {action.map(a => (
+              <Button
+                onClick={a.callback}
+                variant="contained"
+                color="primary"
+                style={{ marginLeft: '10px' }}>
+                <span className="btn-wrapper--icon">
+                  <FontAwesomeIcon icon={['fas', `${a.icon}`]} />
+                </span>
+                <span className="btn-wrapper--label">{a.text}</span>
+              </Button>
+            ))}
+          </div>
+        ) : (
+          // Case then that is a single action button
+          <div className="d-flex align-items-center">
+            <Button
+              onClick={action.callback}
+              variant="contained"
+              color="primary">
+              <span className="btn-wrapper--icon">
+                <FontAwesomeIcon icon={['fas', `${action.icon}`]} />
+              </span>
+              <span className="btn-wrapper--label">{action.text}</span>
+            </Button>
+          </div>
+        )
       ) : null}
     </Paper>
   </Fragment>

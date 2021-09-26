@@ -5,7 +5,7 @@ Tags: appointment, appointments, Booking, calendar, plugin, reservation, reserva
 Requires at least: 3.7
 Tested up to: 5.8
 Requires PHP: 5.3
-Stable tag: 3.5.6
+Stable tag: 3.5.7
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -213,6 +213,9 @@ Note: you can have only one calendar on one page.
 25. Admin panel - Report - Export page
 
 == Changelog ==
+
+= 3.5.7 (2021-09-26) =
+* Bulk option for adding new Connections
 
 = 3.5.6 (2021-08-29) =
 * Now when form is not valid it will automatically scroll to first invalid input field.
