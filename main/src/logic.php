@@ -179,7 +179,7 @@ class EALogic
      * @param  time $service_duration Service duration in minuts
      * @return null
      */
-    private function remove_closed_slots(&$slots, $location = null, $service = null, $worker = null, $day = null, $service_duration)
+    private function remove_closed_slots(&$slots, $location = null, $service = null, $worker = null, $day = null, $service_duration = 60)
     {
         $day_of_week = date('l', strtotime($day));
 
@@ -249,11 +249,11 @@ class EALogic
 
         $appIds = $this->wpdb->get_col($query);
 
-        $maxNumber = (int)$this->options->get_option_value('max.appointments', 1);
+        $maxNumber = (int) $this->options->get_option_value('max.appointments', 10);
 
         if (count($appIds) >= $maxNumber) {
             $result['status'] = false;
-            $result['message'] = __('Daily limit of booking request has been reached. Please contact us by email!', 'easy-appointments');
+            $result['message'] = $maxNumber . __('Daily limit of booking request has been reached. Please contact us by email!', 'easy-appointments');
         }
 
         $result = apply_filters( 'ea_can_make_reservation', $result, $data);
