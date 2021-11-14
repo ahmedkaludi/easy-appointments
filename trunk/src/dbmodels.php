@@ -105,6 +105,7 @@ class EADBModels
     public function get_all_appointments($data)
     {
         $tableName = $this->wpdb->prefix . 'ea_appointments';
+        $tableFields = $this->wpdb->prefix . 'ea_fields';
 
         $params = array(
             $data['from'],
@@ -115,6 +116,7 @@ class EADBModels
         $service = '';
         $worker = '';
         $status = '';
+        $search = '';
 
         if (array_key_exists('location', $data)) {
             $location = ' AND location = %d';
@@ -136,9 +138,14 @@ class EADBModels
             $params[] = $data['status'];
         }
 
+        if (array_key_exists('search', $data)) {
+            $search = " AND id IN (SELECT app_id FROM $tableFields WHERE `value` LIKE %s)";
+            $params[] = '%' . $this->wpdb->esc_like($data['search']) . '%';
+        }
+
         $query = "SELECT * 
 			FROM $tableName
-			WHERE 1 AND date >= %s AND date <= %s {$location}{$service}{$worker}{$status}
+			WHERE 1 AND date >= %s AND date <= %s {$location}{$service}{$worker}{$status}{$search}
 			ORDER BY id DESC";
 
         $apps = $this->wpdb->get_results($this->wpdb->prepare($query, $params), OBJECT_K);

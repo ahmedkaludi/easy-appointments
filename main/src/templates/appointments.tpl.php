@@ -35,8 +35,13 @@
 							<% });%>
 						</select>
 					</td>
-					<td></td>
-					<td></td>
+					<td class="filter-label">
+                        <label for="ea-filter-search"><strong><?php _e('Search', 'easy-appointments');?> :</strong></label>
+                        <input type="text" name="ea-filter-search" id="ea-filter-search" data-c="search">
+                        <button>&#128269;</button>
+                    </td>
+                    <td>
+                    </td>
 				</tr>
 				<tr>
 					<td class="filter-label"><label for="ea-filter-status"><strong><?php _e('Status', 'easy-appointments');?> :</strong></label></td>

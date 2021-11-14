@@ -5,7 +5,7 @@ Tags: appointment, appointments, Booking, calendar, plugin, reservation, reserva
 Requires at least: 3.7
 Tested up to: 5.8
 Requires PHP: 5.3
-Stable tag: 3.5.8
+Stable tag: 3.5.9
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -213,6 +213,9 @@ Note: you can have only one calendar on one page.
 25. Admin panel - Report - Export page
 
 == Changelog ==
+
+= 3.5.9 (2021-11-14) =
+* Added option to search Appointments by custom field values
 
 = 3.5.8 (2021-10-18) =
 * Fixed issue with false limit reached when customer tries to book appointment
