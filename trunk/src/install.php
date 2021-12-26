@@ -147,6 +147,7 @@ EOT;
 CREATE TABLE {$table_prefix}ea_services (
   id int(11) NOT NULL AUTO_INCREMENT,
   name varchar(255) NOT NULL,
+  service_color varchar(7) DEFAULT '#0693E3',
   duration int(11) NOT NULL,
   slot_step int(11) DEFAULT NULL,
   block_before int(11) DEFAULT 0,
@@ -812,6 +813,21 @@ EOT;
             $version = '3.5.4';
         }
 
+        if (version_compare($version, '3.6.0', '<')) {
+            $table_queries = array();
+
+            $table_services = $this->wpdb->prefix . 'ea_services';
+
+            $table_queries[] = "ALTER TABLE `{$table_services}` ADD COLUMN `service_color` varchar(7) DEFAULT '#0693E3' AFTER `name`;";
+
+            // add relations
+            foreach ($table_queries as $query) {
+                $this->wpdb->query($query);
+            }
+
+            $version = '3.6.0';
+        }
+
         update_option('easy_app_db_version', $version);
     }
 
@@ -930,8 +946,8 @@ EOT;
                 array('id' => 2, 'name' => 'Washington DC', 'address' => 'Street 10', 'location' => 'Wasington DC', 'cord' => '')
             ),
             'ea_services' => array(
-                array('id' => 1, 'name' => 'Car wash', 'duration' => 60, 'price' => 25),
-                array('id' => 2, 'name' => 'Car polishing', 'duration' =>  45, 'price' => 10)
+                array('id' => 1, 'name' => 'Car wash', 'duration' => 60, 'price' => 25, 'service_color' => '#0693E3'),
+                array('id' => 2, 'name' => 'Car polishing', 'duration' =>  45, 'price' => 10, 'service_color' => '#FF6900')
             ),
         );
 

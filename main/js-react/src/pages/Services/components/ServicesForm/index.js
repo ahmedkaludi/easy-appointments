@@ -1,13 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import { __ } from '../../../../services';
 import { NameField } from './fields/NameField';
-import { Form, MultiFieldWrap } from '../../../../ea-components';
 import { PriceField } from './fields/PriceField';
 import { MinutesField } from './fields/MinutesField';
-import { __ } from '../../../../services';
 import { SlotStepField } from './fields/SlotStepField';
 import { DailyLimitField } from './fields/DailyLimitField';
+import { ServiceColorField } from './fields/ServiceColorField';
+import { Form, MultiFieldWrap } from '../../../../ea-components';
 
 export const ServicesForm = ({ model, onSave, onCancel }) => (
   <Form model={model} onCancel={onCancel} onSave={onSave}>
@@ -32,6 +33,7 @@ export const ServicesForm = ({ model, onSave, onCancel }) => (
       <DailyLimitField />
     </MultiFieldWrap>
     <PriceField />
+    <ServiceColorField />
   </Form>
 );
 

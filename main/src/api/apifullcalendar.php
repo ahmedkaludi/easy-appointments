@@ -118,6 +118,7 @@ class EAApiFullCalendar
      */
     public function get_items( $request ) {
         $title_key = $request->get_param('title_field');
+        $service_color = $request->get_param('color') === 'true';
 
         $params = array(
             'from'     => $request->get_param('start'),
@@ -160,8 +161,9 @@ class EAApiFullCalendar
         $res = $this->db_models->get_all_appointments($params);
 
         $fields = $this->db_models->get_all_rows('ea_meta_fields', array(), array('position' => 'ASC'));
+        $services = $this->db_models->get_all_rows('ea_services', array(), array('id' => 'ASC'));
 
-        $res = array_map(function($element) use ($fields, $title_key) {
+        $res = array_map(function($element) use ($fields, $title_key, $services, $service_color) {
             $result = array(
                 'start'  => $element->date . 'T' . $element->start,
                 'end'    => $element->end_date . 'T' . $element->end,
@@ -169,6 +171,10 @@ class EAApiFullCalendar
                 'id'     => $element->id,
                 'hash'   => $this->calculate_hash($element->id),
             );
+
+            if ($service_color) {
+                $result['color'] = $services[$element->service]->service_color;
+            }
 
             $result['title'] = $element->{$title_key};
 
@@ -207,6 +213,11 @@ class EAApiFullCalendar
             'description' => esc_html__( 'Nonce', 'easy-appointments' ),
             'type'        => 'string',
             'required'    => true,
+        );
+
+        $args['color'] = array(
+            'description' => esc_html__( 'To show service with own color', 'easy-appointments' ),
+            'type'        => 'string',
         );
 
         $args['location'] = array(

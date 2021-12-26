@@ -52,8 +52,14 @@ const SERVICES_CONFIG = {
   price: {
     header: __('Price', 'easy-appointments'),
     headerStyle: { minWidth: '150px' },
-    position: 'left',
+    position: 'right',
     type: 'text'
+  },
+  service_color: {
+    header: __('Color', 'easy-appointments'),
+    headerStyle: { minWidth: '40px' },
+    position: 'center',
+    type: 'color'
   },
   actions: {
     header: __('Actions', 'easy-appointments'),
@@ -70,7 +76,8 @@ const COLUMNS = [
   { value: 'block_before', label: __('Block before', 'easy-appointments') },
   { value: 'block_after', label: __('Block after', 'easy-appointments') },
   { value: 'daily_limit', label: __('Daily limit', 'easy-appointments') },
-  { value: 'price', label: __('Price', 'easy-appointments') }
+  { value: 'price', label: __('Price', 'easy-appointments') },
+  { value: 'service_color', label: __('Color', 'easy-appointments') }
 ];
 
 export const ServicesTable = ({

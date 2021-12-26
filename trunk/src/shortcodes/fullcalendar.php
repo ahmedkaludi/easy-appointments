@@ -97,6 +97,7 @@ class EAFullCalendar
             'location'             => null,
             'service'              => null,
             'worker'               => null,
+            'color'                => false,
             'start_of_week'        => get_option('start_of_week', 0),
             'rtl'                  => '0',
             'default_date'         => date('Y-m-d'),
@@ -154,6 +155,7 @@ class EAFullCalendar
         $location_param = $code_params['location'] !== null ? "location: '{$code_params['location']}'," : '';
         $service_param = $code_params['service'] !== null ? "service: '{$code_params['service']}'," : '';
         $worker_param = $code_params['worker'] !== null ? "worker: '{$code_params['worker']}'," : '';
+        $service_color = $code_params['color'] === 'service' ? "color: true," : '';
 
         $display_end_time = $code_params['display_event_end'] ? 'true' : 'false';
 
@@ -236,6 +238,7 @@ EOT;
           {$location_param}
           {$service_param}
           {$worker_param}
+          {$service_color}
           title_field: '{$code_params['title_field']}',
         },
         error: function() {
@@ -266,9 +269,7 @@ EOT;
         $statuses = $this->logic->getStatus();
         $status_label = __('Status', 'easy-appointments');
 
-        // html and status legend
-        $html = <<<EOT
-<div id="ea-full-calendar-{$id}"></div>
+        $status_html = <<<EOT
 <div class="fc">
     <div id="ea-calendar-color-map-{$id}" class="ea-calendar-color-map fc-view-container">
         <div>{$status_label}</div>
@@ -279,6 +280,14 @@ EOT;
     </div>
 </div>
 EOT;
+
+        // html and status legend
+        $html = <<<EOT
+<div id="ea-full-calendar-{$id}"></div>
+EOT;
+        if (!$service_color) {
+            $html .= $status_html;
+        }
 
         return $html;
     }

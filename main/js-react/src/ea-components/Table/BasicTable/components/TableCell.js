@@ -30,7 +30,8 @@ const CELL_TYPES = {
   TEXT_W_LABEL: 'text_with_label',
   AVATARS: 'avatar',
   CHIPS: 'chips',
-  ACTIONS: 'actions'
+  ACTIONS: 'actions',
+  COLOR: 'color'
 };
 
 const ICON_TYPES = {
@@ -114,6 +115,25 @@ const TextWithLabelCell = (config, data) => {
           </>
         ))}
       </div>
+    </td>
+  );
+};
+
+const ColorCell = (config, data) => {
+  const { cellClass, position } = config;
+  return (
+    <td className={`text-${position} ${cellClass ?? ''}`}>
+      <div
+        style={{
+          color: '#fff',
+          backgroundColor: data,
+          height: '28px',
+          width: '28px',
+          borderRadius: '4px',
+          textAlign: 'center',
+          paddingTop: '4px'
+        }}
+      />
     </td>
   );
 };
@@ -203,6 +223,8 @@ export const renderCell = (config, data) => {
       return TextWithLabelCell(config, data);
     case CELL_TYPES.AVATARS:
       return AvatarsCell(config, data);
+    case CELL_TYPES.COLOR:
+      return ColorCell(config, data);
     case CELL_TYPES.CHIPS:
       return ChipsCell(config, data);
     case CELL_TYPES.ACTIONS:
