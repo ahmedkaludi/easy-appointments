@@ -23,6 +23,7 @@ return array(
     'EAMetaFields' => $baseDir . '/src/metafields.php',
     'EAOptions' => $baseDir . '/src/options.php',
     'EAReport' => $baseDir . '/src/report.php',
+    'EASlotsLogic' => $baseDir . '/src/services/SlotsLogic.php',
     'EATableColumns' => $baseDir . '/src/fields/tablecolumns.php',
     'EAUninstallTools' => $baseDir . '/src/uninstall.php',
     'EAUserFieldMapper' => $baseDir . '/src/services/UserFieldMapper.php',

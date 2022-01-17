@@ -4,7 +4,7 @@
  * Plugin Name: Easy Appointments
  * Plugin URI: https://easy-appointments.net/
  * Description: Simple and easy to use management system for Appointments and Bookings
- * Version: 3.6.0
+ * Version: 3.7.0
  * Requires PHP: 5.3
  * Author: Nikola Loncar
  * Author URI: http://nikolaloncar.com
@@ -21,7 +21,7 @@ if (!defined('WPINC')) {
 /**
  * Currently plugin version.
  */
-define( 'EASY_APPOINTMENTS_VERSION', '3.6.0' );
+define( 'EASY_APPOINTMENTS_VERSION', '3.7.0' );
 
 // path for source files
 define('EA_SRC_DIR', dirname(__FILE__) . '/src/');
@@ -156,12 +156,16 @@ class EasyAppointment
             return new EADBModels( $container['wpdb'], $container['table_columns'], $container['options']);
         };
 
+        $this->container['slots_logic'] = function ($container) {
+            return new EASlotsLogic($container['wpdb'], $container['options']);
+        };
+
         $this->container['datetime'] = function ($container) {
             return new EADateTime();
         };
 
         $this->container['logic'] = function ($container) {
-            return new EALogic($container['wpdb'], $container['db_models'], $container['options']);
+            return new EALogic($container['wpdb'], $container['db_models'], $container['options'], $container['slots_logic']);
         };
 
         $this->container['install_tools'] = function ($container) {

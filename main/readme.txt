@@ -5,7 +5,7 @@ Tags: appointment, appointments, Booking, calendar, plugin, reservation, reserva
 Requires at least: 3.7
 Tested up to: 5.8
 Requires PHP: 5.3
-Stable tag: 3.6.0
+Stable tag: 3.7.0
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -213,6 +213,12 @@ Note: you can have only one calendar on one page.
 25. Admin panel - Report - Export page
 
 == Changelog ==
+
+= 3.7.0 (2022-01-16) =
+* Added option to select how busy slots are going to be calculated. For example now you can set Location as shared resource between service providers. Use case when you have like one classroom and multiple teachers that are doing lectures in same space. Once location is booked other teachers are not free for booking.
+
+= 3.6.1 (2021-12-27) =
+* Added events color on new reports time table pages
 
 = 3.6.0 (2021-12-26) =
 * Added color for Services as option, visible on FullCalendar shortcode with param `color=service`

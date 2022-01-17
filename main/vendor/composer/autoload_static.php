@@ -63,6 +63,7 @@ class ComposerStaticInit6454aa61d36164254036b36c455b0d68
         'EAMetaFields' => __DIR__ . '/../..' . '/src/metafields.php',
         'EAOptions' => __DIR__ . '/../..' . '/src/options.php',
         'EAReport' => __DIR__ . '/../..' . '/src/report.php',
+        'EASlotsLogic' => __DIR__ . '/../..' . '/src/services/SlotsLogic.php',
         'EATableColumns' => __DIR__ . '/../..' . '/src/fields/tablecolumns.php',
         'EAUninstallTools' => __DIR__ . '/../..' . '/src/uninstall.php',
         'EAUserFieldMapper' => __DIR__ . '/../..' . '/src/services/UserFieldMapper.php',

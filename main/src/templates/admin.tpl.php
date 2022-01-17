@@ -59,15 +59,17 @@
                 <div class="form-container" id="customize-general">
                     <div class="form-item">
                         <div class="label-with-tooltip">
-                            <label for=""><?php _e('Multiple work', 'easy-appointments'); ?></label>
+                            <label for=""><?php _e('Busy slots are calculated by same', 'easy-appointments'); ?></label>
                             <span class="tooltip tooltip-right"
-                                  data-tooltip="<?php _e('Mark this option if you want to calculate free worker slots only by current service and location. If it\'s not marked system will check if worker is working on any location and service at current time.', 'easy-appointments'); ?>"></span>
+                                  data-tooltip="<?php _e('IMPORTANT! This is used to calculate busy slots based on settings that are set here.', 'easy-appointments'); ?>"></span>
                         </div>
-                        <div class="field-wrap">
-                            <input class="field" data-key="multiple.work" name="multiple.work"
-                                   type="checkbox" <% if (_.findWhere(settings,
-                            {ea_key:'multiple.work'}).ea_value == "1") { %>checked<% } %>>
-                        </div>
+                        <select id="multiple-work" class="field" data-key="multiple.work" name="multiple.work">
+                            <option value="0" data-tip="<?php _e('Use case example: Employee can only provide one service at the time.', 'easy-appointments'); ?>"><?php _e('Worker', 'easy-appointments'); ?></option>
+                            <option value="2" data-tip="<?php _e('Use case example: Multiple employees share same location as resource.', 'easy-appointments'); ?>"><?php _e('Location', 'easy-appointments'); ?></option>
+                            <option value="3" data-tip="<?php _e('Use case example: Service as a shared resource between employees.', 'easy-appointments'); ?>"><?php _e('Service', 'easy-appointments'); ?></option>
+                            <option value="1" data-tip="<?php _e('Use case example: Worker can provide different service at different locations at the same time.', 'easy-appointments'); ?>"><?php _e('Worker, Location and Service', 'easy-appointments'); ?></option>
+                        </select>
+                        <small id="multiple-work-tip"></small>
                     </div>
                     <div class="form-item">
                         <div class="label-with-tooltip">

@@ -34,16 +34,22 @@ class EALogic
     protected $service_cache = [];
 
     /**
+     * @var EASlotsLogic
+     */
+    protected $slots_logic;
+
+    /**
      * EALogic constructor.
      * @param wpdb $wpdb
      * @param EADBModels $models
      * @param EAOptions $options
      */
-    function __construct($wpdb, $models, $options)
+    function __construct($wpdb, $models, $options, $slots_logic)
     {
         $this->wpdb = $wpdb;
         $this->models = $models;
         $this->options = $options;
+        $this->slots_logic = $slots_logic;
     }
 
     /**
@@ -290,19 +296,9 @@ class EALogic
             $app_id = -1;
         }
 
-        $day_of_week = date('l', strtotime($day));
+//        $day_of_week = date('l', strtotime($day));
 
-        $multiple = $this->options->get_option_value('multiple.work', '1');
-
-        $query = $this->wpdb->prepare("SELECT * FROM {$this->wpdb->prefix}ea_appointments WHERE 
-			((location=%d AND service=%d) OR '{$multiple}' = '0') AND 
-			worker=%d AND 
-			date <= %s AND
-			end_date >= %s AND
-			id <> %d AND 
-			status NOT IN ('abandoned','canceled')",
-            $location, $service, $worker, $day, $day, $app_id
-        );
+        $query = $this->slots_logic->get_busy_slot_query($location, $service, $worker, $day, $app_id);
 
         $appointments = $this->wpdb->get_results($query);
 

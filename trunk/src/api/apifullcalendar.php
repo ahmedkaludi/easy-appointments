@@ -173,7 +173,14 @@ class EAApiFullCalendar
             );
 
             if ($service_color) {
-                $result['color'] = $services[$element->service]->service_color;
+                foreach ($services as $service) {
+                    if ($service->id !== $element->service) {
+                        continue;
+                    }
+
+                    $result['color'] = $service->service_color;
+                    break;
+                }
             }
 
             $result['title'] = $element->{$title_key};

@@ -27,8 +27,11 @@ const parseDate = date => moment(date).format('YYYY-MM-DD');
  * @constructor
  */
 function Event({ event }) {
+  const className = event?.status
+    ? `event-content status-${event.status}`
+    : 'event-content';
   return (
-    <div className={event?.status ? `status-${event.status}` : ''}>
+    <div className={className} style={{ backgroundColor: event.color }}>
       {event.id && <span>{`#${event.id} ${event.title}`}</span>}
       {!event.id && <span>{event.title}</span>}
     </div>

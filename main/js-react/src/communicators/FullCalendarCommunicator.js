@@ -17,7 +17,7 @@ export class FullCalendarCommunicator {
    * @returns {Promise<*>}
    */
   static async fetchEvents(start, end, label, filters = {}) {
-    const fromTo = `&start=${start}&end=${end}`;
+    const fromTo = `&start=${start}&end=${end}&color=true`;
     let filtersParams = '';
 
     forEach(filters, (filter, key) => {

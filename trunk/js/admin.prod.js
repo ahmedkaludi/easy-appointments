@@ -90,6 +90,7 @@
             "click .btn-add-cancel-redirect": "addAdvanceCancelRedirect",
             "click .remove-advance-cancel-redirect": "removeAdvanceCancelRedirect",
             "change #ea-select-status": "defaultStatusChange",
+            "change #multiple-work": "multipleWorkChange",
             "click .form-label-option": "changeFormLabelStyle",
             "click .select-label-option": "changeSelectLabelStyle",
             "click .btn-gdpr-delete-data": "gdprDeleteData",
@@ -117,6 +118,7 @@
 
                 plugin.showCustomRedirects();
                 plugin.showCustomCancelRedirects();
+                plugin.initMultipleWork();
             });
 
             // if there is no data in cache
@@ -642,6 +644,17 @@
             this.$el.find('#' + tabId).removeClass('hidden');
 
             return false;
+        },
+
+        initMultipleWork: function () {
+          this.$el.find('#multiple-work').val(ea_settings['multiple.work']);
+        },
+
+        multipleWorkChange: function (e) {
+            var selected = jQuery(e.currentTarget).find(':selected');
+            var tip = selected.data('tip');
+
+            this.$el.find('#multiple-work-tip').html(tip);
         },
 
         defaultStatusChange: function () {
