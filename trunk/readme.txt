@@ -5,7 +5,7 @@ Tags: appointment, appointments, Booking, calendar, plugin, reservation, reserva
 Requires at least: 3.7
 Tested up to: 5.9
 Requires PHP: 5.3
-Stable tag: 3.8.0
+Stable tag: 3.8.1
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -213,6 +213,9 @@ Note: you can have only one calendar on one page.
 25. Admin panel - Report - Export page
 
 == Changelog ==
+
+= 3.8.1 (2022-03-03) =
+* Fixed issue with missing file
 
 = 3.8.0 (2022-03-03) =
 * Updated dependencies to prevent conflict with Events Tickets Plus plugin
