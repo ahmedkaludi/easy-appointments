@@ -2,7 +2,46 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## [Unreleased]
+## [unreleased] Unreleased
+
+## [2.1.5] 2021-12-20;
+
+### Fixed
+- PHP 8.1 compatibility issues (thanks @bordoni)
+
+## [2.1.4] 2021-01-01;
+
+### Fixed
+- PHP 8 compatibility issues (thanks @bordoni)
+
+## [2.1.3] 2020-11-02;
+
+### Fixed
+- Error messages and format in the context of nested `make` resolution (thanks @Luc45)
+
+## [2.1.2] 2020-10-27;
+
+### Fixed
+- PHP 5.3 and 7.4 incompatibility issues
+### Changed
+- moved the builds to GitHub Actions
+
+## [2.1.1] 2020-10-23;
+
+### Added
+- new build tools to the repository
+### Changed
+- refactor `Container::callback` code to re-use callbacks when available (thanks @sc0ttkclark)
+### Fixed
+- fix an issue where the Closure produced by the `callback` method would build the object for static method calls
+
+## [2.1.0] - 2020-07-14
+### Added
+- support for one parameter singletong binding of concrete, instantiatable, classes, thanks @Luc45
+
+## [2.0.12] - 2019-10-14
+### Added
+- add PHPStorm make method auto-completion (thanks @Luc45)
 
 ## [2.0.11] - 2019-09-26
 ### Changed
@@ -166,39 +205,46 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - array resolution support for the Array Access API.
 - the changelog.
 
-[Unreleased]: https://github.com/lucatume/di52/compare/2.0.11...HEAD
-[2.0.11]: https://github.com/lucatume/di52/compare/2.0.10...2.0.11
-[2.0.10]: https://github.com/lucatume/di52/compare/2.0.9...2.0.10
-[2.0.9]: https://github.com/lucatume/di52/compare/2.0.8...2.0.9
-[2.0.8]: https://github.com/lucatume/di52/compare/2.0.7...2.0.8
-[2.0.7]: https://github.com/lucatume/di52/compare/2.0.6...2.0.7
-[2.0.6]: https://github.com/lucatume/di52/compare/2.0.5...2.0.6
-[2.0.5]: https://github.com/lucatume/di52/compare/2.0.4...2.0.5
-[2.0.4]: https://github.com/lucatume/di52/compare/2.0.3...2.0.4
-[2.0.3]: https://github.com/lucatume/di52/compare/2.0.2...2.0.3
-[2.0.2]: https://github.com/lucatume/di52/compare/2.0.1...2.0.2
-[2.0.1]: https://github.com/lucatume/di52/compare/2.0.0...2.0.1
-[2.0.0]: https://github.com/lucatume/di52/compare/1.4.5...2.0.0
-[1.4.5]: https://github.com/lucatume/di52/compare/1.4.4...1.4.5
-[1.4.4]: https://github.com/lucatume/di52/compare/1.4.3...1.4.4
-[1.4.3]: https://github.com/lucatume/di52/compare/1.4.2...1.4.3
-[1.4.2]: https://github.com/lucatume/di52/compare/1.4.1b...1.4.2
-[1.4.1b]: https://github.com/lucatume/di52/compare/1.4.1...1.4.1b
-[1.4.1]: https://github.com/lucatume/di52/compare/1.4.0...1.4.1
-[1.4.0]: https://github.com/lucatume/di52/compare/1.3.1...1.4.0
-[1.3.2]: https://github.com/lucatume/di52/compare/1.3.1...1.3.2
-[1.3.1]: https://github.com/lucatume/di52/compare/1.3.0...1.3.1
-[1.3.0]: https://github.com/lucatume/di52/compare/1.2.6...1.3.0
-[1.2.6]: https://github.com/lucatume/di52/compare/1.2.5...1.2.6
-[1.2.5]: https://github.com/lucatume/di52/compare/1.2.4...1.2.5
-[1.2.4]: https://github.com/lucatume/di52/compare/1.2.3...1.2.4
-[1.2.3]: https://github.com/lucatume/di52/compare/1.2.2...1.2.3
-[1.2.2]: https://github.com/lucatume/di52/compare/1.2.1...1.2.2
-[1.2.1]: https://github.com/lucatume/di52/compare/1.2.0...1.2.1
-[1.2.0]: https://github.com/lucatume/di52/compare/1.1.2...1.2.0
-[1.2.0]: https://github.com/lucatume/di52/compare/1.1.2...1.2.0
-[1.1.2]: https://github.com/lucatume/di52/compare/1.0.3...1.1.2
-[1.1.1]: https://github.com/lucatume/di52/compare/1.0.3...1.1.2
-[1.1.0]: https://github.com/lucatume/di52/compare/1.0.3...1.1.0
-[1.0.3]: https://github.com/lucatume/di52/compare/1.0.2...1.0.3
 [1.0.2]: https://github.com/lucatume/di52/compare/1.0.1...1.0.2
+[1.0.3]: https://github.com/lucatume/di52/compare/1.0.2...1.0.3
+[1.1.0]: https://github.com/lucatume/di52/compare/1.0.3...1.1.0
+[1.1.1]: https://github.com/lucatume/di52/compare/1.0.3...1.1.2
+[1.1.2]: https://github.com/lucatume/di52/compare/1.0.3...1.1.2
+[1.2.0]: https://github.com/lucatume/di52/compare/1.1.2...1.2.0
+[1.2.0]: https://github.com/lucatume/di52/compare/1.1.2...1.2.0
+[1.2.1]: https://github.com/lucatume/di52/compare/1.2.0...1.2.1
+[1.2.2]: https://github.com/lucatume/di52/compare/1.2.1...1.2.2
+[1.2.3]: https://github.com/lucatume/di52/compare/1.2.2...1.2.3
+[1.2.4]: https://github.com/lucatume/di52/compare/1.2.3...1.2.4
+[1.2.5]: https://github.com/lucatume/di52/compare/1.2.4...1.2.5
+[1.2.6]: https://github.com/lucatume/di52/compare/1.2.5...1.2.6
+[1.3.0]: https://github.com/lucatume/di52/compare/1.2.6...1.3.0
+[1.3.1]: https://github.com/lucatume/di52/compare/1.3.0...1.3.1
+[1.3.2]: https://github.com/lucatume/di52/compare/1.3.1...1.3.2
+[1.4.0]: https://github.com/lucatume/di52/compare/1.3.1...1.4.0
+[1.4.1]: https://github.com/lucatume/di52/compare/1.4.0...1.4.1
+[1.4.1b]: https://github.com/lucatume/di52/compare/1.4.1...1.4.1b
+[1.4.2]: https://github.com/lucatume/di52/compare/1.4.1b...1.4.2
+[1.4.3]: https://github.com/lucatume/di52/compare/1.4.2...1.4.3
+[1.4.4]: https://github.com/lucatume/di52/compare/1.4.3...1.4.4
+[1.4.5]: https://github.com/lucatume/di52/compare/1.4.4...1.4.5
+[2.0.0]: https://github.com/lucatume/di52/compare/1.4.5...2.0.0
+[2.0.1]: https://github.com/lucatume/di52/compare/2.0.0...2.0.1
+[2.0.2]: https://github.com/lucatume/di52/compare/2.0.1...2.0.2
+[2.0.3]: https://github.com/lucatume/di52/compare/2.0.2...2.0.3
+[2.0.4]: https://github.com/lucatume/di52/compare/2.0.3...2.0.4
+[2.0.5]: https://github.com/lucatume/di52/compare/2.0.4...2.0.5
+[2.0.6]: https://github.com/lucatume/di52/compare/2.0.5...2.0.6
+[2.0.7]: https://github.com/lucatume/di52/compare/2.0.6...2.0.7
+[2.0.8]: https://github.com/lucatume/di52/compare/2.0.7...2.0.8
+[2.0.9]: https://github.com/lucatume/di52/compare/2.0.8...2.0.9
+[2.0.10]: https://github.com/lucatume/di52/compare/2.0.9...2.0.10
+[2.0.11]: https://github.com/lucatume/di52/compare/2.0.10...2.0.11
+[2.0.12]: https://github.com/lucatume/di52/compare/2.0.11...2.0.12
+[2.1.0]: https://github.com/lucatume/di52/compare/2.0.12...2.1.0
+[2.1.1]: https://github.com/lucatume/di52/compare/2.1.0...2.1.1
+[2.1.2]: https://github.com/lucatume/di52/compare/2.1.1...2.1.2
+[2.1.3]: https://github.com/lucatume/di52/compare/2.1.2...2.1.3
+[2.1.4]: https://github.com/lucatume/di52/compare/2.1.3...2.1.4
+[2.1.5]: https://github.com/lucatume/di52/compare/2.1.4...2.1.5
+[unreleased]: https://github.com/lucatume/di52/compare/2.1.5...HEAD

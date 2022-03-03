@@ -6,6 +6,7 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    'Composer\\InstalledVersions' => $vendorDir . '/composer/InstalledVersions.php',
     'EAAdminPanel' => $baseDir . '/src/admin.php',
     'EAAjax' => $baseDir . '/src/ajax.php',
     'EAApiFullCalendar' => $baseDir . '/src/api/apifullcalendar.php',

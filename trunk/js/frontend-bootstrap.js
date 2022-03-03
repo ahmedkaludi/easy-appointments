@@ -1063,11 +1063,17 @@
          * Event when new appointment is booked
          */
         triggerEvent: function () {
-            // Create the event.
-            var event = document.createEvent('Event');
+            var plugin = this;
+            var booking_data = {};
+            booking_data.location = plugin.$element.find('[name="location"] > option:selected').text();
+            booking_data.service = plugin.$element.find('[name="service"] > option:selected').text();
+            booking_data.worker = plugin.$element.find('[name="worker"] > option:selected').text();
+            booking_data.date = plugin.$element.find('.date').datepicker().val();
+            booking_data.time = plugin.$element.find('.selected-time').data('val');
+            booking_data.price = plugin.$element.find('[name="service"] > option:selected').data('price');
 
-            // Define that the event name is 'easyappnewappointment'.
-            event.initEvent('easyappnewappointment', true, true);
+            // Create the event.
+            var event = new CustomEvent('easyappnewappointment', { detail: booking_data });
 
             // send event to document
             document.dispatchEvent(event);

@@ -412,7 +412,7 @@ class EAAjax
 
     public function ajax_setting()
     {
-        $this->validate_access_rights();
+        $this->validate_access_rights('settings');
         $data = $this->parse_input_data();
 
         $dont_remove = array(
@@ -443,7 +443,7 @@ class EAAjax
 
     public function ajax_settings()
     {
-        $this->validate_access_rights();
+        $this->validate_access_rights('settings');
 
         $data = $this->parse_input_data();
 
@@ -485,7 +485,7 @@ class EAAjax
      */
     public function ajax_settings_upd()
     {
-        $this->validate_access_rights();
+        $this->validate_access_rights('settings');
 
         $this->parse_input_data();
 
@@ -554,7 +554,7 @@ class EAAjax
      */
     public function ajax_service()
     {
-        $this->validate_access_rights();
+        $this->validate_access_rights('services');
 
         $this->parse_single_model('ea_services');
     }
@@ -564,7 +564,7 @@ class EAAjax
      */
     public function ajax_services()
     {
-        $this->validate_access_rights();
+        $this->validate_access_rights('services');
 
         $this->parse_input_data();
 
@@ -584,7 +584,7 @@ class EAAjax
      */
     public function ajax_locations()
     {
-        $this->validate_access_rights();
+        $this->validate_access_rights('locations');
 
         $this->parse_input_data();
 
@@ -606,7 +606,7 @@ class EAAjax
      */
     public function ajax_location()
     {
-        $this->validate_access_rights();
+        $this->validate_access_rights('locations');
 
         $this->parse_single_model('ea_locations');
     }
@@ -616,7 +616,7 @@ class EAAjax
      */
     public function ajax_workers()
     {
-        $this->validate_access_rights();
+        $this->validate_access_rights('workers');
 
         $this->parse_input_data();
 
@@ -638,7 +638,7 @@ class EAAjax
      */
     public function ajax_worker()
     {
-        $this->validate_access_rights();
+        $this->validate_access_rights('workers');
 
         $this->parse_single_model('ea_staff');
     }
@@ -648,7 +648,7 @@ class EAAjax
      */
     public function ajax_connections()
     {
-        $this->validate_access_rights();
+        $this->validate_access_rights('connections');
 
         $this->parse_input_data();
 
@@ -668,7 +668,7 @@ class EAAjax
      */
     public function ajax_connection()
     {
-        $this->validate_access_rights();
+        $this->validate_access_rights('connections');
 
         $this->parse_single_model('ea_connections');
     }
@@ -678,7 +678,7 @@ class EAAjax
      */
     public function ajax_month_status()
     {
-        $this->validate_nonce();
+        $this->validate_nonce('reports');
 
         $data = $this->parse_input_data();
 
@@ -689,7 +689,7 @@ class EAAjax
 
     public function ajax_field()
     {
-        $this->validate_access_rights();
+        $this->validate_access_rights('settings');
 
         // we need to add slug
         $data = $this->parse_input_data();
@@ -715,7 +715,7 @@ class EAAjax
 
     public function ajax_fields()
     {
-        $this->validate_access_rights();
+        $this->validate_access_rights('settings');
 
         $data = $this->parse_input_data();
 
@@ -730,11 +730,11 @@ class EAAjax
     }
 
     /**
-     * Services collection
+     * Errors for tools page
      */
     public function ajax_errors()
     {
-        $this->validate_access_rights();
+        $this->validate_access_rights('tools');
 
         $this->parse_input_data();
 
@@ -749,7 +749,7 @@ class EAAjax
 
     public function ajax_test_mail()
     {
-        $this->validate_access_rights();
+        $this->validate_access_rights('tools');
 
         $address = $_POST['address'];
         $native = $_POST['native'];
@@ -829,7 +829,7 @@ class EAAjax
      */
     public function ajax_report()
     {
-        $this->validate_access_rights();
+        $this->validate_access_rights('reports');
 
         $data = $this->parse_input_data();
 
@@ -842,7 +842,7 @@ class EAAjax
 
     public function ajax_export()
     {
-        $this->validate_access_rights();
+        $this->validate_access_rights('reports');
 
         $data = $this->parse_input_data();
 
@@ -1082,9 +1082,11 @@ class EAAjax
         die($message);
     }
 
-    private function validate_access_rights()
+    private function validate_access_rights($resource)
     {
-        if (!current_user_can( 'manage_options' )) {
+        $capability = apply_filters('easy-appointments-user-ajax-capabilities', 'manage_options', $resource);
+
+        if (!current_user_can( $capability )) {
             header('HTTP/1.1 403 Forbidden');
             die('You don\'t have rights for this action');
         }

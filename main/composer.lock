@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "cdb12330e6a82d7096f1bbebda83668d",
+    "content-hash": "8c4c77ae7f014a796c7ab75e5f3ae85b",
     "packages": [
         {
             "name": "jaybizzle/crawler-detect",
@@ -57,16 +57,16 @@
         },
         {
             "name": "lucatume/di52",
-            "version": "2.0.12",
+            "version": "2.1.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/lucatume/di52.git",
-                "reference": "b5ae39274b03c697f20d8d620e534539d6d8d27e"
+                "reference": "591eadfe768d931d3a0d522069c0924d668aa35e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/lucatume/di52/zipball/b5ae39274b03c697f20d8d620e534539d6d8d27e",
-                "reference": "b5ae39274b03c697f20d8d620e534539d6d8d27e",
+                "url": "https://api.github.com/repos/lucatume/di52/zipball/591eadfe768d931d3a0d522069c0924d668aa35e",
+                "reference": "591eadfe768d931d3a0d522069c0924d668aa35e",
                 "shasum": ""
             },
             "require": {
@@ -96,7 +96,11 @@
                 }
             ],
             "description": "A PHP 5.2 compatible dependency injection container.",
-            "time": "2019-10-14T08:27:38+00:00"
+            "support": {
+                "issues": "https://github.com/lucatume/di52/issues",
+                "source": "https://github.com/lucatume/di52/tree/2.1.5"
+            },
+            "time": "2021-12-20T12:52:26+00:00"
         },
         {
             "name": "text/template",
@@ -192,5 +196,6 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": [],
-    "platform-dev": []
+    "platform-dev": [],
+    "plugin-api-version": "2.2.0"
 }

@@ -1,5 +1,35 @@
 <?php
 
+class TestObject {
+	protected $num;
+
+	public function __construct( $num = 123 ) {
+		$this->num = $num;
+	}
+
+	public function getNum() {
+		return $this->num;
+	}
+
+	public static function staticOne() {
+		return 'static one';
+	}
+
+	public static function staticTwo() {
+		return 'static two';
+	}
+
+	public static function staticThree( $param1 ) {
+		return 'static two';
+	}
+}
+
+interface TestInterface{
+	public static function apiMethodOne( $param1 = 23 );
+
+	public function apiMethodTwo( $param1 );
+}
+
 class Container52CompatTest extends PHPUnit_Framework_TestCase {
 
 	public function boundVariables() {
@@ -1314,20 +1344,14 @@ class Container52CompatTest extends PHPUnit_Framework_TestCase {
 	 * @test
 	 */
 	public function it_should_return_an_interface_argument_default_value_if_available_and_the_interface_is_not_bound() {
-		$defaultValue = 'foobar';
-
-		$mockParameter = $this->getMockBuilder('ReflectionParameter')->disableOriginalConstructor()->getMock();
-		$mockParameter->expects($this->once())->method('isDefaultValueAvailable')->will($this->returnValue(TRUE));
-		$mockParameter->expects($this->once())->method('getDefaultValue')->will($this->returnValue($defaultValue));
-		$mockClass = $this->getMockBuilder('ReflectionClass')->disableOriginalConstructor()->getMock();
-		$mockClass->expects($this->once())->method('getName')->will($this->returnValue('SomeInterface'));
-		$mockClass->expects($this->once())->method('isInstantiable')->will($this->returnValue(FALSE));
-		$mockParameter->expects($this->any())->method('getClass')->will($this->returnValue($mockClass));
+		$reflectionMethod = new ReflectionMethod('TestInterface','apiMethodOne');
+		$params = $reflectionMethod->getParameters();
+		$reflectionParameter = reset($params);
 
 		$container = new tad_DI52_Container();
-		$value     = $container->_getParameter($mockParameter);
+		$value     = $container->_getParameter($reflectionParameter);
 
-		$this->assertEquals($defaultValue, $value);
+		$this->assertEquals(23, $value);
 	}
 
 	/**
@@ -1336,17 +1360,14 @@ class Container52CompatTest extends PHPUnit_Framework_TestCase {
 	 * @test
 	 */
 	public function it_should_throw_an_exception_when_trying_to_resolve_unbound_interface_parameter_with_no_default_value() {
-		$mockParameter = $this->getMockBuilder('ReflectionParameter')->disableOriginalConstructor()->getMock();
-		$mockParameter->expects($this->once())->method('isDefaultValueAvailable')->will($this->returnValue(false));
-		$mockClass = $this->getMockBuilder('ReflectionClass')->disableOriginalConstructor()->getMock();
-		$mockClass->expects($this->once())->method('getName')->will($this->returnValue('SomeInterface'));
-		$mockClass->expects($this->once())->method('isInstantiable')->will($this->returnValue(false));
-		$mockParameter->expects($this->any())->method('getClass')->will($this->returnValue($mockClass));
+		$reflectionMethod = new ReflectionMethod('TestInterface','apiMethodTwo');
+		$params = $reflectionMethod->getParameters();
+		$reflectionParameter = reset($params);
 
 		$this->setExpectedException('ReflectionException');
 
 		$container = new tad_DI52_Container();
-		$container->_getParameter($mockParameter);
+		$container->_getParameter($reflectionParameter);
 	}
 
 	/**
@@ -1362,5 +1383,176 @@ class Container52CompatTest extends PHPUnit_Framework_TestCase {
 
 		$this->assertNotSame($d1,$d2);
 		$this->assertNotSame($d1->getDependency(),$d2->getDependency());
+	}
+
+	/**
+	 * It should return different callbacks for different input objects
+	 *
+	 * @test
+	 */
+	public function should_return_different_callbacks_for_different_input_objects() {
+		$o1 = new TestObject(23);
+		$o2 = new TestObject(89);
+
+		$container = new tad_DI52_Container();
+
+		$o1Callback = $container->callback($o1,'getNum');
+		$o2Callback = $container->callback($o2,'getNum');
+
+		$this->assertNotSame($o1Callback,$o2Callback);
+		$this->assertEquals(23,$o1Callback());
+		$this->assertEquals(89,$o2Callback());
+	}
+
+	/**
+	 * It should return same callback when created for same object instance
+	 *
+	 * @test
+	 */
+	public function should_return_same_callback_when_created_for_same_object_instance() {
+		$this->markTestSkipped('Not a feature yet.');
+
+		$o1 = new TestObject(23);
+
+		$container = new tad_DI52_Container();
+
+		$callback1 = $container->callback($o1,'getNum');
+		$callback2 = $container->callback($o1,'getNum');
+
+		$this->assertSame($callback1,$callback2);
+		$this->assertEquals(23,$callback1());
+		$this->assertEquals(89,$callback2());
+	}
+
+	/**
+	 * It should return the same callback when building for same class and static method
+	 *
+	 * @test
+	 */
+	public function should_return_the_same_callback_when_building_for_same_class_and_static_method() {
+		$container = new tad_DI52_Container();
+
+		$callback1 = $container->callback('TestObject','staticOne');
+		$callback2 = $container->callback('TestObject','staticOne');
+		$callback3 = $container->callback('TestObject','staticTwo');
+		$callback4 = $container->callback('TestObject','staticTwo');
+
+		$this->assertSame($callback1,$callback2);
+		$this->assertSame($callback3,$callback4);
+		$this->assertNotSame($callback1,$callback3);
+		$this->assertEquals('static one',$callback1());
+		$this->assertEquals('static one',$callback2());
+		$this->assertEquals('static two',$callback3());
+		$this->assertEquals('static two',$callback4());
+	}
+
+	/**
+	 * It should allow running a snapshot test
+	 *
+	 * @test
+	 */
+	public function should_allow_running_a_snapshot_test() {
+		assertMatchesSnapshots('Hello Luca');
+		assertMatchesSnapshots('Hello Me');
+		assertMatchesSnapshots('Hello You');
+	}
+
+	public function numeric_names() {
+		return array(
+			array( 'luca' ),
+			array( 'jane' ),
+		);
+	}
+
+	/**
+	 * It should allow running a snapshot test with numeric data providers
+	 *
+	 * @test
+	 * @dataProvider numeric_names
+	 */
+	public function should_allow_running_a_snapshot_test_with_data_providers( $name ) {
+		assertMatchesSnapshots( "Hello {$name}" );
+		assertMatchesSnapshots( "Hi {$name}" );
+	}
+
+	public function names() {
+		return array(
+			'luca' => array( 'luca' ),
+			'jane' => array( 'jane' ),
+		);
+	}
+
+	/**
+	 * It should allow running a snapshot test with named datasets
+	 *
+	 * @test
+	 * @dataProvider names
+	 */
+	public function should_allow_running_a_snapshot_test_with_named_datasets($name) {
+		assertMatchesSnapshots( "Hello {$name}" );
+		assertMatchesSnapshots( "Hi {$name}" );
+	}
+
+	/** @test */
+	public function should_throw_correct_exception_when_injecting_missing_class_in_the_constructor() {
+		$container = new tad_DI52_Container();
+		try {
+			$container->make( 'Car' );
+		} catch ( Exception $e ) {
+			assertMatchesSnapshots( $e->getMessage() );
+		}
+	}
+
+	/** @test */
+	public function should_throw_correct_exception_when_injecting_missing_class_in_the_constructor_and_nested_dependency_singleton() {
+		$container = new tad_DI52_Container();
+		$container->bind( 'Car' );
+		$container->singleton( 'Engine' );
+		try {
+			$container->make( 'Car' );
+		} catch ( Exception $e ) {
+			assertMatchesSnapshots( $e->getMessage() );
+		}
+	}
+
+	/** @test */
+	public function should_throw_correct_exception_when_injecting_missing_class_in_the_constructor_2() {
+		$container = new tad_DI52_Container();
+		$container->singleton( 'Engine' );
+		try {
+			$container->make( 'Engine' );
+		} catch ( Exception $e ) {
+			assertMatchesSnapshots( $e->getMessage() );
+		}
+	}
+
+	/** @test */
+	public function should_throw_correct_exception_when_injecting_class_with_private_constructor() {
+		$container = new tad_DI52_Container();
+		try {
+			$container->make( 'LowerEngine' );
+		} catch ( Exception $e ) {
+			assertMatchesSnapshots( $e->getMessage() );
+		}
+	}
+
+	/** @test */
+	public function should_throw_correct_exception_when_making_class_with_private_constructor_as_a_dependency() {
+		$container = new tad_DI52_Container();
+		try {
+			$container->make( 'Clutch' );
+		} catch ( Exception $e ) {
+			assertMatchesSnapshots( $e->getMessage() );
+		}
+	}
+
+	/** @test */
+	public function should_throw_correct_exception_when_making_class_with_invalid_class_as_dependency() {
+		$container = new tad_DI52_Container();
+		try {
+			$container->make( 'Valve' );
+		} catch ( Exception $e ) {
+			assertMatchesSnapshots( $e->getMessage() );
+		}
 	}
 }

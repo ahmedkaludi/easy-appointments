@@ -46,6 +46,7 @@ class ComposerStaticInit6454aa61d36164254036b36c455b0d68
     );
 
     public static $classMap = array (
+        'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
         'EAAdminPanel' => __DIR__ . '/../..' . '/src/admin.php',
         'EAAjax' => __DIR__ . '/../..' . '/src/ajax.php',
         'EAApiFullCalendar' => __DIR__ . '/../..' . '/src/api/apifullcalendar.php',

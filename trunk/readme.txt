@@ -3,9 +3,9 @@ Contributors: loncar
 Donate link: https://easy-appointments.net/
 Tags: appointment, appointments, Booking, calendar, plugin, reservation, reservations, wp appointment, reservation plugin, reservations, schedule
 Requires at least: 3.7
-Tested up to: 5.8
+Tested up to: 5.9
 Requires PHP: 5.3
-Stable tag: 3.7.0
+Stable tag: 3.8.0
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -213,6 +213,18 @@ Note: you can have only one calendar on one page.
 25. Admin panel - Report - Export page
 
 == Changelog ==
+
+= 3.8.0 (2022-03-03) =
+* Updated dependencies to prevent conflict with Events Tickets Plus plugin
+
+= 3.7.3 (2022-02-07) =
+* Added additional hook for admin ajax access rights. By adding additional code you can now have fine control of user access rights to settings resources.
+
+= 3.7.2 (2022-02-06) =
+* Improved callback hook when appointment is created in `ea_bootstrap`s shortcode
+
+= 3.7.1 (2022-01-20) =
+* Added additional filter that control user capabilities for Admin menu items. Now you can customize access based on that filter and logged in user.
 
 = 3.7.0 (2022-01-16) =
 * Added option to select how busy slots are going to be calculated. For example now you can set Location as shared resource between service providers. Use case when you have like one classroom and multiple teachers that are doing lectures in same space. Once location is booked other teachers are not free for booking.

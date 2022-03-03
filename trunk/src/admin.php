@@ -248,6 +248,10 @@ class EAAdminPanel
 
     }
 
+    public function user_capability_callback($default_capability, $menu_slug) {
+        return apply_filters('easy-appointments-user-menu-capabilities', $default_capability, $menu_slug);
+    }
+
     /**
      * Adds required JS
      */
@@ -333,7 +337,7 @@ class EAAdminPanel
             'easy_app_top_level',
             __('Appointments', 'easy-appointments'),
             __('Appointments', 'easy-appointments'),
-            'edit_posts',
+            $this->user_capability_callback('edit_posts', 'easy_app_top_level'),
             'easy_app_top_level',
             array($this, 'top_level_appointments')
         );
@@ -343,7 +347,7 @@ class EAAdminPanel
             'easy_app_top_level',
             __('Locations', 'easy-appointments'),
             '1. ' . __('Locations', 'easy-appointments'),
-            'manage_options',
+            $this->user_capability_callback('manage_options', 'easy_app_locations'),
             'easy_app_locations',
             array($this, 'locations_page')
         );
@@ -353,7 +357,7 @@ class EAAdminPanel
             'easy_app_top_level',
             __('Services', 'easy-appointments'),
             '2. ' . __('Services', 'easy-appointments'),
-            'manage_options',
+            $this->user_capability_callback('manage_options', 'easy_app_services'),
             'easy_app_services',
             array($this, 'services_page')
         );
@@ -363,7 +367,7 @@ class EAAdminPanel
             'easy_app_top_level',
             __('Employees', 'easy-appointments'),
             '3. ' . __('Employees', 'easy-appointments'),
-            'manage_options',
+            $this->user_capability_callback('manage_options', 'easy_app_workers'),
             'easy_app_workers',
             array($this, 'workers_page')
         );
@@ -373,7 +377,7 @@ class EAAdminPanel
             'easy_app_top_level',
             __('Connections', 'easy-appointments'),
             '4. ' . __('Connections', 'easy-appointments'),
-            'manage_options',
+            $this->user_capability_callback('manage_options', 'easy_app_connections'),
             'easy_app_connections',
             array($this, 'connections_page')
         );
@@ -383,7 +387,7 @@ class EAAdminPanel
             'easy_app_top_level',
             __('Settings', 'easy-appointments'),
             '5. ' . __('Settings', 'easy-appointments'),
-            'manage_options',
+            $this->user_capability_callback('manage_options', 'easy_app_settings'),
             'easy_app_settings',
             array($this, 'top_settings_menu')
         );
@@ -393,7 +397,7 @@ class EAAdminPanel
             'easy_app_top_level',
             __('Tools', 'easy-appointments'),
             '6. ' . __('Tools', 'easy-appointments'),
-            'manage_options',
+            $this->user_capability_callback('manage_options', 'easy_app_tools'),
             'easy_app_tools',
             array($this, 'tools_page')
         );
@@ -403,7 +407,7 @@ class EAAdminPanel
             'easy_app_top_level',
             __('Vacation', 'easy-appointments'),
             __('Vacation', 'easy-appointments'),
-            'manage_options',
+            $this->user_capability_callback('manage_options', 'easy_app_vacation'),
             'easy_app_vacation',
             array($this, 'vacation_page')
         );
@@ -413,7 +417,7 @@ class EAAdminPanel
             'easy_app_top_level',
             __('Reports *OLD*', 'easy-appointments'),
             __('Reports *OLD*', 'easy-appointments'),
-            'manage_options',
+            $this->user_capability_callback('manage_options', 'easy_app_reports'),
             'easy_app_reports',
             array($this, 'reports_page')
         );
@@ -423,7 +427,7 @@ class EAAdminPanel
             'easy_app_top_level',
             __('Reports *NEW*', 'easy-appointments'),
             __('Reports *NEW*', 'easy-appointments'),
-            'manage_options',
+            $this->user_capability_callback('manage_options', 'easy_app_new_reports'),
             'easy_app_new_reports',
             array($this, 'new_reports_page')
         );

@@ -742,4 +742,70 @@ class Container53CompatTest extends \PHPUnit_Framework_TestCase
 
 		$this->assertInstanceOf('Acme\ClassOne', $callback());
 	}
+
+	/**
+	 * @test
+	 * it should allow to bind with one parameter
+	 */
+	public function it_should_allow_to_bind_with_one_parameter() {
+		$container = new tad_DI52_Container();
+
+		$container->bind('ClassFourteen');
+
+		$instance = $container->make('ClassFourteen');
+
+		$this->assertInstanceOf('ClassFourteen', $instance);
+	}
+
+	/**
+	 * @test
+	 * it should allow to bind singleton with one parameter
+	 */
+	public function it_should_allow_to_bind_singleton_with_one_parameter() {
+		$container = new tad_DI52_Container();
+
+		$container->singleton('ClassFourteen');
+
+		$instance1 = $container->make('ClassFourteen');
+		$instance2 = $container->make('ClassFourteen');
+
+		$this->assertInstanceOf('ClassFourteen', $instance1);
+		$this->assertEquals($instance1, $instance2);
+	}
+
+	/** @test */
+	public function it_should_throw_if_binding_string_with_one_parameter() {
+		$this->setExpectedException('ReflectionException');
+
+		$container = new tad_DI52_Container();
+
+		$container->bind('not-a-class');
+	}
+
+	/** @test */
+	public function it_should_throw_if_binding_interface_with_one_parameter() {
+		$this->setExpectedException('InvalidArgumentException');
+
+		$container = new tad_DI52_Container();
+
+		$container->bind('One');
+	}
+
+	/** @test */
+	public function it_should_throw_if_binding_abstract_with_one_parameter() {
+		$this->setExpectedException('InvalidArgumentException');
+
+		$container = new tad_DI52_Container();
+
+		$container->bind('AbstractClass');
+	}
+
+	/** @test */
+	public function it_should_throw_if_binding_private_constructor_with_one_parameter() {
+		$this->setExpectedException('InvalidArgumentException');
+
+		$container = new tad_DI52_Container();
+
+		$container->bind('PrivateConstructor');
+	}
 }
