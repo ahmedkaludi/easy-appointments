@@ -91,17 +91,17 @@ class EAFrontend
         );
 
         wp_register_script(
-            'ea-datepicker-localization',
-            EA_PLUGIN_URL . 'js/libs/jquery-ui-i18n.min.js',
-            array('jquery', 'jquery-ui-datepicker'),
+            'ea-masked',
+            EA_PLUGIN_URL . 'js/libs/jquery.inputmask.min.js',
+            array('jquery'),
             EASY_APPOINTMENTS_VERSION,
             true
         );
 
         wp_register_script(
-            'ea-masked',
-            EA_PLUGIN_URL . 'js/libs/jquery.inputmask.min.js',
-            array('jquery'),
+            'ea-datepicker-localization',
+            EA_PLUGIN_URL . 'js/libs/jquery-ui-i18n.min.js',
+            array('jquery', 'jquery-ui-datepicker'),
             EASY_APPOINTMENTS_VERSION,
             true
         );
@@ -141,6 +141,10 @@ class EAFrontend
             EASY_APPOINTMENTS_VERSION,
             true
         );
+
+        // init for masked input field
+        wp_add_inline_script('ea-front-end', "jQuery(document).on('ea-init:completed', function () { jQuery('.masked-field').inputmask(); });", 'after');
+        wp_add_inline_script('ea-front-bootstrap', "jQuery(document).on('ea-init:completed', function () { jQuery('.masked-field').inputmask(); });", 'after');
 
         wp_register_style(
             'jquery-style',
@@ -243,22 +247,22 @@ class EAFrontend
         $customCss = strip_tags($customCss);
         $customCss = str_replace(array('<?php', '?>', "\t"), array('', '', ''), $customCss);
 
-        wp_localize_script(
-            'ea-front-end',
-            'ea_settings',
-            EATableColumns::clear_settings_data_frontend($settings)
-        );
+        $meta = $this->models->get_all_rows("ea_meta_fields", array(), array('position' => 'ASC'));
 
-        wp_localize_script(
-            'ea-front-end',
-            'ea_vacations',
-            json_decode($this->options->get_option_value('vacations', '[]'))
-        );
+        $add_maks_js = false;
+        foreach ($meta as $row) {
+            // we need to add masked js
+            if ($row->type === 'MASKED') {
+                $add_maks_js = true;
+            }
+        }
+        if ($add_maks_js) {
+            wp_enqueue_script('ea-masked');
+        }
 
         wp_enqueue_script('underscore');
         wp_enqueue_script('ea-validator');
         wp_enqueue_script('ea-front-end');
-        //wp_enqueue_script( 'ea-datepicker-localization' );
 
         if (empty($settings['css.off'])) {
             wp_enqueue_style('jquery-style');
@@ -270,27 +274,13 @@ class EAFrontend
             wp_enqueue_script('ea-google-recaptcha');
         }
 
-        $meta = $this->models->get_all_rows("ea_meta_fields", array(), array('position' => 'ASC'));
-
-        $add_maks_js = false;
-        foreach ($meta as $row) {
-            // we need to add masked js
-            if ($row->type === 'MASKED') {
-                $add_maks_js = true;
-            }
-        }
-
-        if ($add_maks_js) {
-            wp_add_inline_script('ea-masked', "jQuery('.masked-field').inputmask()");
-            wp_enqueue_script('ea-masked');
-        }
-
         $custom_form = $this->generate_custom_fields($meta);
 
         // add custom CSS
-        wp_add_inline_style( 'ea-frontend-style', $customCss );
 
         ob_start();
+
+        $this->output_inline_ea_settings($settings, $customCss);
 
         // GET TEMPLATE
         require $this->utils->get_template_path('booking.overview.tpl.php');
@@ -450,6 +440,22 @@ class EAFrontend
         return $html;
     }
 
+    private function output_inline_ea_settings($settings, $customCss)
+    {
+        $clean_settings = EATableColumns::clear_settings_data_frontend($settings);
+        $data_settings = json_encode($clean_settings);
+        $data_vacation = $this->options->get_option_value('vacations', '[]');
+
+        // make sure it is just array structure
+        if (!is_array(json_decode($data_vacation))) {
+            $data_vacation = '[]';
+        }
+
+        echo "<script>var ea_settings = {$data_settings};</script>";
+        echo "<script>var ea_vacations = {$data_vacation};</script>";
+        echo "<style>{$customCss}</style>";
+    }
+
     /**
      * SHORTCODE
      *
@@ -564,37 +570,21 @@ class EAFrontend
                 $add_maks_js = true;
             }
         }
+
+        if ($add_maks_js) {
+            wp_enqueue_script('ea-masked');
+        }
+
         $rows = apply_filters( 'ea_form_rows', $rows);
         $settings['MetaFields'] = $rows;
-
-        wp_localize_script(
-            'ea-front-bootstrap',
-            'ea_settings',
-            EATableColumns::clear_settings_data_frontend($settings)
-        );
-
-        wp_localize_script(
-            'ea-front-bootstrap',
-            'ea_vacations',
-            json_decode($this->options->get_option_value('vacations', '[]'))
-        );
 
         wp_enqueue_script('underscore');
         wp_enqueue_script('ea-validator');
         wp_enqueue_script('ea-bootstrap');
-        // wp_enqueue_script( 'ea-datepicker-localization' );
-        // wp_enqueue_script( 'ea-bootstrap-select' );
         wp_enqueue_script('ea-front-bootstrap');
-
-        if ($add_maks_js) {
-            wp_add_inline_script('ea-masked', "jQuery('.masked-field').inputmask();");
-            wp_enqueue_script('ea-masked');
-        }
 
         if (empty($settings['css.off'])) {
             wp_enqueue_style('ea-bootstrap');
-            // wp_enqueue_style( 'ea-bootstrap-select' );
-            // wp_enqueue_style( 'ea-frontend-style' );
             wp_enqueue_style('ea-admin-awesome-css');
             wp_enqueue_style('ea-frontend-bootstrap');
         }
@@ -607,12 +597,8 @@ class EAFrontend
             wp_enqueue_script('ea-google-recaptcha-v3', "https://www.google.com/recaptcha/api.js?render={$settings['captcha3.site-key']}");
         }
 
-        // add custom CSS
-        wp_add_inline_style( 'ea-bootstrap', $customCss );
-
         ob_start();
-
-        // echo "<style type='text/css'>{$customCss}</style>";
+        $this->output_inline_ea_settings($settings, $customCss);
 
         // FORM TEMPLATE
         if ($settings['rtl'] == '1') {

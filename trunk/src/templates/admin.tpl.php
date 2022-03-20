@@ -64,7 +64,8 @@
                                   data-tooltip="<?php _e('IMPORTANT! This is used to calculate busy slots based on settings that are set here.', 'easy-appointments'); ?>"></span>
                         </div>
                         <select id="multiple-work" class="field" data-key="multiple.work" name="multiple.work">
-                            <option value="0" data-tip="<?php _e('Use case example: Employee can only provide one service at the time.', 'easy-appointments'); ?>"><?php _e('Worker', 'easy-appointments'); ?></option>
+                            <option value="0" data-tip="<?php _e('Use case example: Employee can only provide single service at the time.', 'easy-appointments'); ?>"><?php _e('Worker', 'easy-appointments'); ?></option>
+                            <option value="4" data-tip="<?php _e('Use case example: Employee can only provide single service at the time and other services and locations are blocked during service one is provided.', 'easy-appointments'); ?>"><?php _e('Exclusive by Worker', 'easy-appointments'); ?></option>
                             <option value="2" data-tip="<?php _e('Use case example: Multiple employees share same location as resource.', 'easy-appointments'); ?>"><?php _e('Location', 'easy-appointments'); ?></option>
                             <option value="3" data-tip="<?php _e('Use case example: Service as a shared resource between employees.', 'easy-appointments'); ?>"><?php _e('Service', 'easy-appointments'); ?></option>
                             <option value="1" data-tip="<?php _e('Use case example: Worker can provide different service at different locations at the same time.', 'easy-appointments'); ?>"><?php _e('Worker, Location and Service', 'easy-appointments'); ?></option>

@@ -5,7 +5,7 @@ Tags: appointment, appointments, Booking, calendar, plugin, reservation, reserva
 Requires at least: 3.7
 Tested up to: 5.9
 Requires PHP: 5.3
-Stable tag: 3.8.1
+Stable tag: 3.9.2
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -213,6 +213,15 @@ Note: you can have only one calendar on one page.
 25. Admin panel - Report - Export page
 
 == Changelog ==
+
+= 3.9.2 (2022-03-20) =
+* Added new option for calculating free slots based on Employee that can provide only single service type and be on that one selected location.
+
+= 3.9.1 (2022-03-06) =
+* Fixed issue with masked field
+
+= 3.9.0 (2022-03-06) =
+* Fixed issue with Theme Twenty Twenty-Two and inline JS content that was not rendered within shortcode
 
 = 3.8.1 (2022-03-03) =
 * Fixed issue with missing file

@@ -347,6 +347,11 @@ class EALogic
 
                 // before / after
                 if ($slot_time_end <= $lower_time || $upper_time <= $slot_time) { } else {
+                    if ($this->slots_logic->is_exclusive_mode() && $this->slots_logic->is_provider_is_busy($app, $location, $service)) {
+                        $slots[$temp_time] = 0;
+                        continue;
+                    }
+
                     // Cross time - remove one slot
                     $slots[$temp_time] = $value - 1;
                 }

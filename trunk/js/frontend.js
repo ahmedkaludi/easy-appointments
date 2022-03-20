@@ -200,6 +200,10 @@
             }
 
             this.$element.find('.ea-cancel').on('click', jQuery.proxy(plugin.cancelApp, plugin));
+
+            setTimeout(function() {
+                jQuery(document).trigger('ea-init:completed');
+            }, 1000);
         },
 
         selectTimes: function ($element) {

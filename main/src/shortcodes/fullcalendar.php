@@ -133,8 +133,6 @@ class EAFullCalendar
         wp_enqueue_style('ea-full-calendar-custom-css');
 
         $customCss = $this->options->get_option_value('custom.css', '');
-        // add custom CSS
-        wp_add_inline_style( 'ea-full-calendar-custom-css', $customCss );
 
         $id = uniqid();
 
@@ -177,7 +175,9 @@ EOT;
             $column_header_format = "columnHeaderFormat: '{$code_params['column_header_format']}',";
         }
 
-        $script = <<<EOT
+        $script_section = <<<EOT
+<style>{$customCss}</style>
+<script>
   jQuery(document).ready(function() {
   
     jQuery('#ea-calendar-color-map-{$id}').find('.status').hover(
@@ -262,9 +262,10 @@ EOT;
       }
     });
   });
+</script>
 EOT;
 
-        wp_add_inline_script( 'ea-full-calendar', $script);
+        // wp_add_inline_script( 'ea-full-calendar', $script_section);
 
         $statuses = $this->logic->getStatus();
         $status_label = __('Status', 'easy-appointments');
@@ -288,6 +289,8 @@ EOT;
         if (!$service_color) {
             $html .= $status_html;
         }
+
+        $html .= $script_section;
 
         return $html;
     }

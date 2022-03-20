@@ -5,6 +5,7 @@ class EASlotsLogic {
     private $MATCH_ALL = '1';
     private $LOCATION = '2';
     private $SERVICE = '3';
+    private $EXCLUSIVE_WORKER = '4';
 
     private $PLACEHOLDER = '#DYNAMIC#';
 
@@ -53,6 +54,7 @@ class EASlotsLogic {
                 $params[] = $worker;
                 break;
             case $this->WORKER:
+            case $this->EXCLUSIVE_WORKER:
             default:
                 $dynamic_part = 'worker=%d';
                 $params[] = $worker;
@@ -66,5 +68,16 @@ class EASlotsLogic {
         $full_query = str_replace($this->PLACEHOLDER, $dynamic_part, $static_part);
 
         return $this->wpdb->prepare($full_query, $params);
+    }
+
+    public function is_exclusive_mode()
+    {
+        $mode = $this->options->get_option_value('multiple.work', '1');
+        return $mode === $this->EXCLUSIVE_WORKER;
+    }
+
+    public function is_provider_is_busy($app, $location, $service)
+    {
+        return $app->service !== $service || $app->location !== $location;
     }
 }
