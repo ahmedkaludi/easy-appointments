@@ -81,7 +81,7 @@ class EALogic
         $time_now = current_time('timestamp', false);
 
         // add block minutes
-        $block_time = $time_now + $block_before * 60;
+        $block_time = $time_now + intval($block_before) * 60;
 
         // calculate if that is current day that we are looking
         $is_current_day = (date('Y-m-d') == $day);
@@ -160,15 +160,15 @@ class EALogic
 
         $service_duration = $serviceObj->duration;
 
-        if (!empty($serviceObj->slot_step)) {
-            $service_duration = $serviceObj->slot_step;
-        }
+//        if (!empty($serviceObj->slot_step)) {
+//            $service_duration = $serviceObj->slot_step;
+//        }
 
         // remove non-working time
-        $this->remove_closed_slots($working_hours, $location, $service, $worker, $day, $service_duration);
+        $this->remove_closed_slots($working_hours, $location, $service, $worker, $day, $serviceObj->duration);
 
         // remove already reserved times
-        $this->remove_reserved_slots($working_hours, $location, $service, $worker, $day, $service_duration, $app_id);
+        $this->remove_reserved_slots($working_hours, $location, $service, $worker, $day, $serviceObj->duration, $app_id);
 
         // format time
         return $this->format_time($working_hours, $serviceObj->duration);
@@ -296,8 +296,6 @@ class EALogic
             $app_id = -1;
         }
 
-//        $day_of_week = date('l', strtotime($day));
-
         $query = $this->slots_logic->get_busy_slot_query($location, $service, $worker, $day, $app_id);
 
         $appointments = $this->wpdb->get_results($query);
@@ -328,11 +326,6 @@ class EALogic
                 $lower_time -= ($serviceObj->block_before * 60);
                 $upper_time += ($serviceObj->block_after * 60);
             }
-
-            // all day event fix
-            // if ($app->end === '00:00:00' || $upper_time < $lower_time) {
-                // $upper_time = strtotime('23:59:59');
-            // }
 
             // check slots
             foreach ($slots as $temp_time => $value) {

@@ -149,12 +149,12 @@ export const ConnectionsTable = ({
     ]
   }));
 
-  const applyClassToRow = ({ date, is_working }) => {
+  const applyClassToRow = ({ day_from, day_to, is_working }) => {
     const currentDate = new Date().toISOString().slice(0, 10);
     const formatClassName = name => ({ className: name });
 
     // case when we don't have active connection
-    if (currentDate < date[0].text || currentDate > date[1].text) {
+    if (currentDate < day_from || currentDate > day_to) {
       return formatClassName('ea-not-active');
     }
 

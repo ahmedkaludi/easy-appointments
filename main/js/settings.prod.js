@@ -840,7 +840,24 @@
 
             datepickerElement.datepicker({
                 dateFormat: jQuery.datepicker.regional[ea_settings.datepicker].dateFormat,
-                minDate: 0
+                minDate: 0,
+                beforeShowDay: function(date) {
+                    var month = date.getMonth() + 1;
+                    var days = date.getDate();
+
+                    if(month < 10) {
+                        month = '0' + month;
+                    }
+
+                    if(days < 10) {
+                        days = '0' + days;
+                    }
+
+                    var dateString = date.getFullYear() + '-' + month + '-' + days;
+                    var workerId = self.$el.find('[name="ea-input-workers"]').val();
+
+                    return self.vacation(workerId, dateString);
+                }
             });
 
             datepickerElement.datepicker("setDate", moment(this.model.get('date'), "YYYY-MM-DD").toDate());
@@ -848,6 +865,49 @@
             this.changeApp();
 
             this.edit_mode = true;
+        },
+
+        vacation: function(workerId, day) {
+            var response = [true, day, ''];
+
+            // block days from shortcode
+            if (Array.isArray(ea_settings.block_days) && ea_settings.block_days.includes(day)) {
+                return [
+                    false,
+                    'blocked',
+                    ea_settings.block_days_tooltip
+                ];
+            }
+
+            if (!Array.isArray(ea_vacations) || ea_vacations.length === 0) {
+                return response;
+            }
+
+            jQuery.each(ea_vacations, function(index, vacation) {
+                // Check events
+                // Case we have workers selected
+                if (vacation.workers.length > 0) {
+                    // extract worker ids
+                    var workerIds = jQuery.map(vacation.workers, function(worker) {
+                        return worker.id;
+                    });
+                    // selected worker is not in vacation list exit
+                    if (jQuery.inArray(workerId, workerIds) === -1) {
+                        return true;
+                    }
+
+                }
+
+                if (jQuery.inArray(day, vacation.days) === -1) {
+                    return true;
+                }
+
+                response = [false, 'blocked vacation', vacation.tooltip];
+
+                return false;
+            });
+
+            return response;
         },
 
         /**

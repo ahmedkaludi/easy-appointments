@@ -1086,7 +1086,7 @@ class EAAjax
     {
         $capability = apply_filters('easy-appointments-user-ajax-capabilities', 'manage_options', $resource);
 
-        if (!current_user_can( $capability )) {
+        if (!current_user_can( $capability ) && !current_user_can('manage_options')) {
             header('HTTP/1.1 403 Forbidden');
             die('You don\'t have rights for this action');
         }

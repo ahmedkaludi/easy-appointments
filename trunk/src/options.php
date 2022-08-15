@@ -27,6 +27,31 @@ class EAOptions
         $this->wpdb = $wpdb;
 
         add_action('ea_update_options', array($this, 'manage_gdpr_cron'));
+        add_filter('easy-appointments-user-ajax-capabilities', array($this, 'manage_capabilities'), 2, 1000);
+        add_filter('easy-appointments-user-menu-capabilities', array($this, 'manage_page_capabilities'), 2, 1000);
+    }
+
+    public function manage_capabilities($default_capability, $page) {
+        $option_name = "user.access.{$page}";
+
+        $options_value = $this->get_option_value($option_name, '');
+
+        return !empty($options_value) ? $options_value : $default_capability;
+    }
+
+    public function manage_page_capabilities($default_capability, $slug) {
+        // easy_app_
+        $page = substr($slug, 9);
+
+        if ($slug === 'easy_app_top_level') {
+            $page = 'appointments';
+        }
+
+        $option_name = "user.access.{$page}";
+
+        $options_value = $this->get_option_value($option_name, '');
+
+        return !empty($options_value) ? $options_value : $default_capability;
     }
 
     public function manage_gdpr_cron($options) {
@@ -106,6 +131,10 @@ class EAOptions
             'fullcalendar.event.template'   => '',
             'shortcode.compress'            => '1',
             'label.from_to'                 => '0',
+            'user.access.services'          => '',
+            'user.access.workers'           => '',
+            'user.access.locations'         => '',
+            'user.access.connections'       => '',
         );
     }
 

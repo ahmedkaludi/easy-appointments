@@ -3,9 +3,9 @@ Contributors: loncar
 Donate link: https://easy-appointments.net/
 Tags: appointment, appointments, Booking, calendar, plugin, reservation, reservations, wp appointment, reservation plugin, reservations, schedule
 Requires at least: 3.7
-Tested up to: 5.9
+Tested up to: 6.0
 Requires PHP: 5.3
-Stable tag: 3.9.2
+Stable tag: 3.10.4
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -66,7 +66,6 @@ Can be used for : <strong>Lawyers</strong>, <strong>Salons</strong>, <strong>Mec
     - Finnish translation thanks to Maija
     - Portuguese translation thanks to Antonio
     - Portuguese Brazil translation thanks to seniweb
-    -
 * Labels
     - Hide price
     - Add custom currency
@@ -213,6 +212,23 @@ Note: you can have only one calendar on one page.
 25. Admin panel - Report - Export page
 
 == Changelog ==
+= 3.10.4 (2022-08-15) =
+* Added Vacation days to backend Appointments form. Now it will gray out those days when employee is on vacation
+
+= 3.10.3 (2022-06-05) =
+* Fixed smaller render issues with Connections table
+
+= 3.10.2 (2022-06-01) =
+* Fixed issue with wrong status color of connection rows in table.
+
+= 3.10.1 (2022-05-10) =
+* Fixed bug with PHP error during free slot calculation.
+
+= 3.10.0 (2022-05-08) =
+* Added options to customise user access rights for EasyAppointments admin pages.
+
+= 3.9.3 (2022-04-01) =
+* Fixed issue with possible overbooking in case service duration and slot step are not the same values.
 
 = 3.9.2 (2022-03-20) =
 * Added new option for calculating free slots based on Employee that can provide only single service type and be on that one selected location.

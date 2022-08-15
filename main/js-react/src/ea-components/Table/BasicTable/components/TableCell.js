@@ -181,7 +181,7 @@ const ChipsCell = (config, data) => {
     <td className={`text-${position} ${cellClass ?? ''}`}>
       <div className={classes.chipsWrap}>
         <Chip size="small" label={visible} color="primary" />
-        {hidden.length > 1 && (
+        {hidden.length >= 1 && (
           <Tooltip title={hidden.join(' • ')}>
             <Chip
               size="small"

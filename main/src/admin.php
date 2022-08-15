@@ -450,10 +450,12 @@ class EAAdminPanel
         }
 
         $settings = $this->options->get_options();
+        $data_vacation = $this->options->get_option_value('vacations', '[]');
 
         $settings['date_format'] = $this->datetime->convert_to_moment_format(get_option('date_format', 'F j, Y'));
 
         wp_localize_script('ea-appointments', 'ea_settings', $settings);
+        wp_localize_script('ea-appointments', 'ea_vacations', json_decode($data_vacation));
         wp_localize_script('ea-appointments', 'ea_app_status', $this->logic->getStatus());
         wp_localize_script('ea-appointments', 'ea_connections', $this->models->get_connections_combinations());
 

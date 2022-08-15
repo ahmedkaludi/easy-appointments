@@ -24,6 +24,9 @@
                     <a data-tab="tab-full-calendar" href="#">
                       <span class="icon icon-fullcalendar"></span><span class="text-label"><?php _e('FullCalendar Shortcode', 'easy-appointments'); ?></span>
                     </a>
+                    <a data-tab="tab-user-access" href="#">
+                        <span class="icon icon-workers"></span><span class="text-label"><?php _e('User access', 'easy-appointments'); ?></span>
+                    </a>
                     <a data-tab="tab-labels" href="#">
                         <span class="icon icon-label"></span><span class="text-label"><?php _e('Labels', 'easy-appointments'); ?></span>
                     </a>
@@ -152,6 +155,65 @@
                                    name="shortcode.compress" type="checkbox" <% if
                             (_.findWhere(settings, {ea_key:'shortcode.compress'}).ea_value == "1") {
                             %>checked<% } %>>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="tab-user-access" class="form-section hidden">
+                <span class="separator vertical"></span>
+                <div class="form-container">
+                    <div class="form-item" style="background-color: #ccc">
+                        <blockquote><?php _e('Note: Please use those options carefully because this will allow you to change which capability is needed to access EasyAppointments admin pages. Leave empty to use only default settings', 'easy-appointments'); ?></blockquote>
+                    </div>
+                    <div class="form-item">
+                        <div class="label-with-tooltip">
+                            <label for="user.access.locations"><?php _e('Locations Page', 'easy-appointments'); ?></label>
+                            <span class="tooltip tooltip-right"
+                                  data-tooltip="<?php _e('Default capability: manage_options.', 'easy-appointments'); ?>"></span>
+                        </div>
+                        <input class="field" data-key="user.access.locations"
+                            name="user.access.locations" type="text"
+                            value="<%- _.findWhere(settings, {ea_key:'user.access.locations'}).ea_value %>">
+                    </div>
+                    <div class="form-item">
+                        <div class="label-with-tooltip">
+                            <label for="user.access.services"><?php _e('Services Page', 'easy-appointments'); ?></label>
+                            <span class="tooltip tooltip-right"
+                                  data-tooltip="<?php _e('Default capability: manage_options.', 'easy-appointments'); ?>"></span>
+                        </div>
+                        <input class="field" data-key="user.access.services"
+                           name="user.access.services" type="text"
+                           value="<%- _.findWhere(settings, {ea_key:'user.access.services'}).ea_value %>">
+                    </div>
+                    <div class="form-item">
+                        <div class="label-with-tooltip">
+                            <label for="user.access.workers"><?php _e('Workers Page', 'easy-appointments'); ?></label>
+                            <span class="tooltip tooltip-right"
+                                  data-tooltip="<?php _e('Default capability: manage_options.', 'easy-appointments'); ?>"></span>
+                        </div>
+                        <input class="field" data-key="user.access.workers"
+                           name="user.access.workers" type="text"
+                           value="<%- _.findWhere(settings, {ea_key:'user.access.workers'}).ea_value %>">
+                    </div>
+                    <div class="form-item">
+                        <div class="label-with-tooltip">
+                            <label for="user.access.connections"><?php _e('Connections Page', 'easy-appointments'); ?></label>
+                            <span class="tooltip tooltip-right"
+                                  data-tooltip="<?php _e('Default capability: manage_options.', 'easy-appointments'); ?>"></span>
+                        </div>
+                        <input class="field" data-key="user.access.connections"
+                               name="user.access.connections" type="text"
+                               value="<%- _.findWhere(settings, {ea_key:'user.access.connections'}).ea_value %>">
+                    </div>
+                    <div class="form-item">
+                        <div class="form-wrap">
+                            <?php _e('Current logged in user have:', 'easy-appointments'); ?> <small>x<?php
+                            $data = get_userdata( get_current_user_id() );
+                            if ( is_object( $data) ) {
+                                echo implode(', ', array_keys($data->allcaps));
+                            }
+                            ?></small>
                         </div>
                     </div>
                 </div>

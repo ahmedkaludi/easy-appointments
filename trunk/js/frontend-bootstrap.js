@@ -950,7 +950,7 @@
                 plugin.$element.find('.ea-submit').hide();
                 plugin.$element.find('.ea-cancel').hide();
                 plugin.$element.find('#paypal-button').hide();
-                plugin.$element.find('.final').append('<h3>' + ea_settings['trans.done_message'] + '</h3>');
+                plugin.$element.find('.final').append('<h3 class="ea-done-message">' + ea_settings['trans.done_message'] + '</h3>');
                 plugin.$element.find('form').find('input,select,textarea').prop('disabled', true);
                 plugin.$element.find('.calendar').addClass('disabled');
                 plugin.$element.find('.g-recaptcha').remove();
