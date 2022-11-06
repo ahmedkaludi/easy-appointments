@@ -5,7 +5,7 @@ Tags: appointment, appointments, Booking, calendar, plugin, reservation, reserva
 Requires at least: 3.7
 Tested up to: 6.0
 Requires PHP: 5.3
-Stable tag: 3.10.4
+Stable tag: 3.10.5
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -212,6 +212,9 @@ Note: you can have only one calendar on one page.
 25. Admin panel - Report - Export page
 
 == Changelog ==
+= 3.10.5 (2022-09-05) =
+* Fixed issue with masked input field
+
 = 3.10.4 (2022-08-15) =
 * Added Vacation days to backend Appointments form. Now it will gray out those days when employee is on vacation
 

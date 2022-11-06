@@ -110,7 +110,7 @@ class EAFrontend
         wp_register_script(
             'ea-front-end',
             EA_PLUGIN_URL . 'js/frontend.js',
-            array('jquery', 'jquery-ui-datepicker', 'ea-datepicker-localization', 'ea-momentjs'),
+            array('jquery', 'jquery-ui-datepicker', 'ea-datepicker-localization', 'ea-momentjs', 'ea-masked'),
             EASY_APPOINTMENTS_VERSION,
             true
         );
@@ -128,7 +128,7 @@ class EAFrontend
         wp_register_script(
             'ea-front-bootstrap',
             EA_PLUGIN_URL . 'js/frontend-bootstrap.js',
-            array('jquery', 'jquery-ui-datepicker', 'ea-datepicker-localization', 'ea-momentjs'),
+            array('jquery', 'jquery-ui-datepicker', 'ea-datepicker-localization', 'ea-momentjs', 'ea-masked'),
             EASY_APPOINTMENTS_VERSION,
             true
         );
@@ -248,17 +248,6 @@ class EAFrontend
         $customCss = str_replace(array('<?php', '?>', "\t"), array('', '', ''), $customCss);
 
         $meta = $this->models->get_all_rows("ea_meta_fields", array(), array('position' => 'ASC'));
-
-        $add_maks_js = false;
-        foreach ($meta as $row) {
-            // we need to add masked js
-            if ($row->type === 'MASKED') {
-                $add_maks_js = true;
-            }
-        }
-        if ($add_maks_js) {
-            wp_enqueue_script('ea-masked');
-        }
 
         wp_enqueue_script('underscore');
         wp_enqueue_script('ea-validator');
@@ -560,20 +549,6 @@ class EAFrontend
         }
 
         $rows = $this->models->get_all_rows("ea_meta_fields", array(), array('position' => 'ASC'));
-        $add_maks_js = false;
-
-        foreach ($rows as $key => $row) {
-            $rows[$key]->label = __($row->label, 'easy-appointments');
-
-            // we need to add masked js
-            if ($row->type === 'MASKED') {
-                $add_maks_js = true;
-            }
-        }
-
-        if ($add_maks_js) {
-            wp_enqueue_script('ea-masked');
-        }
 
         $rows = apply_filters( 'ea_form_rows', $rows);
         $settings['MetaFields'] = $rows;
