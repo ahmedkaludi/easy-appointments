@@ -68,7 +68,7 @@ class EAFullCalendar
         wp_register_script(
             'ea-full-calendar',
             EA_PLUGIN_URL . 'js/libs/fullcalendar/fullcalendar.min.js',
-            array('jquery', 'ea-momentjs', 'wp-api', 'thickbox'),
+            array('jquery', 'ea-momentjs', 'wp-api', 'thickbox', 'underscore'),
             '2.0.0',
             true
         );
@@ -121,6 +121,16 @@ class EAFullCalendar
             'column_header_format' => null,
         ), $atts);
 
+        // all those values are used inside JS code part, escape all values to be JS strings
+        foreach ($code_params as $key => $value) {
+            if ($value === null || $value === '0' || $value === '1' || strlen($value) < 4) {
+                continue;
+            }
+
+            // also remove '{', '}' brackets because no settings needs that
+            $code_params[$key] = esc_js(str_replace(array('{','}',';'), array('','',''), $value));
+        }
+
         // scripts that are going to be used
         wp_enqueue_script('underscore');
         wp_enqueue_script('ea-validator');
@@ -165,7 +175,7 @@ class EAFullCalendar
         element.addClass('thickbox');
         element.addClass('ea-full-calendar-dialog-event');
         element.attr('href', wpApiSettings.root + 'easy-appointments/v1/appointment/' + event.id + '?hash=' + event.hash + '&_wpnonce=' + wpApiSettings.nonce + '&width=100%&height=100%');
-        element.attr('title', '#' + event.id + ' - ' + event.title);
+        element.attr('title', '#' + event.id + ' - ' + _.escape(event.title));
 EOT;
         }
 

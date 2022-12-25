@@ -96,7 +96,7 @@
                         </div>
                         <input class="field" data-key="max.appointments" name="max.appointments"
                                type="text"
-                               value="<%= _.findWhere(settings, {ea_key:'max.appointments'}).ea_value %>">
+                               value="<%- _.findWhere(settings, {ea_key:'max.appointments'}).ea_value %>">
                     </div>
                     <div class="form-item">
                         <div class="label-with-tooltip">
@@ -132,15 +132,15 @@
                             <option value="pending"
                             <% if (_.findWhere(settings, {ea_key:'default.status'}).ea_value ==
                             "pending") {
-                            %>selected="selected"<% } %>><%= eaData.Status.pending %></option>
+                            %>selected="selected"<% } %>><%- eaData.Status.pending %></option>
                             <option value="confirmed"
                             <% if (_.findWhere(settings, {ea_key:'default.status'}).ea_value ==
                             "confirmed") {
-                            %>selected="selected"<% } %>><%= eaData.Status.confirmed %></option>
+                            %>selected="selected"<% } %>><%- eaData.Status.confirmed %></option>
                             <option value="reservation"
                             <% if (_.findWhere(settings, {ea_key:'default.status'}).ea_value ==
                             "reservation") {
-                            %>selected="selected"<% } %>><%= eaData.Status.reservation %></option>
+                            %>selected="selected"<% } %>><%- eaData.Status.reservation %></option>
                         </select>
                         <div id="ea-select-status-notification" style="display: none"><?php _e('Reservation status is short term, if you don\'t change it within 5 minutes it will be set to cancelled' , 'easy-appointments');?></div>
                     </div>
@@ -245,32 +245,32 @@
                                            data-textarea="#mail-admin"><?php _e('Admin', 'easy-appointments'); ?></a>
                                     </p>
                                     <textarea id="mail-template" style="height: 150px;"
-                                              name="mail-template"><%= _.findWhere(settings, {ea_key:'mail.pending'}).ea_value %></textarea>
+                                              name="mail-template"><%- _.findWhere(settings, {ea_key:'mail.pending'}).ea_value %></textarea>
                                 </td>
                             </tr>
                             <tr style="display:none;">
                                 <td>
                                     <textarea id="mail-pending" class="field"
-                                              data-key="mail.pending"><%= _.findWhere(settings, {ea_key:'mail.pending'}).ea_value %></textarea>
+                                              data-key="mail.pending"><%- _.findWhere(settings, {ea_key:'mail.pending'}).ea_value %></textarea>
                                 </td>
                                 <td>
                                     <textarea id="mail-reservation" class="field"
-                                              data-key="mail.reservation"><%= _.findWhere(settings, {ea_key:'mail.reservation'}).ea_value %></textarea>
+                                              data-key="mail.reservation"><%- _.findWhere(settings, {ea_key:'mail.reservation'}).ea_value %></textarea>
                                 </td>
                             </tr>
                             <tr style="display:none;">
                                 <td>
                                     <textarea id="mail-canceled" class="field"
-                                              data-key="mail.canceled"><%= _.findWhere(settings, {ea_key:'mail.canceled'}).ea_value %></textarea>
+                                              data-key="mail.canceled"><%- _.findWhere(settings, {ea_key:'mail.canceled'}).ea_value %></textarea>
                                 </td>
                                 <td>
                                     <textarea id="mail-confirmed" class="field"
-                                              data-key="mail.confirmed"><%= _.findWhere(settings, {ea_key:'mail.confirmed'}).ea_value %></textarea>
+                                              data-key="mail.confirmed"><%- _.findWhere(settings, {ea_key:'mail.confirmed'}).ea_value %></textarea>
                                 </td>
                             </tr>
                             <tr style="display:none;">
                                 <td colspan="2">
-                                    <textarea id="mail-admin" class="field" data-key="mail.admin"><%= (_.findWhere(settings, {ea_key:'mail.admin'}) != null) ? _.findWhere(settings, {ea_key:'mail.admin'}).ea_value: '' %></textarea>
+                                    <textarea id="mail-admin" class="field" data-key="mail.admin"><%- (_.findWhere(settings, {ea_key:'mail.admin'}) != null) ? _.findWhere(settings, {ea_key:'mail.admin'}).ea_value: '' %></textarea>
                                 </td>
                             </tr>
                             </tbody>
@@ -297,7 +297,7 @@
                         </div>
                         <input class="field" data-key="pending.email" name="pending.email"
                                type="text"
-                               value="<%= _.findWhere(settings, {ea_key:'pending.email'}).ea_value %>">
+                               value="<%- _.findWhere(settings, {ea_key:'pending.email'}).ea_value %>">
                     </div>
                     <div class="form-item">
                         <div class="label-with-tooltip">
@@ -407,17 +407,17 @@
                     <div class="form-item">
                         <label for=""><?php _e('Service', 'easy-appointments'); ?></label>
                         <input class="field" data-key="trans.service" name="service" type="text"
-                               value="<%= _.escape( _.findWhere(settings, {ea_key:'trans.service'}).ea_value ) %>">
+                               value="<%- _.findWhere(settings, {ea_key:'trans.service'}).ea_value %>">
                     </div>
                     <div class="form-item">
                         <label for=""><?php _e('Location', 'easy-appointments'); ?></label>
                         <input class="field" data-key="trans.location" name="location" type="text"
-                               value="<%= _.escape( _.findWhere(settings, {ea_key:'trans.location'}).ea_value ) %>">
+                               value="<%- _.findWhere(settings, {ea_key:'trans.location'}).ea_value %>">
                     </div>
                     <div class="form-item">
                         <label for=""><?php _e('Worker', 'easy-appointments'); ?></label>
                         <input class="field" data-key="trans.worker" name="worker" type="text"
-                               value="<%= _.escape( _.findWhere(settings, {ea_key:'trans.worker'}).ea_value ) %>">
+                               value="<%- _.findWhere(settings, {ea_key:'trans.worker'}).ea_value %>">
                     </div>
                     <div class="form-item">
                         <div class="label-with-tooltip">
@@ -427,7 +427,7 @@
                         </div>
                         <input class="field" data-key="trans.done_message" name="done_message"
                                type="text"
-                               value="<%= _.escape( _.findWhere(settings, {ea_key:'trans.done_message'}).ea_value ) %>">
+                               value="<%- _.findWhere(settings, {ea_key:'trans.done_message'}).ea_value %>">
                     </div>
                 </div>
             </div>
@@ -646,7 +646,7 @@
                         <label for=""><?php _e('Service', 'easy-appointments'); ?></label>
                         <select id="redirect-service" class="field">
                             <% _.each(eaData.Services,function(item,key,list){ %>
-                            <option value="<%= _.escape(item.id) %>"><%= _.escape(item.name) %></option>
+                            <option value="<%- _.escape(item.id) %>"><%- _.escape(item.name) %></option>
                             <% });%>
                         </select>
                     </div>
@@ -657,7 +657,7 @@
                         </div>
                         <button class="button button-primary btn-add-redirect button-field"><?php _e('Add advance redirect', 'easy-appointments'); ?></button>
                     </div>
-                    <input type="hidden" id="advance-redirect" data-key="advance.redirect" class="field" name="advance.redirect" value="<%= _.escape(ea_settings['advance.redirect']) %>">
+                    <input type="hidden" id="advance-redirect" data-key="advance.redirect" class="field" name="advance.redirect" value="<%- _.escape(ea_settings['advance.redirect']) %>">
                     <div class="form-item">
                         <ul id="custom-redirect-list" class="list-form-item"></ul>
                     </div>
@@ -690,7 +690,7 @@
                         <label for=""><?php _e('Service', 'easy-appointments'); ?></label>
                         <select id="cancel-redirect-service" class="field">
                             <% _.each(eaData.Services,function(item,key,list){ %>
-                            <option value="<%= _.escape(item.id) %>"><%= _.escape(item.name) %></option>
+                            <option value="<%- _.escape(item.id) %>"><%- _.escape(item.name) %></option>
                             <% });%>
                         </select>
                     </div>
@@ -704,7 +704,7 @@
                     <div class="form-item">
                         <ul id="custom-cancel-redirect-list" class="list-form-item"></ul>
                     </div>
-                    <input type="hidden" id="advance-cancel-redirect" data-key="advance_cancel.redirect" class="field" name="advance_cancel.redirect" value="<%= _.escape(ea_settings['advance_cancel.redirect']) %>">
+                    <input type="hidden" id="advance-cancel-redirect" data-key="advance_cancel.redirect" class="field" name="advance_cancel.redirect" value="<%- _.escape(ea_settings['advance_cancel.redirect']) %>">
                 </div>
             </div>
 
@@ -812,13 +812,13 @@
 </script>
 
 <script type="text/template" id="ea-tpl-custom-forms">
-    <li data-name="<%= _.escape(item.label) %>" style="display: list-item;">
+    <li data-name="<%- _.escape(item.label) %>" style="display: list-item;">
         <div class="menu-item-bar">
             <div class="menu-item-handle">
-                <span class="item-title"><span class="menu-item-title"><%= _.escape(item.label) %></span> <span
+                <span class="item-title"><span class="menu-item-title"><%- item.label %></span> <span
                             class="is-submenu" style="display: none;">sub item</span></span>
                 <span class="item-controls">
-                <span class="item-type"><%= item.type %></span>
+                <span class="item-type"><%- item.type %></span>
                     <a class="single-field-options"><i class="fa fa-chevron-down"></i></a>
                 </span>
             </div>
@@ -835,21 +835,18 @@
     </p>
     <% } %>
     <p>
-        <label>Label</label><input type="text" class="field-label" name="field-label"
-                                     value="<%= _.escape(item.label) %>">
+        <label>Label</label><input type="text" class="field-label" name="field-label" value="<%- item.label %>">
     </p>
 
     <% if (item.type !== "PHONE" && item.type !== "SELECT" && item.type !== "MASKED") { %>
     <p>
-        <label>Placeholder</label><input type="text" class="field-mixed" name="field-mixed"
-                                           value="<%= _.escape(item.mixed) %>">
+        <label>Placeholder</label><input type="text" class="field-mixed" name="field-mixed" value="<%- item.mixed %>">
     </p>
     <% } %>
 
     <% if (item.type !== "PHONE" && item.type !== "SELECT" && item.type !== "MASKED") { %>
     <p>
-        <label>Default value</label><input type="text" class="field-default_value" name="field-default_value"
-                                         value="<%- item.default_value %>">
+        <label>Default value</label><input type="text" class="field-default_value" name="field-default_value" value="<%- item.default_value %>">
         <small>You can put values from logged in user (list of keys: <?php echo EAUserFieldMapper::all_field_keys(); ?>)</small>
     </p>
     <% } %>
@@ -877,7 +874,7 @@
     <p>
     <ul class="select-options">
         <% _.each(item.options, function(element) { %>
-        <li data-element="<%- element %>"><%= element %><a href="#" class="remove-select-option"><i
+        <li data-element="<%- element %>"><%- element %><a href="#" class="remove-select-option"><i
                         class="fa fa-trash-o"></i></a></li>
         <% }); %>
     </ul>
@@ -918,9 +915,9 @@
 
 <script type="text/template" id="ea-tpl-single-advance-redirect">
     <li>
-        <span class="bulk-value"><%= _.escape( _.findWhere(locations, {id:row.location}).name ) %></span>
-        <span class="bulk-value"><%= _.escape( _.findWhere(services,  {id:row.service}).name ) %></span>
-        <span class="bulk-value"><%= _.escape( _.findWhere(workers,   {id:row.worker}).name ) %></span>
+        <span class="bulk-value"><%- _.findWhere(locations, {id:row.location}).name %></span>
+        <span class="bulk-value"><%- _.findWhere(services,  {id:row.service}).name %></span>
+        <span class="bulk-value"><%- _.findWhere(workers,   {id:row.worker}).name s%></span>
         <span style="display: inline-block;"><button class="button bulk-connection-remove">Remove</button></span>
     </li>
 </script>

@@ -13,7 +13,7 @@
 						<select name="ea-filter-locations" id="ea-filter-locations" data-c="location">
 							<option value="">-</option>
 							<% _.each(cache.Locations,function(item,key,list){ %>
-								<option value="<%= item.id %>"><%= _.escape( item.name ) %></option>
+								<option value="<%- item.id %>"><%- item.name %></option>
 							<% });%>
 						</select>
 					</td>
@@ -22,7 +22,7 @@
 						<select name="ea-filter-services" id="ea-filter-services" data-c="service">
 							<option value="">-</option>
 							<% _.each(cache.Services,function(item,key,list){ %>
-								<option value="<%= item.id %>"><%= _.escape( item.name ) %></option>
+								<option value="<%- item.id %>"><%- item.name %></option>
 							<% });%>
 						</select>
 					</td>
@@ -31,7 +31,7 @@
 						<select name="ea-filter-workers" id="ea-filter-workers" data-c="worker">
 							<option value="">-</option>
 							<% _.each(cache.Workers,function(item,key,list){ %>
-							<option value="<%= item.id %>"><%= _.escape( item.name ) %></option>
+							<option value="<%- item.id %>"><%- item.name %></option>
 							<% });%>
 						</select>
 					</td>
@@ -49,7 +49,7 @@
 						<select name="ea-filter-status" id="ea-filter-status" data-c="status">
 							<option value="">-</option>
 							<% _.each(cache.Status,function(item,key,list){ %>
-								<option value="<%= key %>"><%= item %></option>
+								<option value="<%- key %>"><%- item %></option>
 							<% });%>
 						</select>
 					</td>
@@ -116,34 +116,34 @@
 
 <script type="text/template" id="ea-tpl-appointment-row">
 	<td colspan="2" class="post-title page-title column-title">
-		<strong>#<%= row.id %></strong>
-		<strong><%= _.escape( _.findWhere(cache.Locations, {id:row.location}).name ) %></strong>
-		<strong><%= _.escape( _.findWhere(cache.Services, {id:row.service}).name ) %></strong>
-		<strong><%= _.escape( _.findWhere(cache.Workers, {id:row.worker}).name ) %></strong>
+		<strong>#<%- row.id %></strong>
+		<strong><%- _.findWhere(cache.Locations, {id:row.location}).name %></strong>
+		<strong><%- _.findWhere(cache.Services, {id:row.service}).name %></strong>
+		<strong><%- _.findWhere(cache.Workers, {id:row.worker}).name %></strong>
 	</td>
 	<td colspan="2">
 		<% _.each(cache.MetaFields,function(item,key,list) { %>
 			<% if (row[item.slug] !== "undefined" && item.type !== 'TEXTAREA') { %>
-			<strong><%= _.escape(row[item.slug]) %></strong><br>
+			<strong><%- row[item.slug] %></strong><br>
 			<% } %>
 		<% });%>
 	</td>
 	<td>
 		<% _.each(cache.MetaFields,function(item,key,list) { %>
 			<% if (row[item.slug] !== "undefined" && item.type === 'TEXTAREA') { %>
-			<strong><%= _.escape(row[item.slug]) %></strong><br>
+			<strong><%- row[item.slug] %></strong><br>
 			<% } %>
 		<% });%>
 	</td>
 	<td>
-		<strong><%= _.formatDate(row.date) %> - <%= _.formatTime(row.start) %></strong><br>
-		<strong><%= _.formatDate(row.end_date) %> - <%= _.formatTime(row.end) %></strong>
+		<strong><%- _.formatDate(row.date) %> - <%- _.formatTime(row.start) %></strong><br>
+		<strong><%- _.formatDate(row.end_date) %> - <%- _.formatTime(row.end) %></strong>
 	</td>
 	<td>
-		<strong><%= eaData.Status[row.status] %></strong><br>
-		<!-- <strong><%= row.user %></strong><br> -->
-		<strong><%= row.price %></strong><br>
-		<strong><%= _.formatDateTime(row.created) %></strong>
+		<strong><%- eaData.Status[row.status] %></strong><br>
+		<!-- <strong><%- row.user %></strong><br> -->
+		<strong><%- row.price %></strong><br>
+		<strong><%- _.formatDateTime(row.created) %></strong>
 	</td>
 	<td class="action-center">
 		<button class="button btn-edit"><?php _e('Edit', 'easy-appointments');?></button>
@@ -162,9 +162,9 @@
 						<option value=""> -- <?php _e('Location', 'easy-appointments');?> -- </option>
 						<% _.each(cache.Locations,function(item,key,list){
 						if (item.id == row.location) { %>
-							<option value="<%= item.id %>" selected="selected"><%= _.escape(item.name) %></option>
+							<option value="<%- item.id %>" selected="selected"><%- item.name %></option>
 						<% } else { %>
-							<option value="<%= item.id %>"><%= _.escape(item.name) %></option>
+							<option value="<%- item.id %>"><%- item.name %></option>
 						<% }
 						});%>
 					</select><br>
@@ -172,9 +172,9 @@
 						<option value=""> -- <?php _e('Service', 'easy-appointments');?> -- </option>
 						<% _.each(cache.Services,function(item,key,list){
 							if (item.id == row.service) { %>
-								<option value="<%= item.id %>" data-duration="<%= item.duration %>" data-price="<%= item.price %>" selected="selected"><%= _.escape( item.name ) %></option>
+								<option value="<%- item.id %>" data-duration="<%- item.duration %>" data-price="<%- item.price %>" selected="selected"><%- item.name %></option>
 						<% } else { %>
-								<option value="<%= item.id %>" data-duration="<%= item.duration %>"  data-price="<%= item.price %>"><%= _.escape( item.name ) %></option>
+								<option value="<%- item.id %>" data-duration="<%- item.duration %>"  data-price="<%- item.price %>"><%- item.name %></option>
 						<% }
 						});%>
 					</select><br>
@@ -182,9 +182,9 @@
 						<option value=""> -- <?php _e('Worker', 'easy-appointments');?> -- </option>
 						<% _.each(cache.Workers,function(item,key,list){
 							if(item.id == row.worker) { %>
-								<option value="<%= item.id %>" selected="selected"><%= _.escape( item.name ) %></option>
+								<option value="<%- item.id %>" selected="selected"><%- item.name %></option>
 						<% } else { %>
-								<option value="<%= item.id %>"><%= _.escape( item.name ) %></option>
+								<option value="<%- item.id %>"><%- item.name %></option>
 						<% }
 						});%>
 					</select>
@@ -192,19 +192,19 @@
 				<td colspan="2">
 					<% _.each(cache.MetaFields,function(item,key,list) { %>
 						<% if(item.type === 'INPUT' || item.type === 'MASKED') { %>
-						<input type="text" data-prop="<%= item.slug %>" placeholder="<%= _.escape( item.label ) %>" value="<% if (typeof row[item.slug] !== "undefined") { %><%= _.escape( row[item.slug] ) %><% } %>"><br>
+						<input type="text" data-prop="<%- item.slug %>" placeholder="<%- item.label %>" value="<% if (typeof row[item.slug] !== "undefined") { %><%- row[item.slug] %><% } %>"><br>
                         <% } else if(item.type === 'PHONE') { %>
-                        <input type="text" data-prop="<%= item.slug %>" placeholder="<%= _.escape( item.label ) %>" value="<% if (typeof row[item.slug] !== "undefined") { %><%= _.escape( row[item.slug] ) %><% } %>"><br>
+                        <input type="text" data-prop="<%- item.slug %>" placeholder="<%- item.label %>" value="<% if (typeof row[item.slug] !== "undefined") { %><%- row[item.slug] %><% } %>"><br>
                         <% } else if(item.type === 'EMAIL') { %>
-                        <input type="text" data-prop="<%= item.slug %>" placeholder="<%= _.escape( item.label ) %>" value="<% if (typeof row[item.slug] !== "undefined") { %><%= _.escape( row[item.slug] ) %><% } %>"><br>
+                        <input type="text" data-prop="<%- item.slug %>" placeholder="<%- item.label %>" value="<% if (typeof row[item.slug] !== "undefined") { %><%- row[item.slug] %><% } %>"><br>
                         <% } else if(item.type === 'SELECT') { %>
-							<select data-prop="<%= item.slug %>">
+							<select data-prop="<%- item.slug %>">
 								<% _.each(item.mixed.split(','),function(i,k,l) {
 									if(typeof row[item.slug] !== 'undefined' && i === row[item.slug]) { %>
 								%>
-								<option value="<%= i %>" selected><%= _.escape( i ) %></option>
+								<option value="<%- i %>" selected><%- i %></option>
 								<% } else { %>
-								<option value="<%= i %>" ><%= _.escape( i ) %></option>
+								<option value="<%- i %>" ><%- i %></option>
 								<% }});%>
 							</select>
 						<% } %>
@@ -213,13 +213,13 @@
 				<td colspan="2">
 					<% _.each(cache.MetaFields,function(item,key,list) { %>
 						<% if(item.type === 'TEXTAREA') { %>
-						<textarea rows="3" data-prop="<%= item.slug %>" placeholder="<%= item.label %>"><% if (typeof row[item.slug] !== "undefined") { %><%= _.escape( row[item.slug] ) %><% } %></textarea><br>
+						<textarea rows="3" data-prop="<%- item.slug %>" placeholder="<%- item.label %>"><% if (typeof row[item.slug] !== "undefined") { %><%- row[item.slug] %><% } %></textarea><br>
 						<% } %>
 					<% });%>
 				</td>
 				<td>
 					<p><?php _e('Date', 'easy-appointments');?> :</p>
-					<input id="date-start" class="app-fields date-start" type="text" data-prop="date" value="<%= row.date %>"><br>
+					<input id="date-start" class="app-fields date-start" type="text" data-prop="date" value="<%- row.date %>"><br>
 					<p><?php _e('Time', 'easy-appointments');?> :</p>
 					<select data-prop="start" disabled="disabled" class="time-start">
 					</select>
@@ -228,15 +228,15 @@
 					<select name="ea-select-status" data-prop="status">
 						<% _.each(cache.Status,function(item,key,list){
 							if(key == row.status) { %>
-								<option value="<%= key %>" selected="selected"><%= item %></option>
+								<option value="<%- key %>" selected="selected"><%- item %></option>
 						<% } else { %>
-								<option value="<%= key %>"><%= item %></option>
+								<option value="<%- key %>"><%- item %></option>
 						<% }
 						});%>
 					</select>
-					<span><?php _e('Price', 'easy-appointments');?> : </span><input class="ea-price" style="width: 50px" type="text" data-prop="price" value="<%= row.price %>">
-					<!-- <strong><%= row.user %></strong><br>
-					<strong><%= row.created %></strong>-->
+					<span><?php _e('Price', 'easy-appointments');?> : </span><input class="ea-price" style="width: 50px" type="text" data-prop="price" value="<%- row.price %>">
+					<!-- <strong><%- row.user %></strong><br>
+					<strong><%- row.created %></strong>-->
 				</td>
 			</tr>
 			<tr>
@@ -257,9 +257,9 @@
 <script type="text/template" id="ea-tpl-appointment-times">
 <% _.each(times,function(item,key,list){ 
 	if(app.start === item.value) { %>
-	<option value="<%= item.value %>" selected="selected"><%= item.show %></option>
+	<option value="<%- item.value %>" selected="selected"><%- item.show %></option>
 	<% } else { %>
-		<option value="<%= item.value %>" <% if(item.count < 1) {%>disabled<% } %>><%= item.show %> - <%= item.ends %></option>
+		<option value="<%- item.value %>" <% if(item.count < 1) {%>disabled<% } %>><%- item.show %> - <%- item.ends %></option>
 	<% } %>
 <% });%>
 </script>

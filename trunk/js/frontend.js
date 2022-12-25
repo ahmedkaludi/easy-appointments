@@ -650,7 +650,7 @@
                 plugin.$element.find('.ea-cancel').hide();
                 plugin.$element.find('#paypal-button').hide();
 
-                plugin.$element.find('.final').append('<h4 class="ea-done-message">' + ea_settings['trans.done_message'] + '</h4>');
+                plugin.$element.find('.final').append('<h4 class="ea-done-message">' + _.escape(ea_settings['trans.done_message']) + '</h4>');
                 plugin.$element.find('form').find('input').prop('disabled', true);
                 plugin.$element.find('.g-recaptcha').remove();
 

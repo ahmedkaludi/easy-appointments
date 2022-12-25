@@ -5,7 +5,7 @@ Tags: appointment, appointments, Booking, calendar, plugin, reservation, reserva
 Requires at least: 3.7
 Tested up to: 6.0
 Requires PHP: 5.3
-Stable tag: 3.10.5
+Stable tag: 3.11.0
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -212,6 +212,17 @@ Note: you can have only one calendar on one page.
 25. Admin panel - Report - Export page
 
 == Changelog ==
+
+= 3.11.0 (2022-12-25) =
+* Security Patch: FullCalendar shortcode didn't have escaped props that could be misused by contributor. Not that is fixed now.
+* Small breaking changes: Now HTML elements in settings will be also escaped meaning that it will not be rendered but just shown if you are using it.
+
+= 3.10.7 (2022-11-21)
+* Fixed issue with free slots calculation that didn't include block before/after time
+
+= 3.10.6 (2022-11-17) =
+* Fixed issue with open time slots that are after closing hours defined in connections
+
 = 3.10.5 (2022-09-05) =
 * Fixed issue with masked input field
 

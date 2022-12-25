@@ -36,7 +36,7 @@
                 <select name="location" id="overview-location" class="field">
                     <option value="">-</option>
                     <% _.each(cache.Locations,function(item,key,list){ %>
-                    <option value="<%= item.id %>"><%= item.name %></option>
+                    <option value="<%- item.id %>"><%- item.name %></option>
                     <% });%>
                 </select>
             </div>
@@ -45,7 +45,7 @@
                 <select name="service" id="overview-service" class="field">
                     <option value="">-</option>
                     <% _.each(cache.Services,function(item,key,list){ %>
-                    <option value="<%= item.id %>"><%= item.name %></option>
+                    <option value="<%- item.id %>"><%- item.name %></option>
                     <% });%>
                 </select>
             </div>
@@ -54,7 +54,7 @@
                 <select name="worker" id="overview-worker" class="field">
                     <option value="">-</option>
                     <% _.each(cache.Workers,function(item,key,list){ %>
-                    <option value="<%= item.id %>"><%= item.name %></option>
+                    <option value="<%- item.id %>"><%- item.name %></option>
                     <% });%>
                 </select>
             </div>
@@ -85,7 +85,7 @@
                 </div>
             </div>
         </div>
-        <form id="ea-export-form" class="ea-export-form" action="<%= export_link %>" method="get">
+        <form id="ea-export-form" class="ea-export-form" action="<%- export_link %>" method="get">
             <input type="hidden" name="action" value="ea_export">
             <div class="form-item">
                 <label for=""><?php _e('From', 'easy-appointments'); ?></label>

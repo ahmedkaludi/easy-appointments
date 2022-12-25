@@ -214,6 +214,16 @@ class EAFrontend
             'show_week'            => '0',
         ), $atts);
 
+        // all those values are used inside JS code part, escape all values to be JS strings
+        foreach ($code_params as $key => $value) {
+            if ($value === null || $value === '0' || $value === '1' || strlen($value) < 4) {
+                continue;
+            }
+
+            // also remove '{', '}' brackets because no settings needs that
+            $code_params[$key] = esc_js(str_replace(array('{','}',';'), array('','',''), $value));
+        }
+
         $settings = $this->options->get_options();
 
         // unset secret
@@ -282,19 +292,19 @@ class EAFrontend
             <form>
                 <div class="step">
                     <div class="block"></div>
-                    <label class="ea-label"><?php _e($this->options->get_option_value("trans.location"), 'easy-appointments') ?></label><select
+                    <label class="ea-label"><?php echo esc_html(__($this->options->get_option_value("trans.location"), 'easy-appointments')) ?></label><select
                         name="location" data-c="location"
                         class="filter"><?php $this->get_options("locations") ?></select>
                 </div>
                 <div class="step">
                     <div class="block"></div>
-                    <label class="ea-label"><?php _e($this->options->get_option_value("trans.service"), 'easy-appointments') ?></label><select
+                    <label class="ea-label"><?php echo esc_html(__($this->options->get_option_value("trans.service"), 'easy-appointments')) ?></label><select
                         name="service" data-c="service" class="filter"
                         data-currency="<?php echo $this->options->get_option_value("trans.currency") ?>"><?php $this->get_options("services") ?></select>
                 </div>
                 <div class="step">
                     <div class="block"></div>
-                    <label class="ea-label"><?php _e($this->options->get_option_value("trans.worker"), 'easy-appointments') ?></label><select
+                    <label class="ea-label"><?php echo esc_html(__($this->options->get_option_value("trans.worker"), 'easy-appointments')) ?></label><select
                         name="worker" data-c="worker" class="filter"><?php $this->get_options("staff") ?></select>
                 </div>
                 <div class="step calendar" class="filter">
@@ -327,16 +337,16 @@ class EAFrontend
                     <?php if (!empty($settings['gdpr.on'])) : ?>
                         <p>
                             <label
-                                    style="font-size: 65%; width: 80%;" class="gdpr"><?php echo $settings['gdpr.label'];?>
+                                    style="font-size: 65%; width: 80%;" class="gdpr"><?php echo esc_html($settings['gdpr.label']);?>
                                 * : </label><input style="width: 15%;" type="checkbox" name="iagree"
                                                    data-rule-required="true"
-                                                   data-msg-required="<?php echo $settings['gdpr.message'];?>">
+                                                   data-msg-required="<?php echo esc_attr($settings['gdpr.message']);?>">
                         </p>
                         <br>
                     <?php endif; ?>
 
                     <?php if (!empty($settings['captcha.site-key'])) : ?>
-                        <div style="width: 100%" class="g-recaptcha" data-sitekey="<?php echo $settings['captcha.site-key'];?>"></div><br>
+                        <div style="width: 100%" class="g-recaptcha" data-sitekey="<?php echo esc_attr($settings['captcha.site-key']);?>"></div><br>
                     <?php endif; ?>
 
                     <div style="display: inline-flex;">
@@ -379,7 +389,7 @@ class EAFrontend
             }
 
             if ($item->visible === "2") {
-                $html .= '<input class="custom-field" type="hidden" name="' . $item->slug . '" value="" />';
+                $html .= '<input class="custom-field" type="hidden" name="' . esc_attr($item->slug) . '" value="" />';
                 continue;
             }
 
@@ -412,7 +422,7 @@ class EAFrontend
                     if ($o == '-') {
                         $html .= '<option value="">-</option>';
                     } else {
-                        $html .= '<option value="' . $o . '" >' . $o . '</option>';
+                        $html .= '<option value="' . esc_attr($o) . '" >' . esc_html($o) . '</option>';
                     }
                 }
 
@@ -478,6 +488,16 @@ class EAFrontend
 
         // check params
         apply_filters('ea_bootstrap_shortcode_params', $atts);
+
+        // all those values are used inside JS code part, escape all values to be JS strings
+        foreach ($code_params as $key => $value) {
+            if ($value === null || $value === '0' || $value === '1' || strlen($value) < 4) {
+                continue;
+            }
+
+            // also remove '{', '}' brackets because no settings needs that
+            $code_params[$key] = esc_js(str_replace(array('{','}',';'), array('','',''), $value));
+        }
 
         // used inside template ea_bootstrap.tpl.php
         $location_id = $code_params['location'];
@@ -618,18 +638,23 @@ class EAFrontend
         $hide_price_service = $this->options->get_option_value('price.hide.service', '0');
 
         $before = $this->options->get_option_value('currency.before', '0');
-        $currency = $this->options->get_option_value('trans.currency', '$');
+        $currency = esc_html($this->options->get_option_value('trans.currency', '$'));
 
 //        $rows = $this->models->get_all_rows("ea_$type");
         $rows = $this->models->get_frontend_select_options("ea_$type", $location_id, $service_id, $worker_id);
 
         // If there is only one result, like one worker in whole system or one location etc
         if (count($rows) == 1) {
-            $price = !empty($rows[0]->price) ? " data-price='{$rows[0]->price}'" : '';
+            $duration = (int) $rows[0]->duration;
+            $slot_step = (int) $rows[0]->slot_step;
+            $name = esc_html($rows[0]->name);
+
+            $price_attr = !empty($rows[0]->price) ? " data-price='" . esc_attr($rows[0]->price) ."'" : '';
+
             if ($type === 'services') {
-                echo "<option data-duration='{$rows[0]->duration}' data-slot_step='{$rows[0]->slot_step}' value='{$rows[0]->id}' selected='selected'$price>{$rows[0]->name}</option>";
+                echo "<option data-duration='{$duration}' data-slot_step='{$slot_step}' value='{$rows[0]->id}' selected='selected'$price_attr>{$name}</option>";
             } else {
-                echo "<option value='{$rows[0]->id}' selected='selected'$price>{$rows[0]->name}</option>";
+                echo "<option value='{$rows[0]->id}' selected='selected'$price_attr>{$name}</option>";
             }
             return;
         }
@@ -638,8 +663,13 @@ class EAFrontend
         if ($type === 'services' && $service_id !== null) {
             foreach ($rows as $row) {
                 if ($row->id == $service_id) {
-                    $price = !empty($row->price) ? " data-price='{$row->price}'" : '';
-                    echo "<option value='{$row->id}' data-duration='{$row->duration}' data-slot_step='{$row->slot_step}' selected='selected'$price>{$row->name}</option>";
+
+                    $duration = (int) $row->duration;
+                    $slot_step = (int) $row->slot_step;
+                    $name = esc_html($row->name);
+                    $price_attr = !empty($row->price) ? " data-price='" . esc_attr($row->price) . "'" : '';
+
+                    echo "<option value='{$row->id}' data-duration='{$duration}' data-slot_step='{$slot_step}' selected='selected'$price_attr>{$name}</option>";
                     return;
                 }
             }
@@ -648,8 +678,9 @@ class EAFrontend
         if ($type === 'locations' && $location_id !== null) {
             foreach ($rows as $row) {
                 if ($row->id == $location_id) {
-                    $price = !empty($row->price) ? " data-price='{$row->price}'" : '';
-                    echo "<option value='{$row->id}' selected='selected'$price>{$row->name}</option>";
+                    $name = esc_html($row->name);
+                    $price_attr = !empty($row->price) ? " data-price='" . esc_attr($row->price) . "'" : '';
+                    echo "<option value='{$row->id}' selected='selected'$price_attr>{$name}</option>";
                     return;
                 }
             }
@@ -658,8 +689,9 @@ class EAFrontend
         if ($type === 'staff' && $worker_id !== null) {
             foreach ($rows as $row) {
                 if ($row->id == $worker_id) {
-                    $price = !empty($row->price) ? " data-price='{$row->price}'" : '';
-                    echo "<option value='{$row->id}' selected='selected'$price>{$row->name}</option>";
+                    $name = esc_html($row->name);
+                    $price_attr = !empty($row->price) ? " data-price='" . esc_attr($row->price) . "'" : '';
+                    echo "<option value='{$row->id}' selected='selected'$price_attr>{$name}</option>";
                     return;
                 }
             }
@@ -670,31 +702,34 @@ class EAFrontend
         echo "<option value='' selected='selected'>{$default_value}</option>";
 
         foreach ($rows as $row) {
-            $price = !empty($row->price) ? " data-price='{$row->price}'" : '';
+            $name = esc_html($row->name);
+            $duration = (int) $row->duration;
+            $slot_step = (int) $row->slot_step;
+            $price_attr = !empty($row->price) ? " data-price='" . esc_attr($row->price) . "'" : '';
+            $price = esc_html($row->price);
 
             // case when we are hiding price
             if ($hide_price == '1') {
 
                 // for all other types
                 if ($type != 'services') {
-                    echo "<option value='{$row->id}'>{$row->name}</option>";
+                    echo "<option value='{$row->id}'>{$name}</option>";
                 } else if ($type == 'services') {
                     // for service
-                    echo "<option data-duration='{$row->duration}' data-slot_step='{$row->slot_step}' value='{$row->id}'>{$row->name}</option>";
+                    echo "<option data-duration='{$duration}' data-slot_step='{$slot_step}' value='{$row->id}'>{$row->name}</option>";
                 }
 
             } else if ($type == 'services') {
-                $name = $row->name;
-                $name_price = ($before == '1') ? $name . ' ' . $currency . $row->price : $name . ' ' . $row->price . $currency;
+                $name_price = $name . ' ' . ($before == '1') ? $currency . $price : $row->price . $currency;
 
                 // maybe we want to hide price in service option
                 if ($hide_price_service) {
                     $name_price = $name;
                 }
 
-                echo "<option data-duration='{$row->duration}' data-slot_step='{$row->slot_step}' value='{$row->id}'$price>{$name_price}</option>";
+                echo "<option data-duration='{duration}' data-slot_step='{$slot_step}' value='{$row->id}'$price_attr>{$name_price}</option>";
             } else {
-                echo "<option value='{$row->id}'>{$row->name}</option>";
+                echo "<option value='{$row->id}'>{$name}</option>";
             }
         }
     }

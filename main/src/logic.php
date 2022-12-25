@@ -117,10 +117,12 @@ class EALogic
             while (true) {
                 // 08:00 at first
                 $temp_time = strtotime($working_day->time_from);
+                $diff_between_duration_and_slot_step = 0;
 
                 // use smaller step
                 if (!empty($serviceObj->slot_step)) {
                     $run_time = $serviceObj->slot_step * 60 * $counter++;
+                    $diff_between_duration_and_slot_step = ($serviceObj->duration - $serviceObj->slot_step) * 60;
                 } else {
                     $run_time = $serviceObj->duration * 60 * $counter++;
                 }
@@ -131,7 +133,7 @@ class EALogic
                 $temp_date_time = strtotime("$day {$working_day->time_from}") + $run_time;
 
                 // is that before upper time limit
-                if ($temp_time < $upper_time) {
+                if (($temp_time + $diff_between_duration_and_slot_step) < $upper_time) {
                     $current_time = date('H:i', $temp_time);
 
                     // check if current time is greater then slot start time
@@ -160,15 +162,11 @@ class EALogic
 
         $service_duration = $serviceObj->duration;
 
-//        if (!empty($serviceObj->slot_step)) {
-//            $service_duration = $serviceObj->slot_step;
-//        }
-
         // remove non-working time
         $this->remove_closed_slots($working_hours, $location, $service, $worker, $day, $serviceObj->duration);
 
         // remove already reserved times
-        $this->remove_reserved_slots($working_hours, $location, $service, $worker, $day, $serviceObj->duration, $app_id);
+        $this->remove_reserved_slots($working_hours, $location, $service, $worker, $day, $service_duration, $app_id, $serviceObj->block_before, $serviceObj->block_after);
 
         // format time
         return $this->format_time($working_hours, $serviceObj->duration);
@@ -287,10 +285,10 @@ class EALogic
      * @param  int $service Service
      * @param  int $worker Worker
      * @param  DateTime $day DateTime
-     * @param  time $service_duration Service duration in minuts
+     * @param int $service_duration Service duration in minutes
      * @param int $app_id
      */
-    private function remove_reserved_slots(&$slots, $location, $service, $worker, $day, $service_duration, $app_id = -1)
+    private function remove_reserved_slots(&$slots, $location, $service, $worker, $day, $service_duration, $app_id = -1, $block_before = 0, $block_after = 0)
     {
         if ($app_id == "") {
             $app_id = -1;
@@ -339,7 +337,7 @@ class EALogic
                 $slot_time_end = strtotime("$temp_time + $service_duration minute");
 
                 // before / after
-                if ($slot_time_end <= $lower_time || $upper_time <= $slot_time) { } else {
+                if (($slot_time_end + $block_after * 60) <= $lower_time || $upper_time <= ($slot_time - $block_before * 60)) { } else {
                     if ($this->slots_logic->is_exclusive_mode() && $this->slots_logic->is_provider_is_busy($app, $location, $service)) {
                         $slots[$temp_time] = 0;
                         continue;

@@ -399,7 +399,7 @@
             var value = $btn.prevAll('input').val();
             var cont = $btn.closest('.field-settings');
 
-            cont.find('.select-options').append('<li data-element="'+ value + '">'+ value + '<a href="#" class="remove-select-option"><i class="fa fa-trash-o"></i></a></li>');
+            cont.find('.select-options').append('<li data-element="'+ value + '">'+ _.escape(value) + '<a href="#" class="remove-select-option"><i class="fa fa-trash-o"></i></a></li>');
 
             // delete option
             $btn.prevAll('input').val('');
