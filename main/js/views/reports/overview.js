@@ -99,11 +99,13 @@ EA.OverviewReportView = Backbone.View.extend({
             var selects = this.$el.find('select');
 
             var fields = selects.serializeArray();
+            var nonce = window?.wpApiSettings?.nonce ?? '';
 
             fields.push({'name': 'action', 'value': 'ea_report'});
             fields.push({'name': 'report', 'value': 'overview'});
             fields.push({'name': 'month', 'value': month});
             fields.push({'name': 'year', 'value': year});
+            fields.push({'name': '_wpnonce', 'value': nonce});
 
             jQuery.get(ajaxurl, fields, function (result) {
                 self.refreshData(result);

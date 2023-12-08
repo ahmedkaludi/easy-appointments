@@ -14,7 +14,10 @@ EA.Field = Backbone.Model.extend({
 		required: false,
 		position: 10,
 	},
-	url: function() { return ajaxurl+'?action=ea_field&id=' + encodeURIComponent(this.id); },
+	url: function() {
+		const nonce = window?.wpApiSettings?.nonce ?? '';
+		return ajaxurl+'?action=ea_field&id=' + encodeURIComponent(this.id) + '&_wpnonce=' + nonce;
+	},
 	toJSON: function() {
 		var attrs = _.clone( this.attributes );
 		//console.log(attrs);

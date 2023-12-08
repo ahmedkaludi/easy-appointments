@@ -121,11 +121,12 @@ class EAApiFullCalendar
         $service_color = $request->get_param('color') === 'true';
 
         $params = array(
-            'from'     => $request->get_param('start'),
-            'to'       => $request->get_param('end'),
-            'location' => $request->get_param('location'),
-            'worker'   => $request->get_param('worker'),
-            'service'  => $request->get_param('service'),
+            'hide_cancelled' => $request->get_param('hide_cancelled'),
+            'from'           => $request->get_param('start'),
+            'to'             => $request->get_param('end'),
+            'location'       => $request->get_param('location'),
+            'worker'         => $request->get_param('worker'),
+            'service'        => $request->get_param('service'),
         );
 
         if ($params['location'] === null) {
@@ -159,6 +160,13 @@ class EAApiFullCalendar
         }
 
         $res = $this->db_models->get_all_appointments($params);
+
+
+        if ($params['hide_cancelled'] == '1') {
+            $res = array_filter($res, function ($element) {
+                return $element->status !== 'canceled';
+            });
+        }
 
         $fields = $this->db_models->get_all_rows('ea_meta_fields', array(), array('position' => 'ASC'));
         $services = $this->db_models->get_all_rows('ea_services', array(), array('id' => 'ASC'));
@@ -235,6 +243,12 @@ class EAApiFullCalendar
 
         $args['service'] = array(
             'description'       => esc_html__( 'Service id that will be used for getting free / taken slots', 'easy-appointments' ),
+            'type'              => 'integer',
+            'sanitize_callback' => 'absint',
+        );
+
+        $args['hide_cancelled'] = array(
+            'description'       => esc_html__( 'Should remove cancelled events in calendar view.', 'easy-appointments' ),
             'type'              => 'integer',
             'sanitize_callback' => 'absint',
         );

@@ -242,11 +242,11 @@
             var duration = serviceData.duration;
             var slot_step = serviceData.slot_step;
 
-            var takeSlots = parseInt(duration) / parseInt(slot_step);
-
-            if (ea_settings["label.from_to"] == "1") {
-                takeSlots = 1;
-            }
+            // var takeSlots = parseInt(duration) / parseInt(slot_step);
+            // if (ea_settings["label.from_to"] == "1") {
+            //     takeSlots = 1;
+            // }
+            var takeSlots = 1; // now we do it the same for all
 
             var $nextSlots = $element.nextAll();
 
@@ -652,6 +652,13 @@
                     plugin.settings.initScrollOff = false;
                 }
 
+                // auto select time slot if there is only one available
+                if (ea_settings.auto_select_slot === '1') {
+                    if (next_element.find('.time-value').not('.time-disabled').length === 1) {
+                        next_element.find('.time-value').not('.time-disabled').click();
+                    }
+                }
+
             }, 'json');
 
             req.always(function () {
@@ -961,7 +968,7 @@
 
                 // if there is redirect do that
                 if (ea_settings['advance.redirect'] !== '') {
-                    var data = JSON.parse(ea_settings['advance.redirect']);
+                    var data = JSON.parse(ea_settings['advance.redirect'].replaceAll('&quot;', '"'));
                     var service = plugin.$element.find('[name="service"]').val();
 
                     var redirect = data.find(function(el) {

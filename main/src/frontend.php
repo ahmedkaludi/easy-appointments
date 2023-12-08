@@ -147,8 +147,8 @@ class EAFrontend
         wp_add_inline_script('ea-front-bootstrap', "jQuery(document).on('ea-init:completed', function () { jQuery('.masked-field').inputmask(); });", 'after');
 
         wp_register_style(
-            'jquery-style',
-            '//ajax.googleapis.com/ajax/libs/jqueryui/1.8.2/themes/smoothness/jquery-ui.css'
+            'ea-jqueryui-style',
+            EA_PLUGIN_URL . 'css/jquery-ui.css'
         );
 
         wp_register_style(
@@ -264,7 +264,7 @@ class EAFrontend
         wp_enqueue_script('ea-front-end');
 
         if (empty($settings['css.off'])) {
-            wp_enqueue_style('jquery-style');
+            wp_enqueue_style('ea-jqueryui-style');
             wp_enqueue_style('ea-frontend-style');
             wp_enqueue_style('ea-admin-awesome-css');
         }
@@ -481,6 +481,7 @@ class EAFrontend
             'show_remaining_slots' => '0',
             'show_week'            => '0',
             'cal_auto_select'      => '1',
+            'auto_select_slot'     => '0',
             'block_days'           => null,
             'block_days_tooltip'   => '',
             'select_placeholder'   => '-'
@@ -511,20 +512,21 @@ class EAFrontend
 
         $settings['check'] = wp_create_nonce('ea-bootstrap-form');
 
-        $settings['width']                 = $code_params['width'];
-        $settings['scroll_off']            = $code_params['scroll_off'];
-        $settings['layout_cols']           = $code_params['layout_cols'];
-        $settings['start_of_week']         = $code_params['start_of_week'];
-        $settings['rtl']                   = $code_params['rtl'];
-        $settings['default_date']          = $code_params['default_date'];
-        $settings['min_date']              = $code_params['min_date'];
-        $settings['max_date']              = $code_params['max_date'];
-        $settings['show_remaining_slots']  = $code_params['show_remaining_slots'];
-        $settings['show_week']             = $code_params['show_week'];
-        $settings['save_form_content']     = $code_params['save_form_content'];
-        $settings['cal_auto_select']       = $code_params['cal_auto_select'];
-        $settings['block_days']            = $code_params['block_days'] !== null ? explode(',', $code_params['block_days']) : null;
-        $settings['block_days_tooltip']    = $code_params['block_days_tooltip'];
+        $settings['width']                  = $code_params['width'];
+        $settings['scroll_off']             = $code_params['scroll_off'];
+        $settings['layout_cols']            = $code_params['layout_cols'];
+        $settings['start_of_week']          = $code_params['start_of_week'];
+        $settings['rtl']                    = $code_params['rtl'];
+        $settings['default_date']           = $code_params['default_date'];
+        $settings['min_date']               = $code_params['min_date'];
+        $settings['max_date']               = $code_params['max_date'];
+        $settings['show_remaining_slots']   = $code_params['show_remaining_slots'];
+        $settings['show_week']              = $code_params['show_week'];
+        $settings['save_form_content']      = $code_params['save_form_content'];
+        $settings['cal_auto_select']        = $code_params['cal_auto_select'];
+        $settings['auto_select_slot']       = $code_params['auto_select_slot'];
+        $settings['block_days']             = $code_params['block_days'] !== null ? explode(',', $code_params['block_days']) : null;
+        $settings['block_days_tooltip']     = $code_params['block_days_tooltip'];
 
             // LOCALIZATION
         $settings['trans.please-select-new-date'] = __('Please select another day', 'easy-appointments');
@@ -716,18 +718,19 @@ class EAFrontend
                     echo "<option value='{$row->id}'>{$name}</option>";
                 } else if ($type == 'services') {
                     // for service
-                    echo "<option data-duration='{$duration}' data-slot_step='{$slot_step}' value='{$row->id}'>{$row->name}</option>";
+                    echo "<option data-duration='{$duration}' data-slot_step='{$slot_step}' value='{$row->id}'>{$name}</option>";
                 }
 
             } else if ($type == 'services') {
-                $name_price = $name . ' ' . ($before == '1') ? $currency . $price : $row->price . $currency;
+                $price = ($before == '1') ? $currency . $price : $row->price . $currency;
+                $name_price = $name . ' ' . $price;
 
                 // maybe we want to hide price in service option
                 if ($hide_price_service) {
                     $name_price = $name;
                 }
 
-                echo "<option data-duration='{duration}' data-slot_step='{$slot_step}' value='{$row->id}'$price_attr>{$name_price}</option>";
+                echo "<option data-duration='{$duration}' data-slot_step='{$slot_step}' value='{$row->id}'{$price_attr}>{$name_price}</option>";
             } else {
                 echo "<option value='{$row->id}'>{$name}</option>";
             }

@@ -285,7 +285,7 @@ EA.CustumizeView = Backbone.View.extend({
         e.preventDefault();
         var $btn = jQuery(e.currentTarget);
         var $li = $btn.closest('li');
-        var name = '' + $li.data('name');
+        var name = _.unescape('' + $li.data('name'));
         var element = this.fields.findWhere({label: name});
 
         if ($btn.find('i').hasClass('fa-chevron-down')) {
@@ -387,7 +387,7 @@ EA.CustumizeView = Backbone.View.extend({
 
         var $btn = jQuery(e.currentTarget);
         var $li = $btn.closest('li');
-        var name = '' + $li.data('name');
+        var name = _.unescape('' + $li.data('name'));
         var element = this.fields.findWhere({label:name});
 
         this.fields.remove(element);
@@ -411,7 +411,7 @@ EA.CustumizeView = Backbone.View.extend({
 
     addAdvanceRedirect: function() {
         var $elData = this.$el.find('#advance-redirect');
-        var data = JSON.parse($elData.val());
+        var data = JSON.parse($elData.val().replaceAll('&quot;', '"'));
 
         if (!Array.isArray(data)) {
             data = [];
@@ -446,7 +446,8 @@ EA.CustumizeView = Backbone.View.extend({
     showCustomRedirects: function() {
         var $list = this.$el.find('#custom-redirect-list');
         var $ulData = this.$el.find('#advance-redirect');
-        var data = JSON.parse($ulData.val());
+
+        var data = JSON.parse($ulData.val().replaceAll('&quot;', '"'));
 
         if (!Array.isArray(data)) {
             data = [];
@@ -465,14 +466,14 @@ EA.CustumizeView = Backbone.View.extend({
                 };
             }
 
-            $list.append('<div class="list-item redirect-row"><span class="row-no">' + (index+1) + '.</span><span class="redirect-service-name">' + service.name + '</span><span class="redirect-url">' + element.url + '</span><button data-index="' + index + '" class="button button-primary remove-advance-redirect"> X </button></div>');
+            $list.append('<div class="list-item redirect-row"><span class="row-no">' + (index+1) + '.</span><span class="redirect-service-name">' + _.escape(service.name) + '</span><span class="redirect-url">' + _.escape(element.url) + '</span><button data-index="' + index + '" class="button button-primary remove-advance-redirect"> X </button></div>');
         });
     },
 
 
     addAdvanceCancelRedirect: function() {
         var $elData = this.$el.find('#advance-cancel-redirect');
-        var data = JSON.parse($elData.val());
+        var data = JSON.parse($elData.val().replaceAll('&quot;', '"'));
 
         if (!Array.isArray(data)) {
             data = [];
@@ -507,7 +508,7 @@ EA.CustumizeView = Backbone.View.extend({
     showCustomCancelRedirects: function() {
         var $list = this.$el.find('#custom-cancel-redirect-list');
         var $ulData = this.$el.find('#advance-cancel-redirect');
-        var data = JSON.parse($ulData.val());
+        var data = JSON.parse($ulData.val().replaceAll('&quot;', '"'));
 
         if (!Array.isArray(data)) {
             data = [];
@@ -526,7 +527,7 @@ EA.CustumizeView = Backbone.View.extend({
                 };
             }
 
-            $list.append('<div class="list-item redirect-row"><span class="row-no">' + (index+1) + '.</span><span class="redirect-service-name">' + service.name + '</span><span class="redirect-url">' + element.url + '</span><button data-index="' + index + '" class="button button-primary remove-advance-cancel-redirect"> X </button></div>');
+            $list.append('<div class="list-item redirect-row"><span class="row-no">' + (index+1) + '.</span><span class="redirect-service-name">' + _.escape(service.name) + '</span><span class="redirect-url">' + _.escape(element.url) + '</span><button data-index="' + index + '" class="button button-primary remove-advance-cancel-redirect"> X </button></div>');
         });
     },
 

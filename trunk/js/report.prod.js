@@ -23,7 +23,8 @@
             type: ""
         },
         url : function() {
-            return ajaxurl+'?action=ea_setting&id=' + this.id;
+            const nonce = window?.wpApiSettings?.nonce ?? '';
+            return ajaxurl+'?action=ea_setting&id=' + this.id + '&_wpnonce=' + nonce;
         },
         toJSON : function() {
             var attrs = _.clone( this.attributes );
@@ -37,7 +38,7 @@
      * Settings collection
      */
     EA.Settings = Backbone.Collection.extend({
-        url : ajaxurl+'?action=ea_settings',
+        url : ajaxurl+'?action=ea_settings' + '&_wpnonce=' + (window?.wpApiSettings?.nonce ?? ''),
         model: EA.Setting
     });
 
@@ -45,7 +46,7 @@
      * Wrapper around settings data
      */
     EA.SettingsWrapper = Backbone.Model.extend({
-    	url : ajaxurl+'?action=ea_settings',
+    	url : ajaxurl+'?action=ea_settings' + '&_wpnonce=' + (window?.wpApiSettings?.nonce ?? '')
     	/*toJSON : function() {
     		return this.model.toJSON();
     	}*/
@@ -206,11 +207,13 @@
                 var selects = this.$el.find('select');
 
                 var fields = selects.serializeArray();
+                var nonce = window?.wpApiSettings?.nonce ?? '';
 
                 fields.push({'name': 'action', 'value': 'ea_report'});
                 fields.push({'name': 'report', 'value': 'overview'});
                 fields.push({'name': 'month', 'value': month});
                 fields.push({'name': 'year', 'value': year});
+                fields.push({'name': '_wpnonce', 'value': nonce});
 
                 jQuery.get(ajaxurl, fields, function (result) {
                     self.refreshData(result);
@@ -285,9 +288,11 @@
         render: function () {
             var view = this;
 
+            var nonce = window?.wpApiSettings?.nonce ?? '';
+
             this.$el.empty();
 
-            this.$el.html(this.template({export_link: ajaxurl}));
+            this.$el.html(this.template({export_link: ajaxurl, nonce: nonce}));
 
             this.$el.find('.ea-datepicker').datepicker({
                 dateFormat: 'yy-mm-dd'
@@ -299,7 +304,10 @@
         download: function () {
 
             var fields = [];
+            var nonce = window?.wpApiSettings?.nonce ?? '';
+
             fields.push({'name': 'action', 'value': 'ea_export'});
+            fields.push({'name': '_wpnonce', 'value': nonce});
 
             jQuery.get(ajaxurl, fields, function (result) {
             });
@@ -316,10 +324,12 @@
          *
          */
         saveCustomColumns: function () {
+            var nonce = window?.wpApiSettings?.nonce ?? '';
 
             var data = {
                 fields: this.$el.find('#ea-export-custom-columns').val(),
-                action: 'ea_save_custom_columns'
+                action: 'ea_save_custom_columns',
+                _wpnonce: nonce
             };
 
             jQuery.post(ajaxurl, data, function (result) {

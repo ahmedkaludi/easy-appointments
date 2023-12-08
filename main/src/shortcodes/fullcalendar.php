@@ -105,6 +105,7 @@ class EAFullCalendar
             'max_date'             => null,
             'time_format'          => 'h(:mm)t',
             'display_event_end'    => '0',
+            'hide_cancelled'        => '0',
             'show_remaining_slots' => '0',
             'show_week'            => '0',
             'title_field'          => 'name',
@@ -244,7 +245,8 @@ EOT;
         url: wpApiSettings.root + 'easy-appointments/v1/appointments',
         type: 'GET',
         data: {
-          _wpnonce: wpApiSettings.nonce, 
+          _wpnonce: wpApiSettings.nonce,
+          hide_cancelled: {$code_params['hide_cancelled']},
           {$location_param}
           {$service_param}
           {$worker_param}

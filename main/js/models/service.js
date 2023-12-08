@@ -11,7 +11,8 @@ EA.Service = Backbone.Model.extend({
         price: 10
     },
     url : function() {
-        return ajaxurl+'?action=ea_service&id=' + this.id;
+        const nonce = window?.wpApiSettings?.nonce ?? '';
+        return ajaxurl+'?action=ea_service&id=' + this.id + '&_wpnonce=' + nonce;
     },
     toJSON : function() {
         var attrs = _.clone( this.attributes );

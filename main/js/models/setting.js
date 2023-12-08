@@ -7,8 +7,9 @@ EA.Setting = Backbone.Model.extend({
         ea_value : "",
         type: ""
     },
-    url : function() { 
-        return ajaxurl+'?action=ea_setting&id=' + this.id;
+    url : function() {
+        const nonce = window?.wpApiSettings?.nonce ?? '';
+        return ajaxurl+'?action=ea_setting&id=' + this.id + '&_wpnonce=' + nonce;
     },
     toJSON : function() {
         var attrs = _.clone( this.attributes );

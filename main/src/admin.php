@@ -159,6 +159,7 @@ class EAAdminPanel
                 'ea-datepicker-localization',
                 'time-picker',
                 'backbone',
+                'wp-api',
                 'underscore'
             ),
             EASY_APPOINTMENTS_VERSION,
@@ -169,7 +170,7 @@ class EAAdminPanel
         wp_register_script(
             'ea-report',
             EA_PLUGIN_URL . 'js/report.prod.js',
-            array('jquery', 'time-picker', 'ea-datepicker-localization', 'backbone', 'underscore'),
+            array('jquery', 'time-picker', 'ea-datepicker-localization', 'backbone', 'underscore', 'wp-api'),
             EASY_APPOINTMENTS_VERSION,
             true
         );
@@ -695,6 +696,8 @@ class EAAdminPanel
         $url   = get_bloginfo('url');
 
         $settings['image_base'] = $wpurl === $url ? '' : $wpurl;
+        $settings['rest_url_extend_connections'] = EALogActions::extend_connection_url();
+
         wp_localize_script('ea-admin-bundle', 'ea_settings', $settings);
 
         if (function_exists('wp_set_script_translations')) {

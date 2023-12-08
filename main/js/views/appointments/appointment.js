@@ -413,8 +413,11 @@ EA.AppointmentView = Backbone.View.extend({
         });
 
         if(isComplete) {
+            const nonce = window?.wpApiSettings?.nonce ?? '';
+
             filter.action = 'ea_open_times';
             filter.app_id = this.model.get('id');
+            filter._wpnonce = nonce;
 
             var that = this;
             

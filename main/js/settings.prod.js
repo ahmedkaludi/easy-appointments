@@ -100,7 +100,10 @@
             price       : 0
         },
 
-        url: function() { return ajaxurl+'?action=ea_appointment&id=' + encodeURIComponent(this.id) },
+        url: function() {
+            const nonce = window?.wpApiSettings?.nonce ?? '';
+            return ajaxurl+'?action=ea_appointment&id=' + encodeURIComponent(this.id) + '&_wpnonce=' + nonce;
+        },
 
         toJSON : function() {
             var attrs = _.clone( this.attributes );
@@ -130,7 +133,10 @@
             cord: null
         },
 
-        url: function() { return ajaxurl+'?action=ea_location&id=' + encodeURIComponent(this.id) },
+        url: function() {
+            const nonce = window?.wpApiSettings?.nonce ?? '';
+            return ajaxurl+'?action=ea_location&id=' + encodeURIComponent(this.id) + '&_wpnonce=' + nonce;
+        },
 
         toJSON : function() {
             var attrs = _.clone( this.attributes );
@@ -149,7 +155,8 @@
             price: 10
         },
         url : function() {
-            return ajaxurl+'?action=ea_service&id=' + this.id;
+            const nonce = window?.wpApiSettings?.nonce ?? '';
+            return ajaxurl+'?action=ea_service&id=' + this.id + '&_wpnonce=' + nonce;
         },
         toJSON : function() {
             var attrs = _.clone( this.attributes );
@@ -166,7 +173,8 @@
             phone: ""
         },
         url : function() {
-            return ajaxurl+'?action=ea_worker&id=' + this.id;
+            const nonce = window?.wpApiSettings?.nonce ?? '';
+            return ajaxurl+'?action=ea_worker&id=' + this.id + '&_wpnonce=' + nonce;
         },
         toJSON : function() {
             var attrs = _.clone( this.attributes );
@@ -176,13 +184,13 @@
      * Appointments collection
      */
     EA.Appointments = Backbone.Collection.extend({
-        url : ajaxurl+'?action=ea_appointments',
+        url : ajaxurl + '?action=ea_appointments' + '&_wpnonce=' + (window?.wpApiSettings?.nonce ?? ''),
         model: EA.Appointment
     });    /**
      * Locations collection
      */
     EA.Locations = Backbone.Collection.extend({
-        url : ajaxurl+'?action=ea_locations',
+        url : ajaxurl+'?action=ea_locations' + '&_wpnonce=' + (window?.wpApiSettings?.nonce ?? ''),
         model: EA.Location,
         cacheData: function() {
             if(typeof eaData !== 'undefined') {
@@ -193,7 +201,7 @@
      * Services collection
      */
     EA.Services = Backbone.Collection.extend({
-        url : ajaxurl+'?action=ea_services',
+        url : ajaxurl+'?action=ea_services' + '&_wpnonce=' + (window?.wpApiSettings?.nonce ?? ''),
         model: EA.Service,
         parse: function(response) {
             // console.log(response);
@@ -208,7 +216,7 @@
      * Workers collection
      */
     EA.Workers = Backbone.Collection.extend({
-        url : ajaxurl+'?action=ea_workers',
+        url : ajaxurl+'?action=ea_workers' + '&_wpnonce=' + (window?.wpApiSettings?.nonce ?? ''),
         model: EA.Worker,
         cacheData: function() {
             if(typeof eaData !== 'undefined') {
@@ -1063,8 +1071,11 @@
             });
 
             if(isComplete) {
+                const nonce = window?.wpApiSettings?.nonce ?? '';
+
                 filter.action = 'ea_open_times';
                 filter.app_id = this.model.get('id');
+                filter._wpnonce = nonce;
 
                 var that = this;
 

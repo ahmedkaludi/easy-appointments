@@ -3,9 +3,9 @@ Contributors: loncar
 Donate link: https://easy-appointments.net/
 Tags: appointment, appointments, Booking, calendar, plugin, reservation, reservations, wp appointment, reservation plugin, reservations, schedule
 Requires at least: 3.7
-Tested up to: 6.0
+Tested up to: 6.4
 Requires PHP: 5.3
-Stable tag: 3.11.0
+Stable tag: 3.11.12
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -213,7 +213,40 @@ Note: you can have only one calendar on one page.
 
 == Changelog ==
 
-= 3.11.0 (2022-12-25) =
+= 3.11.12 (2023-12-08) =
+* Added new option inside bootstrap short code `auto_select_slot` for auto selecting slot if there is only one available during the day.
+
+= 3.11.11 (2023-08-13) =
+* Fixed bug with selection of long services that were blocked when they should be possible.
+
+= 3.11.10 (2023-05-28) =
+* Improved security for Admin section by adding nonce to all ajax requests
+
+= 3.11.9 (2023-05-03) =
+* Added new param for FullCalendar to hide cancelled events from being displayed in calendar (`hide_cancelled="0 or 1"` default `0`)
+
+= 3.11.8 (2023-17-03) =
+* Fixed issue with custom form fields that could not be deleted or edited
+
+= 3.11.7 (2023-03-03) =
+* Fixed issue with custom redirect settings on booking
+
+= 3.11.6 (2023-02-13) =
+* Fixed couple of code issues suggested by WP (part 2)
+
+= 3.11.5 (2023-02-09) =
+* Escaped mail content for admin notification (official WP guideline suggestion - part 1s)
+
+= 3.11.4 (2022-12-31) =
+* Added option to extend all connection in bulk that ends on `2022-12-31` for one more year :)
+
+= 3.11.3 (2022-12-27) =
+* Fixed issue with service name in options
+
+= 3.11.2 (2022-12-25) =
+* Fixed small label issue
+
+= 3.11.1 (2022-12-25) =
 * Security Patch: FullCalendar shortcode didn't have escaped props that could be misused by contributor. Not that is fixed now.
 * Small breaking changes: Now HTML elements in settings will be also escaped meaning that it will not be rendered but just shown if you are using it.
 

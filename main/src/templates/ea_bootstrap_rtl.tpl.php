@@ -20,7 +20,7 @@
                     </select>
                 </div>
             <label class="ea-label col-sm-4 control-label ea-rtl-label">
-                <?php _e($this->options->get_option_value("trans.location"), 'easy-appointments');?>
+                <?php esc_html_e($this->options->get_option_value("trans.location"), 'easy-appointments');?>
             </label>
         </div>
         <div class="step form-group">
@@ -31,7 +31,7 @@
                 </select>
             </div>
             <label class="ea-label col-sm-4 control-label ea-rtl-label">
-                <?php _e($this->options->get_option_value("trans.service"), ''); ?>
+                <?php esc_html_e($this->options->get_option_value("trans.service"), ''); ?>
             </label>
         </div>
         <div class="step form-group">
@@ -42,7 +42,7 @@
                 </select>
             </div>
             <label class="ea-label col-sm-4 control-label ea-rtl-label">
-                <?php _e($this->options->get_option_value("trans.worker"), ''); ?>
+                <?php esc_html_e($this->options->get_option_value("trans.worker"), ''); ?>
             </label>
         </div>
         <div class="step calendar" class="filter">

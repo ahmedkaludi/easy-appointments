@@ -9,7 +9,8 @@ EA.Worker = Backbone.Model.extend({
         phone: ""
     },
     url : function() {
-        return ajaxurl+'?action=ea_worker&id=' + this.id;
+        const nonce = window?.wpApiSettings?.nonce ?? '';
+        return ajaxurl+'?action=ea_worker&id=' + this.id + '&_wpnonce=' + nonce;
     },
     toJSON : function() {
         var attrs = _.clone( this.attributes );

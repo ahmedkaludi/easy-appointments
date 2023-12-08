@@ -12,6 +12,7 @@ import {
 } from '../../ea-components';
 import { BulkConnectionsForm } from './components/ConnectionsForm/BulkConnectionsForm';
 import { orderBy } from 'lodash';
+import { Button } from '@material-ui/core';
 
 const ConnectionsPage = () => {
   const [open, setOpen] = useState(false);
@@ -170,7 +171,20 @@ const ConnectionsPage = () => {
   return (
     <Fragment>
       <PageTitle titleHeading="Connections" action={headerAction} />
-
+      {__(
+        'Extend connections in bulk that are ending at December 31, 2022 for one more year',
+        'easy-appointments'
+      )}
+      <Button
+        style={{ marginBottom: '5px', marginLeft: '5px' }}
+        onClick={() => {
+          ConnectionsCommunicator.extendConnection().then(response =>
+            alert(response)
+          );
+        }}
+        variant="outlined">
+        Extend
+      </Button>
       <PageContentWrap
         pageKey={PAGE_KEYS.CONNECTIONS}
         loading={loading}
@@ -183,7 +197,6 @@ const ConnectionsPage = () => {
           processing={processing}
         />
       </PageContentWrap>
-
       <Sidebar title={title} open={open} onClose={toggleSidebar}>
         {isBulk && (
           <BulkConnectionsForm

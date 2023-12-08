@@ -2,6 +2,7 @@ import { http } from '../services';
 
 const ajaxUrl = window?.ajaxurl ?? '';
 const nonce = window?.wpApiSettings?.nonce ?? '';
+const extendConnections = window?.ea_settings?.rest_url_extend_connections;
 
 /**
  * Locations
@@ -49,5 +50,16 @@ export class ConnectionsCommunicator {
     const response = await http.post(url);
 
     return response === 1;
+  }
+
+  /**
+   * Extend connections
+   */
+  static async extendConnection() {
+    const url = `${extendConnections}?&_wpnonce=${nonce}`;
+
+    const response = await http.post(url);
+
+    return response;
   }
 }

@@ -412,6 +412,8 @@ class EAAjax
 
     public function ajax_setting()
     {
+        $this->validate_admin_nonce();
+
         $this->validate_access_rights('settings');
         $data = $this->parse_input_data();
 
@@ -443,6 +445,8 @@ class EAAjax
 
     public function ajax_settings()
     {
+        $this->validate_admin_nonce();
+
         $this->validate_access_rights('settings');
 
         $data = $this->parse_input_data();
@@ -503,6 +507,8 @@ class EAAjax
      */
     public function ajax_open_times()
     {
+        $this->validate_admin_nonce();
+
         $data = $this->parse_input_data();
 
         if (!array_key_exists('app_id', $data)) {
@@ -518,6 +524,8 @@ class EAAjax
 
     public function ajax_appointments()
     {
+        $this->validate_admin_nonce();
+
         $data = $this->parse_input_data();
 
         $response = array();
@@ -531,6 +539,8 @@ class EAAjax
 
     public function ajax_appointment()
     {
+        $this->validate_admin_nonce();
+
         $response = $this->parse_appointment(false);
 
         if ($response == false) {
@@ -554,6 +564,8 @@ class EAAjax
      */
     public function ajax_service()
     {
+        $this->validate_admin_nonce();
+
         $this->validate_access_rights('services');
 
         $this->parse_single_model('ea_services');
@@ -564,6 +576,8 @@ class EAAjax
      */
     public function ajax_services()
     {
+        $this->validate_admin_nonce();
+
         $this->validate_access_rights('services');
 
         $this->parse_input_data();
@@ -584,6 +598,8 @@ class EAAjax
      */
     public function ajax_locations()
     {
+        $this->validate_admin_nonce();
+
         $this->validate_access_rights('locations');
 
         $this->parse_input_data();
@@ -606,6 +622,8 @@ class EAAjax
      */
     public function ajax_location()
     {
+        $this->validate_admin_nonce();
+
         $this->validate_access_rights('locations');
 
         $this->parse_single_model('ea_locations');
@@ -616,6 +634,8 @@ class EAAjax
      */
     public function ajax_workers()
     {
+        $this->validate_admin_nonce();
+
         $this->validate_access_rights('workers');
 
         $this->parse_input_data();
@@ -638,6 +658,8 @@ class EAAjax
      */
     public function ajax_worker()
     {
+        $this->validate_admin_nonce();
+
         $this->validate_access_rights('workers');
 
         $this->parse_single_model('ea_staff');
@@ -648,6 +670,8 @@ class EAAjax
      */
     public function ajax_connections()
     {
+        $this->validate_admin_nonce();
+
         $this->validate_access_rights('connections');
 
         $this->parse_input_data();
@@ -668,6 +692,8 @@ class EAAjax
      */
     public function ajax_connection()
     {
+        $this->validate_admin_nonce();
+
         $this->validate_access_rights('connections');
 
         $this->parse_single_model('ea_connections');
@@ -689,6 +715,8 @@ class EAAjax
 
     public function ajax_field()
     {
+        $this->validate_admin_nonce();
+
         $this->validate_access_rights('settings');
 
         // we need to add slug
@@ -715,6 +743,8 @@ class EAAjax
 
     public function ajax_fields()
     {
+        $this->validate_admin_nonce();
+
         $this->validate_access_rights('settings');
 
         $data = $this->parse_input_data();
@@ -734,6 +764,8 @@ class EAAjax
      */
     public function ajax_errors()
     {
+        $this->validate_admin_nonce();
+
         $this->validate_access_rights('tools');
 
         $this->parse_input_data();
@@ -749,6 +781,8 @@ class EAAjax
 
     public function ajax_test_mail()
     {
+        $this->validate_admin_nonce();
+
         $this->validate_access_rights('tools');
 
         $address = $_POST['address'];
@@ -829,6 +863,8 @@ class EAAjax
      */
     public function ajax_report()
     {
+        $this->validate_admin_nonce();
+
         $this->validate_access_rights('reports');
 
         $data = $this->parse_input_data();
@@ -842,6 +878,8 @@ class EAAjax
 
     public function ajax_export()
     {
+        $this->validate_admin_nonce();
+
         $this->validate_access_rights('reports');
 
         $data = $this->parse_input_data();
@@ -1109,8 +1147,22 @@ class EAAjax
         check_ajax_referer('ea-bootstrap-form', 'check');
     }
 
+    private function validate_admin_nonce()
+    {
+        $value = $this->options->get_option_value('nonce.off', null);
+
+        if (!empty($value)) {
+            return;
+        }
+
+        check_ajax_referer('wp_rest');
+    }
+
     public function save_custom_columns()
     {
+
+        $this->validate_admin_nonce();
+
         $raw_fields = $_POST['fields'];
 
         $fields = explode(',', $raw_fields);

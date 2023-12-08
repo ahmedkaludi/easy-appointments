@@ -19,7 +19,10 @@ EA.Appointment = Backbone.Model.extend({
         price       : 0
     },
     
-    url: function() { return ajaxurl+'?action=ea_appointment&id=' + encodeURIComponent(this.id) },
+    url: function() {
+        const nonce = window?.wpApiSettings?.nonce ?? '';
+        return ajaxurl+'?action=ea_appointment&id=' + encodeURIComponent(this.id) + '&_wpnonce=' + nonce;
+    },
     
     toJSON : function() {
         var attrs = _.clone( this.attributes );

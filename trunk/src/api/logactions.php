@@ -46,6 +46,17 @@ class EALogActions {
                 }
             )
         ));
+
+        $connection_extend = 'extend_connections';
+        register_rest_route( $this->namespace, '/' . $connection_extend, array(
+            array(
+                'methods'             => WP_REST_Server::CREATABLE,
+                'callback'            => array( $this, 'extend_connections' ),
+                'permission_callback' => function () {
+                    return current_user_can( 'manage_options' );
+                }
+            )
+        ));
     }
 
     public function clear_error_log() {
@@ -56,9 +67,23 @@ class EALogActions {
         return __('Log records deleted', 'easy-appointments');
     }
 
+    public function extend_connections() {
+        $table_app = $this->db_models->get_wpdb()->prefix . 'ea_connections';
+        $query = "UPDATE $table_app SET day_to='2023-12-31' WHERE day_to = '2022-12-31'";
+
+        $this->db_models->get_wpdb()->query($query);
+
+        return __('Connection extended', 'easy-appointments');
+    }
+
     public static function clear_error_url()
     {
         return rest_url('easy-appointments/v1/mail_log');
+    }
+
+    public static function extend_connection_url()
+    {
+        return rest_url('easy-appointments/v1/extend_connections');
     }
 
     public function clear_log_file() {

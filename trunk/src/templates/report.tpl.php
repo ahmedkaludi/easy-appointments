@@ -87,6 +87,7 @@
         </div>
         <form id="ea-export-form" class="ea-export-form" action="<%- export_link %>" method="get">
             <input type="hidden" name="action" value="ea_export">
+            <input type="hidden" name="_wpnonce" value="<%- nonce %>">
             <div class="form-item">
                 <label for=""><?php _e('From', 'easy-appointments'); ?></label>
                 <input class="ea-datepicker field" type="text" name="ea-export-from" autocomplete="off">
