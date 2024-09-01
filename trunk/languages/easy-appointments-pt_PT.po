@@ -1503,8 +1503,8 @@ msgstr "Exportar dados"
 #~ msgstr ""
 #~ "Simples e fácil de usar o sistema de gestão para Compromissos e Reservas"
 
-#~ msgid "https://easy-appointments.net/"
-#~ msgstr "https://easy-appointments.net/"
+#~ msgid "https://easy-appointments.com/"
+#~ msgstr "https://easy-appointments.com/"
 
 #~ msgid "Nikola Loncar"
 #~ msgstr "Nikola Loncar"

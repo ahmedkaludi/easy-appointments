@@ -98,7 +98,7 @@ class EAFullCalendar
             'service'              => null,
             'worker'               => null,
             'color'                => false,
-            'start_of_week'        => get_option('start_of_week', 0),
+            'start_of_week'        => (int) get_option('start_of_week', 0),
             'rtl'                  => '0',
             'default_date'         => date('Y-m-d'),
             'min_date'             => null,
@@ -129,7 +129,7 @@ class EAFullCalendar
             }
 
             // also remove '{', '}' brackets because no settings needs that
-            $code_params[$key] = esc_js(str_replace(array('{','}',';'), array('','',''), $value));
+            $code_params[$key] = esc_js(str_replace(array('{','}',';', '(', ')'), array('','','','',''), $value));
         }
 
         // scripts that are going to be used
@@ -246,7 +246,7 @@ EOT;
         type: 'GET',
         data: {
           _wpnonce: wpApiSettings.nonce,
-          hide_cancelled: {$code_params['hide_cancelled']},
+          hide_cancelled: '{$code_params['hide_cancelled']}',
           {$location_param}
           {$service_param}
           {$worker_param}

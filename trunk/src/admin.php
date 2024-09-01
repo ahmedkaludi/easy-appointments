@@ -467,7 +467,7 @@ class EAAdminPanel
         , 'content' => '<p>Use filter for date to reduce output results for appointments. You can filter by <b>location</b>, <b>service</b>, <b>worker</b>, <b>status</b> and <b>date</b>.</p>'
         ));
 
-        $screen->set_help_sidebar('<a href="https://easy-appointments.net/documentation/">More info!</a>');
+        $screen->set_help_sidebar('<a href="https://easy-appointments.com/documentation/">More info!</a>');
 
         require_once EA_SRC_DIR . 'templates/appointments.tpl.php';
         require_once EA_SRC_DIR . 'templates/inlinedata.sorted.tpl.php';
@@ -495,7 +495,7 @@ class EAAdminPanel
                 '<p>There can you see free times an how many slots are taken.</p>'
         ));
 
-        $screen->set_help_sidebar('<a href="https://easy-appointments.net/documentation/">More info!</a>');
+        $screen->set_help_sidebar('<a href="https://easy-appointments.com/documentation/">More info!</a>');
 
         require_once EA_SRC_DIR . 'templates/report.tpl.php';
         require_once EA_SRC_DIR . 'templates/inlinedata.tpl.php';
@@ -523,7 +523,7 @@ class EAAdminPanel
         , 'content' => '<p>You need to define at least one location, worker and service! Without that widget won\'t work.</p>'
         ));
 
-        $screen->set_help_sidebar('<a href="https://easy-appointments.net/documentation/">More info!</a>');
+        $screen->set_help_sidebar('<a href="https://easy-appointments.com/documentation/">More info!</a>');
 
         require_once EA_SRC_DIR . 'templates/admin.tpl.php';
         require_once EA_SRC_DIR . 'templates/inlinedata.tpl.php';
@@ -552,7 +552,8 @@ class EAAdminPanel
         $wpurl = get_bloginfo('wpurl');
         $url   = get_bloginfo('url');
 
-        $settings['image_base'] = $wpurl === $url ? '' : $wpurl;
+//        $settings['image_base'] = $wpurl === $url ? '' : $wpurl;
+        $settings['image_base'] = str_replace("/wp-content", "", content_url());
         wp_localize_script('ea-admin-bundle', 'ea_settings', $settings);
 
         if (function_exists('wp_set_script_translations')) {
@@ -566,7 +567,7 @@ class EAAdminPanel
         , 'content' => '<p>You need to define at least one location, worker and service! Without that widget won\'t work.</p>'
         ));
 
-        $screen->set_help_sidebar('<a href="https://easy-appointments.net/documentation/">More info!</a>');
+        $screen->set_help_sidebar('<a href="https://easy-appointments.com/documentation/">More info!</a>');
 
         require_once EA_SRC_DIR . 'templates/vacation.tpl.php';
         require_once EA_SRC_DIR . 'templates/inlinedata.tpl.php';
@@ -594,7 +595,8 @@ class EAAdminPanel
         $wpurl = get_bloginfo('wpurl');
         $url   = get_bloginfo('url');
 
-        $settings['image_base'] = $wpurl === $url ? '' : $wpurl;
+//        $settings['image_base'] = $wpurl === $url ? '' : $wpurl;
+        $settings['image_base'] = str_replace("/wp-content", "", content_url());
         wp_localize_script('ea-admin-bundle', 'ea_settings', $settings);
 
         if (function_exists('wp_set_script_translations')) {
@@ -627,7 +629,8 @@ class EAAdminPanel
         $wpurl = get_bloginfo('wpurl');
         $url   = get_bloginfo('url');
 
-        $settings['image_base'] = $wpurl === $url ? '' : $wpurl;
+//        $settings['image_base'] = $wpurl === $url ? '' : $wpurl;
+        $settings['image_base'] = str_replace("/wp-content", "", content_url());
         wp_localize_script('ea-admin-bundle', 'ea_settings', $settings);
 
         if (function_exists('wp_set_script_translations')) {
@@ -660,7 +663,8 @@ class EAAdminPanel
         $wpurl = get_bloginfo('wpurl');
         $url   = get_bloginfo('url');
 
-        $settings['image_base'] = $wpurl === $url ? '' : $wpurl;
+//        $settings['image_base'] = $wpurl === $url ? '' : $wpurl;
+        $settings['image_base'] = str_replace("/wp-content", "", content_url());
         wp_localize_script('ea-admin-bundle', 'ea_settings', $settings);
 
         if (function_exists('wp_set_script_translations')) {
@@ -695,7 +699,8 @@ class EAAdminPanel
         $wpurl = get_bloginfo('wpurl');
         $url   = get_bloginfo('url');
 
-        $settings['image_base'] = $wpurl === $url ? '' : $wpurl;
+//        $settings['image_base'] = $wpurl === $url ? '' : $wpurl;
+        $settings['image_base'] = str_replace("/wp-content", "", content_url());
         $settings['rest_url_extend_connections'] = EALogActions::extend_connection_url();
 
         wp_localize_script('ea-admin-bundle', 'ea_settings', $settings);
@@ -731,7 +736,8 @@ class EAAdminPanel
         $wpurl = get_bloginfo('wpurl');
         $url   = get_bloginfo('url');
 
-        $settings['image_base'] = $wpurl === $url ? '' : $wpurl;
+//        $settings['image_base'] = $wpurl === $url ? '' : $wpurl;
+        $settings['image_base'] = str_replace("/wp-content", "", content_url());
         wp_localize_script('ea-admin-bundle', 'ea_settings', $settings);
 
         if (function_exists('wp_set_script_translations')) {
@@ -765,7 +771,8 @@ class EAAdminPanel
         $wpurl = get_bloginfo('wpurl');
         $url   = get_bloginfo('url');
 
-        $settings['image_base'] = $wpurl === $url ? '' : $wpurl;
+//        $settings['image_base'] = $wpurl === $url ? '' : $wpurl;
+        $settings['image_base'] = str_replace("/wp-content", "", content_url());
         wp_localize_script('ea-admin-bundle', 'ea_settings', $settings);
 
         if (function_exists('wp_set_script_translations')) {

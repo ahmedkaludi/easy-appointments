@@ -1,11 +1,10 @@
 <script type="text/template" id="ea-settings-main">
 <?php 
-	get_current_screen()->render_screen_meta();
+    get_current_screen()->render_screen_meta();
 ?>
-	<div class="wrap">
-		<div id="tab-content">
-		</div>
-	</div>
+    <div class="wrap">
+        <div id="tab-content"></div>
+    </div>
 </script>
 
 <!--Customize -->
@@ -207,6 +206,16 @@
                                value="<%- _.findWhere(settings, {ea_key:'user.access.connections'}).ea_value %>">
                     </div>
                     <div class="form-item">
+                        <div class="label-with-tooltip">
+                            <label for="user.access.reports"><?php _e('Reports Page', 'easy-appointments'); ?></label>
+                            <span class="tooltip tooltip-right"
+                                  data-tooltip="<?php _e('Default capability: manage_options.', 'easy-appointments'); ?>"></span>
+                        </div>
+                        <input class="field" data-key="user.access.reports"
+                               name="user.access.reports" type="text"
+                               value="<%- _.findWhere(settings, {ea_key:'user.access.reports'}).ea_value %>">
+                    </div>
+                    <div class="form-item">
                         <div class="form-wrap">
                             <?php _e('Current logged in user have:', 'easy-appointments'); ?> <small>x<?php
                             $data = get_userdata( get_current_user_id() );
@@ -393,7 +402,7 @@
                                 data-tooltip="<?php _e('Event content when clicked on event', 'easy-appointments'); ?>"></span>
                       </div>
                       <textarea id="fullcalendar-event-template" class="field" name="fullcalendar.event.template" data-key="fullcalendar.event.template"><%- (_.findWhere(settings, {ea_key:'fullcalendar.event.template'})).ea_value %></textarea>
-                      <small><?php _e('Example', 'easy-appointments'); ?> : (<a href="https://easy-appointments.net/documentation/templates/" target="_blank"><?php _e('Full documentation', 'easy-appointments');?></a>)</small>
+                      <small><?php _e('Example', 'easy-appointments'); ?> : (<a href="https://easy-appointments.com/documentation/templates/" target="_blank"><?php _e('Full documentation', 'easy-appointments');?></a>)</small>
                       <div style="display: inline-block"><code>{= event.location_name}</code><small> / </small><code>{= language}</code><small> / </small><code>{= link_confirm}</code></div>
                       <small><?php _e('To get all available options use', 'easy-appointments'); ?> :</small>
                       <code>{= __CONTEXT__ | raw}</code>
@@ -624,6 +633,10 @@
                             {ea_key:'show.iagree'}) !== 'undefined' && _.findWhere(settings,
                             {ea_key:'show.iagree'}).ea_value == '1') { %>checked<% } %> />
                         </div>
+                    </div>
+                    <hr />
+                    <div class="form-item" style="background-color: #ccc">
+                        <blockquote><?php _e('Note: you can use dynamic form values for redirect params. Redirect example: https://example.com/customer_name={{name}}. This will put value from custom form field with slug `name` to that redirect value. Please check custom form fields for slug names of the fields and just put them in {{}} where you need that param.', 'easy-appointments'); ?></blockquote>
                     </div>
                     <div class="form-item">
                         <div class="label-with-tooltip">

@@ -387,6 +387,7 @@
 
             options.action = 'ea_next_step';
             options.check  = ea_settings['check'];
+            options._cb    = Math.floor(Math.random() * 1000000);
 
             this.placeLoader(next_element.parent());
 
@@ -495,6 +496,7 @@
             options.action = 'ea_date_selected';
             options.date   = dateString;
             options.check  = ea_settings['check'];
+            options._cb    = Math.floor(Math.random() * 1000000);
 
             this.placeLoader(calendar);
 
@@ -562,7 +564,8 @@
                 end_date: this.$element.find('.date').datepicker().val(),
                 start: this.$element.find('.selected-time').data('val'),
                 check: ea_settings['check'],
-                action: 'ea_res_appointment'
+                action: 'ea_res_appointment',
+                _cb: Math.floor(Math.random() * 1000000)
             };
 
             // for booking overview
@@ -580,6 +583,8 @@
             jQuery.get(ea_ajaxurl, options, function (response) {
 
                 plugin.res_app = response.id;
+
+                plugin.$element.find('.ea-cancel').data('_hash', response._hash);
 
                 plugin.$element.find('.step').addClass('disabled');
                 plugin.$element.find('.final').removeClass('disabled');
@@ -644,6 +649,7 @@
             });
 
             options.action = 'ea_final_appointment';
+            options._cb    = Math.floor(Math.random() * 1000000);
 
             jQuery.get(ea_ajaxurl, options, function (response) {
                 plugin.$element.find('.ea-submit').hide();
@@ -695,6 +701,8 @@
                 options.captcha = this.$element.find('.g-recaptcha-response').val();
             }
 
+            options._cb    = Math.floor(Math.random() * 1000000);
+
             jQuery.get(ea_ajaxurl, options, function (response) {
                 plugin.res_app = response.id;
 
@@ -738,9 +746,12 @@
 
             this.$element.find('.final').addClass('disabled').prevAll('.step').removeClass('disabled');
 
+            var _hash = plugin.$element.find('.ea-cancel').data('_hash');
+
             var options = {
                 id: this.res_app,
                 check: ea_settings['check'],
+                _hash: _hash,
                 action: 'ea_cancel_appointment'
             };
 
@@ -752,6 +763,8 @@
                 plugin.chooseStep();
                 return;
             }
+
+            options._cb    = Math.floor(Math.random() * 1000000);
 
             jQuery.get(ea_ajaxurl, options, function (response) {
                 if (response.data) {

@@ -1498,8 +1498,8 @@ msgstr "تصدير البيانات"
 #~ msgid "Easy Appointments"
 #~ msgstr "المواعيد السهلة"
 
-#~ msgid "https://easy-appointments.net/"
-#~ msgstr "https://easy-appointments.net/"
+#~ msgid "https://easy-appointments.com/"
+#~ msgstr "https://easy-appointments.com/"
 
 #~ msgid ""
 #~ "Simple and easy to use management system for Appointments and Bookings"

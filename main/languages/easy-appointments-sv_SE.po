@@ -1424,8 +1424,8 @@ msgstr "Exportera data"
 #~ msgid "http://nikolaloncar.com"
 #~ msgstr "http://nikolaloncar.com"
 
-#~ msgid "https://easy-appointments.net/"
-#~ msgstr "https://easy-appointments.net/"
+#~ msgid "https://easy-appointments.com/"
+#~ msgstr "https://easy-appointments.com/"
 
 #~ msgid "Location id that will be used for getting free / taken slots"
 #~ msgstr "Plats-ID som används för att hitta lediga / upptagna platser"

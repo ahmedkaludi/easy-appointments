@@ -506,7 +506,10 @@
             var index = $btn.data('index');
 
             var $elData = this.$el.find('#advance-redirect');
-            var data = JSON.parse($elData.val());
+
+            var urlData = $elData.val().replaceAll('&quot;', '"');
+
+            var data = JSON.parse(urlData);
 
             data.splice(index, 1);
 
@@ -568,7 +571,10 @@
             var index = $btn.data('index');
 
             var $elData = this.$el.find('#advance-cancel-redirect');
-            var data = JSON.parse($elData.val());
+
+            var urlData = $elData.val().replaceAll('&quot;', '"');
+
+            var data = JSON.parse(urlData);
 
             data.splice(index, 1);
 

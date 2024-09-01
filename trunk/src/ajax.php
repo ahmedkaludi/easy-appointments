@@ -296,6 +296,10 @@ class EAAjax
             $this->send_err_json_result(json_encode($resp));
         }
 
+        if ($response->id) {
+            $response->_hash = wp_hash($response->id);
+        }
+
         $this->send_ok_json_result($response);
     }
 
@@ -385,7 +389,14 @@ class EAAjax
 
         $data = $_GET;
 
+        $hash = wp_hash($data['id']);
         unset($data['action']);
+
+        if (!array_key_exists('_hash', $data) || $hash !== $data['_hash']) {
+            $this->send_err_json_result('{"err":"Invalid hash"}');
+        }
+
+        unset($data['_hash']);
 
         $data['status'] = 'abandoned';
 

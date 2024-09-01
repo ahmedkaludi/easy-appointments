@@ -47,6 +47,10 @@ class EAOptions
             $page = 'appointments';
         }
 
+        if ($slug === 'easy_app_reports' || $slug === 'easy_app_new_reports') {
+            $page = 'reports';
+        }
+
         $option_name = "user.access.{$page}";
 
         $options_value = $this->get_option_value($option_name, '');
@@ -135,6 +139,7 @@ class EAOptions
             'user.access.workers'           => '',
             'user.access.locations'         => '',
             'user.access.connections'       => '',
+            'user.access.reports'           => '',
         );
     }
 

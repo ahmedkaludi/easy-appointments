@@ -647,13 +647,14 @@ class EAFrontend
 
         // If there is only one result, like one worker in whole system or one location etc
         if (count($rows) == 1) {
-            $duration = (int) $rows[0]->duration;
-            $slot_step = (int) $rows[0]->slot_step;
             $name = esc_html($rows[0]->name);
 
             $price_attr = !empty($rows[0]->price) ? " data-price='" . esc_attr($rows[0]->price) ."'" : '';
 
             if ($type === 'services') {
+                $duration = (int) $rows[0]->duration;
+                $slot_step = (int) $rows[0]->slot_step;
+
                 echo "<option data-duration='{$duration}' data-slot_step='{$slot_step}' value='{$rows[0]->id}' selected='selected'$price_attr>{$name}</option>";
             } else {
                 echo "<option value='{$rows[0]->id}' selected='selected'$price_attr>{$name}</option>";
@@ -705,23 +706,26 @@ class EAFrontend
 
         foreach ($rows as $row) {
             $name = esc_html($row->name);
-            $duration = (int) $row->duration;
-            $slot_step = (int) $row->slot_step;
-            $price_attr = !empty($row->price) ? " data-price='" . esc_attr($row->price) . "'" : '';
-            $price = esc_html($row->price);
+
+            // only in case of services
+            if ($type === 'services') {
+                $duration = (int)$row->duration;
+                $slot_step = (int)$row->slot_step;
+                $price_attr = !empty($row->price) ? " data-price='" . esc_attr($row->price) . "'" : '';
+                $price = esc_html($row->price);
+            }
 
             // case when we are hiding price
             if ($hide_price == '1') {
-
                 // for all other types
-                if ($type != 'services') {
+                if ($type !== 'services') {
                     echo "<option value='{$row->id}'>{$name}</option>";
                 } else if ($type == 'services') {
                     // for service
                     echo "<option data-duration='{$duration}' data-slot_step='{$slot_step}' value='{$row->id}'>{$name}</option>";
                 }
 
-            } else if ($type == 'services') {
+            } else if ($type === 'services') {
                 $price = ($before == '1') ? $currency . $price : $row->price . $currency;
                 $name_price = $name . ' ' . $price;
 

@@ -433,6 +433,7 @@
 
             options.action = 'ea_next_step';
             options.check  = ea_settings['check'];
+            options._cb    = Math.floor(Math.random() * 1000000);
 
             this.placeLoader(next_element.parent());
 
@@ -717,6 +718,8 @@
 
                 fields.push({'name': 'check', 'value': ea_settings['check']});
 
+                fields.push({'name': '_cb', 'value': Math.floor(Math.random() * 1000000)});
+
                 var req = jQuery.get(ea_ajaxurl, fields, function (result) {
                     self.settings.store = result;
                     self.refreshData(result);
@@ -813,6 +816,8 @@
                 action: 'ea_res_appointment'
             };
 
+            options._cb = Math.floor(Math.random() * 1000000);
+
             // for booking overview
             var booking_data = {};
             booking_data.location = this.$element.find('[name="location"] > option:selected').text();
@@ -827,6 +832,8 @@
 
             var req = jQuery.get(ea_ajaxurl, options, function (response) {
                 plugin.res_app = response.id;
+
+                plugin.$element.find('.ea-cancel').data('_hash', response._hash);
 
                 plugin.$element.find('.step').addClass('disabled');
                 plugin.$element.find('.final').removeClass('disabled');
@@ -920,6 +927,16 @@
             }
         },
 
+        formatRedirect: function (urlString, data) {
+            var parsedUrl = urlString;
+
+            jQuery.each(data, function (key, value) {
+                parsedUrl = parsedUrl.replaceAll('{{' + key + '}}', encodeURIComponent(value));
+            });
+
+            return parsedUrl;
+        },
+
         /**
          * Comform appointment
          */
@@ -948,6 +965,7 @@
             });
 
             options.action = 'ea_final_appointment';
+            options._cb    = Math.floor(Math.random() * 1000000);
 
             var req = jQuery.get(ea_ajaxurl, options, function (response) {
                 // store values from form
@@ -978,7 +996,7 @@
                     if (redirect) {
                         redirected = true;
                         setTimeout(function () {
-                            window.location.href = redirect.url;
+                            window.location.href = plugin.formatRedirect(redirect.url, options);
                         }, 2000);
                     }
                 }
@@ -986,7 +1004,7 @@
                 // if there is redirect do that
                 if (ea_settings['submit.redirect'] !== '' && redirected === false) {
                     setTimeout(function () {
-                        window.location.href = ea_settings['submit.redirect'];
+                        window.location.href = plugin.formatRedirect(ea_settings['submit.redirect'], options);
                     }, 2000);
                 }
             }, 'json')
@@ -1036,6 +1054,7 @@
                 grecaptcha.ready(function() {
                     grecaptcha.execute(ea_settings['captcha3.site-key'], { action: 'submit' }).then(function(token) {
                         options.captcha = token;
+                        options._cb    = Math.floor(Math.random() * 1000000);
 
                         jQuery.get(ea_ajaxurl, options, function (response) {
                             plugin.res_app = response.id;
@@ -1055,6 +1074,7 @@
                 return;
             }
 
+            options._cb    = Math.floor(Math.random() * 1000000);
 
             // simple call
             jQuery.get(ea_ajaxurl, options, function (response) {
@@ -1117,11 +1137,16 @@
             this.$element.find('.final').addClass('disabled');
             this.$element.find('.step:not(.final)').prevAll('.step').removeClass('disabled');
 
+            var _hash = plugin.$element.find('.ea-cancel').data('_hash');
+
             var options = {
                 id: this.res_app,
                 check: ea_settings['check'],
+                _hash: _hash,
                 action: 'ea_cancel_appointment'
             };
+
+            options._cb = Math.floor(Math.random() * 1000000);
 
             jQuery.get(ea_ajaxurl, options, function (response) {
                 if (response.data) {

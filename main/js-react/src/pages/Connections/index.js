@@ -168,11 +168,13 @@ const ConnectionsPage = () => {
     ? __('Edit connection', 'easy-appointments')
     : __('Add connection', 'easy-appointments');
 
+  const previousYear = new Date().getFullYear() - 1;
+
   return (
     <Fragment>
       <PageTitle titleHeading="Connections" action={headerAction} />
       {__(
-        'Extend connections in bulk that are ending at December 31, 2022 for one more year',
+        `Extend connections in bulk that are ending at December 31, ${previousYear} for one more year`,
         'easy-appointments'
       )}
       <Button

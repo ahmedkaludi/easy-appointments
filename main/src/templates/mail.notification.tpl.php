@@ -4,7 +4,7 @@
         <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
     </head>
     <body>
-        <table border="0" cellpadding="15" cellspacing="0" width="500">
+        <table border="0" cellpadding="15" cellspacing="0" width="500" style="margin-bottom: 20px">
             <tbody>
             <tr>
                 <td style="text-align:left; background-color: #CCFFFF;"><?php _e('Id', 'easy-appointments');?></td>
