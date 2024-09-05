@@ -38,7 +38,7 @@ class ComposerStaticInit6454aa61d36164254036b36c455b0d68
         ),
         't' => 
         array (
-            'tad_DI52_' => 
+            'tad_EA52_' => 
             array (
                 0 => __DIR__ . '/..' . '/lucatume/di52/src',
             ),
@@ -81,11 +81,11 @@ class ComposerStaticInit6454aa61d36164254036b36c455b0d68
         'Leuffen\\TextTemplate\\UndefinedVariableException' => __DIR__ . '/..' . '/text/template/src/UndefinedVariableException.php',
         'Leuffen\\TextTemplate\\__BreakLoopException' => __DIR__ . '/..' . '/text/template/src/__BreakLoopException.php',
         'Leuffen\\TextTemplate\\__ContinueLoopException' => __DIR__ . '/..' . '/text/template/src/__ContinueLoopException.php',
-        'tad_DI52_Container' => __DIR__ . '/..' . '/lucatume/di52/src/tad/DI52/Container.php',
-        'tad_DI52_ContainerInterface' => __DIR__ . '/..' . '/lucatume/di52/src/tad/DI52/ContainerInterface.php',
-        'tad_DI52_ProtectedValue' => __DIR__ . '/..' . '/lucatume/di52/src/tad/DI52/ProtectedValue.php',
-        'tad_DI52_ServiceProvider' => __DIR__ . '/..' . '/lucatume/di52/src/tad/DI52/ServiceProvider.php',
-        'tad_DI52_ServiceProviderInterface' => __DIR__ . '/..' . '/lucatume/di52/src/tad/DI52/ServiceProviderInterface.php',
+        'tad_EA52_Container' => __DIR__ . '/..' . '/lucatume/di52/src/tad/EA52/Container.php',
+        'tad_EA52_ContainerInterface' => __DIR__ . '/..' . '/lucatume/di52/src/tad/EA52/ContainerInterface.php',
+        'tad_EA52_ProtectedValue' => __DIR__ . '/..' . '/lucatume/di52/src/tad/EA52/ProtectedValue.php',
+        'tad_EA52_ServiceProvider' => __DIR__ . '/..' . '/lucatume/di52/src/tad/EA52/ServiceProvider.php',
+        'tad_EA52_ServiceProviderInterface' => __DIR__ . '/..' . '/lucatume/di52/src/tad/EA52/ServiceProviderInterface.php',
         'xrstf\\Composer52\\AutoloadGenerator' => __DIR__ . '/..' . '/xrstf/composer-php52/lib/xrstf/Composer52/AutoloadGenerator.php',
         'xrstf\\Composer52\\Generator' => __DIR__ . '/..' . '/xrstf/composer-php52/lib/xrstf/Composer52/Generator.php',
     );

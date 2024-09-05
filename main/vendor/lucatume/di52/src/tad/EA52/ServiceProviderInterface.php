@@ -1,6 +1,6 @@
 <?php
 
-interface tad_DI52_ServiceProviderInterface
+interface tad_EA52_ServiceProviderInterface
 {
     /**
      * Binds and sets up implementations.

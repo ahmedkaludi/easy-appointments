@@ -1,8 +1,8 @@
 <?php
-if (!function_exists('di52_findFile')) {
-	function di52_findFile($class)
+if (!function_exists('ea52_findFile')) {
+	function ea52_findFile($class)
 	{
-		if (0 !== strpos($class, 'tad_DI52_')) {
+		if (0 !== strpos($class, 'tad_EA52_')) {
 			return false;
 		}
 
@@ -10,10 +10,10 @@ if (!function_exists('di52_findFile')) {
 	}
 }
 
-if (!function_exists('di52_autoload')) {
-	function di52_autoload($class)
+if (!function_exists('ea52_autoload')) {
+	function ea52_autoload($class)
 	{
-		$file = di52_findFile($class);
+		$file = ea52_findFile($class);
 		if ($file) {
 			include $file;
 
@@ -24,4 +24,4 @@ if (!function_exists('di52_autoload')) {
 	}
 }
 
-spl_autoload_register('di52_autoload');
+spl_autoload_register('ea52_autoload');

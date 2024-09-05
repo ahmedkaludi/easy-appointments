@@ -3,13 +3,13 @@
  * Builds and returns a closure to be used to lazily make objects on PHP 5.3+, call a method on them and return the
  * method value.
  *
- * @param tad_DI52_Container $container
+ * @param tad_EA52_Container $container
  * @param string|object      $classOrInterface
  * @param string             $method
  *
  * @return Closure
  */
-function di52_callbackClosure(tad_DI52_Container $container, $classOrInterface, $method) {
+function ea52_callbackClosure(tad_EA52_Container $container, $classOrInterface, $method) {
 	if ( is_object( $classOrInterface ) ) {
 		$objectId = uniqid( spl_object_hash( $classOrInterface ), true );
 		$container->bind( $objectId, $classOrInterface );
@@ -35,13 +35,13 @@ function di52_callbackClosure(tad_DI52_Container $container, $classOrInterface, 
 /**
  * Builds and returns a closure to be used to lazily make objects on PHP 5.3+ and return them.
  *
- * @param tad_DI52_Container $container
+ * @param tad_EA52_Container $container
  * @param                  string $classOrInterface
  * @param array $vars
  *
  * @return Closure
  */
-function di52_instanceClosure(tad_DI52_Container $container, $classOrInterface, array $vars = array()) {
+function ea52_instanceClosure(tad_EA52_Container $container, $classOrInterface, array $vars = array()) {
 	return function () use ($container, $classOrInterface, $vars) {
 		if (is_object($classOrInterface)) {
 			if (is_callable($classOrInterface)) {

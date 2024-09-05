@@ -5,7 +5,7 @@ Tags: appointment, appointments, Booking, calendar, reservation
 Requires at least: 3.7
 Tested up to: 6.6
 Requires PHP: 5.3
-Stable tag: 3.11.22
+Stable tag: 3.12.0
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -213,7 +213,10 @@ Note: you can have only one calendar on one page.
 
 == Changelog ==
 
-= 3.11.22 (2024-8-06) =
+= 3.12.0 (2024-09-06) =
+* Fixed issue with DI52 dependency conflict between versions with other plugins
+
+= 3.11.22 (2024-08-06) =
 * Moved from .NET to .COM so new home for EasyAppointments is https://easy-appointments.com
 
 = 3.11.21 (2024-06-09) =

@@ -1,6 +1,6 @@
 <?php
 
-class tad_DI52_ProtectedValue
+class tad_EA52_ProtectedValue
 {
 
     /**
@@ -9,7 +9,7 @@ class tad_DI52_ProtectedValue
     protected $value;
 
     /**
-     * tad_DI52_ProtectedValue constructor.
+     * tad_EA52_ProtectedValue constructor.
      * @param mixed $value
      */
     public function __construct($value)

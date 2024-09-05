@@ -80,7 +80,7 @@
             "installation-source": "dist",
             "autoload": {
                 "psr-0": {
-                    "tad_DI52_": [
+                    "tad_EA52_": [
                         "src/"
                     ]
                 }

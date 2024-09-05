@@ -1,11 +1,11 @@
 <?php
 
 /**
- * Interface tad_DI52_ContainerInterface
+ * Interface tad_EA52_ContainerInterface
  *
  * The API supported by the container.
  */
-interface tad_DI52_ContainerInterface
+interface tad_EA52_ContainerInterface
 {
     /**
      * @param string $key
@@ -139,7 +139,7 @@ interface tad_DI52_ContainerInterface
      *          ->needs('LoggerInterface)
      *          ->give('RemoteLogger);
      *
-     * @return tad_DI52_ContainerInterface
+     * @return tad_EA52_ContainerInterface
      */
     public function when($class);
 
@@ -157,7 +157,7 @@ interface tad_DI52_ContainerInterface
      *          ->needs('LoggerInterface)
      *          ->give('RemoteLogger);
      *
-     * @return tad_DI52_ContainerInterface
+     * @return tad_EA52_ContainerInterface
      */
     public function needs($classOrInterface);
 
@@ -175,7 +175,7 @@ interface tad_DI52_ContainerInterface
      *          ->needs('LoggerInterface)
      *          ->give('RemoteLogger);
      *
-     * @return tad_DI52_ContainerInterface
+     * @return tad_EA52_ContainerInterface
      */
     public function give($implementation);
 }

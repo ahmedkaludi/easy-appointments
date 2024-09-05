@@ -1,6 +1,6 @@
 <?php
 
-class tad_DI52_Container implements ArrayAccess {
+class tad_EA52_Container implements ArrayAccess {
 
 	/**
 	 * @var boolean
@@ -113,7 +113,7 @@ class tad_DI52_Container implements ArrayAccess {
 	protected $dependants = array();
 
 	/**
-	 * tad_DI52_Container constructor.
+	 * tad_EA52_Container constructor.
 	 */
 	public function __construct() {
 		$this->id = uniqid(rand(1, 9999));
@@ -128,7 +128,7 @@ class tad_DI52_Container implements ArrayAccess {
 	 *
 	 *        $container->setVar('foo', $container->protect($f));
 	 *
-	 * @see tad_DI52_Container::protect()
+	 * @see tad_EA52_Container::protect()
 	 *
 	 * @param string $key The alias the container will use to reference the variable.
 	 * @param mixed $value The variable value.
@@ -151,8 +151,8 @@ class tad_DI52_Container implements ArrayAccess {
 	 *
 	 *        $container['foo'] = $container->protect($f));
 	 *
-	 * @see   tad_DI52_Container::protect()
-	 * @see   tad_DI52_Container::singleton()
+	 * @see   tad_EA52_Container::protect()
+	 * @see   tad_EA52_Container::singleton()
 	 *
 	 * @param string $key The alias the container will use to reference the variable.
 	 * @param mixed $value The variable value.
@@ -162,7 +162,7 @@ class tad_DI52_Container implements ArrayAccess {
 	 */
 	#[\ReturnTypeWillChange]
 	public function offsetSet($offset, $value) {
-		if ($value instanceof tad_DI52_ProtectedValue) {
+		if ($value instanceof tad_EA52_ProtectedValue) {
 			$this->protected[$offset] = true;
 			$value = $value->getValue();
 		}
@@ -194,7 +194,7 @@ class tad_DI52_Container implements ArrayAccess {
 	 *
 	 * If the variable is a binding then the binding will be resolved before returning it.
 	 *
-	 * @see tad_DI52_Container::make
+	 * @see tad_EA52_Container::make
 	 *
 	 * @param string $key The alias of the variable or binding to fetch.
 	 *
@@ -308,7 +308,7 @@ class tad_DI52_Container implements ArrayAccess {
 
 		try {
 			if (isset($this->deferred[$classOrInterface])) {
-				/** @var tad_DI52_ServiceProviderInterface $provider */
+				/** @var tad_EA52_ServiceProviderInterface $provider */
 				$provider = $this->deferred[$classOrInterface];
 				$provider->register();
 			}
@@ -413,7 +413,7 @@ class tad_DI52_Container implements ArrayAccess {
 	 *
 	 *        $container->tag(['Posts', 'Users', 'Comments'], 'endpoints');
 	 *
-	 * @see tad_DI52_Container::tagged()
+	 * @see tad_EA52_Container::tagged()
 	 *
 	 * @param array $implementationsArray
 	 * @param string $tag
@@ -432,7 +432,7 @@ class tad_DI52_Container implements ArrayAccess {
 	 *            $endpoint->register();
 	 *        }
 	 *
-	 * @see tad_DI52_Container::tag()
+	 * @see tad_EA52_Container::tag()
 	 *
 	 * @param string $tag
 	 *
@@ -449,7 +449,7 @@ class tad_DI52_Container implements ArrayAccess {
 	/**
 	 * Checks whether a tag group exists in the container.
 	 *
-	 * @see tad_DI52_Container::tag()
+	 * @see tad_EA52_Container::tag()
 	 *
 	 * @param string $tag
 	 *
@@ -472,15 +472,15 @@ class tad_DI52_Container implements ArrayAccess {
 	 * If a provider overloads the `boot` method that method will be called when the `boot` method is called on the
 	 * container itself.
 	 *
-	 * @see tad_DI52_ServiceProviderInterface::register()
-	 * @see tad_DI52_ServiceProviderInterface::isDeferred()
-	 * @see tad_DI52_ServiceProviderInterface::provides()
-	 * @see tad_DI52_ServiceProviderInterface::boot()
+	 * @see tad_EA52_ServiceProviderInterface::register()
+	 * @see tad_EA52_ServiceProviderInterface::isDeferred()
+	 * @see tad_EA52_ServiceProviderInterface::provides()
+	 * @see tad_EA52_ServiceProviderInterface::boot()
 	 *
 	 * @param string $serviceProviderClass
 	 */
 	public function register($serviceProviderClass) {
-		/** @var tad_DI52_ServiceProviderInterface $provider */
+		/** @var tad_EA52_ServiceProviderInterface $provider */
 		$provider = new $serviceProviderClass($this);
 		if (!$provider->isDeferred()) {
 			$provider->register();
@@ -509,12 +509,12 @@ class tad_DI52_Container implements ArrayAccess {
 	 * If there are bootable providers (providers overloading the `boot` method) then the `boot` method will be
 	 * called on each bootable provider.
 	 *
-	 * @see tad_DI52_ServiceProviderInterface::boot()
+	 * @see tad_EA52_ServiceProviderInterface::boot()
 	 */
 	public function boot() {
 		if (!empty($this->bootable)) {
 			foreach ($this->bootable as $provider) {
-				/** @var tad_DI52_ServiceProviderInterface $provider */
+				/** @var tad_EA52_ServiceProviderInterface $provider */
 				$provider->boot();
 			}
 		}
@@ -632,7 +632,7 @@ class tad_DI52_Container implements ArrayAccess {
 	 *          ->needs('LoggerInterface)
 	 *          ->give('RemoteLogger);
 	 *
-	 * @return tad_DI52_Container
+	 * @return tad_EA52_Container
 	 */
 	public function when($class) {
 		$this->bindingFor = $class;
@@ -654,7 +654,7 @@ class tad_DI52_Container implements ArrayAccess {
 	 *
 	 * @param string $classOrInterface The class or interface needed by the class.
 	 *
-	 * @return tad_DI52_Container
+	 * @return tad_EA52_Container
 	 */
 	public function needs($classOrInterface) {
 		$this->neededImplementation = $classOrInterface;
@@ -692,7 +692,7 @@ class tad_DI52_Container implements ArrayAccess {
 	 * @param mixed $value
 	 */
 	public function protect($value) {
-		return new tad_DI52_ProtectedValue($value);
+		return new tad_EA52_ProtectedValue($value);
 	}
 
 	/**
@@ -780,7 +780,7 @@ class tad_DI52_Container implements ArrayAccess {
 		}
 
 		if ($this->useClosures) {
-			$f = di52_callbackClosure($this, $classOrInterface, $method);
+			$f = ea52_callbackClosure($this, $classOrInterface, $method);
 		} else {
 			$classOrInterfaceName = is_object($classOrInterface) ? get_class($classOrInterface) : $classOrInterface;
 			// @codeCoverageIgnoreStart
@@ -870,7 +870,7 @@ class tad_DI52_Container implements ArrayAccess {
 			$this->__instanceCallbackArgs[$instanceId] = $args;
 
 			if ($this->useClosures) {
-				$f = di52_instanceClosure($this, $classOrInterface, $args);
+				$f = ea52_instanceClosure($this, $classOrInterface, $args);
 			} else {
 				// @codeCoverageIgnoreStart
 				if (is_object($classOrInterface) || is_callable($classOrInterface)) {

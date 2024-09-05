@@ -4,7 +4,7 @@ class EAMainApi
 {
     /**
      * EAMainApi constructor.
-     * @param tad_DI52_Container $container
+     * @param tad_EA52_Container $container
      */
     public function __construct($container)
     {

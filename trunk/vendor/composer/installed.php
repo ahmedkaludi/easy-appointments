@@ -5,7 +5,7 @@
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => '48855819d56d256d11bbf75ed4ddfc386555f315',
+        'reference' => '7db186f1852c306d1d01faa0fbbab01bd31a1765',
         'name' => 'loncar/easy-appointment',
         'dev' => true,
     ),
@@ -25,7 +25,7 @@
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => '48855819d56d256d11bbf75ed4ddfc386555f315',
+            'reference' => '7db186f1852c306d1d01faa0fbbab01bd31a1765',
             'dev_requirement' => false,
         ),
         'lucatume/di52' => array(
