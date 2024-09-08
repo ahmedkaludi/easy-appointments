@@ -98,6 +98,7 @@
             "click .form-label-option": "changeFormLabelStyle",
             "click .select-label-option": "changeSelectLabelStyle",
             "click .btn-gdpr-delete-data": "gdprDeleteData",
+            "click #load-default-admin-template": "loadDefaultTemplate"
         },
 
         initialize: function () {
@@ -208,7 +209,9 @@
 
             // process new content
             var $newTemplate = jQuery(event.target);
-            var newContent = this.$el.find($newTemplate.data('textarea')).val();
+            var elemId = $newTemplate.data('textarea');
+
+            var newContent = this.$el.find(elemId).val();
 
             if (this.tinymceOn) {
                 tinymce.get('mail-template').setContent(newContent);
@@ -219,18 +222,50 @@
                 this.$el.find('#mail-template').val(newContent);
             }
 
+            if (elemId === '#mail-admin') {
+                // show load admin template button
+                this.$el.find('#load-default-admin-template').show();
+            } else {
+                // hide admin template button
+                this.$el.find('#load-default-admin-template').hide();
+            }
+
             this.$el.find('.mail-tab').filter('.selected').removeClass('selected');
             $newTemplate.addClass('selected');
+        },
+
+        loadDefaultTemplate: function () {
+            // wp_ajax_ea_default_template
+            var endpoint = ajaxurl + '?action=ea_default_template&_wpnonce=' + wpApiSettings.nonce;
+            var tiny = this.tinymceOn;
+            var $el = this.$el;
+
+            jQuery.ajax({
+                url: endpoint,
+                type: 'GET',
+                success: function(content) {
+                    if (tiny) {
+                        tinymce.get('mail-template').setContent(content);
+                        // clear the stack of undo
+                        tinymce.activeEditor.undoManager.clear();
+                        return;
+                    }
+
+                    $el.find('#mail-template').val(newContent);
+                }
+            });
         },
 
         updateMailTemplate: function() {
             var prevContent = '';
             var $prevTemplate = this.$el.find('.mail-tab').filter('.selected');
+
             if (this.tinymceOn) {
                 prevContent = tinymce.get('mail-template').getContent();
             } else {
                 prevContent = this.$el.find('#mail-template').val();
             }
+
             this.$el.find($prevTemplate.data('textarea')).val(prevContent);
         },
 

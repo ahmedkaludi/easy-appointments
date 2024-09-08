@@ -5,7 +5,7 @@ Tags: appointment, appointments, Booking, calendar, reservation
 Requires at least: 3.7
 Tested up to: 6.6
 Requires PHP: 5.3
-Stable tag: 3.12.0
+Stable tag: 3.12.1
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -212,6 +212,9 @@ Note: you can have only one calendar on one page.
 25. Admin panel - Report - Export page
 
 == Changelog ==
+
+= 3.12.1 (2024-09-08) =
+* Added new option to load default Admin email template to mail editor
 
 = 3.12.0 (2024-09-06) =
 * Fixed issue with DI52 dependency conflict between versions with other plugins

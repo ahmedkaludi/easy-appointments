@@ -284,6 +284,7 @@
                             </tr>
                             </tbody>
                         </table>
+                        <a id="load-default-admin-template" href="#" style="padding-top: 5px; padding-bottom: 5px; display: none;"><?php _e('Load default admin template', 'easy-appointments'); ?></a>
                         <div><small><?php _e('Available tags', 'easy-appointments'); ?>: #id#, #date#, #start#, #end#, #status#, #created#, #price#, #ip#, #link_confirm#, #link_cancel#, #url_confirm#, #url_cancel#, #service_name#, #service_duration#, #service_price#, #worker_name#, #worker_email#, #worker_phone#, #location_name#, #location_address#, #location_location#, <?php echo implode(', ', EADBModels::get_custom_fields_tags()); ?></small></div>
                     </div>
                     <div class="form-item">

@@ -160,6 +160,7 @@ class EAAjax
             add_action('wp_ajax_ea_fields', array($this, 'ajax_fields'));
             add_action('wp_ajax_ea_field', array($this, 'ajax_field'));
             add_action('wp_ajax_ea_export', array($this, 'ajax_export'));
+            add_action('wp_ajax_ea_default_template', array($this, 'ajax_default_template'));
         }
     }
 
@@ -768,6 +769,16 @@ class EAAjax
         }
 
         die(json_encode($response));
+    }
+
+    public function ajax_default_template()
+    {
+        $this->validate_admin_nonce();
+        $this->validate_access_rights('settings');
+
+        $content = $this->mail->get_default_admin_template();
+
+        wp_die($content);
     }
 
     /**

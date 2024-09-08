@@ -309,6 +309,17 @@ EOT;
         wp_die($content, $title);
     }
 
+    public function get_default_admin_template()
+    {
+        $template_path = $this->utils->get_template_path('mail.notification.tpl.convert.php');
+        $meta_fields = $this->models->get_all_rows('ea_meta_fields');
+
+        // render template
+        ob_start();
+        require $template_path;
+        return ob_get_clean();
+    }
+
     /**
      *
      * @param  int $app_id Application id
