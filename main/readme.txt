@@ -5,7 +5,7 @@ Tags: appointment, appointments, Booking, calendar, reservation
 Requires at least: 3.7
 Tested up to: 6.6
 Requires PHP: 5.3
-Stable tag: 3.12.1
+Stable tag: 3.12.3
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -212,6 +212,12 @@ Note: you can have only one calendar on one page.
 25. Admin panel - Report - Export page
 
 == Changelog ==
+
+= 3.12.3 (2024-10-20)
+* Fixed bug with Vacation page not loading (due to plan permalinks settings)
+
+= 3.12.2 (2024-10-03)
+* Fixed bug with ordering of options (location, service, worker)ameba33
 
 = 3.12.1 (2024-09-08) =
 * Added new option to load default Admin email template to mail editor

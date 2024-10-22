@@ -4,7 +4,9 @@ const vacationUrl = window?.ea_settings?.rest_url_vacation ?? '';
 const nonce = window?.wpApiSettings?.nonce ?? '';
 
 export class VacationsCommunicator {
-  static url = `${vacationUrl}?_wpnonce=${nonce}`;
+  static url = vacationUrl.includes('?')
+    ? `${vacationUrl}&_wpnonce=${nonce}`
+    : `${vacationUrl}?_wpnonce=${nonce}`;
 
   static async fetch() {
     const response = await http.getJSON(this.url);

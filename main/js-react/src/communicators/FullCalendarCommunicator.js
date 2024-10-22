@@ -6,7 +6,9 @@ const fullcalendarApi = window?.ea_settings?.rest_url_fullcalendar ?? '';
 const nonce = window?.wpApiSettings?.nonce ?? '';
 
 export class FullCalendarCommunicator {
-  static url = `${fullcalendarApi}?_wpnonce=${nonce}`;
+  static url = fullcalendarApi.includes('?')
+    ? `${fullcalendarApi}&_wpnonce=${nonce}`
+    : `${fullcalendarApi}?_wpnonce=${nonce}`;
 
   /**
    * Fetch all events or all free slots if service, worker, location is selected

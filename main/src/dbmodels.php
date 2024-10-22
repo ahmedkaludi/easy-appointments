@@ -226,7 +226,7 @@ class EADBModels
             $tmp = 'id DESC';
         }
 
-        $order = implode(',', $tmp);
+        $order = is_array($tmp) ? implode(',', $tmp) : $tmp;
 
         $query = "SELECT * 
 			FROM {$this->wpdb->prefix}{$table_name} 
