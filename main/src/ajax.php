@@ -854,6 +854,7 @@ class EAAjax
         }
 
         $data = array();
+        $local_type = $this->type;
 
         switch ($method) {
             case 'POST':
@@ -875,6 +876,11 @@ class EAAjax
                 $data = $_REQUEST;
                 $this->type = 'DELETE';
                 break;
+        }
+
+        // sometimes this method is called more then once and in compatibility mode it is removing type value
+        if ($local_type) {
+            $this->type = $local_type;
         }
 
         return $data;

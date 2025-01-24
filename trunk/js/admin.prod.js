@@ -493,9 +493,12 @@
             var obj = this;
 
             var $btn = jQuery(e.currentTarget);
+
+            var id = $btn.data('id');
+
             var $li = $btn.closest('li');
             var name = _.unescape('' + $li.data('name'));
-            var element = this.fields.findWhere({label:name});
+            var element = !!id ? this.fields.findWhere({id: '' + id}) : this.fields.findWhere({ label:name });
 
             this.fields.remove(element);
 
@@ -654,7 +657,12 @@
 
             $lis.each(function(index, el) {
                 var name = jQuery(el).data('name');
-                var element = obj.fields.findWhere({label:name});
+                var element = obj.fields.findWhere({ label: name });
+
+                if (!element) {
+                    var modelId = jQuery(el).data('id');
+                    element = obj.fields.findWhere({ id: modelId });
+                }
 
                 element.set('position', count++);
             });

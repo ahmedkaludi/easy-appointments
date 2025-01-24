@@ -5,7 +5,7 @@ Tags: appointment, appointments, Booking, calendar, reservation
 Requires at least: 3.7
 Tested up to: 6.6
 Requires PHP: 5.3
-Stable tag: 3.12.3
+Stable tag: 3.12.6
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -212,6 +212,17 @@ Note: you can have only one calendar on one page.
 25. Admin panel - Report - Export page
 
 == Changelog ==
+
+= 3.12.6 (2024-11-05)
+* Fixed issue with empty list on appointments page
+* Fixed issue with order of custom fields
+
+= 3.12.5 (2024-11-03)
+* Fixed compatibility mode and delete action on custom form fields
+
+= 3.12.4 (2024-10-26)
+* Fixed issue with custom form fields that in some cases could not be deleted
+* Added new option for auto selection location/service/worker if there is only one option available (shortcode param `auto_select_option="1"`)
 
 = 3.12.3 (2024-10-20)
 * Fixed bug with Vacation page not loading (due to plan permalinks settings)

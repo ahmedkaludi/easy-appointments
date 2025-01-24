@@ -117,12 +117,12 @@
 <script type="text/template" id="ea-tpl-appointment-row">
 	<td colspan="2" class="post-title page-title column-title">
 		<strong>#<%- row.id %></strong>
-		<strong><%- _.findWhere(cache.Locations, {id:row.location}).name %></strong>
-		<strong><%- _.findWhere(cache.Services, {id:row.service}).name %></strong>
-		<strong><%- _.findWhere(cache.Workers, {id:row.worker}).name %></strong>
+		<strong><%- _.findWhere(cache.Locations, {id:row.location})?.name %></strong>
+		<strong><%- _.findWhere(cache.Services, {id:row.service})?.name %></strong>
+		<strong><%- _.findWhere(cache.Workers, {id:row.worker})?.name %></strong>
 	</td>
 	<td colspan="2">
-		<% _.each(cache.MetaFields,function(item,key,list) { %>
+		<% _.each(cache.MetaFields, function(item,key,list) { %>
 			<% if (row[item.slug] !== "undefined" && item.type !== 'TEXTAREA') { %>
 			<strong><%- row[item.slug] %></strong><br>
 			<% } %>

@@ -443,6 +443,8 @@
                 // default
                 next_element.append('<option value="">-</option>');
 
+                var option_count = 0;
+
                 // options
                 jQuery.each(response, function (index, element) {
                     var name = element.name;
@@ -468,6 +470,8 @@
                     }
 
                     next_element.append($option);
+
+                    option_count++;
                 });
 
                 // enabled
@@ -476,6 +480,15 @@
                 plugin.removeLoader();
 
                 plugin.scrollToElement(next_element.parent());
+
+                // if there is only one option auto select it
+                if (ea_settings['auto_select_option'] === '1' && option_count === 1) {
+                    next_element
+                        .children()
+                        .last()
+                        .prop('selected', true)
+                        .trigger('change');
+                }
             }, 'json');
 
             // in case of failed ajax request

@@ -484,7 +484,8 @@ class EAFrontend
             'auto_select_slot'     => '0',
             'block_days'           => null,
             'block_days_tooltip'   => '',
-            'select_placeholder'   => '-'
+            'select_placeholder'   => '-',
+            'auto_select_option'   => '0'
         ), $atts);
 
         // check params
@@ -525,6 +526,7 @@ class EAFrontend
         $settings['save_form_content']      = $code_params['save_form_content'];
         $settings['cal_auto_select']        = $code_params['cal_auto_select'];
         $settings['auto_select_slot']       = $code_params['auto_select_slot'];
+        $settings['auto_select_option']     = $code_params['auto_select_option'];
         $settings['block_days']             = $code_params['block_days'] !== null ? explode(',', $code_params['block_days']) : null;
         $settings['block_days_tooltip']     = $code_params['block_days_tooltip'];
 

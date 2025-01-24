@@ -914,7 +914,7 @@
             %>selected="selected"<% } %>>No, but rendered as hidden field</option>
         </select>
     </p>
-    <p><a href="#" class="deletion item-delete">Delete</a> | <a href="#" class="item-save">Apply</a></p>
+    <p><a href="#" class="deletion item-delete" data-id="<%=item.id%>">Delete</a> | <a href="#" class="item-save">Apply</a></p>
 </div>
 </script>
 
@@ -929,9 +929,9 @@
 
 <script type="text/template" id="ea-tpl-single-advance-redirect">
     <li>
-        <span class="bulk-value"><%- _.findWhere(locations, {id:row.location}).name %></span>
-        <span class="bulk-value"><%- _.findWhere(services,  {id:row.service}).name %></span>
-        <span class="bulk-value"><%- _.findWhere(workers,   {id:row.worker}).name s%></span>
+        <span class="bulk-value"><%- _.findWhere(locations, {id:row.location})?.name %></span>
+        <span class="bulk-value"><%- _.findWhere(services,  {id:row.service})?.name %></span>
+        <span class="bulk-value"><%- _.findWhere(workers,   {id:row.worker})?.name s%></span>
         <span style="display: inline-block;"><button class="button bulk-connection-remove">Remove</button></span>
     </li>
 </script>
