@@ -1,11 +1,11 @@
 === Easy Appointments ===
-Contributors: loncar
+Contributors: easyappointments
 Donate link: https://easy-appointments.com/
 Tags: appointment, appointments, Booking, calendar, reservation
 Requires at least: 3.7
-Tested up to: 6.6
+Tested up to: 6.7
 Requires PHP: 5.3
-Stable tag: 3.12.6
+Stable tag: 3.12.7
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -212,6 +212,10 @@ Note: you can have only one calendar on one page.
 25. Admin panel - Report - Export page
 
 == Changelog ==
+
+= 3.12.7 (2025-01-28)
+* Tested with WordPress 6.7
+* Updated contributor
 
 = 3.12.6 (2024-11-05)
 * Fixed issue with empty list on appointments page
