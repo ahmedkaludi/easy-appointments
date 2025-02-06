@@ -54,12 +54,19 @@ class EAAdminPanel
     {
         // Hook for adding admin menus
         add_action('admin_menu', array($this, 'add_menu_pages'));
-
+        add_action( 'admin_footer', array($this, 'ea_admin_script_to_footer'));
         // Init action
         add_action('admin_init', array($this, 'init_scripts'));
         //add_action( 'admin_enqueue_scripts', array( $this, 'init' ) );
     }
-
+    public function ea_admin_script_to_footer(){
+        ?>
+        <script type="text/javascript">
+       let child_id = document.getElementById('ea-premium-extension-link');
+        child_id.parentElement.setAttribute('target','_blank');
+        </script>
+    <?php
+    }
     /**
      * Init of admin page
      */
@@ -118,7 +125,6 @@ class EAAdminPanel
             EASY_APPOINTMENTS_VERSION,
             true
         );
-
         // vacation style
         wp_register_style(
             'ea-admin-bundle-css',
@@ -445,7 +451,7 @@ class EAAdminPanel
          $page_vacation_suffix = add_submenu_page(
             'easy_app_top_level',
             __('Premium Extensions', 'easy-appointments'),
-            __('Premium Extensions', 'easy-appointments'),
+            __('<span id="ea-premium-extension-link">Premium Extensions</span>', 'easy-appointments'),
             $this->user_capability_callback('manage_options', 'easy_app_vacation'),
             'https://easy-appointments.com#buyextension'
         );
