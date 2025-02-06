@@ -451,7 +451,7 @@ class EAAdminPanel
          $page_vacation_suffix = add_submenu_page(
             'easy_app_top_level',
             __('Premium Extensions', 'easy-appointments'),
-            __('<span id="ea-premium-extension-link">Premium Extensions</span>', 'easy-appointments'),
+            '<span id="ea-premium-extension-link">'.__('Premium Extensions', 'easy-appointments').'</span>',
             $this->user_capability_callback('manage_options', 'easy_app_vacation'),
             'https://easy-appointments.com#buyextension'
         );
