@@ -1,8 +1,9 @@
 <style>
     .ezappoint-tabcontent {
     border-top: none;
-}
-.ezappoint-tabcontent {
+    box-shadow: 0px 3px 1px -2px rgba(0, 0, 0, 0.2), 0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0px 1px 5px 0px rgba(0, 0, 0, 0.12);
+    margin-right: 18px;
+    margin-top: 18px;
     animation: fadeEffect 1s;
 }
 #ezappoint-tabs-technical {
@@ -146,6 +147,9 @@
 .ezappoint-send-query{
     margin-left: 70px !important;
 }
+.ezappoint-send-query1{
+    margin-left: 70px !important;
+}
 </style>
 <div class="ezappoint_support_div ezappoint-tabcontent" id="technical">
        <!--  <div id="ezappoint-tabs-technical">
@@ -217,7 +221,7 @@
                             </li>
                             <li>
                                 <button class="button button-primary ezappoint-send-query" id="ea-send-btn"><?php esc_html_e('Send Support Request', 'easy-appointment'); ?></button>
-                                <button class="button button-primary" id="ea-send-btn-loader" style="display:none"><?php esc_html_e('Sending...', 'easy-appointment'); ?></button>
+                                <button class="button button-primary ezappoint-send-query1" id="ea-send-btn-loader" style="display:none"><?php esc_html_e('Sending...', 'easy-appointment'); ?></button>
                             </li>
                         </ul>
                         <div class="clear"></div>
