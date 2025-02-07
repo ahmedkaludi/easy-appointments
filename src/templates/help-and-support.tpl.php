@@ -177,8 +177,8 @@
                 <div class="ezappoint-tabcontent-technical" id="ezappoint-technical-support">
                     <h1><?php esc_html_e('Technical Support', 'easy-appointment'); ?></h1>
                     <p class="ezappoint-tabcontent-technical-title-content"><?php esc_html_e('We are dedicated to provide Technical support & Help to our users. Use the below form for sending your questions.', 'easy-appointment') ?> </p>
-                    <p><?php esc_html_e('You can also contact us from ', 'easy-appointment') ?><a
-                                href="https://easy-appointments.com/contactus/">https://easy-appointments.com/contactus/</a></p>
+                    <!-- <p><?php esc_html_e('You can also contact us from ', 'easy-appointment') ?><a
+                                href="https://easy-appointments.com/contactus/">https://easy-appointments.com/contactus/</a></p> -->
 
                     <div class="ezappoint_support_div_form" id="technical-form">
                         <ul>
