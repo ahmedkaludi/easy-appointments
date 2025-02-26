@@ -7,7 +7,7 @@
  * Version: 3.12.7
  * Requires PHP: 5.3
  * Author: Nikola Loncar
- * Author URI: https://easy-appointments.com/
+ * Author URI: http://nikolaloncar.com
  * Text Domain: easy-appointments
  * Domain Path: /languages
  */
