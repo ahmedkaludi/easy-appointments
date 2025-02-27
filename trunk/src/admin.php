@@ -324,8 +324,8 @@ class EAAdminPanel
     {
         // top_level_menu
         add_menu_page(
-            'Easy Appointments',
-            'Easy Appointments',
+            'Appointments',
+            'Appointments',
             'edit_posts',
             'easy_app_top_level',
             null,
@@ -443,13 +443,15 @@ class EAAdminPanel
             array($this, 'easy_app_help_support')
         );
          // Premium Extension
-         $page_vacation_suffix = add_submenu_page(
-            'easy_app_top_level',
-            __('Premium Extensions', 'easy-appointments'),
-            '<span id="ea-premium-extension-link">'.__('Premium Extensions', 'easy-appointments').'</span>',
-            $this->user_capability_callback('manage_options', 'easy_app_vacation'),
-            'https://easy-appointments.com#buyextension'
-        );
+        if (! is_plugin_active( 'easy-appointments-connect/main.php' ) ) {
+            $page_vacation_suffix = add_submenu_page(
+                'easy_app_top_level',
+                __('Premium Extensions', 'easy-appointments'),
+                '<span id="ea-premium-extension-link">'.__('Premium Extensions', 'easy-appointments').'</span>',
+                $this->user_capability_callback('manage_options', 'easy_app_vacation'),
+                'https://easy-appointments.com#buyextension'
+            );
+        }
 
         add_action('load-' . $page_settings_suffix, array($this, 'add_settings_js'));
         add_action('load-' . $page_app_suffix, array($this, 'add_appointments_js'));
