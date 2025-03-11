@@ -148,6 +148,7 @@ CREATE TABLE {$table_prefix}ea_services (
   id int(11) NOT NULL AUTO_INCREMENT,
   name varchar(255) NOT NULL,
   service_color varchar(7) DEFAULT '#0693E3',
+  sequence int(11) AUTO_INCREMENT NOT NULL,
   duration int(11) NOT NULL,
   slot_step int(11) DEFAULT NULL,
   block_before int(11) DEFAULT 0,
@@ -826,6 +827,20 @@ EOT;
             }
 
             $version = '3.6.0';
+        }
+        if (version_compare($version, '3.12.9', '<')) {
+            $table_queries = array();
+
+            $table_services = $this->wpdb->prefix . 'ea_services';
+
+            $table_queries[] = "ALTER TABLE `{$table_services}` ADD COLUMN `sequence` INT AUTO_INCREMENT NOT NULL AFTER `service_color`;";
+
+            // add relations
+            foreach ($table_queries as $query) {
+                $this->wpdb->query($query);
+            }
+
+            $version = '3.12.9';
         }
 
         update_option('easy_app_db_version', $version);

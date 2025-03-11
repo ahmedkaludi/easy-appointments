@@ -658,6 +658,9 @@ class EADBModels
         );
 
         if (!array_key_exists($table_name, $mapping)) {
+            if ('ea_services' == $table_name && $as_string) {
+                return " ORDER BY `sequence` ASC";
+            }
             if ($as_string) {
                 return " ORDER BY `id` DESC";
             }

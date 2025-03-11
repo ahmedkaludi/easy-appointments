@@ -52,4 +52,12 @@ export class ServicesCommunicator {
 
     return response === 1;
   }
+
+  static async updateOrder(id) {
+    const url = `${this.url}&action=ea_update_order&_method=PUT&id=${id}`;
+
+    const response = await http.post(url);
+
+    return response === 1;
+  }
 }

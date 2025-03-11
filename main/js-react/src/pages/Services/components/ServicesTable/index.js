@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-
 import { __, _x } from '../../../../services/Localization';
 import { SortCommunicator } from '../../../../communicators';
-import { ContentBox, BasicTable, TableSorter } from '../../../../ea-components';
+import { ContentBox, TableSorter } from '../../../../ea-components';
+import ServiceDragTable from 'ea-components/Table/BasicTable/ServiceDragTable';
 
 const SERVICES_CONFIG = {
   id: {
@@ -17,7 +17,7 @@ const SERVICES_CONFIG = {
     headerStyle: { minWidth: '200px' },
     position: 'left',
     type: 'text',
-    cellClass: 'font-weight-bold'
+    cellClass: 'font-weight-bold sortable-handle'
   },
   duration: {
     header: __('Duration *', 'easy-appointments'),
@@ -77,7 +77,8 @@ const COLUMNS = [
   { value: 'block_after', label: __('Block after', 'easy-appointments') },
   { value: 'daily_limit', label: __('Daily limit', 'easy-appointments') },
   { value: 'price', label: __('Price', 'easy-appointments') },
-  { value: 'service_color', label: __('Color', 'easy-appointments') }
+  { value: 'service_color', label: __('Color', 'easy-appointments') },
+  { value: 'sequence', label: __('Sequence', 'easy-appointments') }
 ];
 
 export const ServicesTable = ({
@@ -114,7 +115,7 @@ export const ServicesTable = ({
         onSortingDone={onSort}
         hint={__('* value in minutes', 'easy-appointments')}
       />
-      <BasicTable data={adaptedData} config={SERVICES_CONFIG} />
+      <ServiceDragTable data={adaptedData} config={SERVICES_CONFIG} />
     </ContentBox>
   );
 };
