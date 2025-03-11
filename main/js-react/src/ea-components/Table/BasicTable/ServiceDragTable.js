@@ -10,7 +10,7 @@ const ServiceDragTable = ({ data, config, rowCallback }) => {
   const tableBodyRef = useRef(null); // Create a ref for the tbody
   const updateSequence = async model => {
     try {
-      await ServicesCommunicator.save(model);
+      await ServicesCommunicator.updateOrder(model);
     } catch (e) {
       console.log(e);
     }
@@ -22,11 +22,22 @@ const ServiceDragTable = ({ data, config, rowCallback }) => {
         handle: '.sortable-handle',
         animation: 150,
         onEnd(evt) {
-          const draggedRow = evt.item;
-          const draggedRowData = draggedRow.getAttribute('row-data');
-          const parsedRowData = JSON.parse(draggedRowData);
-          parsedRowData.sequence = evt.newIndex;
-          updateSequence(parsedRowData);
+          const allRows = Array.from(
+            tableBodyRef.current.querySelectorAll('tr')
+          );
+          const updatedRows = [];
+
+          allRows.forEach((row, index) => {
+            const rowData = row.getAttribute('row-data');
+            const rowDataParsed = JSON.parse(rowData);
+            rowDataParsed.sequence = index + 1;
+            updatedRows.push({
+              id: rowDataParsed.id,
+              sequence: rowDataParsed.sequence
+            });
+            row.dataset.rowData = JSON.stringify(rowDataParsed);
+          });
+          updateSequence({ sequence_data: updatedRows });
         }
       });
 
