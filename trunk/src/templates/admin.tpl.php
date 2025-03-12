@@ -99,6 +99,17 @@
                     </div>
                     <div class="form-item">
                         <div class="label-with-tooltip">
+                            <label for=""><?php _e('Max number of appointments for logged in user', 'easy-appointments'); ?></label>
+                            <span class="tooltip tooltip-right"
+                                  data-tooltip="<?php _e('Number of appointments that one visitor can make reservation before limit alert is shown. Appointments are counted during one day.', 'easy-appointments'); ?>"></span>
+                        </div>
+                        <input class="field" data-key="max.appointments_by_user" name="max.appointments_by_users"
+                               type="text"
+                               value="<%- _.findWhere(settings, {ea_key:'max.appointments_by_user'}).ea_value %>">
+                               <small><?php _e('Keep 0 for no restriction', 'easy-appointments'); ?></small>
+                    </div>
+                    <div class="form-item">
+                        <div class="label-with-tooltip">
                             <label><?php _e('Auto reservation', 'easy-appointments'); ?></label>
                             <span class="tooltip tooltip-right"
                                   data-tooltip="<?php _e('Make reservation at moment user select date and time!', 'easy-appointments'); ?>"></span>

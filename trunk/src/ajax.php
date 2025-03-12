@@ -280,6 +280,21 @@ class EAAjax
 
         $data['session'] = session_id();
 
+        if (is_user_logged_in() ) {
+            $current_user_id = get_current_user_id();
+            $data['user'] = $current_user_id;
+        }
+
+        $check = $this->logic->can_make_reservation_by_user($data);
+
+        if (!$check['status'] && is_user_logged_in()) {
+            $resp = array(
+                'err'     => true,
+                'message' => $check['message']
+            );
+            $this->send_err_json_result(json_encode($resp));
+        }
+
         $check = $this->logic->can_make_reservation($data);
 
         if (!$check['status'] && !is_user_logged_in()) {

@@ -140,6 +140,7 @@ class EAOptions
             'user.access.locations'         => '',
             'user.access.connections'       => '',
             'user.access.reports'           => '',
+            'max.appointments_by_user'      => '0',
         );
     }
 
