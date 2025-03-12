@@ -5,7 +5,7 @@ Tags: appointment, appointments, Booking, calendar, reservation
 Requires at least: 3.7
 Tested up to: 6.7
 Requires PHP: 5.3
-Stable tag: 3.12.8
+Stable tag: 3.12.9
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -212,8 +212,15 @@ Note: you can have only one calendar on one page.
 25. Admin panel - Report - Export page
 
 == Changelog ==
+= 3.12.9 (2025-03-12)
+* Added an option to set appointment limits Per logged in user instead of IP. #98
+* Fixed Reminder Not Functioning, and Twilio SMS Displayed by Default #96
+* Fixed Php Deprecated error #99
+* Added a license page #102
+* Added the Movable feature in services #101
+* Added compatibility with Outlook Calendar. #105
 
-= 3.12.7 (2025-01-28)
+= 3.12.8 (2025-01-28)
 * Tested with WordPress 6.7
 * Updated contributor
 
