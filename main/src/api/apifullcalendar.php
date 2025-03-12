@@ -133,7 +133,7 @@ class EAApiFullCalendar
             unset($params['location']);
         }
 
-        if ($params['worker'] === null) {
+        if (isset($params['worker']) && $params['worker'] === null) {
             unset($params['worker']);
         }
 
@@ -144,7 +144,7 @@ class EAApiFullCalendar
         /**
          * Process current logged user and show only his/her events
          */
-        if ($params['worker'] === 'logged') {
+        if ( isset($params['worker']) && $params['worker'] === 'logged') {
             $params['worker'] = '0';
 
             $current_user = wp_get_current_user();

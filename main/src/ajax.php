@@ -126,6 +126,9 @@ class EAAjax
             // Service
             add_action('wp_ajax_ea_service', array($this, 'ajax_service'));
 
+            // Service
+            add_action('wp_ajax_ea_update_order', array($this, 'ajax_update_order'));
+
             // Locations
             add_action('wp_ajax_ea_locations', array($this, 'ajax_locations'));
 
@@ -276,6 +279,21 @@ class EAAjax
         $data['ip'] = $_SERVER['REMOTE_ADDR'];
 
         $data['session'] = session_id();
+
+        if (is_user_logged_in() ) {
+            $current_user_id = get_current_user_id();
+            $data['user'] = $current_user_id;
+        }
+
+        $check = $this->logic->can_make_reservation_by_user($data);
+
+        if (!$check['status'] && is_user_logged_in()) {
+            $resp = array(
+                'err'     => true,
+                'message' => $check['message']
+            );
+            $this->send_err_json_result(json_encode($resp));
+        }
 
         $check = $this->logic->can_make_reservation($data);
 
@@ -582,6 +600,43 @@ class EAAjax
 
         $this->parse_single_model('ea_services');
     }
+    /**
+     * Service model
+     */
+    public function ajax_update_order()
+    {
+        $this->validate_admin_nonce();
+        $raw_data = file_get_contents('php://input');
+        $data = json_decode($raw_data, true);
+        if (isset($data['sequence_data']) && !empty($data['sequence_data'])) {
+            $this->update_multiple_service_sequences($data['sequence_data']);
+            die(json_encode(['status' => true]));
+        }
+        die(json_encode(['status' => false]));
+
+
+    }
+
+    public function update_multiple_service_sequences($data) {
+        global $wpdb;
+        $table_name = $wpdb->prefix . 'ea_services';
+        foreach ($data as $row) {
+            if (!isset($row['id']) || !isset($row['sequence'])) {
+                continue;
+            }
+    
+            $id = $row['id'];
+            $sequence = $row['sequence'];
+            $update_data = array(
+                'sequence' => $sequence
+            );
+            $where = array(
+                'id' => $id
+            );
+            $updated = $wpdb->update($table_name, $update_data, $where);
+        }
+    }
+    
 
     /**
      * Services collection

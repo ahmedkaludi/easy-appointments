@@ -278,6 +278,46 @@ class EALogic
     }
 
     /**
+     * Can make reservation for that User
+     *
+     * @param $data
+     * @return bool Can make reservation by user
+     */
+    public function can_make_reservation_by_user($data)
+    {
+        $result = array(
+            'status'  => true,
+            'message' => ''
+        );
+
+        $maxNumber = (int) $this->options->get_option_value('max.appointments_by_user', 10);
+        if ($maxNumber > 0) {
+            $user = $data['user'];
+    
+            $query = $this->wpdb->prepare(
+                "SELECT id AS no_apps FROM {$this->wpdb->prefix}ea_appointments WHERE 
+                    user=%s AND 
+                    status IN ('abandoned', 'pending') AND
+                    created >= now() - INTERVAL 1 DAY",
+                $user
+            );
+    
+            $appIds = $this->wpdb->get_col($query);
+    
+            $maxNumber = (int) $this->options->get_option_value('max.appointments_by_user', 10);
+    
+            if (count($appIds) >= $maxNumber) {
+                $result['status'] = false;
+                $result['message'] = $maxNumber." " . __('Daily limit of booking request has been reached. Please contact us by email!', 'easy-appointments');
+            }
+    
+            $result = apply_filters( 'ea_can_make_reservation', $result, $data);
+        }
+
+        return $result;
+    }
+
+    /**
      * Remove times that are reserved (already booked)
      *
      * @param  array &$slots Free slots

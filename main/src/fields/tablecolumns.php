@@ -70,6 +70,7 @@ class EATableColumns
                 'id',
                 'name',
                 'service_color',
+                'sequence',
                 'duration',
                 'slot_step',
                 'block_before',
