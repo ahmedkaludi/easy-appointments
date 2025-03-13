@@ -382,6 +382,16 @@ class EAAdminPanel
             'easy_app_connections',
             array($this, 'connections_page')
         );
+        
+        // Publish
+        $page_connections_suffix = add_submenu_page(
+            'easy_app_top_level',
+            __('Publish', 'easy-appointments'),
+            '5. ' . __('Publish', 'easy-appointments'),
+            $this->user_capability_callback('manage_options', 'easy_app_publish'),
+            'easy_app_publish',
+            array($this, 'publish_page')
+        );
 
         // settings
         $page_settings_suffix = add_submenu_page(
@@ -797,6 +807,37 @@ class EAAdminPanel
         }
 
         require_once EA_SRC_DIR . 'templates/tools.tpl.php';
+        require_once EA_SRC_DIR . 'templates/inlinedata.tpl.php';
+    }
+
+    /**
+     * Publish page
+     */
+    public function publish_page()
+    {
+        // check if APS tags are on
+        if ($this->is_asp_tags_are_on()) {
+            require_once EA_SRC_DIR . 'templates/asp_tag_message.tpl.php';
+            return;
+        }
+
+        load_plugin_textdomain('easy-appointments', false, EA_PLUGIN_DIR  . 'languages/');
+
+        wp_enqueue_style('ea-admin-bundle-css');
+        wp_enqueue_script('ea-admin-bundle');
+
+        $settings = $this->options->get_options();
+        $settings['rest_url'] = get_rest_url();
+        $settings['rest_url_clear_log'] = EALogActions::clear_error_url();
+       
+        $settings['image_base'] = str_replace("/wp-content", "", content_url());
+        wp_localize_script('ea-admin-bundle', 'ea_settings', $settings);
+
+        if (function_exists('wp_set_script_translations')) {
+            wp_set_script_translations('ea-admin-bundle', 'easy-appointments', EA_PLUGIN_DIR  . 'languages');
+        }
+
+        require_once EA_SRC_DIR . 'templates/publish.tpl.php';
         require_once EA_SRC_DIR . 'templates/inlinedata.tpl.php';
     }
 
