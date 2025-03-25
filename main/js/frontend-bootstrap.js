@@ -161,7 +161,11 @@
 
                 // check if we can select that field
                 if (!result) {
-                    alert(ea_settings['trans.slot-not-selectable']);
+                    if (ea_settings['trans.slot-not-selectable'] !== undefined) {
+                        alert(ea_settings['trans.slot-not-selectable']);                        
+                    }else{
+                        alert('Not enough time please choose an earlier slot');
+                    }
                     return;
                 }
 
