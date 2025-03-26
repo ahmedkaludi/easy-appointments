@@ -133,7 +133,7 @@ class EAApiFullCalendar
             unset($params['location']);
         }
 
-        if (isset($params['worker']) && $params['worker'] === null) {
+        if ($params['worker'] === null) {
             unset($params['worker']);
         }
 
