@@ -73,14 +73,6 @@
 			</tbody>
 		</table>
 		<div>
-			<a href="#" data="selected" class="add-new-h2 ea-cancel-all-selected">
-				<i class="fa fa-times"></i>
-				<?php _e('Cancel All Selected', 'easy-appointments');?>
-			</a>
-			<a href="#" data="all" class="add-new-h2 ea-cancel-all-selected">
-				<i class="fa fa-times"></i>
-				<?php _e('Cancel All', 'easy-appointments');?>
-			</a>
 			<a href="#" class="add-new-h2 add-new">
 				<i class="fa fa-plus"></i>
 				<?php _e('Add New Appointment', 'easy-appointments');?>
@@ -88,6 +80,14 @@
 			<a href="#" class="add-new-h2 refresh-list">
 				<i class="fa fa-refresh"></i>
 				<?php _e('Refresh', 'easy-appointments');?>
+			</a>
+			<a href="#" data="all" class="add-new-h2 ea-cancel-all-selected" style="float:right;">
+				<i class="fa fa-times"></i>
+				<?php _e('Cancel All', 'easy-appointments');?>
+			</a>
+			<a href="#" data="selected" class="add-new-h2 ea-cancel-all-selected" style="float:right;">
+				<i class="fa fa-times"></i>
+				<?php _e('Cancel All Selected', 'easy-appointments');?>
 			</a>
             <div class="ea-sort-fields">
                 <label><?php _e('Sort By');?>:</label>
