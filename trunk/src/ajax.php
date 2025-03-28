@@ -94,7 +94,7 @@ class EAAjax
         add_action('wp_ajax_nopriv_ea_final_appointment', array($this, 'ajax_final_appointment'));
 
         add_action('wp_ajax_ea_cancel_appointment', array($this, 'ajax_cancel_appointment'));
-        add_action('wp_ajax_nopriv_ea_cancel_appointment', array($this, 'ajax_cancel_appointment'));
+        add_action('wp_ajax_nopriv_ea_cancel_appointment', array($this, 'ajax_cancel_appointment'));        
 
         add_action('wp_ajax_ea_month_status', array($this, 'ajax_month_status'));
         add_action('wp_ajax_nopriv_ea_month_status', array($this, 'ajax_month_status'));
@@ -165,7 +165,85 @@ class EAAjax
             add_action('wp_ajax_ea_export', array($this, 'ajax_export'));
             add_action('wp_ajax_ea_default_template', array($this, 'ajax_default_template'));
             add_action('wp_ajax_ea_send_query_message', array( $this, 'ea_send_query_message'));
+            add_action('wp_ajax_cancel_selected_appointments', array( $this, 'cancel_selected_appointments_callback'));
         }
+    }
+
+    public function cancel_selected_appointments_callback() {
+        if (!isset($_POST['appointments_nonce']) || !wp_verify_nonce($_POST['appointments_nonce'], 'appointments_nonce')) {
+            wp_send_json_error(array('message' => 'Security check failed.'));
+        }
+        if (isset($_POST['cancel_to'])  && $_POST['cancel_to'] == 'all' ) {
+            $this->cancel_upcoming_all();
+        }
+        if (!isset($_POST['appointments']) || !is_array($_POST['appointments'])) {
+            wp_send_json_error(array('message' => 'No appointments selected.'));
+        }
+
+        $appointments = $_POST['appointments'];
+        $current_datetime = current_time('mysql');
+        foreach ($appointments as $appointment_id) {
+            $appointment = $this->models->get_row('ea_appointments', $appointment_id, ARRAY_A);
+    
+            if ($appointment) {
+                if (strtotime($appointment['date']) > strtotime($current_datetime)) {
+                    $data = [
+                        'status' => 'abandoned',
+                        'id' => $appointment_id
+                    ];
+                    foreach ($appointment as $key => $value) {
+                        if (!array_key_exists($key, $data)) {
+                            $data[$key] = $value;
+                        }
+                    }
+                    $table = 'ea_appointments';
+                    $response = $this->models->replace($table, $data, true);
+                }
+            }
+        }
+        if ($response === false) {
+            $this->send_err_json_result('{"err":true}');
+        }
+        $response = new stdClass;
+        $response->data = true;
+    
+        $this->send_ok_json_result($response);
+    }
+
+    public function cancel_upcoming_all() {
+        global $wpdb;
+        $current_time = current_time('H:i:s');
+        $current_date = current_time('Y-m-d');
+        $table_name = $wpdb->prefix . 'ea_appointments';
+        $query = "
+            SELECT * 
+            FROM {$table_name}
+            WHERE (date > %s) 
+            OR (date = %s AND start > %s)";
+        $appointments = $wpdb->get_results($wpdb->prepare($query, $current_date, $current_date, $current_time), ARRAY_A);
+        
+        
+        if (!$appointments) {
+            wp_send_json_error(array('message' => esc_html__('No upcoming appointments found.', 'easy-appointments')));
+        }
+        
+        
+        foreach ($appointments as $appointment) {
+            $appointment_id = $appointment['id'];
+            $update_query = "
+                UPDATE {$table_name}
+                SET status = %s
+                WHERE id = %d
+            ";
+            $response = $wpdb->query($wpdb->prepare($update_query, 'abandoned', $appointment_id));
+        }
+        if ($response === false) {
+            $this->send_err_json_result('{"err":true}');
+        }
+        $response = new stdClass;
+        $response->data = true;
+        
+        $this->send_ok_json_result($response);
     }
 
     public function ea_send_query_message(){   
