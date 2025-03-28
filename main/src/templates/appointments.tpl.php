@@ -318,7 +318,7 @@ jQuery(document).ready(function($) {
                 success: function(response) {
                     if (response.data) {
                         alert('<?php _e("Appointments canceled successfully.", "easy-appointments"); ?>');
-                        location.reload(); // Reload the page to reflect changes
+                        location.reload();
                     }
                 },
                 error: function() {
