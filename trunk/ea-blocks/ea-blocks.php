@@ -2,11 +2,11 @@
 
 /**
  * Plugin Name:       Ea Blocks
- * Description:       Example block scaffolded with Create Block tool.
+ * Description:       Easy Appointments.
  * Version:           0.1.0
  * Requires at least: 6.7
  * Requires PHP:      7.4
- * Author:            The WordPress Contributors
+ * Author:            Easy Appointments
  * License:           GPL-2.0-or-later
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
  * Text Domain:       ea-blocks
@@ -43,7 +43,6 @@ function create_block_ea_blocks_block_init()
 add_action('init', 'create_block_ea_blocks_block_init');
 
 add_action('rest_api_init', function () {
-	error_log('rest_api_init');
 	// register_rest_route('wp/v2/eablocks', '/render-shortcode/', array(
 	//     'methods' => 'GET',
 	//     'callback' => function (WP_REST_Request $request) {
@@ -147,8 +146,6 @@ function ea_blocks_get_options(WP_REST_Request $request)
 	};
 
 	$results =  $wpdb->get_results($query);
-
-	error_log(print_r($results, true));
 
 	$options = array_map(function ($row) {
 		return [

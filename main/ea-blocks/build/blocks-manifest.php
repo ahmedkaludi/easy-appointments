@@ -9,7 +9,7 @@ return array(
 		'title' => 'Ea Blocks',
 		'category' => 'widgets',
 		'icon' => 'smiley',
-		'description' => 'Example block scaffolded with Create Block tool.',
+		'description' => 'Easy Appointments.',
 		'example' => array(
 			
 		),
