@@ -599,6 +599,9 @@ EOT;
 
         $time_format = get_option('time_format', 'H:i');
         $date_format = get_option('date_format', 'F j, Y');
+        if (empty($time_format)) {
+            $time_format = 'H:i';
+        }
 
         foreach ($app_array as $key => $value) {
             if ($key == 'start' || $key == 'end') {
