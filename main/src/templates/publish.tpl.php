@@ -4,48 +4,50 @@
         font-family: 'Arial', sans-serif;
     }
 
+    .ezappoint-tabcontent {
+        margin-right: 20px;
+        margin-top: 20px;
+        animation: fadeEffect 1s;
+        border: 1px solid #c3c4c7;
+    }
+
     .easy_container {
         max-width: 1000px;
         background: #fff;
         padding: 25px;
         border-radius: 10px;
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        margin-top: 40px;
     }
 
     pre {
-        background: #272c36;
+        background: #0073aa;
         color: #f8f9fa;
         padding: 12px;
         border-radius: 5px;
         font-size: 20px !important;
         font-family: 'Courier New', monospace !important;
     }
-
-    h1,
-    h2,
-    h3 {
-        color: #2a3f5f;
-    }
+    
 
     .table th {
-        background: #2a3f5f;
+        background: #0073aa;
         color: white;
     }
 </style>
+<div class="ezappoint_support_div ezappoint-tabcontent">
 <div class="easy_container">
-    <h1 class="mb-4"><?php esc_html_e('Shortcode Documentation', 'easy-appointments'); ?></h1>
+    <h2 class="mb-4"><?php esc_html_e('Shortcode Documentation', 'easy-appointments'); ?></h2>
     <p><?php esc_html_e('To insert the front-end plugin on a page or post, use the following shortcodes.', 'easy-appointments'); ?></p>
 
-    <h2><?php esc_html_e('Standard Form', 'easy-appointments'); ?></h2>
+    <h3><?php esc_html_e('Standard Form', 'easy-appointments'); ?></h3>
     <pre>[ea_standard]</pre>
 
-    <h3><?php esc_html_e('Options:', 'easy-appointments'); ?></h3>
+    <h4><?php esc_html_e('Options:', 'easy-appointments'); ?></h4>
     <table class="table table-striped table-bordered">
         <thead>
             <tr>
-                <th><?php esc_html_e('Name', 'easy-appointments'); ?></th>
-                <th><?php esc_html_e('Description', 'easy-appointments'); ?></th>
+                <td><?php esc_html_e('Name', 'easy-appointments'); ?></td>
+                <td><?php esc_html_e('Description', 'easy-appointments'); ?></td>
             </tr>
         </thead>
         <tbody>
@@ -76,18 +78,18 @@
         </tbody>
     </table>
 
-    <h3><?php esc_html_e('Example:', 'easy-appointments'); ?></h3>
+    <h4><?php esc_html_e('Example:', 'easy-appointments'); ?></h4>
     <pre>[ea_standard scroll_off="true"]</pre>
 
-    <h2><?php esc_html_e('Bootstrap Version – Responsive Layout', 'easy-appointments'); ?></h2>
+    <h3><?php esc_html_e('Bootstrap Version – Responsive Layout', 'easy-appointments'); ?></h3>
     <pre>[ea_bootstrap]</pre>
 
-    <h3><?php esc_html_e('Additional Options:', 'easy-appointments'); ?></h3>
+    <h4><?php esc_html_e('Additional Options:', 'easy-appointments'); ?></h4>
     <table class="table table-striped table-bordered">
         <thead>
             <tr>
-                <th><?php esc_html_e('Name', 'easy-appointments'); ?></th>
-                <th><?php esc_html_e('Description', 'easy-appointments'); ?></th>
+                <td><?php esc_html_e('Name', 'easy-appointments'); ?></td>
+                <td><?php esc_html_e('Description', 'easy-appointments'); ?></td>
             </tr>
         </thead>
         <tbody>
@@ -126,10 +128,11 @@
         </tbody>
     </table>
 
-    <h3><?php esc_html_e('Example:', 'easy-appointments'); ?></h3>
+    <h4><?php esc_html_e('Example:', 'easy-appointments'); ?></h4>
     <pre>[ea_bootstrap width="800px" layout_cols="2"]</pre>
 
-    <h2><?php esc_html_e('FullCalendar View', 'easy-appointments'); ?></h2>
+    <h3><?php esc_html_e('FullCalendar View', 'easy-appointments'); ?></h3>
     <p><strong><?php esc_html_e('Note:', 'easy-appointments'); ?></strong> <?php esc_html_e('This feature is under development, and documentation may change.', 'easy-appointments'); ?></p>
     <pre>[ea_full_calendar location="1" worker="1" service="1"]</pre>
+</div>
 </div>
