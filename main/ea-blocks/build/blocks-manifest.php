@@ -6,10 +6,10 @@ return array(
 		'apiVersion' => 3,
 		'name' => 'create-block/ea-blocks',
 		'version' => '0.1.0',
-		'title' => 'Ea Blocks',
+		'title' => 'EA Bookings',
 		'category' => 'widgets',
-		'icon' => 'smiley',
-		'description' => 'Easy Appointments.',
+		'icon' => 'calendar',
+		'description' => 'Easy Appointments',
 		'example' => array(
 			
 		),

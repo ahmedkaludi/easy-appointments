@@ -56,6 +56,8 @@ if (version_compare(PHP_VERSION, '5.3', '<')) {
     require_once dirname(__FILE__) . '/vendor/autoload.php';
 }
 
+require_once dirname(__FILE__) . '/ea-blocks/ea-blocks.php';
+
 /**
  * Entry point
  */
