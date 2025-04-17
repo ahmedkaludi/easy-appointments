@@ -12,11 +12,8 @@
     }
 
     .easy_container {
-        max-width: 1000px;
         background: #fff;
         padding: 25px;
-        border-radius: 10px;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     }
 
     pre {
@@ -36,7 +33,13 @@
 </style>
 <div class="ezappoint_support_div ezappoint-tabcontent">
 <div class="easy_container">
-    <h2 class="mb-4"><?php esc_html_e('Shortcode Documentation', 'easy-appointments'); ?></h2>
+    <h2 class="mb-4"><?php esc_html_e('Shortcode Uses Guideline', 'easy-appointments'); ?></h2>
+    <div style="position: absolute; top: 45px; right: 47px;">
+        <a target="_blank" href="https://easy-appointments.com/docs/installation-and-configuration-guide/#short-code" 
+        style="display: inline-block; padding: 8px 16px; background-color: #0073aa; color: white; text-decoration: none; border-radius: 4px;">
+        <?php esc_html_e('Learn More', 'easy-appointments'); ?>
+        </a>
+    </div>
     <p><?php esc_html_e('To insert the front-end plugin on a page or post, use the following shortcodes.', 'easy-appointments'); ?></p>
 
     <h3><?php esc_html_e('Standard Form', 'easy-appointments'); ?></h3>
