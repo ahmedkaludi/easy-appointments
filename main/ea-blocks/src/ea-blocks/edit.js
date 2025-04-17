@@ -80,6 +80,15 @@ export default function Edit({ attributes, setAttributes }) {
                         onChange={(value) => setAttributes({ scrollOff: value ? 'true' : 'false' })}
                     />
                     <SelectControl
+                        label={__('Layout Columns', 'ea-blocks')}
+                        value={layoutCols}
+                        options={[
+                            { label: '1 Column', value: '1' },
+                            { label: '2 Columns', value: '2' }
+                        ]}
+                        onChange={(value) => setAttributes({ layoutCols: value })}
+                    />
+                    <SelectControl
                         label={__('Location', 'ea-blocks')}
                         value={location}
                         options={[{ label: 'Select Location', value: '' }, ...locations]}
@@ -182,7 +191,7 @@ export default function Edit({ attributes, setAttributes }) {
             
             <style>{`
                 .ea_preview {
-                    max-width: 660px;
+                    max-width: 400px;
                     background: #fff;
                     padding: 10px;
                     border: 1px solid #ddd;

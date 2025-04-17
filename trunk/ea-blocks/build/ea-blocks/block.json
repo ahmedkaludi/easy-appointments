@@ -3,10 +3,10 @@
   "apiVersion": 3,
   "name": "create-block/ea-blocks",
   "version": "0.1.0",
-  "title": "EA Bookings",
+  "title": "Ea Blocks",
   "category": "widgets",
-  "icon": "calendar",
-  "description": "Easy Appointments",
+  "icon": "smiley",
+  "description": "Example block scaffolded with Create Block tool.",
   "example": {},
   "supports": {
     "html": false
