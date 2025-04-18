@@ -660,7 +660,7 @@
                 plugin.$element.find('.ea-cancel').hide();
                 plugin.$element.find('#paypal-button').hide();
 
-                plugin.$element.find('.final').append('<h4 class="ea-done-message">' + _.escape(ea_settings['trans.done_message']) + '</h4>');
+                plugin.$element.find('.final').append('<h6 class="ea-done-message" style="color:green;">Your appointment has been successfully submitted. You will receive an update shortly.</h6><button class="ea-btn" onclick="window.location.reload();">Create New Booking</button>');
                 plugin.$element.find('form').find('input').prop('disabled', true);
                 plugin.$element.find('.g-recaptcha').remove();
 
