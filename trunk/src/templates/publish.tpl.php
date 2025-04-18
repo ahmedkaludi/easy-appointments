@@ -35,14 +35,16 @@
     <div class="easy_container">
         <div style="display: flex; justify-content: space-between; align-items: center;">
             <h2 class="mb-4"><?php esc_html_e('Shortcode Uses Guideline', 'easy-appointments'); ?></h2>
-            <a target="_blank" href="https://easy-appointments.com/docs/installation-and-configuration-guide/#short-code"
-                style="padding: 8px 16px; background-color: #0073aa; color: white; text-decoration: none; border-radius: 4px;">
-                <?php esc_html_e('Learn More', 'easy-appointments'); ?>
-            </a>
-            <a target="_blank" href="https://easy-appointments.com/contact-us/"
-                style="padding: 8px 16px; background-color: #0073aa; color: white; text-decoration: none; border-radius: 4px;">
-                <?php esc_html_e('Need Help', 'easy-appointments'); ?>
-            </a>
+            <div>
+                <a target="_blank" href="https://easy-appointments.com/docs/installation-and-configuration-guide/#short-code"
+                    style="padding: 8px 16px; background-color: #0073aa; color: white; text-decoration: none; border-radius: 4px;margin-right: 10px;">
+                    <?php esc_html_e('Learn More', 'easy-appointments'); ?>
+                </a>
+                <a target="_blank" href="https://easy-appointments.com/contact-us/"
+                    style="padding: 8px 16px; background-color: #0073aa; color: white; text-decoration: none; border-radius: 4px;">
+                    <?php esc_html_e('Need Help?', 'easy-appointments'); ?>
+                </a>
+            </div>
         </div>
         <p><?php esc_html_e('To insert the front-end plugin on a page or post, use the following shortcodes.', 'easy-appointments'); ?></p>
 
@@ -142,15 +144,15 @@
         <p><strong><?php esc_html_e('Note:', 'easy-appointments'); ?></strong> <?php esc_html_e('This feature is under development, and documentation may change.', 'easy-appointments'); ?></p>
         <pre>[ea_full_calendar location="1" worker="1" service="1"]</pre>
     </div>
-    <div style="border: 1px solid #ddd; padding: 20px; border-radius: 8px; background-color: #f8fcff; max-width: 500px; text-align: center; margin: 20px auto;" id="ea-suggest-feature-box">
+    <div style="border: 1px solid #ddd; padding: 20px; border-radius: 8px; background-color: #f8fcff; max-width: 700px; text-align: center; margin: 20px auto;" id="ea-suggest-feature-box">
         <h2 style="font-size: 20px; margin-bottom: 10px;">
-            👉 <span style="font-weight: bold;"><?php esc_html_e('Suggest a new feature!', 'easy-appointments'); ?></span> 👈
+            👉 <span style="font-weight: bold;"><?php esc_html_e('Still not working as expected?', 'easy-appointments'); ?></span> 👈
         </h2>
         <p style="font-size: 16px; color: #333; margin-bottom: 20px;">
-            <?php esc_html_e('Help us build the next set of features for Easy Appointments. Tell us what you think and we will make it happen!', 'easy-appointments'); ?>
+            <?php esc_html_e('We’re actively improving Easy Appointments. If something isn’t working or a feature is missing, let us know — your feedback helps us fix it faster!', 'easy-appointments'); ?>
         </p>
         <a href="https://easy-appointments.com/contact-us/" id="ea-suggest-feature-btn" style="display: inline-block; padding: 10px 20px; background-color: #1d70b8; color: white; text-decoration: none; border-radius: 4px; font-size: 16px;">
-            <?php esc_html_e('Click here', 'easy-appointments'); ?>
+            <?php esc_html_e('Report or Suggest', 'easy-appointments'); ?>
         </a>
     </div>
 
