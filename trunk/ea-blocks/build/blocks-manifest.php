@@ -6,15 +6,22 @@ return array(
 		'apiVersion' => 3,
 		'name' => 'create-block/ea-blocks',
 		'version' => '0.1.0',
-		'title' => 'Ea Blocks',
+		'title' => 'Booking Appointments',
 		'category' => 'widgets',
-		'icon' => 'smiley',
-		'description' => 'Example block scaffolded with Create Block tool.',
+		'icon' => 'calendar',
+		'description' => 'Booking Appointments',
 		'example' => array(
 			
 		),
 		'supports' => array(
 			'html' => false
+		),
+		'keywords' => array(
+			'appointment',
+			'calendar',
+			'booking',
+			'easy appointments',
+			'ea'
 		),
 		'attributes' => array(
 			'width' => array(
@@ -57,7 +64,7 @@ return array(
 		'apiVersion' => 3,
 		'name' => 'ea-blocks/ea-fullcalendar',
 		'version' => '0.1.0',
-		'title' => 'Ea Full Calendar',
+		'title' => 'EA Full Calendar',
 		'category' => 'widgets',
 		'icon' => 'calendar',
 		'description' => 'Full Calendar',
@@ -66,6 +73,13 @@ return array(
 		),
 		'supports' => array(
 			'html' => false
+		),
+		'keywords' => array(
+			'full calendar',
+			'appointment',
+			'booking',
+			'easy appointments',
+			'ea'
 		),
 		'attributes' => array(
 			'width' => array(

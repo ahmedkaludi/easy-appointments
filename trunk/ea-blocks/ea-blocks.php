@@ -118,7 +118,6 @@ function get_ea_appointments( WP_REST_Request $request ) {
 	$data['service'] =$service;
 	$data['worker'] =$worker;
 	$result = get_all_appointments($data);
-	error_log(print_r($result,true));
 	return $result;
 }
 

@@ -3,7 +3,7 @@
   "apiVersion": 3,
   "name": "ea-blocks/ea-fullcalendar",
   "version": "0.1.0",
-  "title": "Ea Full Calendar",
+  "title": "EA Full Calendar",
   "category": "widgets",
   "icon": "calendar",
   "description": "Full Calendar",
@@ -11,6 +11,13 @@
   "supports": {
     "html": false
   },
+  "keywords": [
+    "full calendar",
+    "appointment",
+    "booking",
+    "easy appointments",
+    "ea"
+  ],
   "attributes": {
     "width": {
       "type": "string",

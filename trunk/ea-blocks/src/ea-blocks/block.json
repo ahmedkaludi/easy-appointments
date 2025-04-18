@@ -3,7 +3,7 @@
 	"apiVersion": 3,
 	"name": "create-block/ea-blocks",
 	"version": "0.1.0",
-	"title": "Ea Blocks",
+	"title": "Booking Appointments",
 	"category": "widgets",
 	"icon": "calendar",
 	"description": "Booking Appointments",
@@ -11,6 +11,13 @@
 	"supports": {
 		"html": false
 	},
+	"keywords": [
+		"appointment",
+		"calendar",
+		"booking",
+		"easy appointments",
+		"ea"
+	],
 	"attributes": {
 		"width": {
 			"type": "string",
