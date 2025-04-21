@@ -13,76 +13,100 @@
 
         <table style="width: 100%; font-size: 14px; color: #000; text-align: left; margin: 0 auto 20px;" class="ea-overview-table">
             <tbody>
-            <% if(settings['rtl'] == '1') { %>
                 <% if(data.location.indexOf('_') !== 0) { %>
-                <tr class="row-location">
-                    <td style="font-weight: bold;" class="ea-label"><%- settings['trans.location'] %>:</td>
-                    <td class=""><%- data.location %></td>
+                <tr>
+                    <td style="font-weight: bold;">Location:</td>
+                    <td><%- data.location %></td>
                 </tr>
                 <% } %>
                 <% if(data.service.indexOf('_') !== 0) { %>
-                <tr class="row-service">
-                    <td style="font-weight: bold;" class="ea-label"><%- settings['trans.service'] %>:</td>
-                    <td class=""><%- data.service %></td>
+                <tr>
+                    <td style="font-weight: bold;">Service:</td>
+                    <td><%- data.service %></td>
                 </tr>
                 <% } %>
                 <% if(data.worker.indexOf('_') !== 0) { %>
-                <tr class="row-worker">
-                    <td style="font-weight: bold;" class="ea-label"><%- settings['trans.worker'] %>:</td>
-                    <td class=""><%- data.worker %></td>
+                <tr>
+                    <td style="font-weight: bold;">Worker:</td>
+                    <td><%- data.worker %></td>
                 </tr>
                 <% } %>
-                <% if (settings['price.hide'] !== '1') { %>
-                <tr class="row-price">
-                    <td style="font-weight: bold;" class="ea-label"><%- settings['trans.price'] %>:</td>
-                    <td class=""><%- data.price%> <%- settings['trans.currency'] %></td>
+                <tr>
+                    <td style="font-weight: bold;">Price:</td>
+                    <td><%- data.price %><%- settings['trans.currency'] %></td>
                 </tr>
-                <% } %>
-                <tr class="row-datetime">
-                    <td style="font-weight: bold;" class="ea-label"><%- settings['trans.date-time'] %>:</td>
-                    <td class=""><%- data.date %> <%- data.time %></td>
+                <tr>
+                    <td style="font-weight: bold;">Date & time:</td>
+                    <td><%- data.date_time %></td>
                 </tr>
-            <% } else { %>
-                <% if(data.location.indexOf('_') !== 0) { %>
-                <tr class="row-location">
-                    <td style="font-weight: bold;" class="ea-label"><%- settings['trans.location'] %>:</td>
-                    <td class=""><%- data.location %></td>
-                </tr>
-                <% } %>
-                <% if(data.service.indexOf('_') !== 0) { %>
-                <tr class="row-service">
-                    <td style="font-weight: bold;" class="ea-label"><%- settings['trans.service'] %>:</td>
-                    <td class=""><%- data.service %></td>
-                </tr>
-                <% } %>
-                <% if(data.worker.indexOf('_') !== 0) { %>
-                <tr class="row-worker">
-                    <td style="font-weight: bold;" class="ea-label"><%- settings['trans.worker'] %>:</td>
-                    <td class=""><%- data.worker %></td>
-                </tr>
-                <% } %>
-                <% if (settings['price.hide'] !== '1') { %>
-                <tr class="row-price">
-                    <td style="font-weight: bold;" class="ea-label"><%- settings['trans.price'] %>:</td>
-                    <% if (settings['currency.before'] == '1') { %>
-                    <td class=""><%- settings['trans.currency'] %><%- data.price %></td>
-                    <% } else { %>
-                    <td class=""><%- data.price %><%- settings['trans.currency'] %></td>
-                    <% } %>
-                </tr>
-                <% } %>
-                <tr class="row-datetime">
-                    <td style="font-weight: bold;" class="ea-label"><%- settings['trans.date-time'] %>:</td>
-                    <td class=""><%- data.date_time %></td>
-                </tr>
-            <% } %>
             </tbody>
         </table>
 
-        <a href="#" onclick="window.location.reload();" style="display: none; padding: 10px 20px; background-color: #333cb7; color: white; text-decoration: none; border-radius: 5px; font-weight: bold;" class="ea-button-book-again">
-            <%- settings['trans.book-again'] || 'Book Another Appointment' %>
-        </a>
+        <div id="ea-overview-buttons" style="display: none; justify-content: center; gap: 10px; margin-top: 15px; flex-wrap: wrap;">
+            <a 
+                href="#" 
+                onclick="window.location.reload();" 
+                style="padding: 5px 10px; background-color: #333cb7; color: white; text-decoration: none; border-radius: 5px;" 
+                class="ea-button-book-again">
+                <%- settings['trans.book-again'] || 'Book New Appointment' %>
+            </a>
+
+            <a 
+                id="ea-add-to-calendar" 
+                href="#" 
+                target="_blank" 
+                style="background-color: #34A853; color: #fff; padding: 5px 10px; border-radius: 6px; text-decoration: none;">
+                Add to Google Calendar
+            </a>
+        </div>
+
+
+        
     </div>
 
     <div id="ea-total-amount" style="display: none;" data-total="<%- data.price %>"></div>
+
+    <script>
+        (function(){
+            const rawDateTime = "<%- data.date_time %>"; // Example: "25/04/2025 12:36 am"
+            const title = "<%- data.service %> with <%- data.worker %>";
+            const location = "<%- data.location %>";
+            const description = "Service: <%- data.service %>\\nWorker: <%- data.worker %>\\nPrice: <%- data.price %><%- settings['trans.currency'] %>";
+
+            const parseDate = (str) => {
+                const [datePart, timePart, meridian] = str.trim().split(' ');
+                const [day, month, year] = datePart.split('/');
+
+                let [hour, minute] = timePart.split(':').map(Number);
+                const isPM = meridian.toLowerCase() === 'pm';
+                const isAM = meridian.toLowerCase() === 'am';
+
+                if (isPM && hour < 12) hour += 12;
+                if (isAM && hour === 12) hour = 0;
+
+                return new Date(Date.UTC(parseInt(year), parseInt(month) - 1, parseInt(day), hour, minute));
+            };
+
+            const startDateObj = parseDate(rawDateTime);
+            const endDateObj = new Date(startDateObj.getTime() + 60 * 60 * 1000); // +1 hour
+
+            const formatDateForGoogle = (dateObj) =>
+                dateObj.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+
+            const start = formatDateForGoogle(startDateObj);
+            const end = formatDateForGoogle(endDateObj);
+
+            const calendarUrl = new URL("https://calendar.google.com/calendar/render");
+            calendarUrl.searchParams.set("action", "TEMPLATE");
+            calendarUrl.searchParams.set("text", title);
+            calendarUrl.searchParams.set("dates", `${start}/${end}`);
+            calendarUrl.searchParams.set("details", description);
+            calendarUrl.searchParams.set("location", location);
+            calendarUrl.searchParams.set("trp", "false");
+
+            document.getElementById("ea-add-to-calendar").href = calendarUrl.toString();
+        })();
+
+
+    </script>
 </script>

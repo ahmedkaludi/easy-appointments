@@ -1000,7 +1000,7 @@
                 plugin.$element.find('.ea_hide_show').hide();
                 plugin.$element.find('.ea-confirmation-subtext').hide();
                 plugin.$element.find('#booking-overview-header').hide();
-                plugin.$element.find('.ea-button-book-again').css('display', 'inline-block');
+                plugin.$element.find('#ea-overview-buttons').css('display', 'flex');
 
                 switch (ea_settings['default.status']) {
                     case 'pending':
