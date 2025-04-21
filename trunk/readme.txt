@@ -212,6 +212,16 @@ Note: you can have only one calendar on one page.
 25. Admin panel - Report - Export page
 
 == Changelog ==
+= 3.12.10 (2025-04-22)
+* Tested with WordPress 6.8 #140
+* Fixed An Alert pop-ups saying "Undefined" if user selects a slot that does not have sufficient time gap #129
+* Fixed Conflict issue with 3.12.9. version. #131
+* Fixed #start# is not getting saved in the email confirmation settings (User Specific) #125
+* Added Publish Connection Page #122
+* Added a proper thank you message on booking submission and add book again button #120
+* Added Make the Appointment Booking Form method easy to add #116
+* Added an Option to Cancel All Appointments at Once with Email Notifications and a Customizable Reason. #100
+
 = 3.12.9 (2025-03-12)
 * Added an option to set appointment limits Per logged in user instead of IP. #98
 * Fixed Reminder Not Functioning, and Twilio SMS Displayed by Default #96
