@@ -316,42 +316,48 @@ class EAFrontend
                     <div class="time"></div>
                 </div>
                 <div class="step final">
+                    <div class="ea_hide_show">
                     <div class="block"></div>
                     <p class="section"><?php _e('Personal information', 'easy-appointments'); ?></p>
                     <small><?php _e('Fields with * are required', 'easy-appointments'); ?></small>
                     <br>
                     <?php echo $custom_form; ?>
+                    </div>
                     <br>
-                    <p class="section"><?php _e('Booking overview', 'easy-appointments'); ?></p>
+                    <h3 style="color: #147514; margin-top: 0;" class="section">
+                    <?php _e('Booking overview', 'easy-appointments'); ?>
+                    </h3>
                     <div id="booking-overview"></div>
-                    <?php if (!empty($settings['show.iagree'])) : ?>
-                        <p>
-                            <label
-                                style="font-size: 65%; width: 80%;" class="i-agree"><?php _e('I agree with terms and conditions', 'easy-appointments'); ?>
-                                * : </label><input style="width: 15%;" type="checkbox" name="iagree"
-                                                   data-rule-required="true"
-                                                   data-msg-required="<?php _e('You must agree with terms and conditions', 'easy-appointments'); ?>">
-                        </p>
-                        <br>
-                    <?php endif; ?>
-                    <?php if (!empty($settings['gdpr.on'])) : ?>
-                        <p>
-                            <label
-                                    style="font-size: 65%; width: 80%;" class="gdpr"><?php echo esc_html($settings['gdpr.label']);?>
-                                * : </label><input style="width: 15%;" type="checkbox" name="iagree"
-                                                   data-rule-required="true"
-                                                   data-msg-required="<?php echo esc_attr($settings['gdpr.message']);?>">
-                        </p>
-                        <br>
-                    <?php endif; ?>
+                    <div class="ea_hide_show">
+                        <?php if (!empty($settings['show.iagree'])) : ?>
+                            <p>
+                                <label
+                                    style="font-size: 65%; width: 80%;" class="i-agree"><?php _e('I agree with terms and conditions', 'easy-appointments'); ?>
+                                    * : </label><input style="width: 15%;" type="checkbox" name="iagree"
+                                                    data-rule-required="true"
+                                                    data-msg-required="<?php _e('You must agree with terms and conditions', 'easy-appointments'); ?>">
+                            </p>
+                            <br>
+                        <?php endif; ?>
+                        <?php if (!empty($settings['gdpr.on'])) : ?>
+                            <p>
+                                <label
+                                        style="font-size: 65%; width: 80%;" class="gdpr"><?php echo esc_html($settings['gdpr.label']);?>
+                                    * : </label><input style="width: 15%;" type="checkbox" name="iagree"
+                                                    data-rule-required="true"
+                                                    data-msg-required="<?php echo esc_attr($settings['gdpr.message']);?>">
+                            </p>
+                            <br>
+                        <?php endif; ?>
 
-                    <?php if (!empty($settings['captcha.site-key'])) : ?>
-                        <div style="width: 100%" class="g-recaptcha" data-sitekey="<?php echo esc_attr($settings['captcha.site-key']);?>"></div><br>
-                    <?php endif; ?>
+                        <?php if (!empty($settings['captcha.site-key'])) : ?>
+                            <div style="width: 100%" class="g-recaptcha" data-sitekey="<?php echo esc_attr($settings['captcha.site-key']);?>"></div><br>
+                        <?php endif; ?>
 
-                    <div style="display: inline-flex;">
-                        <?php echo apply_filters('ea_checkout_button', '<button class="ea-btn ea-submit">' . __('Submit', 'easy-appointments') . '</button>'); ?>
-                        <button class="ea-btn ea-cancel"><?php _e('Cancel', 'easy-appointments'); ?></button>
+                        <div style="display: inline-flex;">
+                            <?php echo apply_filters('ea_checkout_button', '<button class="ea-btn ea-submit">' . __('Submit', 'easy-appointments') . '</button>'); ?>
+                            <button class="ea-btn ea-cancel"><?php _e('Cancel', 'easy-appointments'); ?></button>
+                        </div>
                     </div>
                 </div>
             </form>

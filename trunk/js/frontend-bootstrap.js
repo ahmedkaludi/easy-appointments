@@ -992,6 +992,14 @@
                 plugin.$element.find('.ea-submit').hide();
                 plugin.$element.find('.ea-cancel').hide();
                 plugin.$element.find('#paypal-button').hide();
+
+                plugin.$element.find('.step').hide();
+                plugin.$element.find('#booking-overview').show();
+                plugin.$element.find('.ea-confirmation-title').show();
+                plugin.$element.find('.final').show();
+                plugin.$element.find('.ea_hide_show').hide();
+                plugin.$element.find('.ea-button-book-again').css('display', 'inline-block');
+
                 switch (ea_settings['default.status']) {
                     case 'pending':
                         default_status_message = 'Your appointment has been submitted and is currently pending approval. You will be notified once it is confirmed';
@@ -1006,7 +1014,7 @@
                         default_status_message = 'Your appointment has been successfully submitted. You will receive an update shortly.';
                         break;
                 }
-                plugin.$element.find('.final').append('<h6 class="ea-done-message" style="color:green;">'+default_status_message+'</h6><button class="ea-btn" onclick="window.location.reload();">Create New Booking</button>');
+                plugin.$element.find('.ea-status-note').text(default_status_message);
                 plugin.$element.find('form').find('input,select,textarea').prop('disabled', true);
                 plugin.$element.find('.calendar').addClass('disabled');
                 plugin.$element.find('.g-recaptcha').remove();
