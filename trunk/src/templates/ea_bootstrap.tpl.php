@@ -58,6 +58,7 @@
                 <% } else { %>
                 <div class="step final">
                     <% } %>
+                    <div class="ea_hide_show">
                     <div class="block"></div>
                     <h3><%- settings['trans.personal-informations'] %></h3>
                     <small><%- settings['trans.fields'] %></small>
@@ -108,8 +109,10 @@
                         </div>
                     </div>
                     <% });%>
+                    </div>
                     <h3 id="booking-overview-header"><%- settings['trans.booking-overview'] %></h3>
                     <div id="booking-overview"></div>
+                    <div class="ea_hide_show">
                     <% if (settings['show.iagree'] == '1') { %>
 
                     <div class="form-group">
@@ -161,6 +164,7 @@
                 <% if (settings.layout_cols === '2') { %>
             </div>
             <% } %>
+                </div>
         </form>
     </div>
 <div id="ea-loader"></div>

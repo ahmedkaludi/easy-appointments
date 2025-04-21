@@ -998,6 +998,8 @@
                 plugin.$element.find('.ea-confirmation-title').show();
                 plugin.$element.find('.final').show();
                 plugin.$element.find('.ea_hide_show').hide();
+                plugin.$element.find('.ea-confirmation-subtext').hide();
+                plugin.$element.find('#booking-overview-header').hide();
                 plugin.$element.find('.ea-button-book-again').css('display', 'inline-block');
 
                 switch (ea_settings['default.status']) {
