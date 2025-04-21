@@ -442,6 +442,9 @@ class EAFrontend
     private function output_inline_ea_settings($settings, $customCss)
     {
         $clean_settings = EATableColumns::clear_settings_data_frontend($settings);
+        if ( isset($settings['default.status'])) {
+            $clean_settings['default.status'] = $settings['default.status'];
+        }
         $data_settings = json_encode($clean_settings);
         $data_vacation = $this->options->get_option_value('vacations', '[]');
 
