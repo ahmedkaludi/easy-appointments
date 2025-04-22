@@ -322,11 +322,12 @@ class EAFrontend
                     <small><?php _e('Fields with * are required', 'easy-appointments'); ?></small>
                     <br>
                     <?php echo $custom_form; ?>
-                    </div>
+                    
                     <br>
                     <h3 style="color: #147514; margin-top: 0;" class="section">
                     <?php _e('Booking overview', 'easy-appointments'); ?>
                     </h3>
+                    </div>
                     <div id="booking-overview"></div>
                     <div class="ea_hide_show">
                         <?php if (!empty($settings['show.iagree'])) : ?>

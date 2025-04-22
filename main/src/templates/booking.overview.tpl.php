@@ -1,3 +1,14 @@
+<style>
+    body .wp-block-post-content a:not(.wp-element-button) {
+        color: #000000;
+        text-decoration: none !important;
+    }
+    .ea-standard .selected-time {
+        background-color: green !important;
+        color: white !important;
+    }
+
+</style>
 <script type="text/template" id="ea-appointments-overview">
     <small id="ea-overview-message"><%- settings['trans.overview-message'] %></small>
     <table>
