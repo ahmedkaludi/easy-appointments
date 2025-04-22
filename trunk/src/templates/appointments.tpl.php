@@ -280,10 +280,20 @@
 </script>
 <script>
 	var appointments_nonce = "<?php echo wp_create_nonce('appointments_nonce'); ?>";
+
 jQuery(document).ready(function($) {
+	function check_is_any_cancel_checkbox(){
+		if ($('.ea-appointment-checkbox').length < 1){
+			$('.ea-cancel-all-selected').hide();
+		}else{
+			$('.ea-cancel-all-selected').show();
+		}
+	}
+    
     $('#ea-select-all').on('change', function() {
         var isChecked = $(this).prop('checked');
         $('.ea-appointment-checkbox').prop('checked', isChecked);
+		check_is_any_cancel_checkbox();
     });
 
     
@@ -327,6 +337,11 @@ jQuery(document).ready(function($) {
             });
         }
     });
+
+	check_is_any_cancel_checkbox();
+	setInterval(() => {
+		check_is_any_cancel_checkbox(); // Repeated call every 2 seconds
+	}, 2000);
 });
 
 </script>
