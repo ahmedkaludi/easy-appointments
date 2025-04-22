@@ -1055,6 +1055,7 @@
                         break;
                 }
                 plugin.$element.find('.ea-status-note').text(default_status_message);
+                window.scrollTo({ top: 0, behavior: 'smooth' });
                 plugin.$element.find('form').find('input,select,textarea').prop('disabled', true);
                 plugin.$element.find('.calendar').addClass('disabled');
                 plugin.$element.find('.g-recaptcha').remove();

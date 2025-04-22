@@ -34,7 +34,7 @@
 <div class="ezappoint_support_div ezappoint-tabcontent">
     <div class="easy_container">
         <div style="display: flex; justify-content: space-between; align-items: center;">
-            <h2 class="mb-4"><?php esc_html_e('Shortcode Uses Guideline', 'easy-appointments'); ?></h2>
+            <h2 class="mb-4"><?php esc_html_e('Shortcode Uses Guide', 'easy-appointments'); ?></h2>
             <div>
                 <a target="_blank" href="https://easy-appointments.com/docs/installation-and-configuration-guide/#short-code"
                     style="padding: 8px 16px; background-color: #0073aa; color: white; text-decoration: none; border-radius: 4px;margin-right: 10px;">
@@ -143,6 +143,30 @@
         <h3><?php esc_html_e('FullCalendar View', 'easy-appointments'); ?></h3>
         <p><strong><?php esc_html_e('Note:', 'easy-appointments'); ?></strong> <?php esc_html_e('This feature is under development, and documentation may change.', 'easy-appointments'); ?></p>
         <pre>[ea_full_calendar location="1" worker="1" service="1"]</pre>
+
+        <h3><?php esc_html_e('Gutenberg Block Uses Guide', 'easy-appointments'); ?></h3>
+        <pre><?php esc_html_e('Booking Appointments Block', 'easy-appointments'); ?></pre>
+        <p><strong><?php esc_html_e('Note:', 'easy-appointments'); ?></strong> <?php esc_html_e('Embed a full appointment booking form directly into your page or post using this block. It allows visitors to book services based on selected location, service, and worker..', 'easy-appointments'); ?></p>
+        <div style="">
+            <h3 style="color: #333;"><?php esc_html_e('Booking Appointments Block', 'easy-appointments'); ?> How to Use:</h3>
+            <ol style="color: #555; margin-top: 5px;">
+            <li><?php esc_html_e('Go to', 'easy-appointments'); ?> <strong><?php esc_html_e('Pages', 'easy-appointments'); ?> &gt; </strong><?php esc_html_e('Add New (or edit an existing page)', 'easy-appointments'); ?> .</li>
+                <li> <?php esc_html_e('Click the', 'easy-appointments'); ?> <strong>“+”</strong> <?php esc_html_e('to add a block and search for', 'easy-appointments'); ?> <strong><?php esc_html_e('"Booking Appointments"', 'easy-appointments'); ?></strong>.</li>
+                <li><?php esc_html_e('Select the block labeled', 'easy-appointments'); ?> <strong><?php esc_html_e('Booking Appointments', 'easy-appointments'); ?></strong> <?php esc_html_e('with the EA logo', 'easy-appointments'); ?>.</li>
+                <li><?php esc_html_e('Publish or update your page', 'easy-appointments'); ?>.</li>
+            </ol>
+        </div>
+        <pre><?php esc_html_e('EA Full Calendar Block', 'easy-appointments'); ?></pre>
+        <p><strong><?php esc_html_e('Note:', 'easy-appointments'); ?></strong> <?php esc_html_e('Shows a full calendar view of all scheduled appointments for a specific location, service, and worker.', 'easy-appointments'); ?></p>
+        <div style="">
+            <h3 style="color: #333;"><?php esc_html_e('Booking Appointments Block', 'easy-appointments'); ?> How to Use:</h3>
+            <ol style="color: #555; margin-top: 5px;">
+                <li><?php esc_html_e('Go to', 'easy-appointments'); ?> <strong><?php esc_html_e('Pages', 'easy-appointments'); ?> &gt; </strong><?php esc_html_e('Add New (or edit an existing page)', 'easy-appointments'); ?> .</li>
+                <li> <?php esc_html_e('Click the', 'easy-appointments'); ?> <strong>“+”</strong> <?php esc_html_e('to add a block and search for', 'easy-appointments'); ?> <strong><?php esc_html_e('"Full View Calendar"', 'easy-appointments'); ?></strong>.</li>
+                <li><?php esc_html_e('Select the block labeled', 'easy-appointments'); ?> <strong><?php esc_html_e('"EA Full Calendar"', 'easy-appointments'); ?></strong> <?php esc_html_e('with the EA logo', 'easy-appointments'); ?>.</li>
+                <li><?php esc_html_e('Publish or update your page', 'easy-appointments'); ?>.</li>
+            </ol>
+        </div>
     </div>
     <div style="border: 1px solid #ddd; padding: 20px; border-radius: 8px; background-color: #f8fcff; max-width: 700px; text-align: center; margin: 20px auto;" id="ea-suggest-feature-box">
         <h2 style="font-size: 20px; margin-bottom: 10px;">
