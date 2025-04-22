@@ -65,48 +65,10 @@
     </div>
 
     <div id="ea-total-amount" style="display: none;" data-total="<%- data.price %>"></div>
-
-    <script>
-        (function(){
-            const rawDateTime = "<%- data.date_time %>"; // Example: "25/04/2025 12:36 am"
-            const title = "<%- data.service %> with <%- data.worker %>";
-            const location = "<%- data.location %>";
-            const description = "Service: <%- data.service %>\\nWorker: <%- data.worker %>\\nPrice: <%- data.price %><%- settings['trans.currency'] %>";
-
-            const parseDate = (str) => {
-                const [datePart, timePart, meridian] = str.trim().split(' ');
-                const [day, month, year] = datePart.split('/');
-
-                let [hour, minute] = timePart.split(':').map(Number);
-                const isPM = meridian.toLowerCase() === 'pm';
-                const isAM = meridian.toLowerCase() === 'am';
-
-                if (isPM && hour < 12) hour += 12;
-                if (isAM && hour === 12) hour = 0;
-
-                return new Date(Date.UTC(parseInt(year), parseInt(month) - 1, parseInt(day), hour, minute));
-            };
-
-            const startDateObj = parseDate(rawDateTime);
-            const endDateObj = new Date(startDateObj.getTime() + 60 * 60 * 1000); // +1 hour
-
-            const formatDateForGoogle = (dateObj) =>
-                dateObj.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
-
-            const start = formatDateForGoogle(startDateObj);
-            const end = formatDateForGoogle(endDateObj);
-
-            const calendarUrl = new URL("https://calendar.google.com/calendar/render");
-            calendarUrl.searchParams.set("action", "TEMPLATE");
-            calendarUrl.searchParams.set("text", title);
-            calendarUrl.searchParams.set("dates", `${start}/${end}`);
-            calendarUrl.searchParams.set("details", description);
-            calendarUrl.searchParams.set("location", location);
-            calendarUrl.searchParams.set("trp", "false");
-
-            document.getElementById("ea-add-to-calendar").href = calendarUrl.toString();
-        })();
-
-
-    </script>
+    <div id="ea-meta-data" 
+             data-location="<%- data.location %>" 
+             data-service="<%- data.service %>" 
+             data-worker="<%- data.worker %>" 
+             data-date-time="<%- data.date_time %>" 
+             data-currency="<%- settings['trans.currency'] %>"></div>
 </script>
