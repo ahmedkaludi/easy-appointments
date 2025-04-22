@@ -661,13 +661,16 @@
                 plugin.$element.find('#paypal-button').hide();
 
                 plugin.$element.find('.step').hide();
+                var table_html = plugin.$element.find('#booking-overview').find('table').html();
                 plugin.$element.find('#booking-overview').show();
-                plugin.$element.find('.ea-confirmation-title').show();
+                plugin.$element.find('#booking-overview').find('table').hide();
                 plugin.$element.find('.final').show();
                 plugin.$element.find('.ea_hide_show').hide();
                 plugin.$element.find('.ea-confirmation-subtext').hide();
                 plugin.$element.find('#booking-overview-header').hide();
-                plugin.$element.find('#ea-overview-buttons').css('display', 'flex');
+                plugin.$element.find('#ea-overview-message').hide();
+                plugin.$element.find('#ea-success-box').show();
+                plugin.$element.find('#ea-overview-details').html(table_html);
 
                 const meta = document.getElementById('ea-meta-data');
                 if (meta) {
