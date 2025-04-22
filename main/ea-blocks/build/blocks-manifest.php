@@ -6,10 +6,10 @@ return array(
 		'apiVersion' => 3,
 		'name' => 'create-block/ea-blocks',
 		'version' => '0.1.0',
-		'title' => 'Booking Appointments',
+		'title' => 'EA Booking Form',
 		'category' => 'widgets',
 		'icon' => 'calendar',
-		'description' => 'Booking Appointments',
+		'description' => 'EA Booking Form',
 		'example' => array(
 			
 		),
@@ -64,10 +64,10 @@ return array(
 		'apiVersion' => 3,
 		'name' => 'ea-blocks/ea-fullcalendar',
 		'version' => '0.1.0',
-		'title' => 'EA Full Calendar',
+		'title' => 'EA Full Calendar View',
 		'category' => 'widgets',
 		'icon' => 'calendar',
-		'description' => 'Full Calendar',
+		'description' => 'EA Full Calendar View',
 		'example' => array(
 			
 		),

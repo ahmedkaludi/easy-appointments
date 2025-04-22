@@ -3,10 +3,10 @@
 	"apiVersion": 3,
 	"name": "create-block/ea-blocks",
 	"version": "0.1.0",
-	"title": "Booking Appointments",
+	"title": "EA Booking Form",
 	"category": "widgets",
 	"icon": "calendar",
-	"description": "Booking Appointments",
+	"description": "EA Booking Form",
 	"example": {},
 	"supports": {
 		"html": false

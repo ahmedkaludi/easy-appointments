@@ -3,10 +3,10 @@
   "apiVersion": 3,
   "name": "ea-blocks/ea-fullcalendar",
   "version": "0.1.0",
-  "title": "EA Full Calendar",
+  "title": "EA Full Calendar View",
   "category": "widgets",
   "icon": "calendar",
-  "description": "Full Calendar",
+  "description": "EA Full Calendar View",
   "example": {},
   "supports": {
     "html": false
