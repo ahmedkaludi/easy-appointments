@@ -3,7 +3,7 @@ Contributors: easyappointments
 Donate link: https://easy-appointments.com/
 Tags: appointment, appointments, Booking, calendar, reservation
 Requires at least: 3.7
-Tested up to: 6.7
+Tested up to: 6.8
 Requires PHP: 5.3
 Stable tag: 3.12.10
 License: GPLv2
