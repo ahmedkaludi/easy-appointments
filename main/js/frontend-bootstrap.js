@@ -993,69 +993,75 @@
                 plugin.$element.find('.ea-cancel').hide();
                 plugin.$element.find('#paypal-button').hide();
 
-                plugin.$element.find('.step').hide();
-                var table_html = plugin.$element.find('#booking-overview').find('table').html();
-                plugin.$element.find('#booking-overview').show();
-                plugin.$element.find('#booking-overview').find('table').hide();
-                plugin.$element.find('.final').show();
-                plugin.$element.find('.ea_hide_show').hide();
-                plugin.$element.find('.ea-confirmation-subtext').hide();
-                plugin.$element.find('#booking-overview-header').hide();
-                plugin.$element.find('#ea-overview-message').hide();
-                plugin.$element.find('#ea-success-box').show();
-                plugin.$element.find('#ea-overview-details').html(table_html);
-
-                const meta = document.getElementById('ea-meta-data');
-                if (meta) {
-                    const rawDateTime = meta.dataset.dateTime;
-                    const service = meta.dataset.service;
-                    const worker = meta.dataset.worker;
-                    const location = meta.dataset.location;
-                    const price = document.getElementById('ea-total-amount')?.dataset.price || '';
-                    const currency = meta.dataset.currency;
-                    const title = `${service} with ${worker}`;
-                    const description = `Service: ${service}\nWorker: ${worker}\nPrice: ${price}${currency}`;
-                    const startDateObj = new Date(rawDateTime);
-                    if (isNaN(startDateObj.getTime())) {
-                        console.error('Invalid date:', rawDateTime);
-                        return;
+                if (ea_settings['display_thankyou_note'] == 1) {                    
+                    plugin.$element.find('.step').hide();
+                    var table_html = plugin.$element.find('#booking-overview').find('table').html();
+                    plugin.$element.find('#booking-overview').show();
+                    plugin.$element.find('#booking-overview').find('table').hide();
+                    plugin.$element.find('.final').show();
+                    plugin.$element.find('.ea_hide_show').hide();
+                    plugin.$element.find('.ea-confirmation-subtext').hide();
+                    plugin.$element.find('#booking-overview-header').hide();
+                    plugin.$element.find('#ea-overview-message').hide();
+                    plugin.$element.find('#ea-success-box').show();
+                    plugin.$element.find('#ea-overview-details').html(table_html);
+    
+                    const meta = document.getElementById('ea-meta-data');
+                    if (meta) {
+                        const rawDateTime = meta.dataset.dateTime;
+                        const service = meta.dataset.service;
+                        const worker = meta.dataset.worker;
+                        const location = meta.dataset.location;
+                        const price = document.getElementById('ea-total-amount')?.dataset.price || '';
+                        const currency = meta.dataset.currency;
+                        const title = `${service} with ${worker}`;
+                        const description = `Service: ${service}\nWorker: ${worker}\nPrice: ${price}${currency}`;
+                        const startDateObj = new Date(rawDateTime);
+                        if (isNaN(startDateObj.getTime())) {
+                            console.error('Invalid date:', rawDateTime);
+                            return;
+                        }
+    
+                        const endDateObj = new Date(startDateObj.getTime() + 60 * 60 * 1000); // +1 hour
+    
+                        const formatDateForGoogle = (dateObj) =>
+                            dateObj.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+    
+                        const start = formatDateForGoogle(startDateObj);
+                        const end = formatDateForGoogle(endDateObj);
+    
+                        const calendarUrl = new URL("https://calendar.google.com/calendar/render");
+                        calendarUrl.searchParams.set("action", "TEMPLATE");
+                        calendarUrl.searchParams.set("text", title);
+                        calendarUrl.searchParams.set("dates", `${start}/${end}`);
+                        calendarUrl.searchParams.set("details", description);
+                        calendarUrl.searchParams.set("location", location);
+                        calendarUrl.searchParams.set("trp", "false");
+    
+                        document.getElementById("ea-add-to-calendar").href = calendarUrl.toString();
                     }
-
-                    const endDateObj = new Date(startDateObj.getTime() + 60 * 60 * 1000); // +1 hour
-
-                    const formatDateForGoogle = (dateObj) =>
-                        dateObj.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
-
-                    const start = formatDateForGoogle(startDateObj);
-                    const end = formatDateForGoogle(endDateObj);
-
-                    const calendarUrl = new URL("https://calendar.google.com/calendar/render");
-                    calendarUrl.searchParams.set("action", "TEMPLATE");
-                    calendarUrl.searchParams.set("text", title);
-                    calendarUrl.searchParams.set("dates", `${start}/${end}`);
-                    calendarUrl.searchParams.set("details", description);
-                    calendarUrl.searchParams.set("location", location);
-                    calendarUrl.searchParams.set("trp", "false");
-
-                    document.getElementById("ea-add-to-calendar").href = calendarUrl.toString();
+    
+                    switch (ea_settings['default.status']) {
+                        case 'pending':
+                            default_status_message = 'Your appointment has been submitted and is currently pending approval. You will be notified once it is confirmed';
+                            break;
+                        case 'confirmed':
+                            default_status_message = 'Your appointment has been confirmed. Thank you!';
+                            break;
+                        case 'reservation':
+                            default_status_message = 'Your appointment has been reserved. You will be notified once it is confirmed.';
+                            break;
+                        default:
+                            default_status_message = 'Your appointment has been successfully submitted. You will receive an update shortly.';
+                            break;
+                    }
+                    plugin.$element.find('.ea-status-note').text(default_status_message);
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                }else{
+                    plugin.$element.find('.final').append('<h3 class="ea-done-message">' + _.escape(ea_settings['trans.done_message']) + '</h3>');
                 }
 
-                switch (ea_settings['default.status']) {
-                    case 'pending':
-                        default_status_message = 'Your appointment has been submitted and is currently pending approval. You will be notified once it is confirmed';
-                        break;
-                    case 'confirmed':
-                        default_status_message = 'Your appointment has been confirmed. Thank you!';
-                        break;
-                    case 'reservation':
-                        default_status_message = 'Your appointment has been reserved. You will be notified once it is confirmed.';
-                        break;
-                    default:
-                        default_status_message = 'Your appointment has been successfully submitted. You will receive an update shortly.';
-                        break;
-                }
-                plugin.$element.find('.ea-status-note').text(default_status_message);
-                window.scrollTo({ top: 0, behavior: 'smooth' });
+
                 plugin.$element.find('form').find('input,select,textarea').prop('disabled', true);
                 plugin.$element.find('.calendar').addClass('disabled');
                 plugin.$element.find('.g-recaptcha').remove();

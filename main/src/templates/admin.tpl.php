@@ -730,6 +730,30 @@
                         <ul id="custom-cancel-redirect-list" class="list-form-item"></ul>
                     </div>
                     <input type="hidden" id="advance-cancel-redirect" data-key="advance_cancel.redirect" class="field" name="advance_cancel.redirect" value="<%- _.escape(ea_settings['advance_cancel.redirect']) %>">
+
+                    <div class="form-item">
+                        <div class="label-with-tooltip">
+                            <label for="show.display_thankyou_note"><?php _e('Display Thank You Note', 'easy-appointments'); ?></label>
+                        </div>
+                        <div class="field-wrap">
+                            <input class="field" type="checkbox" name="show.display_thankyou_note"
+                                   data-key="show.display_thankyou_note"<% if (typeof _.findWhere(settings,
+                            {ea_key:'show.display_thankyou_note'}) !== 'undefined' && _.findWhere(settings,
+                            {ea_key:'show.display_thankyou_note'}).ea_value == '1') { %>checked<% } %> />
+                        </div>
+                    </div>
+                    <div class="form-item" style="background-color: #ccc; padding: 15px;">
+                        <blockquote style="margin: 0;">
+                            <?php echo wp_kses_post(__('
+                                <strong>Display Thank You Note:</strong> This screen is displayed immediately after a user successfully books an appointment using the booking form, Its featured Appointment summary and Action buttons.<br><br>
+                                <strong>Action Buttons:</strong><br>
+                                <ul style="margin: 0 0 0 20px; padding: 0;">
+                                    <li><strong>Book New Appointment:</strong> Allows the user to return and book another appointment.</li>
+                                    <li><strong>Add to Google Calendar:</strong> Its add the appointment directly to their Google Calendar for easy reminders.</li>
+                                </ul>
+                            ', 'easy-appointments')); ?>
+                        </blockquote>
+                    </div>
                 </div>
             </div>
 

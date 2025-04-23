@@ -173,6 +173,7 @@ class EATableColumns
             'save_form_content',
             'scroll_off',
             'show.iagree',
+            'show.display_thankyou_note',
             'show_remaining_slots',
             'show_week',
             'sort.locations-by',

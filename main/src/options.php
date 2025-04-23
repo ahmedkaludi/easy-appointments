@@ -101,6 +101,7 @@ class EAOptions
             'custom.css'                    => '',
             'form.label.above'              => '0',
             'show.iagree'                   => '0',
+            'show.display_thankyou_note'    => '0',
             'cancel.scroll'                 => 'calendar',
             'multiple.work'                 => '1',
             'compatibility.mode'            => '0',
