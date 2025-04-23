@@ -212,7 +212,7 @@ Note: you can have only one calendar on one page.
 25. Admin panel - Report - Export page
 
 == Changelog ==
-= 3.12.10 (2025-04-22)
+= 3.12.10 (2025-04-23)
 * Tested with WordPress 6.8 #140
 * Fixed An Alert pop-ups saying "Undefined" if user selects a slot that does not have sufficient time gap #129
 * Fixed Conflict issue with 3.12.9. version. #131
