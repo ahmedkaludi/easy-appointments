@@ -81,6 +81,14 @@
 				<i class="fa fa-refresh"></i>
 				<?php _e('Refresh', 'easy-appointments');?>
 			</a>
+			<a href="#" data="all" class="add-new-h2 ea-cancel-all-selected" style="float:right;">
+				<i class="fa fa-times"></i>
+				<?php _e('Cancel All', 'easy-appointments');?>
+			</a>
+			<a href="#" data="selected" class="add-new-h2 ea-cancel-all-selected" style="float:right;">
+				<i class="fa fa-times"></i>
+				<?php _e('Cancel All Selected', 'easy-appointments');?>
+			</a>
             <div class="ea-sort-fields">
                 <label><?php _e('Sort By');?>:</label>
                 <select id="ea-sort-by" name="ea-sort-by">
@@ -100,6 +108,10 @@
 		<table class="ea-responsive-table widefat fixed">
 			<thead>
 				<tr>
+					<th class="manage-column column-title">
+						<input type="checkbox" id="ea-select-all" style="margin:4px 0px 0 0;" />
+						<label for="ea-select-all"><?php _e('Select All', 'easy-appointments'); ?></label>
+					</th>
                     <th colspan="2" class="manage-column column-title"><a class="ea-set-sort" data-key="id" href="#">Id</a> / <?php _e('Location', 'easy-appointments');?> / <?php _e('Service', 'easy-appointments');?> / <?php _e('Worker', 'easy-appointments');?></th>
 					<th colspan="2" class="manage-column column-title"><?php _e('Customer', 'easy-appointments');?></th>
 					<th class="manage-column column-title"><?php _e('Description', 'easy-appointments');?></th>
@@ -115,6 +127,9 @@
 </script>
 
 <script type="text/template" id="ea-tpl-appointment-row">
+	<td>
+		<input type="checkbox" class="ea-appointment-checkbox" data-id="<%- row.id %>" />
+	</td>
 	<td colspan="2" class="post-title page-title column-title">
 		<strong>#<%- row.id %></strong>
 		<strong><%- _.findWhere(cache.Locations, {id:row.location})?.name %></strong>
@@ -262,4 +277,71 @@
 		<option value="<%- item.value %>" <% if(item.count < 1) {%>disabled<% } %>><%- item.show %> - <%- item.ends %></option>
 	<% } %>
 <% });%>
+</script>
+<script>
+	var appointments_nonce = "<?php echo wp_create_nonce('appointments_nonce'); ?>";
+
+jQuery(document).ready(function($) {
+	function check_is_any_cancel_checkbox(){
+		if ($('.ea-appointment-checkbox').length < 1){
+			$('.ea-cancel-all-selected').hide();
+		}else{
+			$('.ea-cancel-all-selected').show();
+		}
+	}
+    
+    $('#ea-select-all').on('change', function() {
+        var isChecked = $(this).prop('checked');
+        $('.ea-appointment-checkbox').prop('checked', isChecked);
+		check_is_any_cancel_checkbox();
+    });
+
+    
+    $('.ea-cancel-all-selected').on('click', function(e) {
+        e.preventDefault();
+
+        var cancel_to =  $(this).attr('data');
+		console.log(cancel_to);
+        var selectedAppointments = [];
+        $('.ea-appointment-checkbox:checked').each(function() {
+            selectedAppointments.push($(this).data('id'));
+        });
+
+        if (selectedAppointments.length === 0 && cancel_to != 'all') {
+            alert('<?php _e("Please select at least one appointment to cancel.", "easy-appointments"); ?>');
+            return;
+        }
+		var popup_message = 'Are you sure you want to cancel all appointments?';
+		if (cancel_to != 'all') {
+			var popup_message = 'Are you sure you want to cancel all selected appointments?';
+		}
+        if (confirm(popup_message)) {
+            $.ajax({
+                url: ajaxurl,
+                type: 'POST',
+                data: {
+                    action: 'cancel_selected_appointments',
+                    appointments: selectedAppointments,
+                    cancel_to: cancel_to,
+					appointments_nonce: appointments_nonce
+                },
+                success: function(response) {
+                    if (response.data) {
+                        alert('<?php _e("Appointments canceled successfully.", "easy-appointments"); ?>');
+                        location.reload(); // Reload the page to reflect changes
+                    }
+                },
+                error: function() {
+                    alert('<?php _e("An error occurred.", "easy-appointments"); ?>');
+                }
+            });
+        }
+    });
+
+	check_is_any_cancel_checkbox();
+	setInterval(() => {
+		check_is_any_cancel_checkbox(); // Repeated call every 2 seconds
+	}, 2000);
+});
+
 </script>

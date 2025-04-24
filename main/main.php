@@ -4,7 +4,7 @@
  * Plugin Name: Easy Appointments
  * Plugin URI: https://easy-appointments.com/
  * Description: Simple and easy to use management system for Appointments and Bookings
- * Version: 3.12.9
+ * Version: 3.12.10
  * Requires PHP: 5.3
  * Author: Nikola Loncar
  * Author URI: https://easy-appointments.com/
@@ -21,7 +21,7 @@ if (!defined('WPINC')) {
 /**
  * Currently plugin version.
  */
-define( 'EASY_APPOINTMENTS_VERSION', '3.12.9' );
+define( 'EASY_APPOINTMENTS_VERSION', '3.12.10' );
 
 // path for source files
 define('EA_SRC_DIR', dirname(__FILE__) . '/src/');
@@ -55,6 +55,8 @@ if (version_compare(PHP_VERSION, '5.3', '<')) {
     // PHP 5.3.0+ use composer auto loader
     require_once dirname(__FILE__) . '/vendor/autoload.php';
 }
+
+require_once dirname(__FILE__) . '/ea-blocks/ea-blocks.php';
 
 /**
  * Entry point

@@ -1,0 +1,56 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "ea-blocks/ea-fullcalendar",
+  "version": "0.1.0",
+  "title": "EA Full Calendar View",
+  "category": "widgets",
+  "icon": "calendar",
+  "description": "EA Full Calendar View",
+  "example": {},
+  "supports": {
+    "html": false
+  },
+  "keywords": [
+    "full calendar",
+    "appointment",
+    "booking",
+    "easy appointments",
+    "ea"
+  ],
+  "attributes": {
+    "width": {
+      "type": "string",
+      "default": "400px"
+    },
+    "scrollOff": {
+      "type": "boolean",
+      "default": false
+    },
+    "layoutCols": {
+      "type": "string",
+      "default": "1"
+    },
+    "location": {
+      "type": "string",
+      "default": ""
+    },
+    "service": {
+      "type": "string",
+      "default": ""
+    },
+    "worker": {
+      "type": "string",
+      "default": ""
+    },
+    "defaultDate": {
+      "type": "string",
+      "default": ""
+    }
+  },
+  "textdomain": "ea-fullcalendar",
+  "editorScript": "file:./index.js",
+  "editorStyle": "file:./index.css",
+  "style": "file:./style-index.css",
+  "viewScript": "file:./frontend.js"
+}
