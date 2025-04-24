@@ -23,11 +23,11 @@ class EAMetaFields
     static function get_meta_fields_type()
     {
         return array(
-            'INPUT'    => __('Input', 'easy_appointments'),
-            'TEXTAREA' => __('Select', 'easy_appointments'),
-            'SELECT'   => __('Text', 'easy_appointments'),
-            'PHONE'    => __('Phone', 'easy_appointments'),
-            'EMAIL'    => __('Email', 'easy_appointments'),
+            'INPUT'    => __('Input', 'easy-appointments'),
+            'TEXTAREA' => __('Select', 'easy-appointments'),
+            'SELECT'   => __('Text', 'easy-appointments'),
+            'PHONE'    => __('Phone', 'easy-appointments'),
+            'EMAIL'    => __('Email', 'easy-appointments'),
         );
     }
 
