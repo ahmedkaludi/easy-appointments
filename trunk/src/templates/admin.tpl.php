@@ -460,7 +460,7 @@
                         <div class="label-with-tooltip">
                             <label for=""><?php _e('Time format', 'easy-appointments'); ?></label>
                             <span class="tooltip tooltip-right"
-                                  data-tooltip="<?php _e('Notice : date/time formating for email notification are done by Settings > General.', 'easy-appointments', 'easy-appointments'); ?>"></span>
+                                  data-tooltip="<?php _e('Notice : date/time formating for email notification are done by Settings > General.', 'easy-appointments'); ?>"></span>
                         </div>
                         <select data-key="time_format" class="field" name="time_format">
                             <option value="00-24"

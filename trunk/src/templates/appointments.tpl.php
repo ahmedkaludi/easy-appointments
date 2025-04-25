@@ -90,13 +90,13 @@
 				<?php _e('Cancel All Selected', 'easy-appointments');?>
 			</a>
             <div class="ea-sort-fields">
-                <label><?php _e('Sort By');?>:</label>
+                <label><?php _e('Sort By', 'easy-appointments');?>:</label>
                 <select id="ea-sort-by" name="ea-sort-by">
                     <option value="id"><?php _e('Id', 'easy-appointments');?></option>
                     <option value="date"><?php _e('Date & time', 'easy-appointments');?></option>
                     <option value="created"><?php _e('Created', 'easy-appointments');?></option>
                 </select>
-                <label><?php _e('Order by');?>:</label>
+                <label><?php _e('Order by', 'easy-appointments');?>:</label>
                 <select id="ea-order-by" name="ea-order-by">
                     <option value="ASC">asc</option>
                     <option value="DESC" selected>desc</option>

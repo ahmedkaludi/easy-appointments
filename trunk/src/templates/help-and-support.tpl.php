@@ -155,49 +155,49 @@
        <!--  <div id="ezappoint-tabs-technical">
             <a href="#" onclick="ezappointTabToggle(event, 'ezappoint-technical-support',
             'ezappoint-tabcontent-technical', 'ezappoint-tablinks-technical')"
-               class="ezappoint-tablinks-technical active"><?php esc_html_e('Technical Support', 'easy-appointment') ?></a>
+               class="ezappoint-tablinks-technical active"><?php esc_html_e('Technical Support', 'easy-appointments') ?></a>
             |
             <a href="#" onclick="ezappointTabToggle(event, 'ezappoint-technical-how-to-use',
             'ezappoint-tabcontent-technical', 'ezappoint-tablinks-technical')"
-               class="ezappoint-tablinks-technical"><?php esc_html_e('How to Use', 'easy-appointment') ?></a>
+               class="ezappoint-tablinks-technical"><?php esc_html_e('How to Use', 'easy-appointments') ?></a>
             |
             <a href="#" onclick="ezappointTabToggle(event, 'ezappoint-technical-shortcode',
             'ezappoint-tabcontent-technical', 'ezappoint-tablinks-technical')"
-               class="ezappoint-tablinks-technical"><?php esc_html_e('Shortcode', 'easy-appointment') ?></a>
+               class="ezappoint-tablinks-technical"><?php esc_html_e('Shortcode', 'easy-appointments') ?></a>
             |
             <a href="https://easy-appointments.com/docs/" target="_blank" class="ezappoint-tablinks-technical"><?php echo
-                esc_html_e('Documentation', 'easy-appointment') ?></a>
+                esc_html_e('Documentation', 'easy-appointments') ?></a>
             |
             <a href="#" onclick="ezappointTabToggle(event, 'ezappoint-technical-hooks-for-developers',
             'ezappoint-tabcontent-technical', 'ezappoint-tablinks-technical')"
-               class="ezappoint-tablinks-technical"><?php esc_html_e('Hooks (for Developers)', 'easy-appointment') ?></a>
+               class="ezappoint-tablinks-technical"><?php esc_html_e('Hooks (for Developers)', 'easy-appointments') ?></a>
         </div> -->
         <div class="ezappoint-form-page-ui">
             <div class="ezappoint-left-side">
                 <div class="ezappoint-tabcontent-technical" id="ezappoint-technical-support">
-                    <h1><?php esc_html_e('Technical Support', 'easy-appointment'); ?></h1>
-                    <p class="ezappoint-tabcontent-technical-title-content"><?php esc_html_e('We are dedicated to provide Technical support & Help to our users. Use the below form for sending your questions.', 'easy-appointment') ?> </p>
-                    <!-- <p><?php esc_html_e('You can also contact us from ', 'easy-appointment') ?><a
+                    <h1><?php esc_html_e('Technical Support', 'easy-appointments'); ?></h1>
+                    <p class="ezappoint-tabcontent-technical-title-content"><?php esc_html_e('We are dedicated to provide Technical support & Help to our users. Use the below form for sending your questions.', 'easy-appointments') ?> </p>
+                    <!-- <p><?php esc_html_e('You can also contact us from ', 'easy-appointments') ?><a
                                 href="https://easy-appointments.com/contactus/">https://easy-appointments.com/contactus/</a></p> -->
 
                     <div class="ezappoint_support_div_form" id="technical-form">
                         <ul>
                             <li>
-                                <label class="ezappoint-support-label"><?php esc_html_e( 'Email', 'easy-appointment' ) ?><span class="star-mark">*</span></label>
+                                <label class="ezappoint-support-label"><?php esc_html_e( 'Email', 'easy-appointments' ) ?><span class="star-mark">*</span></label>
                                 <div class="ezappoint-support-input">
 
                                     <input type="text" id="ezappoint_query_email" name="ezappoint_query_email"
-                                           placeholder="<?php esc_html_e( 'Enter your Email', 'easy-appointment' ) ?>" required style="width: 350px;"/>
+                                           placeholder="<?php esc_html_e( 'Enter your Email', 'easy-appointments' ) ?>" required style="width: 350px;"/>
                                 </div>
                             </li>
 
                             <li>
-                                <label class="ezappoint-support-label"><?php esc_html_e( 'Query', 'easy-appointment' ) ?><span class="star-mark">*</span></label>
+                                <label class="ezappoint-support-label"><?php esc_html_e( 'Query', 'easy-appointments' ) ?><span class="star-mark">*</span></label>
 
                                 <div class="ezappoint-support-input">
                                     <textarea style="width: 350px;" rows="5" cols="50" id="ezappoint_query_message"
                                               name="ezappoint_query_message"
-                                              placeholder="<?php esc_html_e( 'Write your query', 'easy-appointment' ) ?>"></textarea></label>
+                                              placeholder="<?php esc_html_e( 'Write your query', 'easy-appointments' ) ?>"></textarea></label>
                                 </div>
 
 
@@ -206,190 +206,190 @@
 
                             <li>
                                 <div class="ezappoint-customer-type">
-                                    <label class="ezappoint-support-label"><?php esc_html_e( 'Type', 'easy-appointment' ) ?></label>
+                                    <label class="ezappoint-support-label"><?php esc_html_e( 'Type', 'easy-appointments' ) ?></label>
                                     <div class="ezappoint-support-input">
                                         <select name="ezappoint_customer_type" id="ezappoint_customer_type" style="width: 350px;">
-                                            <option value="select"><?php esc_html_e( 'Select Customer Type', 'easy-appointment' ) ?></option>
-                                            <option value="paid"><?php esc_html_e( 'Paid', 'easy-appointment' ) ?><span> <?php esc_html_e( '(Response within 24 hrs)', 'easy-appointment' ) ?></span>
+                                            <option value="select"><?php esc_html_e( 'Select Customer Type', 'easy-appointments' ) ?></option>
+                                            <option value="paid"><?php esc_html_e( 'Paid', 'easy-appointments' ) ?><span> <?php esc_html_e( '(Response within 24 hrs)', 'easy-appointments' ) ?></span>
                                             </option>
                                             <option value="free">
-                                                <?php esc_html_e( 'Free', 'easy-appointment' ) ?><span> <?php esc_html_e( '( Avg Response within 48-72 hrs)', 'easy-appointment' ) ?></span>
+                                                <?php esc_html_e( 'Free', 'easy-appointments' ) ?><span> <?php esc_html_e( '( Avg Response within 48-72 hrs)', 'easy-appointments' ) ?></span>
                                             </option>
                                         </select>
                                     </div>
                                 </div>
                             </li>
                             <li>
-                                <button class="button button-primary ezappoint-send-query" id="ea-send-btn"><?php esc_html_e('Send Support Request', 'easy-appointment'); ?></button>
-                                <button class="button button-primary ezappoint-send-query1" id="ea-send-btn-loader" style="display:none"><?php esc_html_e('Sending...', 'easy-appointment'); ?></button>
+                                <button class="button button-primary ezappoint-send-query" id="ea-send-btn"><?php esc_html_e('Send Support Request', 'easy-appointments'); ?></button>
+                                <button class="button button-primary ezappoint-send-query1" id="ea-send-btn-loader" style="display:none"><?php esc_html_e('Sending...', 'easy-appointments'); ?></button>
                             </li>
                         </ul>
                         <div class="clear"></div>
-                        <span class="ezappoint-query-success ezappoint-result ezappoint_hide"><?php esc_html_e('Message sent successfully, Please wait we will get back to you shortly', 'easy-appointment'); ?></span>
-                        <span class="ezappoint-query-error ezappoint-result ezappoint_hide"><?php esc_html_e('Message not sent. Please try after some time', 'easy-appointment'); ?></span>
+                        <span class="ezappoint-query-success ezappoint-result ezappoint_hide"><?php esc_html_e('Message sent successfully, Please wait we will get back to you shortly', 'easy-appointments'); ?></span>
+                        <span class="ezappoint-query-error ezappoint-result ezappoint_hide"><?php esc_html_e('Message not sent. Please try after some time', 'easy-appointments'); ?></span>
                     </div>
                 </div>
                 <div class="ezappoint-tabcontent-technical" id="ezappoint-technical-how-to-use" style="display:
                 none;">
-                    <h1><?php esc_html_e('How to Use', 'easy-appointment'); ?></h1>
-                    <p class="ezappoint-tabcontent-technical-title-content"><?php esc_html_e('You can check how to use `Easy Table of Contents`, follow the basic details below.', 'easy-appointment'); ?></p>
-                    <h3><?php esc_html_e('1. AUTOMATICALLY', 'easy-appointment'); ?></h3>
+                    <h1><?php esc_html_e('How to Use', 'easy-appointments'); ?></h1>
+                    <p class="ezappoint-tabcontent-technical-title-content"><?php esc_html_e('You can check how to use `Easy Table of Contents`, follow the basic details below.', 'easy-appointments'); ?></p>
+                    <h3><?php esc_html_e('1. AUTOMATICALLY', 'easy-appointments'); ?></h3>
                     <ol>
-                        <li><?php esc_html_e('Go to the tab Settings &gt; General section, check Auto Insert', 'easy-appointment');
+                        <li><?php esc_html_e('Go to the tab Settings &gt; General section, check Auto Insert', 'easy-appointments');
                             ?></li>
-                        <li><?php esc_html_e('Select the post types which will have the table of contents automatically inserted.', 'easy-appointment'); ?></li>
-                        <li><?php esc_html_e('NOTE: The table of contents will only be automatically inserted on post types for which it has been enabled.', 'easy-appointment'); ?></li>
-                        <li><?php esc_html_e('After Auto Insert, the Position option for choosing where you want to display the `Easy Table of Contents`.', 'easy-appointment'); ?></li>
+                        <li><?php esc_html_e('Select the post types which will have the table of contents automatically inserted.', 'easy-appointments'); ?></li>
+                        <li><?php esc_html_e('NOTE: The table of contents will only be automatically inserted on post types for which it has been enabled.', 'easy-appointments'); ?></li>
+                        <li><?php esc_html_e('After Auto Insert, the Position option for choosing where you want to display the `Easy Table of Contents`.', 'easy-appointments'); ?></li>
                     </ol>
-                    <h3><?php esc_html_e('2. MANUALLY', 'easy-appointment'); ?></h3>
-                    <p><?php esc_html_e('There are two ways for manual adding & display `Easy Table of Contents`:', 'easy-appointment');
+                    <h3><?php esc_html_e('2. MANUALLY', 'easy-appointments'); ?></h3>
+                    <p><?php esc_html_e('There are two ways for manual adding & display `Easy Table of Contents`:', 'easy-appointments');
                         ?></p>
                     <ol>
-                        <li><?php esc_html_e('Using shortcode, you can copy shortcode and paste the shortcode on editor of any post type.', 'easy-appointment');
+                        <li><?php esc_html_e('Using shortcode, you can copy shortcode and paste the shortcode on editor of any post type.', 'easy-appointments');
                             ?></li>
                         <li><?php esc_html_e('Using Insert table of contents option on editor of any post type.',
                                 'easy-appointment');
                             ?></li>
-                        <li><?php esc_html_e('You have to choose post types on tab General &gt; Enable Support section then `Easy Table of Contents` editor options would be shown to choose settings for particular post type.', 'easy-appointment'); ?></li>
+                        <li><?php esc_html_e('You have to choose post types on tab General &gt; Enable Support section then `Easy Table of Contents` editor options would be shown to choose settings for particular post type.', 'easy-appointments'); ?></li>
                     </ol>
-                    <h3><?php esc_html_e('3. DESIGN CUSTOMIZATION', 'easy-appointment');
+                    <h3><?php esc_html_e('3. DESIGN CUSTOMIZATION', 'easy-appointments');
                         ?></h3>
                     <ol>
-                        <li><?php esc_html_e('Go to tab Settings &gt; Appearance for design customization.', 'easy-appointment');
+                        <li><?php esc_html_e('Go to tab Settings &gt; Appearance for design customization.', 'easy-appointments');
                             ?></li>
-                        <li><?php esc_html_e('You can change width of `Easy Table of Contents` from select Fixed or Relative sizes or you select custom width then it will be showing custom width option for enter manually width.', 'easy-appointment');
+                        <li><?php esc_html_e('You can change width of `Easy Table of Contents` from select Fixed or Relative sizes or you select custom width then it will be showing custom width option for enter manually width.', 'easy-appointments');
                             ?></li>
-                        <li><?php esc_html_e('You can also choose Alignment of `Easy Table of Contents`.', 'easy-appointment');
+                        <li><?php esc_html_e('You can also choose Alignment of `Easy Table of Contents`.', 'easy-appointments');
                             ?></li>
-                        <li><?php esc_html_e('You can also set Font Option of `Easy Table of Contents` according to your needs.', 'easy-appointment');
+                        <li><?php esc_html_e('You can also set Font Option of `Easy Table of Contents` according to your needs.', 'easy-appointments');
                             ?></li>
-                        <li><?php esc_html_e('You can also choose Theme color of `Easy Table of Contents` on Theme Options section according to your choice.', 'easy-appointment');
+                        <li><?php esc_html_e('You can also choose Theme color of `Easy Table of Contents` on Theme Options section according to your choice.', 'easy-appointments');
                             ?></li>
-                        <li><?php esc_html_e('You can also choose Custom Theme colors of `Easy Table of Contents`. according to your requirements', 'easy-appointment');
+                        <li><?php esc_html_e('You can also choose Custom Theme colors of `Easy Table of Contents`. according to your requirements', 'easy-appointments');
                             ?></li>
                     </ol>
-                    <h3><?php esc_html_e('4. STICKY TABLE', 'easy-appointment');
+                    <h3><?php esc_html_e('4. STICKY TABLE', 'easy-appointments');
                         ?></h3>
                     <ol>
-                        <li><?php esc_html_e('Go to Sticky TOC tab to show Table of contents as sticky on your site.', 'easy-appointment');
+                        <li><?php esc_html_e('Go to Sticky TOC tab to show Table of contents as sticky on your site.', 'easy-appointments');
                             ?></li>
-                        <li><?php esc_html_e('Select the post types on which sticky table of contents has been to be enabled.', 'easy-appointment');
+                        <li><?php esc_html_e('Select the post types on which sticky table of contents has been to be enabled.', 'easy-appointments');
                             ?></li>
-                        <li><?php esc_html_e('You can also decide whether to have sticky table of contents enabled on Homepage.', 'easy-appointment');
+                        <li><?php esc_html_e('You can also decide whether to have sticky table of contents enabled on Homepage.', 'easy-appointments');
                             ?></li>
-                        <li><?php esc_html_e('You can also decide whether to have sticky table of contents enabled on Category|Tag.', 'easy-appointment');
+                        <li><?php esc_html_e('You can also decide whether to have sticky table of contents enabled on Category|Tag.', 'easy-appointments');
                             ?></li>
-                        <li><?php esc_html_e('You can also decide whether to have sticky table of contents enabled on Product Category.', 'easy-appointment');
+                        <li><?php esc_html_e('You can also decide whether to have sticky table of contents enabled on Product Category.', 'easy-appointments');
                             ?></li>
-                        <li><?php esc_html_e('You can also decide whether to have sticky table of contents enabled on Custom Taxonomy.', 'easy-appointment');
+                        <li><?php esc_html_e('You can also decide whether to have sticky table of contents enabled on Custom Taxonomy.', 'easy-appointments');
                             ?></li>
-                        <li><?php esc_html_e('You can also decide on which device you want to show sticky table of contents Mobile or Laptop.', 'easy-appointment');
+                        <li><?php esc_html_e('You can also decide on which device you want to show sticky table of contents Mobile or Laptop.', 'easy-appointments');
                             ?></li>
-                        <li><?php esc_html_e('You can also decide the position of sticky table of contents on left or right.', 'easy-appointment');
+                        <li><?php esc_html_e('You can also decide the position of sticky table of contents on left or right.', 'easy-appointments');
                             ?></li>
-                        <li><?php esc_html_e('You can also choose Alignment of Sticky `Easy Table of Contents`.', 'easy-appointment');
+                        <li><?php esc_html_e('You can also choose Alignment of Sticky `Easy Table of Contents`.', 'easy-appointments');
                             ?></li>
-                        <li><?php esc_html_e('You can also decide whether the sticky toc should be opened by default on load.', 'easy-appointment');
+                        <li><?php esc_html_e('You can also decide whether the sticky toc should be opened by default on load.', 'easy-appointments');
                             ?></li>
-                        <li><?php esc_html_e('You can change width of Sticky `Easy Table of Contents` from select Fixed or Relative sizes or you select custom width then it will be showing custom width option for enter manually width.', 'easy-appointment');
+                        <li><?php esc_html_e('You can change width of Sticky `Easy Table of Contents` from select Fixed or Relative sizes or you select custom width then it will be showing custom width option for enter manually width.', 'easy-appointments');
                             ?></li>
-                        <li><?php esc_html_e('You can change height of Sticky `Easy Table of Contents` from select Fixed or Relative sizes or you select custom height then it will be showing custom height option for enter manually height.', 'easy-appointment');
+                        <li><?php esc_html_e('You can change height of Sticky `Easy Table of Contents` from select Fixed or Relative sizes or you select custom height then it will be showing custom height option for enter manually height.', 'easy-appointments');
                             ?></li>
-                        <li><?php esc_html_e('You can change Button Text of Sticky `Easy Table of Contents`.', 'easy-appointment');
+                        <li><?php esc_html_e('You can change Button Text of Sticky `Easy Table of Contents`.', 'easy-appointments');
                             ?></li>
-                        <li><?php esc_html_e('You can also choose Click TOC Close on Mobile of Sticky `Easy Table of Contents`.', 'easy-appointment');
+                        <li><?php esc_html_e('You can also choose Click TOC Close on Mobile of Sticky `Easy Table of Contents`.', 'easy-appointments');
                             ?></li>
-                        <li><?php esc_html_e('You can also choose Click TOC Close on desktop of Sticky `Easy Table of Contents`.', 'easy-appointment');
+                        <li><?php esc_html_e('You can also choose Click TOC Close on desktop of Sticky `Easy Table of Contents`.', 'easy-appointments');
                             ?></li>
-                        <li><?php esc_html_e('You can also change title of Sticky `Easy Table of Contents`. (PRO)', 'easy-appointment');
+                        <li><?php esc_html_e('You can also change title of Sticky `Easy Table of Contents`. (PRO)', 'easy-appointments');
                             ?></li>
-                        <li><?php esc_html_e('You can also highlight headings while scrolling of Sticky `Easy Table of Contents`. (PRO)', 'easy-appointment');
+                        <li><?php esc_html_e('You can also highlight headings while scrolling of Sticky `Easy Table of Contents`. (PRO)', 'easy-appointments');
                             ?></li>
-                        <li><?php esc_html_e('You can also change background of highlight headings of Sticky `Easy Table of Contents`. (PRO)', 'easy-appointment');
+                        <li><?php esc_html_e('You can also change background of highlight headings of Sticky `Easy Table of Contents`. (PRO)', 'easy-appointments');
                             ?></li>
-                        <li><?php esc_html_e('You can also change title of highlight headings of Sticky `Easy Table of Contents`. (PRO)', 'easy-appointment');
+                        <li><?php esc_html_e('You can also change title of highlight headings of Sticky `Easy Table of Contents`. (PRO)', 'easy-appointments');
                             ?></li>
-                        <li><?php esc_html_e('You can also choose Theme color of Sticky `Easy Table of Contents` on Theme Options section according to your choice. (PRO)', 'easy-appointment');
+                        <li><?php esc_html_e('You can also choose Theme color of Sticky `Easy Table of Contents` on Theme Options section according to your choice. (PRO)', 'easy-appointments');
                             ?></li>
-                        <li><?php esc_html_e('You can also choose Custom Theme colors of Sticky `Easy Table of Contents` according to your requirements. (PRO)', 'easy-appointment');
+                        <li><?php esc_html_e('You can also choose Custom Theme colors of Sticky `Easy Table of Contents` according to your requirements. (PRO)', 'easy-appointments');
                             ?></li>
                     </ol>
-                    <h3><?php esc_html_e('5. MORE DOCUMENTATION:', 'easy-appointment'); ?></h3>
-                    <p><?php esc_html__('You can visit this link ', 'easy-appointment') . '<a href="https://easy-appointments.com/docs/" target="_blank">' . esc_html__('More Documentation', 'easy-appointment') . '</a>' . esc_html__(' for more documentation of `Easy Table of Contents`', 'easy-appointment'); ?></p>
+                    <h3><?php esc_html_e('5. MORE DOCUMENTATION:', 'easy-appointments'); ?></h3>
+                    <p><?php esc_html__('You can visit this link ', 'easy-appointments') . '<a href="https://easy-appointments.com/docs/" target="_blank">' . esc_html__('More Documentation', 'easy-appointments') . '</a>' . esc_html__(' for more documentation of `Easy Table of Contents`', 'easy-appointments'); ?></p>
                 </div>
                 <div class="ezappoint-tabcontent-technical" id="ezappoint-technical-shortcode" style="display: none;">
-                    <h1><?php esc_html_e('Shortcode', 'easy-appointment'); ?></h1>
-                    <p class="ezappoint-tabcontent-technical-title-content"><?php esc_html_e('Use the following shortcode within your content to have the table of contents display where you wish to:', 'easy-appointment'); ?></p>
+                    <h1><?php esc_html_e('Shortcode', 'easy-appointments'); ?></h1>
+                    <p class="ezappoint-tabcontent-technical-title-content"><?php esc_html_e('Use the following shortcode within your content to have the table of contents display where you wish to:', 'easy-appointments'); ?></p>
                     <table class="form-table">
                         <?php do_settings_fields('ez_toc_settings_shortcode', 'ez_toc_settings_shortcode'); ?>
                     </table>
                 </div>
                 <div class="ezappoint-tabcontent-technical" id="ezappoint-technical-hooks-for-developers" style="display:
                 none;">
-                    <h1><?php esc_html_e('Hooks (for Developers)', 'easy-appointment'); ?></h1>
-                    <p class="ezappoint-tabcontent-technical-title-content"><?php esc_html_e('This plugin has been designed for easiest way & best features for the users & also as well as for the developers, any developer follow the below advanced instructions:', 'easy-appointment') ?> </p>
+                    <h1><?php esc_html_e('Hooks (for Developers)', 'easy-appointments'); ?></h1>
+                    <p class="ezappoint-tabcontent-technical-title-content"><?php esc_html_e('This plugin has been designed for easiest way & best features for the users & also as well as for the developers, any developer follow the below advanced instructions:', 'easy-appointments') ?> </p>
 
-                    <h2><?php esc_html_e('Hooks', 'easy-appointment') ?></h2>
-                    <p><?php esc_html_e('Developer can use these below hooks for customization of this plugin:', 'easy-appointment')
+                    <h2><?php esc_html_e('Hooks', 'easy-appointments') ?></h2>
+                    <p><?php esc_html_e('Developer can use these below hooks for customization of this plugin:', 'easy-appointments')
                         ?></p>
-                    <h4><?php esc_html_e('Actions:', 'easy-appointment') ?></h4>
+                    <h4><?php esc_html_e('Actions:', 'easy-appointments') ?></h4>
                     <ul>
-                        <li><code><?php esc_html_e('ez_toc_before', 'easy-appointment') ?></code>
+                        <li><code><?php esc_html_e('ez_toc_before', 'easy-appointments') ?></code>
                         </li>
-                        <li><code><?php esc_html_e('ez_toc_after', 'easy-appointment')
+                        <li><code><?php esc_html_e('ez_toc_after', 'easy-appointments')
                                 ?></code></li>
                         <li>
-                            <code><?php esc_html_e('ez_toc_sticky_toggle_before', 'easy-appointment') ?></code>
+                            <code><?php esc_html_e('ez_toc_sticky_toggle_before', 'easy-appointments') ?></code>
                         </li>
                         <li>
-                            <code><?php esc_html_e('ez_toc_sticky_toggle_after', 'easy-appointment')
+                            <code><?php esc_html_e('ez_toc_sticky_toggle_after', 'easy-appointments')
                                 ?></code></li>
                         <li>
-                            <code><?php esc_html_e('ez_toc_before_widget_container', 'easy-appointment')
+                            <code><?php esc_html_e('ez_toc_before_widget_container', 'easy-appointments')
                                 ?></code></li>
-                        <li><code><?php esc_html_e('ez_toc_before_widget', 'easy-appointment')
-                                ?></code></li>
-                        <li>
-                            <code><?php esc_html_e('ez_toc_after_widget_container', 'easy-appointment') ?></code>
-                        </li>
-                        <li><code><?php esc_html_e('ez_toc_after_widget', 'easy-appointment')
+                        <li><code><?php esc_html_e('ez_toc_before_widget', 'easy-appointments')
                                 ?></code></li>
                         <li>
-                            <code><?php esc_html_e('ez_toc_title', 'easy-appointment') ?></code>
+                            <code><?php esc_html_e('ez_toc_after_widget_container', 'easy-appointments') ?></code>
+                        </li>
+                        <li><code><?php esc_html_e('ez_toc_after_widget', 'easy-appointments')
+                                ?></code></li>
+                        <li>
+                            <code><?php esc_html_e('ez_toc_title', 'easy-appointments') ?></code>
                         </li>
                         <li>
-                            <code><?php esc_html_e('ez_toc_sticky_title', 'easy-appointment') ?></code>
+                            <code><?php esc_html_e('ez_toc_sticky_title', 'easy-appointments') ?></code>
                         </li>
                         <li>
-                            <code><?php esc_html_e('ez_toc_container_class', 'easy-appointment') ?></code>
+                            <code><?php esc_html_e('ez_toc_container_class', 'easy-appointments') ?></code>
                         </li>
                         <li>
-                            <code><?php esc_html_e('ez_toc_widget_sticky_container_class', 'easy-appointment') ?></code>
+                            <code><?php esc_html_e('ez_toc_widget_sticky_container_class', 'easy-appointments') ?></code>
                         </li>
                         <li>
-                            <code><?php esc_html_e('ez_toc_url_anchor_target', 'easy-appointment') ?></code>
+                            <code><?php esc_html_e('ez_toc_url_anchor_target', 'easy-appointments') ?></code>
                         </li>
                         <li>
-                            <code><?php esc_html_e('ez_toc_sticky_enable_support', 'easy-appointment') ?></code>
+                            <code><?php esc_html_e('ez_toc_sticky_enable_support', 'easy-appointments') ?></code>
                         </li>
                         <li>
-                            <code><?php esc_html_e('ez_toc_sticky_post_types', 'easy-appointment') ?></code>
+                            <code><?php esc_html_e('ez_toc_sticky_post_types', 'easy-appointments') ?></code>
                         </li>
                         <li>
-                            <code><?php esc_html_e('ez_toc_modify_icon', 'easy-appointment') ?></code>
+                            <code><?php esc_html_e('ez_toc_modify_icon', 'easy-appointments') ?></code>
                         </li>
                         <li>
-                            <code><?php esc_html_e('ez_toc_label_below_html', 'easy-appointment') ?></code>
+                            <code><?php esc_html_e('ez_toc_label_below_html', 'easy-appointments') ?></code>
                         </li>
                         <li>
-                            <code><?php esc_html_e('ezappoint_wordpress_final_output', 'easy-appointment') ?></code>
+                            <code><?php esc_html_e('ezappoint_wordpress_final_output', 'easy-appointments') ?></code>
                         </li>
                     </ul>
 
 
                     <h4><?php esc_html_e('Example: adding a span tag before the `Easy Table of Contents`',
                             'easy-appointment') ?></h4>
-                    <p><?php esc_html_e("Get this following code and paste into your theme\'s function.php file:", 'easy-appointment') ?></p>
+                    <p><?php esc_html_e("Get this following code and paste into your theme\'s function.php file:", 'easy-appointments') ?></p>
                     <pre>
 add_action( 'ez_toc_before', 'addCustomSpan' );
 function addCustomSpan()
@@ -402,30 +402,30 @@ function addCustomSpan()
             </div>
             <div class="ezappoint-right-side">
                 <div class="ezappoint-bio-box" id="ez_Bio">
-                    <h1><?php esc_html_e("Vision & Mission", 'easy-appointment') ?></h1>
-                    <p class="ezappoint-p"><?php esc_html_e("We strive to provide the best Appointment in the world.", 'easy-appointment') ?></p>
+                    <h1><?php esc_html_e("Vision & Mission", 'easy-appointments') ?></h1>
+                    <p class="ezappoint-p"><?php esc_html_e("We strive to provide the best Appointment in the world.", 'easy-appointments') ?></p>
                     <section class="ezappoint_dev-bio">
                         <div class="ezappoint-bio-wrap">
                             <img width="50px" height="50px"
                                  src="<?php echo esc_url(plugins_url('assets/img/ahmed-kaludi.jpg', dirname(__FILE__)))
                                  ?>" alt="ahmed-kaludi"/>
-                            <p><?php esc_html_e('Lead Dev', 'easy-appointment'); ?></p>
+                            <p><?php esc_html_e('Lead Dev', 'easy-appointments'); ?></p>
                         </div>
                         <div class="ezappoint-bio-wrap">
                             <img width="50px" height="50px"
                                  src="<?php echo esc_url(plugins_url('assets/img/Mohammed-kaludi.jpeg', dirname(__FILE__))) 
                                  ?>" alt="Mohammed-kaludi"/>
-                            <p><?php esc_html_e('Developer', 'easy-appointment'); ?></p>
+                            <p><?php esc_html_e('Developer', 'easy-appointments'); ?></p>
                         </div>
                         <div class="ezappoint-bio-wrap">
                             <img width="50px" height="50px"
                                  src="<?php echo esc_url(plugins_url('assets/img/sanjeev.jpg', dirname(__FILE__))) ?>"
                                  alt="Sanjeev"/>
-                            <p><?php esc_html_e('Developer', 'easy-appointment'); ?></p>
+                            <p><?php esc_html_e('Developer', 'easy-appointments'); ?></p>
                         </div>
                     </section>
-                    <p class="ezappoint_boxdesk"><?php esc_html_e('Delivering a good user experience means a lot to us, so we try our best to reply each and every question.', 'easy-appointment'); ?></p>
-                    <p class="ezappoint-company-link"><?php esc_html_e('Support the innovation & development by upgrading to PRO ', 'easy-appointment'); ?> <a href="https://easy-appointments.com#buyextension" target="_blank"><?php esc_html_e('I Want To Upgrade!', 'easy-appointment'); ?></a></p>
+                    <p class="ezappoint_boxdesk"><?php esc_html_e('Delivering a good user experience means a lot to us, so we try our best to reply each and every question.', 'easy-appointments'); ?></p>
+                    <p class="ezappoint-company-link"><?php esc_html_e('Support the innovation & development by upgrading to PRO ', 'easy-appointments'); ?> <a href="https://easy-appointments.com#buyextension" target="_blank"><?php esc_html_e('I Want To Upgrade!', 'easy-appointments'); ?></a></p>
                 </div>
             </div>
         </div>
