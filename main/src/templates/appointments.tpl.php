@@ -3,12 +3,12 @@
 	get_current_screen()->render_screen_meta();
 ?>
 	<div class="wrap">
-		<h2><?php _e('Appointments', 'easy-appointments');?></h2>
+		<h2><?php esc_html_e('Appointments', 'easy-appointments');?></h2>
 		<br>
 		<table id="ea-appointments-table-filter" class="filter-part wp-filter ea-responsive-table">
 			<tbody>
 				<tr>
-					<td class="filter-label"><label for="ea-filter-locations"><strong><?php _e('Location', 'easy-appointments');?> :</strong></label></td>
+					<td class="filter-label"><label for="ea-filter-locations"><strong><?php esc_html_e('Location', 'easy-appointments');?> :</strong></label></td>
 					<td class="filter-select">
 						<select name="ea-filter-locations" id="ea-filter-locations" data-c="location">
 							<option value="">-</option>
@@ -17,7 +17,7 @@
 							<% });%>
 						</select>
 					</td>
-					<td class="filter-label"><label for="ea-filter-services"><strong><?php _e('Service', 'easy-appointments');?> :</strong></label></td>
+					<td class="filter-label"><label for="ea-filter-services"><strong><?php esc_html_e('Service', 'easy-appointments');?> :</strong></label></td>
 					<td class="filter-select">
 						<select name="ea-filter-services" id="ea-filter-services" data-c="service">
 							<option value="">-</option>
@@ -26,7 +26,7 @@
 							<% });%>
 						</select>
 					</td>
-					<td class="filter-label"><label for="ea-filter-workers"><strong><?php _e('Worker', 'easy-appointments');?> :</strong></label></td>
+					<td class="filter-label"><label for="ea-filter-workers"><strong><?php esc_html_e('Worker', 'easy-appointments');?> :</strong></label></td>
 					<td class="filter-select">
 						<select name="ea-filter-workers" id="ea-filter-workers" data-c="worker">
 							<option value="">-</option>
@@ -36,7 +36,7 @@
 						</select>
 					</td>
 					<td class="filter-label">
-                        <label for="ea-filter-search"><strong><?php _e('Search', 'easy-appointments');?> :</strong></label>
+                        <label for="ea-filter-search"><strong><?php esc_html_e('Search', 'easy-appointments');?> :</strong></label>
                         <input type="text" name="ea-filter-search" id="ea-filter-search" data-c="search">
                         <button>&#128269;</button>
                     </td>
@@ -44,7 +44,7 @@
                     </td>
 				</tr>
 				<tr>
-					<td class="filter-label"><label for="ea-filter-status"><strong><?php _e('Status', 'easy-appointments');?> :</strong></label></td>
+					<td class="filter-label"><label for="ea-filter-status"><strong><?php esc_html_e('Status', 'easy-appointments');?> :</strong></label></td>
 					<td class="filter-select">
 						<select name="ea-filter-status" id="ea-filter-status" data-c="status">
 							<option value="">-</option>
@@ -53,19 +53,19 @@
 							<% });%>
 						</select>
 					</td>
-					<td class="filter-label"><label for="ea-filter-from"><strong><?php _e('From', 'easy-appointments');?> :</strong></label></td>
+					<td class="filter-label"><label for="ea-filter-from"><strong><?php esc_html_e('From', 'easy-appointments');?> :</strong></label></td>
 					<td><input class="date-input" type="text" name="ea-filter-from" id="ea-filter-from" data-c="from"></td>
-					<td class="filter-label"><label for="ea-filter-to"><strong><?php _e('To', 'easy-appointments');?> :</strong></label></td>
+					<td class="filter-label"><label for="ea-filter-to"><strong><?php esc_html_e('To', 'easy-appointments');?> :</strong></label></td>
 					<td><input class="date-input" type="text" name="ea-filter-to" id="ea-filter-to" data-c="to"></td>
-					<td class="filter-label"><strong><?php _e('Quick time filter', 'easy-appointments');?>:</strong>
+					<td class="filter-label"><strong><?php esc_html_e('Quick time filter', 'easy-appointments');?>:</strong>
 						<select id="ea-period">
-                            <option value=""><?php _e('Select period', 'easy-appointments');?></option>
-                            <option value="today"><?php _e('Today', 'easy-appointments');?></option>
-                            <option value="tomorrow"><?php _e('Tomorrow', 'easy-appointments');?></option>
-                            <option value="7d"><?php _e('Next 7 days', 'easy-appointments');?></option>
-                            <option value="30d"><?php _e('Next 30 days', 'easy-appointments');?></option>
-                            <option value="week"><?php _e('This week', 'easy-appointments');?></option>
-                            <option value="month"><?php _e('This month', 'easy-appointments');?></option>
+                            <option value=""><?php esc_html_e('Select period', 'easy-appointments');?></option>
+                            <option value="today"><?php esc_html_e('Today', 'easy-appointments');?></option>
+                            <option value="tomorrow"><?php esc_html_e('Tomorrow', 'easy-appointments');?></option>
+                            <option value="7d"><?php esc_html_e('Next 7 days', 'easy-appointments');?></option>
+                            <option value="30d"><?php esc_html_e('Next 30 days', 'easy-appointments');?></option>
+                            <option value="week"><?php esc_html_e('This week', 'easy-appointments');?></option>
+                            <option value="month"><?php esc_html_e('This month', 'easy-appointments');?></option>
 						</select>
 					</td>
 					<td></td>
@@ -75,28 +75,28 @@
 		<div>
 			<a href="#" class="add-new-h2 add-new">
 				<i class="fa fa-plus"></i>
-				<?php _e('Add New Appointment', 'easy-appointments');?>
+				<?php esc_html_e('Add New Appointment', 'easy-appointments');?>
 			</a>
 			<a href="#" class="add-new-h2 refresh-list">
 				<i class="fa fa-refresh"></i>
-				<?php _e('Refresh', 'easy-appointments');?>
+				<?php esc_html_e('Refresh', 'easy-appointments');?>
 			</a>
 			<a href="#" data="all" class="add-new-h2 ea-cancel-all-selected" style="float:right;">
 				<i class="fa fa-times"></i>
-				<?php _e('Cancel All', 'easy-appointments');?>
+				<?php esc_html_e('Cancel All', 'easy-appointments');?>
 			</a>
 			<a href="#" data="selected" class="add-new-h2 ea-cancel-all-selected" style="float:right;">
 				<i class="fa fa-times"></i>
-				<?php _e('Cancel All Selected', 'easy-appointments');?>
+				<?php esc_html_e('Cancel All Selected', 'easy-appointments');?>
 			</a>
             <div class="ea-sort-fields">
-                <label><?php _e('Sort By', 'easy-appointments');?>:</label>
+                <label><?php esc_html_e('Sort By', 'easy-appointments');?>:</label>
                 <select id="ea-sort-by" name="ea-sort-by">
-                    <option value="id"><?php _e('Id', 'easy-appointments');?></option>
-                    <option value="date"><?php _e('Date & time', 'easy-appointments');?></option>
-                    <option value="created"><?php _e('Created', 'easy-appointments');?></option>
+                    <option value="id"><?php esc_html_e('Id', 'easy-appointments');?></option>
+                    <option value="date"><?php esc_html_e('Date & time', 'easy-appointments');?></option>
+                    <option value="created"><?php esc_html_e('Created', 'easy-appointments');?></option>
                 </select>
-                <label><?php _e('Order by', 'easy-appointments');?>:</label>
+                <label><?php esc_html_e('Order by', 'easy-appointments');?>:</label>
                 <select id="ea-order-by" name="ea-order-by">
                     <option value="ASC">asc</option>
                     <option value="DESC" selected>desc</option>
@@ -110,14 +110,14 @@
 				<tr>
 					<th class="manage-column column-title">
 						<input type="checkbox" id="ea-select-all" style="margin:4px 0px 0 0;" />
-						<label for="ea-select-all"><?php _e('Select All', 'easy-appointments'); ?></label>
+						<label for="ea-select-all"><?php esc_html_e('Select All', 'easy-appointments'); ?></label>
 					</th>
-                    <th colspan="2" class="manage-column column-title"><a class="ea-set-sort" data-key="id" href="#">Id</a> / <?php _e('Location', 'easy-appointments');?> / <?php _e('Service', 'easy-appointments');?> / <?php _e('Worker', 'easy-appointments');?></th>
-					<th colspan="2" class="manage-column column-title"><?php _e('Customer', 'easy-appointments');?></th>
-					<th class="manage-column column-title"><?php _e('Description', 'easy-appointments');?></th>
-					<th class="manage-column column-title"><a class="ea-set-sort" data-key="date" href="#"><?php _e('Date & time', 'easy-appointments');?></a></th>
-                    <th class="manage-column column-title"><?php _e('Status', 'easy-appointments');?> / <?php _e('Price', 'easy-appointments');?> / <a href="#" class="ea-set-sort" data-key="created"><?php _e('Created', 'easy-appointments');?></a></th>
-					<th class="manage-column column-title"><?php _e('Action', 'easy-appointments');?></th>
+                    <th colspan="2" class="manage-column column-title"><a class="ea-set-sort" data-key="id" href="#">Id</a> / <?php esc_html_e('Location', 'easy-appointments');?> / <?php esc_html_e('Service', 'easy-appointments');?> / <?php esc_html_e('Worker', 'easy-appointments');?></th>
+					<th colspan="2" class="manage-column column-title"><?php esc_html_e('Customer', 'easy-appointments');?></th>
+					<th class="manage-column column-title"><?php esc_html_e('Description', 'easy-appointments');?></th>
+					<th class="manage-column column-title"><a class="ea-set-sort" data-key="date" href="#"><?php esc_html_e('Date & time', 'easy-appointments');?></a></th>
+                    <th class="manage-column column-title"><?php esc_html_e('Status', 'easy-appointments');?> / <?php esc_html_e('Price', 'easy-appointments');?> / <a href="#" class="ea-set-sort" data-key="created"><?php esc_html_e('Created', 'easy-appointments');?></a></th>
+					<th class="manage-column column-title"><?php esc_html_e('Action', 'easy-appointments');?></th>
 				</tr>
 			</thead>
 			<tbody id="ea-appointments">
@@ -161,9 +161,9 @@
 		<strong><%- _.formatDateTime(row.created) %></strong>
 	</td>
 	<td class="action-center">
-		<button class="button btn-edit"><?php _e('Edit', 'easy-appointments');?></button>
-		<button class="button btn-del"><?php _e('Delete', 'easy-appointments');?></button>
-		<button class="button btn-clone"><?php _e('Clone', 'easy-appointments');?></button>
+		<button class="button btn-edit"><?php esc_html_e('Edit', 'easy-appointments');?></button>
+		<button class="button btn-del"><?php esc_html_e('Delete', 'easy-appointments');?></button>
+		<button class="button btn-clone"><?php esc_html_e('Clone', 'easy-appointments');?></button>
 	</td>
 </script>
 
@@ -174,7 +174,7 @@
 			<tr>
 				<td colspan="2">
 					<select class="app-fields" name="ea-input-locations" id="ea-input-locations" data-prop="location">
-						<option value=""> -- <?php _e('Location', 'easy-appointments');?> -- </option>
+						<option value=""> -- <?php esc_html_e('Location', 'easy-appointments');?> -- </option>
 						<% _.each(cache.Locations,function(item,key,list){
 						if (item.id == row.location) { %>
 							<option value="<%- item.id %>" selected="selected"><%- item.name %></option>
@@ -184,7 +184,7 @@
 						});%>
 					</select><br>
 					<select class="app-fields ea-service" name="ea-input-services" id="ea-input-services" data-prop="service">
-						<option value=""> -- <?php _e('Service', 'easy-appointments');?> -- </option>
+						<option value=""> -- <?php esc_html_e('Service', 'easy-appointments');?> -- </option>
 						<% _.each(cache.Services,function(item,key,list){
 							if (item.id == row.service) { %>
 								<option value="<%- item.id %>" data-duration="<%- item.duration %>" data-price="<%- item.price %>" selected="selected"><%- item.name %></option>
@@ -194,7 +194,7 @@
 						});%>
 					</select><br>
 					<select class="app-fields" name="ea-input-workers" id="ea-input-workers" data-prop="worker">
-						<option value=""> -- <?php _e('Worker', 'easy-appointments');?> -- </option>
+						<option value=""> -- <?php esc_html_e('Worker', 'easy-appointments');?> -- </option>
 						<% _.each(cache.Workers,function(item,key,list){
 							if(item.id == row.worker) { %>
 								<option value="<%- item.id %>" selected="selected"><%- item.name %></option>
@@ -233,9 +233,9 @@
 					<% });%>
 				</td>
 				<td>
-					<p><?php _e('Date', 'easy-appointments');?> :</p>
+					<p><?php esc_html_e('Date', 'easy-appointments');?> :</p>
 					<input id="date-start" class="app-fields date-start" type="text" data-prop="date" value="<%- row.date %>"><br>
-					<p><?php _e('Time', 'easy-appointments');?> :</p>
+					<p><?php esc_html_e('Time', 'easy-appointments');?> :</p>
 					<select data-prop="start" disabled="disabled" class="time-start">
 					</select>
 				</td>
@@ -249,19 +249,19 @@
 						<% }
 						});%>
 					</select>
-					<span><?php _e('Price', 'easy-appointments');?> : </span><input class="ea-price" style="width: 50px" type="text" data-prop="price" value="<%- row.price %>">
+					<span><?php esc_html_e('Price', 'easy-appointments');?> : </span><input class="ea-price" style="width: 50px" type="text" data-prop="price" value="<%- row.price %>">
 					<!-- <strong><%- row.user %></strong><br>
 					<strong><%- row.created %></strong>-->
 				</td>
 			</tr>
 			<tr>
 				<td colspan="6">
-					<label for="send-mail"> <?php _e('Send email notification :', 'easy-appointments');?> </label>
+					<label for="send-mail"> <?php esc_html_e('Send email notification :', 'easy-appointments');?> </label>
 					<input name="send-mail" type="checkbox" checked="checked">
 				</td>
 				<td colspan="2" style="text-align: right;">
-					<button class="button button-primary btn-save"><?php _e('Save', 'easy-appointments');?></button>
-					<button class="button btn-cancel"><?php _e('Cancel', 'easy-appointments');?></button>
+					<button class="button button-primary btn-save"><?php esc_html_e('Save', 'easy-appointments');?></button>
+					<button class="button btn-cancel"><?php esc_html_e('Cancel', 'easy-appointments');?></button>
 				</td>
 			</tr>
 		</tbody>
@@ -308,7 +308,7 @@ jQuery(document).ready(function($) {
         });
 
         if (selectedAppointments.length === 0 && cancel_to != 'all') {
-            alert('<?php _e("Please select at least one appointment to cancel.", "easy-appointments"); ?>');
+            alert('<?php esc_html_e("Please select at least one appointment to cancel.", "easy-appointments"); ?>');
             return;
         }
 		var popup_message = 'Are you sure you want to cancel all appointments?';
@@ -327,12 +327,12 @@ jQuery(document).ready(function($) {
                 },
                 success: function(response) {
                     if (response.data) {
-                        alert('<?php _e("Appointments canceled successfully.", "easy-appointments"); ?>');
+                        alert('<?php esc_html_e("Appointments canceled successfully.", "easy-appointments"); ?>');
                         location.reload(); // Reload the page to reflect changes
                     }
                 },
                 error: function() {
-                    alert('<?php _e("An error occurred.", "easy-appointments"); ?>');
+                    alert('<?php esc_html_e("An error occurred.", "easy-appointments"); ?>');
                 }
             });
         }

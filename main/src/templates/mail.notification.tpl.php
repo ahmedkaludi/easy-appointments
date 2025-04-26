@@ -7,43 +7,43 @@
         <table border="0" cellpadding="15" cellspacing="0" width="500" style="margin-bottom: 20px">
             <tbody>
             <tr>
-                <td style="text-align:left; background-color: #CCFFFF;"><?php _e('Id', 'easy-appointments');?></td>
+                <td style="text-align:left; background-color: #CCFFFF;"><?php esc_html_e('Id', 'easy-appointments');?></td>
                 <td style="text-align: right; font-weight: bold; background-color: #CCFFFF;"><?php esc_html_e($data['id']);?></td>
             </tr>
             <tr>
-                <td style="text-align:left;"><?php _e('Status', 'easy-appointments');?></td>
+                <td style="text-align:left;"><?php esc_html_e('Status', 'easy-appointments');?></td>
                 <td style="text-align: right; font-weight: bold;"><?php esc_html_e($data['status']);?></td>
             </tr>
             <tr>
-                <td style="text-align:left; background-color: #CCFFFF;"><?php _e('Location', 'easy-appointments');?></td>
+                <td style="text-align:left; background-color: #CCFFFF;"><?php esc_html_e('Location', 'easy-appointments');?></td>
                 <td style="text-align: right; font-weight: bold; background-color: #CCFFFF;"><?php esc_html_e($data['location_name']);?></td>
             </tr>
             <tr>
-                <td style="text-align:left;"><?php _e('Service', 'easy-appointments');?></td>
+                <td style="text-align:left;"><?php esc_html_e('Service', 'easy-appointments');?></td>
                 <td style="text-align: right; font-weight: bold;"><?php esc_html_e($data['service_name']);?></td>
             </tr>
             <tr>
-                <td style="text-align:left; background-color: #CCFFFF;"><?php _e('Worker', 'easy-appointments');?></td>
+                <td style="text-align:left; background-color: #CCFFFF;"><?php esc_html_e('Worker', 'easy-appointments');?></td>
                 <td style="text-align: right; font-weight: bold; background-color: #CCFFFF;"><?php esc_html_e($data['worker_name']);?></td>
             </tr>
             <tr>
-                <td style="text-align:left;"><?php _e('Date', 'easy-appointments');?></td>
+                <td style="text-align:left;"><?php esc_html_e('Date', 'easy-appointments');?></td>
                 <td style="text-align: right; font-weight: bold;"><?php esc_html_e($data['date']);?></td>
             </tr>
             <tr>
-                <td style="text-align:left; background-color: #CCFFFF;"><?php _e('Start', 'easy-appointments');?></td>
+                <td style="text-align:left; background-color: #CCFFFF;"><?php esc_html_e('Start', 'easy-appointments');?></td>
                 <td style="text-align: right; font-weight: bold; background-color: #CCFFFF;"><?php esc_html_e($data['start']);?></td>
             </tr>
             <tr>
-                <td style="text-align:left;"><?php _e('End', 'easy-appointments');?></td>
+                <td style="text-align:left;"><?php esc_html_e('End', 'easy-appointments');?></td>
                 <td style="text-align: right; font-weight: bold;"><?php esc_html_e($data['end']);?></td>
             </tr>
             <tr>
-                <td style="text-align:left; background-color: #CCFFFF;"><?php _e('Created', 'easy-appointments');?></td>
+                <td style="text-align:left; background-color: #CCFFFF;"><?php esc_html_e('Created', 'easy-appointments');?></td>
                 <td style="text-align: right; font-weight: bold; background-color: #CCFFFF;"><?php esc_html_e($data['created']);?></td>
             </tr>
             <tr>
-                <td style="text-align:left;"><?php _e('Price', 'easy-appointments');?></td>
+                <td style="text-align:left;"><?php esc_html_e('Price', 'easy-appointments');?></td>
                 <td style="text-align: right; font-weight: bold;"><?php esc_html_e($data['price']);?></td>
             </tr>
             <tr>

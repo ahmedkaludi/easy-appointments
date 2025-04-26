@@ -1,5 +1,5 @@
 <script type="text/javascript">
-    var ea_ajaxurl = '<?php echo admin_url("admin-ajax.php"); ?>';
+    var ea_ajaxurl = '<?php echo esc_url( admin_url("admin-ajax.php") ); ?>';
 </script>
 <script type="text/template" id="ea-bootstrap-main">
     <div class="ea-bootstrap <%- settings.form_class %>" translate="no" style="max-width: <%- settings.width %>;">
