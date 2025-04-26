@@ -69,8 +69,8 @@ class EALogActions {
 
     public function extend_connections() {
         $table_app = $this->db_models->get_wpdb()->prefix . 'ea_connections';
-        $current_year = date('Y');
-        $previous_year = date("Y",strtotime("-1 year"));
+        $current_year = gmdate('Y');
+        $previous_year = gmdate("Y",strtotime("-1 year"));
         $query = "UPDATE {$table_app} SET day_to='{$current_year}-12-31' WHERE day_to = '{$previous_year}-12-31'";
 
 

@@ -79,7 +79,7 @@ class EAReport
 
         $result = array();
 
-        $num_of_days = date('t', strtotime($year . '-' . $month . '-01'));
+        $num_of_days = gmdate('t', strtotime($year . '-' . $month . '-01'));
         for ($i = 1; $i <= $num_of_days; $i++) {
             $day = $year . "-" . sprintf("%02d", $month) . "-" . str_pad($i, 2, '0', STR_PAD_LEFT);
 
@@ -104,7 +104,7 @@ class EAReport
 
         $slots = $this->get_whole_month_slots($location, $service, $worker, $month, $year, true, $block_time);
 
-        $currentDate = date('Y-m-d');
+        $currentDate = gmdate('Y-m-d');
 
         $result = array();
 
