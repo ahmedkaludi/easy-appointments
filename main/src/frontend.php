@@ -286,7 +286,7 @@ class EAFrontend
 
         ?>
         <script type="text/javascript">
-            var ea_ajaxurl = "<?php echo admin_url('admin-ajax.php'); ?>";
+            var ea_ajaxurl = "<?php echo esc_url( admin_url('admin-ajax.php') ); ?>";
         </script>
         <div class="ea-standard">
             <form>
@@ -318,20 +318,20 @@ class EAFrontend
                 <div class="step final">
                 <div class="ea_hide_show">
                     <div class="block"></div>
-                    <p class="section"><?php _e('Personal information', 'easy-appointments'); ?></p>
-                    <small><?php _e('Fields with * are required', 'easy-appointments'); ?></small>
+                    <p class="section"><?php esc_html_e('Personal information', 'easy-appointments'); ?></p>
+                    <small><?php esc_html_e('Fields with * are required', 'easy-appointments'); ?></small>
                     <br>
                     <?php echo $custom_form; ?>
                     
                     <br>
-                    <p class="section"><?php _e('Booking overview', 'easy-appointments'); ?></p>
+                    <p class="section"><?php esc_html_e('Booking overview', 'easy-appointments'); ?></p>
                     </div>
                     <div id="booking-overview"></div>
                     <div class="ea_hide_show">
                         <?php if (!empty($settings['show.iagree'])) : ?>
                             <p>
                                 <label
-                                    style="font-size: 65%; width: 80%;" class="i-agree"><?php _e('I agree with terms and conditions', 'easy-appointments'); ?>
+                                    style="font-size: 65%; width: 80%;" class="i-agree"><?php esc_html_e('I agree with terms and conditions', 'easy-appointments'); ?>
                                     * : </label><input style="width: 15%;" type="checkbox" name="iagree"
                                                     data-rule-required="true"
                                                     data-msg-required="<?php _e('You must agree with terms and conditions', 'easy-appointments'); ?>">
@@ -355,7 +355,7 @@ class EAFrontend
 
                         <div style="display: inline-flex;">
                             <?php echo apply_filters('ea_checkout_button', '<button class="ea-btn ea-submit">' . __('Submit', 'easy-appointments') . '</button>'); ?>
-                            <button class="ea-btn ea-cancel"><?php _e('Cancel', 'easy-appointments'); ?></button>
+                            <button class="ea-btn ea-cancel"><?php esc_html_e('Cancel', 'easy-appointments'); ?></button>
                         </div>
                     </div>
                 </div>
