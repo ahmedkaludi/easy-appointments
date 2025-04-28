@@ -166,6 +166,7 @@ class EAAjax
             add_action('wp_ajax_ea_default_template', array($this, 'ajax_default_template'));
             add_action('wp_ajax_ea_send_query_message', array( $this, 'ea_send_query_message'));
             add_action('wp_ajax_cancel_selected_appointments', array( $this, 'cancel_selected_appointments_callback'));
+            add_action('wp_ajax_delete_selected_appointment', array($this, 'delete_selected_appointment'));
         }
     }
 
@@ -709,6 +710,24 @@ class EAAjax
         if (isset($this->data['_mail'])) {
             $this->mail->send_status_change_mail($response->id);
             $this->mail->send_admin_email_notification_action($response->id);
+        }
+
+        $this->send_ok_json_result($response);
+    }
+    public function delete_selected_appointment()
+    {
+        if (!isset($_POST['appointments_nonce']) || !wp_verify_nonce($_POST['appointments_nonce'], 'appointments_nonce')) {
+            wp_send_json_error(array('message' => 'Security check failed.'));
+        }
+        
+        if (!isset($_POST['appointments']) || !is_array($_POST['appointments'])) {
+            wp_send_json_error(array('message' => 'No appointments selected.'));
+        }
+
+        $response = $this->delete_parse_appointment(false);
+
+        if ($response == false) {
+            $this->send_err_json_result('err');
         }
 
         $this->send_ok_json_result($response);
@@ -1313,6 +1332,48 @@ class EAAjax
         } else {
             return $response;
         }
+    }
+
+    private function delete_parse_appointment()
+    {
+        $table = 'ea_appointments';
+        $fields = 'ea_fields';
+        $app_data = array();
+
+        $meta_fields = $this->models->get_all_rows('ea_meta_fields');
+        $meta_data = array();
+        $response = array();
+
+        $appointments = $_POST['appointments'];
+        foreach ($appointments as $appointment_id) {
+            $app_data['id'] = $appointment_id;
+            $data = [
+                'id' => $appointment_id
+            ];
+
+            foreach ($meta_fields as $value) {
+                if (array_key_exists($value->slug, $data)) {
+                    $meta_data[] = array(
+                        'app_id'   => null,
+                        'field_id' => $value->id,
+                        'value'    => $data[$value->slug]
+                    );
+                }
+            }
+    
+            
+            $response = $this->models->delete($table, $data, true);
+            $this->models->delete($fields, array('app_id' => $app_data['id']), true);
+        }
+
+        
+
+        if ($response == false) {
+            $this->send_err_json_result('{"err":true}');
+        }
+
+        
+        return $response;
     }
 
     private function send_ok_json_result($result)

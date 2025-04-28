@@ -89,6 +89,10 @@
 				<i class="fa fa-times"></i>
 				<?php esc_html_e('Cancel All Selected', 'easy-appointments');?>
 			</a>
+			<a href="#" data="selected" class="add-new-h2 ea-delete-selected" style="float:right;border: 1px solid #d63638; color:#d63638; display:none;">
+				<i class="fa fa-times"></i>
+				<?php esc_html_e('Delete Selected', 'easy-appointments');?>
+			</a>
             <div class="ea-sort-fields">
                 <label><?php esc_html_e('Sort By', 'easy-appointments');?>:</label>
                 <select id="ea-sort-by" name="ea-sort-by">
@@ -289,11 +293,22 @@ jQuery(document).ready(function($) {
 			$('.ea-cancel-all-selected').show();
 		}
 	}
+
+	function checked_checkbox_count(){
+		var checkedCount = $('.ea-appointment-checkbox:checked').length;
+		if (checkedCount > 0){
+			$('.ea-delete-selected').show();
+		}else{
+			$('.ea-delete-selected').hide();
+
+		}
+	}
     
     $('#ea-select-all').on('change', function() {
         var isChecked = $(this).prop('checked');
         $('.ea-appointment-checkbox').prop('checked', isChecked);
 		check_is_any_cancel_checkbox();
+		checked_checkbox_count();
     });
 
     
@@ -301,7 +316,6 @@ jQuery(document).ready(function($) {
         e.preventDefault();
 
         var cancel_to =  $(this).attr('data');
-		console.log(cancel_to);
         var selectedAppointments = [];
         $('.ea-appointment-checkbox:checked').each(function() {
             selectedAppointments.push($(this).data('id'));
@@ -337,10 +351,45 @@ jQuery(document).ready(function($) {
             });
         }
     });
+    $('.ea-delete-selected').on('click', function(e) {
+        e.preventDefault();
+        var selectedAppointments = [];
+        $('.ea-appointment-checkbox:checked').each(function() {
+            selectedAppointments.push($(this).data('id'));
+        });
+
+        if (selectedAppointments.length === 0 && cancel_to != 'all') {
+            alert('<?php esc_html_e("Please select at least one appointment to delete.", "easy-appointments"); ?>');
+            return;
+        }
+		var popup_message = 'Are you sure you want to delete selected appointments?';
+		
+        if (confirm(popup_message)) {
+            $.ajax({
+                url: ajaxurl,
+                type: 'POST',
+                data: {
+                    action: 'delete_selected_appointment',
+                    appointments: selectedAppointments,
+					appointments_nonce: appointments_nonce
+                },
+                success: function(response) {
+                    if (response) {
+                        location.reload();
+                    }
+                },
+                error: function() {
+                    alert('<?php esc_html_e("An error occurred.", "easy-appointments"); ?>');
+                }
+            });
+        }
+    });
 
 	check_is_any_cancel_checkbox();
+	checked_checkbox_count();
 	setInterval(() => {
-		check_is_any_cancel_checkbox(); // Repeated call every 2 seconds
+		check_is_any_cancel_checkbox();
+		checked_checkbox_count();
 	}, 2000);
 });
 
