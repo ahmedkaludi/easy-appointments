@@ -988,14 +988,11 @@
                 // store values from form
                 plugin.storeFormData(options);
 
-                console.log('ea_settings');
-                console.log(ea_settings);
-
                 // disable fields
                 plugin.$element.find('.ea-submit').hide();
                 plugin.$element.find('.ea-cancel').hide();
                 plugin.$element.find('#paypal-button').hide();
-                
+
                 if (ea_settings['display_thankyou_note'] == 1) {                    
                     plugin.$element.find('.step').hide();
                     var table_html = plugin.$element.find('#booking-overview').find('table').html();

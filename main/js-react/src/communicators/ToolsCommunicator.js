@@ -34,6 +34,12 @@ export class ToolsCommunicator {
     return await http.post(url, formData);
   }
 
+  static async resetPlugin() {
+    let url = `${ToolsCommunicator.url}&action=ea_reset_plugin`;
+    let formData = new FormData();
+    return await http.post(url, formData);
+  }
+
   static clearLogs() {
     let url = `${removeLogUrl}?&_wpnonce=${nonce}`;
 

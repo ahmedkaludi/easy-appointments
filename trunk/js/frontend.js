@@ -656,11 +656,8 @@
             options._cb    = Math.floor(Math.random() * 1000000);
 
             jQuery.get(ea_ajaxurl, options, function (response) {
-                
-                
                 plugin.$element.find('.ea-submit').hide();
                 plugin.$element.find('.ea-cancel').hide();
-                plugin.$element.find('#paypal-button').hide();
                 plugin.$element.find('#paypal-button').hide();
 
                 if (ea_settings['display_thankyou_note'] == 1) {                    

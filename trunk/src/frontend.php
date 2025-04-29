@@ -316,7 +316,7 @@ class EAFrontend
                     <div class="time"></div>
                 </div>
                 <div class="step final">
-                    <div class="ea_hide_show">
+                <div class="ea_hide_show">
                     <div class="block"></div>
                     <p class="section"><?php esc_html_e('Personal information', 'easy-appointments'); ?></p>
                     <small><?php esc_html_e('Fields with * are required', 'easy-appointments'); ?></small>
@@ -324,9 +324,7 @@ class EAFrontend
                     <?php echo $custom_form; ?>
                     
                     <br>
-                    <h3 style="color: #147514; margin-top: 0;" class="section">
-                    <?php esc_html_e('Booking overview', 'easy-appointments'); ?>
-                    </h3>
+                    <p class="section"><?php esc_html_e('Booking overview', 'easy-appointments'); ?></p>
                     </div>
                     <div id="booking-overview"></div>
                     <div class="ea_hide_show">
@@ -336,7 +334,7 @@ class EAFrontend
                                     style="font-size: 65%; width: 80%;" class="i-agree"><?php esc_html_e('I agree with terms and conditions', 'easy-appointments'); ?>
                                     * : </label><input style="width: 15%;" type="checkbox" name="iagree"
                                                     data-rule-required="true"
-                                                    data-msg-required="<?php esc_html_e('You must agree with terms and conditions', 'easy-appointments'); ?>">
+                                                    data-msg-required="<?php _e('You must agree with terms and conditions', 'easy-appointments'); ?>">
                             </p>
                             <br>
                         <?php endif; ?>
@@ -449,7 +447,6 @@ class EAFrontend
     private function output_inline_ea_settings($settings, $customCss)
     {
         $clean_settings = EATableColumns::clear_settings_data_frontend($settings);
-        
         if ( isset($settings['default.status'])) {
             $clean_settings['default.status'] = $settings['default.status'];
         }

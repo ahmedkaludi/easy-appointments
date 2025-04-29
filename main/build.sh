@@ -41,6 +41,7 @@ cp -R ./main/src ./trunk/
 cp -R ./main/vendor ./trunk/
 cp -R ./main/components ./trunk/
 cp -R ./main/languages ./trunk/
+cp -R ./main/ea-blocks ./trunk/
 
 cp -R ./main/js/libs/jquery-ui-timepicker-addon.js ./trunk/js/libs/
 cp -R ./main/js/libs/jquery-ui-timepicker-addon-i18n.js ./trunk/js/libs/
