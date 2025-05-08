@@ -288,6 +288,47 @@ class EAFrontend
         <script type="text/javascript">
             var ea_ajaxurl = "<?php echo esc_url( admin_url('admin-ajax.php') ); ?>";
         </script>
+        <style>
+        #ea-payment-select {
+            padding: 1rem;
+            border-radius: 6px;
+            max-width: 300px;
+            clear: both;
+            position: relative;
+            z-index: 1;
+        }
+
+#ea-payment-select .radio {
+  margin-bottom: 10px;
+}
+
+#ea-payment-select label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  color: #333;
+  padding: 6px 10px;
+  background-color: #f9f9f9;
+}
+
+#ea-payment-select label:hover {
+  background-color: #f0f0f0;
+}
+
+#ea-payment-select input[type="radio"] {
+  margin: 0;
+  accent-color: #007bff;
+}
+
+.ea_card_wrapper {
+  clear: both;
+  position: relative;
+  z-index: 0;
+}
+
+</style>
         <div class="ea-standard">
             <form>
                 <div class="step">
@@ -352,8 +393,11 @@ class EAFrontend
                         <?php if (!empty($settings['captcha.site-key'])) : ?>
                             <div style="width: 100%" class="g-recaptcha" data-sitekey="<?php echo esc_attr($settings['captcha.site-key']);?>"></div><br>
                         <?php endif; ?>
-
-                        <div style="display: inline-flex;">
+                        <div style="display: block;">
+                        <?php echo apply_filters('ea_payment_select', ''); ?>
+                        </div><br/>
+                        <?php echo apply_filters('ea_stripe_checkout', ''); ?><br/>
+                        <div style="display: block;clear: both;">
                             <?php echo apply_filters('ea_checkout_button', '<button class="ea-btn ea-submit">' . __('Submit', 'easy-appointments') . '</button>'); ?>
                             <button class="ea-btn ea-cancel"><?php esc_html_e('Cancel', 'easy-appointments'); ?></button>
                         </div>
