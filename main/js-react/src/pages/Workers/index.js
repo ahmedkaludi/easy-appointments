@@ -88,6 +88,19 @@ const WorkersPage = () => {
     setProcessing(null);
   };
 
+  const onGoogleLink = async employee_id => {
+    try {
+      console.log(employee_id);
+      open(
+        '?init_google_employee=true&employ_id_google=' + employee_id,
+        'Authorize Employee',
+        'resizable,scrollbars,status'
+      );
+    } catch (err) {
+      console.error('Google Link Error:', err);
+    }
+  };
+
   const headerAction = {
     callback: toggleSidebar,
     icon: 'user-plus',
@@ -123,6 +136,7 @@ const WorkersPage = () => {
           model={activeWorker}
           onSave={save}
           onCancel={toggleSidebar}
+          onLinkGoogleCalendar={onGoogleLink}
         />
       </Sidebar>
     </Fragment>

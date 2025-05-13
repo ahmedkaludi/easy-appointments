@@ -154,7 +154,6 @@
             this.$element.find('.ea-bootstrap').on('click', '.time-value', function(event) {
 
                 event.preventDefault();
-                
                 var parentForm = jQuery(this).closest('form');
 
                 var result = plugin.selectTimes(jQuery(this));
@@ -208,21 +207,20 @@
                         plugin.singleConformation(event);
                     });
 
-                    // plugin.$element.find('.step').addClass('disabled');
+                    // parentForm.find('.step').addClass('disabled');
                     parentForm.find('.final').removeClass('disabled');
 
                     parentForm.find('.final').find('select,input').first().focus();
                     plugin.scrollToElement(parentForm.find('.final'));
 
                     // trigger global event when time slot is selected
-                    jQuery('.step.calendar').trigger('ea-timeslot:selected');
-                    parentForm.find('#ea-payment-select').show();
+                    jQuery(document).trigger('ea-timeslot:selected');
                 }
 
                 // only load form if that option is not turned off
                 if (ea_settings['save_form_content'] !== '0') {
                     // load custom fields from localStorage
-                    plugin.loadPreviousFormData(parentForm.find('form'));
+                    plugin.loadPreviousFormData(plugin.$element.find('form'));
                 }
             });
 
@@ -996,7 +994,7 @@
                 plugin.$element.find('.ea-cancel').hide();
                 plugin.$element.find('#paypal-button').hide();
 
-                if (ea_settings['show.display_thankyou_note'] == 1) {                    
+                if (ea_settings['display_thankyou_note'] == 1) {                    
                     plugin.$element.find('.step').hide();
                     var table_html = plugin.$element.find('#booking-overview').find('table').html();
                     plugin.$element.find('#booking-overview').show();
