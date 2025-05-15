@@ -20,12 +20,18 @@ export const WorkersForm = ({
     <EmailField />
     <PhoneField />
     {model && model.id && (
-      <a
-        href={`?init_google_employee=true&employ_id_google=${model.id}`}
-        target="_blank"
-        rel="noopener noreferrer" className='button button-primary'>
-        Link Google Calendar
-      </a>
+      <div>
+        <a
+          href={`?init_google_employee=true&employ_id_google=${model.id}`}
+          target="_blank"
+          rel="noopener noreferrer" className='button button-primary'>
+          Link Google Calendar
+        </a>
+        <button
+        className='button'>
+          Sign Out
+        </button>
+      </div>
     )}
   </Form>
 );
