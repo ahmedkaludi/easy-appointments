@@ -330,8 +330,17 @@ class EAAjax
         $block_time = (int)$this->options->get_option_value('block.time', 0);
 
         $slots = $this->logic->get_open_slots($_GET['location'], $_GET['service'], $_GET['worker'], $_GET['date'], null, true, $block_time);
+        global $wpdb;
+        $query1 = $wpdb->prepare("SELECT * FROM {$wpdb->prefix}ea_connections WHERE 
+            location = %d AND 
+            service = %d AND 
+            worker = %d",
+            $_GET['location'], $_GET['service'], $_GET['worker']
+        );
+        $connection_details = $wpdb->get_row($query1);
+        $result =  array('calendar_slots' =>$slots, 'connection_details' => $connection_details);
 
-        $this->send_ok_json_result($slots);
+        $this->send_ok_json_result($result);
     }
 
     public function ajax_res_appointment()

@@ -99,15 +99,7 @@ class EALogic
             $location, $service, $worker, "%{$day_of_week}%", $day, $day
         );
 
-        $query1 = $this->wpdb->prepare("SELECT * FROM {$this->wpdb->prefix}ea_connections WHERE 
-            location = %d AND 
-            service = %d AND 
-            worker = %d",
-            $location, $service, $worker
-        );
-
         $open_days = $this->wpdb->get_results($query);
-        $connection_details = $this->wpdb->get_row($query1);
 
         $working_hours = array();
 
@@ -177,8 +169,7 @@ class EALogic
         $this->remove_reserved_slots($working_hours, $location, $service, $worker, $day, $service_duration, $app_id, $serviceObj->block_before, $serviceObj->block_after);
 
         // format time
-        $calendar_slots = $this->format_time($working_hours, $serviceObj->duration);
-        return array('calendar_slots' =>$calendar_slots, 'connection_details' => $connection_details);
+        return $this->format_time($working_hours, $serviceObj->duration);
     }
 
     /**
