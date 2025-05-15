@@ -176,6 +176,7 @@
                     plugin.appSelected.apply(plugin);
                 } else {
                     // for booking overview
+                    plugin.$element.find('#ea-payment-select').show();
                     var booking_data = {};
 
                     booking_data.location = parentForm.find('[name="location"] > option:selected').text();
@@ -605,7 +606,7 @@
 
             this.placeLoader(calendarEl);
 
-            var req = jQuery.get(ea_ajaxurl, options, function (response) {
+            var req = jQuery.get(ea_ajaxurl, options, function (response_m) {
 
                 next_element = jQuery(document.createElement('div'))
                     .addClass('time well well-lg');
@@ -616,6 +617,13 @@
                 if (fromTo) {
                     next_element.addClass('time well well-lg col-50');
                 }
+
+                var response = response_m.calendar_slots;
+                if (response_m.connection_details) {
+                    var newMaxDate= response_m.connection_details.day_to;
+                    plugin.$element.find('.date').datepicker('option', 'maxDate', newMaxDate);
+                }
+                
 
                 // sort response by value 11:00, 12:00, 13:00...
                 response.sort(function (a, b) {
@@ -846,6 +854,8 @@
             booking_data.date = this.$element.find('.date').datepicker().val();
             booking_data.time = this.$element.find('.selected-time').data('val');
             booking_data.price = this.$element.find('[name="service"] > option:selected').data('price');
+
+            
 
             var format = ea_settings['date_format'] + ' ' + ea_settings['time_format'];
             booking_data.date_time = moment(booking_data.date + ' ' + booking_data.time, ea_settings['defult_detafime_format']).format(format);

@@ -212,6 +212,7 @@
 
                     parentForm.find('.final').find('select,input').first().focus();
                     plugin.scrollToElement(parentForm.find('.final'));
+                    plugin.$element.find('#ea-payment-select').show();
 
                     // trigger global event when time slot is selected
                     jQuery(document).trigger('ea-timeslot:selected');
@@ -1002,7 +1003,7 @@
                 plugin.$element.find('.ea-cancel').hide();
                 plugin.$element.find('#paypal-button').hide();
 
-                if (ea_settings['display_thankyou_note'] == 1) {                    
+                if (ea_settings['show.display_thankyou_note'] == 1) {                    
                     plugin.$element.find('.step').hide();
                     var table_html = plugin.$element.find('#booking-overview').find('table').html();
                     plugin.$element.find('#booking-overview').show();
