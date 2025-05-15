@@ -98,6 +98,9 @@
             var firstDay = ea_settings.start_of_week;
             var minDate = (ea_settings.min_date === null) ? 0 : ea_settings.min_date;
 
+            console.log('ea_settingsffff');
+            console.log(ea_settings);
+
             // datePicker
             this.$element.find('.date').datepicker({
                 onSelect: jQuery.proxy(plugin.dateChange, plugin),
@@ -504,13 +507,19 @@
 
             this.placeLoader(calendar);
 
-            jQuery.get(ea_ajaxurl, options, function (response) {
+            jQuery.get(ea_ajaxurl, options, function (response_m) {
 
                 var next_element = jQuery(calendar).parent().next('.step').children('.time');
 
                 next_element.empty();
-
+                var response = response_m.calendar_slots;
+                if (response_m.connection_details) {
+                    var newMaxDate= response_m.connection_details.day_to;
+                    plugin.$element.find('.date').datepicker('option', 'maxDate', newMaxDate);
+                }
                 jQuery.each(response, function (index, element) {
+                    
+                    
                     var classAMPM = (ea_settings["time_format"] == "am-pm") ? ' am-pm' : '';
 
                     if (element.count > 0) {

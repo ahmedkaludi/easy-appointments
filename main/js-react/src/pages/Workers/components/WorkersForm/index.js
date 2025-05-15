@@ -23,7 +23,7 @@ export const WorkersForm = ({
       <a
         href={`?init_google_employee=true&employ_id_google=${model.id}`}
         target="_blank"
-        rel="noopener noreferrer">
+        rel="noopener noreferrer" className='button button-primary'>
         Link Google Calendar
       </a>
     )}

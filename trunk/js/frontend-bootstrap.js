@@ -113,6 +113,8 @@
 
             var firstDay = ea_settings.start_of_week;
             var minDate = (ea_settings.min_date === null) ? 0 : ea_settings.min_date;
+            console.log('ea_settings')
+            console.log(ea_settings)
 
             // datePicker
             this.$element.find('.date').datepicker({
