@@ -138,6 +138,9 @@ class EAAjax
 
             // Worker
             add_action('wp_ajax_ea_worker', array($this, 'ajax_worker'));
+            add_action('wp_ajax_ea_is_pro_exist', array($this, 'ajax_is_pro_exist'));
+            add_action('wp_ajax_ea_remove_google_calendar', array($this, 'ajax_remove_google_calendar'));
+            add_action('wp_ajax_ea_check_google_calendar_token', array($this, 'ajax_check_google_calendar_token'));
 
             // Workers
             add_action('wp_ajax_ea_workers', array($this, 'ajax_workers'));
@@ -872,6 +875,40 @@ class EAAjax
 
         header("Content-Type: application/json");
 
+        die(json_encode($response));
+    }
+
+    public function ajax_is_pro_exist()
+    {
+        $this->validate_admin_nonce();
+        $response = false;
+        if ( is_plugin_active( 'easy-appointments-connect/main.php' ) ) {
+            $response = true;
+        }
+        header("Content-Type: application/json");
+
+        die(json_encode($response));
+    }
+    public function ajax_remove_google_calendar()
+    {
+        $this->validate_admin_nonce();
+        $response = false;
+        $data = $_REQUEST;
+        $employ_id_google = $data['id'];
+        delete_option("ea_google_token_employee_{$employ_id_google}");
+        header("Content-Type: application/json");
+
+        die(json_encode($response));
+    }
+    public function ajax_check_google_calendar_token()
+    {
+        $this->validate_admin_nonce();
+        $response = false;
+        $data = $_REQUEST;
+        $employ_id_google = $data['id'];
+        $token_exist = get_option("ea_google_token_employee_{$employ_id_google}");
+        $response = $token_exist ? true : false;
+        header("Content-Type: application/json");
         die(json_encode($response));
     }
 

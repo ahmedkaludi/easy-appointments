@@ -113,8 +113,6 @@
 
             var firstDay = ea_settings.start_of_week;
             var minDate = (ea_settings.min_date === null) ? 0 : ea_settings.min_date;
-            console.log('ea_settings')
-            console.log(ea_settings)
 
             // datePicker
             this.$element.find('.date').datepicker({
@@ -176,7 +174,6 @@
                     plugin.appSelected.apply(plugin);
                 } else {
                     // for booking overview
-                    plugin.$element.find('#ea-payment-select').show();
                     var booking_data = {};
 
                     booking_data.location = parentForm.find('[name="location"] > option:selected').text();
@@ -215,6 +212,7 @@
 
                     parentForm.find('.final').find('select,input').first().focus();
                     plugin.scrollToElement(parentForm.find('.final'));
+                    plugin.$element.find('#ea-payment-select').show();
 
                     // trigger global event when time slot is selected
                     jQuery(document).trigger('ea-timeslot:selected');
@@ -623,7 +621,6 @@
                     var newMaxDate= response_m.connection_details.day_to;
                     plugin.$element.find('.date').datepicker('option', 'maxDate', newMaxDate);
                 }
-                
 
                 // sort response by value 11:00, 12:00, 13:00...
                 response.sort(function (a, b) {
@@ -635,6 +632,8 @@
 
                     return a1 > b1 ? 1 : -1;
                 });
+
+                
 
 
                 // TR > TD WITH TIME SLOTS
@@ -855,8 +854,6 @@
             booking_data.time = this.$element.find('.selected-time').data('val');
             booking_data.price = this.$element.find('[name="service"] > option:selected').data('price');
 
-            
-
             var format = ea_settings['date_format'] + ' ' + ea_settings['time_format'];
             booking_data.date_time = moment(booking_data.date + ' ' + booking_data.time, ea_settings['defult_detafime_format']).format(format);
 
@@ -1006,7 +1003,7 @@
                 plugin.$element.find('.ea-cancel').hide();
                 plugin.$element.find('#paypal-button').hide();
 
-                if (ea_settings['display_thankyou_note'] == 1) {                    
+                if (ea_settings['show.display_thankyou_note'] == 1) {                    
                     plugin.$element.find('.step').hide();
                     var table_html = plugin.$element.find('#booking-overview').find('table').html();
                     plugin.$element.find('#booking-overview').show();

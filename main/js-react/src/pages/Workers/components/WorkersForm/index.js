@@ -12,25 +12,32 @@ export const WorkersForm = ({
   model,
   onSave,
   onCancel,
-  onLinkGoogleCalendar
+  isPro,
+  onSignOut,
+  showSignOut
 }) => (
   <Form model={model} onCancel={onCancel} onSave={onSave}>
     <NameField />
     <DescriptionField />
     <EmailField />
     <PhoneField />
-    {model && model.id && (
+    {isPro && model && model.id && (
       <div>
         <a
           href={`?init_google_employee=true&employ_id_google=${model.id}`}
           target="_blank"
-          rel="noopener noreferrer" className='button button-primary'>
+          rel="noopener noreferrer"
+          className="button button-primary">
           Link Google Calendar
         </a>
-        <button
-        className='button'>
-          Sign Out
-        </button>
+        {showSignOut && (
+          <button
+            style={{ marginLeft: '10px' }}
+            className="button"
+            onClick={() => onSignOut(model.id)}>
+            Sign Out
+          </button>
+        )}
       </div>
     )}
   </Form>
@@ -39,11 +46,11 @@ export const WorkersForm = ({
 WorkersForm.propTypes = {
   onSave: PropTypes.func,
   onCancel: PropTypes.func,
-  onLinkGoogleCalendar: PropTypes.func
+  onSignOut: PropTypes.func
 };
 
 WorkersForm.defaultProps = {
   onSave: f => f,
   onCancel: f => f,
-  onLinkGoogleCalendar: f => f
+  onSignOut: f => f
 };

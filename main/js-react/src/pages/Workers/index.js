@@ -14,6 +14,8 @@ import {
 const WorkersPage = () => {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [isPro, setIsPro] = useState(false);
+  const [displaySignOut, setDisplaySignOut] = useState(false);
   const [workers, setWorkers] = useState([]);
   const [activeWorker, setActiveWorker] = useState(null);
   const [processing, setProcessing] = useState(null);
@@ -27,9 +29,19 @@ const WorkersPage = () => {
       throw new Error(e);
     }
   };
+  const isProPluginExist = async () => {
+    try {
+      const records = await WorkersCommunicator.isProExist();
+      setIsPro(records);
+      setLoading(false);
+    } catch (e) {
+      throw new Error(e);
+    }
+  };
 
   useEffect(() => {
     loadWorkers();
+    isProPluginExist();
   }, []);
 
   const toggleSidebar = () => {
@@ -67,6 +79,7 @@ const WorkersPage = () => {
   const save = (model, isEdit) => (isEdit ? onEdit(model) : onCreate(model));
 
   const onEditClick = row => {
+    haveGoogleToken(row.id);
     setActiveWorker(row);
     toggleSidebar();
   };
@@ -88,17 +101,26 @@ const WorkersPage = () => {
     setProcessing(null);
   };
 
-  const onGoogleLink = async employee_id => {
+  const onGoogleCalendarSignOut = async id => {
+    setProcessing(id);
     try {
-      console.log(employee_id);
-      open(
-        '?init_google_employee=true&employ_id_google=' + employee_id,
-        'Authorize Employee',
-        'resizable,scrollbars,status'
-      );
-    } catch (err) {
-      console.error('Google Link Error:', err);
+      await WorkersCommunicator.googleSignOut(id);
+      toggleSidebar();
+    } catch (e) {
+      throw new Error(e);
     }
+    setProcessing(null);
+  };
+
+  const haveGoogleToken = async id => {
+    setProcessing(true);
+    try {
+      const result = await WorkersCommunicator.checkGoogleToken(id);
+      setDisplaySignOut(result);
+    } catch (e) {
+      throw new Error(e);
+    }
+    setProcessing(null);
   };
 
   const headerAction = {
@@ -136,7 +158,9 @@ const WorkersPage = () => {
           model={activeWorker}
           onSave={save}
           onCancel={toggleSidebar}
-          onLinkGoogleCalendar={onGoogleLink}
+          isPro={isPro}
+          onSignOut={onGoogleCalendarSignOut}
+          showSignOut={displaySignOut}
         />
       </Sidebar>
     </Fragment>
