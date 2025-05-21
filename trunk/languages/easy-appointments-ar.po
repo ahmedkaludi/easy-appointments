@@ -323,7 +323,7 @@ msgstr ""
 
 #: js-react/src/pages/Workers/index.js:108
 msgid "There are no employees yet."
-msgstr ""
+msgstr "hello its vikas testing"
 
 #: js-react/src/pages/Workers/index.js:110
 msgid "Use the 'Add employee' button to add new employee."

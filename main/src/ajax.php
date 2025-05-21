@@ -332,13 +332,19 @@ class EAAjax
 
         $block_time = (int)$this->options->get_option_value('block.time', 0);
 
-        $slots = $this->logic->get_open_slots($_GET['location'], $_GET['service'], $_GET['worker'], $_GET['date'], null, true, $block_time);
+        $location = isset($_GET['location']) ? sanitize_text_field( wp_unslash( $_GET['location'] ) ) : '';
+        $service  = isset($_GET['service'])  ? sanitize_text_field( wp_unslash( $_GET['service'] ) )  : '';
+        $worker   = isset($_GET['worker'])   ? sanitize_text_field( wp_unslash( $_GET['worker'] ) )   : '';
+        $date     = isset($_GET['date'])     ? sanitize_text_field( wp_unslash( $_GET['date'] ) )     : '';
+
+
+        $slots = $this->logic->get_open_slots($location, $service, $worker, $date, null, true, $block_time);
         global $wpdb;
         $query1 = $wpdb->prepare("SELECT * FROM {$wpdb->prefix}ea_connections WHERE 
             location = %d AND 
             service = %d AND 
             worker = %d",
-            $_GET['location'], $_GET['service'], $_GET['worker']
+            $location, $service, $worker
         );
         $connection_details = $wpdb->get_row($query1);
         $result =  array('calendar_slots' =>$slots, 'connection_details' => $connection_details);
@@ -733,6 +739,10 @@ class EAAjax
         if (!isset($_POST['appointments_nonce']) || !wp_verify_nonce($_POST['appointments_nonce'], 'appointments_nonce')) {
             wp_send_json_error(array('message' => 'Security check failed.'));
         }
+
+        if ( !current_user_can( 'manage_options' ) ) {
+            return;  					
+        }
         
         if (!isset($_POST['appointments']) || !is_array($_POST['appointments'])) {
             wp_send_json_error(array('message' => 'No appointments selected.'));
@@ -892,6 +902,9 @@ class EAAjax
     public function ajax_remove_google_calendar()
     {
         $this->validate_admin_nonce();
+        if ( !current_user_can( 'manage_options' ) ) {
+            return;  					
+        }
         $response = false;
         $data = $_REQUEST;
         $employ_id_google = $data['id'];
@@ -903,6 +916,9 @@ class EAAjax
     public function ajax_check_google_calendar_token()
     {
         $this->validate_admin_nonce();
+        if ( !current_user_can( 'manage_options' ) ) {
+            return;  					
+        }
         $response = false;
         $data = $_REQUEST;
         $employ_id_google = $data['id'];

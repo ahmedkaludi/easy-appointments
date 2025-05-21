@@ -362,7 +362,7 @@ jQuery(document).ready(function($) {
             alert('<?php esc_html_e("Please select at least one appointment to delete.", "easy-appointments"); ?>');
             return;
         }
-		var popup_message = 'Are you sure you want to delete selected appointments?';
+		var popup_message = '<?php esc_html_e("Are you sure you want to delete selected appointments?", "easy-appointments"); ?>';
 		
         if (confirm(popup_message)) {
             $.ajax({
