@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 25.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 196.7 222.8" style="enable-background:new 0 0 196.7 222.8;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:#FFFFFF;}
+	.st1{fill:#0073AA;}
+</style>
+<g>
+	<rect x="4.9" y="141.2" class="st0" width="91.6" height="77.7">
+	
+		<animate  accumulate="none" additive="replace" attributeName="fill" calcMode="linear" dur="1s" fill="remove" repeatCount="indefinite" restart="always" values="#ffffff; #ffffff; #ffffff; #ffffff; #006696">
+		</animate>
+	</rect>
+	<polygon class="st1" points="43.2,198.6 32.9,183.9 37.8,180.5 43.3,188.4 61.4,165.1 68.4,165.1 	"/>
+</g>
+<g>
+	<rect x="99.8" y="141.2" class="st0" width="91.6" height="77.7">
+	
+		<animate  accumulate="none" additive="replace" attributeName="fill" calcMode="linear" dur="1s" fill="remove" repeatCount="indefinite" restart="always" values="#ffffff; #ffffff; #ffffff; #006696; #ffffff">
+		</animate>
+	</rect>
+	<path class="st1" d="M146.5,195.1c-8,0-14.4-6.5-14.5-14.4c0-8,6.5-14.4,14.4-14.5c8,0,14.4,6.5,14.5,14.4c0,0,0,0,0,0
+		C160.9,188.6,154.4,195.1,146.5,195.1z M146.5,172.2c-4.7,0-8.4,3.8-8.5,8.4c0,4.7,3.8,8.4,8.4,8.5c4.7,0,8.4-3.8,8.5-8.4
+		c0,0,0,0,0,0C154.9,176,151.1,172.2,146.5,172.2L146.5,172.2z"/>
+</g>
+<g>
+	<rect x="99.8" y="60.6" class="st0" width="91.6" height="77.7">
+	
+		<animate  accumulate="none" additive="replace" attributeName="fill" calcMode="linear" dur="1s" fill="remove" repeatCount="indefinite" restart="always" values="#ffffff; #ffffff; #006696; #ffffff; #ffffff">
+		</animate>
+	</rect>
+	<polygon class="st1" points="137.8,114.9 130.2,114.9 142.4,99.3 131.6,84.5 139,84.5 146.2,94.4 153.9,84.5 161,84.5 150,99.4 
+		161,114.9 153.9,114.9 146.1,104.2 	"/>
+</g>
+<g>
+	<rect x="4.9" y="60.6" class="st0" width="91.6" height="77.7">
+	
+		<animate  accumulate="none" additive="replace" attributeName="fill" calcMode="linear" dur="1s" fill="remove" repeatCount="indefinite" restart="always" values="#ffffff; #006696; #ffffff; #ffffff; #ffffff">
+		</animate>
+	</rect>
+	<path class="st1" d="M67.5,115.5H34v-6h33.5V115.5z M67.5,102.5H34v-6h33.5V102.5z M67.5,90.5H34v-6h33.5V90.5z"/>
+</g>
+<path class="st1" d="M196.7,222.8H0V20h31.2C32.8,7.4,44.4-1.4,57,0.2C69.6,1.9,78.5,13.4,76.8,26C75.3,37.5,65.6,46,54,46v-6
+	c9.4,0,17-7.6,17-17c0-9.4-7.6-17-17-17c-8.2,0-15.3,5.9-16.7,14h17.2v6H6v30h184.7V26h-17.6v-6h23.7L196.7,222.8z M101.3,216.8
+	h89.4v-73.5h-89.4V216.8z M6,216.8h89.4v-73.5H6V216.8z M101.3,137.3h89.4V62.1h-89.4V137.3z M6,137.3h89.4V62.1H6V137.3z
+	 M141.3,46.1v-6c9.4,0,17-7.6,17-17s-7.6-17-17-17V0c12.7,0,23,10.3,23,23S154,46.1,141.3,46.1z M83.1,46.1v-6c9.4,0,17-7.6,17-17
+	s-7.6-17-17-17V0c12.7,0,23,10.3,23,23S95.8,46.1,83.1,46.1z M112.4,46.1v-6c9.4,0,17-7.6,17-17s-7.6-17-17-17l0,0V0
+	c12.7,0,23,10.3,23,23S125.1,46.1,112.4,46.1z"/>
+</svg>

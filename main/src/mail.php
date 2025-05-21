@@ -171,13 +171,13 @@ EOT;
 
         if (empty($data)) {
             header('Refresh:3; url=' . get_home_url());
-            wp_die(__('No appointment.', 'easy-appointments'));
+            wp_die(esc_html__('No appointment.', 'easy-appointments'));
         }
 
         // invalid token
         if ($this->generate_token($data, $_GET['_ea-action']) != $_GET['_ea-t']) {
             header('Refresh:3; url=' . get_home_url());
-            wp_die(__('Invalid token.', 'easy-appointments'));
+            wp_die(esc_html__('Invalid token.', 'easy-appointments'));
         }
 
         $table = 'ea_appointments';
@@ -195,7 +195,7 @@ EOT;
 
             if ($data['status'] === 'confirm') {
                 header('Refresh:3; url=' . get_home_url());
-                wp_die(__('Appointment is already confirmed!', 'easy-appointments'));
+                wp_die(esc_html__('Appointment is already confirmed!', 'easy-appointments'));
             }
 
             // allow status change in case of pending and in some cases if reservation is in case
@@ -203,7 +203,7 @@ EOT;
             $default_status = $this->options->get_option_value('default.status');
             if ($data['status'] !== 'pending' && $default_status !== 'reservation' && $data['status'] !== 'reservation') {
                 header('Refresh:3; url=' . get_home_url());
-                wp_die(__('Appointment can\'t be confirmed!', 'easy-appointments'));
+                wp_die(esc_html__('Appointment can\'t be confirmed!', 'easy-appointments'));
             }
 
             $app_data['status'] = 'confirmed';
@@ -221,7 +221,7 @@ EOT;
             $url = apply_filters( 'ea_confirmed_redirect_url', get_home_url());
 
             header('Refresh:3; url=' . $url);
-            wp_die(__('Appointment has been confirmed.', 'easy-appointments'));
+            wp_die(esc_html__('Appointment has been confirmed.', 'easy-appointments'));
         }
 
         // cancel appointment
@@ -229,12 +229,12 @@ EOT;
             $app_data['status'] = 'canceled';
 
             if ($data['status'] === 'canceled') {
-                wp_die(__('Appointment is already cancelled!', 'easy-appointments'));
+                wp_die(esc_html__('Appointment is already cancelled!', 'easy-appointments'));
             }
 
             // only pending and confirmed appointments can be canceled
             if ($data['status'] != 'pending' && $data['status'] != 'confirmed') {
-                wp_die(__('Appointment can\'t be cancelled!', 'easy-appointments'));
+                wp_die(esc_html__('Appointment can\'t be cancelled!', 'easy-appointments'));
             }
 
             $response = $this->models->replace($table, $app_data, true);
@@ -252,7 +252,7 @@ EOT;
                 $url = apply_filters( 'ea_cant_be_canceled_redirect_url', get_home_url());
 
                 header('Refresh:3; url=' . $url);
-                wp_die(__('Appointment can\'t be cancelled', 'easy-appointments'));
+                wp_die(esc_html__('Appointment can\'t be cancelled', 'easy-appointments'));
             }
 
             $url = apply_filters( 'ea_cancel_redirect_url', get_home_url());
@@ -273,7 +273,7 @@ EOT;
             }
 
             header('Refresh:3; url=' . $url);
-            wp_die(__('Appointment has been cancelled', 'easy-appointments'));
+            wp_die(esc_html__('Appointment has been cancelled', 'easy-appointments'));
         }
     }
 

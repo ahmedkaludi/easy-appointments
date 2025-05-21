@@ -108,6 +108,7 @@
 .ui-datepicker .ui-state-disabled {
 	color: #ccc;
 	font-size: 1.5em;
+	display: none;
 }
 
 .ui-datepicker a {

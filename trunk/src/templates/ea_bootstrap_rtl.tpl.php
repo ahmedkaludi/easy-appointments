@@ -4,7 +4,7 @@
     }
 </style>
 <script type="text/javascript">
-    var ea_ajaxurl = '<?php echo admin_url("admin-ajax.php"); ?>';
+    var ea_ajaxurl = '<?php echo esc_url( admin_url("admin-ajax.php") ); ?>';
 </script>
 <script type="text/template" id="ea-bootstrap-main">
 <div class="ea-bootstrap" translate="no" style="max-width: <%- settings.width %>;">
@@ -20,7 +20,7 @@
                     </select>
                 </div>
             <label class="ea-label col-sm-4 control-label ea-rtl-label">
-                <?php esc_html_e($this->options->get_option_value("trans.location"), 'easy-appointments');?>
+                <?php echo esc_html($this->options->get_option_value("trans.location"));?>
             </label>
         </div>
         <div class="step form-group">
@@ -31,7 +31,7 @@
                 </select>
             </div>
             <label class="ea-label col-sm-4 control-label ea-rtl-label">
-                <?php esc_html_e($this->options->get_option_value("trans.service"), ''); ?>
+                <?php echo esc_html($this->options->get_option_value("trans.service")); ?>
             </label>
         </div>
         <div class="step form-group">
@@ -42,7 +42,7 @@
                 </select>
             </div>
             <label class="ea-label col-sm-4 control-label ea-rtl-label">
-                <?php esc_html_e($this->options->get_option_value("trans.worker"), ''); ?>
+                <?php echo esc_html($this->options->get_option_value("trans.worker")); ?>
             </label>
         </div>
         <div class="step calendar" class="filter">
@@ -59,7 +59,6 @@
         <% } else { %>
         <div class="step final">
         <% } %>
-        <div class="ea_hide_show">
             <div class="block"></div>
             <h3><%- settings['trans.personal-informations'] %></h3>
             <small><%- settings['trans.fields'] %></small>
@@ -94,10 +93,8 @@
                 <label class="col-sm-4 control-label ea-rtl-label"><%- item.label %> <% if (item.required == "1") { %>*<% } %> :</label>
             </div>
             <% });%>
-            </div>
             <h3 id="booking-overview-header"><%- settings['trans.booking-overview'] %></h3>
             <div id="booking-overview"></div>
-            <div class="ea_hide_show">
             <% if (settings['show.iagree'] == '1') { %>
 
             <div class="form-group">
@@ -147,7 +144,6 @@
         <% if (settings.layout_cols === '2') { %>
         </div>
         <% } %>
-        </div>
     </form>
 </div>
 <div id="ea-loader"></div>

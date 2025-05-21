@@ -7,8 +7,7 @@
     "test": "tests"
   },
   "dependencies": {
-    "metascript": "^1.0.0",
-    "node-sass": "^4.12.0"
+    "metascript": "^1.0.0"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -17,5 +16,8 @@
     "meta-script": "metascript ./js/admin.js > ./js/admin.prod.js && metascript ./js/report.js > ./js/report.prod.js && metascript ./js/settings.js > ./js/settings.prod.js"
   },
   "author": "Nikola Loncar",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "node-sass": "^4.14.1"
+  }
 }

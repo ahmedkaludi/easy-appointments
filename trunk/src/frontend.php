@@ -207,7 +207,7 @@ class EAFrontend
             'scroll_off'           => false,
             'save_form_content'    => true,
             'start_of_week'        => get_option('start_of_week', 0),
-            'default_date'         => date('Y-m-d'),
+            'default_date'         => gmdate('Y-m-d'),
             'min_date'             => null,
             'max_date'             => null,
             'show_remaining_slots' => '0',
@@ -286,7 +286,7 @@ class EAFrontend
 
         ?>
         <script type="text/javascript">
-            var ea_ajaxurl = "<?php echo admin_url('admin-ajax.php'); ?>";
+            var ea_ajaxurl = "<?php echo esc_url( admin_url('admin-ajax.php') ); ?>";
         </script>
         <div class="ea-standard">
             <form>
@@ -316,24 +316,22 @@ class EAFrontend
                     <div class="time"></div>
                 </div>
                 <div class="step final">
-                    <div class="ea_hide_show">
+                <div class="ea_hide_show">
                     <div class="block"></div>
-                    <p class="section"><?php _e('Personal information', 'easy-appointments'); ?></p>
-                    <small><?php _e('Fields with * are required', 'easy-appointments'); ?></small>
+                    <p class="section"><?php esc_html_e('Personal information', 'easy-appointments'); ?></p>
+                    <small><?php esc_html_e('Fields with * are required', 'easy-appointments'); ?></small>
                     <br>
                     <?php echo $custom_form; ?>
                     
                     <br>
-                    <h3 style="color: #147514; margin-top: 0;" class="section">
-                    <?php _e('Booking overview', 'easy-appointments'); ?>
-                    </h3>
+                    <p class="section"><?php esc_html_e('Booking overview', 'easy-appointments'); ?></p>
                     </div>
                     <div id="booking-overview"></div>
                     <div class="ea_hide_show">
                         <?php if (!empty($settings['show.iagree'])) : ?>
                             <p>
                                 <label
-                                    style="font-size: 65%; width: 80%;" class="i-agree"><?php _e('I agree with terms and conditions', 'easy-appointments'); ?>
+                                    style="font-size: 65%; width: 80%;" class="i-agree"><?php esc_html_e('I agree with terms and conditions', 'easy-appointments'); ?>
                                     * : </label><input style="width: 15%;" type="checkbox" name="iagree"
                                                     data-rule-required="true"
                                                     data-msg-required="<?php _e('You must agree with terms and conditions', 'easy-appointments'); ?>">
@@ -357,7 +355,7 @@ class EAFrontend
 
                         <div style="display: inline-flex;">
                             <?php echo apply_filters('ea_checkout_button', '<button class="ea-btn ea-submit">' . __('Submit', 'easy-appointments') . '</button>'); ?>
-                            <button class="ea-btn ea-cancel"><?php _e('Cancel', 'easy-appointments'); ?></button>
+                            <button class="ea-btn ea-cancel"><?php esc_html_e('Cancel', 'easy-appointments'); ?></button>
                         </div>
                     </div>
                 </div>
@@ -449,7 +447,6 @@ class EAFrontend
     private function output_inline_ea_settings($settings, $customCss)
     {
         $clean_settings = EATableColumns::clear_settings_data_frontend($settings);
-        
         if ( isset($settings['default.status'])) {
             $clean_settings['default.status'] = $settings['default.status'];
         }
@@ -486,7 +483,7 @@ class EAFrontend
             'layout_cols'          => '1',
             'start_of_week'        => get_option('start_of_week', 0),
             'rtl'                  => '0',
-            'default_date'         => date('Y-m-d'),
+            'default_date'         => gmdate('Y-m-d'),
             'min_date'             => null,
             'max_date'             => null,
             'show_remaining_slots' => '0',

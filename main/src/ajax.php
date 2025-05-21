@@ -113,6 +113,7 @@ class EAAjax
             add_action('wp_ajax_ea_errors', array($this, 'ajax_errors'));
 
             add_action('wp_ajax_ea_test_wp_mail', array($this, 'ajax_test_mail'));
+            add_action('wp_ajax_ea_reset_plugin', array($this, 'ajax_reset_plugin'));
 
             // Appointments
             add_action('wp_ajax_ea_appointments', array($this, 'ajax_appointments'));
@@ -137,6 +138,9 @@ class EAAjax
 
             // Worker
             add_action('wp_ajax_ea_worker', array($this, 'ajax_worker'));
+            add_action('wp_ajax_ea_is_pro_exist', array($this, 'ajax_is_pro_exist'));
+            add_action('wp_ajax_ea_remove_google_calendar', array($this, 'ajax_remove_google_calendar'));
+            add_action('wp_ajax_ea_check_google_calendar_token', array($this, 'ajax_check_google_calendar_token'));
 
             // Workers
             add_action('wp_ajax_ea_workers', array($this, 'ajax_workers'));
@@ -166,6 +170,7 @@ class EAAjax
             add_action('wp_ajax_ea_default_template', array($this, 'ajax_default_template'));
             add_action('wp_ajax_ea_send_query_message', array( $this, 'ea_send_query_message'));
             add_action('wp_ajax_cancel_selected_appointments', array( $this, 'cancel_selected_appointments_callback'));
+            add_action('wp_ajax_delete_selected_appointment', array($this, 'delete_selected_appointment'));
         }
     }
 
@@ -327,9 +332,24 @@ class EAAjax
 
         $block_time = (int)$this->options->get_option_value('block.time', 0);
 
-        $slots = $this->logic->get_open_slots($_GET['location'], $_GET['service'], $_GET['worker'], $_GET['date'], null, true, $block_time);
+        $location = isset($_GET['location']) ? sanitize_text_field( wp_unslash( $_GET['location'] ) ) : '';
+        $service  = isset($_GET['service'])  ? sanitize_text_field( wp_unslash( $_GET['service'] ) )  : '';
+        $worker   = isset($_GET['worker'])   ? sanitize_text_field( wp_unslash( $_GET['worker'] ) )   : '';
+        $date     = isset($_GET['date'])     ? sanitize_text_field( wp_unslash( $_GET['date'] ) )     : '';
 
-        $this->send_ok_json_result($slots);
+
+        $slots = $this->logic->get_open_slots($location, $service, $worker, $date, null, true, $block_time);
+        global $wpdb;
+        $query1 = $wpdb->prepare("SELECT * FROM {$wpdb->prefix}ea_connections WHERE 
+            location = %d AND 
+            service = %d AND 
+            worker = %d",
+            $location, $service, $worker
+        );
+        $connection_details = $wpdb->get_row($query1);
+        $result =  array('calendar_slots' =>$slots, 'connection_details' => $connection_details);
+
+        $this->send_ok_json_result($result);
     }
 
     public function ajax_res_appointment()
@@ -714,6 +734,29 @@ class EAAjax
         $this->send_ok_json_result($response);
     }
 
+    public function delete_selected_appointment()
+    {
+        if (!isset($_POST['appointments_nonce']) || !wp_verify_nonce($_POST['appointments_nonce'], 'appointments_nonce')) {
+            wp_send_json_error(array('message' => 'Security check failed.'));
+        }
+
+        if ( !current_user_can( 'manage_options' ) ) {
+            return;  					
+        }
+        
+        if (!isset($_POST['appointments']) || !is_array($_POST['appointments'])) {
+            wp_send_json_error(array('message' => 'No appointments selected.'));
+        }
+
+        $response = $this->delete_parse_appointment(false);
+
+        if ($response == false) {
+            $this->send_err_json_result('err');
+        }
+
+        $this->send_ok_json_result($response);
+    }
+
     /**
      * Service model
      */
@@ -842,6 +885,46 @@ class EAAjax
 
         header("Content-Type: application/json");
 
+        die(json_encode($response));
+    }
+
+    public function ajax_is_pro_exist()
+    {
+        $this->validate_admin_nonce();
+        $response = false;
+        if ( is_plugin_active( 'easy-appointments-connect/main.php' ) ) {
+            $response = true;
+        }
+        header("Content-Type: application/json");
+
+        die(json_encode($response));
+    }
+    public function ajax_remove_google_calendar()
+    {
+        $this->validate_admin_nonce();
+        if ( !current_user_can( 'manage_options' ) ) {
+            return;  					
+        }
+        $response = false;
+        $data = $_REQUEST;
+        $employ_id_google = $data['id'];
+        delete_option("ea_google_token_employee_{$employ_id_google}");
+        header("Content-Type: application/json");
+
+        die(json_encode($response));
+    }
+    public function ajax_check_google_calendar_token()
+    {
+        $this->validate_admin_nonce();
+        if ( !current_user_can( 'manage_options' ) ) {
+            return;  					
+        }
+        $response = false;
+        $data = $_REQUEST;
+        $employ_id_google = $data['id'];
+        $token_exist = get_option("ea_google_token_employee_{$employ_id_google}");
+        $response = $token_exist ? true : false;
+        header("Content-Type: application/json");
         die(json_encode($response));
     }
 
@@ -1019,6 +1102,230 @@ class EAAjax
         }
 
         die(__('Request completed, please check email.', 'easy-appointments'));
+    }
+    public function ajax_reset_plugin()
+    {
+        $this->validate_admin_nonce();
+
+        $this->validate_access_rights('tools');
+
+        if (!current_user_can('install_plugins')) {
+            die(__('Only admin user can test mail!', 'easy-appointments'));
+        }
+
+        global $wpdb;
+        $tables = [
+            'ea_fields',
+            'ea_appointments',
+            'ea_connections',
+            'ea_locations',
+            'ea_services',
+            'ea_staff',
+            'ea_options',
+            'ea_meta_fields',
+            'ea_log_errors',
+        ];
+
+        $wpdb->query("SET FOREIGN_KEY_CHECKS=0;");
+        $wpdb->query("SET AUTOCOMMIT = 0;");
+        $wpdb->query("START TRANSACTION;");
+
+        foreach ($tables as $table) {
+            $wpdb->query("TRUNCATE TABLE {$wpdb->prefix}{$table}");
+        }
+
+        $wpdb->query("SET FOREIGN_KEY_CHECKS=1;");
+        $wpdb->query("COMMIT;");
+
+        $option_name = 'easy_app_db_version';
+
+        delete_option($option_name);
+        die(__('Plugin data reset successfully.', 'easy-appointments'));
+    }
+
+    public function get_insert_options()
+    {
+        $options = $this->get_default_options();
+        $output = array();
+
+        foreach ($options as $key => $value) {
+            $output[] = array(
+                'ea_key'   => $key,
+                'ea_value' => $value,
+                'type'     => 'default'
+            );
+        }
+
+        return $output;
+    }
+
+    public function get_default_options() {
+        return array(
+            'mail.pending'                  => 'pending',
+            'mail.reservation'              => 'reservation',
+            'mail.canceled'                 => 'canceled',
+            'mail.confirmed'                => 'confirmed',
+            'mail.admin'                    => '',
+            'mail.action.two_step'          => '0',
+            'trans.service'                 => 'Service',
+            'trans.location'                => 'Location',
+            'trans.worker'                  => 'Worker',
+            'trans.done_message'            => 'Done',
+            'trans.booking_message'         => 'Your appointment has been successfully submitted. You will receive an update shortly',
+            'trans.done_message_front'         => 'Your appointment has been successfully submitted. You will receive an update shortly',
+            'trans.create_new_booking'      => 'Create New Booking',
+            'time_format'                   => '00-24',
+            'trans.currency'                => '$',
+            'pending.email'                 => '',
+            'price.hide'                    => '0',
+            'price.hide.service'            => '0',
+            'datepicker'                    => 'en-US',
+            'send.user.email'               => '0',
+            'custom.css'                    => '',
+            'form.label.above'              => '0',
+            'show.iagree'                   => '0',
+            'show.display_thankyou_note'    => '0',
+            'cancel.scroll'                 => 'calendar',
+            'multiple.work'                 => '1',
+            'compatibility.mode'            => '0',
+            'pending.subject.email'         => 'New Reservation #id#',
+            'send.from.email'               => '',
+            'css.off'                       => '0',
+            'submit.redirect'               => '',
+            'advance.redirect'              => '[]',
+            'advance_cancel.redirect'       => '[]',
+            'pending.subject.visitor.email' => 'Reservation #id#',
+            'block.time'                    => '0',
+            'max.appointments'              => '5',
+            'pre.reservation'               => '0',
+            'default.status'                => 'pending',
+            'send.worker.email'             => '0',
+            'currency.before'               => '0',
+            'nonce.off'                     => '0',
+            'gdpr.on'                       => '0',
+            'gdpr.label'                    => 'By using this form you agree with the storage and handling of your data by this website.',
+            'gdpr.link'                     => '',
+            'gdpr.message'                  => 'You need to accept the privacy checkbox',
+            'gdpr.auto_remove'              => '0',
+            'sort.workers-by'               => 'id',
+            'sort.services-by'              => 'id',
+            'sort.locations-by'             => 'id',
+            'order.workers-by'              => 'DESC',
+            'order.services-by'             => 'DESC',
+            'order.locations-by'            => 'DESC',
+            'captcha.site-key'              => '',
+            'captcha3.site-key'             => '',
+            'captcha.secret-key'            => '',
+            'captcha3.secret-key'           => '',
+            'fullcalendar.public'           => '0',
+            'fullcalendar.event.show'       => '0',
+            'fullcalendar.event.template'   => '',
+            'shortcode.compress'            => '1',
+            'label.from_to'                 => '0',
+            'user.access.services'          => '',
+            'user.access.workers'           => '',
+            'user.access.locations'         => '',
+            'user.access.connections'       => '',
+            'user.access.reports'           => '',
+            'max.appointments_by_user'      => '0',
+        );
+    }
+
+    public function migrateFormFields()
+    {
+        $email = __('EMail', 'easy-appointments');
+        $name = __('Name', 'easy-appointments');
+        $phone = __('Phone', 'easy-appointments');
+        $comment = __('Description', 'easy-appointments');
+
+        $data = array();
+
+        // email
+        $data[] = array(
+            'type'          => 'EMAIL',
+            'slug'          => str_replace('-', '_', sanitize_title('email')),
+            'label'         => $email,
+            'default_value' => '',
+            'validation'    => 'email',
+            'mixed'         => '',
+            'visible'       => 1,
+            'required'      => 1,
+            'position'      => 1
+        );
+
+        $data[] = array(
+            'type'          => 'INPUT',
+            'slug'          => str_replace('-', '_', sanitize_title('name')),
+            'label'         => $name,
+            'default_value' => '',
+            'validation'    => 'minlength-3',
+            'mixed'         => '',
+            'visible'       => 1,
+            'required'      => 1,
+            'position'      => 2
+        );
+
+        $data[] = array(
+            'type'          => 'INPUT',
+            'slug'          => str_replace('-', '_', sanitize_title('phone')),
+            'label'         => $phone,
+            'default_value' => '',
+            'validation'    => 'minlength-3',
+            'mixed'         => '',
+            'visible'       => 1,
+            'required'      => 1,
+            'position'      => 3
+        );
+
+        $data[] = array(
+            'type'          => 'TEXTAREA',
+            'slug'          => str_replace('-', '_', sanitize_title('description')),
+            'label'         => $comment,
+            'default_value' => '',
+            'validation'    => NULL,
+            'mixed'         => '',
+            'visible'       => 1,
+            'required'      => 0,
+            'position'      => 4
+        );
+
+        return $data;
+    }
+
+    public function init_reset_data()
+    {
+        global $wpdb;
+        $count_query = "SELECT count(*) FROM {$wpdb->prefix}ea_meta_fields";
+        $num = (int) $wpdb->get_var($count_query);
+        if ($num > 0) {
+            return;
+        }
+
+        // options table
+        $table_name = $wpdb->prefix . 'ea_options';
+
+        // rows data
+        $wp_ea_options = $this->get_insert_options();
+
+        // insert options
+        foreach ($wp_ea_options as $row) {
+            $wpdb->insert(
+                $table_name,
+                $row
+            );
+        }
+
+        // create custom form fields
+        $default_fields = $this->migrateFormFields();
+
+        $table_name = $wpdb->prefix . 'ea_meta_fields';
+
+        foreach ($default_fields as $row) {
+            $wpdb->insert(
+                $table_name,
+                $row
+            );
+        }
     }
 
     /**
@@ -1313,6 +1620,48 @@ class EAAjax
         } else {
             return $response;
         }
+    }
+
+    private function delete_parse_appointment()
+    {
+        $table = 'ea_appointments';
+        $fields = 'ea_fields';
+        $app_data = array();
+
+        $meta_fields = $this->models->get_all_rows('ea_meta_fields');
+        $meta_data = array();
+        $response = array();
+
+        $appointments = $_POST['appointments'];
+        foreach ($appointments as $appointment_id) {
+            $app_data['id'] = $appointment_id;
+            $data = [
+                'id' => $appointment_id
+            ];
+
+            foreach ($meta_fields as $value) {
+                if (array_key_exists($value->slug, $data)) {
+                    $meta_data[] = array(
+                        'app_id'   => null,
+                        'field_id' => $value->id,
+                        'value'    => $data[$value->slug]
+                    );
+                }
+            }
+    
+            
+            $response = $this->models->delete($table, $data, true);
+            $this->models->delete($fields, array('app_id' => $app_data['id']), true);
+        }
+
+        
+
+        if ($response == false) {
+            $this->send_err_json_result('{"err":true}');
+        }
+
+        
+        return $response;
     }
 
     private function send_ok_json_result($result)

@@ -89,7 +89,7 @@ class EAApiFullCalendar
         $have_access = apply_filters( 'ea_calendar_public_access', false);
 
         if ( ! current_user_can( 'read' ) && !$have_access ) {
-            return new WP_Error( 'rest_forbidden', esc_html__( 'You cannot view the category resource.' ), array( 'status' => $this->authorization_status_code() ) );
+            return new WP_Error( 'rest_forbidden', esc_html__( 'You cannot view the category resource.', 'easy-appointments' ), array( 'status' => $this->authorization_status_code() ) );
         }
 
         return true;
@@ -104,7 +104,7 @@ class EAApiFullCalendar
      */
     public function update_item_permissions_check( $request ) {
         if ( ! current_user_can( 'manage_options' ) ) {
-            return new WP_Error( 'rest_forbidden', esc_html__( 'You cannot update the category resource.' ), array( 'status' => $this->authorization_status_code() ) );
+            return new WP_Error( 'rest_forbidden', esc_html__( 'You cannot update the category resource.', 'easy-appointments' ), array( 'status' => $this->authorization_status_code() ) );
         }
         return true;
     }

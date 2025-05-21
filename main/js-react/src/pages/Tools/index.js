@@ -4,6 +4,7 @@ import { __ } from '../../services/Localization';
 import { Button } from '@material-ui/core';
 import ErrorOutlineIcon from '@material-ui/icons/ErrorOutline';
 import MailOutlineIcon from '@material-ui/icons/MailOutline';
+import RefreshIcon from '@material-ui/icons/Refresh';
 import { ToolsCommunicator } from '../../communicators/ToolsCommunicator';
 import {
   PageTitle,
@@ -13,6 +14,7 @@ import {
 } from '../../ea-components';
 import { ErrorLog } from './components/ErrorLog';
 import { TestMail } from './components/TestMail';
+import { Reset } from './components/Reset';
 
 const Tools = () => {
   const [loading, setLoading] = useState(true);
@@ -51,8 +53,19 @@ const Tools = () => {
             'easy-appointments'
           )}
         </span>
-
         <TestMail test={ToolsCommunicator.testEmail} />
+      </ContentBox>
+      <ContentBox customClass="card-header p-3 mb-5">
+        <div className="d-flex align-items-center">
+          <RefreshIcon className="ea-text" />
+          <span className="card-header--title font-size-md ml-2">
+            {__('Reset Plugin', 'easy-appointments')}
+          </span>
+        </div>
+
+        <div className="divider my-2" />
+
+        <Reset resetPlugin={ToolsCommunicator.resetPlugin} />
       </ContentBox>
 
       <div className="d-flex mb-3 ea-margin-fix align-items-center justify-content-between">

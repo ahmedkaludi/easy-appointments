@@ -75,7 +75,7 @@ class EALogic
     )
     {
         // current day as weekday now (string)
-        $day_of_week = date('l', strtotime($day));
+        $day_of_week = gmdate('l', strtotime($day));
 
         // get current datetime as int
         $time_now = current_time('timestamp', false);
@@ -84,9 +84,9 @@ class EALogic
         $block_time = $time_now + intval($block_before) * 60;
 
         // calculate if that is current day that we are looking
-        $is_current_day = (date('Y-m-d') == $day);
+        $is_current_day = (gmdate('Y-m-d') == $day);
 
-        $block_date = date('Y-m-d', $block_time);
+        $block_date = gmdate('Y-m-d', $block_time);
 
         $query = $this->wpdb->prepare("SELECT * FROM {$this->wpdb->prefix}ea_connections WHERE 
 			location=%d AND 
@@ -134,7 +134,7 @@ class EALogic
 
                 // is that before upper time limit
                 if (($temp_time + $diff_between_duration_and_slot_step) < $upper_time) {
-                    $current_time = date('H:i', $temp_time);
+                    $current_time = gmdate('H:i', $temp_time);
 
                     // check if current time is greater then slot start time
                     if ($check_current_day && $is_current_day && $time_now > $temp_time) {
@@ -185,7 +185,7 @@ class EALogic
      */
     private function remove_closed_slots(&$slots, $location = null, $service = null, $worker = null, $day = null, $service_duration = 60)
     {
-        $day_of_week = date('l', strtotime($day));
+        $day_of_week = gmdate('l', strtotime($day));
 
         $query = $this->wpdb->prepare("SELECT * FROM {$this->wpdb->prefix}ea_connections WHERE 
 			location=%d AND 
@@ -459,15 +459,15 @@ class EALogic
                         'count' => $count,
                         'value' => $time,
                         'show'  => $time,
-                        'ends'  => date('G:i', strtotime("{$time} + $service_duration minute"))
+                        'ends'  => gmdate('G:i', strtotime("{$time} + $service_duration minute"))
                     );
                     break;
                 case 'am-pm':
                     $result[] = array(
                         'count' => $count,
                         'value' => $time,
-                        'show'  => date( 'h:i a', strtotime($time)),
-                        'ends'  => date('h:i a', strtotime("{$time} + $service_duration minute"))
+                        'show'  => gmdate( 'h:i a', strtotime($time)),
+                        'ends'  => gmdate('h:i a', strtotime("{$time} + $service_duration minute"))
                     );
                     break;
                 default:

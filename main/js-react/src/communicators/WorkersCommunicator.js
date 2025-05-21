@@ -20,6 +20,12 @@ export class WorkersCommunicator {
     return http.getJSON(url);
   }
 
+  static async isProExist() {
+    const url = `${this.url}&action=ea_is_pro_exist`;
+
+    return http.getJSON(url);
+  }
+
   /**
    * Save entity NEW / UPDATE
    *
@@ -49,5 +55,20 @@ export class WorkersCommunicator {
     const response = await http.post(url);
 
     return response === 1;
+  }
+
+  static async googleSignOut(id) {
+    const url = `${this.url}&action=ea_remove_google_calendar&_method=DELETE&id=${id}`;
+
+    const response = await http.post(url);
+
+    return response;
+  }
+
+  static async checkGoogleToken(id) {
+    const url = `${this.url}&action=ea_check_google_calendar_token&id=${id}`;
+
+    const response = await http.getJSON(url);
+    return response;
   }
 }

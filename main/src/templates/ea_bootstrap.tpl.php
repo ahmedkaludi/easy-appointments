@@ -1,5 +1,5 @@
 <script type="text/javascript">
-    var ea_ajaxurl = '<?php echo admin_url("admin-ajax.php"); ?>';
+    var ea_ajaxurl = '<?php echo esc_url( admin_url("admin-ajax.php") ); ?>';
 </script>
 <script type="text/template" id="ea-bootstrap-main">
     <div class="ea-bootstrap <%- settings.form_class %>" translate="no" style="max-width: <%- settings.width %>;">
@@ -11,7 +11,7 @@
                 <div class="step form-group">
                     <div class="block"></div>
                     <label class="ea-label col-sm-4 control-label">
-                        <?php esc_html_e($this->options->get_option_value('trans.location'), 'easy-appointments'); ?>
+                        <?php echo esc_html($this->options->get_option_value('trans.location')); ?>
                     </label>
                     <div class="col-sm-8">
                         <select name="location" data-c="location" class="filter form-control">
@@ -23,7 +23,7 @@
                 <div class="step form-group">
                     <div class="block"></div>
                     <label class="ea-label col-sm-4 control-label">
-                        <?php esc_html_e($this->options->get_option_value("trans.service"), 'easy-appointments'); ?>
+                        <?php echo esc_html($this->options->get_option_value("trans.service")); ?>
                     </label>
                     <div class="col-sm-8">
                         <select name="service" data-c="service" class="filter form-control"
@@ -36,7 +36,7 @@
                 <div class="step form-group">
                     <div class="block"></div>
                     <label class="ea-label col-sm-4 control-label">
-                        <?php esc_html_e($this->options->get_option_value("trans.worker"), 'easy-appointments'); ?>
+                        <?php echo esc_html($this->options->get_option_value("trans.worker")); ?>
                     </label>
                     <div class="col-sm-8">
                         <select name="worker" data-c="worker" class="filter form-control">
@@ -58,6 +58,7 @@
                 <% } else { %>
                 <div class="step final">
                     <% } %>
+                    <div class="ea_hide_show">
                     <div class="block"></div>
                     <h3><%- settings['trans.personal-informations'] %></h3>
                     <small><%- settings['trans.fields'] %></small>
@@ -108,8 +109,10 @@
                         </div>
                     </div>
                     <% });%>
+                    </div>
                     <h3 id="booking-overview-header"><%- settings['trans.booking-overview'] %></h3>
                     <div id="booking-overview"></div>
+                    <div class="ea_hide_show">
                     <% if (settings['show.iagree'] == '1') { %>
 
                     <div class="form-group">
@@ -150,6 +153,7 @@
                     <% } %>
 
                     <?php echo apply_filters('ea_payment_select', ''); ?>
+                    <?php echo apply_filters('ea_stripe_checkout', ''); ?>
 
                     <div class="form-group">
                         <div class="col-sm-12 ea-actions-group" style="display: inline-flex; align-items: center; justify-content: center;">
@@ -161,6 +165,7 @@
                 <% if (settings.layout_cols === '2') { %>
             </div>
             <% } %>
+                </div>
         </form>
     </div>
 <div id="ea-loader"></div>

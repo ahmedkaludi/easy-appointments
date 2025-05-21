@@ -154,6 +154,7 @@
             this.$element.find('.ea-bootstrap').on('click', '.time-value', function(event) {
 
                 event.preventDefault();
+                var parentForm = jQuery(this).closest('form');
 
                 var result = plugin.selectTimes(jQuery(this));
 
@@ -175,12 +176,12 @@
                     // for booking overview
                     var booking_data = {};
 
-                    booking_data.location = plugin.$element.find('[name="location"] > option:selected').text();
-                    booking_data.service = plugin.$element.find('[name="service"] > option:selected').text();
-                    booking_data.worker = plugin.$element.find('[name="worker"] > option:selected').text();
-                    booking_data.date = plugin.$element.find('.date').datepicker().val();
-                    booking_data.time = plugin.$element.find('.selected-time').data('val');
-                    booking_data.price = plugin.$element.find('[name="service"] > option:selected').data('price');
+                    booking_data.location = parentForm.find('[name="location"] > option:selected').text();
+                    booking_data.service = parentForm.find('[name="service"] > option:selected').text();
+                    booking_data.worker = parentForm.find('[name="worker"] > option:selected').text();
+                    booking_data.date = parentForm.find('.date').datepicker().val();
+                    booking_data.time = parentForm.find('.selected-time').data('val');
+                    booking_data.price = parentForm.find('[name="service"] > option:selected').data('price');
 
                     var format = ea_settings['date_format'] + ' ' + ea_settings['time_format'];
                     booking_data.date_time = moment(booking_data.date + 'T' + booking_data.time, ea_settings['defult_detafime_format']).format(format);
@@ -190,14 +191,14 @@
 
                     overview_content = plugin.settings.overview_template({data: booking_data, settings: ea_settings});
 
-                    plugin.$element.find('#booking-overview').html(overview_content);
+                    parentForm.find('#booking-overview').html(overview_content);
 
-                    plugin.$element.find('#ea-total-amount').on('checkout:done', function( event, checkoutId ) {
-                        var paypal_input = plugin.$element.find('#paypal_transaction_id');
+                    parentForm.find('#ea-total-amount').on('checkout:done', function( event, checkoutId ) {
+                        var paypal_input = parentForm.find('#paypal_transaction_id');
 
                         if (paypal_input.length == 0) {
                             paypal_input = jQuery('<input id="paypal_transaction_id" class="custom-field" name="paypal_transaction_id" type="hidden"/>');
-                            plugin.$element.find('.final').append(paypal_input);
+                            parentForm.find('.final').append(paypal_input);
                         }
 
                         paypal_input.val(checkoutId);
@@ -206,11 +207,12 @@
                         plugin.singleConformation(event);
                     });
 
-                    // plugin.$element.find('.step').addClass('disabled');
-                    plugin.$element.find('.final').removeClass('disabled');
+                    // parentForm.find('.step').addClass('disabled');
+                    parentForm.find('.final').removeClass('disabled');
 
-                    plugin.$element.find('.final').find('select,input').first().focus();
-                    plugin.scrollToElement(plugin.$element.find('.final'));
+                    parentForm.find('.final').find('select,input').first().focus();
+                    plugin.scrollToElement(parentForm.find('.final'));
+                    plugin.$element.find('#ea-payment-select').show();
 
                     // trigger global event when time slot is selected
                     jQuery(document).trigger('ea-timeslot:selected');
@@ -602,7 +604,7 @@
 
             this.placeLoader(calendarEl);
 
-            var req = jQuery.get(ea_ajaxurl, options, function (response) {
+            var req = jQuery.get(ea_ajaxurl, options, function (response_m) {
 
                 next_element = jQuery(document.createElement('div'))
                     .addClass('time well well-lg');
@@ -612,6 +614,12 @@
 
                 if (fromTo) {
                     next_element.addClass('time well well-lg col-50');
+                }
+
+                var response = response_m.calendar_slots;
+                if (response_m.connection_details) {
+                    var newMaxDate= response_m.connection_details.day_to;
+                    plugin.$element.find('.date').datepicker('option', 'maxDate', newMaxDate);
                 }
 
                 // sort response by value 11:00, 12:00, 13:00...
@@ -624,6 +632,8 @@
 
                     return a1 > b1 ? 1 : -1;
                 });
+
+                
 
 
                 // TR > TD WITH TIME SLOTS
@@ -993,7 +1003,7 @@
                 plugin.$element.find('.ea-cancel').hide();
                 plugin.$element.find('#paypal-button').hide();
 
-                if (ea_settings['display_thankyou_note'] == 1) {                    
+                if (ea_settings['show.display_thankyou_note'] == 1) {                    
                     plugin.$element.find('.step').hide();
                     var table_html = plugin.$element.find('#booking-overview').find('table').html();
                     plugin.$element.find('#booking-overview').show();
