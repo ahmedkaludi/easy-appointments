@@ -222,10 +222,10 @@ class EasyAppointment
         $install = $this->container['install_tools'];
 
         // skip update if db version are the same
-        // if ($install->easy_app_db_version !== get_option('easy_app_db_version')) {
+        if ($install->easy_app_db_version !== get_option('easy_app_db_version')) {
             $install->init_db();
             $install->init_data();
-        // }
+        }
 
         wp_schedule_event(time(), 'hourly', 'easyapp_hourly_event');
     }
