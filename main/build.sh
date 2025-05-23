@@ -15,6 +15,7 @@ mkdir ./trunk/src
 mkdir ./trunk/vendor
 mkdir ./trunk/fonts
 mkdir ./trunk/languages
+mkdir ./trunk/ea-blocks
 
 # meta script
 # metascript ./main/js/admin.js > ./main/js/admin.prod.js
@@ -29,7 +30,7 @@ npm run meta-script
 
 cd ../
 
-cp -R ./main/js-react/build/wp-content/plugins/easy-appointments/ ./trunk/
+# cp -R ./main/js-react/build/wp-content/plugins/easy-appointments/ ./trunk/
 
 cp ./main/main.php ./trunk/
 cp ./main/readme.txt ./trunk/
@@ -41,7 +42,6 @@ cp -R ./main/src ./trunk/
 cp -R ./main/vendor ./trunk/
 cp -R ./main/components ./trunk/
 cp -R ./main/languages ./trunk/
-cp -R ./main/ea-blocks ./trunk/
 cp -R ./main/static ./trunk/
 
 cp -R ./main/js/libs/jquery-ui-timepicker-addon.js ./trunk/js/libs/
@@ -66,6 +66,11 @@ cp ./main/js/backbone.sync.fix.js ./trunk/js/
 cp ./main/js/formater.js ./trunk/js/
 cp ./main/js-react/build/static/js/bundle.js ./trunk/js/
 #cp -R ./main/js-react/src/assets/  ./trunk/css/theme/
+
+cp -R ./main/ea-blocks/build ./trunk/ea-blocks/
+cp -R ./main/ea-blocks/src ./trunk/ea-blocks/
+cp -R ./main/ea-blocks/ea-blocks.php ./trunk/ea-blocks/
+
 mkdir -p ./trunk/css/theme
 cp ./main/js-react/build/static/css/main.css ./trunk/css/theme/
 

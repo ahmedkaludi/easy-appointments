@@ -342,8 +342,7 @@ class EAAjax
         global $wpdb;
         $day_of_week = gmdate('l', strtotime($date));
         $time_now = current_time('timestamp', false);
-        $block_time = $time_now + intval($block_time) * 60;
-
+        $block_time = $time_now + intval($block_time) * 60;       
         $query1 = $wpdb->prepare("SELECT * FROM {$wpdb->prefix}ea_connections WHERE 
                 location = %d AND 
                 service = %d AND 

@@ -226,8 +226,9 @@ class EasyAppointment
             $install->init_db();
             $install->init_data();
         }
-
-        wp_schedule_event(time(), 'hourly', 'easyapp_hourly_event');
+        if ( wp_next_scheduled( 'easyapp_hourly_event' ) === false ) {
+            wp_schedule_event(time(), 'hourly', 'easyapp_hourly_event');
+        }
     }
 
     /**
