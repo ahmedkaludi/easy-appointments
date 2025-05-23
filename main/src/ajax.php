@@ -344,15 +344,14 @@ class EAAjax
         $time_now = current_time('timestamp', false);
         $block_time = $time_now + intval($block_time) * 60;       
         $query1 = $wpdb->prepare("SELECT * FROM {$wpdb->prefix}ea_connections WHERE 
-            location=%d AND 
-            service=%d AND 
-            worker=%d AND 
-            day_of_week LIKE %s AND 
-            is_working = 1 AND 
-            (day_from IS NULL OR day_from <= %s) AND 
-            (day_to IS NULL OR day_to >= %s)",
-            $location, $service, $worker, "%{$day_of_week}%", $date, $date
-        );
+                location = %d AND 
+                service = %d AND 
+                worker = %d AND
+                is_working = 1 AND 
+                (day_from IS NULL OR day_from <= %s)
+                ORDER BY day_to DESC
+                LIMIT 1",
+                $location, $service, $worker, $date);
         $connection_details = $wpdb->get_row($query1);
         $result =  array('calendar_slots' =>$slots, 'connection_details' => $connection_details);
 
