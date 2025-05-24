@@ -492,6 +492,7 @@ EOT;
 
         $subject_template = $this->options->get_option_value('pending.subject.email', 'Notification : #id#');
         $send_from = $this->options->get_option_value('send.from.email', '');
+        $admin_reply_to_address = $this->options->get_option_value('admin_reply_to_address', '');
 
         $subject = str_replace(array_keys($params), array_values($params), $subject_template);
 
@@ -517,6 +518,9 @@ EOT;
 
         if (!empty($send_from)) {
             $headers[] = 'From: ' . $send_from;
+        }
+        if (!empty($admin_reply_to_address)) {
+            $headers[] = 'Reply-To: ' . $admin_reply_to_address;
         }
 
         $files = array();
@@ -677,6 +681,12 @@ EOT;
         // send only email if there is at least one address
         if (count($email_to) > 0) {
             $headers = array('Content-Type: text/html; charset=UTF-8');
+
+            $visitor_reply_to_address = $this->options->get_option_value('visitor_reply_to_address', '');
+
+            if (!empty($visitor_reply_to_address)) {
+                $headers[] = 'Reply-To: '. $visitor_reply_to_address;
+            }
 
             if (!empty($send_from)) {
                 $headers[] = 'From: ' . $send_from;

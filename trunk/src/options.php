@@ -112,6 +112,8 @@ class EAOptions
             'advance.redirect'              => '[]',
             'advance_cancel.redirect'       => '[]',
             'pending.subject.visitor.email' => 'Reservation #id#',
+            'admin_reply_to_address'        => '',
+            'visitor_reply_to_address'      => '',
             'block.time'                    => '0',
             'max.appointments'              => '5',
             'pre.reservation'               => '0',
