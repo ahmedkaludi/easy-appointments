@@ -458,8 +458,33 @@ class EAFrontend
             $data_vacation = '[]';
         }
 
+        $service_start_data = [];
+        global $wpdb;
+        $results = $wpdb->get_results("
+            SELECT id, advance_booking_days 
+            FROM {$wpdb->prefix}ea_services
+            WHERE advance_booking_days IS NOT NULL");
+
+        foreach ($results as $service) {
+            if ( !empty( $service->advance_booking_days ) ) {
+                $current_date =  current_time('Y-m-d');
+                $advance_booking_days = $service->advance_booking_days;
+                $booking_date_skip = [];
+                for ($i = 1; $i < $advance_booking_days; $i++) {
+                    if ($i > 1) {
+                        $booking_date_skip[] = date('Y-m-d', strtotime($current_date . ' +'.$i.' days'));
+                    }else{
+                        $booking_date_skip[] = $current_date;
+                    }
+                }
+                $service_start_data[] = array('id' => $service->id, 'booking_date_skip' => $booking_date_skip);
+            }
+        }
+        $service_start_data = json_encode($service_start_data);
+
         echo "<script>var ea_settings = {$data_settings};</script>";
         echo "<script>var ea_vacations = {$data_vacation};</script>";
+        echo "<script>var ea_service_start_data = {$service_start_data};</script>";
         echo "<style>{$customCss}</style>";
     }
 

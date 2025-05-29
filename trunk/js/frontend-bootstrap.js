@@ -23,8 +23,26 @@
     }
 
     jQuery.extend(Plugin.prototype, {
-        vacation: function(workerId, day) {
+        vacation: function(workerId, day, serviceId=null) {
             var response = [true, day, ''];
+            jQuery.each(ea_service_start_data, function(index, service_start_data) {
+                if (service_start_data.length > 0) {
+                    var serviceIds = jQuery.map(service_start_data, function(service) {
+                        return service.id;
+                    });
+                    if (jQuery.inArray(serviceId, serviceIds) === -1) {
+                        return true;
+                    }
+                }
+
+                if (jQuery.inArray(day, service_start_data.booking_date_skip) === -1) {
+                    return true;
+                }
+
+                response = [false, 'blocked vacation', 'Not Avaiable'];
+
+                return false;
+            });
 
             // block days from shortcode
             if (Array.isArray(ea_settings.block_days) && ea_settings.block_days.includes(day)) {
@@ -142,8 +160,9 @@
 
                     var dateString = date.getFullYear() + '-' + month + '-' + days;
                     var workerId = plugin.$element.find('[name="worker"]').val();
+                    var serviceId = plugin.$element.find('[name="service"]').val();
 
-                    return plugin.vacation(workerId, dateString);
+                    return plugin.vacation(workerId, dateString,serviceId);
                 }
             });
 

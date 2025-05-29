@@ -698,6 +698,19 @@ EOT;
             $version = '1.9.11';
         }
 
+        if (version_compare($version, '3.12.12', '<')) {
+            $table_queries = array();
+
+            $table_services = $this->wpdb->prefix . 'ea_services';
+
+            $table_queries[] = "ALTER TABLE `{$table_services}` ADD COLUMN `advance_booking_days` INT NULL DEFAULT 0 AFTER `price`;";
+            foreach ($table_queries as $query) {
+                $this->wpdb->query($query);
+            }
+
+            $version = '3.12.12';
+        }
+
         if (version_compare($version, '1.10.4', '<')) {
 
             $table_name = $this->wpdb->prefix . 'ea_meta_fields';

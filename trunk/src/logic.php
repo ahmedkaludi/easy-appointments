@@ -168,8 +168,6 @@ class EALogic
         // remove already reserved times
         $this->remove_reserved_slots($working_hours, $location, $service, $worker, $day, $service_duration, $app_id, $serviceObj->block_before, $serviceObj->block_after);
 
-       
-        
         // format time
         return $this->format_time($working_hours, $serviceObj->duration);
     }
@@ -188,6 +186,7 @@ class EALogic
     private function remove_closed_slots(&$slots, $location = null, $service = null, $worker = null, $day = null, $service_duration = 60)
     {
         $day_of_week = gmdate('l', strtotime($day));
+
         $query = $this->wpdb->prepare("SELECT * FROM {$this->wpdb->prefix}ea_connections WHERE 
 			location=%d AND 
 			service=%d AND 
@@ -200,6 +199,8 @@ class EALogic
         );
 
         $closed_days = $this->wpdb->get_results($query);
+
+
         // check all no working times
         foreach ($closed_days as $working_day) {
 
@@ -335,10 +336,7 @@ class EALogic
 
         $query = $this->slots_logic->get_busy_slot_query($location, $service, $worker, $day, $app_id);
 
-        
-
         $appointments = $this->wpdb->get_results($query);
-        
 
         // dailyLimit section
         $currentService = $this->get_service($service);
@@ -390,7 +388,8 @@ class EALogic
 
                 $slot_time = strtotime($temp_time);
                 $slot_time_end = strtotime("$temp_time + $service_duration minute");
-                
+
+
                 // new logic
                 if ( $slot_time  <= $upper_time && $slot_time  >= $lower_time ) {
                     if ($this->slots_logic->is_exclusive_mode() && $this->slots_logic->is_provider_is_busy($app, $location, $service)) {
@@ -401,12 +400,13 @@ class EALogic
                     $slots[$temp_time] = $value - 1;
                 }
 
-                // before / after old code
-                // if (($slot_time_end + $block_after * 60) <= $lower_time || $upper_time <= ($slot_time - $block_before * 60)) { } else {                   
+                // before / after
+                // if (($slot_time_end + $block_after * 60) <= $lower_time || $upper_time <= ($slot_time - $block_before * 60)) { } else {
                 //     if ($this->slots_logic->is_exclusive_mode() && $this->slots_logic->is_provider_is_busy($app, $location, $service)) {
                 //         $slots[$temp_time] = 0;
                 //         continue;
                 //     }
+
                 //     // Cross time - remove one slot
                 //     $slots[$temp_time] = $value - 1;
                 // }

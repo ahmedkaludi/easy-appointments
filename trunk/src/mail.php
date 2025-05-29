@@ -687,6 +687,7 @@ EOT;
             if (!empty($visitor_reply_to_address)) {
                 $headers[] = 'Reply-To: '. $visitor_reply_to_address;
             }
+
             if (!empty($send_from)) {
                 $headers[] = 'From: ' . $send_from;
             }
