@@ -26,22 +26,9 @@
         vacation: function(workerId, day, serviceId=null) {
             var response = [true, day, ''];
             jQuery.each(ea_service_start_data, function(index, service_start_data) {
-                if (service_start_data.length > 0) {
-                    var serviceIds = jQuery.map(service_start_data, function(service) {
-                        return service.id;
-                    });
-                    if (jQuery.inArray(serviceId, serviceIds) === -1) {
-                        return true;
-                    }
+                if (serviceId == service_start_data.id && jQuery.inArray(day, service_start_data.booking_date_skip) !== -1) {
+                    response = [false, 'blocked vacation', 'Not Avaiable'];
                 }
-
-                if (jQuery.inArray(day, service_start_data.booking_date_skip) === -1) {
-                    return true;
-                }
-
-                response = [false, 'blocked vacation', 'Not Avaiable'];
-
-                return false;
             });
 
             // block days from shortcode

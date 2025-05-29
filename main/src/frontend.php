@@ -470,8 +470,8 @@ class EAFrontend
                 $current_date =  current_time('Y-m-d');
                 $advance_booking_days = $service->advance_booking_days;
                 $booking_date_skip = [];
-                for ($i = 1; $i < $advance_booking_days; $i++) {
-                    if ($i > 1) {
+                for ($i = 0; $i < $advance_booking_days; $i++) {
+                    if ($i > 0) {
                         $booking_date_skip[] = date('Y-m-d', strtotime($current_date . ' +'.$i.' days'));
                     }else{
                         $booking_date_skip[] = $current_date;
