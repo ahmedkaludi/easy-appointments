@@ -155,6 +155,7 @@ CREATE TABLE {$table_prefix}ea_services (
   block_after int(11) DEFAULT 0,
   daily_limit int(11) DEFAULT 0,
   price decimal(10,2) DEFAULT NULL,
+  advance_booking_days int(4) DEFAULT 0,
   PRIMARY KEY  (id)
 ) $charset_collate ;
 EOT;
@@ -698,19 +699,6 @@ EOT;
             $version = '1.9.11';
         }
 
-        if (version_compare($version, '3.12.12', '<')) {
-            $table_queries = array();
-
-            $table_services = $this->wpdb->prefix . 'ea_services';
-
-            $table_queries[] = "ALTER TABLE `{$table_services}` ADD COLUMN `advance_booking_days` INT NULL DEFAULT 0 AFTER `price`;";
-            foreach ($table_queries as $query) {
-                $this->wpdb->query($query);
-            }
-
-            $version = '3.12.12';
-        }
-
         if (version_compare($version, '1.10.4', '<')) {
 
             $table_name = $this->wpdb->prefix . 'ea_meta_fields';
@@ -854,6 +842,19 @@ EOT;
             }
 
             $version = '3.12.9';
+        }
+
+        if (version_compare($version, '3.12.12', '<')) {
+            $table_queries = array();
+
+            $table_services = $this->wpdb->prefix . 'ea_services';
+
+            $table_queries[] = "ALTER TABLE `{$table_services}` ADD COLUMN `advance_booking_days` INT NULL DEFAULT 0 AFTER `price`;";
+            foreach ($table_queries as $query) {
+                $this->wpdb->query($query);
+            }
+
+            $version = '3.12.12';
         }
 
         update_option('easy_app_db_version', $version);
