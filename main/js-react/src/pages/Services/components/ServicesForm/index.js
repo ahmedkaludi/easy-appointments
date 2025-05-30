@@ -7,6 +7,7 @@ import { PriceField } from './fields/PriceField';
 import { MinutesField } from './fields/MinutesField';
 import { SlotStepField } from './fields/SlotStepField';
 import { DailyLimitField } from './fields/DailyLimitField';
+import { AdvanceBookingDayField } from './fields/AdvanceBookingDayField';
 import { ServiceColorField } from './fields/ServiceColorField';
 import { Form, MultiFieldWrap } from '../../../../ea-components';
 
@@ -32,6 +33,13 @@ export const ServicesForm = ({ model, onSave, onCancel }) => (
       info="Define hard limit for this service on how many times it can be booked during single day. To disable this check set to 0">
       <DailyLimitField />
     </MultiFieldWrap>
+    <MultiFieldWrap
+      label="Advance Booking Days"
+      className="ea-form-field"
+      info="Control when bookings begin. Set how many days in advance bookings become available. For example, 3 means users can book only from the 3rd day onward. To disable this check set to 0">
+      <AdvanceBookingDayField />
+    </MultiFieldWrap>
+
     <PriceField />
     <ServiceColorField />
   </Form>

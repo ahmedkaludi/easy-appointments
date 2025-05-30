@@ -342,6 +342,22 @@
                     </div>
                     <div class="form-item">
                         <div class="label-with-tooltip">
+                            <label for=""><?php esc_html_e('Admin Reply-To Address', 'easy-appointments'); ?></label>
+                        </div>
+                        <input class="field" data-key="admin_reply_to_address"
+                               name="admin_reply_to_address" type="text"
+                               value="<%- _.findWhere(settings, {ea_key:'admin_reply_to_address'}).ea_value %>">
+                    </div>
+                    <div class="form-item">
+                        <div class="label-with-tooltip">
+                            <label for=""><?php esc_html_e('Visitor Reply-To Address', 'easy-appointments'); ?></label>
+                        </div>
+                        <input class="field" data-key="visitor_reply_to_address"
+                               name="visitor_reply_to_address" type="text"
+                               value="<%- _.findWhere(settings, {ea_key:'visitor_reply_to_address'}).ea_value %>">
+                    </div>
+                    <div class="form-item">
+                        <div class="label-with-tooltip">
                             <label for="send.worker.email"><?php esc_html_e('Send email to worker', 'easy-appointments'); ?></label>
                             <span class="tooltip tooltip-right"
                                   data-tooltip="<?php esc_html_e('Mark this option if you want to employee receive admin email after filing the form.', 'easy-appointments'); ?>"></span>

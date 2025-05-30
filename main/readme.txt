@@ -5,7 +5,7 @@ Tags: appointment, appointments, Booking, calendar, reservation
 Requires at least: 3.7
 Tested up to: 6.8
 Requires PHP: 5.3
-Stable tag: 3.12.11
+Stable tag: 3.12.12
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -212,6 +212,14 @@ Note: you can have only one calendar on one page.
 25. Admin panel - Report - Export page
 
 == Changelog ==
+= 3.12.12 (2025-05-30)
+* Fixed Issue after recent update #151
+* Fixed JS/JSX strings are not being shown in loco translation plugin #148
+* Added Support for Finnish Translation Locale "fi" Alongside "fi_FI" for Better Compatibility #147
+* Fixed Incorrect time slot blocking: 15-min block after appointment also blocks 30 mins before #146
+* Added an option to separate "Reply-To" email fields for Admin and Visitor Notifications #145
+* Enhancement in service drop-down #153
+
 = 3.12.11 (2025-05-21)
 * Added stripe payment gateway support #132
 * Added an option to delete the appointments #137

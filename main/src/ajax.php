@@ -340,12 +340,18 @@ class EAAjax
 
         $slots = $this->logic->get_open_slots($location, $service, $worker, $date, null, true, $block_time);
         global $wpdb;
+        $day_of_week = gmdate('l', strtotime($date));
+        $time_now = current_time('timestamp', false);
+        $block_time = $time_now + intval($block_time) * 60;       
         $query1 = $wpdb->prepare("SELECT * FROM {$wpdb->prefix}ea_connections WHERE 
-            location = %d AND 
-            service = %d AND 
-            worker = %d",
-            $location, $service, $worker
-        );
+                location = %d AND 
+                service = %d AND 
+                worker = %d AND
+                is_working = 1 AND 
+                (day_from IS NULL OR day_from <= %s)
+                ORDER BY day_to DESC
+                LIMIT 1",
+                $location, $service, $worker, $date);
         $connection_details = $wpdb->get_row($query1);
         $result =  array('calendar_slots' =>$slots, 'connection_details' => $connection_details);
 

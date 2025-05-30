@@ -23,8 +23,13 @@
     }
 
     jQuery.extend(Plugin.prototype, {
-        vacation: function(workerId, day) {
+        vacation: function(workerId, day, serviceId=null) {
             var response = [true, day, ''];
+            jQuery.each(ea_service_start_data, function(index, service_start_data) {
+                if (serviceId == service_start_data.id && jQuery.inArray(day, service_start_data.booking_date_skip) !== -1) {
+                    response = [false, 'blocked vacation', 'Not Avaiable'];
+                }
+            });
 
             // block days from shortcode
             if (Array.isArray(ea_settings.block_days) && ea_settings.block_days.includes(day)) {
@@ -142,8 +147,9 @@
 
                     var dateString = date.getFullYear() + '-' + month + '-' + days;
                     var workerId = plugin.$element.find('[name="worker"]').val();
+                    var serviceId = plugin.$element.find('[name="service"]').val();
 
-                    return plugin.vacation(workerId, dateString);
+                    return plugin.vacation(workerId, dateString,serviceId);
                 }
             });
 
@@ -445,9 +451,18 @@
 
             var req = jQuery.get(ea_ajaxurl, options, function (response) {
                 next_element.empty();
-
+                var default_option_value = '-';
+                if (options.next == 'service') {
+                    default_option_value = 'Select '+ea_settings['trans.service'];
+                }
+                if (options.next == 'location') {
+                    default_option_value = 'Select '+ea_settings['trans.location'];
+                }
+                if (options.next == 'worker') {
+                    default_option_value = 'Select '+ea_settings['trans.worker'];
+                }
                 // default
-                next_element.append('<option value="">-</option>');
+                next_element.append('<option value="">'+default_option_value+'</option>');
 
                 var option_count = 0;
 

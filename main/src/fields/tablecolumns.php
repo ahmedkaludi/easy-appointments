@@ -76,7 +76,8 @@ class EATableColumns
                 'block_before',
                 'block_after',
                 'daily_limit',
-                'price'
+                'price',
+                'advance_booking_days'
             ),
             'ea_options' => array(
                 'id',
