@@ -360,7 +360,7 @@ class EALogic
         if ( !empty($calendar_option) && $calendar_option->ea_value == 1) {
              $calendar_option = 1;
         }else{
-            $calendar_option = 0;
+            $calendar_option = 1;
         }
 
         // check all no working times
@@ -399,17 +399,6 @@ class EALogic
                     // Cross time - remove one slot
                     $slots[$temp_time] = $value - 1;
                 }
-
-                // before / after
-                // if (($slot_time_end + $block_after * 60) <= $lower_time || $upper_time <= ($slot_time - $block_before * 60)) { } else {
-                //     if ($this->slots_logic->is_exclusive_mode() && $this->slots_logic->is_provider_is_busy($app, $location, $service)) {
-                //         $slots[$temp_time] = 0;
-                //         continue;
-                //     }
-
-                //     // Cross time - remove one slot
-                //     $slots[$temp_time] = $value - 1;
-                // }
             }
         }
     }
