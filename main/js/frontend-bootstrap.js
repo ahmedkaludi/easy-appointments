@@ -632,9 +632,11 @@
                 }
 
                 var response = response_m.calendar_slots;
-                if (response_m.connection_details) {
-                    var newMaxDate= response_m.connection_details.day_to;
-                    plugin.$element.find('.date').datepicker('option', 'maxDate', newMaxDate);
+                if (ea_settings.max_date == null || ea_settings.max_date == "") {
+                    if (response_m.connection_details) {
+                        var newMaxDate= response_m.connection_details.day_to;
+                        plugin.$element.find('.date').datepicker('option', 'maxDate', newMaxDate);
+                    }
                 }
 
                 // sort response by value 11:00, 12:00, 13:00...
