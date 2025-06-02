@@ -338,8 +338,7 @@ class EAAjax
         $date     = isset($_GET['date'])     ? sanitize_text_field( wp_unslash( $_GET['date'] ) )     : '';
 
 
-        $slots = $this->logic->get_open_slots($location, $service, $worker, $date, null, true, $block_time);
-       
+        $slots = $this->logic->get_open_slots($location, $service, $worker, $date, null, true, $block_time);       
 
         $this->send_ok_json_result($slots);
     }
