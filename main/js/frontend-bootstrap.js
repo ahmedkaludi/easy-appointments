@@ -619,7 +619,7 @@
 
             this.placeLoader(calendarEl);
 
-            var req = jQuery.get(ea_ajaxurl, options, function (response_m) {
+            var req = jQuery.get(ea_ajaxurl, options, function (response) {
 
                 next_element = jQuery(document.createElement('div'))
                     .addClass('time well well-lg');
@@ -629,14 +629,6 @@
 
                 if (fromTo) {
                     next_element.addClass('time well well-lg col-50');
-                }
-
-                var response = response_m.calendar_slots;
-                if (ea_settings.max_date == null || ea_settings.max_date == "") {
-                    if (response_m.connection_details) {
-                        var newMaxDate= response_m.connection_details.day_to;
-                        plugin.$element.find('.date').datepicker('option', 'maxDate', newMaxDate);
-                    }
                 }
 
                 // sort response by value 11:00, 12:00, 13:00...

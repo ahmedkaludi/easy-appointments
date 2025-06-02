@@ -514,19 +514,11 @@
 
             this.placeLoader(calendar);
 
-            jQuery.get(ea_ajaxurl, options, function (response_m) {
+            jQuery.get(ea_ajaxurl, options, function (response) {
 
                 var next_element = jQuery(calendar).parent().next('.step').children('.time');
 
                 next_element.empty();
-
-                var response = response_m.calendar_slots;
-                if (ea_settings.max_date == null || ea_settings.max_date == "") {
-                    if (response_m.connection_details) {
-                        var newMaxDate= response_m.connection_details.day_to;
-                        plugin.$element.find('.date').datepicker('option', 'maxDate', newMaxDate);
-                    }
-                }
 
                 jQuery.each(response, function (index, element) {
                     var classAMPM = (ea_settings["time_format"] == "am-pm") ? ' am-pm' : '';
