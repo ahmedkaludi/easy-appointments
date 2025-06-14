@@ -154,6 +154,7 @@
 
                     <?php echo apply_filters('ea_payment_select', ''); ?>
                     <?php echo apply_filters('ea_stripe_checkout', ''); ?>
+                    <?php echo apply_filters('ea_razorpay_checkout', ''); ?>
 
                     <div class="form-group">
                         <div class="col-sm-12 ea-actions-group" style="display: inline-flex; align-items: center; justify-content: center;">
