@@ -856,9 +856,48 @@ EOT;
 
             $version = '3.12.12';
         }
+        if (version_compare($version, '3.12.13', '<')) {
+            $this->ea_create_customers_table();
+
+            $table_queries = array();
+
+            $table_services = $this->wpdb->prefix . 'ea_appointments';
+
+            $table_queries[] = "ALTER TABLE `{$table_services}` ADD COLUMN `customer_id` INT NULL AFTER `session`;";
+
+            // add relations
+            foreach ($table_queries as $query) {
+                $this->wpdb->query($query);
+            }
+
+            $version = '3.12.13';
+        }
 
         update_option('easy_app_db_version', $version);
     }
+
+    function ea_create_customers_table() {
+        global $wpdb;
+
+        $table_name = $wpdb->prefix . 'ea_customers';
+
+        $charset_collate = $wpdb->get_charset_collate();
+
+        $sql = "CREATE TABLE $table_name (
+            id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+            user_id BIGINT(20) UNSIGNED DEFAULT NULL,
+            name VARCHAR(255) NOT NULL,
+            email VARCHAR(255) DEFAULT '',
+            mobile VARCHAR(50) DEFAULT '',
+            dob VARCHAR(50) DEFAULT '',
+            address TEXT DEFAULT '',
+            PRIMARY KEY (id)
+        ) $charset_collate;";
+
+        require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+        dbDelta($sql);
+    }
+
 
     private function migrateFormFields()
     {

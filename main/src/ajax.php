@@ -171,7 +171,13 @@ class EAAjax
             add_action('wp_ajax_ea_send_query_message', array( $this, 'ea_send_query_message'));
             add_action('wp_ajax_cancel_selected_appointments', array( $this, 'cancel_selected_appointments_callback'));
             add_action('wp_ajax_delete_selected_appointment', array($this, 'delete_selected_appointment'));
+
+            add_action('wp_ajax_ea_get_customers_ajax', [$this, 'handle_customers_ajax']);
+            add_action('wp_ajax_ea_update_customer_ajax', [$this, 'handle_update_customer_ajax']);
+            add_action('wp_ajax_ea_insert_customer_ajax', [$this, 'handle_insert_customer_ajax']);
         }
+
+        add_action('ea_new_app', array($this, 'add_customer_data'), 1000);
     }
 
     public function cancel_selected_appointments_callback() {
@@ -1800,6 +1806,125 @@ class EAAjax
         if (!$result->success) {
             $message = __('Invalid captcha!', 'easy-appointments');
             $this->send_err_json_result('{"message":"' . $message . '"}');
+        }
+    }
+
+    public function add_customer_data($id)
+    {
+        global $wpdb;
+
+        $table_prefix = $wpdb->prefix;
+        $dbmodels = new EADBModels($wpdb, new EATableColumns(), new EAOptions($wpdb));
+        $appointment = $dbmodels->get_appintment_by_id($id);
+        global $wpdb;
+
+        $name    = $appointment['name'];
+        $email   = $appointment['email'];
+        $mobile  = $appointment['phone'];
+        $exists = $wpdb->get_var($wpdb->prepare(
+            "SELECT COUNT(*) FROM {$wpdb->prefix}ea_customers WHERE email = %s",
+            $email
+        ));
+
+        if (!$exists) {
+            $user_id = get_current_user_id();
+            $user_id = $user_id > 0 ? $user_id : null;
+            $inserted = $wpdb->insert("{$wpdb->prefix}ea_customers", [
+                'name'   => $name,
+                'email'  => $email,
+                'mobile' => $mobile,
+                'user_id' => $user_id,
+            ]);
+
+            if ($inserted) {
+                $customer_id = $wpdb->insert_id;
+                $wpdb->update(
+                    "{$wpdb->prefix}ea_appointments",
+                    ['customer_id' => $customer_id],
+                    ['id' => $id],
+                    ['%d'],
+                    ['%d']
+                );
+            }
+        }
+    }
+
+    public function handle_customers_ajax() {
+        global $wpdb;
+
+        $table = $wpdb->prefix . 'ea_customers';
+        $per_page = 10;
+        $paged = isset($_POST['paged']) ? max(1, intval($_POST['paged'])) : 1;
+        $offset = ($paged - 1) * $per_page;
+
+        $search = isset($_POST['search']) ? sanitize_text_field($_POST['search']) : '';
+        $search_sql = '';
+        $params = [];
+
+        if (!empty($search)) {
+            $search_sql = "WHERE name LIKE %s OR email LIKE %s OR mobile LIKE %s";
+            $like = '%' . $wpdb->esc_like($search) . '%';
+            $params = [$like, $like, $like];
+        }
+
+        $total_sql = "SELECT COUNT(*) FROM $table " . ($search_sql ? $search_sql : '');
+        $total_customers = $wpdb->get_var($wpdb->prepare($total_sql, ...$params));
+
+        $query_sql = "SELECT * FROM $table " . ($search_sql ? $search_sql : '') . " ORDER BY id DESC LIMIT %d OFFSET %d";
+        $customers = $wpdb->get_results($wpdb->prepare($query_sql, ...array_merge($params, [$per_page, $offset])));
+
+        wp_send_json([
+            'data' => $customers,
+            'total_pages' => ceil($total_customers / $per_page),
+            'paged' => $paged,
+        ]);
+    }
+
+    public function handle_update_customer_ajax() {
+        if ( ! current_user_can('manage_options') ) {
+            wp_send_json_error(['message' => 'Unauthorized'], 403);
+        }
+        global $wpdb;
+        check_ajax_referer('ea_customer_edit', 'ea_nonce');
+
+        $table = $wpdb->prefix . 'ea_customers';
+        $id = intval($_POST['id']);
+        $data = [
+            'name' => sanitize_text_field($_POST['name']),
+            'email'=> sanitize_email($_POST['email']),
+            'mobile'=> sanitize_text_field($_POST['mobile']),
+            'address'=> sanitize_text_field($_POST['address']),
+        ];
+        $updated = $wpdb->update($table, $data, ['id' => $id]);
+        if ($updated !== false) {
+            wp_send_json_success();
+        }
+        wp_send_json_error();
+    }
+
+    public function handle_insert_customer_ajax() {
+        if ( ! current_user_can('manage_options') ) {
+            wp_send_json_error(['message' => 'Unauthorized'], 403);
+        }
+        check_ajax_referer('ea_customer_edit', 'ea_nonce');
+
+        $name    = sanitize_text_field($_POST['name'] ?? '');
+        $email   = sanitize_email($_POST['email'] ?? '');
+        $mobile  = sanitize_text_field($_POST['mobile'] ?? '');
+        $address = sanitize_textarea_field($_POST['address'] ?? '');
+
+        global $wpdb;
+        $inserted = $wpdb->insert("{$wpdb->prefix}ea_customers", [
+            'name'    => $name,
+            'email'   => $email,
+            'mobile'  => $mobile,
+            'address' => $address,
+        ]);
+
+        if ($inserted) {
+            wp_send_json_success();
+        } else {
+            wp_send_json_error();
         }
     }
 }

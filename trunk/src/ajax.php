@@ -172,6 +172,8 @@ class EAAjax
             add_action('wp_ajax_cancel_selected_appointments', array( $this, 'cancel_selected_appointments_callback'));
             add_action('wp_ajax_delete_selected_appointment', array($this, 'delete_selected_appointment'));
         }
+
+        add_action('ea_new_app', array($this, 'add_customer_data'), 1000);
     }
 
     public function cancel_selected_appointments_callback() {
@@ -1800,6 +1802,46 @@ class EAAjax
         if (!$result->success) {
             $message = __('Invalid captcha!', 'easy-appointments');
             $this->send_err_json_result('{"message":"' . $message . '"}');
+        }
+    }
+
+    public function add_customer_data($id)
+    {
+        global $wpdb;
+
+        $table_prefix = $wpdb->prefix;
+        $dbmodels = new EADBModels($wpdb, new EATableColumns(), new EAOptions($wpdb));
+        $appointment = $dbmodels->get_appintment_by_id($id);
+        global $wpdb;
+
+        $name    = $appointment['name'];
+        $email   = $appointment['email'];
+        $mobile  = $appointment['phone'];
+        $exists = $wpdb->get_var($wpdb->prepare(
+            "SELECT COUNT(*) FROM {$wpdb->prefix}ea_customers WHERE email = %s",
+            $email
+        ));
+
+        if (!$exists) {
+            $user_id = get_current_user_id();
+            $user_id = $user_id > 0 ? $user_id : null;
+            $inserted = $wpdb->insert("{$wpdb->prefix}ea_customers", [
+                'name'   => $name,
+                'email'  => $email,
+                'mobile' => $mobile,
+                'user_id' => $user_id,
+            ]);
+
+            if ($inserted) {
+                $customer_id = $wpdb->insert_id;
+                $wpdb->update(
+                    "{$wpdb->prefix}ea_appointments",
+                    ['customer_id' => $customer_id],
+                    ['id' => $id],
+                    ['%d'],
+                    ['%d']
+                );
+            }
         }
     }
 }
