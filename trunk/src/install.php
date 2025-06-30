@@ -869,6 +869,7 @@ EOT;
             foreach ($table_queries as $query) {
                 $this->wpdb->query($query);
             }
+            $this->ea_sync_customers_from_appointments();
 
             $version = '3.12.13';
         }
@@ -1031,4 +1032,62 @@ EOT;
 
         }
     }
+
+    function ea_sync_customers_from_appointments() {
+        global $wpdb;
+
+        $oldest_appointment = $wpdb->get_row("
+            SELECT * 
+            FROM {$wpdb->prefix}ea_appointments 
+            ORDER BY date ASC 
+            LIMIT 1
+        ", ARRAY_A);
+
+        if ( $oldest_appointment ) {
+            $start_date =  $oldest_appointment['date'];
+            $end_date = date('Y-m-d');
+            $appointments =  $this->models->get_all_appointments(['from'=>$start_date,'to'=> $end_date]);
+            foreach ($appointments as $appointment) {
+                $app_id  = (int) $appointment->id;
+                $name    = $appointment->name;
+                $email   = $appointment->email;
+                $mobile  = $appointment->phone;
+                $user_id  = $appointment->user_id;
+    
+                if (empty($email)) {
+                    error_log("Skipping appointment ID $app_id: email is empty");
+                    continue;
+                }
+                $customer_id = $wpdb->get_var($wpdb->prepare(
+                    "SELECT id FROM {$wpdb->prefix}ea_customers WHERE email = %s",
+                    $email
+                ));
+    
+                // Insert new customer if not found
+                if (!$customer_id) {    
+                    $inserted = $wpdb->insert("{$wpdb->prefix}ea_customers", [
+                        'name'    => $name,
+                        'email'   => $email,
+                        'mobile'  => $mobile,
+                        'user_id' => $user_id ? (int)$user_id : null,
+                    ], ['%s', '%s', '%s', '%d']);
+    
+                    if ($inserted) {
+                        $customer_id = $wpdb->insert_id;
+                        if (empty($appointment->customer_id) && $customer_id) {
+                            $wpdb->update(
+                                "{$wpdb->prefix}ea_appointments",
+                                ['customer_id' => $customer_id],
+                                ['id' => $app_id],
+                                ['%d'],
+                                ['%d']
+                            );
+                        }
+                    }
+                }                
+            }
+        }
+
+    }
+
 }

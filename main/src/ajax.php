@@ -98,6 +98,9 @@ class EAAjax
 
         add_action('wp_ajax_ea_month_status', array($this, 'ajax_month_status'));
         add_action('wp_ajax_nopriv_ea_month_status', array($this, 'ajax_month_status'));
+        add_action('wp_ajax_ea_search_customers', array($this, 'ajax_search_customers'));
+        add_action('wp_ajax_ea_get_customer_detail', array($this, 'ajax_customer_detail'));       
+
         // end frontend
 
         // admin ajax section
@@ -175,6 +178,8 @@ class EAAjax
             add_action('wp_ajax_ea_get_customers_ajax', [$this, 'handle_customers_ajax']);
             add_action('wp_ajax_ea_update_customer_ajax', [$this, 'handle_update_customer_ajax']);
             add_action('wp_ajax_ea_insert_customer_ajax', [$this, 'handle_insert_customer_ajax']);
+            add_action('wp_ajax_ea_get_customer_detail_ajax', [$this, 'handle_customer_detail_ajax']);
+            
         }
 
         add_action('ea_new_app', array($this, 'add_customer_data'), 1000);
@@ -1182,6 +1187,7 @@ class EAAjax
             'form.label.above'              => '0',
             'show.iagree'                   => '0',
             'show.display_thankyou_note'    => '0',
+            'show.customer_search_front'    => '0',
             'cancel.scroll'                 => 'calendar',
             'multiple.work'                 => '1',
             'compatibility.mode'            => '0',
@@ -1849,7 +1855,7 @@ class EAAjax
         }
     }
 
-    public function handle_customers_ajax() {
+        public function handle_customers_ajax() {
         global $wpdb;
 
         $table = $wpdb->prefix . 'ea_customers';
@@ -1927,4 +1933,93 @@ class EAAjax
             wp_send_json_error();
         }
     }
+    public function handle_customer_detail_ajax() {
+        if ( ! current_user_can('manage_options') ) {
+            wp_send_json_error('Permission denied', 403);
+        }
+
+        $id = isset($_POST['id']) ? (int) $_POST['id'] : 0;
+        $type = isset($_POST['type']) && $_POST['type'] === 'past' ? 'past' : 'upcoming';
+
+        global $wpdb;
+
+        $customer = $wpdb->get_row(
+            $wpdb->prepare("SELECT * FROM {$wpdb->prefix}ea_customers WHERE id = %d", $id),
+            ARRAY_A
+        );
+
+        if (!$customer) {
+            wp_send_json_error('Customer not found');
+        }
+
+        $date_compare = $type === 'past' ? '<' : '>=';
+        $today = current_time('Y-m-d');
+
+        $appointments = $wpdb->get_results(
+            $wpdb->prepare("
+                SELECT 
+                    a.id,
+                    a.date,
+                    a.start,
+                    a.end,
+                    a.price,
+                    loc.name AS location_name,
+                    srv.name AS service_name,
+                    st.name AS staff_name
+                FROM {$wpdb->prefix}ea_appointments a
+                LEFT JOIN {$wpdb->prefix}ea_locations loc ON a.location = loc.id
+                LEFT JOIN {$wpdb->prefix}ea_services srv ON a.service = srv.id
+                LEFT JOIN {$wpdb->prefix}ea_staff st ON a.worker = st.id
+                WHERE a.customer_id = %d AND a.date $date_compare %s
+                ORDER BY a.date DESC
+            ", $id, $today),
+            ARRAY_A
+        );
+
+        wp_send_json_success([
+            'customer' => $customer,
+            'appointments' => $appointments
+        ]);
+    }
+
+    public function ajax_search_customers () {
+        $settings = $this->options->get_options();
+
+        if (!is_user_logged_in()) {
+            wp_send_json([]); // or wp_send_json_error('Login required');
+        }
+
+        global $wpdb;
+        $user_id = get_current_user_id();
+        $q = sanitize_text_field($_GET['q']);
+
+        $results = $wpdb->get_results($wpdb->prepare(
+            "SELECT id, name, email 
+            FROM {$wpdb->prefix}ea_customers 
+            WHERE user_id = %d AND (name LIKE %s OR email LIKE %s) 
+            LIMIT 20",
+            $user_id, "%$q%", "%$q%"
+        ));
+
+        wp_send_json($results);
+    }
+
+    
+    function ajax_customer_detail () {
+        $settings = $this->options->get_options();
+
+        if (isset($settings['show.customer_search_front']) && $settings['show.customer_search_front'] == 1) {
+            $this->validate_nonce();
+            if (!current_user_can('manage_options')) wp_send_json_error();
+
+            global $wpdb;
+            $id = absint($_POST['id']);
+            $cust = $wpdb->get_row($wpdb->prepare(
+                "SELECT * FROM {$wpdb->prefix}ea_customers WHERE id = %d", $id
+            ), ARRAY_A);
+
+            wp_send_json($cust);
+        }
+    }
+
 }

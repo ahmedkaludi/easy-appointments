@@ -612,6 +612,8 @@ class EAFrontend
 
         wp_enqueue_script('underscore');
         wp_enqueue_script('ea-validator');
+        
+
         wp_enqueue_script('ea-bootstrap');
         wp_enqueue_script('ea-front-bootstrap');
 
@@ -627,13 +629,22 @@ class EAFrontend
 
         if (!empty($settings['captcha3.site-key'])) {
             wp_enqueue_script('ea-google-recaptcha-v3', "https://www.google.com/recaptcha/api.js?render={$settings['captcha3.site-key']}");
+        }        
+        
+        if (isset($settings['show.customer_search_front']) && $settings['show.customer_search_front'] == 1) {
+            wp_enqueue_script('select2-js', 'https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js');
+            wp_enqueue_style('select2-css', 'https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css');
         }
+
+        
+        
+
 
         ob_start();
         $this->output_inline_ea_settings($settings, $customCss);
 
         // FORM TEMPLATE
-        if ($settings['rtl'] == '1') {
+        if (isset($settings['rtl']) && $settings['rtl'] == '1') {
             require EA_SRC_DIR . 'templates/ea_bootstrap_rtl.tpl.php';
         } else {
             require EA_SRC_DIR . 'templates/ea_bootstrap.tpl.php';

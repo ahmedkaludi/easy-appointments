@@ -1364,4 +1364,48 @@
 
 (function ($) {
     jQuery('.ea-bootstrap').eaBootstrap();
+
+    
+
 })(jQuery);
+jQuery(document).ready(function () {
+    if (ea_settings['show.customer_search_front'] == 1) {
+        jQuery('#ea_customer_search').select2({
+            placeholder: 'Search customer...',
+            minimumInputLength: 2,
+            ajax: {
+                url: ea_ajaxurl,
+                dataType: 'json',
+                delay: 250,
+                data: function (params) {
+                    return {
+                        action: 'ea_search_customers',
+                        q: params.term,
+                        nonce: ea_settings['check']
+                    };
+                },
+                processResults: function (data) {
+                    return {
+                        results: data.map(function (c) {
+                            return { id: c.id, text: c.name + ' (' + c.email + ')' };
+                        })
+                    };
+                }
+            }
+        });
+
+        jQuery('#ea_customer_search').on('select2:select', function (e) {
+            const customerId = e.params.data.id;
+            var parentForm = jQuery(this).closest('form');
+            jQuery.post(ea_ajaxurl, {
+                action: 'ea_get_customer_detail',
+                id: customerId,
+                nonce: ea_settings['check']
+            }, function (c) {
+                parentForm.find('[name="name"]').val(c.name);
+                parentForm.find('[name="email"]').val(c.email);
+                parentForm.find('[name="phone"]').val(c.mobile);
+            });
+        });
+    }
+});

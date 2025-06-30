@@ -175,6 +175,7 @@ class EATableColumns
             'scroll_off',
             'show.iagree',
             'show.display_thankyou_note',
+            'show.customer_search_front',
             'show_remaining_slots',
             'show_week',
             'sort.locations-by',

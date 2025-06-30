@@ -480,26 +480,27 @@ class EAAdminPanel
             'easy_app_connections',
             array($this, 'connections_page')
         );
-        
-        // customer
-        $page_customer_suffix = add_submenu_page(
-            'easy_app_top_level',
-            __('Customers', 'easy-appointments'),
-            '5. ' . __('Customers', 'easy-appointments'),
-            'manage_options', // Ensure admin access
-            'easy_app_customer',
-            array($this, 'customer_page')
-        );
 
         // Publish
         $page_connections_suffix = add_submenu_page(
             'easy_app_top_level',
             __('Publish', 'easy-appointments'),
-            '6. ' . __('Publish', 'easy-appointments'),
+            '5. ' . __('Publish', 'easy-appointments'),
             $this->user_capability_callback('manage_options', 'easy_app_publish'),
             'easy_app_publish',
             array($this, 'publish_page')
         );
+        
+        // customer
+        $page_customer_suffix = add_submenu_page(
+            'easy_app_top_level',
+            __('Customers', 'easy-appointments'),
+            '6. ' . __('Customers', 'easy-appointments'),
+            'manage_options', // Ensure admin access
+            'easy_app_customer',
+            array($this, 'customer_page')
+        );
+        
 
         // settings
         $page_settings_suffix = add_submenu_page(
