@@ -495,7 +495,7 @@ class EAAdminPanel
         $page_customer_suffix = add_submenu_page(
             'easy_app_top_level',
             __('Customers', 'easy-appointments'),
-            '6. ' . __('Customers', 'easy-appointments'),
+            __('Customers', 'easy-appointments'),
             'manage_options', // Ensure admin access
             'easy_app_customer',
             array($this, 'customer_page')

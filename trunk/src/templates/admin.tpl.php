@@ -167,6 +167,20 @@
                             %>checked<% } %>>
                         </div>
                     </div>
+
+                    <div class="form-item">
+                        <div class="label-with-tooltip">
+                            <label for="show.customer_search_front"><?php esc_html_e('Customer Search', 'easy-appointments'); ?></label>
+                            <span class="tooltip tooltip-right"
+                                  data-tooltip="<?php esc_html_e('This will allow to search customer in front from dropdown', 'easy-appointments'); ?>"></span>
+                        </div>
+                        <div class="field-wrap">
+                            <input class="field" type="checkbox" name="show.customer_search_front"
+                                   data-key="show.customer_search_front"<% if (typeof _.findWhere(settings,
+                            {ea_key:'show.customer_search_front'}) !== 'undefined' && _.findWhere(settings,
+                            {ea_key:'show.customer_search_front'}).ea_value == '1') { %>checked<% } %> />
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -542,21 +556,8 @@
                     </div>
                     <div class="form-item">
                         <ul id="custom-fields"></ul>
-                    </div>
+                    </div>                   
                     
-                    <div class="form-item">
-                        <div class="label-with-tooltip">
-                            <label for="show.customer_search_front"><?php esc_html_e('Customer Search', 'easy-appointments'); ?></label>
-                            <span class="tooltip tooltip-right"
-                                  data-tooltip="<?php esc_html_e('This will allow to select customer in front from dropdown', 'easy-appointments'); ?>"></span>
-                        </div>
-                        <div class="field-wrap">
-                            <input class="field" type="checkbox" name="show.customer_search_front"
-                                   data-key="show.customer_search_front"<% if (typeof _.findWhere(settings,
-                            {ea_key:'show.customer_search_front'}) !== 'undefined' && _.findWhere(settings,
-                            {ea_key:'show.customer_search_front'}).ea_value == '1') { %>checked<% } %> />
-                        </div>
-                    </div>
                     <div class="form-item">
                         <span class="pure-text hint"><?php esc_html_e('* To use using the email notification for user there must be field named "email" or "e-mail" or field with type "email"', 'easy-appointments'); ?></span>
                     </div>

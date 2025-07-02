@@ -102,6 +102,7 @@ class EAAjax
         add_action('wp_ajax_ea_get_customer_detail', array($this, 'ajax_customer_detail'));       
 
         // end frontend
+        add_action('ea_new_app', array($this, 'add_customer_data'), 1000);
 
         // admin ajax section
         if (is_admin() && is_user_logged_in()) {
@@ -181,8 +182,7 @@ class EAAjax
             add_action('wp_ajax_ea_get_customer_detail_ajax', [$this, 'handle_customer_detail_ajax']);
             
         }
-
-        add_action('ea_new_app', array($this, 'add_customer_data'), 1000);
+        
     }
 
     public function cancel_selected_appointments_callback() {
@@ -1822,23 +1822,26 @@ class EAAjax
         $table_prefix = $wpdb->prefix;
         $dbmodels = new EADBModels($wpdb, new EATableColumns(), new EAOptions($wpdb));
         $appointment = $dbmodels->get_appintment_by_id($id);
-        global $wpdb;
 
         $name    = $appointment['name'];
         $email   = $appointment['email'];
         $mobile  = $appointment['phone'];
-        $exists = $wpdb->get_var($wpdb->prepare(
-            "SELECT COUNT(*) FROM {$wpdb->prefix}ea_customers WHERE email = %s",
+
+        $user_id = get_current_user_id();
+        $user_id = $user_id > 0 ? $user_id : null;
+
+        // Check if customer exists
+        $existing_customer = $wpdb->get_row($wpdb->prepare(
+            "SELECT id, user_id FROM {$wpdb->prefix}ea_customers WHERE email = %s",
             $email
         ));
 
-        if (!$exists) {
-            $user_id = get_current_user_id();
-            $user_id = $user_id > 0 ? $user_id : null;
+        if (!$existing_customer) {
+            // Insert new customer
             $inserted = $wpdb->insert("{$wpdb->prefix}ea_customers", [
-                'name'   => $name,
-                'email'  => $email,
-                'mobile' => $mobile,
+                'name'    => $name,
+                'email'   => $email,
+                'mobile'  => $mobile,
                 'user_id' => $user_id,
             ]);
 
@@ -1852,10 +1855,35 @@ class EAAjax
                     ['%d']
                 );
             }
+
+        } else {
+            // Append user_id if not already included
+            $existing_user_ids = array_filter(array_map('trim', explode(',', $existing_customer->user_id)));
+            if (!in_array($user_id, $existing_user_ids)) {
+                $existing_user_ids[] = $user_id;
+                $new_user_id_string = implode(',', array_unique($existing_user_ids));
+                $wpdb->update(
+                    "{$wpdb->prefix}ea_customers",
+                    ['user_id' => $new_user_id_string],
+                    ['id' => $existing_customer->id],
+                    ['%s'],
+                    ['%d']
+                );
+            }
+
+            // Optional: Also update appointment with existing customer ID
+            $wpdb->update(
+                "{$wpdb->prefix}ea_appointments",
+                ['customer_id' => $existing_customer->id],
+                ['id' => $id],
+                ['%d'],
+                ['%d']
+            );
         }
     }
 
-        public function handle_customers_ajax() {
+
+    public function handle_customers_ajax() {
         global $wpdb;
 
         $table = $wpdb->prefix . 'ea_customers';
@@ -1986,23 +2014,32 @@ class EAAjax
         $settings = $this->options->get_options();
 
         if (!is_user_logged_in()) {
-            wp_send_json([]); // or wp_send_json_error('Login required');
+            wp_send_json([]);
         }
 
         global $wpdb;
-        $user_id = get_current_user_id();
+        $current_user_id = get_current_user_id();
         $q = sanitize_text_field($_GET['q']);
 
+        // Fetch user_ids stored in comma-separated format
+        // Assume `user_id` column is a comma-separated list of user IDs like: 1,2,3
+        // We use FIND_IN_SET for matching
+        $like_clause = '%' . $wpdb->esc_like($q) . '%';
+
         $results = $wpdb->get_results($wpdb->prepare(
-            "SELECT id, name, email 
+            "
+            SELECT id, name, email 
             FROM {$wpdb->prefix}ea_customers 
-            WHERE user_id = %d AND (name LIKE %s OR email LIKE %s) 
-            LIMIT 20",
-            $user_id, "%$q%", "%$q%"
+            WHERE FIND_IN_SET(%d, user_id) 
+            AND (name LIKE %s OR email LIKE %s)
+            LIMIT 20
+            ",
+            $current_user_id, $like_clause, $like_clause
         ));
 
         wp_send_json($results);
     }
+
 
     
     function ajax_customer_detail () {

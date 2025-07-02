@@ -91,7 +91,7 @@
     <table class="ea-responsive-table widefat fixed">
         <thead>
             <tr>
-                <th><?php esc_html_e('ID', 'easy-appointments'); ?></th>
+                <th width="80px"><?php esc_html_e('ID', 'easy-appointments'); ?></th>
                 <th><?php esc_html_e('Name', 'easy-appointments'); ?></th>
                 <th><?php esc_html_e('Email', 'easy-appointments'); ?></th>
                 <th><?php esc_html_e('Mobile', 'easy-appointments'); ?></th>
@@ -116,85 +116,107 @@
 
 
 <!-- Modal Panel -->
-<div id="ea-edit-panel" style="position:fixed; top:0; right:-500px; width:500px; height:100%; background:#fff; box-shadow:-2px 0 8px rgba(0,0,0,0.3); transition:right .3s ease; z-index:1000;">
-    <div style="padding:20px; border-bottom:1px solid #ddd; display:flex; justify-content:space-between; align-items:center;">
-        <h2 style="margin-top:25px;" id="ea-form-title"><?php esc_html_e('Edit Customer', 'easy-appointments'); ?></h2>
-        <button id="ea-close-panel" class="button-link" style="font-size:20px;">&times;</button>
-    </div>
-    <form id="ea-edit-form" style="padding:20px;">
-        <?php wp_nonce_field('ea_customer_edit', 'ea_nonce'); ?>
-        <input type="hidden" name="id" id="ea-cust-id" />
 
-        <p>
-            <label for="ea-cust-name"><strong><?php esc_html_e('Name *', 'easy-appointments'); ?></strong></label><br />
-            <input type="text" name="name" id="ea-cust-name" class="regular-text" required />
-        </p>
-
-        <p>
-            <label for="ea-cust-email"><strong><?php esc_html_e('Email *', 'easy-appointments'); ?></strong></label><br />
-            <input type="email" name="email" id="ea-cust-email" class="regular-text" required />
-        </p>
-
-        <p>
-            <label for="ea-cust-mobile"><strong><?php esc_html_e('Mobile *', 'easy-appointments'); ?></strong></label><br />
-            <input type="text" name="mobile" id="ea-cust-mobile" class="regular-text" required />
-        </p>
-
-        <p>
-            <label for="ea-cust-address"><strong><?php esc_html_e('Address *', 'easy-appointments'); ?></strong></label><br />
-            <textarea name="address" id="ea-cust-address" rows="3" class="large-text" required></textarea>
-        </p>
-
-        <div style="margin-top: 20px; display: flex; justify-content: space-between;">
-            <button type="button" id="ea-close-cancel" class="button"><?php esc_html_e('Cancel', 'easy-appointments'); ?></button>
-            <button type="submit" class="button button-primary"><?php esc_html_e('Save', 'easy-appointments'); ?></button>
-        </div>
-    </form>
-</div>
 
 <!-- Customer Detail Model -->
 <div id="ea-customer-modal" style="
-    position:fixed;
-    top:0;
-    right:-100%;
-    width:1000px;
-    height:100%;
-    background:#fff;
-    border-left:1px solid #ccc;
-    padding:40px 20px 20px 20px;
-    box-shadow:-2px 0 15px rgba(0,0,0,0.2);
-    overflow-y:auto;
-    transition:right .3s ease;
-    z-index:9999;
-">
-    <button id="ea-close-customer-modal" class="button" style="float:right;">×</button>
-    <h4><?php echo esc_html__('Customer Detail', 'easy-appointments'); ?> <button class="button edit-btn" data-id=""><i class="fa fa-pencil"></i></button></h4>
-    <div id="ea-customer-info" style="margin-bottom:20px;"></div>
+        position:fixed;
+        top:0;
+        right:-100%;
+        width:1000px;
+        height:100%;
+        background:#fff;
+        border-left:1px solid #ccc;
+        padding:40px 20px 20px 20px;
+        box-shadow:-2px 0 15px rgba(0,0,0,0.2);
+        overflow-y:auto;
+        transition:right .3s ease;
+        z-index:9999;
+    ">
+    <button id="ea-close-customer-modal" class="button" style="float:right;">&times;</button>
+    <div class="ea-customer-header" style="display: flex; margin-bottom: 15px;">
+        <h4 id="ea-customer-modal-title" style="margin:0px"><?php esc_html_e('Customer Detail', 'easy-appointments'); ?></h4>
+        &nbsp;<button class="button btn-sm edit-btn" data-id=""><i class="fa fa-pencil"></i></button>
+    </div>
 
-    <h4><?php echo esc_html__('Appointments', 'easy-appointments'); ?></h4>
+
+    <!-- Customer Info Display (Text + Inputs) -->
+    <div id="ea-customer-info" style="margin-bottom:20px;">
+        <div class="ea-customer-card">
+            <form id="ea-customer-info-form">
+                <input type="hidden" name="id" class="ea-info-input" id="ea-cust-id" />
+                <?php wp_nonce_field('ea_customer_edit', 'ea_nonce'); ?>
+
+                <div class="ea-info-grid">
+                    <div><strong><?php esc_html_e('Name:', 'easy-appointments'); ?></strong></div>
+                    <div>
+                        <span class="ea-info-text" id="ea-text-name"></span>
+                        <input type="text" name="name" class="ea-info-input regular-text" style="display:none;width: 100%;" required />
+                    </div>
+
+                    <div><strong><?php esc_html_e('Email:', 'easy-appointments'); ?></strong></div>
+                    <div>
+                        <span class="ea-info-text" id="ea-text-email"></span>
+                        <input type="email" name="email" class="ea-info-input regular-text" style="display:none;width: 100%;" required />
+                    </div>
+
+                    <div><strong><?php esc_html_e('Mobile:', 'easy-appointments'); ?></strong></div>
+                    <div>
+                        <span class="ea-info-text" id="ea-text-mobile"></span>
+                        <input type="text" name="mobile" class="ea-info-input regular-text" style="display:none;width: 100%;" required />
+                    </div>
+
+                    <div><strong><?php esc_html_e('Address:', 'easy-appointments'); ?></strong></div>
+                    <div>
+                        <span class="ea-info-text" id="ea-text-address"></span>
+                        <textarea name="address" class="ea-info-input large-text" style="display:none; width: 100%;" rows="2" required></textarea>
+                    </div>
+                </div>
+
+                <div class="ea-edit-actions" style="margin-top: 20px; display: none; justify-content: flex-end;">
+                    <button type="submit" class="button button-primary"><?php esc_html_e('Save', 'easy-appointments'); ?></button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Appointment Tabs -->
     <div id="ea-appointment-tabs" class="ea-tabs">
         <ul class="ea-tab-nav">
-            <li class="ea-tab-item active" data-type="upcoming"><?php echo esc_html__('Upcoming', 'easy-appointments'); ?></li>
-            <li class="ea-tab-item" data-type="past"><?php echo esc_html__('Past', 'easy-appointments'); ?></li>
+            <li class="ea-tab-item active" data-type="upcoming"><?php esc_html_e('Upcoming', 'easy-appointments'); ?></li>
+            <li class="ea-tab-item" data-type="past"><?php esc_html_e('Past', 'easy-appointments'); ?></li>
         </ul>
     </div>
-    <table class="wp-list-table widefat striped">
+
+    <!-- Appointments List -->
+    <table class="wp-list-table widefat striped" id="ea-appointment-table">
         <thead>
             <tr>
-                <th><?php echo esc_html__('#', 'easy-appointments'); ?></th>
-                <th><?php echo esc_html__('Date', 'easy-appointments'); ?></th>
-                <th><?php echo esc_html__('Start', 'easy-appointments'); ?></th>
-                <th><?php echo esc_html__('End', 'easy-appointments'); ?></th>
-                <th><?php echo esc_html__('Price', 'easy-appointments'); ?></th>
-                <th><?php echo esc_html__('Location', 'easy-appointments'); ?></th>
-                <th><?php echo esc_html__('Service', 'easy-appointments'); ?></th>
-                <th><?php echo esc_html__('Employee', 'easy-appointments'); ?></th>
+                <th><?php esc_html_e('#', 'easy-appointments'); ?></th>
+                <th><?php esc_html_e('Date', 'easy-appointments'); ?></th>
+                <th><?php esc_html_e('Start', 'easy-appointments'); ?></th>
+                <th><?php esc_html_e('End', 'easy-appointments'); ?></th>
+                <th><?php esc_html_e('Price', 'easy-appointments'); ?></th>
+                <th><?php esc_html_e('Location', 'easy-appointments'); ?></th>
+                <th><?php esc_html_e('Service', 'easy-appointments'); ?></th>
+                <th><?php esc_html_e('Employee', 'easy-appointments'); ?></th>
             </tr>
         </thead>
         <tbody id="ea-customer-appointments"></tbody>
     </table>
 </div>
-<div id="ea-overlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.3); z-index:9998;"></div>
+
+<div id="ea-overlay" style="
+    display:none;
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:rgba(0,0,0,0.3);
+    z-index:9998;
+"></div>
+
 
 
 
@@ -236,13 +258,7 @@
             document.getElementById('ea-edit-panel').style.right = '-500px';
         }
 
-        function showScreenLoader() {
-            jQuery('#ea-screen-loader').css('display', 'flex');
-        }
 
-        function hideScreenLoader() {
-            jQuery('#ea-screen-loader').hide();
-        }
 
         fetchCustomers();
 
@@ -255,66 +271,21 @@
             fetchCustomers(jQuery('#customer-search').val(), jQuery(this).data('page'));
         });
 
-        jQuery(document).on('click', '.edit-btn', function() {
-            var id = jQuery('#ea-customer-modal').find('.edit-btn').attr('data-id');
-            showScreenLoader();
-            jQuery('#ea-form-title').text('Edit Customer');
-            jQuery('#ea-close-customer-modal').click();
+       
 
-            jQuery.post(ajaxurl, {
-                action: 'ea_get_customers_ajax',
-                search: '',
-                paged: 1
-            }, function(res) {
-                hideScreenLoader();
-                var cust = res.data.find(function(c) {
-                    return c.id == id;
-                });
-                if (cust) {
-                    jQuery('#ea-cust-id').val(cust.id);
-                    jQuery('#ea-cust-name').val(cust.name);
-                    jQuery('#ea-cust-email').val(cust.email);
-                    jQuery('#ea-cust-mobile').val(cust.mobile);
-                    jQuery('#ea-cust-address').val(cust.address);
-                    openPanel();
-                }
-            });
-        });
+        function showScreenLoader() {
+            jQuery('#ea-screen-loader').css('display', 'flex');
+        }
 
-
-
-        jQuery('#ea-close-panel,#ea-close-cancel').on('click', closePanel);
-
-        jQuery('#ea-edit-form').on('submit', function(e) {
-            e.preventDefault();
-            showScreenLoader();
-
-            const isEdit = jQuery('#ea-cust-id').val() !== '';
-            const action = isEdit ? 'ea_update_customer_ajax' : 'ea_insert_customer_ajax';
-
-            jQuery.post(ajaxurl, jQuery(this).serialize() + '&action=' + action, function(res) {
-                hideScreenLoader();
-
-                if (res.success) {
-                    closePanel();
-                    fetchCustomers(jQuery('#customer-search').val());
-                } else {
-                    alert('Save failed');
-                }
-            });
-        });
-
-
-        jQuery('#ea-add-customer-btn').on('click', function() {
-            jQuery('#ea-form-title').text('Add Customer');
-            jQuery('#ea-cust-id').val('');
-            jQuery('#ea-cust-name, #ea-cust-email, #ea-cust-mobile, #ea-cust-address').val('');
-            openPanel();
-        });
+        function hideScreenLoader() {
+            jQuery('#ea-screen-loader').hide();
+        }
 
         function loadAppointments(custId, type = 'upcoming') {
             showScreenLoader();
-            jQuery('.edit-btn').attr('data-id', custId);
+            var eaNonce = "<?php echo wp_create_nonce('ea_customer_edit'); ?>";
+            var my_modal = jQuery('#ea-customer-modal');
+            my_modal.find('.edit-btn').attr('data-id', custId);
             jQuery.post(ajaxurl, {
                 action: 'ea_get_customer_detail_ajax',
                 id: custId,
@@ -323,17 +294,47 @@
                 if (res.success) {
                     const c = res.data.customer;
                     const a = res.data.appointments;
-                    jQuery('#ea-customer-info').html(
+                    my_modal.find('#ea-customer-info').html(
                         '<div class="ea-customer-card">' +
+                        '<form id="ea-customer-info-form">' +
                         '<div class="ea-info-grid">' +
-                        '<div><strong>Name:</strong></div><div>' + c.name + '</div>' +
-                        '<div><strong>Email:</strong></div><div>' + c.email + '</div>' +
-                        '<div><strong>Mobile:</strong></div><div>' + c.mobile + '</div>' +
-                        '<div><strong>Address:</strong></div><div>' + (c.address || 'N/A') + '</div>' +
+
+                        '<div><strong>Name:</strong></div>' +
+                        '<div>' +
+                        '<span class="ea-info-text">' + c.name + '</span>' +
+                        '<input type="hidden" name="ea_nonce" value="' + eaNonce + '">' +
+                        '<input type="hidden" name="id" class="ea-info-input" id="ea-cust-id" value="' + c.id + '" />' +
+                        '<input type="text" name="name" value="' + c.name + '" class="ea-info-input" style="display:none; width:100%;" required />' +
                         '</div>' +
+
+                        '<div><strong>Email:</strong></div>' +
+                        '<div>' +
+                        '<span class="ea-info-text">' + c.email + '</span>' +
+                        '<input type="email" name="email" value="' + c.email + '" class="ea-info-input" style="display:none; width:100%;" required />' +
+                        '</div>' +
+
+                        '<div><strong>Mobile:</strong></div>' +
+                        '<div>' +
+                        '<span class="ea-info-text">' + c.mobile + '</span>' +
+                        '<input type="text" name="mobile" value="' + c.mobile + '" class="ea-info-input" style="display:none; width:100%;" required />' +
+                        '</div>' +
+
+                        '<div><strong>Address:</strong></div>' +
+                        '<div>' +
+                        '<span class="ea-info-text">' + (c.address || 'N/A') + '</span>' +
+                        '<textarea name="address" class="ea-info-input" style="display:none; width:100%;" rows="2">' + (c.address || '') + '</textarea>' +
+                        '</div>' +
+
+                        '</div>' +
+                        '<div class="ea-edit-actions" style="margin-top: 20px; display: none; justify-content: flex-end;">' +
+                        '<button type="button" class="button" id="ea-cancel-edit"><?php esc_html_e("Cancel", "easy-appointments"); ?></button>&nbsp;' +
+                        '<button type="submit" class="button button-primary"><?php esc_html_e("Save", "easy-appointments"); ?></button>' +
+                        '</div>' +
+                        '</form>' +
                         '</div>'
                     );
-                    
+
+
 
 
                     const appRows = a.map((item, index) => {
@@ -349,21 +350,32 @@
                             '</tr>';
                     }).join('');
 
-                    jQuery('#ea-customer-appointments').html(appRows || '<tr><td colspan="8">No appointments found.</td></tr>');
+                    my_modal.find('#ea-customer-appointments').html(appRows || '<tr><td colspan="8">No appointments found.</td></tr>');
                     jQuery('#ea-customer-modal').css('right', '0');
-                } else {
-                    alert('Customer not found');
                 }
                 hideScreenLoader();
             });
         }
 
-        let currentCustomerId = null;
+        // let currentCustomerId = null;
 
         jQuery(document).on('click', '.customer-detail', function(e) {
             e.preventDefault();
             const custId = jQuery(this).data('id');
             currentCustomerId = custId;
+            jQuery('#ea-customer-modal-title').text('Customer Detail');
+            var my_modal = jQuery('#ea-customer-modal');
+            my_modal.find('.edit-btn').show();
+            my_modal.find('#ea-cancel-edit').show();
+            my_modal.find('.edit-btn').attr('data-id', custId);
+
+            // Hide the form on view
+            jQuery('#ea-customer-form').hide();
+
+            // Show appointments section
+            jQuery('#ea-appointment-tabs').show();
+            jQuery('#ea-appointment-table').show();
+
             jQuery('.ea-tab-item').removeClass('active');
             jQuery('.ea-tab-item[data-type="upcoming"]').addClass('active');
             loadAppointments(custId, 'upcoming');
@@ -381,6 +393,104 @@
 
         jQuery('#ea-close-customer-modal, #ea-overlay').on('click', function() {
             jQuery('#ea-customer-modal').css('right', '-100%');
+        });
+
+
+        let isEdit = false;
+        let currentCustomerId = null;
+
+
+
+        function openCustomerModal() {
+            jQuery('#ea-customer-modal').css('right', '0');
+            jQuery('#ea-overlay').show();
+        }
+
+        function closeCustomerModal() {
+            jQuery('#ea-customer-modal').css('right', '-100%');
+            jQuery('#ea-overlay').hide();
+        }
+
+        function resetCustomerForm() {
+            jQuery('#ea-cust-id').val('');
+            jQuery('#ea-cust-name, #ea-cust-email, #ea-cust-mobile, #ea-cust-address').val('');
+        }
+
+        // Add new customer
+        jQuery('#ea-add-customer-btn').on('click', function (e) {
+            e.preventDefault();
+
+            // Set modal title
+            jQuery('#ea-customer-modal-title').text('Add Customer');
+            var my_modal = jQuery('#ea-customer-modal');
+            my_modal.find('.edit-btn').hide();
+            my_modal.find('#ea-cancel-edit').hide();
+            
+
+            my_modal.find('.ea-info-text').hide();
+            my_modal.find('.ea-info-input').show();
+            my_modal.find('.ea-edit-actions').css('display', 'flex');
+
+            // Show the form
+            my_modal.find('#ea-customer-form').show();
+
+            // Hide the appointment section
+            my_modal.find('#ea-appointment-tabs').hide();
+            my_modal.find('#ea-appointment-table').hide();
+
+            // Show the modal
+            jQuery('#ea-customer-modal').css('right', '0');
+            my_modal.find('.ea-info-text').val('');
+            my_modal.find('.ea-info-input').val('');
+        });
+
+
+        // Edit customer
+        jQuery(document).on('click', '.edit-btn', function() {
+            var my_modal = jQuery('#ea-customer-modal');
+            my_modal.find('.edit-btn').hide();
+            my_modal.find('.ea-info-text').hide();
+            my_modal.find('.ea-info-input').show();
+            my_modal.find('.ea-edit-actions').css('display', 'flex');
+        });
+
+        jQuery(document).on('click', '#ea-cancel-edit', function() {
+            var my_modal = jQuery('#ea-customer-modal');
+            my_modal.find('.edit-btn').show();
+            jQuery('.ea-info-input').hide();
+            jQuery('.ea-info-text').show();
+            jQuery('.ea-edit-actions').hide();
+        });
+
+
+
+        // Save customer
+        jQuery(document).on('submit', '#ea-customer-info-form', function(e) {
+            e.preventDefault();
+            showScreenLoader();
+            const isEdit = jQuery('#ea-cust-id').val() !== '';
+            const action = isEdit ? 'ea_update_customer_ajax' : 'ea_insert_customer_ajax';
+            const formData = jQuery(this).serialize() + '&action='+action;
+
+            jQuery.post(ajaxurl, formData, function(res) {
+                hideScreenLoader();
+                if (res.success) {
+                    fetchCustomers();
+                    if ( isEdit ) {
+                        loadAppointments(currentCustomerId);
+                    }else{
+                        jQuery('#ea-close-customer-modal').click();
+                    }
+                } else {
+                    alert('Update failed.');
+                }
+            });
+        });
+
+
+        // Cancel and close modal
+        jQuery('#ea-close-customer-modal, #ea-close-cancel, #ea-overlay').on('click', function() {
+            closeCustomerModal();
         });
     });
 </script>
