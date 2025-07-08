@@ -319,13 +319,15 @@ class EAApiFullCalendar
      * @param WP_REST_Request $request get data from request.
      */
     public function get_item($request) {
-        header('Content-Type: text/plain');
+        header('Content-Type: text/html');
 
-        $id   = $request->get_param('id');
-        $hash = $request->get_param('hash');
-        $app  = $this->db_models->get_appintment_by_id($id);
+        $id         = $request->get_param('id');
+        $edit       = $request->get_param('edit');
+        $eventpopup = $request->get_param('eventpopup');
+        $hash       = $request->get_param('hash');
+        $app        = $this->db_models->get_appintment_by_id($id);
 
-        // Load options
+        // Load template string from options
         $tplStr = $this->options->get_option_value('fullcalendar.event.template', '');
 
         $data = [
@@ -341,13 +343,89 @@ class EAApiFullCalendar
         ];
 
         $template = new Leuffen\TextTemplate\TextTemplate($tplStr);
+
         try {
-            echo $template->apply($data);
+            $display = 'block';
+
+            if ($edit && $eventpopup && (get_current_user_id() === (int) $app['user_id'] || current_user_can('manage_options'))) {
+                echo '<button style="float:right;" type="button" class="button ea-edit-appointment-icon">
+                        <span class="dashicons dashicons-edit" style="cursor:pointer;"></span>
+                    </button>';
+            }
+
+            if ($eventpopup) {
+                $display = "none";
+                echo '<div id="ea_event_popup">' . $template->apply($data) . '</div>';
+            }
+
+            ob_start();
+
+            if (get_current_user_id() === (int) $app['user_id'] || current_user_can('manage_options')) {
+                $meta_fields = $this->db_models->get_all_rows('ea_meta_fields', array(), array('id' => 'ASC'));
+                ?>
+                <div class="ea-edit-appointment-wrapper" style="max-width:600px; margin:auto; display:<?php echo esc_attr($display); ?>;">
+                    <h3><?php esc_html_e('Personal Information', 'easy-appointments'); ?></h3>
+                    <form id="ea-appointment-edit-form" method="post">
+                        <?php wp_nonce_field('ea_edit_appointment_action', 'ea_edit_appointment_nonce'); ?>
+                        <?php foreach ($meta_fields as $field): ?>
+                            <?php
+                                $slug        = esc_attr($field->slug);
+                                $label       = esc_html($field->label);
+                                $placeholder = esc_attr($field->mixed);
+                                $required    = ($field->required == "1") ? 'required' : '';
+                                $value       = isset($app[$field->slug]) ? esc_attr($app[$field->slug]) : '';
+                            ?>
+                            <div class="form-group">
+                                <label for="<?php echo $slug; ?>"><strong><?php echo $label; ?></strong><?php echo $required ? ' *' : ''; ?></label>
+                                <div>
+                                    <?php if ($field->type === 'INPUT'): ?>
+                                        <input class="form-control custom-field" id="<?php echo $slug; ?>" name="<?php echo $slug; ?>"
+                                            type="<?php echo $field->validation === 'email' ? 'email' : 'text'; ?>"
+                                            value="<?php echo $value; ?>" placeholder="<?php echo $placeholder; ?>" maxlength="499" <?php echo $required; ?> />
+                                    <?php elseif ($field->type === 'TEXTAREA'): ?>
+                                        <textarea class="form-control custom-field" id="<?php echo $slug; ?>" name="<?php echo $slug; ?>" rows="3"
+                                            maxlength="499" placeholder="<?php echo $placeholder; ?>" <?php echo $required; ?>><?php echo $value; ?></textarea>
+                                    <?php elseif ($field->type === 'SELECT'): ?>
+                                        <select class="form-control custom-field" id="<?php echo $slug; ?>" name="<?php echo $slug; ?>" <?php echo $required; ?>>
+                                            <?php foreach (explode(',', $field->mixed) as $option): ?>
+                                                <?php $option = trim($option); ?>
+                                                <option value="<?php echo esc_attr($option); ?>" <?php selected($value, $option); ?>>
+                                                    <?php echo esc_html($option); ?>
+                                                </option>
+                                            <?php endforeach; ?>
+                                        </select>
+                                    <?php endif; ?>
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
+
+
+                        <h3><?php esc_html_e('Appointment Summary', 'easy-appointments'); ?></h3>
+                        <p><strong><?php esc_html_e('Location:', 'easy-appointments'); ?></strong> <?php echo esc_html($app['location_name']); ?></p>
+                        <p><strong><?php esc_html_e('Service:', 'easy-appointments'); ?></strong> <?php echo esc_html($app['service_name'] . ' ' . $app['service_price'] . '€'); ?></p>
+                        <p><strong><?php esc_html_e('Worker:', 'easy-appointments'); ?></strong> <?php echo esc_html($app['worker_name']); ?></p>
+                        <p><strong><?php esc_html_e('Price:', 'easy-appointments'); ?></strong> <?php echo esc_html($app['price'] . '€'); ?></p>
+                        <p><strong><?php esc_html_e('Date and Time:', 'easy-appointments'); ?></strong> <?php echo esc_html(date_i18n('d/m/Y H:i', strtotime($app['date'] . ' ' . $app['start']))); ?></p>
+
+                        <input type="hidden" name="appointment_id" value="<?php echo (int) $app['id']; ?>" />
+
+                        <div style="margin-top: 20px;">
+                            <button type="submit" class="button button-primary" style="background: #0073aa; border: 1px solid #006799; color: #fff; text-decoration: none; text-shadow: none; font-size: 14px; padding: 8px 16px; border-radius: 3px; cursor: pointer;">
+                                <?php esc_html_e('Submit', 'easy-appointments'); ?>
+                            </button>
+                            <button type="button" style=" border: 1px solid rgb(98, 99, 100); text-decoration: none; text-shadow: none; font-size: 14px; padding: 8px 16px; border-radius: 3px; cursor: pointer;" class="button ea-cancel-edit"><?php esc_html_e('Cancel', 'easy-appointments'); ?></button>
+                        </div>
+                    </form>
+                </div>
+                <?php
+            }
+
+            echo ob_get_clean();
         } catch (\Leuffen\TextTemplate\TemplateParsingException $e) {
             echo '';
         }
 
-        exit();
+        exit;
     }
 
     /**

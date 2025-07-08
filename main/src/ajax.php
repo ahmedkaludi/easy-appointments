@@ -99,7 +99,8 @@ class EAAjax
         add_action('wp_ajax_ea_month_status', array($this, 'ajax_month_status'));
         add_action('wp_ajax_nopriv_ea_month_status', array($this, 'ajax_month_status'));
         add_action('wp_ajax_ea_search_customers', array($this, 'ajax_search_customers'));
-        add_action('wp_ajax_ea_get_customer_detail', array($this, 'ajax_customer_detail'));       
+        add_action('wp_ajax_ea_get_customer_detail', array($this, 'ajax_customer_detail'));
+        add_action('wp_ajax_ea_update_customer_data', array($this, 'ea_update_customer_data'));       
 
         // end frontend
         add_action('ea_new_app', array($this, 'add_customer_data'), 1000);
@@ -2057,6 +2058,55 @@ class EAAjax
 
             wp_send_json($cust);
         }
+    }
+
+    public function ea_update_customer_data() {
+        global $wpdb;
+        if ( !isset($_POST['ea_edit_appointment_nonce']) ||
+            !wp_verify_nonce($_POST['ea_edit_appointment_nonce'], 'ea_edit_appointment_action')
+        ) {
+            wp_send_json_error('Invalid nonce');
+            exit;
+        }
+        $data = $_POST;
+        $id = (int) $data['appointment_id'];
+        $name = sanitize_text_field($data['name']);
+        $email = sanitize_email($data['email']);
+        $phone = sanitize_text_field($data['phone']);
+        $description = sanitize_text_field($data['description']);
+        $fields = 'ea_fields';
+        $meta_fields = $this->models->get_all_rows('ea_meta_fields');
+        $meta_data = array();
+
+        foreach ($meta_fields as $value) {
+            if (array_key_exists($value->slug, $data)) {
+                $meta_data[] = array(
+                    'app_id'   => null,
+                    'field_id' => $value->id,
+                    'value'    => $data[$value->slug]
+                );
+            }
+        }
+
+        $this->models->delete($fields, array('app_id' => $id), true);
+
+        foreach ($meta_data as $value) {
+            $value['app_id'] = $id;
+            $this->models->replace($fields, $value, true, true);
+        }
+
+        $wpdb->update(
+            $wpdb->prefix . 'ea_customers',
+            [
+                'name' => $name,
+                'email' => $email,
+                'phone' => $phone,
+                'description' => $description
+            ],
+            ['email' => $email]
+        );
+
+        wp_send_json_success();
     }
 
 }

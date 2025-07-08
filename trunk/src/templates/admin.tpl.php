@@ -426,6 +426,19 @@
                   </div>
                   <div class="form-item">
                       <div class="label-with-tooltip">
+                          <label for=""><?php _e('Manage appointmennt in popup', 'easy-appointments'); ?></label>
+                          <span class="tooltip tooltip-right"
+                                data-tooltip="<?php _e('Popup dialog for modify appointment details.', 'easy-appointments'); ?>"></span>
+                      </div>
+                      <div class="field-wrap">
+                          <input class="field" data-key="fullcalendar.manage_appointment.show"
+                                 name="fullcalendar.manage_appointment.show" type="checkbox" <% if
+                          (_.findWhere(settings, {ea_key:'fullcalendar.manage_appointment.show'}).ea_value == "1") {
+                          %>checked<% } %>>
+                      </div>
+                  </div>
+                  <div class="form-item">
+                      <div class="label-with-tooltip">
                           <label for=""><?php esc_html_e('Show event content in popup', 'easy-appointments'); ?></label>
                           <span class="tooltip tooltip-right"
                                 data-tooltip="<?php esc_html_e('Popup dialog for event content.', 'easy-appointments'); ?>"></span>

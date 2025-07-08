@@ -139,6 +139,7 @@ class EAOptions
             'captcha3.secret-key'           => '',
             'fullcalendar.public'           => '0',
             'fullcalendar.event.show'       => '0',
+            'fullcalendar.manage_appointment.show'       => '0',
             'fullcalendar.event.template'   => '',
             'shortcode.compress'            => '1',
             'label.from_to'                 => '0',
