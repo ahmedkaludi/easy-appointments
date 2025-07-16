@@ -43,7 +43,7 @@
                             <?php $this->get_options('staff', $location_id, $service_id, $worker_id, $code_params['select_placeholder']) ?>
                         </select>
                     </div>
-                </div>
+                </div>                
                 <div class="step calendar" class="filter">
                     <div class="block"></div>
                     <div class="date"></div>
@@ -51,6 +51,27 @@
                 <div class="step" class="filter">
                     <div class="block"></div>
                     <div class="time"></div>
+                </div>
+                <div class="form-group" style="display:none;">
+                    <div class="block"></div>
+                    <label class="ea-label col-sm-4 control-label">
+                        <?php echo esc_html('Repeat Appointement','easy-appointments'); ?>
+                    </label>
+                    <div class="col-sm-8">
+                        <select id="repeat_week" data-c="repeat_week" class="filter form-control">
+                            <option value="0"><?php echo esc_html('Does Not Repeat','easy-appointments'); ?></option>
+                            <option value="1"><?php echo esc_html('Repeat Weekly','easy-appointments'); ?></option>
+                            <option value="2"><?php echo esc_html('Custom','easy-appointments'); ?></option>
+                        </select>
+                    </div>
+                    <input type="hidden" name="repeat_week" value="0" />
+                    <input type="hidden" name="repeat_start_date" value="0" />
+                    <input type="hidden" name="repeat_end_date" value="0" />
+                    <div id="recurrence-summary" class="mt-3 text-muted" style="display: none; padding:20px;">
+                        <strong><?php echo esc_html('Repeat every','easy-appointments'); ?>:</strong> <span id="summary-repeat-week"></span><br>
+                        <strong><?php echo esc_html('Starts','easy-appointments'); ?>:</strong> <span id="summary-start-date"></span><br>
+                        <strong><?php echo esc_html('Ends','easy-appointments'); ?>:</strong> <span id="summary-end-date"></span>
+                    </div>
                 </div>
                 <% if (settings.layout_cols === '2') { %>
             </div>
@@ -177,4 +198,39 @@
         </form>
     </div>
 <div id="ea-loader"></div>
+
+<div id="custom-recurrence-modal" style="display:none; position:fixed; top:20%; left:50%; transform:translateX(-50%); background:#fff; padding:20px; border:1px solid #ccc; border-radius:8px; z-index:10000; width:420px;">
+  <h4>Custom recurrence</h4>
+    <div class="row">
+        <label class="col-sm-4"><?php echo esc_html('Repeat every','easy-appointments'); ?></label>
+        <input type="number" min="1" id="modal-repeat-week" value="2" class="col-sm-4"> <?php echo esc_html('weeks','easy-appointments'); ?>
+    </div>
+
+    <div class="mt-3 row" style="margin-top: 10px;">
+        <label class="col-sm-4"><?php echo esc_html('Starts','easy-appointments'); ?></label>
+        <input class="col-sm-4" type="date" id="modal-start-date" />
+    </div>
+
+    <div class="mt-3">
+        <label><?php echo esc_html('Ends','easy-appointments'); ?></label><br>
+        <input type="radio" name="modal-end-type" value="never" id="modal-end-never" checked> 
+        <label for="modal-end-never"><?php echo esc_html('Never','easy-appointments'); ?></label><br>
+        <input type="radio" name="modal-end-type" value="date" id="modal-end-on"> 
+        <label for="modal-end-on"><?php echo esc_html('On','easy-appointments'); ?></label>
+        <input type="date" id="modal-end-date" disabled>
+    </div>
+
+  <div class="mt-3" style="margin-top: 10px;">
+    <button type="button" id="modal-save-btn" class="btn btn-primary"><?php echo esc_html('Done','easy-appointments'); ?></button>
+    <button type="button" id="modal-cancel-btn" class="btn btn-default"><?php echo esc_html('Cancel','easy-appointments'); ?></button>
+  </div>
+</div>
+
+<!-- Optional: Light overlay -->
+<div id="custom-recurrence-overlay" style="display:none; position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.4);z-index:9999;"></div>
+
+
+
+
+
 </script>

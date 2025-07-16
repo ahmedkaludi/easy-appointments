@@ -131,6 +131,7 @@ class EAFullCalendar
             // also remove '{', '}' brackets because no settings needs that
             $code_params[$key] = esc_js(str_replace(array('{','}',';', '(', ')'), array('','','','',''), $value));
         }
+        error_log('code_params: ' . print_r($code_params, true));
 
         // scripts that are going to be used
         wp_enqueue_script('underscore');
@@ -195,13 +196,14 @@ class EAFullCalendar
                     element.addClass('ea-full-calendar-dialog-event');
                     element.attr('href', wpApiSettings.root + 'easy-appointments/v1/appointment/' + event.id + '?hash=' + event.hash + '&edit=yes&_wpnonce=' + wpApiSettings.nonce + '&width=100%&height=100%');
                     element.attr('title', '#' + event.id + ' - ' + _.escape(event.title));
+                    console.log(event);
             EOT;            
           }
 
         }
-         $event_click_ajax = "";
+        $event_click_ajax = "";
         if (!empty($this->options->get_option_value('fullcalendar.manage_appointment.show'))) {
-          if ( get_current_user_id() === (int) $app['user_id'] || current_user_can('manage_options') ) {
+          if ( get_current_user_id() && current_user_can('manage_options') ) {
             $ajaxurl = admin_url('admin-ajax.php');
             $event_click_ajax = <<<EOT
                   jQuery(document).on('submit', '#ea-appointment-edit-form', function (e) {

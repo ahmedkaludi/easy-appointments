@@ -514,7 +514,8 @@
 
             this.placeLoader(calendar);
 
-            jQuery.get(ea_ajaxurl, options, function (response) {
+            jQuery.get(ea_ajaxurl, options, function (response_m) {
+                var response = response_m.calendar_slots;
 
                 var next_element = jQuery(calendar).parent().next('.step').children('.time');
 

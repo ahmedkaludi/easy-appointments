@@ -350,12 +350,32 @@ class EAAjax
         $date     = isset($_GET['date'])     ? sanitize_text_field( wp_unslash( $_GET['date'] ) )     : '';
 
 
-        $slots = $this->logic->get_open_slots($location, $service, $worker, $date, null, true, $block_time);       
+        $slots = $this->logic->get_open_slots($location, $service, $worker, $date, null, true, $block_time);
+        
+        global $wpdb;
+        $day_of_week = gmdate('l', strtotime($date));
+        $time_now = current_time('timestamp', false);
+        $block_time = $time_now + intval($block_time) * 60;       
+        $query1 = $wpdb->prepare("SELECT * FROM {$wpdb->prefix}ea_connections WHERE 
+                location = %d AND 
+                service = %d AND 
+                worker = %d AND
+                is_working = 1 AND 
+                (day_from IS NULL OR day_from <= %s)
+                ORDER BY day_to DESC
+                LIMIT 1",
+                $location, $service, $worker, $date);
+        $connection_details = $wpdb->get_row($query1);
+        error_log('Connection details: ' . print_r($connection_details, true));
+        $result =  array('calendar_slots' =>$slots, 'connection_details' => $connection_details);
+       
 
-        $this->send_ok_json_result($slots);
+        $this->send_ok_json_result($result);
+
+        // $this->send_ok_json_result($slots);
     }
 
-    public function ajax_res_appointment()
+    public function old_ajax_res_appointment()
     {
         $this->validate_nonce();
 
@@ -470,6 +490,178 @@ class EAAjax
         $this->send_ok_json_result($response);
     }
 
+    public function ajax_res_appointment()
+    {
+        $this->validate_nonce();
+        $this->validate_captcha();
+
+        global $wpdb;
+
+        $table = 'ea_appointments';
+        $data = $_GET;
+
+        $allowed_keys = array(
+            'id', 'location', 'service', 'worker', 'name', 'email', 'phone', 'date', 'start', 'end', 'end_date',
+            'description', 'status', 'user', 'created', 'price', 'ip', 'session', 'repeat_week', 'recurrence_id'
+        );
+
+        foreach ($data as $key => $value) {
+            if (!in_array($key, $allowed_keys)) {
+                unset($data[$key]);
+            }
+        }
+
+        unset($data['action']);
+
+        $block_time = (int)$this->options->get_option_value('block.time', 0);
+
+        // Validate first slot
+        $open_slots = $this->logic->get_open_slots($data['location'], $data['service'], $data['worker'], $data['date'], null, true, $block_time);
+        $is_free = false;
+
+        foreach ($open_slots as $value) {
+            if ($value['value'] === $data['start'] && $value['count'] > 0) {
+                $is_free = true;
+                break;
+            }
+        }
+
+        if (!$is_free) {
+            $this->send_err_json_result(json_encode([
+                'err' => true,
+                'message' => __('Slot is taken', 'easy-appointments')
+            ]));
+        }
+
+        // Default setup
+        $data['status'] = 'reservation';
+        $data['ip'] = $_SERVER['REMOTE_ADDR'];
+        $data['session'] = session_id();
+
+        if (is_user_logged_in()) {
+            $data['user'] = get_current_user_id();
+        }
+
+        $service = $this->models->get_row('ea_services', $data['service']);
+        $data['price'] = $service->price;
+
+        $repeat_week = isset($data['repeat_week']) ? intval($data['repeat_week']) : 0;
+        $repeat_start_date = !empty($data['repeat_start_date']) && $data['repeat_start_date'] !== '0' ? $data['repeat_start_date'] : null;
+        $repeat_end_date   = (!empty($data['repeat_end_date']) && strtolower($data['repeat_end_date']) !== 'never' && $data['repeat_end_date'] !== '0') 
+            ? $data['repeat_end_date'] 
+            : null;
+
+        $recurrence_id = $repeat_week > 0 ? 'rec_' . uniqid() : null;
+
+        // If custom repeat range provided, use that
+        if ($repeat_week > 0 && $repeat_start_date) {
+            $initial_date = $repeat_start_date;
+            $initial_end_date = $repeat_end_date ?: $repeat_start_date;
+            $connection_end_date = $repeat_end_date ? strtotime($repeat_end_date) : null; // NULL = run until blocked by connection or slot availability
+        } else {
+            // Fallback to standard
+            $initial_date = $data['date'];
+            $initial_end_date = isset($data['end_date']) ? $data['end_date'] : $initial_date;
+
+            $connection = $wpdb->get_row($wpdb->prepare(
+                "SELECT * FROM {$wpdb->prefix}ea_connections WHERE 
+                location = %d AND service = %d AND worker = %d AND is_working = 1
+                AND (day_from IS NULL OR day_from <= %s)
+                ORDER BY day_to DESC LIMIT 1",
+                $data['location'], $data['service'], $data['worker'], $initial_date
+            ));
+
+            $connection_end_date = isset($connection->day_to) ? strtotime($connection->day_to) : null;
+        }
+
+        if ($repeat_end_date && $connection_end_date) {
+            // Pick the earlier of the two
+            $repeat_end_ts = strtotime($repeat_end_date);
+            if ($repeat_end_ts > $connection_end_date) {
+                $repeat_end_date = date('Y-m-d', $connection_end_date);
+            }
+        }
+
+
+        $success_ids = [];
+        $i = 0;
+        while (true) {
+            $offset_weeks = $i * max(1, $repeat_week);
+            $current_date_ts = strtotime("+{$offset_weeks} weeks", strtotime($initial_date));
+            $current_end_date_ts = strtotime("+{$offset_weeks} weeks", strtotime($initial_end_date));
+
+            if ($repeat_week > 0 && $i > 0 && $connection_end_date && $current_date_ts > $connection_end_date) {
+                break;
+            }
+
+            $current_date = date('Y-m-d', $current_date_ts);
+            $current_end_date = date('Y-m-d', $current_end_date_ts);
+
+            $current_data = $data;
+            $current_data['date'] = $current_date;
+            $current_data['end_date'] = $current_end_date;
+
+            if ($recurrence_id) {
+                $current_data['recurrence_id'] = $recurrence_id;
+            }
+
+            // Recalculate end time
+            $end_time = strtotime("{$data['start']} + {$service->duration} minutes");
+            $current_data['end'] = date('H:i', $end_time);
+
+            // Check if the slot is still available
+            $open_slots = $this->logic->get_open_slots($data['location'], $data['service'], $data['worker'], $current_date, null, true, $block_time);
+            $slot_free = false;
+            foreach ($open_slots as $slot) {
+                if ($slot['value'] === $data['start'] && $slot['count'] > 0) {
+                    $slot_free = true;
+                    break;
+                }
+            }
+
+            if (!$slot_free) {
+                $i++;
+                continue;
+            }
+
+            // Can make reservation logic
+            $check = $this->logic->can_make_reservation($current_data);
+            if (!$check['status']) {
+                $i++;
+                continue;
+            }
+
+            // Insert appointment
+            $response = $this->models->replace($table, $current_data, true);
+            if ($response && isset($response->id)) {
+                $success_ids[] = $response->id;
+            }
+
+            if ($repeat_week === 0) {
+                break;
+            }
+
+            $i++;
+        }
+
+        if (empty($success_ids)) {
+            $this->send_err_json_result(json_encode([
+                'err' => true,
+                'message' => __('Could not create any appointments.', 'easy-appointments')
+            ]));
+        }
+
+        if ($response->id) {
+            $response->_hash = wp_hash($response->id);
+        }
+
+        $this->send_ok_json_result($response);
+    }
+
+
+
+
+
     /**
      * Final Appointment creation from frontend part
      */
@@ -487,60 +679,122 @@ class EAAjax
 
         $appointment = $this->models->get_row('ea_appointments', $data['id'], ARRAY_A);
 
+        
+
         // check IP
         if ($appointment['ip'] != $_SERVER['REMOTE_ADDR']) {
             $this->send_err_json_result('{"err":true}');
         }
 
-        // check if he can update the reservation
-        $check = $this->logic->can_update_reservation($appointment, $data);
-        if (!$check['status']) {
-            $resp = array(
-                'err'     => true,
-                'message' => $check['message']
+        if (isset($appointment['recurrence_id']) && !empty($appointment['recurrence_id'])) {
+            global $wpdb;
+
+            $recurrence_id = $appointment['recurrence_id'];
+            $table_a = $wpdb->prefix . 'ea_appointments';
+
+            $appointments = $wpdb->get_results(
+                $wpdb->prepare(
+                    "SELECT * FROM {$table_a} WHERE recurrence_id = %s",
+                    $recurrence_id
+                ),
+                ARRAY_A
             );
 
-            $this->send_err_json_result(json_encode($resp));
-        }
+            
+            foreach ($appointments as $appointment) {
+                $data['id'] = $appointment['id'];
+                $appointment = $this->models->get_row('ea_appointments', $data['id'], ARRAY_A);
+                $check = $this->logic->can_update_reservation($appointment, $data);
+                if (!$check['status']) {
+                    $resp = array(
+                        'err'     => true,
+                        'message' => $check['message']
+                    );
 
-        $appointment['status'] = $this->options->get_option_value('default.status', 'pending');
+                    $this->send_err_json_result(json_encode($resp));
+                }
 
-        $response = $this->models->replace($table, $appointment, true);
+                $appointment['status'] = $this->options->get_option_value('default.status', 'pending');
 
-        $meta = $this->models->get_all_rows('ea_meta_fields');
+                $response = $this->models->replace($table, $appointment, true);
 
-        foreach ($meta as $f) {
-            $fields = array();
-            $fields['app_id'] = $appointment['id'];
-            $fields['field_id'] = $f->id;
+                $meta = $this->models->get_all_rows('ea_meta_fields');
 
-            if (array_key_exists($f->slug, $data)) {
-                // remove slashes and convert special chars
-                $fields['value'] = stripslashes($data[$f->slug]);
-            } else if (array_key_exists(str_replace('-', '_', $f->slug), $data)) {
-                // FIX for issue with pay_pal field that have _ in data but real slug has -
-                // remove slashes and convert special chars
-                $fields['value'] = stripslashes($data[str_replace('-', '_', $f->slug)]);
-            } else {
-                $fields['value'] = '';
+                foreach ($meta as $f) {
+                    $fields = array();
+                    $fields['app_id'] = $appointment['id'];
+                    $fields['field_id'] = $f->id;
+
+                    if (array_key_exists($f->slug, $data)) {
+                        // remove slashes and convert special chars
+                        $fields['value'] = stripslashes($data[$f->slug]);
+                    } else if (array_key_exists(str_replace('-', '_', $f->slug), $data)) {
+                        // FIX for issue with pay_pal field that have _ in data but real slug has -
+                        // remove slashes and convert special chars
+                        $fields['value'] = stripslashes($data[str_replace('-', '_', $f->slug)]);
+                    } else {
+                        $fields['value'] = '';
+                    }
+
+                    $response = $response && $this->models->replace('ea_fields', $fields, true, true);
+                }
+                // trigger new appointment
+                do_action('ea_new_app', $appointment['id'], $appointment, true);
+
+                // trigger new appointment from customer
+            }
+            do_action('ea_new_app_from_customer', $appointment['id'], $appointment, true);
+            do_action('ea_repeat_appointment_mail_notification', $appointment['id'],$appointments);
+        }else {
+            $check = $this->logic->can_update_reservation($appointment, $data);
+            if (!$check['status']) {
+                $resp = array(
+                    'err'     => true,
+                    'message' => $check['message']
+                );
+
+                $this->send_err_json_result(json_encode($resp));
             }
 
-            $response = $response && $this->models->replace('ea_fields', $fields, true, true);
-        }
+            $appointment['status'] = $this->options->get_option_value('default.status', 'pending');
 
-        if ($response == false) {
-            $this->send_err_json_result('{"err":true}');
-        } else {
-            $this->mail->send_notification($data);
+            $response = $this->models->replace($table, $appointment, true);
 
-            // trigger send user email notification appointment
-            do_action('ea_user_email_notification', $appointment['id']);
+            $meta = $this->models->get_all_rows('ea_meta_fields');
 
-            // trigger new appointment
-            do_action('ea_new_app', $appointment['id'], $appointment, true);
+            foreach ($meta as $f) {
+                $fields = array();
+                $fields['app_id'] = $appointment['id'];
+                $fields['field_id'] = $f->id;
 
-            // trigger new appointment from customer
-            do_action('ea_new_app_from_customer', $appointment['id'], $appointment, true);
+                if (array_key_exists($f->slug, $data)) {
+                    // remove slashes and convert special chars
+                    $fields['value'] = stripslashes($data[$f->slug]);
+                } else if (array_key_exists(str_replace('-', '_', $f->slug), $data)) {
+                    // FIX for issue with pay_pal field that have _ in data but real slug has -
+                    // remove slashes and convert special chars
+                    $fields['value'] = stripslashes($data[str_replace('-', '_', $f->slug)]);
+                } else {
+                    $fields['value'] = '';
+                }
+
+                $response = $response && $this->models->replace('ea_fields', $fields, true, true);
+            }
+
+            if ($response == false) {
+                $this->send_err_json_result('{"err":true}');
+            } else {
+                $this->mail->send_notification($data);
+
+                // trigger send user email notification appointment
+                do_action('ea_user_email_notification', $appointment['id']);
+
+                // trigger new appointment
+                do_action('ea_new_app', $appointment['id'], $appointment, true);
+
+                // trigger new appointment from customer
+                do_action('ea_new_app_from_customer', $appointment['id'], $appointment, true);
+            }
         }
 
         $response = new stdClass();

@@ -31,7 +31,8 @@ class EATableColumns
                 'created',
                 'price',
                 'ip',
-                'session'
+                'session',
+                'recurrence_id'
             ),
             'ea_connections' => array(
                 'id',
@@ -45,6 +46,7 @@ class EATableColumns
                 'time_to',
                 'day_from',
                 'day_to',
+                'repeat_week',
                 'is_working'
             ),
             'ea_meta_fields' => array(

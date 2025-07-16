@@ -461,6 +461,7 @@
                 if (options.next == 'worker') {
                     default_option_value = 'Select '+ea_settings['trans.worker'];
                 }
+                plugin.$element.find('[id="repeat_week"]').parents('.form-group').hide();
                 // default
                 next_element.append('<option value="">'+default_option_value+'</option>');
 
@@ -618,8 +619,16 @@
             options.check  = ea_settings['check'];
 
             this.placeLoader(calendarEl);
+            
 
-            var req = jQuery.get(ea_ajaxurl, options, function (response) {
+            // var req = jQuery.get(ea_ajaxurl, options, function (response) {
+            var req = jQuery.get(ea_ajaxurl, options, function (response_m) {
+                var response = response_m.calendar_slots;
+                if (response_m.connection_details && response_m.connection_details.repeat_week == 1) {
+                    plugin.$element.find('[id="repeat_week"]').parents('.form-group').show();
+                }else{
+                    plugin.$element.find('[id="repeat_week"]').parents('.form-group').hide();
+                }
 
                 next_element = jQuery(document.createElement('div'))
                     .addClass('time well well-lg');
@@ -845,6 +854,9 @@
                 location: this.$element.find('[name="location"]').val(),
                 service: this.$element.find('[name="service"]').val(),
                 worker: this.$element.find('[name="worker"]').val(),
+                repeat_week: this.$element.find('[name="repeat_week"]').val(),
+                repeat_start_date: this.$element.find('[name="repeat_start_date"]').val(),
+                repeat_end_date: this.$element.find('[name="repeat_end_date"]').val(),
                 date: this.$element.find('.date').datepicker().val(),
                 end_date: this.$element.find('.date').datepicker().val(),
                 start: this.$element.find('.selected-time').data('val'),
@@ -1143,6 +1155,9 @@
                 location: this.$element.find('[name="location"]').val(),
                 service: this.$element.find('[name="service"]').val(),
                 worker: this.$element.find('[name="worker"]').val(),
+                repeat_week: this.$element.find('[name="repeat_week"]').val(),
+                repeat_start_date: this.$element.find('[name="repeat_start_date"]').val(),
+                repeat_end_date: this.$element.find('[name="repeat_end_date"]').val(),
                 date: this.$element.find('.date').datepicker().val(),
                 end_date: this.$element.find('.date').datepicker().val(),
                 start: this.$element.find('.selected-time').data('val'),
@@ -1408,4 +1423,70 @@ jQuery(document).ready(function () {
             });
         });
     }
+
+    
+});
+
+
+jQuery(document).ready(function() {
+    jQuery('select#repeat_week').on('change', function() {
+        if (jQuery(this).val() === '2') {
+            jQuery('#custom-recurrence-modal').show();
+            jQuery('#custom-recurrence-overlay').show();
+        }
+        if (jQuery(this).val() === '1') {
+            jQuery('input[name="repeat_week"]').val(1);
+            jQuery('input[name="repeat_start_date"]').val(0);
+            jQuery('input[name="repeat_end_date"]').val(0);
+            jQuery('#recurrence-summary').hide();
+        }
+        if (jQuery(this).val() === '0') {
+            jQuery('input[name="repeat_week"]').val(0);
+            jQuery('input[name="repeat_start_date"]').val(0);
+            jQuery('input[name="repeat_end_date"]').val(0);
+            jQuery('#recurrence-summary').hide();
+        }
+    });
+
+  jQuery('#modal-end-never').on('change', function() {
+    jQuery('#modal-end-date').prop('disabled', true);
+  });
+
+  jQuery('#modal-end-on').on('change', function() {
+    jQuery('#modal-end-date').prop('disabled', false);
+  });
+
+  jQuery('#modal-cancel-btn').on('click', function() {
+    jQuery('#custom-recurrence-modal').hide();
+    jQuery('#custom-recurrence-overlay').hide();
+    jQuery('select#repeat_week').val('0'); // Reset to 'Does Not Repeat'
+  });
+
+  jQuery('#modal-save-btn').on('click', function() {
+    var repeatWeek = jQuery('#modal-repeat-week').val();
+    var startDate = jQuery('#modal-start-date').val();
+    var endType = jQuery('input[name="modal-end-type"]:checked').val();
+    var endDate = (endType == 'date') ? jQuery('#modal-end-date').val() : 'never';
+
+    if (endType === 'date' && endDate !== '' && startDate !== '') {
+        if (new Date(endDate) < new Date(startDate)) {
+            alert('End date cannot be earlier than start date.');
+            return;
+        }
+    }
+
+    // Save to hidden inputs
+    jQuery('input[name="repeat_week"]').val(repeatWeek);
+    jQuery('input[name="repeat_start_date"]').val(startDate);
+    jQuery('input[name="repeat_end_date"]').val(endDate);
+
+    jQuery('#summary-repeat-week').text(`${repeatWeek} week(s)`);
+    jQuery('#summary-start-date').text(startDate);
+    jQuery('#summary-end-date').text(endType == 'date' ? endDate : 'Never');
+    jQuery('#recurrence-summary').show();
+
+    // Hide modal
+    jQuery('#custom-recurrence-modal').hide();
+    jQuery('#custom-recurrence-overlay').hide();
+  });
 });

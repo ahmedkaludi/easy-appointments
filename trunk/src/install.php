@@ -864,6 +864,7 @@ EOT;
             $table_services = $this->wpdb->prefix . 'ea_appointments';
 
             $table_queries[] = "ALTER TABLE `{$table_services}` ADD COLUMN `customer_id` INT NULL AFTER `session`;";
+            $table_queries[] = "ALTER TABLE `{$table_services}` ADD COLUMN `recurrence_id` INT NULL AFTER `customer_id`;";
 
             // add relations
             foreach ($table_queries as $query) {
