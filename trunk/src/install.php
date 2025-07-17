@@ -83,6 +83,8 @@ CREATE TABLE {$table_prefix}ea_appointments (
   price decimal(10,2) DEFAULT NULL,
   ip varchar(45) DEFAULT NULL,
   session varchar(32) DEFAULT NULL,
+  customer_id int(11) DEFAULT NULL,
+  recurrence_id varchar(255) DEFAULT NULL,
   PRIMARY KEY  (id),
   KEY appointments_location (location),
   KEY appointments_service (service),
@@ -104,6 +106,7 @@ CREATE TABLE {$table_prefix}ea_connections (
   day_from date DEFAULT NULL,
   day_to date DEFAULT NULL,
   is_working smallint(3) DEFAULT NULL,
+  repeat_week smallint(3) DEFAULT NULL,
   PRIMARY KEY  (id),
   KEY location_to_connection (location),
   KEY service_to_location (service),
@@ -862,9 +865,11 @@ EOT;
             $table_queries = array();
 
             $table_services = $this->wpdb->prefix . 'ea_appointments';
+            $table_services_1 = $this->wpdb->prefix . 'ea_connections';
 
             $table_queries[] = "ALTER TABLE `{$table_services}` ADD COLUMN `customer_id` INT NULL AFTER `session`;";
-            $table_queries[] = "ALTER TABLE `{$table_services}` ADD COLUMN `recurrence_id` INT NULL AFTER `customer_id`;";
+            $table_queries[] = "ALTER TABLE `{$table_services}` ADD COLUMN `recurrence_id` VARCHAR(255) NULL AFTER `customer_id`;";
+            $table_queries[] = "ALTER TABLE `{$table_services_1}` ADD COLUMN `repeat_week` INT NULL AFTER `is_working`;";
 
             // add relations
             foreach ($table_queries as $query) {
