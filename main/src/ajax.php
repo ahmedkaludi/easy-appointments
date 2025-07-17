@@ -366,13 +366,10 @@ class EAAjax
                 LIMIT 1",
                 $location, $service, $worker, $date);
         $connection_details = $wpdb->get_row($query1);
-        error_log('Connection details: ' . print_r($connection_details, true));
         $result =  array('calendar_slots' =>$slots, 'connection_details' => $connection_details);
        
 
         $this->send_ok_json_result($result);
-
-        // $this->send_ok_json_result($slots);
     }
 
     public function old_ajax_res_appointment()
@@ -502,7 +499,7 @@ class EAAjax
 
         $allowed_keys = array(
             'id', 'location', 'service', 'worker', 'name', 'email', 'phone', 'date', 'start', 'end', 'end_date',
-            'description', 'status', 'user', 'created', 'price', 'ip', 'session', 'repeat_week', 'recurrence_id'
+            'description', 'status', 'user', 'created', 'price', 'ip', 'session', 'repeat_week', 'recurrence_id','repeat_start_date', 'repeat_end_date'
         );
 
         foreach ($data as $key => $value) {
@@ -553,32 +550,32 @@ class EAAjax
 
         $recurrence_id = $repeat_week > 0 ? 'rec_' . uniqid() : null;
 
+        $initial_date = $data['date'];
+        $connection = $wpdb->get_row($wpdb->prepare(
+            "SELECT * FROM {$wpdb->prefix}ea_connections WHERE 
+            location = %d AND service = %d AND worker = %d AND is_working = 1
+            AND (day_from IS NULL OR day_from <= %s)
+            ORDER BY day_to DESC LIMIT 1",
+            $data['location'], $data['service'], $data['worker'], $initial_date
+        ));
+
+        $connection_end_date = isset($connection->day_to) ? strtotime($connection->day_to) : null;
+
         // If custom repeat range provided, use that
         if ($repeat_week > 0 && $repeat_start_date) {
             $initial_date = $repeat_start_date;
-            $initial_end_date = $repeat_end_date ?: $repeat_start_date;
-            $connection_end_date = $repeat_end_date ? strtotime($repeat_end_date) : null; // NULL = run until blocked by connection or slot availability
+            $initial_end_date = $repeat_start_date;
         } else {
             // Fallback to standard
             $initial_date = $data['date'];
             $initial_end_date = isset($data['end_date']) ? $data['end_date'] : $initial_date;
-
-            $connection = $wpdb->get_row($wpdb->prepare(
-                "SELECT * FROM {$wpdb->prefix}ea_connections WHERE 
-                location = %d AND service = %d AND worker = %d AND is_working = 1
-                AND (day_from IS NULL OR day_from <= %s)
-                ORDER BY day_to DESC LIMIT 1",
-                $data['location'], $data['service'], $data['worker'], $initial_date
-            ));
-
-            $connection_end_date = isset($connection->day_to) ? strtotime($connection->day_to) : null;
         }
 
         if ($repeat_end_date && $connection_end_date) {
             // Pick the earlier of the two
-            $repeat_end_ts = strtotime($repeat_end_date);
-            if ($repeat_end_ts > $connection_end_date) {
-                $repeat_end_date = date('Y-m-d', $connection_end_date);
+            $repeat_end_ts = strtotime($repeat_end_date);            
+            if ($repeat_end_ts < $connection_end_date) {
+                $connection_end_date = strtotime($repeat_end_date);
             }
         }
 
