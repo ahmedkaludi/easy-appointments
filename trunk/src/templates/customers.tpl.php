@@ -290,7 +290,7 @@
                         '<td><button class="button customer-detail" data-id="' + c.id + '">View</button></td>' +
                         '</tr>';
                 });
-                jQuery('#customer-table-body').html(rows || '<tr><td colspan="5">No results.</td></tr>');
+                jQuery('#customer-table-body').html((rows.length) ? rows : '<tr><td colspan="5">No results.</td></tr>');
                 var pag = '';
                 for (var i = 1; i <= res.total_pages; i++) {
                     pag += '<button class="button page-btn" data-page="' + i + '" ' + (i === res.paged ? 'disabled' : '') + '>' + i + '</button> ';

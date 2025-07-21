@@ -949,11 +949,19 @@ class EAAdminPanel
 
         // Total count
         $total_sql = "SELECT COUNT(*) FROM $table " . ($search_sql ? $search_sql : '');
-        $total_customers = $wpdb->get_var($wpdb->prepare($total_sql, ...$search_params));
+        if (!empty($search_sql)) {
+            $total_customers = $wpdb->get_var($wpdb->prepare($total_sql, ...$search_params));
+        } else {
+            $total_customers = $wpdb->get_var($total_sql);
+        }
 
         // Fetch paginated data
         $query_sql = "SELECT * FROM $table " . ($search_sql ? $search_sql : '') . " ORDER BY id DESC LIMIT %d OFFSET %d";
-        $customers = $wpdb->get_results($wpdb->prepare($query_sql, ...array_merge($search_params, [$per_page, $offset])));
+        if (!empty($search_sql)) {
+            $customers = $wpdb->get_results($wpdb->prepare($query_sql, ...array_merge($search_params, [$per_page, $offset])));
+        } else {
+            $customers = $wpdb->get_results($wpdb->prepare($query_sql, $per_page, $offset));
+        }
 
         // Calculate total pages
         $total_pages = ceil($total_customers / $per_page);
@@ -964,9 +972,8 @@ class EAAdminPanel
         $this->paged = $paged;
         $this->total_pages = $total_pages;
 
-        // Enqueue styles/scripts (you can customize these)
+        // Enqueue styles/scripts
         load_plugin_textdomain('easy-appointments', false, EA_PLUGIN_DIR  . 'languages/');
-
         wp_enqueue_style('ea-admin-bundle-css');
         wp_enqueue_script('ea-admin-bundle');
 
@@ -990,6 +997,7 @@ class EAAdminPanel
         require_once EA_SRC_DIR . 'templates/customers.tpl.php';
         require_once EA_SRC_DIR . 'templates/inlinedata.tpl.php';
     }
+
 
 
 
