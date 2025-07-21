@@ -1,13 +1,4 @@
 <style>
-    .ea-loader {
-        width: 40px;
-        height: 40px;
-        border: 4px solid #ccc;
-        border-top: 4px solid #007cba;
-        border-radius: 50%;
-        animation: spin 0.6s linear infinite;
-    }
-
     @keyframes spin {
         to {
             transform: rotate(360deg);
@@ -61,6 +52,56 @@
         border-bottom: 2px solid #184f7c;
         color: #184f7c;
     }
+
+    .table-container {
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        overflow: hidden;
+        background-color: #fff;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        font-family: 'Roboto', sans-serif;
+    }
+
+    /* Table styling */
+    table.custom-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    /* Header */
+    table.custom-table thead {
+        background-color: #f3f4ff;
+    }
+
+    table.custom-table thead th {
+        text-align: left;
+        padding: 12px 16px;
+        font-weight: 600;
+        font-size: 14px;
+        color: #333;
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+        border-bottom: 1px solid #dcdef1;
+    }
+
+    /* Body rows */
+    table.custom-table tbody tr {
+        border-bottom: 1px solid #f0f0f0;
+        transition: background 0.2s ease-in-out;
+        border-bottom: 1px solid #dcdef1;
+    }
+
+    table.custom-table tbody tr:hover {
+        background-color: #f9f9f9;
+    }
+
+    /* Cells */
+    table.custom-table td {
+        padding: 16px 14px;
+        font-size: 15px;
+        color: #222;
+        vertical-align: middle;
+    }
 </style>
 
 <div class="wrap">
@@ -88,31 +129,39 @@
 </div>
 
 <div class="wrap">
-    <table class="ea-responsive-table widefat fixed">
-        <thead>
-            <tr>
-                <th width="80px"><?php esc_html_e('ID', 'easy-appointments'); ?></th>
-                <th><?php esc_html_e('Name', 'easy-appointments'); ?></th>
-                <th><?php esc_html_e('Email', 'easy-appointments'); ?></th>
-                <th><?php esc_html_e('Mobile', 'easy-appointments'); ?></th>
-                <th><?php esc_html_e('Action', 'easy-appointments'); ?></th>
-            </tr>
-        </thead>
-        <tbody id="customer-table-body">
-            <tr>
-                <td colspan="5"><?php esc_html_e('Loading...', 'easy-appointments'); ?></td>
-            </tr>
-        </tbody>
-    </table>
+    <div class="table-container">
+        <table class="custom-table">
+            <thead>
+                <tr>
+                    <th width="80px"><?php esc_html_e('ID', 'easy-appointments'); ?></th>
+                    <th><?php esc_html_e('Name', 'easy-appointments'); ?></th>
+                    <th><?php esc_html_e('Email', 'easy-appointments'); ?></th>
+                    <th><?php esc_html_e('Mobile', 'easy-appointments'); ?></th>
+                    <th><?php esc_html_e('Action', 'easy-appointments'); ?></th>
+                </tr>
+            </thead>
+            <tbody id="customer-table-body">
+                <tr>
+                    <td colspan="5"><?php esc_html_e('Loading...', 'easy-appointments'); ?></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 
     <div id="pagination" style="margin-top: 15px;"></div>
 </div>
 <div id="ea-screen-loader"
     style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(255, 255, 255, 0.6); z-index: 10000;
-            display: flex; align-items: center; justify-content: center;">
-    <div class="ea-loader"></div>
+           background: rgba(255, 255, 255, 0.6); z-index: 10000;
+           display: flex; align-items: center; justify-content: center;">
+    <div class="ea-loader" style="display: flex; flex-direction: column; align-items: center;">
+        <img src="<?php echo esc_url(plugins_url('assets/img/loader.svg', dirname(__FILE__))); ?>"
+            alt="Loading..." style="width: 60px; height: 60px; margin-bottom: 10px;">
+        <div style="color: #333; font-size: 16px;">Loading Customers</div>
+    </div>
 </div>
+
+
 
 
 <!-- Modal Panel -->
@@ -271,7 +320,7 @@
             fetchCustomers(jQuery('#customer-search').val(), jQuery(this).data('page'));
         });
 
-       
+
 
         function showScreenLoader() {
             jQuery('#ea-screen-loader').css('display', 'flex');
@@ -417,7 +466,7 @@
         }
 
         // Add new customer
-        jQuery('#ea-add-customer-btn').on('click', function (e) {
+        jQuery('#ea-add-customer-btn').on('click', function(e) {
             e.preventDefault();
 
             // Set modal title
@@ -425,7 +474,7 @@
             var my_modal = jQuery('#ea-customer-modal');
             my_modal.find('.edit-btn').hide();
             my_modal.find('#ea-cancel-edit').hide();
-            
+
 
             my_modal.find('.ea-info-text').hide();
             my_modal.find('.ea-info-input').show();
@@ -470,15 +519,15 @@
             showScreenLoader();
             const isEdit = jQuery('#ea-cust-id').val() !== '';
             const action = isEdit ? 'ea_update_customer_ajax' : 'ea_insert_customer_ajax';
-            const formData = jQuery(this).serialize() + '&action='+action;
+            const formData = jQuery(this).serialize() + '&action=' + action;
 
             jQuery.post(ajaxurl, formData, function(res) {
                 hideScreenLoader();
                 if (res.success) {
                     fetchCustomers();
-                    if ( isEdit ) {
+                    if (isEdit) {
                         loadAppointments(currentCustomerId);
-                    }else{
+                    } else {
                         jQuery('#ea-close-customer-modal').click();
                     }
                 } else {

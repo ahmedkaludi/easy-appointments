@@ -223,6 +223,7 @@ EOT;
         foreach ($alter_querys as $alter_query) {
             $this->wpdb->query($alter_query);
         }
+        $this->ea_create_customers_table();
 
         update_option('easy_app_db_version', $this->easy_app_db_version);
     }
