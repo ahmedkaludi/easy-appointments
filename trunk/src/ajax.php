@@ -181,6 +181,7 @@ class EAAjax
             add_action('wp_ajax_ea_update_customer_ajax', [$this, 'handle_update_customer_ajax']);
             add_action('wp_ajax_ea_insert_customer_ajax', [$this, 'handle_insert_customer_ajax']);
             add_action('wp_ajax_ea_get_customer_detail_ajax', [$this, 'handle_customer_detail_ajax']);
+            add_action('wp_ajax_ea_delete_customer' , [$this, 'ea_handle_delete_customer']);
             
         }
         
@@ -2209,6 +2210,34 @@ class EAAjax
         }
 
         wp_send_json_error(['message' => 'Failed to update customer.']);
+    }
+
+    public function ea_handle_delete_customer() {
+        check_ajax_referer('ea_customer_delete', 'ea_nonce');
+
+        if (!current_user_can('manage_options')) {
+            wp_send_json_error(['message' => 'Unauthorized'], 403);
+        }
+
+        global $wpdb;
+        $customer_id = intval($_POST['customer_id'] ?? 0);
+        $user_id = get_current_user_id();
+
+        if (!$customer_id) {
+            wp_send_json_error(['message' => 'Invalid customer ID.']);
+        }
+
+        $deleted = $wpdb->delete(
+            $wpdb->prefix . 'ea_customers',
+            ['id' => $customer_id],
+            ['%d']
+        );
+
+        if ($deleted) {
+            wp_send_json_success();
+        } else {
+            wp_send_json_error(['message' => 'Failed to delete customer.']);
+        }
     }
 
     public function handle_insert_customer_ajax() {

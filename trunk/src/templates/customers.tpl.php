@@ -104,6 +104,29 @@
     }
 </style>
 
+ <style>
+    .ea_action-buttons {
+      display: flex;
+      gap: 20px; /* spacing between icons */
+      align-items: center;
+      justify-content: center;
+    }
+
+    .ea_action-buttons i {
+      font-size: 20px;
+      cursor: pointer;
+    }
+
+    .ea_edit-btn {
+      color: #28a745; /* green */
+    }
+
+    .ea_delete-btn {
+      color: #dc3545; /* red */
+    }
+  </style>
+  
+
 <div class="wrap">
     <h2><?php esc_html_e('Customer List', 'easy-appointments'); ?></h2>
     <br>
@@ -137,7 +160,7 @@
                     <th><?php esc_html_e('Name', 'easy-appointments'); ?></th>
                     <th><?php esc_html_e('Email', 'easy-appointments'); ?></th>
                     <th><?php esc_html_e('Mobile', 'easy-appointments'); ?></th>
-                    <th><?php esc_html_e('Action', 'easy-appointments'); ?></th>
+                    <th width="120px"><?php esc_html_e('Action', 'easy-appointments'); ?></th>
                 </tr>
             </thead>
             <tbody id="customer-table-body">
@@ -286,7 +309,7 @@
                         '<td><a href="#" class="customer-detail" data-id="' + c.id + '">' + c.name + '</a></td>' +
                         '<td><a href="#" class="customer-detail" data-id="' + c.id + '">' + c.email + '</a></td>' +
                         '<td>' + c.mobile + '</td>' +
-                        '<td><button class="button customer-detail" data-id="' + c.id + '">View</button></td>' +
+                        '<td><div class="ea_action-buttons"><i data-id="' + c.id + '" class="customer-detail fa fa-eye ea_edit-btn" title="Edit"></i> <i data-id="' + c.id + '" class="fa fa-trash ea_delete-btn" title="Delete"></i></div></td>' +
                         '</tr>';
                 });
                 jQuery('#customer-table-body').html((rows.length) ? rows : '<tr><td colspan="5">No results.</td></tr>');
@@ -535,6 +558,33 @@
                 }
             });
         });
+        jQuery(document).on('click', '.ea_delete-btn', function (e) {
+            e.preventDefault();
+
+            const custId = jQuery(this).data('id');
+            if (!confirm('Are you sure you want to delete this customer?')) {
+                return;
+            }
+
+            showScreenLoader();
+            var eaNonce = "<?php echo wp_create_nonce('ea_customer_delete'); ?>";
+
+            jQuery.post(ajaxurl, {
+                action: 'ea_delete_customer',
+                customer_id: custId,
+                ea_nonce: eaNonce
+            }, function (res) {
+                hideScreenLoader();
+
+                if (res.success) {
+                    fetchCustomers();
+                    alert('Customer deleted successfully.');
+                } else {
+                    alert(res.data.message || 'Failed to delete customer.');
+                }
+            });
+        });
+
 
 
         // Cancel and close modal
