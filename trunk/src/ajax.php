@@ -2170,22 +2170,45 @@ class EAAjax
         if ( ! current_user_can('manage_options') ) {
             wp_send_json_error(['message' => 'Unauthorized'], 403);
         }
+
         global $wpdb;
         check_ajax_referer('ea_customer_edit', 'ea_nonce');
 
         $table = $wpdb->prefix . 'ea_customers';
         $id = intval($_POST['id']);
+        $name = sanitize_text_field($_POST['name']);
+        $email = sanitize_email($_POST['email']);
+        $mobile = sanitize_text_field($_POST['mobile']);
+        $address = sanitize_text_field($_POST['address']);
+        $current_user_id = get_current_user_id();
+
+        // Check for duplicate email for the same user_id (excluding the current customer ID)
+        $duplicate = $wpdb->get_var($wpdb->prepare(
+            "SELECT COUNT(*) FROM $table WHERE email = %s AND user_id = %d AND id != %d",
+            $email,
+            $current_user_id,
+            $id
+        ));
+
+        if ($duplicate > 0) {
+            wp_send_json_error(['message' => 'A customer with this email already exists for your account.']);
+        }
+
         $data = [
-            'name' => sanitize_text_field($_POST['name']),
-            'email'=> sanitize_email($_POST['email']),
-            'mobile'=> sanitize_text_field($_POST['mobile']),
-            'address'=> sanitize_text_field($_POST['address']),
+            'name'    => $name,
+            'email'   => $email,
+            'mobile'  => $mobile,
+            'address' => $address,
+            'user_id' => $current_user_id, // ensure user_id is always stored
         ];
+
         $updated = $wpdb->update($table, $data, ['id' => $id]);
+
         if ($updated !== false) {
             wp_send_json_success();
         }
-        wp_send_json_error();
+
+        wp_send_json_error(['message' => 'Failed to update customer.']);
     }
 
     public function handle_insert_customer_ajax() {
@@ -2200,17 +2223,32 @@ class EAAjax
         $address = sanitize_textarea_field($_POST['address'] ?? '');
 
         global $wpdb;
+        $current_user_id = get_current_user_id();
+
+        // Check for duplicate email for the same user_id
+        $existing = $wpdb->get_var($wpdb->prepare(
+            "SELECT COUNT(*) FROM {$wpdb->prefix}ea_customers WHERE email = %s AND user_id = %d",
+            $email,
+            $current_user_id
+        ));
+
+        if ($existing > 0) {
+            wp_send_json_error(['message' => 'Customer with this email already exists.']);
+        }
+
+        // Proceed to insert
         $inserted = $wpdb->insert("{$wpdb->prefix}ea_customers", [
             'name'    => $name,
             'email'   => $email,
             'mobile'  => $mobile,
             'address' => $address,
+            'user_id' => $current_user_id ? $current_user_id : null,
         ]);
 
         if ($inserted) {
             wp_send_json_success();
         } else {
-            wp_send_json_error();
+            wp_send_json_error(['message' => 'Failed to insert customer.']);
         }
     }
     public function handle_customer_detail_ajax() {

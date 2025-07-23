@@ -63,12 +63,14 @@
                     <h3><%- settings['trans.personal-informations'] %></h3>
                     <small><%- settings['trans.fields'] %></small>
                     <% if (settings['show.customer_search_front'] == 1) { %>
-                        <div class="form-group">
-                            <label class="col-sm-4 control-label"><?php echo esc_html__('Search Customer','easy-appointments'); ?></label>
-                            <div class="col-sm-8">
-                                <input id="ea_customer_search" class="form-control" type="text" placeholder="Search customer..." />
+                        <% if (settings['is_user_logged_in'] == 1) { %>
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label"><?php echo esc_html__('Search Customer','easy-appointments'); ?></label>
+                                <div class="col-sm-8">
+                                    <input id="ea_customer_search" class="form-control" type="text" placeholder="Search customer..." />
+                                </div>
                             </div>
-                        </div>
+                        <% } %>
                     <% } %>
                     <% _.each(settings.MetaFields, function(item,key,list) { %>
                     <% if (item.visible == "0") { return; } %>

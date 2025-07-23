@@ -450,6 +450,7 @@ class EAFrontend
         if ( isset($settings['default.status'])) {
             $clean_settings['default.status'] = $settings['default.status'];
         }
+        $clean_settings['is_user_logged_in'] = is_user_logged_in() ? 1 : 0;
         $data_settings = json_encode($clean_settings);
         $data_vacation = $this->options->get_option_value('vacations', '[]');
 
@@ -632,7 +633,9 @@ class EAFrontend
         }        
         
         if (isset($settings['show.customer_search_front']) && $settings['show.customer_search_front'] == 1) {
-            wp_enqueue_script('select2-js', 'https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js');
+            wp_enqueue_script('select2-js', 'https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js',array('jquery'),
+            EASY_APPOINTMENTS_VERSION,
+            true);
             wp_enqueue_style('select2-css', 'https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css');
         }
 

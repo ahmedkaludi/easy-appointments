@@ -245,7 +245,6 @@
                 <th><?php esc_html_e('Date', 'easy-appointments'); ?></th>
                 <th><?php esc_html_e('Start', 'easy-appointments'); ?></th>
                 <th><?php esc_html_e('End', 'easy-appointments'); ?></th>
-                <th><?php esc_html_e('Price', 'easy-appointments'); ?></th>
                 <th><?php esc_html_e('Location', 'easy-appointments'); ?></th>
                 <th><?php esc_html_e('Service', 'easy-appointments'); ?></th>
                 <th><?php esc_html_e('Employee', 'easy-appointments'); ?></th>
@@ -392,7 +391,6 @@
                             '<td>' + item.date + '</td>' +
                             '<td>' + item.start + '</td>' +
                             '<td>' + item.end + '</td>' +
-                            '<td>' + item.price + '</td>' +
                             '<td>' + item.location_name + '</td>' +
                             '<td>' + item.service_name + '</td>' +
                             '<td>' + item.staff_name + '</td>' +
@@ -527,11 +525,13 @@
                     fetchCustomers();
                     if (isEdit) {
                         loadAppointments(currentCustomerId);
+                        var my_modal = jQuery('#ea-customer-modal');
+                        my_modal.find('.edit-btn').show();
                     } else {
                         jQuery('#ea-close-customer-modal').click();
                     }
                 } else {
-                    alert('Update failed.');
+                    alert(res.data.message);
                 }
             });
         });
