@@ -64,7 +64,7 @@ class EALogic
      * @param  int $block_before
      * @return array Array of free times
      */
-    public function get_open_slots(
+    public function oldget_open_slots(
         $location = null,
         $service = null,
         $worker = null,
@@ -171,6 +171,119 @@ class EALogic
         // format time
         return $this->format_time($working_hours, $serviceObj->duration);
     }
+
+    public function get_open_slots(
+        $location = null,
+        $service = null,
+        $worker = null,
+        $day = null,
+        $app_id = null,
+        $check_current_day = true,
+        $block_before = 0
+    )
+    {
+        $day_of_week = gmdate('l', strtotime($day));
+
+        $time_now = current_time('timestamp', false);
+        $block_time = $time_now + intval($block_before) * 60;
+        $is_current_day = (gmdate('Y-m-d') == $day);
+
+        $query = $this->wpdb->prepare("SELECT * FROM {$this->wpdb->prefix}ea_connections WHERE 
+            location=%d AND 
+            service=%d AND 
+            worker=%d AND 
+            is_working = 1 AND 
+            (day_from IS NULL OR day_from <= %s) AND 
+            (day_to IS NULL OR day_to >= %s)",
+            $location, $service, $worker, $day, $day
+        );
+
+        $open_days = $this->wpdb->get_results($query);
+
+        $working_hours = array();
+        $serviceObj = $this->get_service($service);
+
+        $day_name_map = [
+            'Sunday' => 0, 'Monday' => 1, 'Tuesday' => 2,
+            'Wednesday' => 3, 'Thursday' => 4, 'Friday' => 5, 'Saturday' => 6
+        ];
+
+        foreach ($open_days as $working_day) {
+            $allowed_days = array_map('trim', explode(',', $working_day->day_of_week));
+
+            if (!in_array($day_of_week, $allowed_days)) {
+                continue;
+            }
+
+            $repeat_week = (int)$working_day->repeat_week;
+            $day_from = !empty($working_day->day_from) ? $working_day->day_from : $day;
+            $current_date = new DateTime($day);
+            if ($repeat_week > 1) {
+                $target_dow = $day_name_map[$day_of_week];
+                $start_date = new DateTime($day_from);
+                while ((int)$start_date->format('w') !== $target_dow) {
+                    $start_date->modify('+1 day');
+                }
+
+                $interval = $start_date->diff($current_date);
+                $weeks_between = floor($interval->days / 7);
+
+                if ($weeks_between % $repeat_week !== 0) {
+                    continue;
+                }
+            }
+
+            $upper_time = strtotime($working_day->time_to);
+            $counter = 0;
+
+            while (true) {
+                $temp_time = strtotime($working_day->time_from);
+                $diff_between_duration_and_slot_step = 0;
+
+                if (!empty($serviceObj->slot_step)) {
+                    $run_time = $serviceObj->slot_step * 60 * $counter++;
+                    $diff_between_duration_and_slot_step = ($serviceObj->duration - $serviceObj->slot_step) * 60;
+                } else {
+                    $run_time = $serviceObj->duration * 60 * $counter++;
+                }
+
+                $temp_time += $run_time;
+                $temp_date_time = strtotime("$day {$working_day->time_from}") + $run_time;
+
+                if (($temp_time + $diff_between_duration_and_slot_step) < $upper_time) {
+                    $current_time = gmdate('H:i', $temp_time);
+
+                    if ($check_current_day && $is_current_day && $time_now > $temp_time) {
+                        continue;
+                    }
+
+                    if ($block_before > 0 && $check_current_day && $block_time > $temp_date_time) {
+                        continue;
+                    }
+
+                    $slot_count = is_numeric($working_day->slot_count) ? (int) $working_day->slot_count : 1;
+
+                    if (!array_key_exists($current_time, $working_hours)) {
+                        $working_hours[$current_time] = $slot_count;
+                    } else {
+                        $working_hours[$current_time] += $slot_count;
+                    }
+                } else {
+                    break;
+                }
+            }
+        }
+
+        $service_duration = $serviceObj->duration;
+
+        $this->remove_closed_slots($working_hours, $location, $service, $worker, $day, $serviceObj->duration);
+        $this->remove_reserved_slots($working_hours, $location, $service, $worker, $day, $service_duration, $app_id, $serviceObj->block_before, $serviceObj->block_after);
+
+        return $this->format_time($working_hours, $serviceObj->duration);
+    }
+
+
+
 
     /**
      * Remove times when is not working

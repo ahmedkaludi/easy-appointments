@@ -461,7 +461,7 @@
                 if (options.next == 'worker') {
                     default_option_value = 'Select '+ea_settings['trans.worker'];
                 }
-                plugin.$element.find('[id="repeat_week"]').parents('.form-group').hide();
+                plugin.$element.find('[id="repeat_booking"]').parents('.form-group').hide();
                 // default
                 next_element.append('<option value="">'+default_option_value+'</option>');
 
@@ -624,10 +624,10 @@
             // var req = jQuery.get(ea_ajaxurl, options, function (response) {
             var req = jQuery.get(ea_ajaxurl, options, function (response_m) {
                 var response = response_m.calendar_slots;
-                if (response_m.connection_details && response_m.connection_details.repeat_week == 1) {
-                    plugin.$element.find('[id="repeat_week"]').parents('.form-group').show();
+                if (response_m.connection_details && response_m.connection_details.repeat_booking == 1) {
+                    plugin.$element.find('[id="repeat_booking"]').parents('.form-group').show();
                 }else{
-                    plugin.$element.find('[id="repeat_week"]').parents('.form-group').hide();
+                    plugin.$element.find('[id="repeat_booking"]').parents('.form-group').hide();
                 }
 
                 next_element = jQuery(document.createElement('div'))
@@ -854,7 +854,7 @@
                 location: this.$element.find('[name="location"]').val(),
                 service: this.$element.find('[name="service"]').val(),
                 worker: this.$element.find('[name="worker"]').val(),
-                repeat_week: this.$element.find('[name="repeat_week"]').val(),
+                repeat_booking: this.$element.find('[name="repeat_booking"]').val(),
                 repeat_start_date: this.$element.find('[name="repeat_start_date"]').val(),
                 repeat_end_date: this.$element.find('[name="repeat_end_date"]').val(),
                 date: this.$element.find('.date').datepicker().val(),
@@ -1155,7 +1155,7 @@
                 location: this.$element.find('[name="location"]').val(),
                 service: this.$element.find('[name="service"]').val(),
                 worker: this.$element.find('[name="worker"]').val(),
-                repeat_week: this.$element.find('[name="repeat_week"]').val(),
+                repeat_booking: this.$element.find('[name="repeat_booking"]').val(),
                 repeat_start_date: this.$element.find('[name="repeat_start_date"]').val(),
                 repeat_end_date: this.$element.find('[name="repeat_end_date"]').val(),
                 date: this.$element.find('.date').datepicker().val(),
@@ -1429,19 +1429,19 @@ jQuery(document).ready(function () {
 
 
 jQuery(document).ready(function() {
-    jQuery('select#repeat_week').on('change', function() {
+    jQuery('select#repeat_booking').on('change', function() {
         if (jQuery(this).val() === '2') {
             jQuery('#custom-recurrence-modal').show();
             jQuery('#custom-recurrence-overlay').show();
         }
         if (jQuery(this).val() === '1') {
-            jQuery('input[name="repeat_week"]').val(1);
+            jQuery('input[name="repeat_booking"]').val(1);
             jQuery('input[name="repeat_start_date"]').val(0);
             jQuery('input[name="repeat_end_date"]').val(0);
             jQuery('#recurrence-summary').hide();
         }
         if (jQuery(this).val() === '0') {
-            jQuery('input[name="repeat_week"]').val(0);
+            jQuery('input[name="repeat_booking"]').val(0);
             jQuery('input[name="repeat_start_date"]').val(0);
             jQuery('input[name="repeat_end_date"]').val(0);
             jQuery('#recurrence-summary').hide();
@@ -1459,7 +1459,7 @@ jQuery(document).ready(function() {
   jQuery('#modal-cancel-btn').on('click', function() {
     jQuery('#custom-recurrence-modal').hide();
     jQuery('#custom-recurrence-overlay').hide();
-    jQuery('select#repeat_week').val('0'); // Reset to 'Does Not Repeat'
+    jQuery('select#repeat_booking').val('0'); // Reset to 'Does Not Repeat'
   });
 
   jQuery('#modal-save-btn').on('click', function() {
@@ -1476,7 +1476,7 @@ jQuery(document).ready(function() {
     }
 
     // Save to hidden inputs
-    jQuery('input[name="repeat_week"]').val(repeatWeek);
+    jQuery('input[name="repeat_booking"]').val(repeatWeek);
     jQuery('input[name="repeat_start_date"]').val(startDate);
     jQuery('input[name="repeat_end_date"]').val(endDate);
 

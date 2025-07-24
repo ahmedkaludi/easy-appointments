@@ -102,9 +102,7 @@
         color: #222;
         vertical-align: middle;
     }
-</style>
 
- <style>
     .ea_action-buttons {
       display: flex;
       gap: 20px; /* spacing between icons */
@@ -118,14 +116,13 @@
     }
 
     .ea_edit-btn {
-      color: #28a745; /* green */
+      color: #28a745;
     }
 
     .ea_delete-btn {
-      color: #dc3545; /* red */
+      color: #dc3545;
     }
-  </style>
-  
+</style>
 
 <div class="wrap">
     <h2><?php esc_html_e('Customer List', 'easy-appointments'); ?></h2>
@@ -160,7 +157,7 @@
                     <th><?php esc_html_e('Name', 'easy-appointments'); ?></th>
                     <th><?php esc_html_e('Email', 'easy-appointments'); ?></th>
                     <th><?php esc_html_e('Mobile', 'easy-appointments'); ?></th>
-                    <th width="120px"><?php esc_html_e('Action', 'easy-appointments'); ?></th>
+                    <th><?php esc_html_e('Action', 'easy-appointments'); ?></th>
                 </tr>
             </thead>
             <tbody id="customer-table-body">
@@ -558,6 +555,7 @@
                 }
             });
         });
+
         jQuery(document).on('click', '.ea_delete-btn', function (e) {
             e.preventDefault();
 
@@ -584,7 +582,6 @@
                 }
             });
         });
-
 
 
         // Cancel and close modal

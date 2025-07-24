@@ -107,6 +107,7 @@ CREATE TABLE {$table_prefix}ea_connections (
   day_to date DEFAULT NULL,
   is_working smallint(3) DEFAULT NULL,
   repeat_week smallint(3) DEFAULT NULL,
+  repeat_booking smallint(3) DEFAULT NULL,
   PRIMARY KEY  (id),
   KEY location_to_connection (location),
   KEY service_to_location (service),
@@ -871,6 +872,7 @@ EOT;
             $table_queries[] = "ALTER TABLE `{$table_services}` ADD COLUMN `customer_id` INT NULL AFTER `session`;";
             $table_queries[] = "ALTER TABLE `{$table_services}` ADD COLUMN `recurrence_id` VARCHAR(255) NULL AFTER `customer_id`;";
             $table_queries[] = "ALTER TABLE `{$table_services_1}` ADD COLUMN `repeat_week` INT NULL AFTER `is_working`;";
+            $table_queries[] = "ALTER TABLE `{$table_services_1}` ADD COLUMN `repeat_booking` INT NULL AFTER `repeat_week`;";
 
             // add relations
             foreach ($table_queries as $query) {
