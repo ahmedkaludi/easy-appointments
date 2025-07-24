@@ -119,20 +119,19 @@
                     </div>
                     <% });%>
                     </div>
-                    <% if (2 == '1') { %>
                     <div class="form-group" style="display:none;">
                         <div class="block"></div>
                         <label class="ea-label col-sm-4 control-label">
                             <?php echo esc_html('Repeat Appointement','easy-appointments'); ?>
                         </label>
                         <div class="col-sm-8">
-                            <select id="repeat_week" data-c="repeat_week" class="filter form-control">
+                            <select id="repeat_booking" data-c="repeat_booking" class="filter form-control">
                                 <option value="0"><?php echo esc_html('Does Not Repeat','easy-appointments'); ?></option>
                                 <option value="1"><?php echo esc_html('Repeat Weekly','easy-appointments'); ?></option>
                                 <option value="2"><?php echo esc_html('Custom','easy-appointments'); ?></option>
                             </select>
                         </div>
-                        <input type="hidden" name="repeat_week" value="0" />
+                        <input type="hidden" name="repeat_booking" value="0" />
                         <input type="hidden" name="repeat_start_date" value="0" />
                         <input type="hidden" name="repeat_end_date" value="0" />
                         <div id="recurrence-summary" class="mt-3 text-muted" style="display: none; padding:20px;">
@@ -141,7 +140,7 @@
                             <strong><?php echo esc_html('Ends','easy-appointments'); ?>:</strong> <span id="summary-end-date"></span>
                         </div>
                     </div>
-                    <% } %>
+                    
                     <h3 id="booking-overview-header"><%- settings['trans.booking-overview'] %></h3>
                     <div id="booking-overview"></div>
                     <div class="ea_hide_show">

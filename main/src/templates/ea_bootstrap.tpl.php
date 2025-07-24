@@ -119,7 +119,6 @@
                     </div>
                     <% });%>
                     </div>
-                    <% if (2 == '1') { %>
                     <div class="form-group" style="display:none;">
                         <div class="block"></div>
                         <label class="ea-label col-sm-4 control-label">
@@ -141,7 +140,7 @@
                             <strong><?php echo esc_html('Ends','easy-appointments'); ?>:</strong> <span id="summary-end-date"></span>
                         </div>
                     </div>
-                    <% } %>
+                    
                     <h3 id="booking-overview-header"><%- settings['trans.booking-overview'] %></h3>
                     <div id="booking-overview"></div>
                     <div class="ea_hide_show">

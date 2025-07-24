@@ -500,7 +500,7 @@ class EAAjax
 
         $allowed_keys = array(
             'id', 'location', 'service', 'worker', 'name', 'email', 'phone', 'date', 'start', 'end', 'end_date',
-            'description', 'status', 'user', 'created', 'price', 'ip', 'session', 'repeat_week', 'recurrence_id','repeat_start_date', 'repeat_end_date'
+            'description', 'status', 'user', 'created', 'price', 'ip', 'session', 'repeat_booking', 'recurrence_id','repeat_start_date', 'repeat_end_date'
         );
 
         foreach ($data as $key => $value) {
@@ -543,13 +543,13 @@ class EAAjax
         $service = $this->models->get_row('ea_services', $data['service']);
         $data['price'] = $service->price;
 
-        $repeat_week = isset($data['repeat_week']) ? intval($data['repeat_week']) : 0;
+        $repeat_booking = isset($data['repeat_booking']) ? intval($data['repeat_booking']) : 0;
         $repeat_start_date = !empty($data['repeat_start_date']) && $data['repeat_start_date'] !== '0' ? $data['repeat_start_date'] : null;
         $repeat_end_date   = (!empty($data['repeat_end_date']) && strtolower($data['repeat_end_date']) !== 'never' && $data['repeat_end_date'] !== '0') 
             ? $data['repeat_end_date'] 
             : null;
 
-        $recurrence_id = $repeat_week > 0 ? 'rec_' . uniqid() : null;
+        $recurrence_id = $repeat_booking > 0 ? 'rec_' . uniqid() : null;
 
         $initial_date = $data['date'];
         $connection = $wpdb->get_row($wpdb->prepare(
@@ -563,7 +563,7 @@ class EAAjax
         $connection_end_date = isset($connection->day_to) ? strtotime($connection->day_to) : null;
 
         // If custom repeat range provided, use that
-        if ($repeat_week > 0 && $repeat_start_date) {
+        if ($repeat_booking > 0 && $repeat_start_date) {
             $initial_date = $repeat_start_date;
             $initial_end_date = $repeat_start_date;
         } else {
@@ -584,11 +584,11 @@ class EAAjax
         $success_ids = [];
         $i = 0;
         while (true) {
-            $offset_weeks = $i * max(1, $repeat_week);
+            $offset_weeks = $i * max(1, $repeat_booking);
             $current_date_ts = strtotime("+{$offset_weeks} weeks", strtotime($initial_date));
             $current_end_date_ts = strtotime("+{$offset_weeks} weeks", strtotime($initial_end_date));
 
-            if ($repeat_week > 0 && $i > 0 && $connection_end_date && $current_date_ts > $connection_end_date) {
+            if ($repeat_booking > 0 && $i > 0 && $connection_end_date && $current_date_ts > $connection_end_date) {
                 break;
             }
 
@@ -635,7 +635,7 @@ class EAAjax
                 $success_ids[] = $response->id;
             }
 
-            if ($repeat_week === 0) {
+            if ($repeat_booking === 0) {
                 break;
             }
 
