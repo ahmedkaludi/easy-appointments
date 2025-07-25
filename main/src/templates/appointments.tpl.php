@@ -102,8 +102,8 @@
                 </select>
                 <label><?php esc_html_e('Order by', 'easy-appointments');?>:</label>
                 <select id="ea-order-by" name="ea-order-by">
-                    <option value="ASC">asc</option>
-                    <option value="DESC" selected>desc</option>
+                    <option value="ASC"><?php esc_html_e('asc', 'easy-appointments');?></option>
+                    <option value="DESC" selected><?php esc_html_e('desc', 'easy-appointments');?></option>
                 </select>
             </div>
 			<span id="status-msg" class="status"></span>

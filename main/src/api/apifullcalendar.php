@@ -177,6 +177,7 @@ class EAApiFullCalendar
                 'end'    => $element->end_date . 'T' . $element->end,
                 'status' => $element->status,
                 'id'     => $element->id,
+                'user'     => $element->user,
                 'hash'   => $this->calculate_hash($element->id),
             );
 
@@ -347,7 +348,7 @@ class EAApiFullCalendar
         try {
             $display = 'block';
 
-            if ($edit && $eventpopup && (get_current_user_id() === (int) $app['user_id'] || current_user_can('manage_options'))) {
+            if ($edit && $eventpopup && (get_current_user_id() === (int) $app['user'] || current_user_can('manage_options'))) {
                 echo '<button style="float:right;" type="button" class="button ea-edit-appointment-icon">
                         <span class="dashicons dashicons-edit" style="cursor:pointer;"></span>
                     </button>';
@@ -360,7 +361,7 @@ class EAApiFullCalendar
 
             ob_start();
 
-            if (get_current_user_id() === (int) $app['user_id'] || current_user_can('manage_options')) {
+            if (get_current_user_id() === (int) $app['user'] || current_user_can('manage_options')) {
                 $meta_fields = $this->db_models->get_all_rows('ea_meta_fields', array(), array('id' => 'ASC'));
                 ?>
                 <div class="ea-edit-appointment-wrapper" style="max-width:600px; margin:auto; display:<?php echo esc_attr($display); ?>;">
@@ -413,7 +414,9 @@ class EAApiFullCalendar
                             <button type="submit" class="button button-primary" style="background: #0073aa; border: 1px solid #006799; color: #fff; text-decoration: none; text-shadow: none; font-size: 14px; padding: 8px 16px; border-radius: 3px; cursor: pointer;">
                                 <?php esc_html_e('Submit', 'easy-appointments'); ?>
                             </button>
+                            <?php if (!empty($this->options->get_option_value('fullcalendar.event.show'))) { ?>
                             <button type="button" style=" border: 1px solid rgb(98, 99, 100); text-decoration: none; text-shadow: none; font-size: 14px; padding: 8px 16px; border-radius: 3px; cursor: pointer;" class="button ea-cancel-edit"><?php esc_html_e('Cancel', 'easy-appointments'); ?></button>
+                            <?php } ?>
                         </div>
                     </form>
                 </div>

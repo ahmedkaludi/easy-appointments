@@ -1064,7 +1064,6 @@ EOT;
                 $user_id  = $appointment->user_id;
     
                 if (empty($email)) {
-                    error_log("Skipping appointment ID $app_id: email is empty");
                     continue;
                 }
                 $customer_id = $wpdb->get_var($wpdb->prepare(

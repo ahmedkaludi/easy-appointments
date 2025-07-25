@@ -788,14 +788,12 @@
                     </div>
                     <div class="form-item" style="background-color: #ccc; padding: 15px;">
                         <blockquote style="margin: 0;">
-                            <?php echo wp_kses_post(__('
-                                <strong>Display Thank You Note:</strong> This screen is displayed immediately after a user successfully books an appointment using the booking form, Its featured Appointment summary and Action buttons.<br><br>
-                                <strong>Action Buttons:</strong><br>
+                                <strong><?php esc_html_e('Display Thank You Note', 'easy-appointments'); ?>:</strong> <?php esc_html_e('Action Buttons', 'easy-appointments'); ?>.<br><br>
+                                <strong><?php esc_html_e('This screen is displayed immediately after a user successfully books an appointment using the booking form, Its featured Appointment summary and Action buttons', 'easy-appointments'); ?>:</strong><br>
                                 <ul style="margin: 0 0 0 20px; padding: 0;">
-                                    <li><strong>Book New Appointment:</strong> Allows the user to return and book another appointment.</li>
-                                    <li><strong>Add to Google Calendar:</strong> Its add the appointment directly to their Google Calendar for easy reminders.</li>
+                                    <li><strong><?php esc_html_e('Book New Appointment', 'easy-appointments'); ?>:</strong> <?php esc_html_e('Allows the user to return and book another appointment', 'easy-appointments'); ?>.</li>
+                                    <li><strong><?php esc_html_e('Add to Google Calendar', 'easy-appointments'); ?>:</strong><?php esc_html_e('Its add the appointment directly to their Google Calendar for easy reminders', 'easy-appointments'); ?> .</li>
                                 </ul>
-                            ', 'easy-appointments')); ?>
                         </blockquote>
                     </div>
                 </div>

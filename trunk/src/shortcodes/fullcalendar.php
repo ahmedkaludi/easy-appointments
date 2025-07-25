@@ -131,7 +131,6 @@ class EAFullCalendar
             // also remove '{', '}' brackets because no settings needs that
             $code_params[$key] = esc_js(str_replace(array('{','}',';', '(', ')'), array('','','','',''), $value));
         }
-        error_log('code_params: ' . print_r($code_params, true));
 
         // scripts that are going to be used
         wp_enqueue_script('underscore');
@@ -170,6 +169,7 @@ class EAFullCalendar
         $display_end_time = $code_params['display_event_end'] ? 'true' : 'false';
 
         $event_click_link = '';
+        $current_user = get_current_user_id();
 
         // event link
         if (!empty($this->options->get_option_value('fullcalendar.event.show'))) {
@@ -181,10 +181,13 @@ class EAFullCalendar
             EOT;
           if (!empty($this->options->get_option_value('fullcalendar.manage_appointment.show'))) {
             $event_click_link = <<<EOT
+              var current_user = "{$current_user}";
+              if (current_user && current_user > 0 && current_user === event.user) {
                     element.addClass('thickbox');
                     element.addClass('ea-full-calendar-dialog-event');
                     element.attr('href', wpApiSettings.root + 'easy-appointments/v1/appointment/' + event.id + '?hash=' + event.hash + '&eventpopup=yes&edit=yes&_wpnonce=' + wpApiSettings.nonce + '&width=100%&height=100%');
                     element.attr('title', '#' + event.id + ' - ' + _.escape(event.title));
+              }
             EOT;
             
           }
@@ -192,25 +195,24 @@ class EAFullCalendar
         }else{
           if (!empty($this->options->get_option_value('fullcalendar.manage_appointment.show'))) {
             $event_click_link = <<<EOT
+              var current_user = "{$current_user}";
+              if (current_user && current_user > 0 && current_user === event.user) {
                     element.addClass('thickbox');
                     element.addClass('ea-full-calendar-dialog-event');
                     element.attr('href', wpApiSettings.root + 'easy-appointments/v1/appointment/' + event.id + '?hash=' + event.hash + '&edit=yes&_wpnonce=' + wpApiSettings.nonce + '&width=100%&height=100%');
                     element.attr('title', '#' + event.id + ' - ' + _.escape(event.title));
-                    console.log(event);
+              }
             EOT;            
           }
 
         }
         $event_click_ajax = "";
-        if (!empty($this->options->get_option_value('fullcalendar.manage_appointment.show'))) {
-          if ( get_current_user_id() && current_user_can('manage_options') ) {
+        if (!empty($this->options->get_option_value('fullcalendar.manage_appointment.show')) && $current_user) {
             $ajaxurl = admin_url('admin-ajax.php');
             $event_click_ajax = <<<EOT
                   jQuery(document).on('submit', '#ea-appointment-edit-form', function (e) {
-                      console.log('clicked work');
                       e.preventDefault();
                       var ajax_url = "{$ajaxurl}";
-                      console.log(ajax_url);
 
                       const formData = jQuery(this).serialize();
 
@@ -222,8 +224,7 @@ class EAFullCalendar
                           }
                       });
                   });
-            EOT;
-          }          
+            EOT;     
         }        
 
         $column_header_format = '';
