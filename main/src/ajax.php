@@ -2364,9 +2364,8 @@ class EAAjax
     function ajax_customer_detail () {
         $settings = $this->options->get_options();
 
-        if (isset($settings['show.customer_search_front']) && $settings['show.customer_search_front'] == 1) {
+        if (isset($settings['show.customer_search_front']) && $settings['show.customer_search_front'] == 1 && is_user_logged_in()) {
             $this->validate_nonce();
-            if (!current_user_can('manage_options')) wp_send_json_error();
 
             global $wpdb;
             $id = absint($_POST['id']);
