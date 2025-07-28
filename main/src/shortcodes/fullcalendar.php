@@ -312,7 +312,7 @@ class EAFullCalendar
           title_field: '{$code_params['title_field']}',
         },
         error: function() {
-          alert('there was an error while fetching events!');
+          console.log('there was an error while fetching events!');
         },
         textColor: 'white' // a non-ajax option
       },
