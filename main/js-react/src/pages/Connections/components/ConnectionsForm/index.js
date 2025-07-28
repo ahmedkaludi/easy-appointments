@@ -11,7 +11,6 @@ import { EndDateField } from './fields/EndDateField';
 import { StartTimeField } from './fields/StartTimeField';
 import { EndTimeField } from './fields/EndTimeField';
 import { RepeatWeeksField } from './fields/RepeatWeeksField';
-import { RepeatBookingsField } from './fields/RepeatBookingsField';
 
 export const ConnectionsForm = ({ model, onSave, onCancel }) => (
   <Form model={model} onCancel={onCancel} onSave={onSave}>
@@ -43,7 +42,6 @@ export const ConnectionsForm = ({ model, onSave, onCancel }) => (
     </MultiFieldWrap>
 
     <IsWorkingField />
-    <RepeatBookingsField />
   </Form>
 );
 
