@@ -900,7 +900,7 @@ EOT;
             email VARCHAR(255) DEFAULT '',
             mobile VARCHAR(50) DEFAULT '',
             dob VARCHAR(50) DEFAULT '',
-            address TEXT DEFAULT '',
+            address TEXT,
             PRIMARY KEY (id)
         ) $charset_collate;";
 
@@ -1061,7 +1061,7 @@ EOT;
                 $name    = $appointment->name;
                 $email   = $appointment->email;
                 $mobile  = $appointment->phone;
-                $user_id  = $appointment->user_id;
+                $user_id  = $appointment->user;
     
                 if (empty($email)) {
                     continue;
