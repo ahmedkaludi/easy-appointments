@@ -515,16 +515,11 @@
             this.placeLoader(calendar);
 
             jQuery.get(ea_ajaxurl, options, function (response_m) {
+                var response = response_m.calendar_slots;
 
                 var next_element = jQuery(calendar).parent().next('.step').children('.time');
 
                 next_element.empty();
-
-                var response = response_m.calendar_slots;
-                if (response_m.connection_details) {
-                    var newMaxDate= response_m.connection_details.day_to;
-                    plugin.$element.find('.date').datepicker('option', 'maxDate', newMaxDate);
-                }
 
                 jQuery.each(response, function (index, element) {
                     var classAMPM = (ea_settings["time_format"] == "am-pm") ? ' am-pm' : '';

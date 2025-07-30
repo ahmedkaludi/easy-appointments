@@ -169,16 +169,63 @@ class EAFullCalendar
         $display_end_time = $code_params['display_event_end'] ? 'true' : 'false';
 
         $event_click_link = '';
+        $current_user = get_current_user_id();
 
         // event link
         if (!empty($this->options->get_option_value('fullcalendar.event.show'))) {
             $event_click_link = <<<EOT
-        element.addClass('thickbox');
-        element.addClass('ea-full-calendar-dialog-event');
-        element.attr('href', wpApiSettings.root + 'easy-appointments/v1/appointment/' + event.id + '?hash=' + event.hash + '&_wpnonce=' + wpApiSettings.nonce + '&width=100%&height=100%');
-        element.attr('title', '#' + event.id + ' - ' + _.escape(event.title));
-EOT;
+                    element.addClass('thickbox');
+                    element.addClass('ea-full-calendar-dialog-event');
+                    element.attr('href', wpApiSettings.root + 'easy-appointments/v1/appointment/' + event.id + '?hash=' + event.hash + '&eventpopup=yes&_wpnonce=' + wpApiSettings.nonce + '&width=100%&height=100%');
+                    element.attr('title', '#' + event.id + ' - ' + _.escape(event.title));
+            EOT;
+          if (!empty($this->options->get_option_value('fullcalendar.manage_appointment.show'))) {
+            $event_click_link = <<<EOT
+              var current_user = "{$current_user}";
+              if (current_user && current_user > 0 && current_user === event.user) {
+                    element.addClass('thickbox');
+                    element.addClass('ea-full-calendar-dialog-event');
+                    element.attr('href', wpApiSettings.root + 'easy-appointments/v1/appointment/' + event.id + '?hash=' + event.hash + '&eventpopup=yes&edit=yes&_wpnonce=' + wpApiSettings.nonce + '&width=100%&height=100%');
+                    element.attr('title', '#' + event.id + ' - ' + _.escape(event.title));
+              }
+            EOT;
+            
+          }
+           
+        }else{
+          if (!empty($this->options->get_option_value('fullcalendar.manage_appointment.show'))) {
+            $event_click_link = <<<EOT
+              var current_user = "{$current_user}";
+              if (current_user && current_user > 0 && current_user === event.user) {
+                    element.addClass('thickbox');
+                    element.addClass('ea-full-calendar-dialog-event');
+                    element.attr('href', wpApiSettings.root + 'easy-appointments/v1/appointment/' + event.id + '?hash=' + event.hash + '&edit=yes&_wpnonce=' + wpApiSettings.nonce + '&width=100%&height=100%');
+                    element.attr('title', '#' + event.id + ' - ' + _.escape(event.title));
+              }
+            EOT;            
+          }
+
         }
+        $event_click_ajax = "";
+        if (!empty($this->options->get_option_value('fullcalendar.manage_appointment.show')) && $current_user) {
+            $ajaxurl = admin_url('admin-ajax.php');
+            $event_click_ajax = <<<EOT
+                  jQuery(document).on('submit', '#ea-appointment-edit-form', function (e) {
+                      e.preventDefault();
+                      var ajax_url = "{$ajaxurl}";
+
+                      const formData = jQuery(this).serialize();
+
+                      jQuery.post(ajax_url, formData + '&action=ea_update_customer_data', function (res) {
+                          if (res.success) {
+                              alert('Updated successfully.');
+                          } else {
+                              alert('Failed to update.');
+                          }
+                      });
+                  });
+            EOT;     
+        }        
 
         $column_header_format = '';
 
@@ -190,6 +237,17 @@ EOT;
 <style>{$customCss}</style>
 <script>
   jQuery(document).ready(function() {
+
+    jQuery(document).on('click', '.ea-edit-appointment-icon', function (e) {
+        jQuery(".ea-edit-appointment-wrapper").show();
+        jQuery("#ea_event_popup").hide();
+        jQuery(".ea-edit-appointment-icon").hide();
+    });
+    jQuery(document).on('click', '.ea-cancel-edit', function (e) {
+        jQuery(".ea-edit-appointment-wrapper").hide();
+        jQuery("#ea_event_popup").show();
+        jQuery(".ea-edit-appointment-icon").show();
+    });
   
     jQuery('#ea-calendar-color-map-{$id}').find('.status').hover(
         function(event) {
@@ -254,7 +312,7 @@ EOT;
           title_field: '{$code_params['title_field']}',
         },
         error: function() {
-          alert('there was an error while fetching events!');
+          console.log('there was an error while fetching events!');
         },
         textColor: 'white' // a non-ajax option
       },
@@ -273,6 +331,7 @@ EOT;
         {$event_click_link}
       }
     });
+    {$event_click_ajax}
   });
 </script>
 EOT;

@@ -31,7 +31,8 @@ class EATableColumns
                 'created',
                 'price',
                 'ip',
-                'session'
+                'session',
+                'recurrence_id'
             ),
             'ea_connections' => array(
                 'id',
@@ -45,6 +46,8 @@ class EATableColumns
                 'time_to',
                 'day_from',
                 'day_to',
+                'repeat_week',
+                'repeat_booking',
                 'is_working'
             ),
             'ea_meta_fields' => array(
@@ -175,6 +178,7 @@ class EATableColumns
             'scroll_off',
             'show.iagree',
             'show.display_thankyou_note',
+            'show.customer_search_front',
             'show_remaining_slots',
             'show_week',
             'sort.locations-by',

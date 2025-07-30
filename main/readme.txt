@@ -5,7 +5,7 @@ Tags: appointment, appointments, Booking, calendar, reservation
 Requires at least: 3.7
 Tested up to: 6.8
 Requires PHP: 5.3
-Stable tag: 3.12.12
+Stable tag: 3.12.13
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -212,6 +212,19 @@ Note: you can have only one calendar on one page.
 25. Admin panel - Report - Export page
 
 == Changelog ==
+= 3.12.13 (2025-07-28)
+* Added the Razorpay payment gateway #154
+* Added an option of CRM Tool for plugin. #110
+* Added repeat appointment feature. #159
+* Added a feature to change the currency in Stripe tab. #168
+* Fixed Unable to change the connection status in mobile view. #161
+* Enhancement Do not allow to display other plugin notification on license page #158
+* Enhancement Unable to translate few string #169
+
+= 3.12.12.1 (2025-06-02)
+* Fixed Issue after recent two updates
+* Fixed Shortcode min_date and max_date Broken from last version 3.12.11 #156
+
 = 3.12.12 (2025-05-30)
 * Fixed Issue after recent update #151
 * Fixed JS/JSX strings are not being shown in loco translation plugin #148

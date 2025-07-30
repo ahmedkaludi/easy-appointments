@@ -10,6 +10,7 @@ import { StartDateField } from './fields/StartDateField';
 import { EndDateField } from './fields/EndDateField';
 import { StartTimeField } from './fields/StartTimeField';
 import { EndTimeField } from './fields/EndTimeField';
+import { RepeatWeeksField } from './fields/RepeatWeeksField';
 
 export const ConnectionsForm = ({ model, onSave, onCancel }) => (
   <Form model={model} onCancel={onCancel} onSave={onSave}>
@@ -18,6 +19,7 @@ export const ConnectionsForm = ({ model, onSave, onCancel }) => (
     <SelectField name="worker" label="Worker *" dataKey="Workers" />
     <NumberOfSlotsField />
     <DaysOfWeekField />
+    <RepeatWeeksField />
 
     <MultiFieldWrap
       label="Date range"

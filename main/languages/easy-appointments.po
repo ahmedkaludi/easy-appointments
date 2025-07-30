@@ -171,6 +171,12 @@ msgid "Add connection"
 msgstr ""
 
 #: js/bundle.js:1
+#: js-react/src/pages/Connections/index.js:106
+#: js-react/src/pages/Connections/index.js:111
+msgid "Connections"
+msgstr ""
+
+#: js/bundle.js:1
 #: js-react/src/pages/Connections/index.js:110
 msgid "Edit connection"
 msgstr ""
@@ -204,6 +210,18 @@ msgstr ""
 #: js-react/src/pages/Locations/index.js:94
 #: js-react/src/pages/Locations/index.js:99
 msgid "Add location"
+msgstr ""
+
+#: js/bundle.js:1
+#: js-react/src/pages/Locations/index.js:94
+#: js-react/src/pages/Locations/index.js:99
+msgid "Easy Appointments"
+msgstr ""
+
+#: js/bundle.js:1
+#: js-react/src/pages/Locations/index.js:94
+#: js-react/src/pages/Locations/index.js:99
+msgid "locations"
 msgstr ""
 
 #: js/bundle.js:1
@@ -745,6 +763,10 @@ msgstr ""
 msgid "Compatibility mode"
 msgstr ""
 
+#: src/templates/admin.tpl.php:65
+msgid "Busy slots are calculated by same"
+msgstr ""
+
 #: src/templates/admin.tpl.php:76
 msgid ""
 "If you can't EDIT or DELETE conecntion or any other settings, you should "
@@ -1220,6 +1242,14 @@ msgstr ""
 
 #: src/templates/appointments.tpl.php:73
 msgid "Add New Appointment"
+msgstr ""
+
+#: src/templates/appointments.tpl.php:105
+msgid "desc"
+msgstr ""
+
+#: src/templates/appointments.tpl.php:106
+msgid "asc"
 msgstr ""
 
 #: src/templates/appointments.tpl.php:77 src/templates/report.tpl.php:62

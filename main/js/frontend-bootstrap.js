@@ -461,6 +461,7 @@
                 if (options.next == 'worker') {
                     default_option_value = 'Select '+ea_settings['trans.worker'];
                 }
+                plugin.$element.find('[id="repeat_booking"]').parents('.form-group').hide();
                 // default
                 next_element.append('<option value="">'+default_option_value+'</option>');
 
@@ -618,8 +619,16 @@
             options.check  = ea_settings['check'];
 
             this.placeLoader(calendarEl);
+            
 
+            // var req = jQuery.get(ea_ajaxurl, options, function (response) {
             var req = jQuery.get(ea_ajaxurl, options, function (response_m) {
+                var response = response_m.calendar_slots;
+                if (response_m.connection_details && response_m.connection_details.repeat_booking == 1) {
+                    plugin.$element.find('[id="repeat_booking"]').parents('.form-group').show();
+                }else{
+                    plugin.$element.find('[id="repeat_booking"]').parents('.form-group').hide();
+                }
 
                 next_element = jQuery(document.createElement('div'))
                     .addClass('time well well-lg');
@@ -629,12 +638,6 @@
 
                 if (fromTo) {
                     next_element.addClass('time well well-lg col-50');
-                }
-
-                var response = response_m.calendar_slots;
-                if (response_m.connection_details) {
-                    var newMaxDate= response_m.connection_details.day_to;
-                    plugin.$element.find('.date').datepicker('option', 'maxDate', newMaxDate);
                 }
 
                 // sort response by value 11:00, 12:00, 13:00...
@@ -851,6 +854,9 @@
                 location: this.$element.find('[name="location"]').val(),
                 service: this.$element.find('[name="service"]').val(),
                 worker: this.$element.find('[name="worker"]').val(),
+                repeat_booking: this.$element.find('[name="repeat_booking"]').val(),
+                repeat_start_date: this.$element.find('[name="repeat_start_date"]').val(),
+                repeat_end_date: this.$element.find('[name="repeat_end_date"]').val(),
                 date: this.$element.find('.date').datepicker().val(),
                 end_date: this.$element.find('.date').datepicker().val(),
                 start: this.$element.find('.selected-time').data('val'),
@@ -1149,6 +1155,9 @@
                 location: this.$element.find('[name="location"]').val(),
                 service: this.$element.find('[name="service"]').val(),
                 worker: this.$element.find('[name="worker"]').val(),
+                repeat_booking: this.$element.find('[name="repeat_booking"]').val(),
+                repeat_start_date: this.$element.find('[name="repeat_start_date"]').val(),
+                repeat_end_date: this.$element.find('[name="repeat_end_date"]').val(),
                 date: this.$element.find('.date').datepicker().val(),
                 end_date: this.$element.find('.date').datepicker().val(),
                 start: this.$element.find('.selected-time').data('val'),
@@ -1370,4 +1379,114 @@
 
 (function ($) {
     jQuery('.ea-bootstrap').eaBootstrap();
+
+    
+
 })(jQuery);
+jQuery(document).ready(function () {
+    if (ea_settings['show.customer_search_front'] == 1) {
+        jQuery('#ea_customer_search').select2({
+            placeholder: 'Search customer...',
+            minimumInputLength: 2,
+            ajax: {
+                url: ea_ajaxurl,
+                dataType: 'json',
+                delay: 250,
+                data: function (params) {
+                    return {
+                        action: 'ea_search_customers',
+                        q: params.term,
+                        nonce: ea_settings['check']
+                    };
+                },
+                processResults: function (data) {
+                    return {
+                        results: data.map(function (c) {
+                            return { id: c.id, text: c.name + ' (' + c.email + ')' };
+                        })
+                    };
+                }
+            }
+        });
+
+        jQuery('#ea_customer_search').on('select2:select', function (e) {
+            const customerId = e.params.data.id;
+            var parentForm = jQuery(this).closest('form');
+            jQuery.post(ea_ajaxurl, {
+                action: 'ea_get_customer_detail',
+                id: customerId,
+                nonce: ea_settings['check']
+            }, function (c) {
+                parentForm.find('[name="name"]').val(c.name);
+                parentForm.find('[name="email"]').val(c.email);
+                parentForm.find('[name="phone"]').val(c.mobile);
+            });
+        });
+    }
+
+    
+});
+
+
+jQuery(document).ready(function() {
+    jQuery('select#repeat_booking').on('change', function() {
+        if (jQuery(this).val() === '2') {
+            jQuery('#custom-recurrence-modal').show();
+            jQuery('#custom-recurrence-overlay').show();
+        }
+        if (jQuery(this).val() === '1') {
+            jQuery('input[name="repeat_booking"]').val(1);
+            jQuery('input[name="repeat_start_date"]').val(0);
+            jQuery('input[name="repeat_end_date"]').val(0);
+            jQuery('#recurrence-summary').hide();
+        }
+        if (jQuery(this).val() === '0') {
+            jQuery('input[name="repeat_booking"]').val(0);
+            jQuery('input[name="repeat_start_date"]').val(0);
+            jQuery('input[name="repeat_end_date"]').val(0);
+            jQuery('#recurrence-summary').hide();
+        }
+    });
+
+  jQuery('#modal-end-never').on('change', function() {
+    jQuery('#modal-end-date').prop('disabled', true);
+  });
+
+  jQuery('#modal-end-on').on('change', function() {
+    jQuery('#modal-end-date').prop('disabled', false);
+  });
+
+  jQuery('#modal-cancel-btn').on('click', function() {
+    jQuery('#custom-recurrence-modal').hide();
+    jQuery('#custom-recurrence-overlay').hide();
+    jQuery('select#repeat_booking').val('0'); // Reset to 'Does Not Repeat'
+  });
+
+  jQuery('#modal-save-btn').on('click', function() {
+    var repeatWeek = jQuery('#modal-repeat-week').val();
+    var startDate = jQuery('#modal-start-date').val();
+    var endType = jQuery('input[name="modal-end-type"]:checked').val();
+    var endDate = (endType == 'date') ? jQuery('#modal-end-date').val() : 'never';
+
+    if (endType === 'date' && endDate !== '' && startDate !== '') {
+        if (new Date(endDate) < new Date(startDate)) {
+            alert('End date cannot be earlier than start date.');
+            return;
+        }
+    }
+
+    // Save to hidden inputs
+    jQuery('input[name="repeat_booking"]').val(repeatWeek);
+    jQuery('input[name="repeat_start_date"]').val(startDate);
+    jQuery('input[name="repeat_end_date"]').val(endDate);
+
+    jQuery('#summary-repeat-week').text(`${repeatWeek} week(s)`);
+    jQuery('#summary-start-date').text(startDate);
+    jQuery('#summary-end-date').text(endType == 'date' ? endDate : 'Never');
+    jQuery('#recurrence-summary').show();
+
+    // Hide modal
+    jQuery('#custom-recurrence-modal').hide();
+    jQuery('#custom-recurrence-overlay').hide();
+  });
+});

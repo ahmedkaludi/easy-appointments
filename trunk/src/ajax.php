@@ -98,7 +98,12 @@ class EAAjax
 
         add_action('wp_ajax_ea_month_status', array($this, 'ajax_month_status'));
         add_action('wp_ajax_nopriv_ea_month_status', array($this, 'ajax_month_status'));
+        add_action('wp_ajax_ea_search_customers', array($this, 'ajax_search_customers'));
+        add_action('wp_ajax_ea_get_customer_detail', array($this, 'ajax_customer_detail'));
+        add_action('wp_ajax_ea_update_customer_data', array($this, 'ea_update_customer_data'));       
+
         // end frontend
+        add_action('ea_new_app', array($this, 'add_customer_data'), 1000);
 
         // admin ajax section
         if (is_admin() && is_user_logged_in()) {
@@ -171,7 +176,15 @@ class EAAjax
             add_action('wp_ajax_ea_send_query_message', array( $this, 'ea_send_query_message'));
             add_action('wp_ajax_cancel_selected_appointments', array( $this, 'cancel_selected_appointments_callback'));
             add_action('wp_ajax_delete_selected_appointment', array($this, 'delete_selected_appointment'));
+
+            add_action('wp_ajax_ea_get_customers_ajax', [$this, 'handle_customers_ajax']);
+            add_action('wp_ajax_ea_update_customer_ajax', [$this, 'handle_update_customer_ajax']);
+            add_action('wp_ajax_ea_insert_customer_ajax', [$this, 'handle_insert_customer_ajax']);
+            add_action('wp_ajax_ea_get_customer_detail_ajax', [$this, 'handle_customer_detail_ajax']);
+            add_action('wp_ajax_ea_delete_customer' , [$this, 'ea_handle_delete_customer']);
+            
         }
+        
     }
 
     public function cancel_selected_appointments_callback() {
@@ -339,6 +352,7 @@ class EAAjax
 
 
         $slots = $this->logic->get_open_slots($location, $service, $worker, $date, null, true, $block_time);
+        
         global $wpdb;
         $day_of_week = gmdate('l', strtotime($date));
         $time_now = current_time('timestamp', false);
@@ -354,11 +368,12 @@ class EAAjax
                 $location, $service, $worker, $date);
         $connection_details = $wpdb->get_row($query1);
         $result =  array('calendar_slots' =>$slots, 'connection_details' => $connection_details);
+       
 
         $this->send_ok_json_result($result);
     }
 
-    public function ajax_res_appointment()
+    public function old_ajax_res_appointment()
     {
         $this->validate_nonce();
 
@@ -473,6 +488,178 @@ class EAAjax
         $this->send_ok_json_result($response);
     }
 
+    public function ajax_res_appointment()
+    {
+        $this->validate_nonce();
+        $this->validate_captcha();
+
+        global $wpdb;
+
+        $table = 'ea_appointments';
+        $data = $_GET;
+
+        $allowed_keys = array(
+            'id', 'location', 'service', 'worker', 'name', 'email', 'phone', 'date', 'start', 'end', 'end_date',
+            'description', 'status', 'user', 'created', 'price', 'ip', 'session', 'repeat_booking', 'recurrence_id','repeat_start_date', 'repeat_end_date'
+        );
+
+        foreach ($data as $key => $value) {
+            if (!in_array($key, $allowed_keys)) {
+                unset($data[$key]);
+            }
+        }
+
+        unset($data['action']);
+
+        $block_time = (int)$this->options->get_option_value('block.time', 0);
+
+        // Validate first slot
+        $open_slots = $this->logic->get_open_slots($data['location'], $data['service'], $data['worker'], $data['date'], null, true, $block_time);
+        $is_free = false;
+
+        foreach ($open_slots as $value) {
+            if ($value['value'] === $data['start'] && $value['count'] > 0) {
+                $is_free = true;
+                break;
+            }
+        }
+
+        if (!$is_free) {
+            $this->send_err_json_result(json_encode([
+                'err' => true,
+                'message' => __('Slot is taken', 'easy-appointments')
+            ]));
+        }
+
+        // Default setup
+        $data['status'] = 'reservation';
+        $data['ip'] = $_SERVER['REMOTE_ADDR'];
+        $data['session'] = session_id();
+
+        if (is_user_logged_in()) {
+            $data['user'] = get_current_user_id();
+        }
+
+        $service = $this->models->get_row('ea_services', $data['service']);
+        $data['price'] = $service->price;
+
+        $repeat_booking = isset($data['repeat_booking']) ? intval($data['repeat_booking']) : 0;
+        $repeat_start_date = !empty($data['repeat_start_date']) && $data['repeat_start_date'] !== '0' ? $data['repeat_start_date'] : null;
+        $repeat_end_date   = (!empty($data['repeat_end_date']) && strtolower($data['repeat_end_date']) !== 'never' && $data['repeat_end_date'] !== '0') 
+            ? $data['repeat_end_date'] 
+            : null;
+
+        $recurrence_id = $repeat_booking > 0 ? 'rec_' . uniqid() : null;
+
+        $initial_date = $data['date'];
+        $connection = $wpdb->get_row($wpdb->prepare(
+            "SELECT * FROM {$wpdb->prefix}ea_connections WHERE 
+            location = %d AND service = %d AND worker = %d AND is_working = 1
+            AND (day_from IS NULL OR day_from <= %s)
+            ORDER BY day_to DESC LIMIT 1",
+            $data['location'], $data['service'], $data['worker'], $initial_date
+        ));
+
+        $connection_end_date = isset($connection->day_to) ? strtotime($connection->day_to) : null;
+
+        // If custom repeat range provided, use that
+        if ($repeat_booking > 0 && $repeat_start_date) {
+            $initial_date = $repeat_start_date;
+            $initial_end_date = $repeat_start_date;
+        } else {
+            // Fallback to standard
+            $initial_date = $data['date'];
+            $initial_end_date = isset($data['end_date']) ? $data['end_date'] : $initial_date;
+        }
+
+        if ($repeat_end_date && $connection_end_date) {
+            // Pick the earlier of the two
+            $repeat_end_ts = strtotime($repeat_end_date);            
+            if ($repeat_end_ts < $connection_end_date) {
+                $connection_end_date = strtotime($repeat_end_date);
+            }
+        }
+
+
+        $success_ids = [];
+        $i = 0;
+        while (true) {
+            $offset_weeks = $i * max(1, $repeat_booking);
+            $current_date_ts = strtotime("+{$offset_weeks} weeks", strtotime($initial_date));
+            $current_end_date_ts = strtotime("+{$offset_weeks} weeks", strtotime($initial_end_date));
+
+            if ($repeat_booking > 0 && $i > 0 && $connection_end_date && $current_date_ts > $connection_end_date) {
+                break;
+            }
+
+            $current_date = date('Y-m-d', $current_date_ts);
+            $current_end_date = date('Y-m-d', $current_end_date_ts);
+
+            $current_data = $data;
+            $current_data['date'] = $current_date;
+            $current_data['end_date'] = $current_end_date;
+
+            if ($recurrence_id) {
+                $current_data['recurrence_id'] = $recurrence_id;
+            }
+
+            // Recalculate end time
+            $end_time = strtotime("{$data['start']} + {$service->duration} minutes");
+            $current_data['end'] = date('H:i', $end_time);
+
+            // Check if the slot is still available
+            $open_slots = $this->logic->get_open_slots($data['location'], $data['service'], $data['worker'], $current_date, null, true, $block_time);
+            $slot_free = false;
+            foreach ($open_slots as $slot) {
+                if ($slot['value'] === $data['start'] && $slot['count'] > 0) {
+                    $slot_free = true;
+                    break;
+                }
+            }
+
+            if (!$slot_free) {
+                $i++;
+                continue;
+            }
+
+            // Can make reservation logic
+            $check = $this->logic->can_make_reservation($current_data);
+            if (!$check['status']) {
+                $i++;
+                continue;
+            }
+
+            // Insert appointment
+            $response = $this->models->replace($table, $current_data, true);
+            if ($response && isset($response->id)) {
+                $success_ids[] = $response->id;
+            }
+
+            if ($repeat_booking === 0) {
+                break;
+            }
+
+            $i++;
+        }
+
+        if (empty($success_ids)) {
+            $this->send_err_json_result(json_encode([
+                'err' => true,
+                'message' => __('Could not create any appointments.', 'easy-appointments')
+            ]));
+        }
+
+        if ($response->id) {
+            $response->_hash = wp_hash($response->id);
+        }
+
+        $this->send_ok_json_result($response);
+    }
+
+
+
+
+
     /**
      * Final Appointment creation from frontend part
      */
@@ -490,60 +677,122 @@ class EAAjax
 
         $appointment = $this->models->get_row('ea_appointments', $data['id'], ARRAY_A);
 
+        
+
         // check IP
         if ($appointment['ip'] != $_SERVER['REMOTE_ADDR']) {
             $this->send_err_json_result('{"err":true}');
         }
 
-        // check if he can update the reservation
-        $check = $this->logic->can_update_reservation($appointment, $data);
-        if (!$check['status']) {
-            $resp = array(
-                'err'     => true,
-                'message' => $check['message']
+        if (isset($appointment['recurrence_id']) && !empty($appointment['recurrence_id'])) {
+            global $wpdb;
+
+            $recurrence_id = $appointment['recurrence_id'];
+            $table_a = $wpdb->prefix . 'ea_appointments';
+
+            $appointments = $wpdb->get_results(
+                $wpdb->prepare(
+                    "SELECT * FROM {$table_a} WHERE recurrence_id = %s",
+                    $recurrence_id
+                ),
+                ARRAY_A
             );
 
-            $this->send_err_json_result(json_encode($resp));
-        }
+            
+            foreach ($appointments as $appointment) {
+                $data['id'] = $appointment['id'];
+                $appointment = $this->models->get_row('ea_appointments', $data['id'], ARRAY_A);
+                $check = $this->logic->can_update_reservation($appointment, $data);
+                if (!$check['status']) {
+                    $resp = array(
+                        'err'     => true,
+                        'message' => $check['message']
+                    );
 
-        $appointment['status'] = $this->options->get_option_value('default.status', 'pending');
+                    $this->send_err_json_result(json_encode($resp));
+                }
 
-        $response = $this->models->replace($table, $appointment, true);
+                $appointment['status'] = $this->options->get_option_value('default.status', 'pending');
 
-        $meta = $this->models->get_all_rows('ea_meta_fields');
+                $response = $this->models->replace($table, $appointment, true);
 
-        foreach ($meta as $f) {
-            $fields = array();
-            $fields['app_id'] = $appointment['id'];
-            $fields['field_id'] = $f->id;
+                $meta = $this->models->get_all_rows('ea_meta_fields');
 
-            if (array_key_exists($f->slug, $data)) {
-                // remove slashes and convert special chars
-                $fields['value'] = stripslashes($data[$f->slug]);
-            } else if (array_key_exists(str_replace('-', '_', $f->slug), $data)) {
-                // FIX for issue with pay_pal field that have _ in data but real slug has -
-                // remove slashes and convert special chars
-                $fields['value'] = stripslashes($data[str_replace('-', '_', $f->slug)]);
-            } else {
-                $fields['value'] = '';
+                foreach ($meta as $f) {
+                    $fields = array();
+                    $fields['app_id'] = $appointment['id'];
+                    $fields['field_id'] = $f->id;
+
+                    if (array_key_exists($f->slug, $data)) {
+                        // remove slashes and convert special chars
+                        $fields['value'] = stripslashes($data[$f->slug]);
+                    } else if (array_key_exists(str_replace('-', '_', $f->slug), $data)) {
+                        // FIX for issue with pay_pal field that have _ in data but real slug has -
+                        // remove slashes and convert special chars
+                        $fields['value'] = stripslashes($data[str_replace('-', '_', $f->slug)]);
+                    } else {
+                        $fields['value'] = '';
+                    }
+
+                    $response = $response && $this->models->replace('ea_fields', $fields, true, true);
+                }
+                // trigger new appointment
+                do_action('ea_new_app', $appointment['id'], $appointment, true);
+
+                // trigger new appointment from customer
+            }
+            do_action('ea_new_app_from_customer', $appointment['id'], $appointment, true);
+            do_action('ea_repeat_appointment_mail_notification', $appointment['id'],$appointments);
+        }else {
+            $check = $this->logic->can_update_reservation($appointment, $data);
+            if (!$check['status']) {
+                $resp = array(
+                    'err'     => true,
+                    'message' => $check['message']
+                );
+
+                $this->send_err_json_result(json_encode($resp));
             }
 
-            $response = $response && $this->models->replace('ea_fields', $fields, true, true);
-        }
+            $appointment['status'] = $this->options->get_option_value('default.status', 'pending');
 
-        if ($response == false) {
-            $this->send_err_json_result('{"err":true}');
-        } else {
-            $this->mail->send_notification($data);
+            $response = $this->models->replace($table, $appointment, true);
 
-            // trigger send user email notification appointment
-            do_action('ea_user_email_notification', $appointment['id']);
+            $meta = $this->models->get_all_rows('ea_meta_fields');
 
-            // trigger new appointment
-            do_action('ea_new_app', $appointment['id'], $appointment, true);
+            foreach ($meta as $f) {
+                $fields = array();
+                $fields['app_id'] = $appointment['id'];
+                $fields['field_id'] = $f->id;
 
-            // trigger new appointment from customer
-            do_action('ea_new_app_from_customer', $appointment['id'], $appointment, true);
+                if (array_key_exists($f->slug, $data)) {
+                    // remove slashes and convert special chars
+                    $fields['value'] = stripslashes($data[$f->slug]);
+                } else if (array_key_exists(str_replace('-', '_', $f->slug), $data)) {
+                    // FIX for issue with pay_pal field that have _ in data but real slug has -
+                    // remove slashes and convert special chars
+                    $fields['value'] = stripslashes($data[str_replace('-', '_', $f->slug)]);
+                } else {
+                    $fields['value'] = '';
+                }
+
+                $response = $response && $this->models->replace('ea_fields', $fields, true, true);
+            }
+
+            if ($response == false) {
+                $this->send_err_json_result('{"err":true}');
+            } else {
+                $this->mail->send_notification($data);
+
+                // trigger send user email notification appointment
+                do_action('ea_user_email_notification', $appointment['id']);
+
+                // trigger new appointment
+                do_action('ea_new_app', $appointment['id'], $appointment, true);
+
+                // trigger new appointment from customer
+                do_action('ea_new_app_from_customer', $appointment['id'], $appointment, true);
+            }
         }
 
         $response = new stdClass();
@@ -1191,6 +1440,7 @@ class EAAjax
             'form.label.above'              => '0',
             'show.iagree'                   => '0',
             'show.display_thankyou_note'    => '0',
+            'show.customer_search_front'    => '0',
             'cancel.scroll'                 => 'calendar',
             'multiple.work'                 => '1',
             'compatibility.mode'            => '0',
@@ -1817,4 +2067,363 @@ class EAAjax
             $this->send_err_json_result('{"message":"' . $message . '"}');
         }
     }
+
+    public function add_customer_data($id)
+    {
+        global $wpdb;
+
+        $table_prefix = $wpdb->prefix;
+        $dbmodels = new EADBModels($wpdb, new EATableColumns(), new EAOptions($wpdb));
+        $appointment = $dbmodels->get_appintment_by_id($id);
+
+        $name    = $appointment['name'];
+        $email   = $appointment['email'];
+        $mobile  = $appointment['phone'];
+
+        $user_id = get_current_user_id();
+        $user_id = $user_id > 0 ? $user_id : null;
+
+        // Check if customer exists
+        $existing_customer = $wpdb->get_row($wpdb->prepare(
+            "SELECT id, user_id FROM {$wpdb->prefix}ea_customers WHERE email = %s",
+            $email
+        ));
+
+        if (!$existing_customer) {
+            // Insert new customer
+            $inserted = $wpdb->insert("{$wpdb->prefix}ea_customers", [
+                'name'    => $name,
+                'email'   => $email,
+                'mobile'  => $mobile,
+                'user_id' => $user_id,
+            ]);
+
+            if ($inserted) {
+                $customer_id = $wpdb->insert_id;
+                $wpdb->update(
+                    "{$wpdb->prefix}ea_appointments",
+                    ['customer_id' => $customer_id],
+                    ['id' => $id],
+                    ['%d'],
+                    ['%d']
+                );
+            }
+
+        } else {
+            // Append user_id if not already included
+            $existing_user_ids = array_filter(array_map('trim', explode(',', $existing_customer->user_id)));
+            if (!in_array($user_id, $existing_user_ids)) {
+                $existing_user_ids[] = $user_id;
+                $new_user_id_string = implode(',', array_unique($existing_user_ids));
+                $wpdb->update(
+                    "{$wpdb->prefix}ea_customers",
+                    ['user_id' => $new_user_id_string],
+                    ['id' => $existing_customer->id],
+                    ['%s'],
+                    ['%d']
+                );
+            }
+
+            // Optional: Also update appointment with existing customer ID
+            $wpdb->update(
+                "{$wpdb->prefix}ea_appointments",
+                ['customer_id' => $existing_customer->id],
+                ['id' => $id],
+                ['%d'],
+                ['%d']
+            );
+        }
+    }
+
+
+    public function handle_customers_ajax() {
+        global $wpdb;
+
+        $table = $wpdb->prefix . 'ea_customers';
+        $per_page = 10;
+        $paged = isset($_POST['paged']) ? max(1, intval($_POST['paged'])) : 1;
+        $offset = ($paged - 1) * $per_page;
+
+        $search = isset($_POST['search']) ? sanitize_text_field($_POST['search']) : '';
+        $search_sql = '';
+        $params = [];
+
+        if (!empty($search)) {
+            $search_sql = "WHERE name LIKE %s OR email LIKE %s OR mobile LIKE %s";
+            $like = '%' . $wpdb->esc_like($search) . '%';
+            $params = [$like, $like, $like];
+        }
+
+        $total_sql = "SELECT COUNT(*) FROM $table " . ($search_sql ? $search_sql : '');
+        $total_customers = $wpdb->get_var($wpdb->prepare($total_sql, ...$params));
+
+        $query_sql = "SELECT * FROM $table " . ($search_sql ? $search_sql : '') . " ORDER BY id DESC LIMIT %d OFFSET %d";
+        $customers = $wpdb->get_results($wpdb->prepare($query_sql, ...array_merge($params, [$per_page, $offset])));
+
+        wp_send_json([
+            'data' => $customers,
+            'total_pages' => ceil($total_customers / $per_page),
+            'paged' => $paged,
+        ]);
+    }
+
+    public function handle_update_customer_ajax() {
+        if ( ! current_user_can('manage_options') ) {
+            wp_send_json_error(['message' => 'Unauthorized'], 403);
+        }
+
+        global $wpdb;
+        check_ajax_referer('ea_customer_edit', 'ea_nonce');
+
+        $table = $wpdb->prefix . 'ea_customers';
+        $id = intval($_POST['id']);
+        $name = sanitize_text_field($_POST['name']);
+        $email = sanitize_email($_POST['email']);
+        $mobile = sanitize_text_field($_POST['mobile']);
+        $address = sanitize_text_field($_POST['address']);
+        $current_user_id = get_current_user_id();
+
+        // Check for duplicate email for the same user_id (excluding the current customer ID)
+        $duplicate = $wpdb->get_var($wpdb->prepare(
+            "SELECT COUNT(*) FROM $table WHERE email = %s AND user_id = %d AND id != %d",
+            $email,
+            $current_user_id,
+            $id
+        ));
+
+        if ($duplicate > 0) {
+            wp_send_json_error(['message' => 'A customer with this email already exists for your account.']);
+        }
+
+        $data = [
+            'name'    => $name,
+            'email'   => $email,
+            'mobile'  => $mobile,
+            'address' => $address,
+            'user_id' => $current_user_id, // ensure user_id is always stored
+        ];
+
+        $updated = $wpdb->update($table, $data, ['id' => $id]);
+
+        if ($updated !== false) {
+            wp_send_json_success();
+        }
+
+        wp_send_json_error(['message' => 'Failed to update customer.']);
+    }
+
+    public function ea_handle_delete_customer() {
+        check_ajax_referer('ea_customer_delete', 'ea_nonce');
+
+        if (!current_user_can('manage_options')) {
+            wp_send_json_error(['message' => 'Unauthorized'], 403);
+        }
+
+        global $wpdb;
+        $customer_id = intval($_POST['customer_id'] ?? 0);
+        $user_id = get_current_user_id();
+
+        if (!$customer_id) {
+            wp_send_json_error(['message' => 'Invalid customer ID.']);
+        }
+
+        $deleted = $wpdb->delete(
+            $wpdb->prefix . 'ea_customers',
+            ['id' => $customer_id],
+            ['%d']
+        );
+
+        if ($deleted) {
+            wp_send_json_success();
+        } else {
+            wp_send_json_error(['message' => 'Failed to delete customer.']);
+        }
+    }
+
+    public function handle_insert_customer_ajax() {
+        if ( ! current_user_can('manage_options') ) {
+            wp_send_json_error(['message' => 'Unauthorized'], 403);
+        }
+        check_ajax_referer('ea_customer_edit', 'ea_nonce');
+
+        $name    = sanitize_text_field($_POST['name'] ?? '');
+        $email   = sanitize_email($_POST['email'] ?? '');
+        $mobile  = sanitize_text_field($_POST['mobile'] ?? '');
+        $address = sanitize_textarea_field($_POST['address'] ?? '');
+
+        global $wpdb;
+        $current_user_id = get_current_user_id();
+
+        // Check for duplicate email for the same user_id
+        $existing = $wpdb->get_var($wpdb->prepare(
+            "SELECT COUNT(*) FROM {$wpdb->prefix}ea_customers WHERE email = %s AND user_id = %d",
+            $email,
+            $current_user_id
+        ));
+
+        if ($existing > 0) {
+            wp_send_json_error(['message' => 'Customer with this email already exists.']);
+        }
+
+        // Proceed to insert
+        $inserted = $wpdb->insert("{$wpdb->prefix}ea_customers", [
+            'name'    => $name,
+            'email'   => $email,
+            'mobile'  => $mobile,
+            'address' => $address,
+            'user_id' => $current_user_id ? $current_user_id : null,
+        ]);
+
+        if ($inserted) {
+            wp_send_json_success();
+        } else {
+            wp_send_json_error(['message' => 'Failed to insert customer.']);
+        }
+    }
+    public function handle_customer_detail_ajax() {
+        if ( ! current_user_can('manage_options') ) {
+            wp_send_json_error('Permission denied', 403);
+        }
+
+        $id = isset($_POST['id']) ? (int) $_POST['id'] : 0;
+        $type = isset($_POST['type']) && $_POST['type'] === 'past' ? 'past' : 'upcoming';
+
+        global $wpdb;
+
+        $customer = $wpdb->get_row(
+            $wpdb->prepare("SELECT * FROM {$wpdb->prefix}ea_customers WHERE id = %d", $id),
+            ARRAY_A
+        );
+
+        if (!$customer) {
+            wp_send_json_error('Customer not found');
+        }
+
+        $date_compare = $type === 'past' ? '<' : '>=';
+        $today = current_time('Y-m-d');
+
+        $appointments = $wpdb->get_results(
+            $wpdb->prepare("
+                SELECT 
+                    a.id,
+                    a.date,
+                    a.start,
+                    a.end,
+                    a.price,
+                    loc.name AS location_name,
+                    srv.name AS service_name,
+                    st.name AS staff_name
+                FROM {$wpdb->prefix}ea_appointments a
+                LEFT JOIN {$wpdb->prefix}ea_locations loc ON a.location = loc.id
+                LEFT JOIN {$wpdb->prefix}ea_services srv ON a.service = srv.id
+                LEFT JOIN {$wpdb->prefix}ea_staff st ON a.worker = st.id
+                WHERE a.customer_id = %d AND a.date $date_compare %s
+                ORDER BY a.date DESC
+            ", $id, $today),
+            ARRAY_A
+        );
+
+        wp_send_json_success([
+            'customer' => $customer,
+            'appointments' => $appointments
+        ]);
+    }
+
+    public function ajax_search_customers () {
+        $settings = $this->options->get_options();
+
+        if (!is_user_logged_in()) {
+            wp_send_json([]);
+        }
+
+        global $wpdb;
+        $current_user_id = get_current_user_id();
+        $q = sanitize_text_field($_GET['q']);
+
+        // Fetch user_ids stored in comma-separated format
+        // Assume `user_id` column is a comma-separated list of user IDs like: 1,2,3
+        // We use FIND_IN_SET for matching
+        $like_clause = '%' . $wpdb->esc_like($q) . '%';
+
+        $results = $wpdb->get_results($wpdb->prepare(
+            "
+            SELECT id, name, email 
+            FROM {$wpdb->prefix}ea_customers 
+            WHERE FIND_IN_SET(%d, user_id) 
+            AND (name LIKE %s OR email LIKE %s)
+            LIMIT 20
+            ",
+            $current_user_id, $like_clause, $like_clause
+        ));
+
+        wp_send_json($results);
+    }
+
+
+    
+    function ajax_customer_detail () {
+        $settings = $this->options->get_options();
+
+        if (isset($settings['show.customer_search_front']) && $settings['show.customer_search_front'] == 1 && is_user_logged_in()) {
+            $this->validate_nonce();
+
+            global $wpdb;
+            $id = absint($_POST['id']);
+            $cust = $wpdb->get_row($wpdb->prepare(
+                "SELECT * FROM {$wpdb->prefix}ea_customers WHERE id = %d", $id
+            ), ARRAY_A);
+
+            wp_send_json($cust);
+        }
+    }
+
+    public function ea_update_customer_data() {
+        global $wpdb;
+        if ( !isset($_POST['ea_edit_appointment_nonce']) ||
+            !wp_verify_nonce($_POST['ea_edit_appointment_nonce'], 'ea_edit_appointment_action')
+        ) {
+            wp_send_json_error('Invalid nonce');
+            exit;
+        }
+        $data = $_POST;
+        $id = (int) $data['appointment_id'];
+        $name = sanitize_text_field($data['name']);
+        $email = sanitize_email($data['email']);
+        $phone = sanitize_text_field($data['phone']);
+        $description = sanitize_text_field($data['description']);
+        $fields = 'ea_fields';
+        $meta_fields = $this->models->get_all_rows('ea_meta_fields');
+        $meta_data = array();
+
+        foreach ($meta_fields as $value) {
+            if (array_key_exists($value->slug, $data)) {
+                $meta_data[] = array(
+                    'app_id'   => null,
+                    'field_id' => $value->id,
+                    'value'    => $data[$value->slug]
+                );
+            }
+        }
+
+        $this->models->delete($fields, array('app_id' => $id), true);
+
+        foreach ($meta_data as $value) {
+            $value['app_id'] = $id;
+            $this->models->replace($fields, $value, true, true);
+        }
+
+        $wpdb->update(
+            $wpdb->prefix . 'ea_customers',
+            [
+                'name' => $name,
+                'email' => $email,
+                'phone' => $phone,
+                'description' => $description
+            ],
+            ['email' => $email]
+        );
+
+        wp_send_json_success();
+    }
+
 }

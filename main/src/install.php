@@ -83,6 +83,8 @@ CREATE TABLE {$table_prefix}ea_appointments (
   price decimal(10,2) DEFAULT NULL,
   ip varchar(45) DEFAULT NULL,
   session varchar(32) DEFAULT NULL,
+  customer_id int(11) DEFAULT NULL,
+  recurrence_id varchar(255) DEFAULT NULL,
   PRIMARY KEY  (id),
   KEY appointments_location (location),
   KEY appointments_service (service),
@@ -104,6 +106,8 @@ CREATE TABLE {$table_prefix}ea_connections (
   day_from date DEFAULT NULL,
   day_to date DEFAULT NULL,
   is_working smallint(3) DEFAULT NULL,
+  repeat_week smallint(3) DEFAULT NULL,
+  repeat_booking smallint(3) DEFAULT NULL,
   PRIMARY KEY  (id),
   KEY location_to_connection (location),
   KEY service_to_location (service),
@@ -220,6 +224,7 @@ EOT;
         foreach ($alter_querys as $alter_query) {
             $this->wpdb->query($alter_query);
         }
+        $this->ea_create_customers_table();
 
         update_option('easy_app_db_version', $this->easy_app_db_version);
     }
@@ -856,9 +861,53 @@ EOT;
 
             $version = '3.12.12';
         }
+        if (version_compare($version, '3.12.13', '<')) {
+            $this->ea_create_customers_table();
+
+            $table_queries = array();
+
+            $table_services = $this->wpdb->prefix . 'ea_appointments';
+            $table_services_1 = $this->wpdb->prefix . 'ea_connections';
+
+            $table_queries[] = "ALTER TABLE `{$table_services}` ADD COLUMN `customer_id` INT NULL AFTER `session`;";
+            $table_queries[] = "ALTER TABLE `{$table_services}` ADD COLUMN `recurrence_id` VARCHAR(255) NULL AFTER `customer_id`;";
+            $table_queries[] = "ALTER TABLE `{$table_services_1}` ADD COLUMN `repeat_week` INT NULL AFTER `is_working`;";
+            $table_queries[] = "ALTER TABLE `{$table_services_1}` ADD COLUMN `repeat_booking` INT NULL AFTER `repeat_week`;";
+
+            // add relations
+            foreach ($table_queries as $query) {
+                $this->wpdb->query($query);
+            }
+            $this->ea_sync_customers_from_appointments();
+
+            $version = '3.12.13';
+        }
 
         update_option('easy_app_db_version', $version);
     }
+
+    function ea_create_customers_table() {
+        global $wpdb;
+
+        $table_name = $wpdb->prefix . 'ea_customers';
+
+        $charset_collate = $wpdb->get_charset_collate();
+
+        $sql = "CREATE TABLE $table_name (
+            id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+            user_id BIGINT(20) UNSIGNED DEFAULT NULL,
+            name VARCHAR(255) NOT NULL,
+            email VARCHAR(255) DEFAULT '',
+            mobile VARCHAR(50) DEFAULT '',
+            dob VARCHAR(50) DEFAULT '',
+            address TEXT DEFAULT '',
+            PRIMARY KEY (id)
+        ) $charset_collate;";
+
+        require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+        dbDelta($sql);
+    }
+
 
     private function migrateFormFields()
     {
@@ -992,4 +1041,61 @@ EOT;
 
         }
     }
+
+    function ea_sync_customers_from_appointments() {
+        global $wpdb;
+
+        $oldest_appointment = $wpdb->get_row("
+            SELECT * 
+            FROM {$wpdb->prefix}ea_appointments 
+            ORDER BY date ASC 
+            LIMIT 1
+        ", ARRAY_A);
+
+        if ( $oldest_appointment ) {
+            $start_date =  $oldest_appointment['date'];
+            $end_date = date('Y-m-d');
+            $appointments =  $this->models->get_all_appointments(['from'=>$start_date,'to'=> $end_date]);
+            foreach ($appointments as $appointment) {
+                $app_id  = (int) $appointment->id;
+                $name    = $appointment->name;
+                $email   = $appointment->email;
+                $mobile  = $appointment->phone;
+                $user_id  = $appointment->user_id;
+    
+                if (empty($email)) {
+                    continue;
+                }
+                $customer_id = $wpdb->get_var($wpdb->prepare(
+                    "SELECT id FROM {$wpdb->prefix}ea_customers WHERE email = %s",
+                    $email
+                ));
+    
+                // Insert new customer if not found
+                if (!$customer_id) {    
+                    $inserted = $wpdb->insert("{$wpdb->prefix}ea_customers", [
+                        'name'    => $name,
+                        'email'   => $email,
+                        'mobile'  => $mobile,
+                        'user_id' => $user_id ? (int)$user_id : null,
+                    ], ['%s', '%s', '%s', '%d']);
+    
+                    if ($inserted) {
+                        $customer_id = $wpdb->insert_id;
+                        if (empty($appointment->customer_id) && $customer_id) {
+                            $wpdb->update(
+                                "{$wpdb->prefix}ea_appointments",
+                                ['customer_id' => $customer_id],
+                                ['id' => $app_id],
+                                ['%d'],
+                                ['%d']
+                            );
+                        }
+                    }
+                }                
+            }
+        }
+
+    }
+
 }

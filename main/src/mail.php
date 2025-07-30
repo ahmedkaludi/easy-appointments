@@ -67,6 +67,7 @@ class EAMail
     {
         // email notification
         add_action('ea_user_email_notification', array($this, 'send_user_email_notification_action'), 10, 1);
+        add_action('ea_repeat_appointment_mail_notification', array($this, 'send_repeat_appointment_mail_notification'), 10, 2);
         add_action('ea_admin_email_notification', array($this, 'send_admin_email_notification_action'), 10, 2);
 
         // we want to check if it is link from EA mail
@@ -330,6 +331,18 @@ EOT;
 
         if (!empty($send_user_mail)) {
             $this->send_status_change_mail($app_id);
+        }
+    }
+    /**
+     *
+     * @param  int $app_id Application id
+     */
+    public function send_repeat_appointment_mail_notification($app_id,$appointments)
+    {
+        $send_user_mail = $this->options->get_option_value('send.user.email', false);
+
+        if (!empty($send_user_mail)) {
+            $this->send_status_change_repeat_mail($app_id,$appointments);
         }
     }
 
@@ -648,6 +661,126 @@ EOT;
         $body_template = $this->options->get_option_value('mail.' . $app->status, 'mail');
 
         // Hook for customize body of email template
+        $body_template = apply_filters( 'ea_customer_mail_template', $body_template, $app_array, $params );
+
+        $send_from = $this->options->get_option_value('send.from.email', '');
+
+        $body = str_replace(array_keys($params), array_values($params), $body_template);
+        $subject = str_replace(array_keys($params), array_values($params), $subject_template);
+
+        $email_key = null;
+
+        // check if there are field called email
+        if (array_key_exists('email', $app_array)) {
+            $email_key = 'email';
+        }
+
+        // check if there is field called e-mail
+        if (array_key_exists('e-mail', $app_array)) {
+            $email_key = 'e-mail';
+        }
+
+        // list of emails to send
+        $email_to = array();
+
+        // if there is key
+        if ($email_key != null) {
+            $email_to[] = $app_array[$email_key];
+        }
+
+        // merge old email field info and emails as custom fields. Remove duplicate
+        $email_to = array_unique(array_merge($email_to, $this->models->get_email_values_for_app_id($app_id)));
+
+        // send only email if there is at least one address
+        if (count($email_to) > 0) {
+            $headers = array('Content-Type: text/html; charset=UTF-8');
+
+            $visitor_reply_to_address = $this->options->get_option_value('visitor_reply_to_address', '');
+
+            if (!empty($visitor_reply_to_address)) {
+                $headers[] = 'Reply-To: '. $visitor_reply_to_address;
+            }
+
+            if (!empty($send_from)) {
+                $headers[] = 'From: ' . $send_from;
+            }
+
+            $files = array();
+
+            $files = apply_filters('ea_user_mail_attachments', $files, $app_array);
+
+            if (empty($files)) {
+                $files = array();
+            }
+
+            $this->send_email($email_to, $subject, $body, $headers, $files);
+        }
+    }
+
+    public function send_status_change_repeat_mail($app_id,$appointments)
+    {
+        $table_name = 'ea_appointments';
+
+        $app = $this->models->get_row($table_name, $app_id);
+
+        $app_array = $this->models->get_appintment_by_id($app_id);
+
+        // escape input data
+        $app_array = $this->escape_data($app_array);
+
+        $params = array();
+
+        $time_format = get_option('time_format', 'H:i');
+        $date_format = get_option('date_format', 'F j, Y');
+        if (empty($time_format)) {
+            $time_format = 'H:i';
+        }
+
+        foreach ($app_array as $key => $value) {
+            if ($key == 'start' || $key == 'end') {
+                $start_date = $app_array['date'] . ' ' . $app_array[$key];
+                $temp_date = DateTime::createFromFormat('Y-m-d H:i:s', $start_date, $this->get_wp_timezone());
+                // do that only if time is valid
+                if ($temp_date !== false) {
+                    $value = $temp_date->format($time_format);
+                }
+            }
+
+            if ($key == 'date') {
+                $value = date_i18n($date_format, strtotime("$value {$app_array['start']}"));
+            }
+
+            if ($key == 'status') {
+                $value = $this->logic->get_status_translation($value);
+            }
+
+            $params["#$key#"] = $value;
+        }
+
+        $params["#link_cancel#"] = $this->generate_link_element($app_array, 'cancel');
+        $params["#link_confirm#"] = $this->generate_link_element($app_array, 'confirm');
+
+        $params['#url_cancel#'] = $this->generate_url($app_array, 'cancel');
+        $params['#url_confirm#'] = $this->generate_url($app_array, 'confirm');
+
+        $subject_template = $this->options->get_option_value('pending.subject.visitor.email', 'Reservation : #id#');
+
+        // Hook for customize subject of email template
+        $subject_template = apply_filters( 'ea_customer_mail_subject_template', $subject_template);
+
+        $body_template = $this->options->get_option_value('mail.' . $app->status, 'mail');
+
+        // Hook for customize body of email template
+        
+        $email_body = esc_html__('Here are your scheduled repeat appointments', 'easy-appointments');
+        $email_body .= ":\n\n";
+        foreach ($appointments as $appointment) {
+            $email_body .= "Date: " . date('F j, Y', strtotime($appointment['date'])) . "\n";
+            $email_body .= "Time: " . date('H:i', strtotime($appointment['start'])) . " - " . date('H:i', strtotime($appointment['end'])) . "\n";
+            $email_body .= "----------------------------------\n";
+        }
+        $email_body .= esc_html__('Thank you for using our service!', 'easy-appointments');
+        $body_template = $email_body. "\n\n" . $body_template;
         $body_template = apply_filters( 'ea_customer_mail_template', $body_template, $app_array, $params );
 
         $send_from = $this->options->get_option_value('send.from.email', '');

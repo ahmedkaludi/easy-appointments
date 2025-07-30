@@ -98,3 +98,7 @@
 .ea-grid-centered {
   place-content: center;
 }
+
+.MuiPopover-root {
+  z-index: 999999 !important;
+}

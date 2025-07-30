@@ -58,7 +58,88 @@ class EAAdminPanel
         // Init action
         add_action('admin_init', array($this, 'init_scripts'));
         //add_action( 'admin_enqueue_scripts', array( $this, 'init' ) );
+
     }
+
+    public function handle_customers_ajax() {
+        global $wpdb;
+
+        $table = $wpdb->prefix . 'ea_customers';
+        $per_page = 10;
+        $paged = isset($_POST['paged']) ? max(1, intval($_POST['paged'])) : 1;
+        $offset = ($paged - 1) * $per_page;
+
+        $search = isset($_POST['search']) ? sanitize_text_field($_POST['search']) : '';
+        $search_sql = '';
+        $params = [];
+
+        if (!empty($search)) {
+            $search_sql = "WHERE name LIKE %s OR email LIKE %s OR mobile LIKE %s";
+            $like = '%' . $wpdb->esc_like($search) . '%';
+            $params = [$like, $like, $like];
+        }
+
+        $total_sql = "SELECT COUNT(*) FROM $table " . ($search_sql ? $search_sql : '');
+        $total_customers = $wpdb->get_var($wpdb->prepare($total_sql, ...$params));
+
+        $query_sql = "SELECT * FROM $table " . ($search_sql ? $search_sql : '') . " ORDER BY id DESC LIMIT %d OFFSET %d";
+        $customers = $wpdb->get_results($wpdb->prepare($query_sql, ...array_merge($params, [$per_page, $offset])));
+
+        wp_send_json([
+            'data' => $customers,
+            'total_pages' => ceil($total_customers / $per_page),
+            'paged' => $paged,
+        ]);
+    }
+
+    public function handle_update_customer_ajax() {
+        if ( ! current_user_can('manage_options') ) {
+            wp_send_json_error(['message' => 'Unauthorized'], 403);
+        }
+        global $wpdb;
+        check_ajax_referer('ea_customer_edit', 'ea_nonce');
+
+        $table = $wpdb->prefix . 'ea_customers';
+        $id = intval($_POST['id']);
+        $data = [
+            'name' => sanitize_text_field($_POST['name']),
+            'email'=> sanitize_email($_POST['email']),
+            'mobile'=> sanitize_text_field($_POST['mobile']),
+            'address'=> sanitize_text_field($_POST['address']),
+        ];
+        $updated = $wpdb->update($table, $data, ['id' => $id]);
+        if ($updated !== false) {
+            wp_send_json_success();
+        }
+        wp_send_json_error();
+    }
+
+    public function handle_insert_customer_ajax() {
+        if ( ! current_user_can('manage_options') ) {
+            wp_send_json_error(['message' => 'Unauthorized'], 403);
+        }
+        check_ajax_referer('ea_customer_edit', 'ea_nonce');
+
+        $name    = sanitize_text_field($_POST['name'] ?? '');
+        $email   = sanitize_email($_POST['email'] ?? '');
+        $mobile  = sanitize_text_field($_POST['mobile'] ?? '');
+        $address = sanitize_textarea_field($_POST['address'] ?? '');
+
+        global $wpdb;
+        $inserted = $wpdb->insert("{$wpdb->prefix}ea_customers", [
+            'name'    => $name,
+            'email'   => $email,
+            'mobile'  => $mobile,
+            'address' => $address,
+        ]);
+
+        if ($inserted) {
+            wp_send_json_success();
+        } else {
+            wp_send_json_error();
+        }
+    }
+
 
     /**
      * Init of admin page
@@ -299,6 +380,23 @@ class EAAdminPanel
         wp_enqueue_style('time-picker');
         wp_enqueue_style('ea-admin-awesome-css');
     }
+    /**
+     * Customer required JS
+     */
+    public function add_customer_js()
+    {
+        $this->compatibility_mode = $this->options->get_option_value('compatibility.mode', 0);
+
+        if (!empty($this->compatibility_mode)) {
+            wp_enqueue_script('ea-compatibility-mode');
+        }
+
+        wp_enqueue_script('ea-appointments');
+        wp_enqueue_style('ea-admin-css');
+        wp_enqueue_style('jquery-style');
+        wp_enqueue_style('time-picker');
+        wp_enqueue_style('ea-admin-awesome-css');
+    }
 
     /**
      * JS for report admin page
@@ -392,6 +490,17 @@ class EAAdminPanel
             'easy_app_publish',
             array($this, 'publish_page')
         );
+        
+        // customer
+        $page_customer_suffix = add_submenu_page(
+            'easy_app_top_level',
+            __('Customers', 'easy-appointments'),
+            __('Customers', 'easy-appointments'),
+            'manage_options', // Ensure admin access
+            'easy_app_customer',
+            array($this, 'customer_page')
+        );
+        
 
         // settings
         $page_settings_suffix = add_submenu_page(
@@ -466,6 +575,7 @@ class EAAdminPanel
         add_action('load-' . $page_settings_suffix, array($this, 'add_settings_js'));
         add_action('load-' . $page_app_suffix, array($this, 'add_appointments_js'));
         add_action('load-' . $page_report_suffix, array($this, 'add_report_js'));
+        add_action('load-' . $page_customer_suffix, array($this, 'add_customer_js'));
     }
 
     public function easy_app_help_support()
@@ -805,6 +915,91 @@ class EAAdminPanel
         require_once EA_SRC_DIR . 'templates/connections.tpl.php';
         require_once EA_SRC_DIR . 'templates/inlinedata.tpl.php';
     }
+    
+    /**
+     * Content of customer
+     */
+    public function customer_page() {
+        global $wpdb;
+
+        // ASP tag check
+        if ($this->is_asp_tags_are_on()) {
+            require_once EA_SRC_DIR . 'templates/asp_tag_message.tpl.php';
+            return;
+        }
+
+        // Table name
+        $table = $wpdb->prefix . 'ea_customers';
+
+        // Pagination
+        $per_page = 10;
+        $paged = isset($_GET['paged']) ? max(1, intval($_GET['paged'])) : 1;
+        $offset = ($paged - 1) * $per_page;
+
+        // Search
+        $search = isset($_GET['s']) ? sanitize_text_field($_GET['s']) : '';
+        $search_sql = '';
+        $search_params = [];
+
+        if (!empty($search)) {
+            $search_sql = "WHERE name LIKE %s OR email LIKE %s OR mobile LIKE %s";
+            $like = '%' . $wpdb->esc_like($search) . '%';
+            $search_params = [$like, $like, $like];
+        }
+
+        // Total count
+        $total_sql = "SELECT COUNT(*) FROM $table " . ($search_sql ? $search_sql : '');
+        if (!empty($search_sql)) {
+            $total_customers = $wpdb->get_var($wpdb->prepare($total_sql, ...$search_params));
+        } else {
+            $total_customers = $wpdb->get_var($total_sql);
+        }
+
+        // Fetch paginated data
+        $query_sql = "SELECT * FROM $table " . ($search_sql ? $search_sql : '') . " ORDER BY id DESC LIMIT %d OFFSET %d";
+        if (!empty($search_sql)) {
+            $customers = $wpdb->get_results($wpdb->prepare($query_sql, ...array_merge($search_params, [$per_page, $offset])));
+        } else {
+            $customers = $wpdb->get_results($wpdb->prepare($query_sql, $per_page, $offset));
+        }
+
+        // Calculate total pages
+        $total_pages = ceil($total_customers / $per_page);
+
+        // Make available to template
+        $this->customers = $customers;
+        $this->search = $search;
+        $this->paged = $paged;
+        $this->total_pages = $total_pages;
+
+        // Enqueue styles/scripts
+        load_plugin_textdomain('easy-appointments', false, EA_PLUGIN_DIR  . 'languages/');
+        wp_enqueue_style('ea-admin-bundle-css');
+        wp_enqueue_script('ea-admin-bundle');
+
+        $settings = $this->options->get_options();
+        $settings['rest_url'] = get_rest_url();
+        $settings['time_format'] = $this->datetime->convert_to_moment_format(get_option('time_format', 'H:i'));
+        $settings['date_format'] = $this->datetime->convert_to_moment_format(get_option('date_format', 'F j, Y'));
+
+        $wpurl = get_bloginfo('wpurl');
+        $url   = get_bloginfo('url');
+        $settings['image_base'] = str_replace("/wp-content", "", content_url());
+        $settings['rest_url_extend_connections'] = EALogActions::extend_connection_url();
+
+        wp_localize_script('ea-admin-bundle', 'ea_settings', $settings);
+
+        if (function_exists('wp_set_script_translations')) {
+            wp_set_script_translations('ea-admin-bundle', 'easy-appointments', EA_PLUGIN_DIR  . 'languages');
+        }
+
+        // Load template
+        require_once EA_SRC_DIR . 'templates/customers.tpl.php';
+        require_once EA_SRC_DIR . 'templates/inlinedata.tpl.php';
+    }
+
+
+
 
     /**
      * Tools page
@@ -891,4 +1086,6 @@ class EAAdminPanel
 
         return false;
     }
+
+
 }

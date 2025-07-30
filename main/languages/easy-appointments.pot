@@ -176,6 +176,12 @@ msgid "Add connection"
 msgstr ""
 
 #: js/bundle.js:1
+#: js-react/src/pages/Connections/index.js:106
+#: js-react/src/pages/Connections/index.js:111
+msgid "Connections"
+msgstr ""
+
+#: js/bundle.js:1
 #: js-react/src/pages/Connections/index.js:110
 msgid "Edit connection"
 msgstr ""
@@ -212,8 +218,19 @@ msgid "Add location"
 msgstr ""
 
 #: js/bundle.js:1
+#: js-react/src/pages/Locations/index.js:94
+#: js-react/src/pages/Locations/index.js:99
+msgid "Easy Appointments"
+msgstr ""
+
+#: js/bundle.js:1
 #: js-react/src/pages/Locations/index.js:98
 msgid "Edit location"
+msgstr ""
+
+#: js/bundle.js:1
+#: js-react/src/pages/Locations/index.js:98
+msgid "Locations"
 msgstr ""
 
 #: js/bundle.js:1

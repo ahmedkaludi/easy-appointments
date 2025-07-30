@@ -167,6 +167,20 @@
                             %>checked<% } %>>
                         </div>
                     </div>
+
+                    <div class="form-item">
+                        <div class="label-with-tooltip">
+                            <label for="show.customer_search_front"><?php esc_html_e('Customer Search', 'easy-appointments'); ?></label>
+                            <span class="tooltip tooltip-right"
+                                  data-tooltip="<?php esc_html_e('This will allow to search customer in front from dropdown', 'easy-appointments'); ?>"></span>
+                        </div>
+                        <div class="field-wrap">
+                            <input class="field" type="checkbox" name="show.customer_search_front"
+                                   data-key="show.customer_search_front"<% if (typeof _.findWhere(settings,
+                            {ea_key:'show.customer_search_front'}) !== 'undefined' && _.findWhere(settings,
+                            {ea_key:'show.customer_search_front'}).ea_value == '1') { %>checked<% } %> />
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -412,6 +426,19 @@
                   </div>
                   <div class="form-item">
                       <div class="label-with-tooltip">
+                          <label for=""><?php _e('Manage appointmennt in popup', 'easy-appointments'); ?></label>
+                          <span class="tooltip tooltip-right"
+                                data-tooltip="<?php _e('Popup dialog for modify appointment details.', 'easy-appointments'); ?>"></span>
+                      </div>
+                      <div class="field-wrap">
+                          <input class="field" data-key="fullcalendar.manage_appointment.show"
+                                 name="fullcalendar.manage_appointment.show" type="checkbox" <% if
+                          (_.findWhere(settings, {ea_key:'fullcalendar.manage_appointment.show'}).ea_value == "1") {
+                          %>checked<% } %>>
+                      </div>
+                  </div>
+                  <div class="form-item">
+                      <div class="label-with-tooltip">
                           <label for=""><?php esc_html_e('Show event content in popup', 'easy-appointments'); ?></label>
                           <span class="tooltip tooltip-right"
                                 data-tooltip="<?php esc_html_e('Popup dialog for event content.', 'easy-appointments'); ?>"></span>
@@ -542,7 +569,8 @@
                     </div>
                     <div class="form-item">
                         <ul id="custom-fields"></ul>
-                    </div>
+                    </div>                   
+                    
                     <div class="form-item">
                         <span class="pure-text hint"><?php esc_html_e('* To use using the email notification for user there must be field named "email" or "e-mail" or field with type "email"', 'easy-appointments'); ?></span>
                     </div>
@@ -760,14 +788,12 @@
                     </div>
                     <div class="form-item" style="background-color: #ccc; padding: 15px;">
                         <blockquote style="margin: 0;">
-                            <?php echo wp_kses_post(__('
-                                <strong>Display Thank You Note:</strong> This screen is displayed immediately after a user successfully books an appointment using the booking form, Its featured Appointment summary and Action buttons.<br><br>
-                                <strong>Action Buttons:</strong><br>
+                                <strong><?php esc_html_e('Display Thank You Note', 'easy-appointments'); ?>:</strong> <?php esc_html_e('Action Buttons', 'easy-appointments'); ?>.<br><br>
+                                <strong><?php esc_html_e('This screen is displayed immediately after a user successfully books an appointment using the booking form, Its featured Appointment summary and Action buttons', 'easy-appointments'); ?>:</strong><br>
                                 <ul style="margin: 0 0 0 20px; padding: 0;">
-                                    <li><strong>Book New Appointment:</strong> Allows the user to return and book another appointment.</li>
-                                    <li><strong>Add to Google Calendar:</strong> Its add the appointment directly to their Google Calendar for easy reminders.</li>
+                                    <li><strong><?php esc_html_e('Book New Appointment', 'easy-appointments'); ?>:</strong> <?php esc_html_e('Allows the user to return and book another appointment', 'easy-appointments'); ?>.</li>
+                                    <li><strong><?php esc_html_e('Add to Google Calendar', 'easy-appointments'); ?>:</strong><?php esc_html_e('Its add the appointment directly to their Google Calendar for easy reminders', 'easy-appointments'); ?> .</li>
                                 </ul>
-                            ', 'easy-appointments')); ?>
                         </blockquote>
                     </div>
                 </div>
