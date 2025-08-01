@@ -85,6 +85,11 @@ const WorkersPage = () => {
   };
 
   const onDeleteClick = async row => {
+    const confirmDelete = window.confirm(
+      `Are you sure you want to delete "${row.name}"?`
+    );
+    if (!confirmDelete) return;
+
     setProcessing(row?.id);
 
     try {
@@ -95,7 +100,7 @@ const WorkersPage = () => {
         setWorkers(data);
       }
     } catch (e) {
-      throw new Error(e);
+      console.error('Delete failed:', e);
     }
 
     setProcessing(null);

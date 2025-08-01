@@ -118,6 +118,10 @@ const ConnectionsPage = () => {
   };
 
   const onDeleteClick = async row => {
+    const confirmDelete = window.confirm(
+      `Are you sure you want to delete this?`
+    );
+    if (!confirmDelete) return;
     setProcessing(row?.id);
 
     try {
