@@ -400,13 +400,13 @@
                 next_element.empty();
                 var default_option_value = '-';
                 if (options.next == 'service') {
-                    default_option_value = 'Select '+ea_settings['trans.service'];
+                    default_option_value = ea_settings['trans.service'];
                 }
                 if (options.next == 'location') {
-                    default_option_value = 'Select '+ea_settings['trans.location'];
+                    default_option_value = ea_settings['trans.location'];
                 }
                 if (options.next == 'worker') {
-                    default_option_value = 'Select '+ea_settings['trans.worker'];
+                    default_option_value = ea_settings['trans.worker'];
                 }
                 // default
                 next_element.append('<option value="">'+default_option_value+'</option>');
