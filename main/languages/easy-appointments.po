@@ -1385,3 +1385,31 @@ msgstr ""
 #: src/templates/admin.tpl.php:750
 msgid "This screen is displayed immediately after a user successfully books an appointment using the booking form, Its featured Appointment summary and Action buttons"
 msgstr ""
+
+#: src/admin.php:497 src/admin.php:498
+msgid "Customers"
+msgstr ""
+
+#: src/templates/customers.tpl.php:128
+msgid "Customer List"
+msgstr ""
+
+#: src/templates/customers.tpl.php:312
+msgid "No results"
+msgstr ""
+
+#: src/templates/customers.tpl.php:134
+msgid "Search"
+msgstr ""
+
+#: src/admin.php:488 src/admin.php:489
+msgid "Publish"
+msgstr ""
+
+#: src/admin.php:497 src/admin.php:498
+msgid "Customers"
+msgstr ""
+
+#: src/templates/customers.tpl.php:146
+msgid "Add New Customer"
+msgstr ""
