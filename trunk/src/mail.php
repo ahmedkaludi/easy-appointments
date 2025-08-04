@@ -204,7 +204,7 @@ EOT;
             $default_status = $this->options->get_option_value('default.status');
             if ($data['status'] !== 'pending' && $default_status !== 'reservation' && $data['status'] !== 'reservation') {
                 header('Refresh:3; url=' . get_home_url());
-                wp_die(esc_html__('Appointment can\'t be confirmed!', 'easy-appointments'));
+                wp_die(esc_html__('Appointment already confirmed!', 'easy-appointments'));
             }
 
             $app_data['status'] = 'confirmed';
