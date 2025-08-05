@@ -882,9 +882,82 @@ EOT;
 
             $version = '3.12.13';
         }
+        if (version_compare($version, '3.12.14', '<')) {
+            $this->update_email_options('user');
+            $this->update_email_options('worker');
+            $version = '3.12.14';
+        }
 
         update_option('easy_app_db_version', $version);
     }
+
+    public function update_email_options( $type = 'user' ) {
+        global $wpdb;
+        $table_name = $wpdb->prefix . 'ea_options';
+
+        // Define parent key and children based on type
+        if ( $type === 'user' ) {
+            $parent_key = 'send.user.email';
+            $children = [
+                'send.user.pending_email',
+                'send.user.reservation_email',
+                'send.user.cancelled_email',
+                'send.user.confirmed_email',
+            ];
+        } elseif ( $type === 'worker' ) {
+            $parent_key = 'send.worker.email';
+            $children = [
+                'send.worker.pending_email',
+                'send.worker.reservation_email',
+                'send.worker.cancelled_email',
+                'send.worker.confirmed_email',
+            ];
+        } else {
+            return false; // Invalid type
+        }
+
+        // Check if parent is enabled
+        $parent_value = $wpdb->get_var( $wpdb->prepare(
+            "SELECT ea_value FROM $table_name WHERE ea_key = %s",
+            $parent_key
+        ) );
+
+        if ( $parent_value !== '1' ) {
+            return false; // Parent not enabled, do nothing
+        }
+
+        // Insert or update each child key
+        foreach ( $children as $key ) {
+            $existing = $wpdb->get_var( $wpdb->prepare(
+                "SELECT COUNT(*) FROM $table_name WHERE ea_key = %s",
+                $key
+            ) );
+
+            if ( $existing ) {
+                // Update to 1
+                $wpdb->update(
+                    $table_name,
+                    [ 'ea_value' => '1' ],
+                    [ 'ea_key'   => $key ],
+                    [ '%s' ],
+                    [ '%s' ]
+                );
+            } else {
+                // Insert as 1
+                $wpdb->insert(
+                    $table_name,
+                    [
+                        'ea_key'   => $key,
+                        'ea_value' => '1',
+                    ],
+                    [ '%s', '%s' ]
+                );
+            }
+        }
+
+        return true;
+    }
+
 
     function ea_create_customers_table() {
         global $wpdb;
