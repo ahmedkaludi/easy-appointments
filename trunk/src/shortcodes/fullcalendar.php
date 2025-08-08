@@ -85,6 +85,15 @@ class EAFullCalendar
         );
     }
 
+    function get_time_format_by_locale($format = '00-24') {
+        if ($format === '00-24') {
+             return 'H:mm'; // 24-hour format
+        } elseif ($format === 'am-pm') {
+            return 'h:mm a'; // 12-hour format
+        }
+    }
+
+
     /**
      * Shortcode def for Full Calendar
      *
@@ -103,7 +112,7 @@ class EAFullCalendar
             'default_date'         => date('Y-m-d'),
             'min_date'             => null,
             'max_date'             => null,
-            'time_format'          => 'h(:mm)t',
+            'time_format'          => $this->get_time_format_by_locale($this->options->get_option_value('time_format')),
             'display_event_end'    => '0',
             'hide_cancelled'        => '0',
             'show_remaining_slots' => '0',
