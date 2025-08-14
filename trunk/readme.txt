@@ -5,7 +5,7 @@ Tags: appointment, appointments, Booking, calendar, reservation
 Requires at least: 3.7
 Tested up to: 6.8
 Requires PHP: 5.3
-Stable tag: 3.12.13
+Stable tag: 3.12.14
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -212,6 +212,14 @@ Note: you can have only one calendar on one page.
 25. Admin panel - Report - Export page
 
 == Changelog ==
+= 3.12.14 (2025-08-08)
+* Fixed Unable to translate few string #169
+* Fixed Conflict issue with the latest Pro version. #165
+* Enhancement made changes to the confirmation email sent to the worker. #172
+* Enhancement label *Select* is not translating #174
+* Added confirm box on employee, service, location, connection deletion #170
+* Added Need separate Mail options #167
+
 = 3.12.13 (2025-07-28)
 * Added the Razorpay payment gateway #154
 * Added an option of CRM Tool for plugin. #110

@@ -373,7 +373,7 @@ class EAAjax
         $this->send_ok_json_result($result);
     }
 
-    public function old_ajax_res_appointment()
+    public function ajax_res_appointment()
     {
         $this->validate_nonce();
 
@@ -488,7 +488,7 @@ class EAAjax
         $this->send_ok_json_result($response);
     }
 
-    public function ajax_res_appointment()
+    public function repeatbooking_hide_ajax_res_appointment()
     {
         $this->validate_nonce();
         $this->validate_captcha();

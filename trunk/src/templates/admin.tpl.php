@@ -377,10 +377,34 @@
                                   data-tooltip="<?php esc_html_e('Mark this option if you want to employee receive admin email after filing the form.', 'easy-appointments'); ?>"></span>
                         </div>
                         <div class="field-wrap">
-                            <input class="field" data-key="send.worker.email"
+                            <input class="field ea_send_worker_email" data-key="send.worker.email"
                                    name="send.worker.email" type="checkbox" <% if
                             (_.findWhere(settings, {ea_key:'send.worker.email'}).ea_value == "1") {
                             %>checked<% } %>>
+                        </div>                        
+                    </div>
+                    <div class="form-item ea_worker_mail_group" style="margin-left: 12px;">
+                        <div class="label-with-tooltip">
+                            <label for="send.worker.pending_email"><input class="field" id="send.worker.pending_email" data-key="send.worker.pending_email"
+                                name="send.worker.pending_email" type="checkbox" <% if
+                            (_.findWhere(settings, {ea_key:'send.worker.pending_email'}).ea_value == "1") {
+                            %>checked<% } %>> <?php esc_html_e('Pending', 'easy-appointments'); ?>
+                            </label>&nbsp;&nbsp;&nbsp;&nbsp;
+                            <label for="send.worker.reservation_email"><input class="field" data-key="send.worker.reservation_email"
+                                name="send.worker.reservation_email" id="send.worker.reservation_email" type="checkbox" <% if
+                            (_.findWhere(settings, {ea_key:'send.worker.reservation_email'}).ea_value == "1") {
+                            %>checked<% } %>> <?php esc_html_e('Reservation', 'easy-appointments'); ?>
+                            </label>&nbsp;&nbsp;&nbsp;&nbsp;
+                            <label for="send.worker.cancelled_email"><input class="field" data-key="send.worker.cancelled_email"
+                                name="send.worker.cancelled_email" id="send.worker.cancelled_email" type="checkbox" <% if
+                            (_.findWhere(settings, {ea_key:'send.worker.cancelled_email'}).ea_value == "1") {
+                            %>checked<% } %>> <?php esc_html_e('Cancelled', 'easy-appointments'); ?>
+                            </label>&nbsp;&nbsp;&nbsp;&nbsp;
+                            <label for="send.worker.confirmed_email"><input class="field" data-key="send.worker.confirmed_email"
+                                name="send.worker.confirmed_email" id="send.worker.confirmed_email" type="checkbox" <% if
+                            (_.findWhere(settings, {ea_key:'send.worker.confirmed_email'}).ea_value == "1") {
+                            %>checked<% } %>> <?php esc_html_e('Confirmed', 'easy-appointments'); ?>
+                            </label>
                         </div>
                     </div>
                     <div class="form-item">
@@ -390,9 +414,33 @@
                                   data-tooltip="<?php esc_html_e('Mark this option if you want to user receive email after filing the form.', 'easy-appointments'); ?>"></span>
                         </div>
                         <div class="field-wrap">
-                            <input class="field" data-key="send.user.email" name="send.user.email"
+                            <input class="field ea_send_user_email" data-key="send.user.email" name="send.user.email"
                                    type="checkbox" <% if (_.findWhere(settings,
                             {ea_key:'send.user.email'}).ea_value == "1") { %>checked<% } %>>
+                        </div>
+                    </div>
+                    <div class="form-item ea_user_mail_group" style="margin-left: 12px;">
+                        <div class="label-with-tooltip">
+                            <label for="send.user.pending_email"><input class="field" id="send.user.pending_email" data-key="send.user.pending_email"
+                                name="send.user.pending_email" type="checkbox" <% if
+                            (_.findWhere(settings, {ea_key:'send.user.pending_email'}).ea_value == "1") {
+                            %>checked<% } %>> <?php esc_html_e('Pending', 'easy-appointments'); ?>
+                            </label>&nbsp;&nbsp;&nbsp;&nbsp;
+                            <label for="send.user.reservation_email"><input class="field" data-key="send.user.reservation_email"
+                                name="send.user.reservation_email" id="send.user.reservation_email" type="checkbox" <% if
+                            (_.findWhere(settings, {ea_key:'send.user.reservation_email'}).ea_value == "1") {
+                            %>checked<% } %>> <?php esc_html_e('Reservation', 'easy-appointments'); ?>
+                            </label>&nbsp;&nbsp;&nbsp;&nbsp;
+                            <label for="send.user.cancelled_email"><input class="field" data-key="send.user.cancelled_email"
+                                name="send.user.cancelled_email" id="send.user.cancelled_email" type="checkbox" <% if
+                            (_.findWhere(settings, {ea_key:'send.user.cancelled_email'}).ea_value == "1") {
+                            %>checked<% } %>> <?php esc_html_e('Cancelled', 'easy-appointments'); ?>
+                            </label>&nbsp;&nbsp;&nbsp;&nbsp;
+                            <label for="send.user.confirmed_email"><input class="field" data-key="send.user.confirmed_email"
+                                name="send.user.confirmed_email" id="send.user.confirmed_email" type="checkbox" <% if
+                            (_.findWhere(settings, {ea_key:'send.user.confirmed_email'}).ea_value == "1") {
+                            %>checked<% } %>> <?php esc_html_e('Confirmed', 'easy-appointments'); ?>
+                            </label>
                         </div>
                     </div>
                     <div class="form-item">
@@ -1011,4 +1059,37 @@
         <span class="bulk-value"><%- _.findWhere(workers,   {id:row.worker})?.name s%></span>
         <span style="display: inline-block;"><button class="button bulk-connection-remove">Remove</button></span>
     </li>
+</script>
+<script>
+    jQuery(document).ready(function($) {
+        function checked_worker_count(){
+            var checkedCount = $('.ea_send_worker_email:checked').length;
+            if (checkedCount > 0){
+                $('.ea_worker_mail_group').show();
+            }else{
+                $('.ea_worker_mail_group').hide();
+
+            }
+        }   
+        function checked_user_count(){
+            var checkedCount = $('.ea_send_user_email:checked').length;
+            if (checkedCount > 0){
+                $('.ea_user_mail_group').show();
+            }else{
+                $('.ea_user_mail_group').hide();
+
+            }
+        }   
+        $('body').on('change','.ea_send_worker_email', function() {
+            checked_worker_count();
+        });
+        $('body').on('change','.ea_send_user_email', function() {
+            checked_user_count();
+        });
+
+        setInterval(() => {
+            checked_worker_count();
+            checked_user_count();
+        }, 2000);
+    });
 </script>

@@ -204,7 +204,7 @@ EOT;
             $default_status = $this->options->get_option_value('default.status');
             if ($data['status'] !== 'pending' && $default_status !== 'reservation' && $data['status'] !== 'reservation') {
                 header('Refresh:3; url=' . get_home_url());
-                wp_die(esc_html__('Appointment can\'t be confirmed!', 'easy-appointments'));
+                wp_die(esc_html__('Appointment already confirmed!', 'easy-appointments'));
             }
 
             $app_data['status'] = 'confirmed';
@@ -325,11 +325,49 @@ EOT;
      *
      * @param  int $app_id Application id
      */
+    public function get_user_email_notification_active(){
+        $enable_options = [];        
+        if ($this->options->get_option_value('send.user.pending_email')) {
+           $enable_options[] = 'pending';
+        }
+        if ($this->options->get_option_value('send.user.reservation_email')) {
+           $enable_options[] = 'reservation';
+        }
+        if ($this->options->get_option_value('send.user.cancelled_email')) {
+           $enable_options[] = 'canceled';
+        }
+        if ($this->options->get_option_value('send.user.confirmed_email')) {
+           $enable_options[] = 'confirmed';
+        }
+        return $enable_options;
+    }
+    public function get_worker_email_notification_active(){
+        $enable_options = [];        
+        if ($this->options->get_option_value('send.worker.pending_email')) {
+           $enable_options[] = 'pending';
+        }
+        if ($this->options->get_option_value('send.worker.reservation_email')) {
+           $enable_options[] = 'reservation';
+        }
+        if ($this->options->get_option_value('send.worker.cancelled_email')) {
+           $enable_options[] = 'canceled';
+        }
+        if ($this->options->get_option_value('send.worker.confirmed_email')) {
+           $enable_options[] = 'confirmed';
+        }
+        return $enable_options;
+    }
     public function send_user_email_notification_action($app_id)
     {
         $send_user_mail = $this->options->get_option_value('send.user.email', false);
 
         if (!empty($send_user_mail)) {
+            $table_name = 'ea_appointments';
+            $app = $this->models->get_row($table_name, $app_id);
+            $enable_actions = $this->get_user_email_notification_active();
+            if (!empty($enable_actions) && !in_array($app->status, $enable_actions)) {
+                return;
+            }
             $this->send_status_change_mail($app_id);
         }
     }
@@ -353,6 +391,16 @@ EOT;
      */
     public function send_admin_email_notification_action($app_id, $worker_only = false)
     {
+        if ($this->options->get_option_value('send.worker.email', '0') == '1') {
+            $enable_actions = $this->get_worker_email_notification_active();
+            if (!empty($enable_actions)) {
+                $table_name = 'ea_appointments';
+                $app = $this->models->get_row($table_name, $app_id);
+                if (!in_array($app->status, $enable_actions)) {
+                    return;
+                }
+            }
+        }
         $this->send_notification(array('id' => $app_id), $worker_only);
     }
 
