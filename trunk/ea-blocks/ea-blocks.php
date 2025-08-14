@@ -35,7 +35,6 @@ function create_block_ea_blocks_block_init()
 add_action('init', 'create_block_ea_blocks_block_init');
 
 function render_ea_fullcalendar_block( $attributes ) {
-    error_log('inside render render_ea_fullcalendar_block');
 	$location = isset( $attributes['location'] ) ? intval( $attributes['location'] ) : 0;
 	$service  = isset( $attributes['service'] ) ? intval( $attributes['service'] ) : 0;
 	$worker   = isset( $attributes['worker'] ) ? intval( $attributes['worker'] ) : 0;
@@ -159,7 +158,6 @@ function get_all_appointments($data) {
 			}
 		}
 	}
-	// error_log(print_r(array_values((array) $apps),true));
 	return array_values((array) $apps);
 }
 
@@ -264,8 +262,6 @@ function ea_blocks_get_options(WP_REST_Request $request)
 
 	$results =  $wpdb->get_results($query);
 
-	error_log(print_r($results, true));
-
 	$options = array_map(function ($row) {
 		return [
 			'label' => $row->name, // Adjust according to your table structure
@@ -276,16 +272,37 @@ function ea_blocks_get_options(WP_REST_Request $request)
 	return rest_ensure_response($options);
 }
 
-function ea_blocks_render_shortcode( WP_REST_Request $request ) {
+function ea_blocks_render_shortcode(WP_REST_Request $request) {
     $shortcode = $request->get_param('shortcode');
-    return do_shortcode($shortcode);
+
+    // Simple allowlist (whitelist) of permitted shortcodes
+    $allowed_shortcodes = ['location', 'service','worker'];
+
+    // Extract shortcode name
+    preg_match('/^\[(\w+)/', $shortcode, $matches);
+    $shortcode_tag = $matches[1] ?? '';
+
+    if (!in_array($shortcode_tag, $allowed_shortcodes, true)) {
+        return new WP_REST_Response([
+            'success' => false,
+            'message' => 'Shortcode not allowed.'
+        ], 403);
+    }
+
+    return new WP_REST_Response([
+        'success' => true,
+        'html' => do_shortcode($shortcode)
+    ]);
 }
+
 
 add_action('rest_api_init', function () {
     register_rest_route('wp/v2/eablocks', '/render_shortcode', array(
         'methods' => 'POST',
         'callback' => 'ea_blocks_render_shortcode',
-        'permission_callback' => '__return_true'
+        'permission_callback' => function () {
+            return current_user_can('edit_posts');
+        }
     ));
 });
 
