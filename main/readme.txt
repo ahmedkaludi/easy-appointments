@@ -5,7 +5,7 @@ Tags: appointment, appointments, Booking, calendar, reservation
 Requires at least: 3.7
 Tested up to: 6.8
 Requires PHP: 5.3
-Stable tag: 3.12.14
+Stable tag: 3.12.14.1
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -212,6 +212,9 @@ Note: you can have only one calendar on one page.
 25. Admin panel - Report - Export page
 
 == Changelog ==
+= 3.12.14.1 (2025-08-18)
+* Fixed Security issue reported by Patchstack.
+
 = 3.12.14 (2025-08-08)
 * Fixed Unable to translate few string #169
 * Fixed Conflict issue with the latest Pro version. #165
