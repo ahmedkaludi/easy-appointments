@@ -215,6 +215,7 @@ class EATableColumns
             'trans.slot-not-selectable',
             'trans.submit',
             'trans.worker',
+            'trans.customer_search_label',
             'width',
             'form.label.above',
             'form_class',

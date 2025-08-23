@@ -541,6 +541,11 @@
                                type="text"
                                value="<%- _.findWhere(settings, {ea_key:'trans.done_message'}).ea_value %>">
                     </div>
+                    <div class="form-item">
+                        <label for=""><?php esc_html_e('Search Customer', 'easy-appointments'); ?></label>
+                        <input class="field" data-key="trans.customer_search_label" name="customer_search_label" type="text"
+                               value="<%- _.findWhere(settings, {ea_key:'trans.customer_search_label'}).ea_value %>">
+                    </div>
                 </div>
             </div>
 

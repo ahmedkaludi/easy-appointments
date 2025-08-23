@@ -1386,7 +1386,7 @@
 jQuery(document).ready(function () {
     if (ea_settings['show.customer_search_front'] == 1) {
         jQuery('#ea_customer_search').select2({
-            placeholder: 'Search customer...',
+            placeholder: ea_settings['trans.customer_search_label'],
             minimumInputLength: 2,
             ajax: {
                 url: ea_ajaxurl,

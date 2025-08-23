@@ -87,6 +87,7 @@ class EAOptions
             'trans.service'                 => 'Service',
             'trans.location'                => 'Location',
             'trans.worker'                  => 'Worker',
+            'trans.customer_search_label'   => 'Search Customer',
             'trans.done_message'            => 'Done',
             'trans.booking_message'         => 'Your appointment has been successfully submitted. You will receive an update shortly',
             'trans.done_message_front'         => 'Your appointment has been successfully submitted. You will receive an update shortly',
