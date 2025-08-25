@@ -173,6 +173,7 @@ class EATableColumns
             'pre.reservation',
             'price.hide',
             'price.hide.service',
+            'hide.decimal_in_price',
             'rtl',
             'save_form_content',
             'scroll_off',

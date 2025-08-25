@@ -97,6 +97,7 @@ class EAOptions
             'pending.email'                 => '',
             'price.hide'                    => '0',
             'price.hide.service'            => '0',
+            'hide.decimal_in_price'         => '0',
             'datepicker'                    => 'en-US',
             'send.user.email'               => '0',
             'send.user.pending_email'       => '0',

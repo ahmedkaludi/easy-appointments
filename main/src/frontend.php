@@ -687,6 +687,7 @@ class EAFrontend
 
         $hide_price = $this->options->get_option_value('price.hide', '0');
         $hide_price_service = $this->options->get_option_value('price.hide.service', '0');
+        $hide_decimal_in_price_service = $this->options->get_option_value('hide.decimal_in_price', '0');
 
         $before = $this->options->get_option_value('currency.before', '0');
         $currency = esc_html($this->options->get_option_value('trans.currency', '$'));
@@ -776,6 +777,9 @@ class EAFrontend
                 $slot_step = (int)$row->slot_step;
                 $price_attr = !empty($row->price) ? " data-price='" . esc_attr($row->price) . "'" : '';
                 $price = esc_html($row->price);
+                if ($hide_decimal_in_price_service == '1') {
+                    $price = number_format((float)$price, 0, '', '');
+                }
             }
 
             // case when we are hiding price
@@ -789,7 +793,7 @@ class EAFrontend
                 }
 
             } else if ($type === 'services') {
-                $price = ($before == '1') ? $currency . $price : $row->price . $currency;
+                $price = ($before == '1') ? $currency . $price : $price . $currency;
                 $name_price = $name . ' ' . $price;
 
                 // maybe we want to hide price in service option

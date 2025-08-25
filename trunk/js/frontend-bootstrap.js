@@ -477,6 +477,9 @@
                         $option.data('price', element.price);
 
                         if (ea_settings['price.hide'] !== '1' && ea_settings['price.hide.service'] !== '1') {
+                            if (ea_settings['hide.decimal_in_price'] == '1' && !isNaN(element.price)) {
+                                element.price = Math.round(element.price);
+                            }
                             // see if currency is before price or now
                             if (ea_settings['currency.before'] === '1') {
                                 $option.text(element.name + ' - ' + next_element.data('currency') + element.price);

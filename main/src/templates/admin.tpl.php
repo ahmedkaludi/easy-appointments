@@ -928,6 +928,14 @@
                         </div>
                     </div>
                     <div class="form-item">
+                        <label for="currency.before"><?php esc_html_e('Hide decimal in price', 'easy-appointments'); ?></label>
+                        <div class="field-wrap">
+                            <input class="field" data-key="hide.decimal_in_price" name="hide.decimal_in_price"
+                                   type="checkbox" <% if (_.findWhere(settings,
+                            {ea_key:'hide.decimal_in_price'}).ea_value == "1") { %>checked<% } %>>
+                        </div>
+                    </div>
+                    <div class="form-item">
                         <label for="price.hide.service"><?php esc_html_e('Hide price in service select', 'easy-appointments'); ?></label>
                         <div class="field-wrap">
                             <input class="field" data-key="price.hide.service" name="price.hide.service"
