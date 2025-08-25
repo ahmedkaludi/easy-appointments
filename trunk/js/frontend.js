@@ -700,43 +700,29 @@
                         const startDateObj = new Date(rawDateTime);
                         if (isNaN(startDateObj.getTime())) {
                             console.error('Invalid date:', rawDateTime);
-                            return;
+                        }else{
+                            const endDateObj = new Date(startDateObj.getTime() + 60 * 60 * 1000); // +1 hour
+        
+                            const formatDateForGoogle = (dateObj) =>
+                                dateObj.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+        
+                            const start = formatDateForGoogle(startDateObj);
+                            const end = formatDateForGoogle(endDateObj);
+        
+                            const calendarUrl = new URL("https://calendar.google.com/calendar/render");
+                            calendarUrl.searchParams.set("action", "TEMPLATE");
+                            calendarUrl.searchParams.set("text", title);
+                            calendarUrl.searchParams.set("dates", `${start}/${end}`);
+                            calendarUrl.searchParams.set("details", description);
+                            calendarUrl.searchParams.set("location", location);
+                            calendarUrl.searchParams.set("trp", "false");
+        
+                            document.getElementById("ea-add-to-calendar").href = calendarUrl.toString();
                         }
     
-                        const endDateObj = new Date(startDateObj.getTime() + 60 * 60 * 1000); // +1 hour
-    
-                        const formatDateForGoogle = (dateObj) =>
-                            dateObj.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
-    
-                        const start = formatDateForGoogle(startDateObj);
-                        const end = formatDateForGoogle(endDateObj);
-    
-                        const calendarUrl = new URL("https://calendar.google.com/calendar/render");
-                        calendarUrl.searchParams.set("action", "TEMPLATE");
-                        calendarUrl.searchParams.set("text", title);
-                        calendarUrl.searchParams.set("dates", `${start}/${end}`);
-                        calendarUrl.searchParams.set("details", description);
-                        calendarUrl.searchParams.set("location", location);
-                        calendarUrl.searchParams.set("trp", "false");
-    
-                        document.getElementById("ea-add-to-calendar").href = calendarUrl.toString();
                     }
-    
-                    switch (ea_settings['default.status']) {
-                        case 'pending':
-                            default_status_message = 'Your appointment has been submitted and is currently pending approval. You will be notified once it is confirmed';
-                            break;
-                        case 'confirmed':
-                            default_status_message = 'Your appointment has been confirmed. Thank you!';
-                            break;
-                        case 'reservation':
-                            default_status_message = 'Your appointment has been reserved. You will be notified once it is confirmed.';
-                            break;
-                        default:
-                            default_status_message = 'Your appointment has been successfully submitted. You will receive an update shortly.';
-                            break;
-                    }
-                    plugin.$element.find('.ea-status-note').text(default_status_message);
+                    
+                    plugin.$element.find('.ea-status-note').text(ea_settings['default_status_message']);
                     window.scrollTo({ top: 0, behavior: 'smooth' });
                 }else{
                     plugin.$element.find('.final').append('<h3 class="ea-done-message">' + _.escape(ea_settings['trans.done_message']) + '</h3>');

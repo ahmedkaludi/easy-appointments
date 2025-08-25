@@ -450,6 +450,37 @@ class EAFrontend
         if ( isset($settings['default.status'])) {
             $clean_settings['default.status'] = $settings['default.status'];
         }
+        switch ( $settings['default.status'] ) {
+            case 'pending':
+                $default_status_message = esc_html__( 
+                    'Your appointment has been submitted and is currently pending approval. You will be notified once it is confirmed.', 
+                    'easy-appointments' 
+                );
+                break;
+
+            case 'confirmed':
+                $default_status_message = esc_html__( 
+                    'Your appointment has been confirmed. Thank you!', 
+                    'easy-appointments' 
+                );
+                break;
+
+            case 'reservation':
+                $default_status_message = esc_html__( 
+                    'Your appointment has been reserved. You will be notified once it is confirmed.', 
+                    'easy-appointments' 
+                );
+                break;
+
+            default:
+                $default_status_message = esc_html__( 
+                    'Your appointment has been successfully submitted. You will receive an update shortly.', 
+                    'easy-appointments' 
+                );
+                break;
+        }
+
+        $clean_settings['default_status_message'] = $default_status_message;
         $clean_settings['is_user_logged_in'] = is_user_logged_in() ? 1 : 0;
         $data_settings = json_encode($clean_settings);
         $data_vacation = $this->options->get_option_value('vacations', '[]');

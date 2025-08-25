@@ -617,6 +617,22 @@ msgstr ""
 msgid "You can't select this time slot!'"
 msgstr ""
 
+#: src/frontend.php:456
+msgid "Your appointment has been submitted and is currently pending approval. You will be notified once it is confirmed."
+msgstr ""
+
+#: src/frontend.php:463
+msgid "Your appointment has been confirmed. Thank you!"
+msgstr ""
+
+#: src/frontend.php:470
+msgid "Your appointment has been reserved. You will be notified once it is confirmed."
+msgstr ""
+
+#: src/frontend.php:476
+msgid "Your appointment has been successfully submitted. You will receive an update shortly."
+msgstr ""
+
 #: src/install.php:804
 msgid "EMail"
 msgstr ""
@@ -1400,4 +1416,16 @@ msgstr ""
 
 #: src/templates/customers.tpl.php:146
 msgid "Add New Customer"
+msgstr ""
+
+#: src/templates/booking.overview.tpl.php:116
+msgid "Book New Appointment"
+msgstr ""
+
+#: src/templates/booking.overview.tpl.php:100
+msgid "Thank You for Booking!"
+msgstr ""
+
+#: src/templates/booking.overview.tpl.php:123
+msgid "Add to Google Calendar"
 msgstr ""
