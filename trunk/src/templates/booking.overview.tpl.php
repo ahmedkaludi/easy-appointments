@@ -95,7 +95,7 @@
              data-date-time="<%- data.date_time %>" 
              data-currency="<%- settings['trans.currency'] %>"></div>
     
-    <div id="ea-success-box" style="display:none; min-width:500px; min-height:340px; margin: 20px auto; padding: 20px; border-radius: 10px; text-align: center; font-family: Arial, sans-serif; box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);" class="ea-confirmation-card">
+    <div id="ea-success-box" style="display:none; min-width:400px; min-height:340px; margin: 20px auto; padding: 20px; border-radius: 10px; text-align: center; font-family: Arial, sans-serif; box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);" class="ea-confirmation-card">
         <h3 style="color: #2b6924; margin-top: 0;" class="ea-confirmation-title">
             <%- settings['trans.confirmation-title'] || "<?php esc_html_e('Thank You for Booking!', 'easy-appointments'); ?>" %>
         </h3>
