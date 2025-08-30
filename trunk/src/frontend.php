@@ -793,9 +793,7 @@ class EAFrontend
             }
             if ($type === 'staff') {
                 $default_value = $this->options->get_option_value("trans.worker");
-            }
-            $default_value = esc_html__('Select', 'easy-appointments').' '.$default_value;
-            
+            }            
         }
         echo "<option value='' selected='selected'>{$default_value}</option>";
 
