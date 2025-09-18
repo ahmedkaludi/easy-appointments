@@ -35,7 +35,10 @@
             <% if (settings['price.hide'] !== '1') { %>
             <tr class="row-price">
                 <td class="ea-label"><%- settings['trans.price'] %></td>
-                <td class="value"><%- data.price%> <%- settings['trans.currency'] %></td>
+                <td class="value"><%- settings['hide.decimal_in_price'] == '1' 
+                ? Math.round(parseFloat(data.price))
+                : 55 
+            %> <%- settings['trans.currency'] %></td>
             </tr>
             <% } %>
             <tr class="row-datetime">
@@ -65,9 +68,15 @@
             <tr class="row-price">
                 <td class="ea-label"><%- settings['trans.price'] %></td>
                 <% if (settings['currency.before'] == '1') { %>
-                <td class="value"><%- settings['trans.currency'] %><%- data.price %></td>
+                <td class="value"><%- settings['trans.currency'] %><%- settings['hide.decimal_in_price'] == '1' 
+                ? Math.round(parseFloat(data.price))
+                : data.price 
+            %></td>
                 <% } else { %>
-                <td class="value"><%- data.price %><%- settings['trans.currency'] %></td>
+                <td class="value"><%- settings['hide.decimal_in_price'] == '1' 
+                ? Math.round(parseFloat(data.price))
+                : data.price 
+            %><%- settings['trans.currency'] %></td>
                 <% } %>
             </tr>
             <% } %>
@@ -86,9 +95,9 @@
              data-date-time="<%- data.date_time %>" 
              data-currency="<%- settings['trans.currency'] %>"></div>
     
-    <div id="ea-success-box" style="display:none; max-width: 500px; margin: 20px auto; padding: 20px; border-radius: 10px; text-align: center; font-family: Arial, sans-serif; box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);" class="ea-confirmation-card">
+    <div id="ea-success-box" style="display:none; min-width:400px; min-height:340px; margin: 20px auto; padding: 20px; border-radius: 10px; text-align: center; font-family: Arial, sans-serif; box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);" class="ea-confirmation-card">
         <h3 style="color: #2b6924; margin-top: 0;" class="ea-confirmation-title">
-            <%- settings['trans.confirmation-title'] || 'Thank You for Booking!' %>
+            <%- settings['trans.confirmation-title'] || "<?php esc_html_e('Thank You for Booking!', 'easy-appointments'); ?>" %>
         </h3>
         <div style="margin: 10px 0 20px;">
             <p style="font-size: 14px; color: #555; margin-top: 8px; word-wrap: break-word; white-space: normal; max-width: 100%;" class="ea-status-note">
@@ -104,15 +113,14 @@
                 onclick="window.location.reload();" 
                 style="padding: 5px 10px; background-color: #333cb7; color: white; text-decoration: none; border-radius: 5px; margin-right: 5px;" 
                 class="ea-button-book-again">
-                <%- settings['trans.book-again'] || 'Book New Appointment' %>
+                <%- settings['trans.book-again'] || "<?php esc_html_e('Book New Appointment', 'easy-appointments'); ?>" %>                
             </a>
-
             <a 
                 id="ea-add-to-calendar" 
                 href="#" 
                 target="_blank" 
-                style="background-color: #34A853; color: #fff; padding: 5px 10px; border-radius: 6px; text-decoration: none;">
-                Add to Google Calendar
+                style="background-color: #34A853; color: #fff; padding: 5px 10px; border-radius: 6px; text-decoration: none;">                
+                <?php esc_html_e('Add to Google Calendar', 'easy-appointments'); ?>
             </a>
         </div>
     </div>

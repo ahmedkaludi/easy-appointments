@@ -65,9 +65,9 @@
                     <% if (settings['show.customer_search_front'] == 1) { %>
                         <% if (settings['is_user_logged_in'] == 1) { %>
                             <div class="form-group">
-                                <label class="col-sm-4 control-label"><?php echo esc_html__('Search Customer','easy-appointments'); ?></label>
+                                <label class="col-sm-4 control-label"><?php echo esc_html($this->options->get_option_value("trans.customer_search_label")); ?></label>
                                 <div class="col-sm-8">
-                                    <input id="ea_customer_search" class="form-control" type="text" placeholder="Search customer..." />
+                                    <input id="ea_customer_search" class="form-control" type="text" placeholder="<?php echo esc_html($this->options->get_option_value("trans.customer_search_label")); ?>" />
                                 </div>
                             </div>
                         <% } %>

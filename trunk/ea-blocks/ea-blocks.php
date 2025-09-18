@@ -285,7 +285,7 @@ function ea_blocks_render_shortcode(WP_REST_Request $request) {
     if (!in_array($shortcode_tag, $allowed_shortcodes, true)) {
         return new WP_REST_Response([
             'success' => false,
-            'message' => 'Shortcode not allowed.'
+            'message' => esc_html__('Shortcode not allowed.', 'easy-appointments')
         ], 403);
     }
 

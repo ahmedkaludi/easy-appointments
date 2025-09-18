@@ -5,7 +5,7 @@ Tags: appointment, appointments, Booking, calendar, reservation
 Requires at least: 3.7
 Tested up to: 6.8
 Requires PHP: 5.3
-Stable tag: 3.12.14
+Stable tag: 3.12.15
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -76,7 +76,7 @@ Can be used for : <strong>Lawyers</strong>, <strong>Salons</strong>, <strong>Mec
     - Time table overview
     - **Export to CSV (for Calc, Excel...)**
 
-= Need even more like Google Calendar, iCalendar, WooCommerce or SMS support? =
+= Need even more like Google Calendar, iCalendar, WooCommerce, Room Booking or SMS support? =
 There is extension plugin that you can buy and add to your Easy Appointments plugin :
 
 * Google Calendar with 2 way sync
@@ -212,6 +212,19 @@ Note: you can have only one calendar on one page.
 25. Admin panel - Report - Export page
 
 == Changelog ==
+= 3.12.15 (2025-09-18)
+* Added German/European time format needs to be added. #162
+* Added an option to change label of 'Customer Search' #177
+* Added an option to change money format. #175
+* Added a feature to added iCal feed URL #188
+* Enhancement "Thank You" Note not translatable & booking buttons layout issue #181
+* Fixed *Select* is getting added in label #186
+* Fixed Ics file not working on status pending to confirmed from admin #187
+
+
+= 3.12.14.1 (2025-08-18)
+* Fixed Security issue reported by Patchstack.
+
 = 3.12.14 (2025-08-08)
 * Fixed Unable to translate few string #169
 * Fixed Conflict issue with the latest Pro version. #165

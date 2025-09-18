@@ -541,6 +541,11 @@
                                type="text"
                                value="<%- _.findWhere(settings, {ea_key:'trans.done_message'}).ea_value %>">
                     </div>
+                    <div class="form-item">
+                        <label for=""><?php esc_html_e('Search Customer', 'easy-appointments'); ?></label>
+                        <input class="field" data-key="trans.customer_search_label" name="customer_search_label" type="text"
+                               value="<%- _.findWhere(settings, {ea_key:'trans.customer_search_label'}).ea_value %>">
+                    </div>
                 </div>
             </div>
 
@@ -611,6 +616,7 @@
                                 <option value="TEXTAREA"><?php esc_html_e('Textarea', 'easy-appointments'); ?></option>
                                 <option value="PHONE"><?php esc_html_e('Phone', 'easy-appointments'); ?></option>
                                 <option value="EMAIL"><?php esc_html_e('Email', 'easy-appointments'); ?></option>
+                                <option value="DATE"><?php esc_html_e('Date', 'easy-appointments'); ?></option>
                             </select>
                         </div>
                         <button class="button button-primary btn-add-field button-field"><?php esc_html_e('Add', 'easy-appointments'); ?></button>
@@ -836,7 +842,7 @@
                     </div>
                     <div class="form-item" style="background-color: #ccc; padding: 15px;">
                         <blockquote style="margin: 0;">
-                                <strong><?php esc_html_e('Display Thank You Note', 'easy-appointments'); ?>:</strong> <?php esc_html_e('Action Buttons', 'easy-appointments'); ?>.<br><br>
+                                <strong><?php esc_html_e('Display Thank You Note', 'easy-appointments'); ?>:</strong> <?php esc_html_e('Action Buttons', 'easy-appointments'); ?><br><br>
                                 <strong><?php esc_html_e('This screen is displayed immediately after a user successfully books an appointment using the booking form, Its featured Appointment summary and Action buttons', 'easy-appointments'); ?>:</strong><br>
                                 <ul style="margin: 0 0 0 20px; padding: 0;">
                                     <li><strong><?php esc_html_e('Book New Appointment', 'easy-appointments'); ?>:</strong> <?php esc_html_e('Allows the user to return and book another appointment', 'easy-appointments'); ?>.</li>
@@ -920,6 +926,14 @@
                             <input class="field" data-key="currency.before" name="currency.before"
                                    type="checkbox" <% if (_.findWhere(settings,
                             {ea_key:'currency.before'}).ea_value == "1") { %>checked<% } %>>
+                        </div>
+                    </div>
+                    <div class="form-item">
+                        <label for="currency.before"><?php esc_html_e('Hide decimal in price', 'easy-appointments'); ?></label>
+                        <div class="field-wrap">
+                            <input class="field" data-key="hide.decimal_in_price" name="hide.decimal_in_price"
+                                   type="checkbox" <% if (_.findWhere(settings,
+                            {ea_key:'hide.decimal_in_price'}).ea_value == "1") { %>checked<% } %>>
                         </div>
                     </div>
                     <div class="form-item">

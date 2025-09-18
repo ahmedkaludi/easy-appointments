@@ -450,6 +450,37 @@ class EAFrontend
         if ( isset($settings['default.status'])) {
             $clean_settings['default.status'] = $settings['default.status'];
         }
+        switch ( $settings['default.status'] ) {
+            case 'pending':
+                $default_status_message = esc_html__( 
+                    'Your appointment has been submitted and is currently pending approval. You will be notified once it is confirmed.', 
+                    'easy-appointments' 
+                );
+                break;
+
+            case 'confirmed':
+                $default_status_message = esc_html__( 
+                    'Your appointment has been confirmed. Thank you!', 
+                    'easy-appointments' 
+                );
+                break;
+
+            case 'reservation':
+                $default_status_message = esc_html__( 
+                    'Your appointment has been reserved. You will be notified once it is confirmed.', 
+                    'easy-appointments' 
+                );
+                break;
+
+            default:
+                $default_status_message = esc_html__( 
+                    'Your appointment has been successfully submitted. You will receive an update shortly.', 
+                    'easy-appointments' 
+                );
+                break;
+        }
+
+        $clean_settings['default_status_message'] = $default_status_message;
         $clean_settings['is_user_logged_in'] = is_user_logged_in() ? 1 : 0;
         $data_settings = json_encode($clean_settings);
         $data_vacation = $this->options->get_option_value('vacations', '[]');
@@ -687,6 +718,7 @@ class EAFrontend
 
         $hide_price = $this->options->get_option_value('price.hide', '0');
         $hide_price_service = $this->options->get_option_value('price.hide.service', '0');
+        $hide_decimal_in_price_service = $this->options->get_option_value('hide.decimal_in_price', '0');
 
         $before = $this->options->get_option_value('currency.before', '0');
         $currency = esc_html($this->options->get_option_value('trans.currency', '$'));
@@ -761,9 +793,7 @@ class EAFrontend
             }
             if ($type === 'staff') {
                 $default_value = $this->options->get_option_value("trans.worker");
-            }
-            $default_value = esc_html__('Select', 'easy-appointments').' '.$default_value;
-            
+            }            
         }
         echo "<option value='' selected='selected'>{$default_value}</option>";
 
@@ -776,6 +806,9 @@ class EAFrontend
                 $slot_step = (int)$row->slot_step;
                 $price_attr = !empty($row->price) ? " data-price='" . esc_attr($row->price) . "'" : '';
                 $price = esc_html($row->price);
+                if ($hide_decimal_in_price_service == '1') {
+                    $price = number_format((float)$price, 0, '', '');
+                }
             }
 
             // case when we are hiding price
@@ -789,7 +822,7 @@ class EAFrontend
                 }
 
             } else if ($type === 'services') {
-                $price = ($before == '1') ? $currency . $price : $row->price . $currency;
+                $price = ($before == '1') ? $currency . $price : $price . $currency;
                 $name_price = $name . ' ' . $price;
 
                 // maybe we want to hide price in service option
