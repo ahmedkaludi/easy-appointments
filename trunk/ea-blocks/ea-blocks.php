@@ -16,41 +16,41 @@ function create_block_ea_blocks_block_init()
 	// if (function_exists('wp_register_block_types_from_metadata_collection')) { // Function introduced in WordPress 6.8.
 	// 	wp_register_block_types_from_metadata_collection(__DIR__ . '/build', __DIR__ . '/build/blocks-manifest.php');
 	// } else {
-		if (function_exists('wp_register_block_metadata_collection')) { // Function introduced in WordPress 6.7.
-			wp_register_block_metadata_collection(__DIR__ . '/build', __DIR__ . '/build/blocks-manifest.php');
+	if (function_exists('wp_register_block_metadata_collection')) { // Function introduced in WordPress 6.7.
+		wp_register_block_metadata_collection(__DIR__ . '/build', __DIR__ . '/build/blocks-manifest.php');
+	}
+	$manifest_data = require __DIR__ . '/build/blocks-manifest.php';
+	foreach (array_keys($manifest_data) as $block_type) {
+		if ('ea-fullcalendar' == $block_type) {
+			register_block_type(__DIR__ . "/build/{$block_type}", [
+				'render_callback' => 'render_ea_fullcalendar_block',
+			]);
+		} else {
+			register_block_type(__DIR__ . "/build/{$block_type}");
 		}
-		$manifest_data = require __DIR__ . '/build/blocks-manifest.php';
-		foreach (array_keys($manifest_data) as $block_type) {
-			if ('ea-fullcalendar' == $block_type) {
-				register_block_type(__DIR__ . "/build/{$block_type}", [
-					'render_callback' => 'render_ea_fullcalendar_block',
-				]);
-			}else{
-				register_block_type(__DIR__ . "/build/{$block_type}");
-			}
-			
-		}
+	}
 	// }
 }
 add_action('init', 'create_block_ea_blocks_block_init');
 
-function render_ea_fullcalendar_block( $attributes ) {
-	$location = isset( $attributes['location'] ) ? intval( $attributes['location'] ) : 0;
-	$service  = isset( $attributes['service'] ) ? intval( $attributes['service'] ) : 0;
-	$worker   = isset( $attributes['worker'] ) ? intval( $attributes['worker'] ) : 0;
+function render_ea_fullcalendar_block($attributes)
+{
+	$location = isset($attributes['location']) ? intval($attributes['location']) : 0;
+	$service  = isset($attributes['service']) ? intval($attributes['service']) : 0;
+	$worker   = isset($attributes['worker']) ? intval($attributes['worker']) : 0;
 
 	wp_enqueue_script(
 		'ea-fullcalendar-frontend',
-		plugins_url( 'ea-blocks/build/ea-fullcalendar/frontend.js', __DIR__ . '/../../' ),
-		[ 'wp-element', 'wp-api-fetch' ],
-		filemtime( plugin_dir_path( __DIR__ . '/../../' ) . 'ea-blocks/build/ea-fullcalendar/frontend.js' ),
+		plugins_url('ea-blocks/build/ea-fullcalendar/frontend.js', __DIR__ . '/../../'),
+		['wp-element', 'wp-api-fetch'],
+		filemtime(plugin_dir_path(__DIR__ . '/../../') . 'ea-blocks/build/ea-fullcalendar/frontend.js'),
 		true
 	);
 	wp_enqueue_style(
 		'ea-fullcalendar-frontend-style',
-		plugins_url( 'ea-blocks/build/ea-fullcalendar/frontend.css', __DIR__ . '/../../' ),
+		plugins_url('ea-blocks/build/ea-fullcalendar/frontend.css', __DIR__ . '/../../'),
 		[],
-		filemtime( plugin_dir_path( __DIR__ . '/../../' ) . 'ea-blocks/build/ea-fullcalendar/frontend.css' )
+		filemtime(plugin_dir_path(__DIR__ . '/../../') . 'ea-blocks/build/ea-fullcalendar/frontend.css')
 	);
 
 	wp_add_inline_script(
@@ -78,12 +78,13 @@ add_action('rest_api_init', function () {
 	));
 });
 
-function get_ea_appointments( WP_REST_Request $request ) {
+function get_ea_appointments(WP_REST_Request $request)
+{
 	global $wpdb;
 
-	$location = intval( $request->get_param( 'location' ) );
-	$service  = intval( $request->get_param( 'service' ) );
-	$worker   = intval( $request->get_param( 'worker' ) );
+	$location = intval($request->get_param('location'));
+	$service  = intval($request->get_param('service'));
+	$worker   = intval($request->get_param('worker'));
 
 	// $where = [ "1=1" ];
 	// if ( $location ) $where[] = "location = {$location}";
@@ -99,14 +100,15 @@ function get_ea_appointments( WP_REST_Request $request ) {
 	// " );
 
 	// return rest_ensure_response( $results );
-	$data['location'] =$location;
-	$data['service'] =$service;
-	$data['worker'] =$worker;
+	$data['location'] = $location;
+	$data['service'] = $service;
+	$data['worker'] = $worker;
 	$result = get_all_appointments($data);
 	return $result;
 }
 
-function get_all_appointments($data) {
+function get_all_appointments($data)
+{
 	global $wpdb;
 
 	$tableName = $wpdb->prefix . 'ea_appointments';
@@ -162,7 +164,8 @@ function get_all_appointments($data) {
 }
 
 
-function get_fields_for_apps($ids = array()) {
+function get_fields_for_apps($ids = array())
+{
 	global $wpdb;
 	$meta = $wpdb->prefix . 'ea_meta_fields';
 	$fields = $wpdb->prefix . 'ea_fields';
@@ -178,11 +181,11 @@ function get_fields_for_apps($ids = array()) {
 
 
 add_action('rest_api_init', function () {
-    register_rest_route('wp/v2/eablocks', '/ea_appointments/', [
-        'methods'  => 'GET',
-        'callback' => 'get_ea_appointments',
-        'permission_callback' => '__return_true', // Secure this if needed
-    ]);
+	register_rest_route('wp/v2/eablocks', '/ea_appointments/', [
+		'methods'  => 'GET',
+		'callback' => 'get_ea_appointments',
+		'permission_callback' => '__return_true', // Secure this if needed
+	]);
 });
 
 
@@ -272,38 +275,37 @@ function ea_blocks_get_options(WP_REST_Request $request)
 	return rest_ensure_response($options);
 }
 
-function ea_blocks_render_shortcode(WP_REST_Request $request) {
-    $shortcode = $request->get_param('shortcode');
+function ea_blocks_render_shortcode(WP_REST_Request $request)
+{
+	$shortcode = $request->get_param('shortcode');
 
-    // Simple allowlist (whitelist) of permitted shortcodes
-    $allowed_shortcodes = ['location', 'service','worker'];
+	// Simple allowlist (whitelist) of permitted shortcodes
+	$allowed_shortcodes = ['location', 'service', 'worker'];
 
-    // Extract shortcode name
-    preg_match('/^\[(\w+)/', $shortcode, $matches);
-    $shortcode_tag = $matches[1] ?? '';
+	// Extract shortcode name
+	preg_match('/^\[(\w+)/', $shortcode, $matches);
+	$shortcode_tag = $matches[1] ?? '';
 
-    if (!in_array($shortcode_tag, $allowed_shortcodes, true)) {
-        return new WP_REST_Response([
-            'success' => false,
-            'message' => esc_html__('Shortcode not allowed.', 'easy-appointments')
-        ], 403);
-    }
+	if (!in_array($shortcode_tag, $allowed_shortcodes, true)) {
+		return new WP_REST_Response([
+			'success' => false,
+			'message' => esc_html__('Shortcode not allowed.', 'easy-appointments')
+		], 403);
+	}
 
-    return new WP_REST_Response([
-        'success' => true,
-        'html' => do_shortcode($shortcode)
-    ]);
+	return new WP_REST_Response([
+		'success' => true,
+		'html' => do_shortcode($shortcode)
+	]);
 }
 
 
 add_action('rest_api_init', function () {
-    register_rest_route('wp/v2/eablocks', '/render_shortcode', array(
-        'methods' => 'POST',
-        'callback' => 'ea_blocks_render_shortcode',
-        'permission_callback' => function () {
-            return current_user_can('edit_posts');
-        }
-    ));
+	register_rest_route('wp/v2/eablocks', '/render_shortcode', array(
+		'methods' => 'POST',
+		'callback' => 'ea_blocks_render_shortcode',
+		'permission_callback' => function () {
+			return current_user_can('edit_posts');
+		}
+	));
 });
-
-

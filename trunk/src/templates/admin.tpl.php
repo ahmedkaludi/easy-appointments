@@ -616,7 +616,6 @@
                                 <option value="TEXTAREA"><?php esc_html_e('Textarea', 'easy-appointments'); ?></option>
                                 <option value="PHONE"><?php esc_html_e('Phone', 'easy-appointments'); ?></option>
                                 <option value="EMAIL"><?php esc_html_e('Email', 'easy-appointments'); ?></option>
-                                <option value="DATE"><?php esc_html_e('Date', 'easy-appointments'); ?></option>
                             </select>
                         </div>
                         <button class="button button-primary btn-add-field button-field"><?php esc_html_e('Add', 'easy-appointments'); ?></button>

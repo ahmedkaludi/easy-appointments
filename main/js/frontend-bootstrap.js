@@ -63,6 +63,25 @@
                     return true;
                 }
 
+                //  Check if it's a full-day vacation
+                if (vacation.time && vacation.time.fullDay === false) {
+                    var startTime = vacation.time.startTime ? moment(vacation.time.startTime) : null;
+                    var endTime = vacation.time.endTime ? moment(vacation.time.endTime) : null;
+
+                    if (startTime && endTime) {
+                        // attach a flag so we can disable specific time slots later
+                        if (!window.ea_partial_vacations) window.ea_partial_vacations = [];
+                        window.ea_partial_vacations.push({
+                            day: day,
+                            start: startTime.format('HH:mm'),
+                            end: endTime.format('HH:mm'),
+                            workerId: workerId,
+                            tooltip: vacation.tooltip
+                        });
+                        return true; // don't block the whole day
+                    }
+                }
+
                 response = [false, 'blocked vacation', vacation.tooltip];
 
                 return false;
@@ -661,21 +680,29 @@
                 jQuery.each(response, function (index, element) {
                     var selectLabel = fromTo ? element.show + ' - ' + element.ends : element.show;
 
-                    if (element.count > 0) {
-                        // show remaining slots or not
-                        if (ea_settings['show_remaining_slots'] === '1') {
-                            next_element.append('<a href="#" class="time-value slots' + classAMPM + '" data-val="' + element.value + '">' + selectLabel + ' (' + element.count + ')</a>');
-                        } else {
-                            next_element.append('<a href="#" class="time-value' + classAMPM + '" data-val="' + element.value + '">' + selectLabel + '</a>');
-                        }
+                    //  Check if time falls into partial vacation window
+                    var isDisabled = false;
+                    if (window.ea_partial_vacations && window.ea_partial_vacations.length > 0) {
+                        var selectedWorker = plugin.$element.find('[name="worker"]').val();
+                        window.ea_partial_vacations.forEach(function(vac) {
+                            if (vac.day === plugin.settings.currentDate && vac.workerId == selectedWorker) {
+                                var slotTime = moment(element.value, 'HH:mm');
+                                var start = moment(vac.start, 'HH:mm');
+                                var end = moment(vac.end, 'HH:mm');
+                                if (slotTime.isBetween(start, end, null, '[)')) {
+                                    isDisabled = true;
+                                }
+                            }
+                        });
+                    }
+
+                    if (element.count > 0 && !isDisabled) {
+                        next_element.append('<a href="#" class="time-value' + classAMPM + '" data-val="' + element.value + '">' + selectLabel + '</a>');
                     } else {
-                        if (ea_settings['show_remaining_slots'] === '1') {
-                            next_element.append('<a class="time-disabled slots' + classAMPM + '">' + selectLabel + ' (0)</a>');
-                        } else {
-                            next_element.append('<a class="time-disabled' + classAMPM + '">' + selectLabel + '</a>');
-                        }
+                        next_element.append('<a class="time-disabled' + classAMPM + '" title="Vacation">' + selectLabel + '</a>');
                     }
                 });
+
 
                 if (response.length === 0) {
                     next_element.html('<p class="time-message">' + ea_settings['trans.please-select-new-date'] + '</p>');
