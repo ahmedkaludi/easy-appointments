@@ -1,5 +1,7 @@
+// file: ea-blocks/admin/vacations/components/VacationTable/index.js
 import React from 'react';
 import PropTypes from 'prop-types';
+import moment from 'moment';
 
 import { __, _x } from '../../../../services/Localization';
 import { ContentBox, BasicTable } from '../../../../ea-components';
@@ -28,6 +30,11 @@ const VACATION_CONFIG = {
     position: 'center',
     type: 'chips'
   },
+  time: {
+    header: __('Vacation Time', 'easy-appointments'),
+    position: 'center',
+    type: 'text'
+  },
   actions: {
     header: __('Actions', 'easy-appointments'),
     position: 'center',
@@ -39,6 +46,16 @@ export const VacationTable = ({ data, onEdit, onDelete, processing }) => {
   const adaptedData = data.map(record => ({
     ...record,
     workers: record.workers.map(worker => worker.name),
+
+    // Display "Full Day" or start–end times
+    time: record.time?.fullDay
+      ? __('Full Day', 'easy-appointments')
+      : record.time?.startTime && record.time?.endTime
+      ? `${moment(record.time.startTime).format('HH:mm')} - ${moment(
+          record.time.endTime
+        ).format('HH:mm')}`
+      : __('Full Day', 'easy-appointments'),
+
     actions: [
       {
         tooltip: __('Edit', 'easy-appointments'),
