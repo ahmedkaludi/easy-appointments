@@ -5,7 +5,7 @@ Tags: appointment, appointments, Booking, calendar, reservation
 Requires at least: 3.7
 Tested up to: 6.8
 Requires PHP: 5.3
-Stable tag: 3.12.15
+Stable tag: 3.12.16
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -212,6 +212,11 @@ Note: you can have only one calendar on one page.
 25. Admin panel - Report - Export page
 
 == Changelog ==
+= 3.12.16 (2025-11-05)
+* Added the time feature in the Vacation section. #196
+* Added Room booking shortcode to list of room to be booked #204
+* Fixed Warnings and other code imrovment
+
 = 3.12.15 (2025-09-18)
 * Added German/European time format needs to be added. #162
 * Added an option to change label of 'Customer Search' #177
