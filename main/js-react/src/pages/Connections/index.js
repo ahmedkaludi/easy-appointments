@@ -230,8 +230,13 @@ const ConnectionsPage = () => {
       {showBulkDelete && (
         <Button
           variant="contained"
-          color="secondary"
-          style={{ marginBottom: '10px', marginLeft: '5px' }}
+          color="error"
+          style={{
+            marginBottom: '8px',
+            marginLeft: '5px',
+            backgroundColor: '#d32f2f',
+            color: '#fff'
+          }}
           onClick={deleteSelected}>
           Delete Selected
         </Button>
