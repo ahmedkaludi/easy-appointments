@@ -182,10 +182,36 @@ class EAAjax
             add_action('wp_ajax_ea_insert_customer_ajax', [$this, 'handle_insert_customer_ajax']);
             add_action('wp_ajax_ea_get_customer_detail_ajax', [$this, 'handle_customer_detail_ajax']);
             add_action('wp_ajax_ea_delete_customer' , [$this, 'ea_handle_delete_customer']);
+            add_action('wp_ajax_ea_delete_multiple_connections' , [$this, 'ea_delete_multiple_connections']);
             
         }
         
     }
+
+    function ea_delete_multiple_connections() {
+
+        // Read JSON body
+        $body = file_get_contents('php://input');
+        $data = json_decode($body, true);
+
+        // Ensure IDs exist
+        if (!isset($data['ids']) || !is_array($data['ids'])) {
+            wp_send_json_error('No valid IDs provided.');
+        }
+
+        $ids = $data['ids'];
+
+        global $wpdb;
+        $table = $wpdb->prefix . 'ea_connections';
+
+        // Delete each ID
+        foreach ($ids as $id) {
+            $wpdb->delete($table, [ 'id' => intval($id) ]);
+        }
+
+        wp_send_json_success(1);
+    }
+
 
     public function cancel_selected_appointments_callback() {
         if (!isset($_POST['appointments_nonce']) || !wp_verify_nonce($_POST['appointments_nonce'], 'appointments_nonce')) {

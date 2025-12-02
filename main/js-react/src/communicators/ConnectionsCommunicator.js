@@ -52,6 +52,15 @@ export class ConnectionsCommunicator {
     return response === 1;
   }
 
+  static async deleteMultiple(ids) {
+    const url = `${this.url}&action=ea_delete_multiple_connections&_method=DELETE`;
+
+    // Send JSON with IDs
+    const response = await http.postJSON(url, JSON.stringify({ ids }));
+
+    return response === 1;
+  }
+
   /**
    * Extend connections
    */
