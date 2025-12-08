@@ -33,6 +33,26 @@ class EAAdminPanel
     protected $datetime;
 
     /**
+     * @var array
+     */
+    protected $customers = [];
+
+    /**
+     * @var string
+     */
+    protected $search = '';
+
+    /**
+     * @var int
+     */
+    protected $paged = 1;
+
+    /**
+     * @var int
+     */
+    protected $total_pages = 1;
+
+    /**
      * EAAdminPanel constructor.
      * @param EAOptions $options
      * @param EALogic $logic
