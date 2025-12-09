@@ -235,8 +235,10 @@
                     // parentForm.find('.step').addClass('disabled');
                     parentForm.find('.final').removeClass('disabled');
 
-                    parentForm.find('.final').find('select,input').first().focus();
-                    plugin.scrollToElement(parentForm.find('.final'));
+                    if (ea_settings['is_multiple_booking_allowed'] != '1') {
+                        parentForm.find('.final').find('select,input').first().focus();
+                        plugin.scrollToElement(parentForm.find('.final'));
+                    }
                     plugin.$element.find('#ea-payment-select').show();
 
                     // trigger global event when time slot is selected
@@ -269,59 +271,113 @@
         selectTimes: function ($element) {
             var plugin = this;
 
-            var serviceData = plugin.$element.find('[name="service"] > option:selected').data();
-            var duration = serviceData.duration;
-            var slot_step = serviceData.slot_step;
+            // =======================
+            // FEATURE FLAG CHECK
+            // =======================
+            if (ea_settings['is_multiple_booking_allowed'] != '1') {
+                // ----------------------------------------
+                // ORIGINAL SINGLE-SLOT LOGIC (unchanged)
+                // ----------------------------------------
+                var serviceData = plugin.$element.find('[name="service"] > option:selected').data();
+                var duration = serviceData.duration;
+                var slot_step = serviceData.slot_step;
 
-            // var takeSlots = parseInt(duration) / parseInt(slot_step);
-            // if (ea_settings["label.from_to"] == "1") {
-            //     takeSlots = 1;
-            // }
-            var takeSlots = 1; // now we do it the same for all
+                var takeSlots = 1; // original logic
+                var $nextSlots = $element.nextAll();
 
-            var $nextSlots = $element.nextAll();
+                var forSelection = [];
+                forSelection.push($element);
 
-            var forSelection = [];
-            forSelection.push($element);
+                if (($nextSlots.length + 1) < takeSlots) {
+                    return false;
+                }
 
-            if (($nextSlots.length + 1) < takeSlots) {
+                $element.parent().children().removeClass('selected-time');
+
+                jQuery.each($nextSlots, function (index, elem) {
+                    var $elem = jQuery(elem);
+
+                    var startTime = moment($element.data('val'), 'HH:mm');
+                    var calculatedTime = (index + 1) * slot_step;
+                    var expectedTime = startTime.add(calculatedTime, 'minutes').format('HH:mm');
+
+                    if ($elem.data('val') !== expectedTime) {
+                        return false;
+                    }
+
+                    if (index + 2 > takeSlots) {
+                        return false;
+                    }
+
+                    if ($elem.hasClass('time-disabled')) {
+                        return false;
+                    }
+
+                    forSelection.push($elem);
+                });
+
+                if (forSelection.length < takeSlots) {
+                    return false;
+                }
+
+                jQuery.each(forSelection, function (index, elem) {
+                    elem.addClass('selected-time');
+                });
+
+                return true;
+            }
+
+            // =======================
+            // NEW MULTI-SLOT LOGIC
+            // =======================
+
+            var slot_step = parseInt(
+                plugin.$element.find('[name="service"] > option:selected').data('slot_step')
+            );
+
+            // If no slot selected yet — user is picking START time
+            if (plugin.multiStart == null) {
+                plugin.multiStart = $element;
+                plugin.$element.find('.time-value').removeClass('selected-time');
+                $element.addClass('selected-time');
+                return true;
+            }
+
+            // If start is selected and user selects end time
+            var startTime = moment(plugin.multiStart.data('val'), 'HH:mm');
+            var endTime = moment($element.data('val'), 'HH:mm');
+
+            if (endTime.isBefore(startTime)) {
+                alert("End time must be after start time.");
+                plugin.multiStart = null;
                 return false;
             }
 
-            $element.parent().children().removeClass('selected-time');
+            // Mark all slots between start → end
+            plugin.$element.find('.time-value').removeClass('selected-time');
 
-            jQuery.each($nextSlots, function (index, elem) {
-                var $elem = jQuery(elem);
+            var current = startTime.clone();
+            while (current <= endTime) {
+                let t = current.format('HH:mm');
+                let $slot = plugin.$element.find('.time-value[data-val="' + t + '"]');
 
-                var startTime = moment($element.data('val'), 'HH:mm');
-                var calculatedTime = (index + 1) * slot_step;
-                var expectedTime = startTime.add(calculatedTime, 'minutes').format('HH:mm');
-
-                if ($elem.data('val') !== expectedTime) {
+                if ($slot.length === 0 || $slot.hasClass('time-disabled')) {
+                    alert("One or more selected slots are unavailable.");
+                    plugin.multiStart = null;
                     return false;
                 }
 
-                if (index + 2 > takeSlots) {
-                    return false;
-                }
-
-                if ($elem.hasClass('time-disabled')) {
-                    return false;
-                }
-
-                forSelection.push($elem);
-            });
-
-            if (forSelection.length < takeSlots) {
-                return false;
+                $slot.addClass('selected-time');
+                current.add(slot_step, 'minutes');
             }
 
-            jQuery.each(forSelection, function (index, elem) {
-                elem.addClass('selected-time');
-            });
+            // Save selected range
+            plugin.multiSelectedStart = startTime.format('HH:mm');
+            plugin.multiSelectedEnd   = endTime.add(slot_step, 'minutes').format('HH:mm');
 
             return true;
         },
+
 
         /**
          * Check if settings are ok
@@ -889,10 +945,15 @@
                 repeat_end_date: this.$element.find('[name="repeat_end_date"]').val(),
                 date: this.$element.find('.date').datepicker().val(),
                 end_date: this.$element.find('.date').datepicker().val(),
-                start: this.$element.find('.selected-time').data('val'),
                 check: ea_settings['check'],
                 action: 'ea_res_appointment'
             };
+            if (ea_settings['is_multiple_booking_allowed'] == '1' && plugin.multiSelectedEnd) {
+                options.start = plugin.multiSelectedStart;
+                options.end   = plugin.multiSelectedEnd;
+            } else {
+                options.start = this.$element.find('.selected-time').data('val');
+            }
 
             options._cb = Math.floor(Math.random() * 1000000);
 
@@ -1176,10 +1237,15 @@
                 repeat_end_date: this.$element.find('[name="repeat_end_date"]').val(),
                 date: this.$element.find('.date').datepicker().val(),
                 end_date: this.$element.find('.date').datepicker().val(),
-                start: this.$element.find('.selected-time').data('val'),
                 check: ea_settings['check'],
                 action: 'ea_res_appointment'
             };
+            if (ea_settings['is_multiple_booking_allowed'] == '1' && plugin.multiSelectedEnd) {
+                options.start = plugin.multiSelectedStart;
+                options.end   = plugin.multiSelectedEnd;
+            } else {
+                options.start = this.$element.find('.selected-time').data('val');
+            }
 
             if (this.$element.find('.g-recaptcha-response').length === 1) {
                 options.captcha = this.$element.find('.g-recaptcha-response').val();

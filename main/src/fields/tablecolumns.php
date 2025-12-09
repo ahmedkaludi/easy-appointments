@@ -220,7 +220,8 @@ class EATableColumns
             'width',
             'form.label.above',
             'form_class',
-            'label.from_to'
+            'label.from_to',
+            'is_multiple_booking_allowed'
         );
 
         foreach ($ea_settings as $key => $value) {

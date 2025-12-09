@@ -89,6 +89,19 @@
                     </div>
                     <div class="form-item">
                         <div class="label-with-tooltip">
+                            <label for=""><?php esc_html_e('Allow Multi Slot Selection', 'easy-appointments'); ?></label>
+                            <span class="tooltip tooltip-right"
+                                  data-tooltip="<?php esc_html_e('If you want allow multiple slot to select for booking, you should mark this option. NOTE: After saving this options you must refresh page!', 'easy-appointments'); ?>"></span>
+                        </div>
+                        <div class="field-wrap">
+                            <input class="field" data-key="is_multiple_booking_allowed"
+                                   name="is_multiple_booking_allowed" type="checkbox" <% if
+                            (_.findWhere(settings, {ea_key:'is_multiple_booking_allowed'}).ea_value == "1") {
+                            %>checked<% } %>>
+                        </div>
+                    </div>
+                    <div class="form-item">
+                        <div class="label-with-tooltip">
                             <label for=""><?php esc_html_e('Max number of appointments', 'easy-appointments'); ?></label>
                             <span class="tooltip tooltip-right"
                                   data-tooltip="<?php esc_html_e('Number of appointments that one visitor can make reservation before limit alert is shown. Appointments are counted during one day.', 'easy-appointments'); ?>"></span>

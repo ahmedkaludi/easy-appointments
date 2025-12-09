@@ -399,7 +399,7 @@ class EAAjax
         $this->send_ok_json_result($result);
     }
 
-    public function ajax_res_appointment()
+    public function ooajax_res_appointment()
     {
         $this->validate_nonce();
 
@@ -513,6 +513,127 @@ class EAAjax
 
         $this->send_ok_json_result($response);
     }
+
+    public function ajax_res_appointment()
+    {
+        $this->validate_nonce();
+        $this->validate_captcha();
+
+        $table = 'ea_appointments';
+        $data = $_GET;
+
+        $multiple_allowed = intval($this->options->get_option_value('is_multiple_booking_allowed', 0));
+        $has_range = (!empty($data['end']) && $multiple_allowed === 1);
+
+        // sanitize input keys
+        $dont_remove = array(
+            'id','location','service','worker','name','email','phone',
+            'date','start','end','end_date','description','status',
+            'user','created','price','ip','session'
+        );
+
+        foreach ($data as $key => $rem) {
+            if (!in_array($key, $dont_remove)) unset($data[$key]);
+        }
+        unset($data['action']);
+
+        $block_time = (int)$this->options->get_option_value('block.time', 0);
+
+        // Load open slots
+        $open_slots = $this->logic->get_open_slots(
+            $data['location'], $data['service'], $data['worker'],
+            $data['date'], null, true, $block_time
+        );
+
+        // ===========================
+        // MULTI-SLOT RANGE BOOKING
+        // ===========================
+        if ($has_range) {
+
+            $service     = $this->models->get_row('ea_services', $data['service']);
+            $slot_step   = isset($service->slot_step) ? intval($service->slot_step) : 30;
+
+            $start_ts = strtotime($data['date'] . ' ' . $data['start']);
+            $end_ts   = strtotime($data['date'] . ' ' . $data['end']);
+
+            if ($end_ts <= $start_ts) {
+                $this->send_err_json_result('{"err":true,"message":"Invalid range"}');
+            }
+
+            // create map
+            $open_map = array();
+            foreach ($open_slots as $slot) {
+                $open_map[$slot['value']] = $slot['count'];
+            }
+
+            // check ALL slots in range
+            for ($ts = $start_ts; $ts < $end_ts; $ts += $slot_step * 60) {
+                $t = date('H:i', $ts);
+                if (!isset($open_map[$t]) || $open_map[$t] <= 0) {
+                    $this->send_err_json_result('{"err":true,"message":"Selected range not available"}');
+                }
+            }
+
+            // price calculation by duration
+            $duration_minutes = ($end_ts - $start_ts) / 60;
+            $unit_duration    = intval($service->duration);
+            if ($unit_duration > 0) {
+                $price = ($service->price / $unit_duration) * $duration_minutes;
+            } else {
+                $price = $service->price;
+            }
+
+            $data['price'] = round($price, 2);
+        }
+
+        // ===========================
+        // ORIGINAL SINGLE SLOT FALLBACK
+        // ===========================
+        if (!$has_range) {
+
+            $is_free = false;
+            foreach ($open_slots as $slot) {
+                if ($slot['value'] === $data['start'] && $slot['count'] > 0) {
+                    $is_free = true;
+                    break;
+                }
+            }
+
+            if (!$is_free) {
+                $this->send_err_json_result('{"err":true,"message":"Slot is taken"}');
+            }
+
+            $service = $this->models->get_row('ea_services', $data['service']);
+            $data['price'] = $service->price;
+
+            $end_time = strtotime($data['start'] . " + {$service->duration} minutes");
+            $data['end'] = date('H:i', $end_time);
+        }
+
+        // store metadata
+        $data['status'] = 'reservation';
+        $data['ip'] = $_SERVER['REMOTE_ADDR'];
+        $data['session'] = session_id();
+
+        if (is_user_logged_in()) $data['user'] = get_current_user_id();
+
+        // EA validation
+        $check = $this->logic->can_make_reservation($data);
+        if (!$check['status']) {
+            $this->send_err_json_result(json_encode(['err'=>true,'message'=>$check['message']]));
+        }
+
+        $response = $this->models->replace($table, $data, true);
+
+        if ($response === false) {
+            $this->send_err_json_result('{"err":true,"message":"DB error"}');
+        }
+
+        $response->_hash = wp_hash($response->id);
+        $this->send_ok_json_result($response);
+    }
+
+
 
     public function repeatbooking_hide_ajax_res_appointment()
     {
@@ -1482,6 +1603,7 @@ class EAAjax
             'user.access.connections'       => '',
             'user.access.reports'           => '',
             'max.appointments_by_user'      => '0',
+            'is_multiple_booking_allowed'   => '0',
         );
     }
 
