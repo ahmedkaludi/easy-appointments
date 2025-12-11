@@ -1131,7 +1131,7 @@ function ea_newsletter_form(){
 
         if ( $ea_newsletter === true && $hide_form !== 'yes') { ?>
         <div class="ea-newsletter-wrapper">
-            <div class="plugin-card plugin-card-ea-newsletter" style="margin :10px; background: #2271b1  url('<?php echo plugin_dir_url( __DIR__ ) . '/img/email.png'; ?>') no-repeat right top;">
+            <div class="plugin-card plugin-card-ea-newsletter" style="margin :10px; background: #2271b1  url('<?php echo plugin_dir_url( __DIR__ ) . 'img/email.png'; ?>') no-repeat right top;">
                             
                         <div class="plugin-card-top" style="min-height: 135px; color: white;">
                             <span class="dashicons dashicons-dismiss ea_newsletter_hide" style="float: right;cursor: pointer;"></span>
@@ -1213,3 +1213,44 @@ function ea_newsletter_form(){
         die;
     }
     add_action( 'wp_ajax_ea_newsletter_hide_form', 'ea_newsletter_hide_form' );
+
+    add_action('admin_enqueue_scripts', 'ea_enqueue_bfcm_assets');
+
+function ea_enqueue_bfcm_assets($hook) { 
+ 
+    // var_dump($hook);
+    if (!in_array( $hook,['toplevel_page_easy_app_top_level','appointments_page_easy_app_locations','appointments_page_easy_app_services','appointments_page_easy_app_workers','appointments_page_easy_app_connections','appointments_page_easy_app_publish','appointments_page_easy_app_customer','appointments_page_easy_app_settings','appointments_page_easy_app_tools','appointments_page_easy_app_vacation','appointments_page_easy_app_reports','appointments_page_easy_app_new_reports','appointments_page_easy_app_help_suppport','appointments_page_easy_app_connect_license','appointments_page_easy_app_connect'] ) ) {
+        return;
+    }
+    
+    
+    /*if ( ! isset($_GET['page']) || $_GET['page'] !== 'setting_page_check-email-dashboard' ) {
+        return;
+    }*/
+
+    // 2. define settings
+    $expiry_date_str = '2025-12-25 23:59:59'; 
+    $offer_link      = 'https://easy-appointments.com/bfcm-2025/';
+
+    // 3. Expiry Check (Server Side)
+    if ( current_time('timestamp') > strtotime($expiry_date_str) ) {
+        return; 
+    }
+
+    // 4. Register & Enqueue CSS    
+    wp_enqueue_style(
+        'bfcm-style', 
+        plugin_dir_url( __DIR__ ) . 'bfcm25/css/bfcm-style.css', 
+        array(), 
+        '1.0.0'
+    );
+
+    // 5. Register & Enqueue JS
+    wp_enqueue_script(
+        'bfcm-script', 
+        plugin_dir_url( __DIR__ ) . 'bfcm25/js/bfcm-script.js', 
+        array('jquery'), 
+        '1.0.0', 
+        true
+    );
+}
