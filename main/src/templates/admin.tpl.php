@@ -1,6 +1,7 @@
 <script type="text/template" id="ea-settings-main">
 <?php 
     get_current_screen()->render_screen_meta();
+    
 ?>
     <div class="wrap">
         <div id="tab-content"></div>
@@ -195,7 +196,9 @@
                         </div>
                     </div>
                 </div>
+                
             </div>
+            
 
             <div id="tab-user-access" class="form-section hidden">
                 <span class="separator vertical"></span>
@@ -971,8 +974,9 @@
                 </div>
             </div>
         </div>
-
+        
         <br><br>
+        <?php ea_newsletter_form(); ?>
     </div>
 </script>
 
@@ -1088,6 +1092,31 @@
 </script>
 <script>
     jQuery(document).ready(function($) {
+        $(document).on('submit','#ea_newsletter',function(e){
+            e.preventDefault();
+            var form = jQuery(this);
+            var email = form.find('input[name="newsletter-email"]').val();
+            jQuery.post(ea_obj.ajax_url, {action:'ea_newsletter_submit',email:email,ea_security_nonce:ea_obj.ea_security_nonce},
+            function (data) {
+                if (data.status == 200) {
+                    alert(data.message); // 👉 show success message
+                } else {
+                    alert("Something went wrong");
+                }
+            },
+            "json"
+            );
+            return true;
+        });
+        $(document).on('click','.ea_newsletter_hide',function(e){
+            e.preventDefault();
+            jQuery('.ea-newsletter-wrapper').css("display", "none");
+            var form = jQuery(this);
+            jQuery.post(ajaxurl, {action:'ea_newsletter_hide_form',ea_security_nonce:ea_obj.ea_security_nonce},
+            function(data) {}
+            );
+            return true;
+        });
         function checked_worker_count(){
             var checkedCount = $('.ea_send_worker_email:checked').length;
             if (checkedCount > 0){
