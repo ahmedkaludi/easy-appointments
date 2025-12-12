@@ -26,7 +26,22 @@ const ConnectionsPage = () => {
   const [selectedIds, setSelectedIds] = useState([]);
   const [showBulkDelete, setShowBulkDelete] = useState(false);
 
-  const toggleSelect = id => {
+  const toggleSelect = (id, allIds = []) => {
+    // Select all
+    if (id === 'ALL') {
+      setSelectedIds(allIds);
+      setShowBulkDelete(true);
+      return;
+    }
+
+    // Unselect all
+    if (id === 'NONE') {
+      setSelectedIds([]);
+      setShowBulkDelete(false);
+      return;
+    }
+
+    // Toggle single row
     let updated = [];
 
     if (selectedIds.includes(id)) {

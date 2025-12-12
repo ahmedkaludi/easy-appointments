@@ -380,7 +380,7 @@ class EAAdminPanel
         wp_enqueue_style('thickbox');
         wp_enqueue_style('jquery-chosen');
         wp_enqueue_style('ea-admin-fonts-css');
-                // style editor
+
         $object_name = array(
             'ajax_url'                  => admin_url( 'admin-ajax.php' ),
             'ea_security_nonce'   => wp_create_nonce('ea_ajax_check_nonce'),
@@ -388,6 +388,7 @@ class EAAdminPanel
         $object_name = apply_filters('ea_localize_filter',$object_name,'ea_obj');
         
         wp_localize_script('ea-settings', 'ea_obj', $object_name);
+        // style editor
     }
 
     /**
@@ -653,6 +654,8 @@ class EAAdminPanel
         $data_vacation = $this->options->get_option_value('vacations', '[]');
 
         $settings['date_format'] = $this->datetime->convert_to_moment_format(get_option('date_format', 'F j, Y'));
+
+        
 
         wp_localize_script('ea-appointments', 'ea_settings', $settings);
         wp_localize_script('ea-appointments', 'ea_vacations', json_decode($data_vacation));
@@ -1114,6 +1117,8 @@ class EAAdminPanel
         return false;
     }
 
+    
+
 
 }
 
@@ -1126,7 +1131,7 @@ function ea_newsletter_form(){
 
         if ( $ea_newsletter === true && $hide_form !== 'yes') { ?>
         <div class="ea-newsletter-wrapper">
-            <div class="plugin-card plugin-card-ea-newsletter" style="margin :10px; background: #2271b1  url('<?php echo plugin_dir_url( __DIR__ ) . '/img/email.png'; ?>') no-repeat right top;">
+            <div class="plugin-card plugin-card-ea-newsletter" style="margin :10px; background: #2271b1  url('<?php echo plugin_dir_url( __DIR__ ) . 'img/email.png'; ?>') no-repeat right top;">
                             
                         <div class="plugin-card-top" style="min-height: 135px; color: white;">
                             <span class="dashicons dashicons-dismiss ea_newsletter_hide" style="float: right;cursor: pointer;"></span>
@@ -1195,7 +1200,7 @@ function ea_newsletter_form(){
     add_action( 'wp_ajax_ea_newsletter_submit', 'ea_newsletter_submit' );
 
     function ea_newsletter_hide_form(){   
-        if (isset( $_REQUEST['ea_security_nonce'] ) && current_user_can( ea_current_user_can()) && (wp_verify_nonce( sanitize_text_field( wp_unslash($_REQUEST['ea_security_nonce'] ) ), 'ea_ajax_check_nonce' ) )){
+        if (isset( $_REQUEST['ea_security_nonce'] ) && current_user_can( 'manage_options') && (wp_verify_nonce( sanitize_text_field( wp_unslash($_REQUEST['ea_security_nonce'] ) ), 'ea_ajax_check_nonce' ) )){
                 $hide_newsletter  = get_option('ea_hide_newsletter');
                 if($hide_newsletter == false){
                     add_option( 'ea_hide_newsletter', 'no');
@@ -1235,7 +1240,7 @@ function ea_enqueue_bfcm_assets($hook) {
     // 4. Register & Enqueue CSS    
     wp_enqueue_style(
         'bfcm-style', 
-        plugin_dir_url( __DIR__ ) . 'bfcm25/css/bfcm-style.css', 
+        plugin_dir_url( __DIR__ ) . 'src/bfcm25/css/bfcm-style.css', 
         array(), 
         '1.0.0'
     );
@@ -1243,7 +1248,7 @@ function ea_enqueue_bfcm_assets($hook) {
     // 5. Register & Enqueue JS
     wp_enqueue_script(
         'bfcm-script', 
-        plugin_dir_url( __DIR__ ) . 'bfcm25/js/bfcm-script.js', 
+        plugin_dir_url( __DIR__ ) . 'src/bfcm25/js/bfcm-script.js', 
         array('jquery'), 
         '1.0.0', 
         true

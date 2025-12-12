@@ -1200,7 +1200,7 @@ function ea_newsletter_form(){
     add_action( 'wp_ajax_ea_newsletter_submit', 'ea_newsletter_submit' );
 
     function ea_newsletter_hide_form(){   
-        if (isset( $_REQUEST['ea_security_nonce'] ) && current_user_can( ea_current_user_can()) && (wp_verify_nonce( sanitize_text_field( wp_unslash($_REQUEST['ea_security_nonce'] ) ), 'ea_ajax_check_nonce' ) )){
+        if (isset( $_REQUEST['ea_security_nonce'] ) && current_user_can( 'manage_options') && (wp_verify_nonce( sanitize_text_field( wp_unslash($_REQUEST['ea_security_nonce'] ) ), 'ea_ajax_check_nonce' ) )){
                 $hide_newsletter  = get_option('ea_hide_newsletter');
                 if($hide_newsletter == false){
                     add_option( 'ea_hide_newsletter', 'no');
@@ -1240,7 +1240,7 @@ function ea_enqueue_bfcm_assets($hook) {
     // 4. Register & Enqueue CSS    
     wp_enqueue_style(
         'bfcm-style', 
-        plugin_dir_url( __DIR__ ) . 'bfcm25/css/bfcm-style.css', 
+        plugin_dir_url( __DIR__ ) . 'src/bfcm25/css/bfcm-style.css', 
         array(), 
         '1.0.0'
     );
@@ -1248,7 +1248,7 @@ function ea_enqueue_bfcm_assets($hook) {
     // 5. Register & Enqueue JS
     wp_enqueue_script(
         'bfcm-script', 
-        plugin_dir_url( __DIR__ ) . 'bfcm25/js/bfcm-script.js', 
+        plugin_dir_url( __DIR__ ) . 'src/bfcm25/js/bfcm-script.js', 
         array('jquery'), 
         '1.0.0', 
         true

@@ -88,16 +88,32 @@ export const ConnectionsTable = ({
   toggleSelect
 }) => {
   // Build CONFIG including checkbox column
+  const allSelected = selectedIds.length === data.length && data.length > 0;
   const CONFIG = {
     select: {
-      header: '#',
-      type: 'component',
-      position: 'left',
-      render: data => (
+      header: (
         <input
           type="checkbox"
-          checked={selectedIds.includes(data.id)}
-          onChange={() => toggleSelect(data.id)}
+          checked={allSelected}
+          onChange={e => {
+            if (e.target.checked) {
+              // Select ALL
+              const allIds = data.map(item => item.id);
+              toggleSelect('ALL', allIds);
+            } else {
+              // Unselect ALL
+              toggleSelect('NONE', []);
+            }
+          }}
+        />
+      ),
+      type: 'component',
+      position: 'left',
+      render: row => (
+        <input
+          type="checkbox"
+          checked={selectedIds.includes(row.id)}
+          onChange={() => toggleSelect(row.id)}
         />
       )
     },
