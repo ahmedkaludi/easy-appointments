@@ -846,13 +846,37 @@
 
                     <div class="form-item">
                         <div class="label-with-tooltip">
-                            <label for="show.display_thankyou_note"><?php esc_html_e('Display Thank You Note', 'easy-appointments'); ?></label>
+                            <label for="show.display_thankyou_note"><?php esc_html_e('Display Thank You Note & Status messages', 'easy-appointments'); ?></label>
                         </div>
                         <div class="field-wrap">
                             <input class="field" type="checkbox" name="show.display_thankyou_note"
                                    data-key="show.display_thankyou_note"<% if (typeof _.findWhere(settings,
                             {ea_key:'show.display_thankyou_note'}) !== 'undefined' && _.findWhere(settings,
                             {ea_key:'show.display_thankyou_note'}).ea_value == '1') { %>checked<% } %> />
+                        </div>
+                        <div class="form-item inline-fields">
+                            <div class="form-item">
+                                <label for=""><?php esc_html_e('Heading', 'easy-appointments'); ?></label>
+                                <input class="field" data-key="trans.confirmation-title" name="trans.confirmation-title" type="text" value="<%- _.findWhere(settings, {ea_key:'trans.confirmation-title'}).ea_value %>">
+                            </div>
+                        </div>
+                        <div class="form-item inline-fields">
+                            <div class="form-item">
+                                <label for=""><?php esc_html_e('Pending', 'easy-appointments'); ?></label>
+                                <input class="field" data-key="pending_message" name="pending_message" type="text" value="<%- _.findWhere(settings, {ea_key:'pending_message'}).ea_value %>">
+                            </div>
+                        </div>
+                        <div class="form-item inline-fields">
+                            <div class="form-item">
+                                <label for=""><?php esc_html_e('Confirmed', 'easy-appointments'); ?></label>
+                                <input class="field" data-key="confirmed_message" name="confirmed_message" type="text" value="<%- _.findWhere(settings, {ea_key:'confirmed_message'}).ea_value %>">
+                            </div>
+                        </div>
+                        <div class="form-item inline-fields">
+                            <div class="form-item">
+                                <label for=""><?php esc_html_e('Reservation', 'easy-appointments'); ?></label>
+                                <input class="field" data-key="reservation_message" name="reservation_message" type="text" value="<%- _.findWhere(settings, {ea_key:'reservation_message'}).ea_value %>">
+                            </div>
                         </div>
                     </div>
                     <div class="form-item" style="background-color: #ccc; padding: 15px;">

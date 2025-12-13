@@ -452,31 +452,19 @@ class EAFrontend
         }
         switch ( $settings['default.status'] ) {
             case 'pending':
-                $default_status_message = esc_html__( 
-                    'Your appointment has been submitted and is currently pending approval. You will be notified once it is confirmed.', 
-                    'easy-appointments' 
-                );
+                $default_status_message = $settings['pending_message'];
                 break;
 
             case 'confirmed':
-                $default_status_message = esc_html__( 
-                    'Your appointment has been confirmed. Thank you!', 
-                    'easy-appointments' 
-                );
+                $default_status_message = $settings['confirmed_message'];
                 break;
 
             case 'reservation':
-                $default_status_message = esc_html__( 
-                    'Your appointment has been reserved. You will be notified once it is confirmed.', 
-                    'easy-appointments' 
-                );
+                $default_status_message = $settings['reservation_message'];
                 break;
 
             default:
-                $default_status_message = esc_html__( 
-                    'Your appointment has been successfully submitted. You will receive an update shortly.', 
-                    'easy-appointments' 
-                );
+                $default_status_message = $settings['trans.confirmation-title'];
                 break;
         }
 

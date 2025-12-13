@@ -221,7 +221,11 @@ class EATableColumns
             'form.label.above',
             'form_class',
             'label.from_to',
-            'is_multiple_booking_allowed'
+            'is_multiple_booking_allowed',
+            'pending_message',
+            'confirmed_message',
+            'reservation_message',
+            'trans.confirmation-title',
         );
 
         foreach ($ea_settings as $key => $value) {
