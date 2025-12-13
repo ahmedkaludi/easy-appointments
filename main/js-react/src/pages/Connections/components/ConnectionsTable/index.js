@@ -13,13 +13,8 @@ const WORKERS = DataService.get('Workers');
 const dateFormat = window?.ea_settings?.date_format ?? 'YYYY-MM-DD';
 const timeFormat = window?.ea_settings?.time_format ?? 'HH:mm:ss';
 
-const CONNECTIONS_CONFIG = {
-  id: {
-    header: __('Id', 'easy-appointments'),
-    headerStyle: { maxWidth: '50px' },
-    position: 'left',
-    type: 'text'
-  },
+// ORIGINAL CONFIG WITHOUT ID COLUMN
+const BASE_CONFIG = {
   connection: {
     header: __('Location / Service / Employee', 'location', 'easy-appointment'),
     headerStyle: { minWidth: '200px' },
@@ -88,9 +83,44 @@ export const ConnectionsTable = ({
   onEdit,
   onDelete,
   onClone,
-  processing
+  processing,
+  selectedIds,
+  toggleSelect
 }) => {
-  // maybe we have connections for assets that are not longer there
+  // Build CONFIG including checkbox column
+  const allSelected = selectedIds.length === data.length && data.length > 0;
+  const CONFIG = {
+    select: {
+      header: (
+        <input
+          type="checkbox"
+          checked={allSelected}
+          onChange={e => {
+            if (e.target.checked) {
+              // Select ALL
+              const allIds = data.map(item => item.id);
+              toggleSelect('ALL', allIds);
+            } else {
+              // Unselect ALL
+              toggleSelect('NONE', []);
+            }
+          }}
+        />
+      ),
+      type: 'component',
+      position: 'left',
+      render: row => (
+        <input
+          type="checkbox"
+          checked={selectedIds.includes(row.id)}
+          onChange={() => toggleSelect(row.id)}
+        />
+      )
+    },
+    ...BASE_CONFIG
+  };
+
+  // Clean invalid data
   const cleanData = data.filter(
     record =>
       LOCATIONS.some(loc => loc.id === record.location) &&
@@ -100,6 +130,7 @@ export const ConnectionsTable = ({
 
   const adaptedData = cleanData.map(record => ({
     ...record,
+    select: { id: record.id },
     connection: [
       LOCATIONS.find(loc => loc.id === record.location).name,
       SERVICES.find(ser => ser.id === record.service).name,
@@ -153,7 +184,6 @@ export const ConnectionsTable = ({
     const currentDate = new Date().toISOString().slice(0, 10);
     const formatClassName = name => ({ className: name });
 
-    // case when we don't have active connection
     if (currentDate < day_from || currentDate > day_to) {
       return formatClassName('ea-not-active');
     }
@@ -171,7 +201,7 @@ export const ConnectionsTable = ({
       <TableLegend />
       <BasicTable
         data={adaptedData}
-        config={CONNECTIONS_CONFIG}
+        config={CONFIG}
         rowCallback={applyClassToRow}
       />
     </ContentBox>
@@ -183,7 +213,9 @@ ConnectionsTable.propTypes = {
   onEdit: PropTypes.func.isRequired,
   onDelete: PropTypes.func.isRequired,
   onClone: PropTypes.func.isRequired,
-  processing: PropTypes.string
+  processing: PropTypes.string,
+  selectedIds: PropTypes.array.isRequired,
+  toggleSelect: PropTypes.func.isRequired
 };
 
 ConnectionsTable.defaultProps = {

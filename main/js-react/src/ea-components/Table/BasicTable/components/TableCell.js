@@ -31,7 +31,8 @@ const CELL_TYPES = {
   AVATARS: 'avatar',
   CHIPS: 'chips',
   ACTIONS: 'actions',
-  COLOR: 'color'
+  COLOR: 'color',
+  COMPONENT: 'component'
 };
 
 const ICON_TYPES = {
@@ -74,6 +75,16 @@ const getRandomColor = title => {
 
   const rand = Math.floor(hash % COLORS.length);
   return COLORS[rand];
+};
+
+const ComponentCell = (config, data) => {
+  const { cellClass, position } = config;
+
+  return (
+    <td className={`text-${position} ${cellClass ?? ''}`}>
+      {config.render ? config.render(data) : null}
+    </td>
+  );
 };
 
 /**
@@ -217,6 +228,8 @@ const ActionsCell = (config, data) => {
 
 export const renderCell = (config, data) => {
   switch (config.type) {
+    case CELL_TYPES.COMPONENT:
+      return ComponentCell(config, data);
     case CELL_TYPES.TEXT:
       return TextCell(config, data);
     case CELL_TYPES.TEXT_W_LABEL:

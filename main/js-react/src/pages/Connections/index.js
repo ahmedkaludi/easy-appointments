@@ -22,6 +22,57 @@ const ConnectionsPage = () => {
   const [activeConnection, setActiveConnection] = useState(null);
   const [processing, setProcessing] = useState(null);
 
+  // NEW STATES
+  const [selectedIds, setSelectedIds] = useState([]);
+  const [showBulkDelete, setShowBulkDelete] = useState(false);
+
+  const toggleSelect = (id, allIds = []) => {
+    // Select all
+    if (id === 'ALL') {
+      setSelectedIds(allIds);
+      setShowBulkDelete(true);
+      return;
+    }
+
+    // Unselect all
+    if (id === 'NONE') {
+      setSelectedIds([]);
+      setShowBulkDelete(false);
+      return;
+    }
+
+    // Toggle single row
+    let updated = [];
+
+    if (selectedIds.includes(id)) {
+      updated = selectedIds.filter(item => item !== id);
+    } else {
+      updated = [...selectedIds, id];
+    }
+
+    setSelectedIds(updated);
+    setShowBulkDelete(updated.length > 0);
+  };
+
+  const deleteSelected = async () => {
+    const confirmDelete = window.confirm(
+      `Delete ${selectedIds.length} connections?`
+    );
+    if (!confirmDelete) return;
+
+    try {
+      // ONE SINGLE REQUEST
+      await ConnectionsCommunicator.deleteMultiple({ ids: selectedIds });
+
+      // Update UI
+      setConnections(connections.filter(c => !selectedIds.includes(c.id)));
+      setSelectedIds([]);
+      setShowBulkDelete(false);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
   const loadConnections = async () => {
     try {
       const records = await ConnectionsCommunicator.fetchAll();
@@ -82,7 +133,6 @@ const ConnectionsPage = () => {
       return;
     }
 
-    // make all combination
     location.forEach(l => {
       service.forEach(s => {
         worker.forEach(w => {
@@ -191,6 +241,22 @@ const ConnectionsPage = () => {
         variant="outlined">
         Extend
       </Button>
+
+      {showBulkDelete && (
+        <Button
+          variant="contained"
+          color="error"
+          style={{
+            marginBottom: '8px',
+            marginLeft: '5px',
+            backgroundColor: '#d32f2f',
+            color: '#fff'
+          }}
+          onClick={deleteSelected}>
+          Delete Selected
+        </Button>
+      )}
+
       <PageContentWrap
         pageKey={PAGE_KEYS.CONNECTIONS}
         loading={loading}
@@ -201,8 +267,11 @@ const ConnectionsPage = () => {
           onDelete={onDeleteClick}
           onClone={onCloneClick}
           processing={processing}
+          toggleSelect={toggleSelect}
+          selectedIds={selectedIds}
         />
       </PageContentWrap>
+
       <Sidebar title={title} open={open} onClose={toggleSidebar}>
         {isBulk && (
           <BulkConnectionsForm

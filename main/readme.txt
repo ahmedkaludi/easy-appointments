@@ -3,9 +3,9 @@ Contributors: easyappointments
 Donate link: https://easy-appointments.com/
 Tags: appointment, appointments, Booking, calendar, reservation
 Requires at least: 3.7
-Tested up to: 6.8
+Tested up to: 6.9
 Requires PHP: 5.3
-Stable tag: 3.12.16
+Stable tag: 3.12.17
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -212,6 +212,15 @@ Note: you can have only one calendar on one page.
 25. Admin panel - Report - Export page
 
 == Changelog ==
+= 3.12.17 (2025-12-12)
+* Added to allow selecting multiple slots at a time. #180
+* Added an option to delete the bulk connections. #217
+* Added an Auto-Cancellation Issue Caused by Google Calendar API Pagination/Sync Errors #215
+* Added news letter subscribe option as we have in our other plugins #214
+* Fixed Reservation is not displaying correctly in the full calendar on mobile and tablet devices. #179
+* Fixed In Customer list admin page using php 8.2 there are several PHP Deprecated notices #213
+* Enhancement We need to improve two-way connectivity with Google Calendar. #221
+
 = 3.12.16 (2025-11-05)
 * Added the time feature in the Vacation section. #196
 * Added Room booking shortcode to list of room to be booked #204

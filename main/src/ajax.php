@@ -144,8 +144,8 @@ class EAAjax
             // Worker
             add_action('wp_ajax_ea_worker', array($this, 'ajax_worker'));
             add_action('wp_ajax_ea_is_pro_exist', array($this, 'ajax_is_pro_exist'));
-            add_action('wp_ajax_ea_remove_google_calendar', array($this, 'ajax_remove_google_calendar'));
-            add_action('wp_ajax_ea_check_google_calendar_token', array($this, 'ajax_check_google_calendar_token'));
+            
+            
 
             // Workers
             add_action('wp_ajax_ea_workers', array($this, 'ajax_workers'));
@@ -182,10 +182,36 @@ class EAAjax
             add_action('wp_ajax_ea_insert_customer_ajax', [$this, 'handle_insert_customer_ajax']);
             add_action('wp_ajax_ea_get_customer_detail_ajax', [$this, 'handle_customer_detail_ajax']);
             add_action('wp_ajax_ea_delete_customer' , [$this, 'ea_handle_delete_customer']);
+            add_action('wp_ajax_ea_delete_multiple_connections' , [$this, 'ea_delete_multiple_connections']);
             
         }
         
     }
+
+    function ea_delete_multiple_connections() {
+
+        // Read JSON body
+        $body = file_get_contents('php://input');
+        $data = json_decode($body, true);
+
+        // Ensure IDs exist
+        if (!isset($data['ids']) || !is_array($data['ids'])) {
+            wp_send_json_error('No valid IDs provided.');
+        }
+
+        $ids = $data['ids'];
+
+        global $wpdb;
+        $table = $wpdb->prefix . 'ea_connections';
+
+        // Delete each ID
+        foreach ($ids as $id) {
+            $wpdb->delete($table, [ 'id' => intval($id) ]);
+        }
+
+        wp_send_json_success(1);
+    }
+
 
     public function cancel_selected_appointments_callback() {
         if (!isset($_POST['appointments_nonce']) || !wp_verify_nonce($_POST['appointments_nonce'], 'appointments_nonce')) {
@@ -373,7 +399,7 @@ class EAAjax
         $this->send_ok_json_result($result);
     }
 
-    public function ajax_res_appointment()
+    public function ooajax_res_appointment()
     {
         $this->validate_nonce();
 
@@ -487,6 +513,127 @@ class EAAjax
 
         $this->send_ok_json_result($response);
     }
+
+    public function ajax_res_appointment()
+    {
+        $this->validate_nonce();
+        $this->validate_captcha();
+
+        $table = 'ea_appointments';
+        $data = $_GET;
+
+        $multiple_allowed = intval($this->options->get_option_value('is_multiple_booking_allowed', 0));
+        $has_range = (!empty($data['end']) && $multiple_allowed === 1);
+
+        // sanitize input keys
+        $dont_remove = array(
+            'id','location','service','worker','name','email','phone',
+            'date','start','end','end_date','description','status',
+            'user','created','price','ip','session'
+        );
+
+        foreach ($data as $key => $rem) {
+            if (!in_array($key, $dont_remove)) unset($data[$key]);
+        }
+        unset($data['action']);
+
+        $block_time = (int)$this->options->get_option_value('block.time', 0);
+
+        // Load open slots
+        $open_slots = $this->logic->get_open_slots(
+            $data['location'], $data['service'], $data['worker'],
+            $data['date'], null, true, $block_time
+        );
+
+        // ===========================
+        // MULTI-SLOT RANGE BOOKING
+        // ===========================
+        if ($has_range) {
+
+            $service     = $this->models->get_row('ea_services', $data['service']);
+            $slot_step   = isset($service->slot_step) ? intval($service->slot_step) : 30;
+
+            $start_ts = strtotime($data['date'] . ' ' . $data['start']);
+            $end_ts   = strtotime($data['date'] . ' ' . $data['end']);
+
+            if ($end_ts <= $start_ts) {
+                $this->send_err_json_result('{"err":true,"message":"Invalid range"}');
+            }
+
+            // create map
+            $open_map = array();
+            foreach ($open_slots as $slot) {
+                $open_map[$slot['value']] = $slot['count'];
+            }
+
+            // check ALL slots in range
+            for ($ts = $start_ts; $ts < $end_ts; $ts += $slot_step * 60) {
+                $t = date('H:i', $ts);
+                if (!isset($open_map[$t]) || $open_map[$t] <= 0) {
+                    $this->send_err_json_result('{"err":true,"message":"Selected range not available"}');
+                }
+            }
+
+            // price calculation by duration
+            $duration_minutes = ($end_ts - $start_ts) / 60;
+            $unit_duration    = intval($service->duration);
+            if ($unit_duration > 0) {
+                $price = ($service->price / $unit_duration) * $duration_minutes;
+            } else {
+                $price = $service->price;
+            }
+
+            $data['price'] = round($price, 2);
+        }
+
+        // ===========================
+        // ORIGINAL SINGLE SLOT FALLBACK
+        // ===========================
+        if (!$has_range) {
+
+            $is_free = false;
+            foreach ($open_slots as $slot) {
+                if ($slot['value'] === $data['start'] && $slot['count'] > 0) {
+                    $is_free = true;
+                    break;
+                }
+            }
+
+            if (!$is_free) {
+                $this->send_err_json_result('{"err":true,"message":"Slot is taken"}');
+            }
+
+            $service = $this->models->get_row('ea_services', $data['service']);
+            $data['price'] = $service->price;
+
+            $end_time = strtotime($data['start'] . " + {$service->duration} minutes");
+            $data['end'] = date('H:i', $end_time);
+        }
+
+        // store metadata
+        $data['status'] = 'reservation';
+        $data['ip'] = $_SERVER['REMOTE_ADDR'];
+        $data['session'] = session_id();
+
+        if (is_user_logged_in()) $data['user'] = get_current_user_id();
+
+        // EA validation
+        $check = $this->logic->can_make_reservation($data);
+        if (!$check['status']) {
+            $this->send_err_json_result(json_encode(['err'=>true,'message'=>$check['message']]));
+        }
+
+        $response = $this->models->replace($table, $data, true);
+
+        if ($response === false) {
+            $this->send_err_json_result('{"err":true,"message":"DB error"}');
+        }
+
+        $response->_hash = wp_hash($response->id);
+        $this->send_ok_json_result($response);
+    }
+
+
 
     public function repeatbooking_hide_ajax_res_appointment()
     {
@@ -1154,34 +1301,6 @@ class EAAjax
 
         die(json_encode($response));
     }
-    public function ajax_remove_google_calendar()
-    {
-        $this->validate_admin_nonce();
-        if ( !current_user_can( 'manage_options' ) ) {
-            return;  					
-        }
-        $response = false;
-        $data = $_REQUEST;
-        $employ_id_google = $data['id'];
-        delete_option("ea_google_token_employee_{$employ_id_google}");
-        header("Content-Type: application/json");
-
-        die(json_encode($response));
-    }
-    public function ajax_check_google_calendar_token()
-    {
-        $this->validate_admin_nonce();
-        if ( !current_user_can( 'manage_options' ) ) {
-            return;  					
-        }
-        $response = false;
-        $data = $_REQUEST;
-        $employ_id_google = $data['id'];
-        $token_exist = get_option("ea_google_token_employee_{$employ_id_google}");
-        $response = $token_exist ? true : false;
-        header("Content-Type: application/json");
-        die(json_encode($response));
-    }
 
     /**
      * Single worker
@@ -1484,6 +1603,7 @@ class EAAjax
             'user.access.connections'       => '',
             'user.access.reports'           => '',
             'max.appointments_by_user'      => '0',
+            'is_multiple_booking_allowed'   => '0',
         );
     }
 

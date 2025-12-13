@@ -33,6 +33,26 @@ class EAAdminPanel
     protected $datetime;
 
     /**
+     * @var array
+     */
+    protected $customers = [];
+
+    /**
+     * @var string
+     */
+    protected $search = '';
+
+    /**
+     * @var int
+     */
+    protected $paged = 1;
+
+    /**
+     * @var int
+     */
+    protected $total_pages = 1;
+
+    /**
      * EAAdminPanel constructor.
      * @param EAOptions $options
      * @param EALogic $logic
@@ -360,6 +380,14 @@ class EAAdminPanel
         wp_enqueue_style('thickbox');
         wp_enqueue_style('jquery-chosen');
         wp_enqueue_style('ea-admin-fonts-css');
+
+        $object_name = array(
+            'ajax_url'                  => admin_url( 'admin-ajax.php' ),
+            'ea_security_nonce'   => wp_create_nonce('ea_ajax_check_nonce'),
+        );
+        $object_name = apply_filters('ea_localize_filter',$object_name,'ea_obj');
+        
+        wp_localize_script('ea-settings', 'ea_obj', $object_name);
         // style editor
     }
 
@@ -626,6 +654,8 @@ class EAAdminPanel
         $data_vacation = $this->options->get_option_value('vacations', '[]');
 
         $settings['date_format'] = $this->datetime->convert_to_moment_format(get_option('date_format', 'F j, Y'));
+
+        
 
         wp_localize_script('ea-appointments', 'ea_settings', $settings);
         wp_localize_script('ea-appointments', 'ea_vacations', json_decode($data_vacation));
@@ -1087,5 +1117,140 @@ class EAAdminPanel
         return false;
     }
 
+    
 
+
+}
+
+function ea_newsletter_form(){
+	
+        $hide_form = get_option('ea_hide_newsletter');
+
+        // Newsletter marker. Set this to false once newsletter subscription is displayed.
+            $ea_newsletter = true;
+
+        if ( $ea_newsletter === true && $hide_form !== 'yes') { ?>
+        <div class="ea-newsletter-wrapper">
+            <div class="plugin-card plugin-card-ea-newsletter" style="margin :10px; background: #2271b1  url('<?php echo plugin_dir_url( __DIR__ ) . 'img/email.png'; ?>') no-repeat right top;">
+                            
+                        <div class="plugin-card-top" style="min-height: 135px; color: white;">
+                            <span class="dashicons dashicons-dismiss ea_newsletter_hide" style="float: right;cursor: pointer;"></span>
+                            <span style="clear:both;"></span>
+                            <div class="name column-name" style="margin: 0px 10px;">
+                                <h3 style="color:white;"><?php esc_html_e( 'Easy Appointments Newsletter', 'easy-appointments' ); ?></h3>
+                            </div>
+                            <div class="desc column-description" style="margin: 0px 10px; color:white;">
+                                <p style="margin-left:0px;"><?php esc_html_e( 'Learn more about easy appointments and get latest updates about plugin', 'easy-appointments' ); ?></p>
+                            </div>
+                            
+                            <div class="ea-newsletter-form" style="margin: 18px 10px 0px;">
+                            
+                                <form method="post" action="https://ea.com/newsletter/" target="_blank" id="ea_newsletter">
+                                    <fieldset>
+                                        <input name="newsletter-email" value="<?php $user = wp_get_current_user(); echo esc_attr( $user->user_email ); ?>" placeholder="<?php esc_html_e( 'Enter your email', 'easy-appointments' ); ?>" style="width: 60%; margin-left: 0px;" type="email">		
+                                        <input name="source" value="ea-plugin" type="hidden">
+                                        <input type="submit" class="button" value="<?php esc_html_e( 'Subscribe', 'easy-appointments' ); ?>" style="background: linear-gradient(to right, #c6ccd1, #bdd0d3) !important !important; box-shadow: unset;">
+                                        <span class="ea_newsletter_hide" style="box-shadow: unset;cursor: pointer;margin-left: 10px; color:white;">
+                                        <?php esc_html_e( 'No thanks', 'easy-appointments' ); ?>
+                                        </span>
+                                        <small style="display:block; margin-top:8px; color:white;"><?php esc_html_e( 'we\'ll share our <code>root</code> password before we share your email with anyone else.', 'easy-appointments' ); ?></small>
+                                        
+                                    </fieldset>
+                                </form>
+                                
+                            </div>
+                            
+                        </div>
+                                    
+                    </div>
+            </div>
+        <?php }
+                // Set newsletter marker to false
+                $ea_newsletter = false;
+    }
+
+    function ea_newsletter_submit(){
+	
+        if (isset( $_REQUEST['ea_security_nonce'] ) && current_user_can('manage_options') && (wp_verify_nonce( sanitize_text_field( wp_unslash( $_REQUEST['ea_security_nonce'] ) ), 'ea_ajax_check_nonce' ) )){
+        global $current_user;
+        $api_url = 'http://magazine3.company/wp-json/api/central/email/subscribe';
+        $email = "";
+        if ( isset($_POST['email']) ) {
+            $email = sanitize_email( wp_unslash( $_POST['email'] ) );
+        }
+        $api_params = array(
+            'name' => sanitize_text_field($current_user->display_name),
+            'email'=> $email,
+            'website'=> sanitize_url( get_site_url() ),
+            'type'=> 'easyappointments'
+        );
+        $response = wp_remote_post( $api_url, array( 'timeout' => 15, 'sslverify' => false, 'body' => $api_params ) );
+        if ( !is_wp_error( $response ) ) {
+            $response = wp_remote_retrieve_body( $response );
+            echo wp_json_encode(array('status'=>200, 'message'=>esc_html__('Submitted ','easy-appointments'), 'response'=> $response));
+        }else{
+            echo wp_json_encode(array('status'=>500, 'message'=>esc_html__('No response from API','easy-appointments')));	
+        }
+    }
+    else{
+        echo wp_json_encode(array('status'=>403, 'message'=>esc_html__('Unauthorized Request','easy-appointments')));
+    }
+        die;
+    }
+    add_action( 'wp_ajax_ea_newsletter_submit', 'ea_newsletter_submit' );
+
+    function ea_newsletter_hide_form(){   
+        if (isset( $_REQUEST['ea_security_nonce'] ) && current_user_can( 'manage_options') && (wp_verify_nonce( sanitize_text_field( wp_unslash($_REQUEST['ea_security_nonce'] ) ), 'ea_ajax_check_nonce' ) )){
+                $hide_newsletter  = get_option('ea_hide_newsletter');
+                if($hide_newsletter == false){
+                    add_option( 'ea_hide_newsletter', 'no');
+                }
+                update_option( 'ea_hide_newsletter', 'yes' , false);
+                echo wp_json_encode(array('status'=>200, 'message'=>esc_html__('Submitted ','easy-appointments')));
+        }else{
+            echo wp_json_encode(array('status'=>403, 'message'=>esc_html__('Unauthorized Request','easy-appointments')));
+        }
+        die;
+    }
+    add_action( 'wp_ajax_ea_newsletter_hide_form', 'ea_newsletter_hide_form' );
+
+    add_action('admin_enqueue_scripts', 'ea_enqueue_bfcm_assets');
+
+function ea_enqueue_bfcm_assets($hook) { 
+ 
+    // var_dump($hook);
+    if (!in_array( $hook,['toplevel_page_easy_app_top_level','appointments_page_easy_app_locations','appointments_page_easy_app_services','appointments_page_easy_app_workers','appointments_page_easy_app_connections','appointments_page_easy_app_publish','appointments_page_easy_app_customer','appointments_page_easy_app_settings','appointments_page_easy_app_tools','appointments_page_easy_app_vacation','appointments_page_easy_app_reports','appointments_page_easy_app_new_reports','appointments_page_easy_app_help_suppport','appointments_page_easy_app_connect_license','appointments_page_easy_app_connect'] ) ) {
+        return;
+    }
+    
+    
+    /*if ( ! isset($_GET['page']) || $_GET['page'] !== 'setting_page_check-email-dashboard' ) {
+        return;
+    }*/
+
+    // 2. define settings
+    $expiry_date_str = '2025-12-25 23:59:59'; 
+    $offer_link      = 'https://easy-appointments.com/bfcm-2025/';
+
+    // 3. Expiry Check (Server Side)
+    if ( current_time('timestamp') > strtotime($expiry_date_str) ) {
+        return; 
+    }
+
+    // 4. Register & Enqueue CSS    
+    wp_enqueue_style(
+        'bfcm-style', 
+        plugin_dir_url( __DIR__ ) . 'src/bfcm25/css/bfcm-style.css', 
+        array(), 
+        '1.0.0'
+    );
+
+    // 5. Register & Enqueue JS
+    wp_enqueue_script(
+        'bfcm-script', 
+        plugin_dir_url( __DIR__ ) . 'src/bfcm25/js/bfcm-script.js', 
+        array('jquery'), 
+        '1.0.0', 
+        true
+    );
 }
