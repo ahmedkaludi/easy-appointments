@@ -1,1174 +1,1256 @@
-<script type="text/template" id="ea-settings-main">
-<?php 
-    get_current_screen()->render_screen_meta();
-    
-?>
-    <div class="wrap">
-        <div id="tab-content"></div>
-    </div>
-</script>
+<?php
 
-<!--Customize -->
-<script type="text/template" id="ea-tpl-custumize">
-    <div class="wp-filter">
-        <div class="custom-tab-view">
-            <!-- TAB SECTION -->
-            <div class="tab-selection">
-                <div class="tabs-list">
-                    <a data-tab="tab-connections" class="selected" href="#">
-                        <span class="icon icon-general"></span><span class="text-label"><?php esc_html_e('General', 'easy-appointments'); ?></span>
-                    </a>
-                    <a data-tab="tab-mail" href="#">
-                        <span class="icon icon-mail"></span><span class="text-label"><?php esc_html_e('Mail Notifications', 'easy-appointments'); ?></span>
-                    </a>
-                    <a data-tab="tab-full-calendar" href="#">
-                      <span class="icon icon-fullcalendar"></span><span class="text-label"><?php esc_html_e('FullCalendar Shortcode', 'easy-appointments'); ?></span>
-                    </a>
-                    <a data-tab="tab-user-access" href="#">
-                        <span class="icon icon-workers"></span><span class="text-label"><?php esc_html_e('User access', 'easy-appointments'); ?></span>
-                    </a>
-                    <a data-tab="tab-labels" href="#">
-                        <span class="icon icon-label"></span><span class="text-label"><?php esc_html_e('Labels', 'easy-appointments'); ?></span>
-                    </a>
-                    <a data-tab="tab-date-time" href="#">
-                        <span class="icon icon-datetime"></span><span class="text-label"><?php esc_html_e('Date & Time', 'easy-appointments'); ?></span>
-                    </a>
-                    <a data-tab="tab-fields" href="#">
-                        <span class="icon icon-fields"></span><span class="text-label"><?php esc_html_e('Custom Form Fields', 'easy-appointments'); ?></span>
-                    </a>
-                    <a data-tab="tab-captcha" href="#">
-                        <span class="icon icon-recaptcha"></span><span class="text-label"><?php esc_html_e('Google reCAPTCHA v2', 'easy-appointments'); ?></span>
-                    </a>
-                    <a data-tab="tab-captcha-3" href="#">
-                        <span class="icon icon-recaptcha"></span><span class="text-label"><?php esc_html_e('Google reCAPTCHA v3', 'easy-appointments'); ?></span>
-                    </a>
-                    <a data-tab="tab-form" href="#">
-                        <span class="icon icon-redirect"></span><span class="text-label"><?php esc_html_e('Form Style & Redirect', 'easy-appointments'); ?></span>
-                    </a>
-                    <a data-tab="tab-gdpr" href="#">
-                        <span class="icon icon-gdpr"></span><span class="text-label"><?php esc_html_e('GDPR', 'easy-appointments'); ?></span>
-                    </a>
-                    <a data-tab="tab-money" href="#">
-                        <span class="icon icon-money"></span><span class="text-label"><?php esc_html_e('Money Format', 'easy-appointments'); ?></span>
-                    </a>
-                </div>
-                <div class="button-wrap">
-                    <button class="button button-primary btn-save-settings"><?php esc_html_e('Save', 'easy-appointments'); ?></button>
-                </div>
-            </div>
+// If this file is called directly, abort.
+if (!defined('WPINC')) {
+    die;
+}
 
-            <div id="tab-connections" class="form-section">
-                <span class="separator vertical"></span>
-                <div class="form-container" id="customize-general">
-                    <div class="form-item">
-                        <div class="label-with-tooltip">
-                            <label for=""><?php esc_html_e('Busy slots are calculated by same', 'easy-appointments'); ?></label>
-                            <span class="tooltip tooltip-right"
-                                  data-tooltip="<?php esc_html_e('IMPORTANT! This is used to calculate busy slots based on settings that are set here.', 'easy-appointments'); ?>"></span>
-                        </div>
-                        <select id="multiple-work" class="field" data-key="multiple.work" name="multiple.work">
-                            <option value="0" data-tip="<?php esc_html_e('Use case example: Employee can only provide single service at the time.', 'easy-appointments'); ?>"><?php esc_html_e('Worker', 'easy-appointments'); ?></option>
-                            <option value="4" data-tip="<?php esc_html_e('Use case example: Employee can only provide single service at the time and other services and locations are blocked during service one is provided.', 'easy-appointments'); ?>"><?php esc_html_e('Exclusive by Worker', 'easy-appointments'); ?></option>
-                            <option value="2" data-tip="<?php esc_html_e('Use case example: Multiple employees share same location as resource.', 'easy-appointments'); ?>"><?php esc_html_e('Location', 'easy-appointments'); ?></option>
-                            <option value="3" data-tip="<?php esc_html_e('Use case example: Service as a shared resource between employees.', 'easy-appointments'); ?>"><?php esc_html_e('Service', 'easy-appointments'); ?></option>
-                            <option value="1" data-tip="<?php esc_html_e('Use case example: Worker can provide different service at different locations at the same time.', 'easy-appointments'); ?>"><?php esc_html_e('Worker, Location and Service', 'easy-appointments'); ?></option>
-                        </select>
-                        <small id="multiple-work-tip"></small>
-                    </div>
-                    <div class="form-item">
-                        <div class="label-with-tooltip">
-                            <label for=""><?php esc_html_e('Compatibility mode', 'easy-appointments'); ?></label>
-                            <span class="tooltip tooltip-right"
-                                  data-tooltip="<?php esc_html_e('If you can\'t EDIT or DELETE conecntion or any other settings, you should mark this option. NOTE: After saving this options you must refresh page!', 'easy-appointments'); ?>"></span>
-                        </div>
-                        <div class="field-wrap">
-                            <input class="field" data-key="compatibility.mode"
-                                   name="compatibility.mode" type="checkbox" <% if
-                            (_.findWhere(settings, {ea_key:'compatibility.mode'}).ea_value == "1") {
-                            %>checked<% } %>>
-                        </div>
-                    </div>
-                    <div class="form-item">
-                        <div class="label-with-tooltip">
-                            <label for=""><?php esc_html_e('Allow Multi Slot Selection', 'easy-appointments'); ?></label>
-                            <span class="tooltip tooltip-right"
-                                  data-tooltip="<?php esc_html_e('If you want allow multiple slot to select for booking, you should mark this option. NOTE: After saving this options you must refresh page!', 'easy-appointments'); ?>"></span>
-                        </div>
-                        <div class="field-wrap">
-                            <input class="field" data-key="is_multiple_booking_allowed"
-                                   name="is_multiple_booking_allowed" type="checkbox" <% if
-                            (_.findWhere(settings, {ea_key:'is_multiple_booking_allowed'}).ea_value == "1") {
-                            %>checked<% } %>>
-                        </div>
-                    </div>
-                    <div class="form-item">
-                        <div class="label-with-tooltip">
-                            <label for=""><?php esc_html_e('Max number of appointments', 'easy-appointments'); ?></label>
-                            <span class="tooltip tooltip-right"
-                                  data-tooltip="<?php esc_html_e('Number of appointments that one visitor can make reservation before limit alert is shown. Appointments are counted during one day.', 'easy-appointments'); ?>"></span>
-                        </div>
-                        <input class="field" data-key="max.appointments" name="max.appointments"
-                               type="text"
-                               value="<%- _.findWhere(settings, {ea_key:'max.appointments'}).ea_value %>">
-                    </div>
-                    <div class="form-item">
-                        <div class="label-with-tooltip">
-                            <label for=""><?php esc_html_e('Max number of appointments for logged in user', 'easy-appointments'); ?></label>
-                            <span class="tooltip tooltip-right"
-                                  data-tooltip="<?php esc_html_e('Number of appointments that one visitor can make reservation before limit alert is shown. Appointments are counted during one day.', 'easy-appointments'); ?>"></span>
-                        </div>
-                        <input class="field" data-key="max.appointments_by_user" name="max.appointments_by_users"
-                               type="text"
-                               value="<%- _.findWhere(settings, {ea_key:'max.appointments_by_user'}).ea_value %>">
-                               <small><?php esc_html_e('Keep 0 for no restriction', 'easy-appointments'); ?></small>
-                    </div>
-                    <div class="form-item">
-                        <div class="label-with-tooltip">
-                            <label><?php esc_html_e('Auto reservation', 'easy-appointments'); ?></label>
-                            <span class="tooltip tooltip-right"
-                                  data-tooltip="<?php esc_html_e('Make reservation at moment user select date and time!', 'easy-appointments'); ?>"></span>
-                        </div>
-                        <div class="field-wrap">
-                            <input class="field" data-key="pre.reservation" name="pre.reservation"
-                                   type="checkbox" <% if (_.findWhere(settings,
-                            {ea_key:'pre.reservation'}).ea_value == "1") { %>checked<% } %>>
-                        </div>
-                    </div>
-                    <div class="form-item">
-                        <div class="label-with-tooltip">
-                            <label for=""><?php esc_html_e('Turn nonce off', 'easy-appointments'); ?></label>
-                            <span class="tooltip tooltip-right"
-                                  data-tooltip="<?php esc_html_e('if you have issues with validation code that is expired in form you can turn off nonce but you are doing that on your own risk.', 'easy-appointments'); ?>"></span>
-                        </div>
-                        <div class="field-wrap">
-                            <input class="field" data-key="nonce.off" name="nonce.off"
-                                   type="checkbox" <% if (_.findWhere(settings,
-                            {ea_key:'nonce.off'}).ea_value == "1") { %>checked<% } %>>
-                        </div>
-                    </div>
-                    <div class="form-item">
-                        <div class="label-with-tooltip">
-                            <label for=""><?php esc_html_e('Default status', 'easy-appointments'); ?></label>
-                            <span class="tooltip tooltip-right"
-                                  data-tooltip="<?php esc_html_e('Default status of Appointment made by visitor.', 'easy-appointments'); ?>"></span>
-                        </div>
-                        <select id="ea-select-status" class="field" name="ea-select-status" data-key="default.status">
-                            <option value="pending"
-                            <% if (_.findWhere(settings, {ea_key:'default.status'}).ea_value ==
-                            "pending") {
-                            %>selected="selected"<% } %>><%- eaData.Status.pending %></option>
-                            <option value="confirmed"
-                            <% if (_.findWhere(settings, {ea_key:'default.status'}).ea_value ==
-                            "confirmed") {
-                            %>selected="selected"<% } %>><%- eaData.Status.confirmed %></option>
-                            <option value="reservation"
-                            <% if (_.findWhere(settings, {ea_key:'default.status'}).ea_value ==
-                            "reservation") {
-                            %>selected="selected"<% } %>><%- eaData.Status.reservation %></option>
-                        </select>
-                        <div id="ea-select-status-notification" style="display: none"><?php esc_html_e('Reservation status is short term, if you don\'t change it within 5 minutes it will be set to cancelled' , 'easy-appointments');?></div>
-                    </div>
-                    <div class="form-item">
-                        <div class="label-with-tooltip">
-                            <label for=""><?php esc_html_e('Compress shortcode output (removes new lines from templates).', 'easy-appointments'); ?></label>
-                            <span class="tooltip tooltip-right"
-                                  data-tooltip="<?php esc_html_e('WordPress can add auto paragraph html element for each line break. This option prevents WP from doing that on EA shortcode.', 'easy-appointments'); ?>"></span>
-                        </div>
-                        <div class="field-wrap">
-                            <input class="field" data-key="shortcode.compress"
-                                   name="shortcode.compress" type="checkbox" <% if
-                            (_.findWhere(settings, {ea_key:'shortcode.compress'}).ea_value == "1") {
-                            %>checked<% } %>>
-                        </div>
-                    </div>
+/**
+ * Admin panel
+ */
+class EAAdminPanel
+{
+    protected $compatibility_mode;
 
-                    <div class="form-item">
-                        <div class="label-with-tooltip">
-                            <label for="show.customer_search_front"><?php esc_html_e('Customer Search', 'easy-appointments'); ?></label>
-                            <span class="tooltip tooltip-right"
-                                  data-tooltip="<?php esc_html_e('This will allow to search customer in front from dropdown', 'easy-appointments'); ?>"></span>
-                        </div>
-                        <div class="field-wrap">
-                            <input class="field" type="checkbox" name="show.customer_search_front"
-                                   data-key="show.customer_search_front"<% if (typeof _.findWhere(settings,
-                            {ea_key:'show.customer_search_front'}) !== 'undefined' && _.findWhere(settings,
-                            {ea_key:'show.customer_search_front'}).ea_value == '1') { %>checked<% } %> />
-                        </div>
-                    </div>
-                </div>
-                
-            </div>
-            
+    /**
+     * @var EAOptions
+     */
+    protected $options;
 
-            <div id="tab-user-access" class="form-section hidden">
-                <span class="separator vertical"></span>
-                <div class="form-container">
-                    <div class="form-item" style="background-color: #ccc">
-                        <blockquote><?php esc_html_e('Note: Please use those options carefully because this will allow you to change which capability is needed to access EasyAppointments admin pages. Leave empty to use only default settings', 'easy-appointments'); ?></blockquote>
-                    </div>
-                    <div class="form-item">
-                        <div class="label-with-tooltip">
-                            <label for="user.access.locations"><?php esc_html_e('Locations Page', 'easy-appointments'); ?></label>
-                            <span class="tooltip tooltip-right"
-                                  data-tooltip="<?php esc_html_e('Default capability: manage_options.', 'easy-appointments'); ?>"></span>
-                        </div>
-                        <input class="field" data-key="user.access.locations"
-                            name="user.access.locations" type="text"
-                            value="<%- _.findWhere(settings, {ea_key:'user.access.locations'}).ea_value %>">
-                    </div>
-                    <div class="form-item">
-                        <div class="label-with-tooltip">
-                            <label for="user.access.services"><?php esc_html_e('Services Page', 'easy-appointments'); ?></label>
-                            <span class="tooltip tooltip-right"
-                                  data-tooltip="<?php esc_html_e('Default capability: manage_options.', 'easy-appointments'); ?>"></span>
-                        </div>
-                        <input class="field" data-key="user.access.services"
-                           name="user.access.services" type="text"
-                           value="<%- _.findWhere(settings, {ea_key:'user.access.services'}).ea_value %>">
-                    </div>
-                    <div class="form-item">
-                        <div class="label-with-tooltip">
-                            <label for="user.access.workers"><?php esc_html_e('Workers Page', 'easy-appointments'); ?></label>
-                            <span class="tooltip tooltip-right"
-                                  data-tooltip="<?php esc_html_e('Default capability: manage_options.', 'easy-appointments'); ?>"></span>
-                        </div>
-                        <input class="field" data-key="user.access.workers"
-                           name="user.access.workers" type="text"
-                           value="<%- _.findWhere(settings, {ea_key:'user.access.workers'}).ea_value %>">
-                    </div>
-                    <div class="form-item">
-                        <div class="label-with-tooltip">
-                            <label for="user.access.connections"><?php esc_html_e('Connections Page', 'easy-appointments'); ?></label>
-                            <span class="tooltip tooltip-right"
-                                  data-tooltip="<?php esc_html_e('Default capability: manage_options.', 'easy-appointments'); ?>"></span>
-                        </div>
-                        <input class="field" data-key="user.access.connections"
-                               name="user.access.connections" type="text"
-                               value="<%- _.findWhere(settings, {ea_key:'user.access.connections'}).ea_value %>">
-                    </div>
-                    <div class="form-item">
-                        <div class="label-with-tooltip">
-                            <label for="user.access.reports"><?php esc_html_e('Reports Page', 'easy-appointments'); ?></label>
-                            <span class="tooltip tooltip-right"
-                                  data-tooltip="<?php esc_html_e('Default capability: manage_options.', 'easy-appointments'); ?>"></span>
-                        </div>
-                        <input class="field" data-key="user.access.reports"
-                               name="user.access.reports" type="text"
-                               value="<%- _.findWhere(settings, {ea_key:'user.access.reports'}).ea_value %>">
-                    </div>
-                    <div class="form-item">
-                        <div class="form-wrap">
-                            <?php _e('Current logged in user have:', 'easy-appointments'); ?> <small>x<?php
-                            $data = get_userdata( get_current_user_id() );
-                            if ( is_object( $data) ) {
-                                echo implode(', ', array_keys($data->allcaps));
-                            }
-                            ?></small>
-                        </div>
-                    </div>
-                </div>
-            </div>
+    /**
+     * @var EALogic
+     */
+    protected $logic;
 
-            <div id="tab-mail" class="form-section hidden">
-                <span class="separator vertical"></span>
-                <div class="form-container">
-                    <div class="form-item">
-                        <div class="label-with-tooltip">
-                            <label for=""><?php esc_html_e('Notifications', 'easy-appointments'); ?></label>
-                            <span class="tooltip tooltip-right"
-                                  data-tooltip="<?php esc_html_e('You can use this tags inside email content. Just place for example #id# inside mail template and that value will be replaced with value.', 'easy-appointments'); ?>"></span>
-                        </div>
-                        <table class='notifications form-table'>
-                            <tbody>
-                            <tr>
-                                <td colspan="2">
-                                    <p>
-                                        <a class="mail-tab selected"
-                                           data-textarea="#mail-pending"><?php esc_html_e('Pending', 'easy-appointments'); ?></a>
-                                        <a class="mail-tab"
-                                           data-textarea="#mail-reservation"><?php esc_html_e('Reservation', 'easy-appointments'); ?></a>
-                                        <a class="mail-tab"
-                                           data-textarea="#mail-canceled"><?php esc_html_e('Cancelled', 'easy-appointments'); ?></a>
-                                        <a class="mail-tab"
-                                           data-textarea="#mail-confirmed"><?php esc_html_e('Confirmed', 'easy-appointments'); ?></a>
-                                        <a class="mail-tab"
-                                           data-textarea="#mail-admin"><?php esc_html_e('Admin', 'easy-appointments'); ?></a>
-                                    </p>
-                                    <textarea id="mail-template" style="height: 150px;"
-                                              name="mail-template"><%- _.findWhere(settings, {ea_key:'mail.pending'}).ea_value %></textarea>
-                                </td>
-                            </tr>
-                            <tr style="display:none;">
-                                <td>
-                                    <textarea id="mail-pending" class="field"
-                                              data-key="mail.pending"><%- _.findWhere(settings, {ea_key:'mail.pending'}).ea_value %></textarea>
-                                </td>
-                                <td>
-                                    <textarea id="mail-reservation" class="field"
-                                              data-key="mail.reservation"><%- _.findWhere(settings, {ea_key:'mail.reservation'}).ea_value %></textarea>
-                                </td>
-                            </tr>
-                            <tr style="display:none;">
-                                <td>
-                                    <textarea id="mail-canceled" class="field"
-                                              data-key="mail.canceled"><%- _.findWhere(settings, {ea_key:'mail.canceled'}).ea_value %></textarea>
-                                </td>
-                                <td>
-                                    <textarea id="mail-confirmed" class="field"
-                                              data-key="mail.confirmed"><%- _.findWhere(settings, {ea_key:'mail.confirmed'}).ea_value %></textarea>
-                                </td>
-                            </tr>
-                            <tr style="display:none;">
-                                <td colspan="2">
-                                    <textarea id="mail-admin" class="field" data-key="mail.admin"><%- (_.findWhere(settings, {ea_key:'mail.admin'}) != null) ? _.findWhere(settings, {ea_key:'mail.admin'}).ea_value: '' %></textarea>
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
-                        <a id="load-default-admin-template" href="#" style="padding-top: 5px; padding-bottom: 5px; display: none;"><?php esc_html_e('Load default admin template', 'easy-appointments'); ?></a>
-                        <div><small><?php esc_html_e('Available tags', 'easy-appointments'); ?>: #id#, #date#, #start#, #end#, #status#, #created#, #price#, #ip#, #link_confirm#, #link_cancel#, #url_confirm#, #url_cancel#, #service_name#, #service_duration#, #service_price#, #worker_name#, #workeresc_html_email#, #worker_phone#, #location_name#, #location_address#, #location_location#, <?php echo implode(', ', EADBModels::get_custom_fields_tags()); ?></small></div>
-                    </div>
-                    <div class="form-item">
-                        <div class="label-with-tooltip">
-                            <label for="mail.action.two_step"><?php esc_html_e('Two step action links in email', 'easy-appointments'); ?></label>
-                            <span class="tooltip tooltip-right"
-                                  data-tooltip="<?php esc_html_e('Sometimes Mail servers can open links from email for inspection. That will trigger actions such as #link_confirm#, #link_cancel#. Mark this option if you want to have additional prompt for user action via links.', 'easy-appointments'); ?>"></span>
-                        </div>
-                        <div class="field-wrap">
-                            <input class="field" data-key="mail.action.two_step" name="mail.action.two_step"
-                                   type="checkbox" <% if (_.findWhere(settings,
-                            {ea_key:'mail.action.two_step'}).ea_value == "1") { %>checked<% } %>>
-                        </div>
-                    </div>
-                    <div class="form-item">
-                        <div class="label-with-tooltip">
-                            <label for=""><?php esc_html_e('Pending notification emails', 'easy-appointments'); ?></label>
-                            <span class="tooltip tooltip-right"
-                                  data-tooltip="<?php esc_html_e('Enter email adress that will receive new reservation notification. Separate multiple emails with , (comma)', 'easy-appointments'); ?>"></span>
-                        </div>
-                        <input class="field" data-key="pending.email" name="pending.email"
-                               type="text"
-                               value="<%- _.findWhere(settings, {ea_key:'pending.email'}).ea_value %>">
-                    </div>
-                    <div class="form-item">
-                        <div class="label-with-tooltip">
-                            <label for=""><?php esc_html_e('Admin notification subject', 'easy-appointments'); ?></label>
-                            <span class="tooltip tooltip-right"
-                                  data-tooltip="<?php esc_html_e('You can use any tag that is available as in custom email notifications.', 'easy-appointments'); ?>"></span>
-                        </div>
-                        <input class="field" data-key="pending.subject.email"
-                               name="pending.subject.email" type="text"
-                               value="<%- _.findWhere(settings, {ea_key:'pending.subject.email'}).ea_value %>">
-                    </div>
-                    <div class="form-item">
-                        <div class="label-with-tooltip">
-                            <label for=""><?php esc_html_e('Visitor notification subject', 'easy-appointments'); ?></label>
-                            <span class="tooltip tooltip-right"
-                                  data-tooltip="<?php esc_html_e('You can use any tag that is available as in custom email notifications.', 'easy-appointments'); ?>"></span>
-                        </div>
-                        <input class="field" data-key="pending.subject.visitor.email"
-                               name="pending.subject.visitor.email" type="text"
-                               value="<%- _.findWhere(settings, {ea_key:'pending.subject.visitor.email'}).ea_value %>">
-                    </div>
-                    <div class="form-item">
-                        <div class="label-with-tooltip">
-                            <label for=""><?php esc_html_e('Admin Reply-To Address', 'easy-appointments'); ?></label>
-                        </div>
-                        <input class="field" data-key="admin_reply_to_address"
-                               name="admin_reply_to_address" type="text"
-                               value="<%- _.findWhere(settings, {ea_key:'admin_reply_to_address'}).ea_value %>">
-                    </div>
-                    <div class="form-item">
-                        <div class="label-with-tooltip">
-                            <label for=""><?php esc_html_e('Visitor Reply-To Address', 'easy-appointments'); ?></label>
-                        </div>
-                        <input class="field" data-key="visitor_reply_to_address"
-                               name="visitor_reply_to_address" type="text"
-                               value="<%- _.findWhere(settings, {ea_key:'visitor_reply_to_address'}).ea_value %>">
-                    </div>
-                    <div class="form-item">
-                        <div class="label-with-tooltip">
-                            <label for="send.worker.email"><?php esc_html_e('Send email to worker', 'easy-appointments'); ?></label>
-                            <span class="tooltip tooltip-right"
-                                  data-tooltip="<?php esc_html_e('Mark this option if you want to employee receive admin email after filing the form.', 'easy-appointments'); ?>"></span>
-                        </div>
-                        <div class="field-wrap">
-                            <input class="field ea_send_worker_email" data-key="send.worker.email"
-                                   name="send.worker.email" type="checkbox" <% if
-                            (_.findWhere(settings, {ea_key:'send.worker.email'}).ea_value == "1") {
-                            %>checked<% } %>>
-                        </div>                        
-                    </div>
-                    <div class="form-item ea_worker_mail_group" style="margin-left: 12px;">
-                        <div class="label-with-tooltip">
-                            <label for="send.worker.pending_email"><input class="field" id="send.worker.pending_email" data-key="send.worker.pending_email"
-                                name="send.worker.pending_email" type="checkbox" <% if
-                            (_.findWhere(settings, {ea_key:'send.worker.pending_email'}).ea_value == "1") {
-                            %>checked<% } %>> <?php esc_html_e('Pending', 'easy-appointments'); ?>
-                            </label>&nbsp;&nbsp;&nbsp;&nbsp;
-                            <label for="send.worker.reservation_email"><input class="field" data-key="send.worker.reservation_email"
-                                name="send.worker.reservation_email" id="send.worker.reservation_email" type="checkbox" <% if
-                            (_.findWhere(settings, {ea_key:'send.worker.reservation_email'}).ea_value == "1") {
-                            %>checked<% } %>> <?php esc_html_e('Reservation', 'easy-appointments'); ?>
-                            </label>&nbsp;&nbsp;&nbsp;&nbsp;
-                            <label for="send.worker.cancelled_email"><input class="field" data-key="send.worker.cancelled_email"
-                                name="send.worker.cancelled_email" id="send.worker.cancelled_email" type="checkbox" <% if
-                            (_.findWhere(settings, {ea_key:'send.worker.cancelled_email'}).ea_value == "1") {
-                            %>checked<% } %>> <?php esc_html_e('Cancelled', 'easy-appointments'); ?>
-                            </label>&nbsp;&nbsp;&nbsp;&nbsp;
-                            <label for="send.worker.confirmed_email"><input class="field" data-key="send.worker.confirmed_email"
-                                name="send.worker.confirmed_email" id="send.worker.confirmed_email" type="checkbox" <% if
-                            (_.findWhere(settings, {ea_key:'send.worker.confirmed_email'}).ea_value == "1") {
-                            %>checked<% } %>> <?php esc_html_e('Confirmed', 'easy-appointments'); ?>
-                            </label>
-                        </div>
-                    </div>
-                    <div class="form-item">
-                        <div class="label-with-tooltip">
-                            <label for="send.user.email"><?php esc_html_e('Send email to user', 'easy-appointments'); ?></label>
-                            <span class="tooltip tooltip-right"
-                                  data-tooltip="<?php esc_html_e('Mark this option if you want to user receive email after filing the form.', 'easy-appointments'); ?>"></span>
-                        </div>
-                        <div class="field-wrap">
-                            <input class="field ea_send_user_email" data-key="send.user.email" name="send.user.email"
-                                   type="checkbox" <% if (_.findWhere(settings,
-                            {ea_key:'send.user.email'}).ea_value == "1") { %>checked<% } %>>
-                        </div>
-                    </div>
-                    <div class="form-item ea_user_mail_group" style="margin-left: 12px;">
-                        <div class="label-with-tooltip">
-                            <label for="send.user.pending_email"><input class="field" id="send.user.pending_email" data-key="send.user.pending_email"
-                                name="send.user.pending_email" type="checkbox" <% if
-                            (_.findWhere(settings, {ea_key:'send.user.pending_email'}).ea_value == "1") {
-                            %>checked<% } %>> <?php esc_html_e('Pending', 'easy-appointments'); ?>
-                            </label>&nbsp;&nbsp;&nbsp;&nbsp;
-                            <label for="send.user.reservation_email"><input class="field" data-key="send.user.reservation_email"
-                                name="send.user.reservation_email" id="send.user.reservation_email" type="checkbox" <% if
-                            (_.findWhere(settings, {ea_key:'send.user.reservation_email'}).ea_value == "1") {
-                            %>checked<% } %>> <?php esc_html_e('Reservation', 'easy-appointments'); ?>
-                            </label>&nbsp;&nbsp;&nbsp;&nbsp;
-                            <label for="send.user.cancelled_email"><input class="field" data-key="send.user.cancelled_email"
-                                name="send.user.cancelled_email" id="send.user.cancelled_email" type="checkbox" <% if
-                            (_.findWhere(settings, {ea_key:'send.user.cancelled_email'}).ea_value == "1") {
-                            %>checked<% } %>> <?php esc_html_e('Cancelled', 'easy-appointments'); ?>
-                            </label>&nbsp;&nbsp;&nbsp;&nbsp;
-                            <label for="send.user.confirmed_email"><input class="field" data-key="send.user.confirmed_email"
-                                name="send.user.confirmed_email" id="send.user.confirmed_email" type="checkbox" <% if
-                            (_.findWhere(settings, {ea_key:'send.user.confirmed_email'}).ea_value == "1") {
-                            %>checked<% } %>> <?php esc_html_e('Confirmed', 'easy-appointments'); ?>
-                            </label>
-                        </div>
-                    </div>
-                    <div class="form-item">
-                        <div class="label-with-tooltip">
-                            <label for=""><?php esc_html_e('Send from', 'easy-appointments'); ?></label>
-                            <span class="tooltip tooltip-right"
-                                  data-tooltip="<?php esc_html_e('Send from email adress (Example: Name &lt;name@domain.com&gt;). Leave blank to use default address.', 'easy-appointments'); ?>"></span>
-                        </div>
-                        <input class="field" data-key="send.from.email" name="send.from.email"
-                               type="text"
-                               value="<%- _.findWhere(settings, {ea_key:'send.from.email'}).ea_value %>">
-                    </div>
-                </div>
-            </div>
+    /**
+     * @var EADBModels
+     */
+    protected $models;
 
-            <div id="tab-full-calendar" class="form-section hidden">
-              <span class="separator vertical"></span>
-              <div class="form-container">
-                  <div class="form-item">
-                      <div class="label-with-tooltip">
-                          <label for=""><?php esc_html_e('Allow public access to FullCalendar shortcode', 'easy-appointments'); ?></label>
-                          <span class="tooltip tooltip-right"
-                                data-tooltip="<?php esc_html_e('By default only logged in users can see data in FullCalendar. Mark this option if you want to allow public access for all.', 'easy-appointments'); ?>"></span>
-                      </div>
-                      <div class="field-wrap">
-                          <input class="field" data-key="fullcalendar.public"
-                                 name="fullcalendar.public" type="checkbox" <% if
-                          (_.findWhere(settings, {ea_key:'fullcalendar.public'}).ea_value == "1") {
-                          %>checked<% } %>>
-                      </div>
-                  </div>
-                  <div class="form-item">
-                      <div class="label-with-tooltip">
-                          <label for=""><?php _e('Manage appointmennt in popup', 'easy-appointments'); ?></label>
-                          <span class="tooltip tooltip-right"
-                                data-tooltip="<?php _e('Popup dialog for modify appointment details.', 'easy-appointments'); ?>"></span>
-                      </div>
-                      <div class="field-wrap">
-                          <input class="field" data-key="fullcalendar.manage_appointment.show"
-                                 name="fullcalendar.manage_appointment.show" type="checkbox" <% if
-                          (_.findWhere(settings, {ea_key:'fullcalendar.manage_appointment.show'}).ea_value == "1") {
-                          %>checked<% } %>>
-                      </div>
-                  </div>
-                  <div class="form-item">
-                      <div class="label-with-tooltip">
-                          <label for=""><?php esc_html_e('Show event content in popup', 'easy-appointments'); ?></label>
-                          <span class="tooltip tooltip-right"
-                                data-tooltip="<?php esc_html_e('Popup dialog for event content.', 'easy-appointments'); ?>"></span>
-                      </div>
-                      <div class="field-wrap">
-                          <input class="field" data-key="fullcalendar.event.show"
-                                 name="fullcalendar.event.show" type="checkbox" <% if
-                          (_.findWhere(settings, {ea_key:'fullcalendar.event.show'}).ea_value == "1") {
-                          %>checked<% } %>>
-                      </div>
-                  </div>
-                  <div class="form-item">
-                      <div class="label-with-tooltip">
-                          <label for=""><?php esc_html_e('Event content in popup', 'easy-appointments'); ?></label>
-                          <span class="tooltip tooltip-right"
-                                data-tooltip="<?php esc_html_e('Event content when clicked on event', 'easy-appointments'); ?>"></span>
-                      </div>
-                      <textarea id="fullcalendar-event-template" class="field" name="fullcalendar.event.template" data-key="fullcalendar.event.template"><%- (_.findWhere(settings, {ea_key:'fullcalendar.event.template'})).ea_value %></textarea>
-                      <small><?php esc_html_e('Example', 'easy-appointments'); ?> : (<a href="https://easy-appointments.com/documentation/templates/" target="_blank"><?php esc_html_e('Full documentation', 'easy-appointments');?></a>)</small>
-                      <div style="display: inline-block"><code>{= event.location_name}</code><small> / </small><code>{= language}</code><small> / </small><code>{= link_confirm}</code></div>
-                      <small><?php esc_html_e('To get all available options use', 'easy-appointments'); ?> :</small>
-                      <code>{= __CONTEXT__ | raw}</code>
-                  </div>
-              </div>
-            </div>
+    /**
+     * @var EADateTime
+     */
+    protected $datetime;
 
-            <div id="tab-labels" class="form-section hidden">
-                <span class="separator vertical"></span>
-                <div class="form-container">
-                    <div class="form-item">
-                        <label for=""><?php esc_html_e('Service', 'easy-appointments'); ?></label>
-                        <input class="field" data-key="trans.service" name="service" type="text"
-                               value="<%- _.findWhere(settings, {ea_key:'trans.service'}).ea_value %>">
-                    </div>
-                    <div class="form-item">
-                        <label for=""><?php esc_html_e('Location', 'easy-appointments'); ?></label>
-                        <input class="field" data-key="trans.location" name="location" type="text"
-                               value="<%- _.findWhere(settings, {ea_key:'trans.location'}).ea_value %>">
-                    </div>
-                    <div class="form-item">
-                        <label for=""><?php esc_html_e('Worker', 'easy-appointments'); ?></label>
-                        <input class="field" data-key="trans.worker" name="worker" type="text"
-                               value="<%- _.findWhere(settings, {ea_key:'trans.worker'}).ea_value %>">
-                    </div>
-                    <div class="form-item">
-                        <div class="label-with-tooltip">
-                            <label for=""><?php esc_html_e('Done message', 'easy-appointments'); ?></label>
-                            <span class="tooltip tooltip-right"
-                                  data-tooltip="<?php esc_html_e('Message that user receive after completing appointment', 'easy-appointments'); ?>"></span>
-                        </div>
-                        <input class="field" data-key="trans.done_message" name="done_message"
-                               type="text"
-                               value="<%- _.findWhere(settings, {ea_key:'trans.done_message'}).ea_value %>">
-                    </div>
-                    <div class="form-item">
-                        <label for=""><?php esc_html_e('Search Customer', 'easy-appointments'); ?></label>
-                        <input class="field" data-key="trans.customer_search_label" name="customer_search_label" type="text"
-                               value="<%- _.findWhere(settings, {ea_key:'trans.customer_search_label'}).ea_value %>">
-                    </div>
-                </div>
-            </div>
+    /**
+     * @var array
+     */
+    protected $customers = [];
 
-            <div id="tab-date-time" class="form-section hidden">
-                <span class="separator vertical"></span>
-                <div class="form-container">
-                    <div class="form-item">
-                        <div class="label-with-tooltip">
-                            <label for=""><?php esc_html_e('Time format', 'easy-appointments'); ?></label>
-                            <span class="tooltip tooltip-right"
-                                  data-tooltip="<?php esc_html_e('Notice : date/time formating for email notification are done by Settings > General.', 'easy-appointments'); ?>"></span>
-                        </div>
-                        <select data-key="time_format" class="field" name="time_format">
-                            <option value="00-24"
-                            <% if (_.findWhere(settings, {ea_key:'time_format'}).ea_value ===
-                            "00-24") {
-                            %>selected="selected"<% } %>>00-24</option>
-                            <option value="am-pm"
-                            <% if (_.findWhere(settings, {ea_key:'time_format'}).ea_value ===
-                            "am-pm") {
-                            %>selected="selected"<% } %>>AM-PM</option>
-                        </select>
-                    </div>
-                    <div class="form-item">
-                        <label for=""><?php esc_html_e('Calendar localization', 'easy-appointments'); ?></label>
-                        <select data-key="datepicker" class="field" name="datepicker">
-                            <% var langs = [
-                            'af','ar','ar-DZ','az','be','bg','bs','ca','cs','cy-GB','da','de','el','en','en-AU','en-GB','en-NZ','en-US','eo','es','et','eu','fa','fi','fo','fr','fr-CA','fr-CH','gl','he','hi','hr','hu','hy','id','is','it','it-CH','ja','ka','kk','km','ko','ky','lb','lt','lv','mk','ml','ms','nb','nl','nl-BE','nn','no','pl','pt','pt-BR','rm','ro','ru','sk','sl','sq','sr','sr-SR','sv','ta','th','tj','tr','uk','vi','zh-CN','zh-HK','zh-TW'
-                            ];
-                            _.each(langs,function(item,key,list){
-                            if(_.findWhere(settings, {ea_key:'datepicker'}).ea_value === item) { %>
-                            <option value="<%- item %>" selected="selected"><%- item %></option>
-                            <% } else { %>
-                            <option value="<%- item %>"><%- item %></option>
-                            <% }
-                            });%>
-                        </select>
-                    </div>
-                    <div class="form-item">
-                        <div class="label-with-tooltip">
-                            <label for=""><?php esc_html_e('Block time', 'easy-appointments'); ?></label>
-                            <span class="tooltip tooltip-right"
-                                  data-tooltip="<?php esc_html_e('(in minutes). Prevent visitor from making an appointment if there are less minutes than this.', 'easy-appointments'); ?>"></span>
-                        </div>
-                        <input class="field" data-key="block.time" name="block.time" type="text"
-                               value="<%- _.findWhere(settings, {ea_key:'block.time'}).ea_value %>">
-                    </div>
-                </div>
-            </div>
+    /**
+     * @var string
+     */
+    protected $search = '';
 
-            <div id="tab-fields" class="form-section hidden">
-                <span class="separator vertical"></span>
-                <div class="form-container">
-                    <div class="form-item">
-                        <span class="pure-text"><?php esc_html_e('Create all fields that you need. Custom order them by drag and drop.', 'easy-appointments'); ?></span>
-                    </div>
-                    <div class="form-item inline-fields">
-                        <div class="form-item">
-                            <label for="">Name</label>
-                            <input type="text">
-                        </div>
-                        <div class="form-item">
-                            <label for="">Type</label>
-                            <select>
-                                <option value="INPUT"><?php esc_html_e('Input', 'easy-appointments'); ?></option>
-                                <option value="MASKED"><?php esc_html_e('Masked Input', 'easy-appointments'); ?></option>
-                                <option value="SELECT"><?php esc_html_e('Select', 'easy-appointments'); ?></option>
-                                <option value="TEXTAREA"><?php esc_html_e('Textarea', 'easy-appointments'); ?></option>
-                                <option value="PHONE"><?php esc_html_e('Phone', 'easy-appointments'); ?></option>
-                                <option value="EMAIL"><?php esc_html_e('Email', 'easy-appointments'); ?></option>
-                            </select>
-                        </div>
-                        <button class="button button-primary btn-add-field button-field"><?php esc_html_e('Add', 'easy-appointments'); ?></button>
-                    </div>
-                    <div class="form-item">
-                        <ul id="custom-fields"></ul>
-                    </div>                   
-                    
-                    <div class="form-item">
-                        <span class="pure-text hint"><?php esc_html_e('* To use using the email notification for user there must be field named "email" or "e-mail" or field with type "email"', 'easy-appointments'); ?></span>
-                    </div>
-                </div>
-            </div>
+    /**
+     * @var int
+     */
+    protected $paged = 1;
 
-            <div id="tab-captcha" class="form-section hidden">
-                <span class="separator vertical"></span>
-                <div class="form-container">
-                    <div class="form-item">
-                        <label for=""><?php esc_html_e('Site key', 'easy-appointments'); ?></label>
-                        <input style="width: 100%" class="field" data-key="captcha.site-key"
-                               name="captcha.site-key" type="text"
-                               value="<%- _.findWhere(settings, {ea_key:'captcha.site-key'}).ea_value %>">
-                    </div>
-                    <div class="form-item">
-                        <span class="pure-text hint"><?php esc_html_e('* Google reCAPTCHA key can be generated via', 'easy-appointments'); ?> <a
-                                    href="https://www.google.com/recaptcha/admin" target="_blank">LINK</a></span>
-                    </div>
-                    <div class="form-item">
-                        <label for=""><?php esc_html_e('Secret key', 'easy-appointments'); ?></label>
-                        <input style="width: 100%" class="field" data-key="captcha.secret-key"
-                               name="captcha.secret-key" type="text"
-                               value="<%- _.findWhere(settings, {ea_key:'captcha.secret-key'}).ea_value %>">
-                    </div>
-                    <div class="form-item">
-                        <span class="pure-text hint"><?php esc_html_e('* If you want to use Captcha you must have auto reservation option turned off. If you don\'t want to use Captcha just leave fields empty.', 'easy-appointments'); ?></span>
-                    </div>
-                </div>
-            </div>
+    /**
+     * @var int
+     */
+    protected $total_pages = 1;
 
-            <div id="tab-captcha-3" class="form-section hidden">
-                <span class="separator vertical"></span>
-                <div class="form-container">
-                    <div class="form-item">
-                        <label for=""><?php esc_html_e('Site key', 'easy-appointments'); ?></label>
-                        <input style="width: 100%" class="field" data-key="captcha3.site-key"
-                               name="captcha3.site-key" type="text"
-                               value="<%- _.findWhere(settings, {ea_key:'captcha3.site-key'}).ea_value %>">
-                    </div>
-                    <div class="form-item">
-                        <span class="pure-text hint"><?php esc_html_e('* Google reCAPTCHA key can be generated via', 'easy-appointments'); ?> <a
-                                    href="https://www.google.com/recaptcha/admin" target="_blank">LINK</a></span>
-                    </div>
-                    <div class="form-item">
-                        <label for=""><?php esc_html_e('Secret key', 'easy-appointments'); ?></label>
-                        <input style="width: 100%" class="field" data-key="captcha3.secret-key"
-                               name="captcha3.secret-key" type="text"
-                               value="<%- _.findWhere(settings, {ea_key:'captcha3.secret-key'}).ea_value %>">
-                    </div>
-                    <div class="form-item">
-                        <span class="pure-text hint"><?php esc_html_e('* If you want to use Captcha you must have auto reservation option turned off. If you don\'t want to use Captcha just leave fields empty.', 'easy-appointments'); ?></span>
-                    </div>
-                    <div class="form-item">
-                        <span class="pure-text hint"><?php esc_html_e('* Only request with recaptcha score 0.5 or greater will be processed. Others will be rejected as bot calls.', 'easy-appointments'); ?></span>
-                    </div>
-                </div>
-            </div>
+    /**
+     * EAAdminPanel constructor.
+     * @param EAOptions $options
+     * @param EALogic $logic
+     * @param EADBModels $models
+     * @param EADateTime $datetime
+     */
+    function __construct($options, $logic, $models, $datetime)
+    {
+        $this->options = $options;
+        $this->logic = $logic;
+        $this->models = $models;
+        $this->datetime = $datetime;
+    }
 
-            <div id="tab-form" class="form-section hidden">
-                <span class="separator vertical"></span>
-                <div class="form-container">
-                    <div class="form-item">
-                        <div class="label-with-tooltip">
-                            <label for=""><?php esc_html_e('Custom style', 'easy-appointments'); ?></label>
-                            <span class="tooltip tooltip-right"
-                                  data-tooltip="<?php esc_html_e('Place here custom css styles. This will be included in both standard and bootstrap widget.', 'easy-appointments'); ?>"></span>
-                        </div>
-                        <textarea class="field" data-key="custom.css"><% if (typeof _.findWhere(settings, {ea_key:'custom.css'}) !== 'undefined') { %><%- (_.findWhere(settings, {ea_key:'custom.css'})).ea_value %><% } %></textarea>
-                    </div>
-                    <div class="form-item">
-                        <label for="send.worker.email"><?php esc_html_e('Turn off css files', 'easy-appointments'); ?></label>
-                        <div class="field-wrap">
-                            <input class="field" data-key="css.off" name="css.off" type="checkbox"
-                            <% if (_.findWhere(settings,
-                            {ea_key:'css.off'}).ea_value == "1") { %>checked<% } %>>
-                        </div>
-                    </div>
-                    <div class="form-item">
-                        <div class="label-with-tooltip">
-                            <label for="form.label.above"><?php esc_html_e('Form label style', 'easy-appointments'); ?></label>
-                            <span class="tooltip tooltip-right"
-                                  data-tooltip="<?php esc_html_e('Show labels above or inline with fields option on [ea_bootstrap] shortcode.', 'easy-appointments'); ?>"></span>
-                        </div>
-                        <div>
-                            <img data-value="0" class="form-label-option" title="inline" src="<?php echo plugin_dir_url( __DIR__ ) . '../img/label-inline.png';?>"/>
-                            <img data-value="1" class="form-label-option" title="above" src="<?php echo plugin_dir_url( __DIR__ ) . '../img/label-above.png';?>"/>
-                            <input class="field" type="hidden" name="form.label.above"
-                                   data-key="form.label.above" value="<%- _.findWhere(settings,
-                            {ea_key:'form.label.above'}).ea_value %>" />
-                        </div>
-                    </div>
-                    <div class="form-item">
-                        <div class="label-with-tooltip">
-                            <label for="label.from_to"><?php esc_html_e('Select label style', 'easy-appointments'); ?></label>
-                            <span class="tooltip tooltip-right"
-                                  data-tooltip="<?php esc_html_e('Show From or From-To label on time slot in [ea_bootstrap] shortcode.', 'easy-appointments'); ?>"></span>
-                        </div>
-                        <div>
-                            <img data-value="1" class="select-label-option" title="From - To" width="200px" src="<?php echo plugin_dir_url( __DIR__ ) . '../img/label-from-to.png';?>"/>
-                            <img data-value="0" class="select-label-option" title="From" width="200px" src="<?php echo plugin_dir_url( __DIR__ ) . '../img/label-from.png';?>"/>
-                            <input class="field" type="hidden" name="label.from_to"
-                                   data-key="label.from_to" value="<%- _.findWhere(settings,
-                            {ea_key:'label.from_to'}).ea_value %>" />
-                        </div>
-                    </div>
-                    <div class="form-item">
-                        <div class="label-with-tooltip">
-                            <label for="send.worker.email"><?php esc_html_e('I agree field', 'easy-appointments'); ?></label>
-                            <span class="tooltip tooltip-right"
-                                  data-tooltip="<?php esc_html_e('I agree option at the end of form. If this is marked user must confirm "I agree" checkbox.', 'easy-appointments'); ?>"></span>
-                        </div>
-                        <div class="field-wrap">
-                            <input class="field" type="checkbox" name="show.iagree"
-                                   data-key="show.iagree"<% if (typeof _.findWhere(settings,
-                            {ea_key:'show.iagree'}) !== 'undefined' && _.findWhere(settings,
-                            {ea_key:'show.iagree'}).ea_value == '1') { %>checked<% } %> />
-                        </div>
-                    </div>
-                    <hr />
-                    <div class="form-item" style="background-color: #ccc">
-                        <blockquote><?php esc_html_e('Note: you can use dynamic form values for redirect params. Redirect example: https://example.com/customer_name={{name}}. This will put value from custom form field with slug `name` to that redirect value. Please check custom form fields for slug names of the fields and just put them in {{}} where you need that param.', 'easy-appointments'); ?></blockquote>
-                    </div>
-                    <div class="form-item">
-                        <div class="label-with-tooltip">
-                            <label for=""><?php esc_html_e('Go to page', 'easy-appointments'); ?></label>
-                            <span class="tooltip tooltip-right"
-                                  data-tooltip="<?php esc_html_e('After a visitor creates an appointment on the front-end form. Leave blank to turn off redirect.', 'easy-appointments'); ?>"></span>
-                        </div>
-                        <input class="field" data-key="submit.redirect" name="submit.redirect"
-                               type="text"
-                               value="<%- _.findWhere(settings, {ea_key:'submit.redirect'}).ea_value %>">
-                    </div>
-                    <div class="form-item subgroup">
-                        <div class="label-with-tooltip">
-                            <label for=""><?php esc_html_e('Advance Go to', 'easy-appointments'); ?></label>
-                            <span class="tooltip tooltip-right"
-                                  data-tooltip="<?php esc_html_e('Add custom redirect based on service.', 'easy-appointments'); ?>"></span>
-                        </div>
-                    </div>
-                    <div class="form-item">
-                        <label for=""><?php esc_html_e('Service', 'easy-appointments'); ?></label>
-                        <select id="redirect-service" class="field">
-                            <% _.each(eaData.Services,function(item,key,list){ %>
-                            <option value="<%- _.escape(item.id) %>"><%- _.escape(item.name) %></option>
-                            <% });%>
-                        </select>
-                    </div>
-                    <div class="form-item inline-fields">
-                        <div class="form-item">
-                            <label for=""><?php esc_html_e('Redirect to', 'easy-appointments'); ?></label>
-                            <input id="redirect-url" name="redirect-url" type="text">
-                        </div>
-                        <button class="button button-primary btn-add-redirect button-field"><?php esc_html_e('Add advance redirect', 'easy-appointments'); ?></button>
-                    </div>
-                    <input type="hidden" id="advance-redirect" data-key="advance.redirect" class="field" name="advance.redirect" value="<%- _.escape(ea_settings['advance.redirect']) %>">
-                    <div class="form-item">
-                        <ul id="custom-redirect-list" class="list-form-item"></ul>
-                    </div>
-                    <hr>
-                    <div class="form-item">
-                        <label for=""><?php esc_html_e('After cancel go to', 'easy-appointments'); ?></label>
-                        <select data-key="cancel.scroll" class="field" name="cancel.scroll">
-                            <% var langs = [
-                            'calendar', 'worker', 'service', 'location'
-                            ];
-                            _.each(langs,function(item,key,list){
-                            if(typeof _.findWhere(settings, {ea_key:'cancel.scroll'}) !==
-                            'undefined' &&
-                            _.findWhere(settings, {ea_key:'cancel.scroll'}).ea_value === item) { %>
-                            <option value="<%- item %>" selected="selected"><%- item %></option>
-                            <% } else { %>
-                            <option value="<%- item %>"><%- item %></option>
-                            <% }
-                            });%>
-                        </select>
-                    </div>
-                    <div class="form-item subgroup">
-                        <div class="label-with-tooltip">
-                            <label for=""><?php esc_html_e('Advance Go to on Cancel', 'easy-appointments'); ?></label>
-                            <span class="tooltip tooltip-right"
-                                  data-tooltip="<?php esc_html_e('Add custom cancels redirect based on service.', 'easy-appointments'); ?>"></span>
-                        </div>
-                    </div>
-                    <div class="form-item">
-                        <label for=""><?php esc_html_e('Service', 'easy-appointments'); ?></label>
-                        <select id="cancel-redirect-service" class="field">
-                            <% _.each(eaData.Services,function(item,key,list){ %>
-                            <option value="<%- _.escape(item.id) %>"><%- _.escape(item.name) %></option>
-                            <% });%>
-                        </select>
-                    </div>
-                    <div class="form-item inline-fields">
-                        <div class="form-item">
-                            <label for=""><?php esc_html_e('Redirect to', 'easy-appointments'); ?></label>
-                            <input id="cancel-redirect-url" name="cancel-redirect-url" type="text">
-                        </div>
-                        <button class="button button-primary btn-add-cancel-redirect button-field"><?php esc_html_e('Add advance redirect', 'easy-appointments'); ?></button>
-                    </div>
-                    <div class="form-item">
-                        <ul id="custom-cancel-redirect-list" class="list-form-item"></ul>
-                    </div>
-                    <input type="hidden" id="advance-cancel-redirect" data-key="advance_cancel.redirect" class="field" name="advance_cancel.redirect" value="<%- _.escape(ea_settings['advance_cancel.redirect']) %>">
+    /**
+     * Init action callbacks
+     */
+    public function init()
+    {
+        // Hook for adding admin menus
+        add_action('admin_menu', array($this, 'add_menu_pages'));
 
-                    <div class="form-item">
-                        <div class="label-with-tooltip">
-                            <label for="show.display_thankyou_note"><?php esc_html_e('Display Thank You Note & Status messages', 'easy-appointments'); ?></label>
-                        </div>
-                        <div class="field-wrap">
-                            <input class="field" type="checkbox" name="show.display_thankyou_note"
-                                   data-key="show.display_thankyou_note"<% if (typeof _.findWhere(settings,
-                            {ea_key:'show.display_thankyou_note'}) !== 'undefined' && _.findWhere(settings,
-                            {ea_key:'show.display_thankyou_note'}).ea_value == '1') { %>checked<% } %> />
-                        </div>
-                        <div class="form-item inline-fields">
-                            <div class="form-item">
-                                <label for=""><?php esc_html_e('Heading', 'easy-appointments'); ?></label>
-                                <input class="field" data-key="trans.confirmation-title" name="trans.confirmation-title" type="text" value="<%- _.findWhere(settings, {ea_key:'trans.confirmation-title'}).ea_value %>">
-                            </div>
-                        </div>
-                        <div class="form-item inline-fields">
-                            <div class="form-item">
-                                <label for=""><?php esc_html_e('Pending', 'easy-appointments'); ?></label>
-                                <input class="field" data-key="pending_message" name="pending_message" type="text" value="<%- _.findWhere(settings, {ea_key:'pending_message'}).ea_value %>">
-                            </div>
-                        </div>
-                        <div class="form-item inline-fields">
-                            <div class="form-item">
-                                <label for=""><?php esc_html_e('Confirmed', 'easy-appointments'); ?></label>
-                                <input class="field" data-key="confirmed_message" name="confirmed_message" type="text" value="<%- _.findWhere(settings, {ea_key:'confirmed_message'}).ea_value %>">
-                            </div>
-                        </div>
-                        <div class="form-item inline-fields">
-                            <div class="form-item">
-                                <label for=""><?php esc_html_e('Reservation', 'easy-appointments'); ?></label>
-                                <input class="field" data-key="reservation_message" name="reservation_message" type="text" value="<%- _.findWhere(settings, {ea_key:'reservation_message'}).ea_value %>">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-item" style="background-color: #ccc; padding: 15px;">
-                        <blockquote style="margin: 0;">
-                                <strong><?php esc_html_e('Display Thank You Note', 'easy-appointments'); ?>:</strong> <?php esc_html_e('Action Buttons', 'easy-appointments'); ?><br><br>
-                                <strong><?php esc_html_e('This screen is displayed immediately after a user successfully books an appointment using the booking form, Its featured Appointment summary and Action buttons', 'easy-appointments'); ?>:</strong><br>
-                                <ul style="margin: 0 0 0 20px; padding: 0;">
-                                    <li><strong><?php esc_html_e('Book New Appointment', 'easy-appointments'); ?>:</strong> <?php esc_html_e('Allows the user to return and book another appointment', 'easy-appointments'); ?>.</li>
-                                    <li><strong><?php esc_html_e('Add to Google Calendar', 'easy-appointments'); ?>:</strong><?php esc_html_e('Its add the appointment directly to their Google Calendar for easy reminders', 'easy-appointments'); ?> .</li>
-                                </ul>
-                        </blockquote>
-                    </div>
-                </div>
-            </div>
+        // Init action
+        add_action('admin_init', array($this, 'init_scripts'));
+        //add_action( 'admin_enqueue_scripts', array( $this, 'init' ) );
 
-            <div id="tab-gdpr" class="form-section hidden">
-                <span class="separator vertical"></span>
-                <div class="form-container">
-                    <div class="form-item">
-                        <div class="label-with-tooltip">
-                            <label for="send.worker.email"><?php esc_html_e('Turn on checkbox', 'easy-appointments'); ?></label>
-                            <span class="tooltip tooltip-right"
-                                  data-tooltip="<?php esc_html_e('GDPR section checkbox.', 'easy-appointments'); ?>"></span>
-                        </div>
-                        <div class="field-wrap">
-                            <input class="field" type="checkbox" name="gdpr.on" data-key="gdpr.on"<%
-                            if (typeof _.findWhere(settings, {ea_key:'gdpr.on'}) !== 'undefined' &&
-                            _.findWhere(settings, {ea_key:'gdpr.on'}).ea_value == '1') { %>checked<%
-                            } %> />
-                        </div>
-                    </div>
-                    <div class="form-item">
-                        <div class="label-with-tooltip">
-                            <label for=""><?php esc_html_e('Label', 'easy-appointments'); ?></label>
-                            <span class="tooltip tooltip-right"
-                                  data-tooltip="<?php esc_html_e('Label next to checkbox.', 'easy-appointments'); ?>"></span>
-                        </div>
-                        <input class="field" data-key="gdpr.label" name="gdpr.label" type="text"
-                               value="<%- _.findWhere(settings, {ea_key:'gdpr.label'}).ea_value %>">
-                    </div>
-                    <div class="form-item">
-                        <div class="label-with-tooltip">
-                            <label for=""><?php esc_html_e('Page with GDPR content', 'easy-appointments'); ?></label>
-                            <span class="tooltip tooltip-right"
-                                  data-tooltip="<?php esc_html_e('Link to page with GDPR content.', 'easy-appointments'); ?>"></span>
-                        </div>
-                        <input class="field" data-key="gdpr.link" name="gdpr.link" type="text"
-                               value="<%- _.findWhere(settings, {ea_key:'gdpr.link'}).ea_value %>">
-                    </div>
-                    <div class="form-item">
-                        <div class="label-with-tooltip">
-                            <label for=""><?php esc_html_e('Error message', 'easy-appointments'); ?></label>
-                            <span class="tooltip tooltip-right"
-                                  data-tooltip="<?php esc_html_e('Message if user don\'t mark the GDPR checkbox.', 'easy-appointments'); ?>"></span>
-                        </div>
-                        <input class="field" data-key="gdpr.message" name="gdpr.message" type="text"
-                               value="<%- _.findWhere(settings, {ea_key:'gdpr.message'}).ea_value %>">
-                    </div>
-                    <div class="form-item">
-                        <div class="label-with-tooltip">
-                            <label for=""><?php esc_html_e('Clear customer data older then 6 months', 'easy-appointments'); ?></label>
-                            <span class="tooltip tooltip-right"
-                                  data-tooltip="<?php esc_html_e('This action will remove custom form field values older then 6 months. After that appointments older then 6 months will not hold any customer related data.', 'easy-appointments'); ?>"></span>
-                        </div>
-                        <div class="field-wrap button">
-                            <input class="field" type="checkbox" name="gdpr.auto_remove" style="margin-right: 10px;" data-key="gdpr.auto_remove"<%
-                            if (typeof _.findWhere(settings, {ea_key:'gdpr.auto_remove'}) !== 'undefined' &&
-                            _.findWhere(settings, {ea_key:'gdpr.auto_remove'}).ea_value == '1') { %>checked<%
-                            } %> /> <?php esc_html_e('Auto remove data via Cron that runs once a day','easy-appointments');?><button class="button button-primary btn-gdpr-delete-data button-field" style="margin-left: 10px"><?php esc_html_e('Remove data now', 'easy-appointments'); ?></button>
-                        </div>
-                    </div>
-                </div>
-            </div>
+    }
 
-            <div id="tab-money" class="form-section hidden">
-                <span class="separator vertical"></span>
-                <div class="form-container">
-                    <div class="form-item">
-                        <label for=""><?php esc_html_e('Currency', 'easy-appointments'); ?></label>
-                        <input class="field" data-key="trans.currency" name="currency" type="text"
-                               value="<%- _.findWhere(settings, {ea_key:'trans.currency'}).ea_value %>">
-                    </div>
-                    <div class="form-item">
-                        <label for="currency.before"><?php esc_html_e('Currency before price', 'easy-appointments'); ?></label>
-                        <div class="field-wrap">
-                            <input class="field" data-key="currency.before" name="currency.before"
-                                   type="checkbox" <% if (_.findWhere(settings,
-                            {ea_key:'currency.before'}).ea_value == "1") { %>checked<% } %>>
-                        </div>
-                    </div>
-                    <div class="form-item">
-                        <label for="currency.before"><?php esc_html_e('Hide decimal in price', 'easy-appointments'); ?></label>
-                        <div class="field-wrap">
-                            <input class="field" data-key="hide.decimal_in_price" name="hide.decimal_in_price"
-                                   type="checkbox" <% if (_.findWhere(settings,
-                            {ea_key:'hide.decimal_in_price'}).ea_value == "1") { %>checked<% } %>>
-                        </div>
-                    </div>
-                    <div class="form-item">
-                        <label for="price.hide.service"><?php esc_html_e('Hide price in service select', 'easy-appointments'); ?></label>
-                        <div class="field-wrap">
-                            <input class="field" data-key="price.hide.service" name="price.hide.service"
-                                   type="checkbox" <% if (_.findWhere(settings,
-                            {ea_key:'price.hide.service'}).ea_value == "1") { %>checked<% } %>>
-                        </div>
-                    </div>
-                    <div class="form-item">
-                        <div class="label-with-tooltip">
-                            <label for="price.hide"><?php esc_html_e('Hide price', 'easy-appointments'); ?></label>
-                            <span class="tooltip tooltip-right"
-                                  data-tooltip="<?php esc_html_e('Hide price in whole customers form.', 'easy-appointments'); ?>"></span>
-                        </div>
-                        <div class="field-wrap">
-                            <input class="field" data-key="price.hide" name="price.hide"
-                                   type="checkbox" <% if (_.findWhere(settings,
-                            {ea_key:'price.hide'}).ea_value == "1") { %>checked<% } %>>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+    public function handle_customers_ajax() {
+        global $wpdb;
+
+        $table = $wpdb->prefix . 'ea_customers';
+        $per_page = 10;
+        $paged = isset($_POST['paged']) ? max(1, intval($_POST['paged'])) : 1;
+        $offset = ($paged - 1) * $per_page;
+
+        $search = isset($_POST['search']) ? sanitize_text_field($_POST['search']) : '';
+        $search_sql = '';
+        $params = [];
+
+        if (!empty($search)) {
+            $search_sql = "WHERE name LIKE %s OR email LIKE %s OR mobile LIKE %s";
+            $like = '%' . $wpdb->esc_like($search) . '%';
+            $params = [$like, $like, $like];
+        }
+
+        $total_sql = "SELECT COUNT(*) FROM $table " . ($search_sql ? $search_sql : '');
+        $total_customers = $wpdb->get_var($wpdb->prepare($total_sql, ...$params));
+
+        $query_sql = "SELECT * FROM $table " . ($search_sql ? $search_sql : '') . " ORDER BY id DESC LIMIT %d OFFSET %d";
+        $customers = $wpdb->get_results($wpdb->prepare($query_sql, ...array_merge($params, [$per_page, $offset])));
+
+        wp_send_json([
+            'data' => $customers,
+            'total_pages' => ceil($total_customers / $per_page),
+            'paged' => $paged,
+        ]);
+    }
+
+    public function handle_update_customer_ajax() {
+        if ( ! current_user_can('manage_options') ) {
+            wp_send_json_error(['message' => 'Unauthorized'], 403);
+        }
+        global $wpdb;
+        check_ajax_referer('ea_customer_edit', 'ea_nonce');
+
+        $table = $wpdb->prefix . 'ea_customers';
+        $id = intval($_POST['id']);
+        $data = [
+            'name' => sanitize_text_field($_POST['name']),
+            'email'=> sanitize_email($_POST['email']),
+            'mobile'=> sanitize_text_field($_POST['mobile']),
+            'address'=> sanitize_text_field($_POST['address']),
+        ];
+        $updated = $wpdb->update($table, $data, ['id' => $id]);
+        if ($updated !== false) {
+            wp_send_json_success();
+        }
+        wp_send_json_error();
+    }
+
+    public function handle_insert_customer_ajax() {
+        if ( ! current_user_can('manage_options') ) {
+            wp_send_json_error(['message' => 'Unauthorized'], 403);
+        }
+        check_ajax_referer('ea_customer_edit', 'ea_nonce');
+
+        $name    = sanitize_text_field($_POST['name'] ?? '');
+        $email   = sanitize_email($_POST['email'] ?? '');
+        $mobile  = sanitize_text_field($_POST['mobile'] ?? '');
+        $address = sanitize_textarea_field($_POST['address'] ?? '');
+
+        global $wpdb;
+        $inserted = $wpdb->insert("{$wpdb->prefix}ea_customers", [
+            'name'    => $name,
+            'email'   => $email,
+            'mobile'  => $mobile,
+            'address' => $address,
+        ]);
+
+        if ($inserted) {
+            wp_send_json_success();
+        } else {
+            wp_send_json_error();
+        }
+    }
+
+
+    /**
+     * Init of admin page
+     */
+    public function init_scripts()
+    {
+        // admin panel script
+        wp_register_script(
+            'ea-compatibility-mode',
+            EA_PLUGIN_URL . 'js/backbone.sync.fix.js',
+            array('backbone'),
+            EASY_APPOINTMENTS_VERSION,
+            true
+        );
+
+        // admin panel script
+        wp_register_script(
+            'time-picker-i18n',
+            EA_PLUGIN_URL . 'js/libs/jquery-ui-timepicker-addon-i18n.js',
+            array('jquery', 'time-picker'),
+            EASY_APPOINTMENTS_VERSION,
+            true
+        );
+
+        // bootstrap script
+        wp_register_script(
+            'ea-momentjs',
+            EA_PLUGIN_URL . 'js/libs/moment.min.js',
+            array(),
+            EASY_APPOINTMENTS_VERSION,
+            true
+        );
+
+        // admin panel script
+        wp_register_script(
+            'time-picker',
+            EA_PLUGIN_URL . 'js/libs/jquery-ui-timepicker-addon.js',
+            array('jquery', 'jquery-ui-datepicker'),
+            EASY_APPOINTMENTS_VERSION,
+            true
+        );
+
+        // admin panel script
+        wp_register_script(
+            'jquery-chosen',
+            EA_PLUGIN_URL . 'js/libs/chosen.jquery.min.js',
+            array('jquery'),
+            EASY_APPOINTMENTS_VERSION,
+            true
+        );
+
+        // vacation panel script
+        wp_register_script(
+            'ea-admin-bundle',
+            EA_PLUGIN_URL . 'js/bundle.js',
+            array('jquery', 'wp-api', 'wp-i18n'),
+            EASY_APPOINTMENTS_VERSION,
+            true
+        );
+
+        // vacation style
+        wp_register_style(
+            'ea-admin-bundle-css',
+            EA_PLUGIN_URL . 'css/theme/main.css',
+            array(),
+            EASY_APPOINTMENTS_VERSION
+        );
+
+        // admin panel script
+        wp_register_script(
+            'ea-settings',
+            EA_PLUGIN_URL . 'js/admin.prod.js',
+            array(
+                'jquery',
+                'ea-momentjs',
+                'jquery-ui-datepicker',
+                'ea-datepicker-localization',
+                'time-picker',
+                'backbone',
+                'underscore',
+                'jquery-ui-sortable',
+                'jquery-chosen',
+                'wp-api',
+                'thickbox'
+            ),
+            EASY_APPOINTMENTS_VERSION,
+            true
+        );
+
+        // appointments panel script
+        wp_register_script(
+            'ea-appointments',
+            EA_PLUGIN_URL . 'js/settings.prod.js',
+            array(
+                'jquery',
+                'ea-momentjs',
+                'jquery-ui-datepicker',
+                'ea-datepicker-localization',
+                'time-picker',
+                'backbone',
+                'wp-api',
+                'underscore'
+            ),
+            EASY_APPOINTMENTS_VERSION,
+            true
+        );
+
+        // report panel script
+        wp_register_script(
+            'ea-report',
+            EA_PLUGIN_URL . 'js/report.prod.js',
+            array('jquery', 'time-picker', 'ea-datepicker-localization', 'backbone', 'underscore', 'wp-api'),
+            EASY_APPOINTMENTS_VERSION,
+            true
+        );
+
+        wp_register_script(
+            'ea-datepicker-localization',
+            EA_PLUGIN_URL . 'js/libs/jquery-ui-i18n.min.js',
+            array('jquery'),
+            EASY_APPOINTMENTS_VERSION,
+            true
+        );
+
+        wp_register_script(
+            'ea-tinymce',
+            EA_PLUGIN_URL . 'js/libs/mce.plugin.code.min.js',
+            array('tinymce_js'),
+            EASY_APPOINTMENTS_VERSION,
+            true
+        );
+
+        // admin style
+        wp_register_style(
+            'ea-admin-css',
+            EA_PLUGIN_URL . 'css/admin.css',
+            array(),
+            EASY_APPOINTMENTS_VERSION
+        );
+
+        // admin style
+        wp_register_style(
+            'jquery-chosen',
+            EA_PLUGIN_URL . 'css/chosen.min.css',
+            array(),
+            EASY_APPOINTMENTS_VERSION
+        );
+
+
+        // report style
+        wp_register_style(
+            'ea-report-css',
+            EA_PLUGIN_URL . 'css/report.css',
+            array(),
+            EASY_APPOINTMENTS_VERSION
+        );
+
+        // admin style
+        wp_register_style(
+            'ea-admin-awesome-css',
+            EA_PLUGIN_URL . 'css/font-awesome.css',
+            array(),
+            EASY_APPOINTMENTS_VERSION
+        );
+
+        // admin style
+        wp_register_style(
+            'time-picker',
+            EA_PLUGIN_URL . 'css/jquery-ui-timepicker-addon.css',
+            array(),
+            EASY_APPOINTMENTS_VERSION
+        );
+
+        wp_register_style(
+            'jquery-style',
+            EA_PLUGIN_URL . 'css/jquery-ui.css',
+            array(),
+            EASY_APPOINTMENTS_VERSION
+        );
+
+        // custom fonts
+        wp_register_style(
+            'ea-admin-fonts-css',
+            EA_PLUGIN_URL . 'css/fonts.css',
+            array(),
+            EASY_APPOINTMENTS_VERSION
+        );
+
+    }
+
+    public function user_capability_callback($default_capability, $menu_slug) {
+        return apply_filters('easy-appointments-user-menu-capabilities', $default_capability, $menu_slug);
+    }
+
+    /**
+     * Adds required JS
+     */
+    public function add_settings_js()
+    {
+        $this->compatibility_mode = $this->options->get_option_value('compatibility.mode', 0);
+
+        if (!empty($this->compatibility_mode)) {
+            wp_enqueue_script('ea-compatibility-mode');
+        }
+
+        // we need tinyMce for WYSIWYG editor
+        wp_enqueue_script('tinymce_js', includes_url( 'js/tinymce/' ) . 'wp-tinymce.php', array( 'jquery' ), false, true );
+        wp_enqueue_script('ea-tinymce');
+        wp_enqueue_style('ea-editor-style', includes_url('/css/editor.min.css'));
+
+//        wp_enqueue_script( 'time-picker-i18n' );
+        wp_enqueue_script('ea-settings');
+
+        wp_enqueue_style('ea-admin-css');
+        wp_enqueue_style('jquery-style');
+        wp_enqueue_style('time-picker');
+        wp_enqueue_style('ea-admin-awesome-css');
+        wp_enqueue_style('thickbox');
+        wp_enqueue_style('jquery-chosen');
+        wp_enqueue_style('ea-admin-fonts-css');
+
+        $object_name = array(
+            'ajax_url'                  => admin_url( 'admin-ajax.php' ),
+            'ea_security_nonce'   => wp_create_nonce('ea_ajax_check_nonce'),
+        );
+        $object_name = apply_filters('ea_localize_filter',$object_name,'ea_obj');
         
-        <br><br>
-        <?php ea_newsletter_form(); ?>
-    </div>
-</script>
+        wp_localize_script('ea-settings', 'ea_obj', $object_name);
+        // style editor
+    }
 
-<script type="text/template" id="ea-tpl-custom-forms">
-    <li data-name="<%- _.escape(item.label) %>" style="display: list-item;">
-        <div class="menu-item-bar">
-            <div class="menu-item-handle">
-                <span class="item-title"><span class="menu-item-title"><%- item.label %></span> <span
-                            class="is-submenu" style="display: none;">sub item</span></span>
-                <span class="item-controls">
-                <span class="item-type"><%- item.type %></span>
-                    <a class="single-field-options"><i class="fa fa-chevron-down"></i></a>
-                </span>
+    /**
+     * Adds required JS
+     */
+    public function add_appointments_js()
+    {
+        $this->compatibility_mode = $this->options->get_option_value('compatibility.mode', 0);
+
+        if (!empty($this->compatibility_mode)) {
+            wp_enqueue_script('ea-compatibility-mode');
+        }
+
+        wp_enqueue_script('ea-appointments');
+        wp_enqueue_style('ea-admin-css');
+        wp_enqueue_style('jquery-style');
+        wp_enqueue_style('time-picker');
+        wp_enqueue_style('ea-admin-awesome-css');
+    }
+    /**
+     * Customer required JS
+     */
+    public function add_customer_js()
+    {
+        $this->compatibility_mode = $this->options->get_option_value('compatibility.mode', 0);
+
+        if (!empty($this->compatibility_mode)) {
+            wp_enqueue_script('ea-compatibility-mode');
+        }
+
+        wp_enqueue_script('ea-appointments');
+        wp_enqueue_style('ea-admin-css');
+        wp_enqueue_style('jquery-style');
+        wp_enqueue_style('time-picker');
+        wp_enqueue_style('ea-admin-awesome-css');
+    }
+
+    /**
+     * JS for report admin page
+     */
+    public function add_report_js()
+    {
+        if (!empty($this->compatibility_mode)) {
+            wp_enqueue_script('ea-compatibility-mode');
+        }
+
+        wp_enqueue_script('ea-report');
+        wp_enqueue_script('jquery-ui-datepicker');
+        wp_enqueue_style('ea-admin-awesome-css');
+        wp_enqueue_style('ea-report-css');
+        wp_enqueue_style('jquery-style');
+        wp_enqueue_style('ea-admin-fonts-css');
+    }
+
+    /**
+     * create menu structure
+     */
+    public function add_menu_pages()
+    {
+        // top_level_menu
+        add_menu_page(
+            'Appointments',
+            'Appointments',
+            'edit_posts',
+            'easy_app_top_level',
+            null,
+            'dashicons-calendar-alt',
+            '10.842015'
+        );
+
+        // Rename first
+        $page_app_suffix = add_submenu_page(
+            'easy_app_top_level',
+            __('Appointments', 'easy-appointments'),
+            __('Appointments', 'easy-appointments'),
+            $this->user_capability_callback('edit_posts', 'easy_app_top_level'),
+            'easy_app_top_level',
+            array($this, 'top_level_appointments')
+        );
+
+        // locations page
+        $page_location_suffix = add_submenu_page(
+            'easy_app_top_level',
+            __('Locations', 'easy-appointments'),
+            '1. ' . __('Locations', 'easy-appointments'),
+            $this->user_capability_callback('manage_options', 'easy_app_locations'),
+            'easy_app_locations',
+            array($this, 'locations_page')
+        );
+
+        // services
+        $page_services_suffix = add_submenu_page(
+            'easy_app_top_level',
+            __('Services', 'easy-appointments'),
+            '2. ' . __('Services', 'easy-appointments'),
+            $this->user_capability_callback('manage_options', 'easy_app_services'),
+            'easy_app_services',
+            array($this, 'services_page')
+        );
+
+        // Workers
+        $page_worker_suffix = add_submenu_page(
+            'easy_app_top_level',
+            __('Employees', 'easy-appointments'),
+            '3. ' . __('Employees', 'easy-appointments'),
+            $this->user_capability_callback('manage_options', 'easy_app_workers'),
+            'easy_app_workers',
+            array($this, 'workers_page')
+        );
+
+        // connections
+        $page_connections_suffix = add_submenu_page(
+            'easy_app_top_level',
+            __('Connections', 'easy-appointments'),
+            '4. ' . __('Connections', 'easy-appointments'),
+            $this->user_capability_callback('manage_options', 'easy_app_connections'),
+            'easy_app_connections',
+            array($this, 'connections_page')
+        );
+
+        // Publish
+        $page_connections_suffix = add_submenu_page(
+            'easy_app_top_level',
+            __('Publish', 'easy-appointments'),
+            '5. ' . __('Publish', 'easy-appointments'),
+            $this->user_capability_callback('manage_options', 'easy_app_publish'),
+            'easy_app_publish',
+            array($this, 'publish_page')
+        );
+        
+        // customer
+        $page_customer_suffix = add_submenu_page(
+            'easy_app_top_level',
+            __('Customers', 'easy-appointments'),
+            __('Customers', 'easy-appointments'),
+            'manage_options', // Ensure admin access
+            'easy_app_customer',
+            array($this, 'customer_page')
+        );
+        
+
+        // settings
+        $page_settings_suffix = add_submenu_page(
+            'easy_app_top_level',
+            __('Settings', 'easy-appointments'),
+            __('Settings', 'easy-appointments'),
+            $this->user_capability_callback('manage_options', 'easy_app_settings'),
+            'easy_app_settings',
+            array($this, 'top_settings_menu')
+        );
+
+        // vacation page
+        $page_vacation_suffix = add_submenu_page(
+            'easy_app_top_level',
+            __('Tools', 'easy-appointments'),
+            __('Tools', 'easy-appointments'),
+            $this->user_capability_callback('manage_options', 'easy_app_tools'),
+            'easy_app_tools',
+            array($this, 'tools_page')
+        );
+
+        // vacation page
+        $page_vacation_suffix = add_submenu_page(
+            'easy_app_top_level',
+            __('Vacation', 'easy-appointments'),
+            __('Vacation', 'easy-appointments'),
+            $this->user_capability_callback('manage_options', 'easy_app_vacation'),
+            'easy_app_vacation',
+            array($this, 'vacation_page')
+        );
+
+        // Overview - report
+        $page_report_suffix = add_submenu_page(
+            'easy_app_top_level',
+            __('Reports *OLD*', 'easy-appointments'),
+            __('Reports *OLD*', 'easy-appointments'),
+            $this->user_capability_callback('manage_options', 'easy_app_reports'),
+            'easy_app_reports',
+            array($this, 'reports_page')
+        );
+
+        // Overview - report
+        $page_new_report_suffix = add_submenu_page(
+            'easy_app_top_level',
+            __('Reports *NEW*', 'easy-appointments'),
+            __('Reports *NEW*', 'easy-appointments'),
+            $this->user_capability_callback('manage_options', 'easy_app_new_reports'),
+            'easy_app_new_reports',
+            array($this, 'new_reports_page')
+        );
+
+        // Overview - report
+        $page_new_report_suffix = add_submenu_page(
+            'easy_app_top_level',
+            __('Help & Support', 'easy-appointments'),
+            __('Help & Support', 'easy-appointments'),
+            $this->user_capability_callback('manage_options', 'easy_app_help_suppport'),
+            'easy_app_help_suppport',
+            array($this, 'easy_app_help_support')
+        );
+         // Premium Extension
+        if (! is_plugin_active( 'easy-appointments-connect/main.php' ) ) {
+            $page_vacation_suffix = add_submenu_page(
+                'easy_app_top_level',
+                __('Premium Extensions', 'easy-appointments'),
+                '<span id="ea-premium-extension-link">'.__('Premium Extensions', 'easy-appointments').'</span>',
+                $this->user_capability_callback('manage_options', 'easy_app_vacation'),
+                'https://easy-appointments.com#buyextension'
+            );
+        }
+
+        add_action('load-' . $page_settings_suffix, array($this, 'add_settings_js'));
+        add_action('load-' . $page_app_suffix, array($this, 'add_appointments_js'));
+        add_action('load-' . $page_report_suffix, array($this, 'add_report_js'));
+        add_action('load-' . $page_customer_suffix, array($this, 'add_customer_js'));
+    }
+
+    public function easy_app_help_support()
+    {
+        // check if APS tags are on
+        if ($this->is_asp_tags_are_on()) {
+            require_once EA_SRC_DIR . 'templates/asp_tag_message.tpl.php';
+            return;
+        }
+
+        wp_enqueue_style('ea-admin-bundle-css');
+        wp_enqueue_script('ea-admin-bundle');
+
+        $settings = $this->options->get_options();
+        $settings['rest_url'] = get_rest_url();
+        $settings['rest_url_fullcalendar'] = EAApiFullCalendar::get_url();
+        $settings['export_tags_list'] = $this->models->get_all_tags_for_template();
+        $settings['saved_tags_list'] = get_option('ea_excel_columns', '');
+
+        $wpurl = get_bloginfo('wpurl');
+        $url   = get_bloginfo('url');
+
+        // $settings['image_base'] = $wpurl === $url ? '' : $wpurl;
+        $settings['image_base'] = str_replace("/wp-content", "", content_url());
+        wp_localize_script('ea-admin-bundle', 'ea_settings', $settings);
+
+        if (function_exists('wp_set_script_translations')) {
+            wp_set_script_translations('ea-admin-bundle', 'easy-appointments');
+        }
+
+        require_once EA_SRC_DIR . 'templates/help-and-support.tpl.php';
+        require_once EA_SRC_DIR . 'templates/inlinedata.tpl.php';
+    }
+
+    /**
+     * Content of appointments admin page
+     */
+    public function top_level_appointments()
+    {
+
+        // check if APS tags are on
+        if ($this->is_asp_tags_are_on()) {
+            require_once EA_SRC_DIR . 'templates/asp_tag_message.tpl.php';
+            return;
+        }
+
+        $settings = $this->options->get_options();
+        $data_vacation = $this->options->get_option_value('vacations', '[]');
+
+        $settings['date_format'] = $this->datetime->convert_to_moment_format(get_option('date_format', 'F j, Y'));
+
+        
+
+        wp_localize_script('ea-appointments', 'ea_settings', $settings);
+        wp_localize_script('ea-appointments', 'ea_vacations', json_decode($data_vacation));
+        wp_localize_script('ea-appointments', 'ea_app_status', $this->logic->getStatus());
+        wp_localize_script('ea-appointments', 'ea_connections', $this->models->get_connections_combinations());
+
+        $screen = get_current_screen();
+        $screen->add_help_tab(array(
+            'id'    => 'easyapp_settings_help'
+        , 'title'   => 'Appointments manager'
+        , 'content' => '<p>Use filter for date to reduce output results for appointments. You can filter by <b>location</b>, <b>service</b>, <b>worker</b>, <b>status</b> and <b>date</b>.</p>'
+        ));
+
+        $screen->set_help_sidebar('<a href="https://easy-appointments.com/documentation/">More info!</a>');
+
+        require_once EA_SRC_DIR . 'templates/appointments.tpl.php';
+        require_once EA_SRC_DIR . 'templates/inlinedata.sorted.tpl.php';
+    }
+
+    /**
+     * Content of top menu page
+     */
+    public function reports_page()
+    {
+        // check if APS tags are on
+        if ($this->is_asp_tags_are_on()) {
+            require_once EA_SRC_DIR . 'templates/asp_tag_message.tpl.php';
+            return;
+        }
+
+        $settings = $this->options->get_options();
+        wp_localize_script('ea-report', 'ea_settings', $settings);
+
+        $screen = get_current_screen();
+        $screen->add_help_tab(array(
+            'id'    => 'easyapp_settings_help'
+        , 'title'   => 'Time table'
+        , 'content' => '<p>Time table report shows free slots for every location - service - worker connection on whole month</p>' .
+                '<p>There can you see free times an how many slots are taken.</p>'
+        ));
+
+        $screen->set_help_sidebar('<a href="https://easy-appointments.com/documentation/">More info!</a>');
+
+        require_once EA_SRC_DIR . 'templates/report.tpl.php';
+        require_once EA_SRC_DIR . 'templates/inlinedata.tpl.php';
+    }
+
+    /**
+     * Content of top menu page
+     */
+    public function top_settings_menu()
+    {
+        // check if APS tags are on
+        if ($this->is_asp_tags_are_on()) {
+            require_once EA_SRC_DIR . 'templates/asp_tag_message.tpl.php';
+            return;
+        }
+
+        $settings = $this->options->get_options();
+        $settings['rest_url'] = get_rest_url();
+        wp_localize_script('ea-settings', 'ea_settings', $settings);
+
+        $screen = get_current_screen();
+        $screen->add_help_tab(array(
+            'id'    => 'easyapp_settings_help'
+        , 'title'   => 'Settings'
+        , 'content' => '<p>You need to define at least one location, worker and service! Without that widget won\'t work.</p>'
+        ));
+
+        $screen->set_help_sidebar('<a href="https://easy-appointments.com/documentation/">More info!</a>');
+
+        require_once EA_SRC_DIR . 'templates/admin.tpl.php';
+        require_once EA_SRC_DIR . 'templates/inlinedata.tpl.php';
+    }
+
+    /**
+     * Content of top menu page
+     */
+    public function vacation_page()
+    {
+        // check if APS tags are on
+        if ($this->is_asp_tags_are_on()) {
+            require_once EA_SRC_DIR . 'templates/asp_tag_message.tpl.php';
+            return;
+        }
+
+        load_plugin_textdomain('easy-appointments', false, EA_PLUGIN_DIR  . 'languages/');
+
+        wp_enqueue_style('ea-admin-bundle-css');
+        wp_enqueue_script('ea-admin-bundle');
+
+        $settings = $this->options->get_options();
+        $settings['rest_url'] = get_rest_url();
+        $settings['rest_url_vacation'] = EAVacationActions::get_url();
+
+        $wpurl = get_bloginfo('wpurl');
+        $url   = get_bloginfo('url');
+
+//        $settings['image_base'] = $wpurl === $url ? '' : $wpurl;
+        $settings['image_base'] = str_replace("/wp-content", "", content_url());
+        wp_localize_script('ea-admin-bundle', 'ea_settings', $settings);
+
+        if (function_exists('wp_set_script_translations')) {
+            wp_set_script_translations('ea-admin-bundle', 'easy-appointments', EA_PLUGIN_DIR  . 'languages');
+        }
+
+        $screen = get_current_screen();
+        $screen->add_help_tab(array(
+            'id'    => 'easyapp_settings_help'
+        , 'title'   => 'Settings'
+        , 'content' => '<p>You need to define at least one location, worker and service! Without that widget won\'t work.</p>'
+        ));
+
+        $screen->set_help_sidebar('<a href="https://easy-appointments.com/documentation/">More info!</a>');
+
+        require_once EA_SRC_DIR . 'templates/vacation.tpl.php';
+        require_once EA_SRC_DIR . 'templates/inlinedata.tpl.php';
+    }
+
+    /**
+     * Content of top menu page
+     */
+    public function locations_page()
+    {
+        // check if APS tags are on
+        if ($this->is_asp_tags_are_on()) {
+            require_once EA_SRC_DIR . 'templates/asp_tag_message.tpl.php';
+            return;
+        }
+
+        load_plugin_textdomain('easy-appointments', false, EA_PLUGIN_DIR  . 'languages/');
+
+        wp_enqueue_style('ea-admin-bundle-css');
+        wp_enqueue_script('ea-admin-bundle');
+
+        $settings = $this->options->get_options();
+        $settings['rest_url'] = get_rest_url();
+
+        $wpurl = get_bloginfo('wpurl');
+        $url   = get_bloginfo('url');
+
+//        $settings['image_base'] = $wpurl === $url ? '' : $wpurl;
+        $settings['image_base'] = str_replace("/wp-content", "", content_url());
+        wp_localize_script('ea-admin-bundle', 'ea_settings', $settings);
+
+        if (function_exists('wp_set_script_translations')) {
+            wp_set_script_translations('ea-admin-bundle', 'easy-appointments', EA_PLUGIN_DIR  . 'languages');
+        }
+
+        require_once EA_SRC_DIR . 'templates/locations.tpl.php';
+        require_once EA_SRC_DIR . 'templates/inlinedata.tpl.php';
+    }
+
+    /**
+     * Content of top menu page
+     */
+    public function workers_page()
+    {
+        // check if APS tags are on
+        if ($this->is_asp_tags_are_on()) {
+            require_once EA_SRC_DIR . 'templates/asp_tag_message.tpl.php';
+            return;
+        }
+
+        load_plugin_textdomain('easy-appointments', false, EA_PLUGIN_DIR  . 'languages/');
+
+        wp_enqueue_style('ea-admin-bundle-css');
+        wp_enqueue_script('ea-admin-bundle');
+
+        $settings = $this->options->get_options();
+        $settings['rest_url'] = get_rest_url();
+
+        $wpurl = get_bloginfo('wpurl');
+        $url   = get_bloginfo('url');
+
+//        $settings['image_base'] = $wpurl === $url ? '' : $wpurl;
+        $settings['image_base'] = str_replace("/wp-content", "", content_url());
+        wp_localize_script('ea-admin-bundle', 'ea_settings', $settings);
+
+        if (function_exists('wp_set_script_translations')) {
+            wp_set_script_translations('ea-admin-bundle', 'easy-appointments', EA_PLUGIN_DIR  . 'languages');
+        }
+
+        require_once EA_SRC_DIR . 'templates/workers.tpl.php';
+        require_once EA_SRC_DIR . 'templates/inlinedata.tpl.php';
+    }
+
+    /**
+     * Content of top menu page
+     */
+    public function services_page()
+    {
+        // check if APS tags are on
+        if ($this->is_asp_tags_are_on()) {
+            require_once EA_SRC_DIR . 'templates/asp_tag_message.tpl.php';
+            return;
+        }
+
+        load_plugin_textdomain('easy-appointments', false, EA_PLUGIN_DIR  . 'languages/');
+
+        wp_enqueue_style('ea-admin-bundle-css');
+        wp_enqueue_script('ea-admin-bundle');
+
+        $settings = $this->options->get_options();
+        $settings['rest_url'] = get_rest_url();
+
+        $wpurl = get_bloginfo('wpurl');
+        $url   = get_bloginfo('url');
+
+//        $settings['image_base'] = $wpurl === $url ? '' : $wpurl;
+        $settings['image_base'] = str_replace("/wp-content", "", content_url());
+        wp_localize_script('ea-admin-bundle', 'ea_settings', $settings);
+
+        if (function_exists('wp_set_script_translations')) {
+            wp_set_script_translations('ea-admin-bundle', 'easy-appointments', EA_PLUGIN_DIR  . 'languages');
+        }
+
+        require_once EA_SRC_DIR . 'templates/services.tpl.php';
+        require_once EA_SRC_DIR . 'templates/inlinedata.tpl.php';
+    }
+
+    /**
+     * Publish page
+     */
+    public function publish_page()
+    {
+        // check if APS tags are on
+        if ($this->is_asp_tags_are_on()) {
+            require_once EA_SRC_DIR . 'templates/asp_tag_message.tpl.php';
+            return;
+        }
+
+        load_plugin_textdomain('easy-appointments', false, EA_PLUGIN_DIR  . 'languages/');
+
+        wp_enqueue_style('ea-admin-bundle-css');
+        wp_enqueue_script('ea-admin-bundle');
+
+        $settings = $this->options->get_options();
+        $settings['rest_url'] = get_rest_url();
+        $settings['rest_url_clear_log'] = EALogActions::clear_error_url();
+       
+        $settings['image_base'] = str_replace("/wp-content", "", content_url());
+        wp_localize_script('ea-admin-bundle', 'ea_settings', $settings);
+
+        if (function_exists('wp_set_script_translations')) {
+            wp_set_script_translations('ea-admin-bundle', 'easy-appointments', EA_PLUGIN_DIR  . 'languages');
+        }
+
+        require_once EA_SRC_DIR . 'templates/publish.tpl.php';
+        require_once EA_SRC_DIR . 'templates/inlinedata.tpl.php';
+    }
+
+    /**
+     * Content of top menu page
+     */
+    public function connections_page()
+    {
+        // check if APS tags are on
+        if ($this->is_asp_tags_are_on()) {
+            require_once EA_SRC_DIR . 'templates/asp_tag_message.tpl.php';
+            return;
+        }
+
+        load_plugin_textdomain('easy-appointments', false, EA_PLUGIN_DIR  . 'languages/');
+
+        wp_enqueue_style('ea-admin-bundle-css');
+        wp_enqueue_script('ea-admin-bundle');
+
+        $settings = $this->options->get_options();
+        $settings['rest_url'] = get_rest_url();
+        $settings['time_format'] = $this->datetime->convert_to_moment_format(get_option('time_format', 'H:i'));
+        $settings['date_format'] = $this->datetime->convert_to_moment_format(get_option('date_format', 'F j, Y'));
+
+        $wpurl = get_bloginfo('wpurl');
+        $url   = get_bloginfo('url');
+
+//        $settings['image_base'] = $wpurl === $url ? '' : $wpurl;
+        $settings['image_base'] = str_replace("/wp-content", "", content_url());
+        $settings['rest_url_extend_connections'] = EALogActions::extend_connection_url();
+
+        wp_localize_script('ea-admin-bundle', 'ea_settings', $settings);
+
+        if (function_exists('wp_set_script_translations')) {
+            wp_set_script_translations('ea-admin-bundle', 'easy-appointments', EA_PLUGIN_DIR  . 'languages');
+        }
+
+        require_once EA_SRC_DIR . 'templates/connections.tpl.php';
+        require_once EA_SRC_DIR . 'templates/inlinedata.tpl.php';
+    }
+    
+    /**
+     * Content of customer
+     */
+    public function customer_page() {
+        global $wpdb;
+
+        // ASP tag check
+        if ($this->is_asp_tags_are_on()) {
+            require_once EA_SRC_DIR . 'templates/asp_tag_message.tpl.php';
+            return;
+        }
+
+        // Table name
+        $table = $wpdb->prefix . 'ea_customers';
+
+        // Pagination
+        $per_page = 10;
+        $paged = isset($_GET['paged']) ? max(1, intval($_GET['paged'])) : 1;
+        $offset = ($paged - 1) * $per_page;
+
+        // Search
+        $search = isset($_GET['s']) ? sanitize_text_field($_GET['s']) : '';
+        $search_sql = '';
+        $search_params = [];
+
+        if (!empty($search)) {
+            $search_sql = "WHERE name LIKE %s OR email LIKE %s OR mobile LIKE %s";
+            $like = '%' . $wpdb->esc_like($search) . '%';
+            $search_params = [$like, $like, $like];
+        }
+
+        // Total count
+        $total_sql = "SELECT COUNT(*) FROM $table " . ($search_sql ? $search_sql : '');
+        if (!empty($search_sql)) {
+            $total_customers = $wpdb->get_var($wpdb->prepare($total_sql, ...$search_params));
+        } else {
+            $total_customers = $wpdb->get_var($total_sql);
+        }
+
+        // Fetch paginated data
+        $query_sql = "SELECT * FROM $table " . ($search_sql ? $search_sql : '') . " ORDER BY id DESC LIMIT %d OFFSET %d";
+        if (!empty($search_sql)) {
+            $customers = $wpdb->get_results($wpdb->prepare($query_sql, ...array_merge($search_params, [$per_page, $offset])));
+        } else {
+            $customers = $wpdb->get_results($wpdb->prepare($query_sql, $per_page, $offset));
+        }
+
+        // Calculate total pages
+        $total_pages = ceil($total_customers / $per_page);
+
+        // Make available to template
+        $this->customers = $customers;
+        $this->search = $search;
+        $this->paged = $paged;
+        $this->total_pages = $total_pages;
+
+        // Enqueue styles/scripts
+        load_plugin_textdomain('easy-appointments', false, EA_PLUGIN_DIR  . 'languages/');
+        wp_enqueue_style('ea-admin-bundle-css');
+        wp_enqueue_script('ea-admin-bundle');
+
+        $settings = $this->options->get_options();
+        $settings['rest_url'] = get_rest_url();
+        $settings['time_format'] = $this->datetime->convert_to_moment_format(get_option('time_format', 'H:i'));
+        $settings['date_format'] = $this->datetime->convert_to_moment_format(get_option('date_format', 'F j, Y'));
+
+        $wpurl = get_bloginfo('wpurl');
+        $url   = get_bloginfo('url');
+        $settings['image_base'] = str_replace("/wp-content", "", content_url());
+        $settings['rest_url_extend_connections'] = EALogActions::extend_connection_url();
+
+        wp_localize_script('ea-admin-bundle', 'ea_settings', $settings);
+
+        if (function_exists('wp_set_script_translations')) {
+            wp_set_script_translations('ea-admin-bundle', 'easy-appointments', EA_PLUGIN_DIR  . 'languages');
+        }
+
+        // Load template
+        require_once EA_SRC_DIR . 'templates/customers.tpl.php';
+        require_once EA_SRC_DIR . 'templates/inlinedata.tpl.php';
+    }
+
+
+
+
+    /**
+     * Tools page
+     */
+    public function tools_page()
+    {
+        // check if APS tags are on
+        if ($this->is_asp_tags_are_on()) {
+            require_once EA_SRC_DIR . 'templates/asp_tag_message.tpl.php';
+            return;
+        }
+
+        load_plugin_textdomain('easy-appointments', false, EA_PLUGIN_DIR  . 'languages/');
+
+        wp_enqueue_style('ea-admin-bundle-css');
+        wp_enqueue_script('ea-admin-bundle');
+
+        $settings = $this->options->get_options();
+        $settings['rest_url'] = get_rest_url();
+        $settings['rest_url_clear_log'] = EALogActions::clear_error_url();
+
+        $wpurl = get_bloginfo('wpurl');
+        $url   = get_bloginfo('url');
+
+//        $settings['image_base'] = $wpurl === $url ? '' : $wpurl;
+        $settings['image_base'] = str_replace("/wp-content", "", content_url());
+        wp_localize_script('ea-admin-bundle', 'ea_settings', $settings);
+
+        if (function_exists('wp_set_script_translations')) {
+            wp_set_script_translations('ea-admin-bundle', 'easy-appointments', EA_PLUGIN_DIR  . 'languages');
+        }
+
+        require_once EA_SRC_DIR . 'templates/tools.tpl.php';
+        require_once EA_SRC_DIR . 'templates/inlinedata.tpl.php';
+    }
+
+    /**
+     * Tools page
+     */
+    public function new_reports_page()
+    {
+        // check if APS tags are on
+        if ($this->is_asp_tags_are_on()) {
+            require_once EA_SRC_DIR . 'templates/asp_tag_message.tpl.php';
+            return;
+        }
+
+        wp_enqueue_style('ea-admin-bundle-css');
+        wp_enqueue_script('ea-admin-bundle');
+
+        $settings = $this->options->get_options();
+        $settings['rest_url'] = get_rest_url();
+        $settings['rest_url_fullcalendar'] = EAApiFullCalendar::get_url();
+        $settings['export_tags_list'] = $this->models->get_all_tags_for_template();
+        $settings['saved_tags_list'] = get_option('ea_excel_columns', '');
+
+        $wpurl = get_bloginfo('wpurl');
+        $url   = get_bloginfo('url');
+
+//        $settings['image_base'] = $wpurl === $url ? '' : $wpurl;
+        $settings['image_base'] = str_replace("/wp-content", "", content_url());
+        wp_localize_script('ea-admin-bundle', 'ea_settings', $settings);
+
+        if (function_exists('wp_set_script_translations')) {
+            wp_set_script_translations('ea-admin-bundle', 'easy-appointments');
+        }
+
+        require_once EA_SRC_DIR . 'templates/reports.tpl.php';
+        require_once EA_SRC_DIR . 'templates/inlinedata.tpl.php';
+    }
+
+    /**
+     * We need to check if asp tags are turned on
+     */
+    public function is_asp_tags_are_on()
+    {
+        $aps_tags = ini_get('asp_tags');
+
+        if (!empty($aps_tags)) {
+            if (ini_set('asp_tags', '0') === false) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    
+
+
+}
+
+function ea_newsletter_form(){
+	
+        $hide_form = get_option('ea_hide_newsletter');
+
+        // Newsletter marker. Set this to false once newsletter subscription is displayed.
+            $ea_newsletter = true;
+
+        if ( $ea_newsletter === true && $hide_form !== 'yes') { ?>
+        <div class="ea-newsletter-wrapper">
+            <div class="plugin-card plugin-card-ea-newsletter" style="margin :10px; background: #2271b1  url('<?php echo esc_url( plugin_dir_url( __DIR__ ) . 'img/email.png'); ?>') no-repeat right top;">
+                            
+                        <div class="plugin-card-top" style="min-height: 135px; color: white;">
+                            <span class="dashicons dashicons-dismiss ea_newsletter_hide" style="float: right;cursor: pointer;"></span>
+                            <span style="clear:both;"></span>
+                            <div class="name column-name" style="margin: 0px 10px;">
+                                <h3 style="color:white;"><?php esc_html_e( 'Easy Appointments Newsletter', 'easy-appointments' ); ?></h3>
+                            </div>
+                            <div class="desc column-description" style="margin: 0px 10px; color:white;">
+                                <p style="margin-left:0px;"><?php esc_html_e( 'Learn more about easy appointments and get latest updates about plugin', 'easy-appointments' ); ?></p>
+                            </div>
+                            
+                            <div class="ea-newsletter-form" style="margin: 18px 10px 0px;">
+                            
+                                <form method="post" action="https://ea.com/newsletter/" target="_blank" id="ea_newsletter">
+                                    <fieldset>
+                                        <input name="newsletter-email" value="<?php $user = wp_get_current_user(); echo esc_attr( $user->user_email ); ?>" placeholder="<?php esc_html_e( 'Enter your email', 'easy-appointments' ); ?>" style="width: 60%; margin-left: 0px;" type="email">		
+                                        <input name="source" value="ea-plugin" type="hidden">
+                                        <input type="submit" class="button" value="<?php esc_html_e( 'Subscribe', 'easy-appointments' ); ?>" style="background: linear-gradient(to right, #c6ccd1, #bdd0d3) !important !important; box-shadow: unset;">
+                                        <span class="ea_newsletter_hide" style="box-shadow: unset;cursor: pointer;margin-left: 10px; color:white;">
+                                        <?php esc_html_e( 'No thanks', 'easy-appointments' ); ?>
+                                        </span>
+                                        <small style="display:block; margin-top:8px; color:white;"><?php esc_html_e( 'we\'ll share our <code>root</code> password before we share your email with anyone else.', 'easy-appointments' ); ?></small>
+                                        
+                                    </fieldset>
+                                </form>
+                                
+                            </div>
+                            
+                        </div>
+                                    
+                    </div>
             </div>
-        </div>
-    </li>
-</script>
+        <?php }
+                // Set newsletter marker to false
+                $ea_newsletter = false;
+    }
 
-<script type="text/template" id="ea-tpl-custom-form-options">
-<div class="field-settings">
-    <% if (item.slug && item.slug.length > 0) { %>
-    <p><label>Slug :</label>
-        <input type="text" class="field-slug" name="field-slug"
-               value="<%- item.slug %>">
-    </p>
-    <% } %>
-    <p>
-        <label>Label</label><input type="text" class="field-label" name="field-label" value="<%- item.label %>">
-    </p>
+    function ea_newsletter_submit(){
+	
+        if (isset( $_REQUEST['ea_security_nonce'] ) && current_user_can('manage_options') && (wp_verify_nonce( sanitize_text_field( wp_unslash( $_REQUEST['ea_security_nonce'] ) ), 'ea_ajax_check_nonce' ) )){
+        global $current_user;
+        $api_url = 'http://magazine3.company/wp-json/api/central/email/subscribe';
+        $email = "";
+        if ( isset($_POST['email']) ) {
+            $email = sanitize_email( wp_unslash( $_POST['email'] ) );
+        }
+        $api_params = array(
+            'name' => sanitize_text_field($current_user->display_name),
+            'email'=> $email,
+            'website'=> sanitize_url( get_site_url() ),
+            'type'=> 'easyappointments'
+        );
+        $response = wp_remote_post( $api_url, array( 'timeout' => 15, 'sslverify' => false, 'body' => $api_params ) );
+        if ( !is_wp_error( $response ) ) {
+            $response = wp_remote_retrieve_body( $response );
+            echo wp_json_encode(array('status'=>200, 'message'=>esc_html__('Submitted ','easy-appointments'), 'response'=> $response));
+        }else{
+            echo wp_json_encode(array('status'=>500, 'message'=>esc_html__('No response from API','easy-appointments')));	
+        }
+    }
+    else{
+        echo wp_json_encode(array('status'=>403, 'message'=>esc_html__('Unauthorized Request','easy-appointments')));
+    }
+        die;
+    }
+    add_action( 'wp_ajax_ea_newsletter_submit', 'ea_newsletter_submit' );
 
-    <% if (item.type !== "PHONE" && item.type !== "SELECT" && item.type !== "MASKED") { %>
-    <p>
-        <label>Placeholder</label><input type="text" class="field-mixed" name="field-mixed" value="<%- item.mixed %>">
-    </p>
-    <% } %>
-
-    <% if (item.type !== "PHONE" && item.type !== "SELECT" && item.type !== "MASKED") { %>
-    <p>
-        <label>Default value</label><input type="text" class="field-default_value" name="field-default_value" value="<%- item.default_value %>">
-        <small>You can put values from logged in user (list of keys: <?php echo EAUserFieldMapper::all_field_keys(); ?>)</small>
-    </p>
-    <% } %>
-
-    <% if (item.type === "PHONE") { %>
-    <p>
-        <label>Default value</label><select class="field-default_value" name="field-default_value"><?php require __DIR__ . '/phone.list.tpl.php';?></select>
-    </p>
-    <% } %>
-
-    <% if (item.type === "MASKED") { %>
-    <p>
-        <label>Mask</label><input type="text" class="field-default_value" name="field-default_value" value="<%- item.default_value %>">
-        <p><?php esc_html_e('Mask options', 'easy-appointments');?> : </p>
-        <code>9 : numeric</code> , <code>a : alphabetical</code> , <code>* : alphanumeric</code>
-        <p><?php esc_html_e('Example', 'easy-appointments');?> : </p>
-        <code>(99) 9999[9]-9999</code> , <code>999-999-9999</code> , <code>aa-9{1,4}</code>
-    </p>
-    <% } %>
-
-    <% if (item.type === "SELECT") { %>
-    <p>
-        <label>Options :</label>
-    </p>
-    <p>
-    <ul class="select-options">
-        <% _.each(item.options, function(element) { %>
-        <li data-element="<%- element %>"><%- element %><a href="#" class="remove-select-option"><i
-                        class="fa fa-trash-o"></i></a></li>
-        <% }); %>
-    </ul>
-    </p>
-    <p><input type="text"><a href="#" class="add-select-option">&nbsp;&nbsp;<i class="fa fa-plus"></i> Add option</a>
-    </p>
-    <% } %>
-    <p>
-        <label>Required :</label><input type="checkbox" class="required" name="required" <% if (item.required == "1") {
-        %>checked<% } %>>
-    </p>
-    <p>
-        <label>Visible: </label>
-        <select class="visible" name="visible">
-            <option value="0"
-            <% if (item.visible === "0") {
-            %>selected="selected"<% } %>>No</option>
-            <option value="1"
-            <% if (item.visible === "1") {
-            %>selected="selected"<% } %>>Yes</option>
-            <option value="2"
-            <% if (item.visible === "2") {
-            %>selected="selected"<% } %>>No, but rendered as hidden field</option>
-        </select>
-    </p>
-    <p><a href="#" class="deletion item-delete" data-id="<%=item.id%>">Delete</a> | <a href="#" class="item-save">Apply</a></p>
-</div>
-</script>
-
-<script type="text/template" id="ea-tpl-advance-redirect">
-    <div style="min-height: 380px; max-height: 380px;">
-
-    </div>
-    <div class="bulk-footer">
-        <button id="close-advance-redirect" class="button-primary" disabled>Close</button>
-    </div>
-</script>
-
-<script type="text/template" id="ea-tpl-single-advance-redirect">
-    <li>
-        <span class="bulk-value"><%- _.findWhere(locations, {id:row.location})?.name %></span>
-        <span class="bulk-value"><%- _.findWhere(services,  {id:row.service})?.name %></span>
-        <span class="bulk-value"><%- _.findWhere(workers,   {id:row.worker})?.name s%></span>
-        <span style="display: inline-block;"><button class="button bulk-connection-remove">Remove</button></span>
-    </li>
-</script>
-<script>
-    jQuery(document).ready(function($) {
-        $(document).on('submit','#ea_newsletter',function(e){
-            e.preventDefault();
-            var form = jQuery(this);
-            var email = form.find('input[name="newsletter-email"]').val();
-            jQuery.post(ea_obj.ajax_url, {action:'ea_newsletter_submit',email:email,ea_security_nonce:ea_obj.ea_security_nonce},
-            function (data) {
-                if (data.status == 200) {
-                    alert(data.message); // 👉 show success message
-                } else {
-                    alert("Something went wrong");
+    function ea_newsletter_hide_form(){   
+        if (isset( $_REQUEST['ea_security_nonce'] ) && current_user_can( 'manage_options') && (wp_verify_nonce( sanitize_text_field( wp_unslash($_REQUEST['ea_security_nonce'] ) ), 'ea_ajax_check_nonce' ) )){
+                $hide_newsletter  = get_option('ea_hide_newsletter');
+                if($hide_newsletter == false){
+                    add_option( 'ea_hide_newsletter', 'no');
                 }
-            },
-            "json"
-            );
-            return true;
-        });
-        $(document).on('click','.ea_newsletter_hide',function(e){
-            e.preventDefault();
-            jQuery('.ea-newsletter-wrapper').css("display", "none");
-            var form = jQuery(this);
-            jQuery.post(ajaxurl, {action:'ea_newsletter_hide_form',ea_security_nonce:ea_obj.ea_security_nonce},
-            function(data) {}
-            );
-            return true;
-        });
-        function checked_worker_count(){
-            var checkedCount = $('.ea_send_worker_email:checked').length;
-            if (checkedCount > 0){
-                $('.ea_worker_mail_group').show();
-            }else{
-                $('.ea_worker_mail_group').hide();
+                update_option( 'ea_hide_newsletter', 'yes' , false);
+                echo wp_json_encode(array('status'=>200, 'message'=>esc_html__('Submitted ','easy-appointments')));
+        }else{
+            echo wp_json_encode(array('status'=>403, 'message'=>esc_html__('Unauthorized Request','easy-appointments')));
+        }
+        die;
+    }
+    add_action( 'wp_ajax_ea_newsletter_hide_form', 'ea_newsletter_hide_form' );
 
-            }
-        }   
-        function checked_user_count(){
-            var checkedCount = $('.ea_send_user_email:checked').length;
-            if (checkedCount > 0){
-                $('.ea_user_mail_group').show();
-            }else{
-                $('.ea_user_mail_group').hide();
+    add_action('admin_enqueue_scripts', 'ea_enqueue_bfcm_assets');
 
-            }
-        }   
-        $('body').on('change','.ea_send_worker_email', function() {
-            checked_worker_count();
-        });
-        $('body').on('change','.ea_send_user_email', function() {
-            checked_user_count();
-        });
+function ea_enqueue_bfcm_assets($hook) { 
+ 
+    // var_dump($hook);
+    if (!in_array( $hook,['toplevel_page_easy_app_top_level','appointments_page_easy_app_locations','appointments_page_easy_app_services','appointments_page_easy_app_workers','appointments_page_easy_app_connections','appointments_page_easy_app_publish','appointments_page_easy_app_customer','appointments_page_easy_app_settings','appointments_page_easy_app_tools','appointments_page_easy_app_vacation','appointments_page_easy_app_reports','appointments_page_easy_app_new_reports','appointments_page_easy_app_help_suppport','appointments_page_easy_app_connect_license','appointments_page_easy_app_connect'] ) ) {
+        return;
+    }
+    
+    
+    /*if ( ! isset($_GET['page']) || $_GET['page'] !== 'setting_page_check-email-dashboard' ) {
+        return;
+    }*/
 
-        setInterval(() => {
-            checked_worker_count();
-            checked_user_count();
-        }, 2000);
-    });
-</script>
+    // 2. define settings
+    $expiry_date_str = '2025-12-25 23:59:59'; 
+    $offer_link      = 'https://easy-appointments.com/bfcm-2025/';
+
+    // 3. Expiry Check (Server Side)
+    if ( current_time('timestamp') > strtotime($expiry_date_str) ) {
+        return; 
+    }
+
+    // 4. Register & Enqueue CSS    
+    wp_enqueue_style(
+        'bfcm-style', 
+        plugin_dir_url( __DIR__ ) . 'src/bfcm25/css/bfcm-style.css', 
+        array(), 
+        '1.0.0'
+    );
+
+    // 5. Register & Enqueue JS
+    wp_enqueue_script(
+        'bfcm-script', 
+        plugin_dir_url( __DIR__ ) . 'src/bfcm25/js/bfcm-script.js', 
+        array('jquery'), 
+        '1.0.0', 
+        true
+    );
+}

@@ -1131,7 +1131,7 @@ function ea_newsletter_form(){
 
         if ( $ea_newsletter === true && $hide_form !== 'yes') { ?>
         <div class="ea-newsletter-wrapper">
-            <div class="plugin-card plugin-card-ea-newsletter" style="margin :10px; background: #2271b1  url('<?php echo plugin_dir_url( __DIR__ ) . 'img/email.png'; ?>') no-repeat right top;">
+            <div class="plugin-card plugin-card-ea-newsletter" style="margin :10px; background: #2271b1  url('<?php echo esc_url( plugin_dir_url( __DIR__ ) . 'img/email.png'); ?>') no-repeat right top;">
                             
                         <div class="plugin-card-top" style="min-height: 135px; color: white;">
                             <span class="dashicons dashicons-dismiss ea_newsletter_hide" style="float: right;cursor: pointer;"></span>

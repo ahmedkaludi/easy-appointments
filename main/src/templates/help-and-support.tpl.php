@@ -248,7 +248,7 @@
                         <li><?php esc_html_e('Using shortcode, you can copy shortcode and paste the shortcode on editor of any post type.', 'easy-appointments');
                             ?></li>
                         <li><?php esc_html_e('Using Insert table of contents option on editor of any post type.',
-                                'easy-appointment');
+                                'easy-appointments');
                             ?></li>
                         <li><?php esc_html_e('You have to choose post types on tab General &gt; Enable Support section then `Easy Table of Contents` editor options would be shown to choose settings for particular post type.', 'easy-appointments'); ?></li>
                     </ol>
@@ -388,7 +388,7 @@
 
 
                     <h4><?php esc_html_e('Example: adding a span tag before the `Easy Table of Contents`',
-                            'easy-appointment') ?></h4>
+                            'easy-appointments') ?></h4>
                     <p><?php esc_html_e("Get this following code and paste into your theme\'s function.php file:", 'easy-appointments') ?></p>
                     <pre>
 add_action( 'ez_toc_before', 'addCustomSpan' );

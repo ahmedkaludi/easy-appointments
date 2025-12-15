@@ -292,19 +292,19 @@ class EAFrontend
             <form>
                 <div class="step">
                     <div class="block"></div>
-                    <label class="ea-label"><?php echo esc_html(__($this->options->get_option_value("trans.location"), 'easy-appointments')) ?></label><select
+                    <label class="ea-label"><?php echo esc_html(($this->options->get_option_value("trans.location"))) ?></label><select
                         name="location" data-c="location"
                         class="filter"><?php $this->get_options("locations") ?></select>
                 </div>
                 <div class="step">
                     <div class="block"></div>
-                    <label class="ea-label"><?php echo esc_html(__($this->options->get_option_value("trans.service"), 'easy-appointments')) ?></label><select
+                    <label class="ea-label"><?php echo esc_html(($this->options->get_option_value("trans.service"))) ?></label><select
                         name="service" data-c="service" class="filter"
                         data-currency="<?php echo $this->options->get_option_value("trans.currency") ?>"><?php $this->get_options("services") ?></select>
                 </div>
                 <div class="step">
                     <div class="block"></div>
-                    <label class="ea-label"><?php echo esc_html(__($this->options->get_option_value("trans.worker"), 'easy-appointments')) ?></label><select
+                    <label class="ea-label"><?php echo esc_html(($this->options->get_option_value("trans.worker"))) ?></label><select
                         name="worker" data-c="worker" class="filter"><?php $this->get_options("staff") ?></select>
                 </div>
                 <div class="step calendar" class="filter">
@@ -403,7 +403,7 @@ class EAFrontend
             $star = ($r) ? ' * ' : ' ';
 
             $html .= '<p>';
-            $html .= '<label>' . __($item->label, 'easy-appointments') . $star . ': </label>';
+            $html .= '<label>' . esc_html($item->label) . $star . ': </label>';
 
             if ($item->type == 'INPUT') {
                 $msg = ($r) ? 'data-rule-required="true" data-msg-required="' . __('This field is required.', 'easy-appointments') . '"' : '';
