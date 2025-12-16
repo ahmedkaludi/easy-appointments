@@ -469,7 +469,57 @@ class EAFrontend
         }
 
         $clean_settings['default_status_message'] = $default_status_message;
-        $clean_settings['is_user_logged_in'] = is_user_logged_in() ? 1 : 0;
+        $is_logged_in = is_user_logged_in();
+        $clean_settings['is_user_logged_in'] = $is_logged_in ? 1 : 0;
+            
+        $allow_customer_search = false;
+
+        $show_front   = !empty($settings['show.customer_search_front']);
+        $password_only = !empty($settings['customer_search_password_only']);
+        
+        $post = get_post();
+
+        $page_has_password = (
+            $post instanceof WP_Post &&
+            !empty($post->post_password)
+        );
+
+        $page_is_locked = false;
+        if ($page_has_password && function_exists('post_password_required')) {
+            $page_is_locked = post_password_required($post);
+        }   
+        if ($show_front) {
+            if ($is_logged_in) {
+
+                if ($password_only && $page_has_password) {
+                    $allow_customer_search = true;
+                }
+
+                $selected_roles = [];
+
+                if (!empty($settings['customer_search_roles'])) {
+                    $decoded = json_decode($settings['customer_search_roles'], true);
+                    if (is_array($decoded)) {
+                        $selected_roles = $decoded;
+                    }
+                }
+
+                if (empty($selected_roles)) {
+                    $allow_customer_search = true;
+                } else {
+                    $user = wp_get_current_user();
+                    foreach ((array) $user->roles as $role) {
+                        if (in_array($role, $selected_roles, true)) {
+                            $allow_customer_search = true;
+                            break;
+                        }
+                    }
+                }
+            }
+        }       
+
+        $clean_settings['allow_customer_search'] = $allow_customer_search ? 1 : 0;
+
         $data_settings = json_encode($clean_settings);
         $data_vacation = $this->options->get_option_value('vacations', '[]');
 

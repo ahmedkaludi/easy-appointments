@@ -195,6 +195,75 @@
                             {ea_key:'show.customer_search_front'}).ea_value == '1') { %>checked<% } %> />
                         </div>
                     </div>
+
+                    <div class="form-item">
+                        <div class="label-with-tooltip">
+                            <label for="customer_search_roles">
+                                <?php esc_html_e( 'Customer Search Roles', 'easy-appointments' ); ?>
+                            </label>
+                            <span class="tooltip tooltip-right"
+                                data-tooltip="<?php esc_html_e( 'Show customer search only for selected user roles', 'easy-appointments' ); ?>">
+                            </span>
+                        </div>
+                        <?php
+                        global $wp_roles;
+                        $roles = $wp_roles->roles;
+                        ?>
+
+                        <div class="form-item">
+                            <select multiple
+                                    class="field"
+                                    style="height: auto;"
+                                    name="customer_search_roles[]"
+                                    data-key="customer_search_roles">
+
+                                <?php foreach ( $roles as $role_key => $role ) : ?>
+                                    <option value="<?php echo esc_attr( $role_key ); ?>"
+                                    <%
+                                        var roleSetting = _.findWhere(settings, { ea_key: 'customer_search_roles' });
+                                        var selectedRoles = [];
+
+                                        if (roleSetting && roleSetting.ea_value) {
+                                            try {
+                                                selectedRoles = JSON.parse(roleSetting.ea_value);
+                                            } catch (e) {
+                                                selectedRoles = [];
+                                            }
+                                        }
+
+                                        if (_.contains(selectedRoles, '<?php echo esc_js( $role_key ); ?>')) {
+                                    %> selected <% } %>>
+                                        <?php echo esc_html( $role['name'] ); ?>
+                                    </option>
+                                <?php endforeach; ?>
+
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-item">
+                        <div class="label-with-tooltip">
+                            <label for="customer_search_password_only">
+                                <?php esc_html_e( 'Password Protected Only', 'easy-appointments' ); ?>
+                            </label>
+                            <span class="tooltip tooltip-right"
+                                data-tooltip="<?php esc_html_e( 'Display customer search only on password-protected pages', 'easy-appointments' ); ?>">
+                            </span>
+                        </div>
+
+                        <div class="field-wrap">
+                            <input type="checkbox"
+                                class="field"
+                                name="customer_search_password_only"
+                                data-key="customer_search_password_only"
+                                <% if (
+                                        typeof _.findWhere(settings,{ea_key:'customer_search_password_only'}) !== 'undefined'
+                                        && _.findWhere(settings,{ea_key:'customer_search_password_only'}).ea_value == '1'
+                                ) { %> checked <% } %> />
+                        </div>
+                    </div>
+
+
                 </div>
                 
             </div>
@@ -846,13 +915,37 @@
 
                     <div class="form-item">
                         <div class="label-with-tooltip">
-                            <label for="show.display_thankyou_note"><?php esc_html_e('Display Thank You Note', 'easy-appointments'); ?></label>
+                            <label for="show.display_thankyou_note"><?php esc_html_e('Display Thank You Note & Status messages', 'easy-appointments'); ?></label>
                         </div>
                         <div class="field-wrap">
                             <input class="field" type="checkbox" name="show.display_thankyou_note"
                                    data-key="show.display_thankyou_note"<% if (typeof _.findWhere(settings,
                             {ea_key:'show.display_thankyou_note'}) !== 'undefined' && _.findWhere(settings,
                             {ea_key:'show.display_thankyou_note'}).ea_value == '1') { %>checked<% } %> />
+                        </div>
+                        <div class="form-item inline-fields">
+                            <div class="form-item">
+                                <label for=""><?php esc_html_e('Heading', 'easy-appointments'); ?></label>
+                                <input class="field" data-key="trans.confirmation-title" name="trans.confirmation-title" type="text" value="<%- _.findWhere(settings, {ea_key:'trans.confirmation-title'}).ea_value %>">
+                            </div>
+                        </div>
+                        <div class="form-item inline-fields">
+                            <div class="form-item">
+                                <label for=""><?php esc_html_e('Pending', 'easy-appointments'); ?></label>
+                                <input class="field" data-key="pending_message" name="pending_message" type="text" value="<%- _.findWhere(settings, {ea_key:'pending_message'}).ea_value %>">
+                            </div>
+                        </div>
+                        <div class="form-item inline-fields">
+                            <div class="form-item">
+                                <label for=""><?php esc_html_e('Confirmed', 'easy-appointments'); ?></label>
+                                <input class="field" data-key="confirmed_message" name="confirmed_message" type="text" value="<%- _.findWhere(settings, {ea_key:'confirmed_message'}).ea_value %>">
+                            </div>
+                        </div>
+                        <div class="form-item inline-fields">
+                            <div class="form-item">
+                                <label for=""><?php esc_html_e('Reservation', 'easy-appointments'); ?></label>
+                                <input class="field" data-key="reservation_message" name="reservation_message" type="text" value="<%- _.findWhere(settings, {ea_key:'reservation_message'}).ea_value %>">
+                            </div>
                         </div>
                     </div>
                     <div class="form-item" style="background-color: #ccc; padding: 15px;">

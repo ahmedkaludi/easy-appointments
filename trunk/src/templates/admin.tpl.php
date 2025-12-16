@@ -195,6 +195,75 @@
                             {ea_key:'show.customer_search_front'}).ea_value == '1') { %>checked<% } %> />
                         </div>
                     </div>
+
+                    <div class="form-item">
+                        <div class="label-with-tooltip">
+                            <label for="customer_search_roles">
+                                <?php esc_html_e( 'Customer Search Roles', 'easy-appointments' ); ?>
+                            </label>
+                            <span class="tooltip tooltip-right"
+                                data-tooltip="<?php esc_html_e( 'Show customer search only for selected user roles', 'easy-appointments' ); ?>">
+                            </span>
+                        </div>
+                        <?php
+                        global $wp_roles;
+                        $roles = $wp_roles->roles;
+                        ?>
+
+                        <div class="form-item">
+                            <select multiple
+                                    class="field"
+                                    style="height: auto;"
+                                    name="customer_search_roles[]"
+                                    data-key="customer_search_roles">
+
+                                <?php foreach ( $roles as $role_key => $role ) : ?>
+                                    <option value="<?php echo esc_attr( $role_key ); ?>"
+                                    <%
+                                        var roleSetting = _.findWhere(settings, { ea_key: 'customer_search_roles' });
+                                        var selectedRoles = [];
+
+                                        if (roleSetting && roleSetting.ea_value) {
+                                            try {
+                                                selectedRoles = JSON.parse(roleSetting.ea_value);
+                                            } catch (e) {
+                                                selectedRoles = [];
+                                            }
+                                        }
+
+                                        if (_.contains(selectedRoles, '<?php echo esc_js( $role_key ); ?>')) {
+                                    %> selected <% } %>>
+                                        <?php echo esc_html( $role['name'] ); ?>
+                                    </option>
+                                <?php endforeach; ?>
+
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-item">
+                        <div class="label-with-tooltip">
+                            <label for="customer_search_password_only">
+                                <?php esc_html_e( 'Password Protected Only', 'easy-appointments' ); ?>
+                            </label>
+                            <span class="tooltip tooltip-right"
+                                data-tooltip="<?php esc_html_e( 'Display customer search only on password-protected pages', 'easy-appointments' ); ?>">
+                            </span>
+                        </div>
+
+                        <div class="field-wrap">
+                            <input type="checkbox"
+                                class="field"
+                                name="customer_search_password_only"
+                                data-key="customer_search_password_only"
+                                <% if (
+                                        typeof _.findWhere(settings,{ea_key:'customer_search_password_only'}) !== 'undefined'
+                                        && _.findWhere(settings,{ea_key:'customer_search_password_only'}).ea_value == '1'
+                                ) { %> checked <% } %> />
+                        </div>
+                    </div>
+
+
                 </div>
                 
             </div>

@@ -1,6 +1,9 @@
 <?php
 
 // If this file is called directly, abort.
+
+use Stripe\ErrorObject;
+
 if (!defined('WPINC')) {
     die;
 }
@@ -277,6 +280,26 @@ class EADBModels
 
                 continue;
             }
+
+            if (
+                isset($data['ea_key']) &&
+                $data['ea_key'] === 'customer_search_roles' &&
+                $key === 'ea_value'
+            ) {
+                if (is_array($value)) {
+                    $value = wp_json_encode(
+                        array_map('sanitize_text_field', $value)
+                    );
+                    $data[$key] = $value;
+                }
+            }
+
+            // 🔒 Global safety: ANY array → JSON
+            if (is_array($value)) {
+                $value = wp_json_encode($value);
+                $data[$key] = $value;
+            }
+
 
             if (strlen($value) > 0 && substr($value, 0, 1) == '0') {
                 $types[] = '%s';

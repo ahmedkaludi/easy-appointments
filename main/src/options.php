@@ -109,6 +109,8 @@ class EAOptions
             'show.iagree'                   => '0',
             'show.display_thankyou_note'    => '0',
             'show.customer_search_front'    => '0',
+            'customer_search_password_only' => '0',
+            'customer_search_roles'         => '[]',
             'cancel.scroll'                 => 'calendar',
             'multiple.work'                 => '1',
             'compatibility.mode'            => '0',
