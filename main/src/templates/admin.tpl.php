@@ -327,7 +327,7 @@
                     </div>
                     <div class="form-item">
                         <div class="form-wrap">
-                            <?php _e('Current logged in user have:', 'easy-appointments'); ?> <small>x<?php
+                            <?php esc_html_e('Current logged in user have:', 'easy-appointments'); ?> <small>x<?php
                             $data = get_userdata( get_current_user_id() );
                             if ( is_object( $data) ) {
                                 echo implode(', ', array_keys($data->allcaps));
@@ -559,9 +559,9 @@
                   </div>
                   <div class="form-item">
                       <div class="label-with-tooltip">
-                          <label for=""><?php _e('Manage appointmennt in popup', 'easy-appointments'); ?></label>
+                          <label for=""><?php esc_attr_e('Manage appointmennt in popup', 'easy-appointments'); ?></label>
                           <span class="tooltip tooltip-right"
-                                data-tooltip="<?php _e('Popup dialog for modify appointment details.', 'easy-appointments'); ?>"></span>
+                                data-tooltip="<?php esc_attr_e('Popup dialog for modify appointment details.', 'easy-appointments'); ?>"></span>
                       </div>
                       <div class="field-wrap">
                           <input class="field" data-key="fullcalendar.manage_appointment.show"
@@ -572,9 +572,9 @@
                   </div>
                   <div class="form-item">
                       <div class="label-with-tooltip">
-                          <label for=""><?php esc_html_e('Show event content in popup', 'easy-appointments'); ?></label>
+                          <label for=""><?php esc_attr_e('Show event content in popup', 'easy-appointments'); ?></label>
                           <span class="tooltip tooltip-right"
-                                data-tooltip="<?php esc_html_e('Popup dialog for event content.', 'easy-appointments'); ?>"></span>
+                                data-tooltip="<?php esc_attr_e('Popup dialog for event content.', 'easy-appointments'); ?>"></span>
                       </div>
                       <div class="field-wrap">
                           <input class="field" data-key="fullcalendar.event.show"
@@ -585,14 +585,14 @@
                   </div>
                   <div class="form-item">
                       <div class="label-with-tooltip">
-                          <label for=""><?php esc_html_e('Event content in popup', 'easy-appointments'); ?></label>
+                          <label for=""><?php esc_attr_e('Event content in popup', 'easy-appointments'); ?></label>
                           <span class="tooltip tooltip-right"
-                                data-tooltip="<?php esc_html_e('Event content when clicked on event', 'easy-appointments'); ?>"></span>
+                                data-tooltip="<?php esc_attr_e('Event content when clicked on event', 'easy-appointments'); ?>"></span>
                       </div>
                       <textarea id="fullcalendar-event-template" class="field" name="fullcalendar.event.template" data-key="fullcalendar.event.template"><%- (_.findWhere(settings, {ea_key:'fullcalendar.event.template'})).ea_value %></textarea>
-                      <small><?php esc_html_e('Example', 'easy-appointments'); ?> : (<a href="https://easy-appointments.com/documentation/templates/" target="_blank"><?php esc_html_e('Full documentation', 'easy-appointments');?></a>)</small>
+                      <small><?php esc_attr_e('Example', 'easy-appointments'); ?> : (<a href="https://easy-appointments.com/documentation/templates/" target="_blank"><?php esc_attr_e('Full documentation', 'easy-appointments');?></a>)</small>
                       <div style="display: inline-block"><code>{= event.location_name}</code><small> / </small><code>{= language}</code><small> / </small><code>{= link_confirm}</code></div>
-                      <small><?php esc_html_e('To get all available options use', 'easy-appointments'); ?> :</small>
+                      <small><?php esc_attr_e('To get all available options use', 'easy-appointments'); ?> :</small>
                       <code>{= __CONTEXT__ | raw}</code>
                   </div>
               </div>
@@ -794,8 +794,8 @@
                                   data-tooltip="<?php esc_html_e('Show labels above or inline with fields option on [ea_bootstrap] shortcode.', 'easy-appointments'); ?>"></span>
                         </div>
                         <div>
-                            <img data-value="0" class="form-label-option" title="inline" src="<?php echo plugin_dir_url( __DIR__ ) . '../img/label-inline.png';?>"/>
-                            <img data-value="1" class="form-label-option" title="above" src="<?php echo plugin_dir_url( __DIR__ ) . '../img/label-above.png';?>"/>
+                            <img data-value="0" class="form-label-option" title="inline" src="<?php echo esc_url( plugin_dir_url( __DIR__ ) . '../img/label-inline.png' );?>"/>
+                            <img data-value="1" class="form-label-option" title="above" src="<?php echo esc_url( plugin_dir_url( __DIR__ ) . '../img/label-above.png' );?>"/>
                             <input class="field" type="hidden" name="form.label.above"
                                    data-key="form.label.above" value="<%- _.findWhere(settings,
                             {ea_key:'form.label.above'}).ea_value %>" />
@@ -808,8 +808,8 @@
                                   data-tooltip="<?php esc_html_e('Show From or From-To label on time slot in [ea_bootstrap] shortcode.', 'easy-appointments'); ?>"></span>
                         </div>
                         <div>
-                            <img data-value="1" class="select-label-option" title="From - To" width="200px" src="<?php echo plugin_dir_url( __DIR__ ) . '../img/label-from-to.png';?>"/>
-                            <img data-value="0" class="select-label-option" title="From" width="200px" src="<?php echo plugin_dir_url( __DIR__ ) . '../img/label-from.png';?>"/>
+                            <img data-value="1" class="select-label-option" title="From - To" width="200px" src="<?php echo esc_url( plugin_dir_url( __DIR__ ) . '../img/label-from-to.png' );?>"/>
+                            <img data-value="0" class="select-label-option" title="From" width="200px" src="<?php echo esc_url( plugin_dir_url( __DIR__ ) . '../img/label-from.png' );?>"/>
                             <input class="field" type="hidden" name="label.from_to"
                                    data-key="label.from_to" value="<%- _.findWhere(settings,
                             {ea_key:'label.from_to'}).ea_value %>" />

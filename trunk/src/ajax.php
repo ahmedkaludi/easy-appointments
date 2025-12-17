@@ -214,15 +214,30 @@ class EAAjax
 
 
     public function cancel_selected_appointments_callback() {
-        if (!isset($_POST['appointments_nonce']) || !wp_verify_nonce($_POST['appointments_nonce'], 'appointments_nonce')) {
-            wp_send_json_error(array('message' => 'Security check failed.'));
+        $nonce = isset( $_POST['appointments_nonce'] )
+            ? sanitize_text_field( wp_unslash( $_POST['appointments_nonce'] ) )
+            : '';
+
+        if ( ! wp_verify_nonce( $nonce, 'appointments_nonce' ) ) {
+            wp_send_json_error( [ 'message' => esc_html__( 'Security check failed.', 'easy-appointments' ) ] );
         }
-        if (isset($_POST['cancel_to'])  && $_POST['cancel_to'] == 'all' ) {
+
+        $cancel_to = isset( $_POST['cancel_to'] )
+            ? sanitize_text_field( wp_unslash( $_POST['cancel_to'] ) )
+            : '';
+
+        if ( 'all' === $cancel_to ) {
             $this->cancel_upcoming_all();
         }
-        if (!isset($_POST['appointments']) || !is_array($_POST['appointments'])) {
-            wp_send_json_error(array('message' => 'No appointments selected.'));
+
+        $appointments = isset( $_POST['appointments'] ) && is_array( $_POST['appointments'] )
+            ? array_map( 'absint', wp_unslash( $_POST['appointments'] ) )
+            : [];
+
+        if ( empty( $appointments ) ) {
+            wp_send_json_error( [ 'message' => esc_html__( 'No appointments selected.', 'easy-appointments' ) ] );
         }
+
 
         $appointments = $_POST['appointments'];
         $current_datetime = current_time('mysql');
@@ -466,9 +481,9 @@ class EAAjax
         $data['price'] = $service->price;
         $end_time = strtotime("{$data['start']} + {$service->duration} minute");
 
-        $data['end'] = date('H:i', $end_time);
+        $data['end'] = gmdate('H:i', $end_time);
 
-        $data['ip'] = $_SERVER['REMOTE_ADDR'];
+        $data['ip'] = sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) );
 
         $data['session'] = session_id();
 
@@ -568,7 +583,7 @@ class EAAjax
 
             // check ALL slots in range
             for ($ts = $start_ts; $ts < $end_ts; $ts += $slot_step * 60) {
-                $t = date('H:i', $ts);
+                $t = gmdate('H:i', $ts);
                 if (!isset($open_map[$t]) || $open_map[$t] <= 0) {
                     $this->send_err_json_result('{"err":true,"message":"Selected range not available"}');
                 }
@@ -607,7 +622,7 @@ class EAAjax
             $data['price'] = $service->price;
 
             $end_time = strtotime($data['start'] . " + {$service->duration} minutes");
-            $data['end'] = date('H:i', $end_time);
+            $data['end'] = gmdate('H:i', $end_time);
         }
 
         // store metadata
@@ -680,7 +695,7 @@ class EAAjax
 
         // Default setup
         $data['status'] = 'reservation';
-        $data['ip'] = $_SERVER['REMOTE_ADDR'];
+        $data['ip'] = sanitize_text_field( wp_unslash($_SERVER['REMOTE_ADDR'] ) );
         $data['session'] = session_id();
 
         if (is_user_logged_in()) {
@@ -739,8 +754,8 @@ class EAAjax
                 break;
             }
 
-            $current_date = date('Y-m-d', $current_date_ts);
-            $current_end_date = date('Y-m-d', $current_end_date_ts);
+            $current_date = gmdate('Y-m-d', $current_date_ts);
+            $current_end_date = gmdate('Y-m-d', $current_end_date_ts);
 
             $current_data = $data;
             $current_data['date'] = $current_date;
@@ -752,7 +767,7 @@ class EAAjax
 
             // Recalculate end time
             $end_time = strtotime("{$data['start']} + {$service->duration} minutes");
-            $current_data['end'] = date('H:i', $end_time);
+            $current_data['end'] = gmdate('H:i', $end_time);
 
             // Check if the slot is still available
             $open_slots = $this->logic->get_open_slots($data['location'], $data['service'], $data['worker'], $current_date, null, true, $block_time);
@@ -827,7 +842,7 @@ class EAAjax
         
 
         // check IP
-        if ($appointment['ip'] != $_SERVER['REMOTE_ADDR']) {
+        if ($appointment['ip'] != sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) ) ) {
             $this->send_err_json_result('{"err":true}');
         }
 
@@ -1138,8 +1153,8 @@ class EAAjax
 
     public function delete_selected_appointment()
     {
-        if (!isset($_POST['appointments_nonce']) || !wp_verify_nonce($_POST['appointments_nonce'], 'appointments_nonce')) {
-            wp_send_json_error(array('message' => 'Security check failed.'));
+        if (!isset($_POST['appointments_nonce']) || !wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['appointments_nonce'] ) ), 'appointments_nonce')) {
+            wp_send_json_error(array('message' => esc_html__('Security check failed.', 'easy-appointments')));
         }
 
         if ( !current_user_can( 'manage_options' ) ) {
@@ -1147,7 +1162,7 @@ class EAAjax
         }
         
         if (!isset($_POST['appointments']) || !is_array($_POST['appointments'])) {
-            wp_send_json_error(array('message' => 'No appointments selected.'));
+            wp_send_json_error(array('message' => esc_html__('No appointments selected.', 'easy-appointments') ));
         }
 
         $response = $this->delete_parse_appointment(false);
@@ -1444,8 +1459,8 @@ class EAAjax
 
         $this->validate_access_rights('tools');
 
-        $address = $_POST['address'];
-        $native = $_POST['native'];
+        $address = sanitize_text_field( wp_unslash($_POST['address']));
+        $native = sanitize_text_field( wp_unslash($_POST['native']));
 
         if (!filter_var($address, FILTER_VALIDATE_EMAIL)) {
             die(__('Invalid email address!', 'easy-appointments'));
@@ -1709,7 +1724,7 @@ class EAAjax
      */
     private function parse_input_data()
     {
-        $method = $_SERVER['REQUEST_METHOD'];
+        $method = sanitize_text_field( wp_unslash($_SERVER['REQUEST_METHOD']));
 
         if (!empty($_REQUEST['_method'])) {
             $method = strtoupper($_REQUEST['_method']);
@@ -1932,7 +1947,7 @@ class EAAjax
         // set end data
         $service = $this->models->get_row('ea_services', $app_data['service']);
         $end_time = strtotime("{$data['start']} + {$service->duration} minute");
-        $app_data['end'] = date('H:i', $end_time);
+        $app_data['end'] = gmdate('H:i', $end_time);
 
 
         $meta_fields = $this->models->get_all_rows('ea_meta_fields');
@@ -2150,7 +2165,7 @@ class EAAjax
                 CURLOPT_POSTFIELDS => [
                     'secret' => $secret,
                     'response' => $captcha,
-                    'remoteip' => $_SERVER['REMOTE_ADDR']
+                    'remoteip' => sanitize_text_field( wp_unslash($_SERVER['REMOTE_ADDR']) )
                 ],
                 CURLOPT_RETURNTRANSFER => true
             ]);
@@ -2165,7 +2180,7 @@ class EAAjax
                 array(
                     'secret'   => $secret,
                     'response' => $captcha,
-                    'remoteip' => $_SERVER['REMOTE_ADDR']
+                    'remoteip' => sanitize_text_field( wp_unslash($_SERVER['REMOTE_ADDR']) )
                 )
             );
             $opts = array('http' =>
@@ -2297,10 +2312,10 @@ class EAAjax
 
         $table = $wpdb->prefix . 'ea_customers';
         $id = intval($_POST['id']);
-        $name = sanitize_text_field($_POST['name']);
-        $email = sanitize_email($_POST['email']);
-        $mobile = sanitize_text_field($_POST['mobile']);
-        $address = sanitize_text_field($_POST['address']);
+        $name = sanitize_text_field( wp_unslash($_POST['name']));
+        $email = sanitize_email( wp_unslash($_POST['email']));
+        $mobile = sanitize_text_field( wp_unslash($_POST['mobile']));
+        $address = sanitize_text_field( wp_unslash($_POST['address']));
         $current_user_id = get_current_user_id();
 
         // Check for duplicate email for the same user_id (excluding the current customer ID)
@@ -2312,7 +2327,7 @@ class EAAjax
         ));
 
         if ($duplicate > 0) {
-            wp_send_json_error(['message' => 'A customer with this email already exists for your account.']);
+            wp_send_json_error(['message' => esc_html__('A customer with this email already exists for your account.', 'easy-appointments')]);
         }
 
         $data = [
@@ -2329,14 +2344,14 @@ class EAAjax
             wp_send_json_success();
         }
 
-        wp_send_json_error(['message' => 'Failed to update customer.']);
+        wp_send_json_error(['message' => esc_html__('Failed to update customer.', 'easy-appointments')]);
     }
 
     public function ea_handle_delete_customer() {
         check_ajax_referer('ea_customer_delete', 'ea_nonce');
 
         if (!current_user_can('manage_options')) {
-            wp_send_json_error(['message' => 'Unauthorized'], 403);
+            wp_send_json_error(['message' => esc_html__('Unauthorized', 'easy-appointments')], 403);
         }
 
         global $wpdb;
@@ -2344,7 +2359,7 @@ class EAAjax
         $user_id = get_current_user_id();
 
         if (!$customer_id) {
-            wp_send_json_error(['message' => 'Invalid customer ID.']);
+            wp_send_json_error(['message' => esc_html__('Invalid customer ID.', 'easy-appointments')]);
         }
 
         $deleted = $wpdb->delete(
@@ -2356,20 +2371,20 @@ class EAAjax
         if ($deleted) {
             wp_send_json_success();
         } else {
-            wp_send_json_error(['message' => 'Failed to delete customer.']);
+            wp_send_json_error(['message' => esc_html__('Failed to delete customer.', 'easy-appointments')]);
         }
     }
 
     public function handle_insert_customer_ajax() {
         if ( ! current_user_can('manage_options') ) {
-            wp_send_json_error(['message' => 'Unauthorized'], 403);
+            wp_send_json_error(['message' => esc_html__('Unauthorized', 'easy-appointments')], 403);
         }
         check_ajax_referer('ea_customer_edit', 'ea_nonce');
 
-        $name    = sanitize_text_field($_POST['name'] ?? '');
-        $email   = sanitize_email($_POST['email'] ?? '');
-        $mobile  = sanitize_text_field($_POST['mobile'] ?? '');
-        $address = sanitize_textarea_field($_POST['address'] ?? '');
+        $name    = sanitize_text_field( wp_unslash($_POST['name'] ?? ''));
+        $email   = sanitize_email( wp_unslash($_POST['email'] ?? ''));
+        $mobile  = sanitize_text_field( wp_unslash($_POST['mobile'] ?? ''));
+        $address = sanitize_textarea_field( wp_unslash($_POST['address'] ?? ''));
 
         global $wpdb;
         $current_user_id = get_current_user_id();
@@ -2382,7 +2397,7 @@ class EAAjax
         ));
 
         if ($existing > 0) {
-            wp_send_json_error(['message' => 'Customer with this email already exists.']);
+            wp_send_json_error(['message' => esc_html__('Customer with this email already exists.', 'easy-appointments')]);
         }
 
         // Proceed to insert
@@ -2397,7 +2412,7 @@ class EAAjax
         if ($inserted) {
             wp_send_json_success();
         } else {
-            wp_send_json_error(['message' => 'Failed to insert customer.']);
+            wp_send_json_error(['message' => esc_html__('Failed to insert customer.', 'easy-appointments')]);
         }
     }
     public function handle_customer_detail_ajax() {
@@ -2416,7 +2431,7 @@ class EAAjax
         );
 
         if (!$customer) {
-            wp_send_json_error('Customer not found');
+            wp_send_json_error(esc_html__('Customer not found', 'easy-appointments'));
         }
 
         $date_compare = $type === 'past' ? '<' : '>=';
@@ -2502,15 +2517,15 @@ class EAAjax
         if ( !isset($_POST['ea_edit_appointment_nonce']) ||
             !wp_verify_nonce($_POST['ea_edit_appointment_nonce'], 'ea_edit_appointment_action')
         ) {
-            wp_send_json_error('Invalid nonce');
+            wp_send_json_error(esc_html__('Invalid nonce', 'easy-appointments'));
             exit;
         }
         $data = $_POST;
         $id = (int) $data['appointment_id'];
-        $name = sanitize_text_field($data['name']);
-        $email = sanitize_email($data['email']);
-        $phone = sanitize_text_field($data['phone']);
-        $description = sanitize_text_field($data['description']);
+        $name = sanitize_text_field(wp_unslash($data['name']));
+        $email = sanitize_email(wp_unslash($data['email']));
+        $phone = sanitize_text_field(wp_unslash($data['phone']));
+        $description = sanitize_text_field(wp_unslash($data['description']));
         $fields = 'ea_fields';
         $meta_fields = $this->models->get_all_rows('ea_meta_fields');
         $meta_data = array();

@@ -300,7 +300,7 @@ class EAFrontend
                     <div class="block"></div>
                     <label class="ea-label"><?php echo esc_html(($this->options->get_option_value("trans.service"))) ?></label><select
                         name="service" data-c="service" class="filter"
-                        data-currency="<?php echo $this->options->get_option_value("trans.currency") ?>"><?php $this->get_options("services") ?></select>
+                        data-currency="<?php echo esc_attr( $this->options->get_option_value("trans.currency") ) ?>"><?php $this->get_options("services") ?></select>
                 </div>
                 <div class="step">
                     <div class="block"></div>
@@ -334,7 +334,7 @@ class EAFrontend
                                     style="font-size: 65%; width: 80%;" class="i-agree"><?php esc_html_e('I agree with terms and conditions', 'easy-appointments'); ?>
                                     * : </label><input style="width: 15%;" type="checkbox" name="iagree"
                                                     data-rule-required="true"
-                                                    data-msg-required="<?php _e('You must agree with terms and conditions', 'easy-appointments'); ?>">
+                                                    data-msg-required="<?php esc_attr_e('You must agree with terms and conditions', 'easy-appointments'); ?>">
                             </p>
                             <br>
                         <?php endif; ?>
