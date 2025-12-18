@@ -453,7 +453,7 @@ function addCustomSpan()
                     action: "ea_send_query_message",
                     message: message,
                     email: email,
-                    ezappoint_security_nonce: "<?= wp_create_nonce('ea_send_query_message')?>"
+                    ezappoint_security_nonce: "<?php echo wp_create_nonce('ea_send_query_message')?>"
                 },
                 success: function (response) {
                     document.getElementById('ea-send-btn').style.display='';

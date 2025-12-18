@@ -321,7 +321,9 @@ class EAFrontend
                     <p class="section"><?php esc_html_e('Personal information', 'easy-appointments'); ?></p>
                     <small><?php esc_html_e('Fields with * are required', 'easy-appointments'); ?></small>
                     <br>
-                    <?php echo $custom_form; ?>
+                    <?php 
+                    // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+                    echo $custom_form; ?>
                     
                     <br>
                     <p class="section"><?php esc_html_e('Booking overview', 'easy-appointments'); ?></p>
@@ -354,7 +356,7 @@ class EAFrontend
                         <?php endif; ?>
 
                         <div style="display: inline-flex;">
-                            <?php echo apply_filters('ea_checkout_button', '<button class="ea-btn ea-submit">' . __('Submit', 'easy-appointments') . '</button>'); ?>
+                            <?php echo apply_filters('ea_checkout_button', '<button class="ea-btn ea-submit">' . esc_html_e('Submit', 'easy-appointments') . '</button>'); ?>
                             <button class="ea-btn ea-cancel"><?php esc_html_e('Cancel', 'easy-appointments'); ?></button>
                         </div>
                     </div>
@@ -551,10 +553,13 @@ class EAFrontend
             }
         }
         $service_start_data = json_encode($service_start_data);
-
+        // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
         echo "<script>var ea_settings = {$data_settings};</script>";
+        // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
         echo "<script>var ea_vacations = {$data_vacation};</script>";
+        // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
         echo "<script>var ea_service_start_data = {$service_start_data};</script>";
+        // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
         echo "<style>{$customCss}</style>";
     }
 

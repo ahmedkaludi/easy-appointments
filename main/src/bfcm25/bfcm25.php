@@ -10,7 +10,7 @@ add_action('admin_enqueue_scripts', 'ea_enqueue_bfcm_assets');
 
 function ea_enqueue_bfcm_assets($hook) { 
  
-    var_dump($hook);
+    // var_dump($hook);
     if ( $hook !== 'toplevel_page_amp_options' ) {
         return;
     }

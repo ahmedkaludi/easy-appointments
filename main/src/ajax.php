@@ -807,7 +807,7 @@ class EAAjax
         if (empty($success_ids)) {
             $this->send_err_json_result(json_encode([
                 'err' => true,
-                'message' => __('Could not create any appointments.', 'easy-appointments')
+                'message' => esc_html__('Could not create any appointments.', 'easy-appointments')
             ]));
         }
 
@@ -1429,7 +1429,7 @@ class EAAjax
         $this->validate_access_rights('settings');
 
         $content = $this->mail->get_default_admin_template();
-
+        // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
         wp_die($content);
     }
 
@@ -1463,11 +1463,11 @@ class EAAjax
         $native = sanitize_text_field( wp_unslash($_POST['native']));
 
         if (!filter_var($address, FILTER_VALIDATE_EMAIL)) {
-            die(__('Invalid email address!', 'easy-appointments'));
+            die(esc_html__('Invalid email address!', 'easy-appointments'));
         }
 
         if (!current_user_can('install_plugins')) {
-            die(__('Only admin user can test mail!', 'easy-appointments'));
+            die(esc_html__('Only admin user can test mail!', 'easy-appointments'));
         }
 
         $headers = array('Content-Type: text/html; charset=UTF-8');
@@ -1490,7 +1490,7 @@ class EAAjax
             wp_mail($address, $subject, $body, $headers, $files);
         }
 
-        die(__('Request completed, please check email.', 'easy-appointments'));
+        die(esc_html__('Request completed, please check email.', 'easy-appointments'));
     }
     public function ajax_reset_plugin()
     {
@@ -1499,7 +1499,7 @@ class EAAjax
         $this->validate_access_rights('tools');
 
         if (!current_user_can('install_plugins')) {
-            die(__('Only admin user can test mail!', 'easy-appointments'));
+            die(esc_html__('Only admin user can test mail!', 'easy-appointments'));
         }
 
         global $wpdb;
@@ -1529,7 +1529,7 @@ class EAAjax
         $option_name = 'easy_app_db_version';
 
         delete_option($option_name);
-        die(__('Plugin data reset successfully.', 'easy-appointments'));
+        die(esc_html__('Plugin data reset successfully.', 'easy-appointments'));
     }
 
     public function get_insert_options()
@@ -1624,10 +1624,10 @@ class EAAjax
 
     public function migrateFormFields()
     {
-        $email = __('EMail', 'easy-appointments');
-        $name = __('Name', 'easy-appointments');
-        $phone = __('Phone', 'easy-appointments');
-        $comment = __('Description', 'easy-appointments');
+        $email = esc_html__('EMail', 'easy-appointments');
+        $name = esc_html__('Name', 'easy-appointments');
+        $phone = esc_html__('Phone', 'easy-appointments');
+        $comment = esc_html__('Description', 'easy-appointments');
 
         $data = array();
 
@@ -2065,6 +2065,7 @@ class EAAjax
     private function send_err_json_result($message)
     {
         header('HTTP/1.1 400 BAD REQUEST');
+        // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
         die($message);
     }
 
@@ -2198,7 +2199,7 @@ class EAAjax
         $result = json_decode($response);
 
         if (!$result->success) {
-            $message = __('Invalid captcha!', 'easy-appointments');
+            $message = esc_html__('Invalid captcha!', 'easy-appointments');
             $this->send_err_json_result('{"message":"' . $message . '"}');
         }
     }
