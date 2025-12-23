@@ -57,12 +57,12 @@
                 if($count++ % 2 == 1) {
                     echo '<tr>
                                 <td style="text-align:left;">' . esc_html($field->label) . '</td>
-                                <td style="text-align: right; font-weight: bold;">#' . $field->slug . '#</td>
+                                <td style="text-align: right; font-weight: bold;">#' . esc_attr($field->slug) . '#</td>
                           </tr>';
                 } else {
                     echo '<tr>
                                 <td style="text-align:left; background-color: #CCFFFF;">' . esc_html($field->label) . '</td>
-                                <td style="text-align: right; font-weight: bold; background-color: #CCFFFF;">#' . $field->slug . '#</td>
+                                <td style="text-align: right; font-weight: bold; background-color: #CCFFFF;">#' . esc_attr($field->slug) . '#</td>
                           </tr>';
                 }
             }

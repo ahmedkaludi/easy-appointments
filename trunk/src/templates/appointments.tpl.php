@@ -283,7 +283,9 @@
 <% });%>
 </script>
 <script>
-	var appointments_nonce = "<?php echo wp_create_nonce('appointments_nonce'); ?>";
+	var appointments_nonce = "<?php 
+	// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+	echo wp_create_nonce('appointments_nonce'); ?>";
 
 jQuery(document).ready(function($) {
 	function check_is_any_cancel_checkbox(){

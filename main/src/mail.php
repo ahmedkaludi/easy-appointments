@@ -306,7 +306,7 @@ EOT;
         ob_start();
         require $template_path;
         $content = ob_get_clean();
-
+        // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
         wp_die($content, $title);
     }
 

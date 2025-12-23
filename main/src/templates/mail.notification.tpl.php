@@ -12,7 +12,7 @@
             </tr>
             <tr>
                 <td style="text-align:left;"><?php esc_html_e('Status', 'easy-appointments');?></td>
-                <td style="text-align: right; font-weight: bold;"><?php esc_html_e($data['status']);?></td>
+                <td style="text-align: right; font-weight: bold;"><?php esc_html($data['status']);?></td>
             </tr>
             <tr>
                 <td style="text-align:left; background-color: #CCFFFF;"><?php esc_html_e('Location', 'easy-appointments');?></td>

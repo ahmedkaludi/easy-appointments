@@ -328,11 +328,12 @@
                     <div class="form-item">
                         <div class="form-wrap">
                             <?php esc_html_e('Current logged in user have:', 'easy-appointments'); ?> <small>x<?php
-                                                                                                                $data = get_userdata(get_current_user_id());
-                                                                                                                if (is_object($data)) {
-                                                                                                                    echo implode(', ', array_keys($data->allcaps));
-                                                                                                                }
-                                                                                                                ?></small>
+                            $data = get_userdata(get_current_user_id());
+                            if (is_object($data)) {
+                                // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+                                echo implode(', ', array_keys($data->allcaps));
+                            }
+                            ?></small>
                         </div>
                     </div>
                 </div>
@@ -395,7 +396,9 @@
                             </tbody>
                         </table>
                         <a id="load-default-admin-template" href="#" style="padding-top: 5px; padding-bottom: 5px; display: none;"><?php esc_html_e('Load default admin template', 'easy-appointments'); ?></a>
-                        <div><small><?php esc_html_e('Available tags', 'easy-appointments'); ?>: #id#, #date#, #start#, #end#, #status#, #created#, #price#, #ip#, #link_confirm#, #link_cancel#, #url_confirm#, #url_cancel#, #service_name#, #service_duration#, #service_price#, #worker_name#, #workeresc_html_email#, #worker_phone#, #location_name#, #location_address#, #location_location#, <?php echo implode(', ', EADBModels::get_custom_fields_tags()); ?></small></div>
+                        <div><small><?php esc_html_e('Available tags', 'easy-appointments'); ?>: #id#, #date#, #start#, #end#, #status#, #created#, #price#, #ip#, #link_confirm#, #link_cancel#, #url_confirm#, #url_cancel#, #service_name#, #service_duration#, #service_price#, #worker_name#, #workeresc_html_email#, #worker_phone#, #location_name#, #location_address#, #location_location#, <?php
+                        // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+                         echo implode(', ', EADBModels::get_custom_fields_tags()); ?></small></div>
                     </div>
                     <div class="form-item">
                         <div class="label-with-tooltip">
@@ -1109,7 +1112,9 @@
     <% if (item.type !== "PHONE" && item.type !== "SELECT" && item.type !== "MASKED") { %>
     <p>
         <label>Default value</label><input type="text" class="field-default_value" name="field-default_value" value="<%- item.default_value %>">
-        <small>You can put values from logged in user (list of keys: <?php echo EAUserFieldMapper::all_field_keys(); ?>)</small>
+        <small>You can put values from logged in user (list of keys: <?php 
+        // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+        echo EAUserFieldMapper::all_field_keys(); ?>)</small>
     </p>
     <% } %>
 

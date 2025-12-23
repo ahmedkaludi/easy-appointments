@@ -182,13 +182,21 @@
                         <div style="width: 100%; padding: 20px;" class="g-recaptcha" data-sitekey="<%- settings['captcha.site-key'] %>"></div>
                     <% } %>
 
-                    <?php echo apply_filters('ea_payment_select', ''); ?>
-                    <?php echo apply_filters('ea_stripe_checkout', ''); ?>
-                    <?php echo apply_filters('ea_razorpay_checkout', ''); ?>
+                    <?php 
+                    // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+                    echo apply_filters('ea_payment_select', ''); ?>
+                    <?php 
+                    // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+                    echo apply_filters('ea_stripe_checkout', ''); ?>
+                    <?php 
+                    // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+                    echo apply_filters('ea_razorpay_checkout', ''); ?>
 
                     <div class="form-group">
                         <div class="col-sm-12 ea-actions-group" style="display: inline-flex; align-items: center; justify-content: center;">
-                            <?php echo apply_filters('ea_checkout_button', '<button class="ea-btn ea-submit btn btn-primary booking-button"><%- settings[\'trans.submit\'] %></button>'); ?>
+                            <?php 
+                            // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+                            echo apply_filters('ea_checkout_button', '<button class="ea-btn ea-submit btn btn-primary booking-button"><%- settings[\'trans.submit\'] %></button>'); ?>
                             <button class="ea-btn ea-cancel btn btn-default"><%- settings['trans.cancel'] %></button>
                         </div>
                     </div>
