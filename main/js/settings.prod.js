@@ -821,6 +821,25 @@
             });
         },
 
+        showError: function(message) {
+            alert(message);
+        },
+        restoreUI: function(attrs) {
+
+            if (attrs.date) {
+                const dateInput = this.$el.find('[data-prop="date"]');
+                if (dateInput.hasClass('hasDatepicker')) {
+                    dateInput.datepicker('setDate', moment(attrs.date, 'YYYY-MM-DD').toDate());
+                }
+            }
+
+            if (attrs.start) {
+                this.$el.find('[data-prop="start"]').val(attrs.start);
+            }
+        },
+
+
+
         /**
          *
          */
@@ -955,40 +974,63 @@
             var view = this;
             var customParams = {};
 
+            // 🔐 snapshot original values
+            const originalAttrs = _.clone(appointment.attributes);
+
             this.$el.find('.time-start').change();
 
+            // collect form data (DO NOT commit permanently)
             jQuery.each(this.$el.find('input, select, textarea'), function(index, elem) {
                 var $elem = jQuery(elem);
 
                 if ($elem.data('prop') === 'date') {
-                    appointment.set($elem.data('prop'), moment(jQuery(elem).datepicker('getDate')).format('YYYY-MM-DD'));
-                    appointment.set('end_date', moment(jQuery(elem).datepicker('getDate')).format('YYYY-MM-DD'));
-                } else {
-                    if (!$(elem).is(':disabled')) {
-                        appointment.set($elem.data('prop'), $elem.val());
-                    }
+                    appointment.set('date', moment(jQuery(elem).datepicker('getDate')).format('YYYY-MM-DD'), {silent: true});
+                    appointment.set('end_date', moment(jQuery(elem).datepicker('getDate')).format('YYYY-MM-DD'), {silent: true});
+                } else if (!$(elem).is(':disabled')) {
+                    appointment.set($elem.data('prop'), $elem.val(), {silent: true});
                 }
 
-                if($elem.attr('name') === 'send-mail' && $elem.is(':checked')) {
+                if ($elem.attr('name') === 'send-mail' && $elem.is(':checked')) {
                     customParams._mail = $elem.val();
                 }
             });
 
-            // Saves appointment
             appointment.save(customParams, {
+
                 success: function(model, response) {
+
+                    // backend logical error
+                    if (response && response.err) {
+                        model.set(originalAttrs, {silent: true});
+                        view.restoreUI(originalAttrs);
+                        alert(response.message);
+                        return;
+                    }
+
+                    // ✅ commit success
+                    view.$el.removeClass('ea-editing');
+                    view.template = view.template_show;
                     view.render();
+                    view.edit_mode = false;
+                },
+
+                error: function(model, xhr) {
+                    let message = 'Error saving appointment.';
+
+                    try {
+                        const res = JSON.parse(xhr.responseText);
+                        if (res && res.message) {
+                            message = res.message;
+                        }
+                    } catch (e) {}
+
+                    // 🔁 rollback
+                    model.set(originalAttrs, {silent: true});
+                    view.restoreUI(originalAttrs);
+
+                    alert(message);
                 }
             });
-
-            this.$el.removeClass('ea-editing');
-
-            // show row
-            this.template = this.template_show;
-
-            this.render();
-
-            this.edit_mode = false;
         },
 
         cancel: function() {

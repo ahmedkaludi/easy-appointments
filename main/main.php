@@ -96,6 +96,9 @@ class EasyAppointment
 
         // cron
         add_action('easyapp_hourly_event', array($this, 'delete_reservations'));
+        // daily expire appointments cron
+        add_action('ea_daily_expire_appointments', array($this, 'expire_old_appointments'));
+
         add_action('ea_gdpr_auto_delete', array($this, 'delete_old_data'));
 
         // we want to check if it is link from EA mail
@@ -229,6 +232,9 @@ class EasyAppointment
         if ( wp_next_scheduled( 'easyapp_hourly_event' ) === false ) {
             wp_schedule_event(time(), 'hourly', 'easyapp_hourly_event');
         }
+        if (wp_next_scheduled('ea_daily_expire_appointments') === false) {
+            wp_schedule_event(strtotime('00:05:00'), 'daily', 'ea_daily_expire_appointments');
+        }
     }
 
     /**
@@ -249,6 +255,7 @@ class EasyAppointment
     public static function remove_scheduled_event()
     {
         wp_clear_scheduled_hook('easyapp_hourly_event');
+        wp_clear_scheduled_hook('ea_daily_expire_appointments');
     }
 
     public function update()
@@ -313,6 +320,33 @@ class EasyAppointment
         $gdpr = new EAGDPRActions($this->container['db_models']);
         $gdpr->clear_old_custom_data();
     }
+
+        /**
+     * Mark past unconfirmed appointments as expired
+     */
+    public function expire_old_appointments()
+    {
+        global $wpdb;
+
+        $table = $wpdb->prefix . 'ea_appointments';
+
+        $sql = "
+            UPDATE {$table}
+            SET status = %s
+            WHERE status != %s
+            AND end_date < %s
+        ";
+
+        $wpdb->query(
+            $wpdb->prepare(
+                $sql,
+                'expired',
+                'confirmed',
+                current_time('mysql')
+            )
+        );
+    }
+
 }
 
 /**

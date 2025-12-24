@@ -1949,6 +1949,26 @@ class EAAjax
         $end_time = strtotime("{$data['start']} + {$service->duration} minute");
         $app_data['end'] = gmdate('H:i', $end_time);
 
+        if (!empty($app_data['date']) && !empty($app_data['start'])) {
+
+            // Appointment datetime (YYYY-mm-dd HH:ii)
+            $appointment_datetime = strtotime(
+                $app_data['date'] . ' ' . $app_data['start']
+            );
+
+            // Current WP time (respects site timezone)
+            $current_datetime = strtotime(current_time('Y-m-d H:i'));
+
+            if ($appointment_datetime < $current_datetime) {
+                $this->send_err_json_result(
+                    json_encode(array(
+                        'err'     => true,
+                        'message' => __('You cannot book an appointment in the past.', 'easy-appointments')
+                    ))
+                );
+            }
+        }
+
 
         $meta_fields = $this->models->get_all_rows('ea_meta_fields');
         $meta_data = array();

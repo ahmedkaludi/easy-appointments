@@ -194,6 +194,14 @@ EOT;
         // confirm appointment
         if ($_GET['_ea-action'] == 'confirm') {
 
+            $appointment_dt = new DateTime($app_data['date'] . ' ' . $app_data['start']);
+            $current_dt     = new DateTime(current_time('Y-m-d H:i'));
+
+            if ($appointment_dt < $current_dt) {
+                header('Refresh:3; url=' . get_home_url());
+                wp_die(esc_html__('Appointment can’t be confirmed because it is in the past.', 'easy-appointments'));
+            }
+
             if ($data['status'] === 'confirm') {
                 header('Refresh:3; url=' . get_home_url());
                 wp_die(esc_html__('Appointment is already confirmed!', 'easy-appointments'));
