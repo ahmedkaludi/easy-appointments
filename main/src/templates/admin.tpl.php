@@ -1072,7 +1072,7 @@
         </div>
         
         <br><br>
-        <?php ea_newsletter_form(); ?>
+        <?php easy_ea_newsletter_form(); ?>
     </div>
 </script>
 
@@ -1195,7 +1195,7 @@
             var form = jQuery(this);
             var email = form.find('input[name="newsletter-email"]').val();
             jQuery.post(ea_obj.ajax_url, {
-                    action: 'ea_newsletter_submit',
+                    action: 'easy_ea_newsletter_submit',
                     email: email,
                     ea_security_nonce: ea_obj.ea_security_nonce
                 },
@@ -1215,7 +1215,7 @@
             jQuery('.ea-newsletter-wrapper').css("display", "none");
             var form = jQuery(this);
             jQuery.post(ajaxurl, {
-                    action: 'ea_newsletter_hide_form',
+                    action: 'easy_ea_newsletter_hide_form',
                     ea_security_nonce: ea_obj.ea_security_nonce
                 },
                 function(data) {}
