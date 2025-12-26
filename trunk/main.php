@@ -117,7 +117,7 @@ class EasyAppointment
             $admin = $this->container['admin_panel'];
             $admin->init();
         } else {
-            /** @var EAFrontend $frontend */
+            /** @var Easy_EA_Frontend $frontend */
             $frontend = $this->container['frontend'];
             $frontend->init();
 
@@ -188,7 +188,7 @@ class EasyAppointment
         };
 
         $this->container['frontend'] = function ($container) {
-            return new EAFrontend($container['db_models'], $container['options'], $container['datetime'], $container['utils']);
+            return new Easy_EA_Frontend($container['db_models'], $container['options'], $container['datetime'], $container['utils']);
         };
 
         $this->container['fullcalendar'] = function ($container) {

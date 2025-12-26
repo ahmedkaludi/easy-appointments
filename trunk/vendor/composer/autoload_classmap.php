@@ -13,7 +13,7 @@ return array(
     'EAAppointmentFields' => $baseDir . '/src/fields/appointment.php',
     'EADBModels' => $baseDir . '/src/dbmodels.php',
     'EADateTime' => $baseDir . '/src/datetime.php',
-    'EAFrontend' => $baseDir . '/src/frontend.php',
+    'Easy_EA_Frontend' => $baseDir . '/src/frontend.php',
     'EAFullCalendar' => $baseDir . '/src/shortcodes/fullcalendar.php',
     'EAGDPRActions' => $baseDir . '/src/api/gdpr.php',
     'EAInstallTools' => $baseDir . '/src/install.php',

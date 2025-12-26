@@ -6,7 +6,7 @@ class EAUserFieldMapper
 
     public function init()
     {
-        add_filter('ea_form_rows', array($this, 'process_fields'));
+        add_filter('easy_ea_form_rows', array($this, 'process_fields'));
     }
 
     public function process_fields($fields)

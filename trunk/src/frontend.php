@@ -8,7 +8,7 @@ if (!defined('WPINC')) {
 /**
  * Home of the front end short codes
  */
-class EAFrontend
+class Easy_EA_Frontend
 {
 
     /**
@@ -148,7 +148,9 @@ class EAFrontend
 
         wp_register_style(
             'ea-jqueryui-style',
-            EA_PLUGIN_URL . 'css/jquery-ui.css'
+            EA_PLUGIN_URL . 'css/jquery-ui.css',
+            array(),
+            EASY_APPOINTMENTS_VERSION
         );
 
         wp_register_style(
@@ -254,7 +256,7 @@ class EAFrontend
         $settings['trans.ajax-call-not-available'] = __('Unable to make ajax request. Please try again later.', 'easy-appointments');
 
         $customCss = $settings['custom.css'];
-        $customCss = strip_tags($customCss);
+        $customCss = wp_strip_all_tags($customCss);
         $customCss = str_replace(array('<?php', '?>', "\t"), array('', '', ''), $customCss);
 
         $meta = $this->models->get_all_rows("ea_meta_fields", array(), array('position' => 'ASC'));
@@ -356,7 +358,9 @@ class EAFrontend
                         <?php endif; ?>
 
                         <div style="display: inline-flex;">
-                            <?php echo apply_filters('ea_checkout_button', '<button class="ea-btn ea-submit">' . esc_html_e('Submit', 'easy-appointments') . '</button>'); ?>
+                            <?php 
+                             // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+                             echo apply_filters('easy_ea_checkout_button', '<button class="ea-btn ea-submit">' . esc_html_e('Submit', 'easy-appointments') . '</button>'); ?>
                             <button class="ea-btn ea-cancel"><?php esc_html_e('Cancel', 'easy-appointments'); ?></button>
                         </div>
                     </div>
@@ -366,7 +370,7 @@ class EAFrontend
         </div>
         <?php
 
-        apply_filters('ea_checkout_script', '');
+        apply_filters('easy_ea_checkout_script', '');
 
         $content = ob_get_clean();
         // compress output
@@ -532,10 +536,24 @@ class EAFrontend
 
         $service_start_data = [];
         global $wpdb;
-        $results = $wpdb->get_results("
-            SELECT id, advance_booking_days 
-            FROM {$wpdb->prefix}ea_services
-            WHERE advance_booking_days IS NOT NULL");
+
+        $cache_key   = 'ea_services_advance_booking_days';
+        $cache_group = 'easy_appointments';
+
+        $results = wp_cache_get( $cache_key, $cache_group );
+
+        if ( false === $results ) {
+            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
+            $results = $wpdb->get_results(
+                "SELECT id, advance_booking_days
+                FROM {$wpdb->prefix}ea_services
+                WHERE advance_booking_days IS NOT NULL"
+            );
+
+            wp_cache_set( $cache_key, $results, $cache_group );
+        }
+
+
 
         foreach ($results as $service) {
             if ( !empty( $service->advance_booking_days ) ) {
@@ -544,7 +562,7 @@ class EAFrontend
                 $booking_date_skip = [];
                 for ($i = 0; $i < $advance_booking_days; $i++) {
                     if ($i > 0) {
-                        $booking_date_skip[] = date('Y-m-d', strtotime($current_date . ' +'.$i.' days'));
+                        $booking_date_skip[] = gmdate('Y-m-d', strtotime($current_date . ' +'.$i.' days'));
                     }else{
                         $booking_date_skip[] = $current_date;
                     }
@@ -597,7 +615,7 @@ class EAFrontend
         ), $atts);
 
         // check params
-        apply_filters('ea_bootstrap_shortcode_params', $atts);
+        apply_filters('easy_ea_bootstrap_shortcode_params', $atts);
 
         // all those values are used inside JS code part, escape all values to be JS strings
         foreach ($code_params as $key => $value) {
@@ -671,7 +689,7 @@ class EAFrontend
 
         // CUSTOM CSS
         $customCss = $settings['custom.css'];
-        $customCss = strip_tags($customCss);
+        $customCss = wp_strip_all_tags($customCss);
         $customCss = str_replace(array('<?php', '?>', "\t"), array('', '', ''), $customCss);
 
         unset($settings['custom.css']);
@@ -682,7 +700,7 @@ class EAFrontend
 
         $rows = $this->models->get_all_rows("ea_meta_fields", array(), array('position' => 'ASC'));
 
-        $rows = apply_filters( 'ea_form_rows', $rows);
+        $rows = apply_filters( 'easy_ea_form_rows', $rows);
         $settings['MetaFields'] = $rows;
 
         wp_enqueue_script('underscore');
@@ -703,14 +721,14 @@ class EAFrontend
         }
 
         if (!empty($settings['captcha3.site-key'])) {
-            wp_enqueue_script('ea-google-recaptcha-v3', "https://www.google.com/recaptcha/api.js?render={$settings['captcha3.site-key']}");
+            wp_enqueue_script('ea-google-recaptcha-v3', "https://www.google.com/recaptcha/api.js?render={$settings['captcha3.site-key']}",array(),EASY_APPOINTMENTS_VERSION,true);
         }        
         
         if (isset($settings['show.customer_search_front']) && $settings['show.customer_search_front'] == 1) {
-            wp_enqueue_script('select2-js', 'https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js',array('jquery'),
+            wp_enqueue_script('select2-js', EA_PLUGIN_URL . 'js/select2.min.js',array('jquery'),
             EASY_APPOINTMENTS_VERSION,
             true);
-            wp_enqueue_style('select2-css', 'https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css');
+            wp_enqueue_style('select2-css', EA_PLUGIN_URL . 'css/select2.min.css',array(),EASY_APPOINTMENTS_VERSION);
         }
 
         
@@ -734,7 +752,7 @@ class EAFrontend
         <div class="ea-bootstrap bootstrap"></div><?php
 
         // load scripts if there are some
-        apply_filters('ea_checkout_script', '');
+        apply_filters('easy_ea_checkout_script', '');
 
         $content = ob_get_clean();
         // compress output
@@ -779,9 +797,22 @@ class EAFrontend
                 $duration = (int) $rows[0]->duration;
                 $slot_step = (int) $rows[0]->slot_step;
 
-                echo "<option data-duration='{$duration}' data-slot_step='{$slot_step}' value='{$rows[0]->id}' selected='selected'$price_attr>{$name}</option>";
+                echo sprintf(
+                    '<option data-duration="%d" data-slot_step="%d" value="%d" selected="selected"%s>%s</option>',
+                    esc_attr( $duration ),
+                    esc_attr( $slot_step ),
+                    esc_attr( $rows[0]->id ),
+                    wp_kses_post( $price_attr ),
+                    esc_html( $name )
+                );
             } else {
-                echo "<option value='{$rows[0]->id}' selected='selected'$price_attr>{$name}</option>";
+                echo sprintf(
+                    '<option value="%d" selected="selected"%s>%s</option>',
+                    esc_attr( $rows[0]->id ),
+                    wp_kses_post( $price_attr ),
+                    esc_html( $name )
+                );
+
             }
             return;
         }
@@ -794,9 +825,23 @@ class EAFrontend
                     $duration = (int) $row->duration;
                     $slot_step = (int) $row->slot_step;
                     $name = esc_html($row->name);
-                    $price_attr = !empty($row->price) ? " data-price='" . esc_attr($row->price) . "'" : '';
+                    $price_attr = '';
+                    if ( ! empty( $row->price ) ) {
+                        $price_attr = sprintf(
+                            ' data-price="%s"',
+                            esc_attr( $row->price )
+                        );
+                    }
 
-                    echo "<option value='{$row->id}' data-duration='{$duration}' data-slot_step='{$slot_step}' selected='selected'$price_attr>{$name}</option>";
+                    printf(
+                        '<option value="%s" data-duration="%s" data-slot_step="%s" selected="selected"%s>%s</option>',
+                        esc_attr( $row->id ),
+                        esc_attr( $duration ),
+                        esc_attr( $slot_step ),
+                        // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+                        $price_attr, // already escaped above
+                        esc_html( $name )
+                    );
                     return;
                 }
             }
@@ -807,7 +852,12 @@ class EAFrontend
                 if ($row->id == $location_id) {
                     $name = esc_html($row->name);
                     $price_attr = !empty($row->price) ? " data-price='" . esc_attr($row->price) . "'" : '';
-                    echo "<option value='{$row->id}' selected='selected'$price_attr>{$name}</option>";
+                    echo sprintf(
+                        '<option value="%d" selected="selected"%s>%s</option>',
+                        esc_attr( $rows->id ),
+                        wp_kses_post( $price_attr ),
+                        esc_html( $name )
+                    );
                     return;
                 }
             }
@@ -818,7 +868,12 @@ class EAFrontend
                 if ($row->id == $worker_id) {
                     $name = esc_html($row->name);
                     $price_attr = !empty($row->price) ? " data-price='" . esc_attr($row->price) . "'" : '';
-                    echo "<option value='{$row->id}' selected='selected'$price_attr>{$name}</option>";
+                    echo sprintf(
+                        '<option value="%d" selected="selected"%s>%s</option>',
+                        esc_attr( $rows->id ),
+                        wp_kses_post( $price_attr ),
+                        esc_html( $name )
+                    );
                     return;
                 }
             }
@@ -840,7 +895,11 @@ class EAFrontend
             $default_value = esc_html__('Select', 'easy-appointments').' '.$default_value;
             
         }
-        echo "<option value='' selected='selected'>{$default_value}</option>";
+        printf(
+            '<option value="" selected="selected">%s</option>',
+            esc_html( $default_value )
+        );
+
 
         foreach ($rows as $row) {
             $name = esc_html($row->name);
@@ -859,12 +918,27 @@ class EAFrontend
             // case when we are hiding price
             if ($hide_price == '1') {
                 // for all other types
-                if ($type !== 'services') {
-                    echo "<option value='{$row->id}'>{$name}</option>";
-                } else if ($type == 'services') {
+                if ( $type !== 'services' ) {
+
+                    printf(
+                        '<option value="%s">%s</option>',
+                        esc_attr( $row->id ),
+                        esc_html( $name )
+                    );
+
+                } else {
+
                     // for service
-                    echo "<option data-duration='{$duration}' data-slot_step='{$slot_step}' value='{$row->id}'>{$name}</option>";
+                    printf(
+                        '<option value="%s" data-duration="%s" data-slot_step="%s">%s</option>',
+                        esc_attr( $row->id ),
+                        esc_attr( $duration ),
+                        esc_attr( $slot_step ),
+                        esc_html( $name )
+                    );
+
                 }
+
 
             } else if ($type === 'services') {
                 $price = ($before == '1') ? $currency . $price : $price . $currency;
@@ -875,9 +949,24 @@ class EAFrontend
                     $name_price = $name;
                 }
 
-                echo "<option data-duration='{$duration}' data-slot_step='{$slot_step}' value='{$row->id}'{$price_attr}>{$name_price}</option>";
+                printf(
+                    '<option value="%s" data-duration="%s" data-slot_step="%s"%s>%s</option>',
+                    esc_attr( $row->id ),
+                    esc_attr( $duration ),
+                    esc_attr( $slot_step ),
+                    // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+                    $price_attr, // already escaped above
+                    esc_html( $name_price )
+                );
+
             } else {
-                echo "<option value='{$row->id}'>{$name}</option>";
+
+                printf(
+                    '<option value="%s">%s</option>',
+                    esc_attr( $row->id ),
+                    esc_html( $name )
+                );
+
             }
         }
     }

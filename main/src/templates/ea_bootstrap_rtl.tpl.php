@@ -138,7 +138,7 @@
                 <div class="col-sm-offset-4 col-sm-8 ea-actions-group" style="display: inline-flex;">
                     <?php 
                     // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-                    echo apply_filters('ea_checkout_button', '<button class="ea-btn ea-submit btn btn-primary"><%- settings[\'trans.submit\'] %></button>');?>
+                    echo apply_filters('easy_ea_checkout_button', '<button class="ea-btn ea-submit btn btn-primary"><%- settings[\'trans.submit\'] %></button>');?>
                     <button class="ea-btn ea-cancel btn btn-default"><%- settings['trans.cancel'] %></button>
                 </div>
             </div>

@@ -53,7 +53,7 @@ class ComposerStaticInit6454aa61d36164254036b36c455b0d68
         'EAAppointmentFields' => __DIR__ . '/../..' . '/src/fields/appointment.php',
         'EADBModels' => __DIR__ . '/../..' . '/src/dbmodels.php',
         'EADateTime' => __DIR__ . '/../..' . '/src/datetime.php',
-        'EAFrontend' => __DIR__ . '/../..' . '/src/frontend.php',
+        'Easy_EA_Frontend' => __DIR__ . '/../..' . '/src/frontend.php',
         'EAFullCalendar' => __DIR__ . '/../..' . '/src/shortcodes/fullcalendar.php',
         'EAGDPRActions' => __DIR__ . '/../..' . '/src/api/gdpr.php',
         'EAInstallTools' => __DIR__ . '/../..' . '/src/install.php',
