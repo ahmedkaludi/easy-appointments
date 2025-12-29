@@ -5,7 +5,7 @@ if (!defined('WPINC')) {
     die;
 }
 
-class EAApiFullCalendar
+class EasyEAApiFullCalendar
 {
     /**
      * The namespace.
@@ -86,7 +86,7 @@ class EAApiFullCalendar
      */
     public function get_items_permissions_check( $request ) {
         // just for demo page
-        $have_access = apply_filters( 'ea_calendar_public_access', false);
+        $have_access = apply_filters( 'easy_ea_calendar_public_access', false);
 
         if ( ! current_user_can( 'read' ) && !$have_access ) {
             return new WP_Error( 'rest_forbidden', esc_html__( 'You cannot view the category resource.', 'easy-appointments' ), array( 'status' => $this->authorization_status_code() ) );

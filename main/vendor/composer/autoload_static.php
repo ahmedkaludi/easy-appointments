@@ -49,7 +49,7 @@ class ComposerStaticInit6454aa61d36164254036b36c455b0d68
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
         'EAAdminPanel' => __DIR__ . '/../..' . '/src/admin.php',
         'EAAjax' => __DIR__ . '/../..' . '/src/ajax.php',
-        'EAApiFullCalendar' => __DIR__ . '/../..' . '/src/api/apifullcalendar.php',
+        'EasyEAApiFullCalendar' => __DIR__ . '/../..' . '/src/api/apifullcalendar.php',
         'EAAppointmentFields' => __DIR__ . '/../..' . '/src/fields/appointment.php',
         'EADBModels' => __DIR__ . '/../..' . '/src/dbmodels.php',
         'EADateTime' => __DIR__ . '/../..' . '/src/datetime.php',

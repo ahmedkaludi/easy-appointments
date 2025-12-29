@@ -9,7 +9,7 @@ return array(
     'Composer\\InstalledVersions' => $vendorDir . '/composer/InstalledVersions.php',
     'EAAdminPanel' => $baseDir . '/src/admin.php',
     'EAAjax' => $baseDir . '/src/ajax.php',
-    'EAApiFullCalendar' => $baseDir . '/src/api/apifullcalendar.php',
+    'EasyEAApiFullCalendar' => $baseDir . '/src/api/apifullcalendar.php',
     'EAAppointmentFields' => $baseDir . '/src/fields/appointment.php',
     'EADBModels' => $baseDir . '/src/dbmodels.php',
     'EADateTime' => $baseDir . '/src/datetime.php',

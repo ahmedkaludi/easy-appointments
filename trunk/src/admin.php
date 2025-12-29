@@ -653,7 +653,7 @@ class EAAdminPanel
 
         $settings = $this->options->get_options();
         $settings['rest_url'] = get_rest_url();
-        $settings['rest_url_fullcalendar'] = EAApiFullCalendar::get_url();
+        $settings['rest_url_fullcalendar'] = EasyEAApiFullCalendar::get_url();
         $settings['export_tags_list'] = $this->models->get_all_tags_for_template();
         $settings['saved_tags_list'] = get_option('ea_excel_columns', '');
 
@@ -1122,7 +1122,7 @@ class EAAdminPanel
 
         $settings = $this->options->get_options();
         $settings['rest_url'] = get_rest_url();
-        $settings['rest_url_fullcalendar'] = EAApiFullCalendar::get_url();
+        $settings['rest_url_fullcalendar'] = EasyEAApiFullCalendar::get_url();
         $settings['export_tags_list'] = $this->models->get_all_tags_for_template();
         $settings['saved_tags_list'] = get_option('ea_excel_columns', '');
 

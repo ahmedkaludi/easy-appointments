@@ -35,22 +35,22 @@ define('EA_PLUGIN_DIR', plugin_dir_path( __FILE__));
 
 // Register the autoloader that loads everything except the Google namespace.
 if (version_compare(PHP_VERSION, '5.3', '<')) {
-    if (!function_exists('ea_autoload')) {
-        function ea_autoload($class)
+    if (!function_exists('easy_ea_autoload')) {
+        function easy_ea_autoload($class)
         {
-            global $ea_class_location;
+            global $easy_ea_class_location;
 
-            if (empty($ea_class_location)) {
-                $ea_class_location = include dirname(__FILE__) . '/vendor/composer/autoload_classmap.php';
+            if (empty($easy_ea_class_location)) {
+                $easy_ea_class_location = include dirname(__FILE__) . '/vendor/composer/autoload_classmap.php';
             }
 
-            if (is_array($ea_class_location) && array_key_exists($class, $ea_class_location)) {
-                require_once $ea_class_location[$class];
+            if (is_array($easy_ea_class_location) && array_key_exists($class, $easy_ea_class_location)) {
+                require_once $easy_ea_class_location[$class];
             }
         }
     }
     // register autoloader
-    spl_autoload_register('ea_autoload');
+    spl_autoload_register('easy_ea_autoload');
 } else {
     // PHP 5.3.0+ use composer auto loader
     require_once dirname(__FILE__) . '/vendor/autoload.php';
@@ -352,8 +352,8 @@ class EasyAppointment
 /**
  * INIT EASY APPOINTMENTS
  */
-$ea_app = new EasyAppointment;
-$ea_app->init();
+$easy_ea_app = new EasyAppointment;
+$easy_ea_app->init();
 /**
  * END
  */

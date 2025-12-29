@@ -58,7 +58,7 @@ class EAFullCalendar
         $is_public = $this->options->get_option_value('fullcalendar.public', '0');
 
         if (!empty($is_public)) {
-            add_filter('ea_calendar_public_access', function() { return true; });
+            add_filter('easy_ea_calendar_public_access', function() { return true; });
         }
     }
 

@@ -66,8 +66,8 @@ class EAMail
     public function init()
     {
         // email notification
-        add_action('ea_user_email_notification', array($this, 'send_user_email_notification_action'), 10, 1);
-        add_action('ea_repeat_appointment_mail_notification', array($this, 'send_repeat_appointment_mail_notification'), 10, 2);
+        add_action('easy_ea_user_email_notification', array($this, 'send_user_email_notification_action'), 10, 1);
+        add_action('easy_ea_repeat_appointment_mail_notification', array($this, 'send_repeat_appointment_mail_notification'), 10, 2);
         add_action('ea_admin_email_notification', array($this, 'send_admin_email_notification_action'), 10, 2);
 
         // we want to check if it is link from EA mail
@@ -219,10 +219,10 @@ EOT;
             $response = $this->models->replace($table, $app_data, true);
 
             // trigger new appointment
-            do_action('ea_new_app', $app_data['id'], $app_data);
+            do_action('easy_ea_new_app', $app_data['id'], $app_data);
 
             // for user
-            do_action('ea_user_email_notification', $app_data['id']);
+            do_action('easy_ea_user_email_notification', $app_data['id']);
 
             // for admin
             do_action('ea_admin_email_notification', $app_data['id']);
@@ -249,10 +249,10 @@ EOT;
             $response = $this->models->replace($table, $app_data, true);
 
             // trigger new appointment
-            do_action('ea_new_app', $app_data['id'], $app_data);
+            do_action('easy_ea_new_app', $app_data['id'], $app_data);
 
             // for user
-            do_action('ea_user_email_notification', $app_data['id']);
+            do_action('easy_ea_user_email_notification', $app_data['id']);
 
             // for admin
             do_action('ea_admin_email_notification', $app_data['id']);

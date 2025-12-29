@@ -103,7 +103,7 @@ class EAAjax
         add_action('wp_ajax_ea_update_customer_data', array($this, 'ea_update_customer_data'));       
 
         // end frontend
-        add_action('ea_new_app', array($this, 'add_customer_data'), 1000);
+        add_action('easy_ea_new_app', array($this, 'add_customer_data'), 1000);
 
         // admin ajax section
         if (is_admin() && is_user_logged_in()) {
@@ -899,12 +899,12 @@ class EAAjax
                     $response = $response && $this->models->replace('ea_fields', $fields, true, true);
                 }
                 // trigger new appointment
-                do_action('ea_new_app', $appointment['id'], $appointment, true);
+                do_action('easy_ea_new_app', $appointment['id'], $appointment, true);
 
                 // trigger new appointment from customer
             }
-            do_action('ea_new_app_from_customer', $appointment['id'], $appointment, true);
-            do_action('ea_repeat_appointment_mail_notification', $appointment['id'],$appointments);
+            do_action('easy_ea_new_app_from_customer', $appointment['id'], $appointment, true);
+            do_action('easy_ea_repeat_appointment_mail_notification', $appointment['id'],$appointments);
         }else {
             $check = $this->logic->can_update_reservation($appointment, $data);
             if (!$check['status']) {
@@ -947,13 +947,13 @@ class EAAjax
                 $this->mail->send_notification($data);
 
                 // trigger send user email notification appointment
-                do_action('ea_user_email_notification', $appointment['id']);
+                do_action('easy_ea_user_email_notification', $appointment['id']);
 
                 // trigger new appointment
-                do_action('ea_new_app', $appointment['id'], $appointment, true);
+                do_action('easy_ea_new_app', $appointment['id'], $appointment, true);
 
                 // trigger new appointment from customer
-                do_action('ea_new_app_from_customer', $appointment['id'], $appointment, true);
+                do_action('easy_ea_new_app_from_customer', $appointment['id'], $appointment, true);
             }
         }
 
@@ -2001,7 +2001,7 @@ class EAAjax
                 }
 
                 // edit app
-                do_action('ea_edit_app', $app_data['id']);
+                do_action('easy_ea_edit_app', $app_data['id']);
 
                 break;
             case 'NEW':
@@ -2012,7 +2012,7 @@ class EAAjax
                 }
 
                 // trigger new appointment
-                do_action('ea_new_app', $response->id, $app_data, false);
+                do_action('easy_ea_new_app', $response->id, $app_data, false);
 
                 break;
             case 'DELETE':
