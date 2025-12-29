@@ -280,12 +280,12 @@ class EAOptions
      */
     protected function get_options_from_db()
     {
-        $table_name = $this->wpdb->prefix . 'ea_options';
+        $table_name = esc_sql( $this->wpdb->prefix . 'ea_options' );
 
-        $query =
-            "SELECT ea_key, ea_value 
-             FROM $table_name";
-
+        /* phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter */
+        $query = "SELECT ea_key, ea_value FROM {$table_name}";
+        
+        /* phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared */
         $output = $this->wpdb->get_results($query, OBJECT_K);
 
         $db_options = array();

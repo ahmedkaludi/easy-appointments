@@ -66,7 +66,7 @@ class EASlotsLogic {
         $params[] = $day;
         $params[] = $app_id;
         $full_query = str_replace($this->PLACEHOLDER, $dynamic_part, $static_part);
-
+        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
         return $this->wpdb->prepare($full_query, $params);
     }
 

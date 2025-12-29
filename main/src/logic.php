@@ -87,7 +87,7 @@ class EALogic
         $is_current_day = (gmdate('Y-m-d') == $day);
 
         $block_date = gmdate('Y-m-d', $block_time);
-
+        // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared	
         $query = $this->wpdb->prepare("SELECT * FROM {$this->wpdb->prefix}ea_connections WHERE 
 			location=%d AND 
 			service=%d AND 
@@ -98,7 +98,7 @@ class EALogic
 			(day_to IS NULL OR day_to >= %s)",
             $location, $service, $worker, "%{$day_of_week}%", $day, $day
         );
-
+        // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.PreparedSQL.NotPrepared
         $open_days = $this->wpdb->get_results($query);
 
         $working_hours = array();
@@ -187,7 +187,7 @@ class EALogic
         $time_now = current_time('timestamp', false);
         $block_time = $time_now + intval($block_before) * 60;
         $is_current_day = (gmdate('Y-m-d') == $day);
-
+        // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
         $query = $this->wpdb->prepare("SELECT * FROM {$this->wpdb->prefix}ea_connections WHERE 
             location=%d AND 
             service=%d AND 
@@ -197,7 +197,7 @@ class EALogic
             (day_to IS NULL OR day_to >= %s)",
             $location, $service, $worker, $day, $day
         );
-
+        // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.PreparedSQL.NotPrepared
         $open_days = $this->wpdb->get_results($query);
 
         $working_hours = array();
@@ -299,7 +299,7 @@ class EALogic
     private function remove_closed_slots(&$slots, $location = null, $service = null, $worker = null, $day = null, $service_duration = 60)
     {
         $day_of_week = gmdate('l', strtotime($day));
-
+        // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
         $query = $this->wpdb->prepare("SELECT * FROM {$this->wpdb->prefix}ea_connections WHERE 
 			location=%d AND 
 			service=%d AND 
@@ -310,7 +310,7 @@ class EALogic
 			(day_to IS NULL OR day_to >= %s)",
             $location, $service, $worker, "%{$day_of_week}%", $day, $day
         );
-
+        // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.PreparedSQL.NotPrepared
         $closed_days = $this->wpdb->get_results($query);
 
 
@@ -355,15 +355,14 @@ class EALogic
             'status'  => true,
             'message' => ''
         );
-
-        $query = $this->wpdb->prepare(
-            "SELECT id AS no_apps FROM {$this->wpdb->prefix}ea_appointments WHERE 
+        // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+        $query = $this->wpdb->prepare("SELECT id AS no_apps FROM {$this->wpdb->prefix}ea_appointments WHERE 
 				ip=%s AND 
 				status IN ('abandoned', 'pending') AND
 				created >= now() - INTERVAL 1 DAY",
             $ip
         );
-
+        // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.PreparedSQL.NotPrepared
         $appIds = $this->wpdb->get_col($query);
 
         $maxNumber = (int) $this->options->get_option_value('max.appointments', 10);
@@ -373,7 +372,7 @@ class EALogic
             $result['message'] = $maxNumber . __('Daily limit of booking request has been reached. Please contact us by email!', 'easy-appointments');
         }
 
-        $result = apply_filters( 'ea_can_make_reservation', $result, $data);
+        $result = apply_filters( 'easy_ea_can_make_reservation', $result, $data);
 
         return $result;
     }
@@ -385,7 +384,7 @@ class EALogic
             'message' => ''
         );
 
-        $result = apply_filters( 'ea_can_update_reservation', $result, $appointment, $data);
+        $result = apply_filters( 'easy_ea_can_update_reservation', $result, $appointment, $data);
 
         return $result;
     }
@@ -406,15 +405,14 @@ class EALogic
         $maxNumber = (int) $this->options->get_option_value('max.appointments_by_user', 10);
         if ($maxNumber > 0) {
             $user = $data['user'];
-    
-            $query = $this->wpdb->prepare(
-                "SELECT id AS no_apps FROM {$this->wpdb->prefix}ea_appointments WHERE 
+            // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+            $query = $this->wpdb->prepare("SELECT id AS no_apps FROM {$this->wpdb->prefix}ea_appointments WHERE 
                     user=%s AND 
                     status IN ('abandoned', 'pending') AND
                     created >= now() - INTERVAL 1 DAY",
                 $user
             );
-    
+            // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.PreparedSQL.NotPrepared
             $appIds = $this->wpdb->get_col($query);
     
             $maxNumber = (int) $this->options->get_option_value('max.appointments_by_user', 10);
@@ -424,7 +422,7 @@ class EALogic
                 $result['message'] = $maxNumber." " . __('Daily limit of booking request has been reached. Please contact us by email!', 'easy-appointments');
             }
     
-            $result = apply_filters( 'ea_can_make_reservation', $result, $data);
+            $result = apply_filters( 'easy_ea_can_make_reservation', $result, $data);
         }
 
         return $result;
@@ -448,7 +446,7 @@ class EALogic
         }
 
         $query = $this->slots_logic->get_busy_slot_query($location, $service, $worker, $day, $app_id);
-
+        // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.PreparedSQL.NotPrepared
         $appointments = $this->wpdb->get_results($query);
 
         // dailyLimit section
