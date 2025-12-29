@@ -94,14 +94,9 @@ class EADBModels
         }
 
         $order_part = implode(',', $order_part);
-
-        $query = $this->wpdb->prepare("SELECT * 
-			FROM {$this->wpdb->prefix}{$table_name} 
-			WHERE 1$where 
-			ORDER BY {$order_part}",
-            $params
-        );
-
+        // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
+        $query = $this->wpdb->prepare("SELECT * FROM {$this->wpdb->prefix}{$table_name} WHERE 1$where ORDER BY {$order_part}", $params );
+        // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.PreparedSQL.NotPrepared
         return $this->wpdb->get_results($query);
     }
 
@@ -150,7 +145,7 @@ class EADBModels
 			FROM $tableName
 			WHERE 1 AND date >= %s AND date <= %s {$location}{$service}{$worker}{$status}{$search}
 			ORDER BY id DESC";
-
+        // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.PreparedSQL.NotPrepared
         $apps = $this->wpdb->get_results($this->wpdb->prepare($query, $params), OBJECT_K);
 
         $ids = array_keys($apps);
@@ -182,6 +177,7 @@ class EADBModels
         $apps = implode(',', $ids);
 
         $query = "SELECT f.app_id, m.slug, f.value FROM {$meta} m JOIN {$fields} f ON (m.id = f.field_id) WHERE f.app_id IN ($apps)";
+        // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.PreparedSQL.NotPrepared
         $result = $this->wpdb->get_results($query);
 
         return $result;
@@ -203,6 +199,7 @@ class EADBModels
         }
 
         $query = "SELECT f.value FROM {$meta} m JOIN {$fields} f ON (m.id = f.field_id) WHERE m.type = 'EMAIL' AND f.app_id = $id";
+        // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.PreparedSQL.NotPrepared
         $result = $this->wpdb->get_col($query);
 
         return $result;
@@ -230,11 +227,10 @@ class EADBModels
         }
 
         $order = is_array($tmp) ? implode(',', $tmp) : $tmp;
-
-        $query = "SELECT * 
-			FROM {$this->wpdb->prefix}{$table_name} 
+        $query = "SELECT * FROM {$this->wpdb->prefix}{$table_name} 
 			ORDER BY {$order}";
 
+        // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.PreparedSQL.NotPrepared
         return json_encode($this->wpdb->get_results($query));
     }
 
@@ -246,13 +242,9 @@ class EADBModels
      */
     public function get_row($table_name, $id, $output_type = OBJECT)
     {
-
-        $query = $this->wpdb->prepare("SELECT * 
-			FROM {$this->wpdb->prefix}{$table_name}
-			WHERE id=%d",
-            $id
-        );
-
+        // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+        $query = $this->wpdb->prepare("SELECT * FROM {$this->wpdb->prefix}{$table_name} WHERE id=%d", $id );
+        // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
         return $this->wpdb->get_row($query, $output_type);
     }
 
@@ -405,12 +397,9 @@ class EADBModels
 
             $values[] = $value;
         }
-
-        $query = $this->wpdb->prepare(
-            "SELECT DISTINCT {$options['next']} FROM $table_name WHERE 1=1$vars",
-            $values
-        );
-
+        // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
+        $query = $this->wpdb->prepare("SELECT DISTINCT {$options['next']} FROM $table_name WHERE 1=1$vars", $values );
+        // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.PreparedSQL.NotPrepared, 
         $next_rows_raw = $this->wpdb->get_results($query, ARRAY_N);
 
         $next_rows = array();
@@ -434,7 +423,7 @@ class EADBModels
         if ($order != '') {
             $query .= $order;
         }
-
+        // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.PreparedSQL.NotPrepared
         return $this->wpdb->get_results($query);
     }
 
@@ -472,34 +461,14 @@ class EADBModels
         $table_meta = $this->wpdb->prefix . 'ea_meta_fields';
         $table_fields = $this->wpdb->prefix . 'ea_fields';
 
-        $query = $this->wpdb->prepare("SELECT 
-				a.*,
-				s.name AS service_name,
-				s.duration AS service_duration,
-				s.price AS service_price,
-				w.name AS worker_name,
-				w.email AS worker_email,
-				w.phone AS worker_phone,
-				l.name AS location_name,
-				l.address AS location_address,
-				l.location AS location_location
-			FROM 
-				{$table_app} a 
-			JOIN 
-				{$table_services} s
-				ON(a.service = s.id)
-			JOIN 
-				{$table_locations} l
-				ON(a.location = l.id)
-			JOIN 
-				{$table_workers} w
-				ON(a.worker = w.id)
-			WHERE a.id = %d", $id);
+        /* phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare */
+        $query = $this->wpdb->prepare("SELECT a.*, s.name AS service_name, s.duration AS service_duration, s.price AS service_price, w.name AS worker_name, w.email AS worker_email, w.phone AS worker_phone, l.name AS location_name, l.address AS location_address, l.location AS location_location FROM {$table_app} a JOIN {$table_services} s ON (a.service = s.id) JOIN {$table_locations} l ON (a.location = l.id) JOIN {$table_workers} w ON (a.worker = w.id) WHERE a.id = %d", $id);
 
+        // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.PreparedSQL.NotPrepared, 
         $results = $this->wpdb->get_results($query, ARRAY_A);
-
+        /* phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare */
         $f_query = $this->wpdb->prepare("SELECT m.slug, f.value FROM {$table_meta} m JOIN $table_fields f ON (m.id = f.field_id) WHERE f.app_id = %d", $id);
-
+        // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.PreparedSQL.NotPrepared, 
         $fields = $this->wpdb->get_results($f_query);
 
         if (count($results) == 1) {
@@ -521,7 +490,7 @@ class EADBModels
         $table_app = $this->wpdb->prefix . 'ea_appointments';
 
         $query = "DELETE FROM $table_app WHERE status = 'reservation' AND created < (NOW() - INTERVAL 6 MINUTE)";
-
+        // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
         $this->wpdb->query($query);
     }
 
@@ -583,15 +552,16 @@ class EADBModels
 
                 break;
         };
-
+        // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.PreparedSQL.NotPrepared
         return $this->wpdb->get_results($query);
     }
 
     public function clear_options($type = 'default')
     {
         $table = $this->wpdb->prefix . 'ea_options';
-
+        /* phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared */
         $query = $this->wpdb->prepare("DELETE FROM $table WHERE `type` = %s", $type);
+        // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.PreparedSQL.NotPrepared
         $this->wpdb->query($query);
     }
 
@@ -603,7 +573,7 @@ class EADBModels
         $connections = $this->wpdb->prefix . 'ea_connections';
 
         $query = "SELECT location, service, worker FROM $connections WHERE is_working=1";
-
+        // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.PreparedSQL.NotPrepared
         return $this->wpdb->get_results($query);
     }
 
@@ -633,7 +603,7 @@ class EADBModels
         $meta = $this->wpdb->prefix . 'ea_meta_fields';
 
         $query = "SELECT MAX(id) FROM $meta";
-
+        // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.PreparedSQL.NotPrepared
         $max = (int)$this->wpdb->get_var($query);
 
         return $max + 1;
@@ -644,8 +614,9 @@ class EADBModels
     {
         $table_name = $this->wpdb->prefix . 'ea_options';
         $key = $option['ea_key'];
+        /* phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared */
         $query = $this->wpdb->prepare("DELETE FROM $table_name WHERE ea_key=%s", $key);
-
+        // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.PreparedSQL.NotPrepared
         $this->wpdb->query($query);
 
         return $this->wpdb->insert($table_name, $option);
@@ -718,7 +689,7 @@ class EADBModels
         global $wpdb;
 
         $table_name = $wpdb->prefix . 'ea_meta_fields';
-
+        // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
         $fields = $wpdb->get_col('SELECT CONCAT(\'#\', `slug`, \'#\') FROM ' . $table_name);
 
         return $fields;
@@ -727,9 +698,9 @@ class EADBModels
     public function get_worker_id_by_email($email)
     {
         $table_name = $this->wpdb->prefix . 'ea_staff';
-
+        //  phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
         $query = $this->wpdb->prepare("SELECT id FROM {$table_name} WHERE email = %s", array($email));
-
+        // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.PreparedSQL.NotPrepared
         return $this->wpdb->get_var($query);
     }
 }

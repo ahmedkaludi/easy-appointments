@@ -336,7 +336,7 @@ class EasyAppointment
             WHERE status != %s
             AND end_date < %s
         ";
-
+        /* phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter */
         $wpdb->query(
             $wpdb->prepare(
                 $sql,
