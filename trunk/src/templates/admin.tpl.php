@@ -564,7 +564,7 @@
                       <div class="label-with-tooltip">
                           <label for=""><?php esc_attr_e('Manage appointmennt in popup', 'easy-appointments'); ?></label>
                           <span class="tooltip tooltip-right"
-                                data-tooltip="<?php esc_attr_e('Popup dialog for modify appointment details.', 'easy-appointments'); ?>"></span>
+                                data-tooltip="<?php esc_attr_e('Popup dialog for modify appointment details, It works only for logged in users.', 'easy-appointments'); ?>"></span>
                       </div>
                       <div class="field-wrap">
                           <input class="field" data-key="fullcalendar.manage_appointment.show"
