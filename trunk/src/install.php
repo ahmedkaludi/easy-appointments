@@ -219,7 +219,7 @@ class EAInstallTools
         }
 
         foreach ($alter_querys as $query) {
-            // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
+            // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
             $wpdb->query($query);
         }
 
@@ -500,7 +500,7 @@ class EAInstallTools
         }
 
         // Check if parent is enabled
-        // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter
+        // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
         $parent_value = $wpdb->get_var($wpdb->prepare(
             "SELECT ea_value FROM $table_name WHERE ea_key = %s",
             $parent_key
@@ -512,7 +512,7 @@ class EAInstallTools
 
         // Insert or update each child key
         foreach ($children as $key) {
-            // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter
+            // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
             $existing = $wpdb->get_var($wpdb->prepare(
                 "SELECT COUNT(*) FROM $table_name WHERE ea_key = %s",
                 $key
@@ -520,6 +520,7 @@ class EAInstallTools
 
             if ($existing) {
                 // Update to 1
+                // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
                 $wpdb->update(
                     $table_name,
                     ['ea_value' => '1'],
@@ -529,6 +530,7 @@ class EAInstallTools
                 );
             } else {
                 // Insert as 1
+                // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
                 $wpdb->insert(
                     $table_name,
                     [
@@ -704,7 +706,7 @@ class EAInstallTools
     function ea_sync_customers_from_appointments()
     {
         global $wpdb;
-
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
         $oldest_appointment = $wpdb->get_row("
             SELECT * 
             FROM {$wpdb->prefix}ea_appointments 
@@ -726,6 +728,7 @@ class EAInstallTools
                 if (empty($email)) {
                     continue;
                 }
+                // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
                 $customer_id = $wpdb->get_var($wpdb->prepare(
                     "SELECT id FROM {$wpdb->prefix}ea_customers WHERE email = %s",
                     $email
@@ -733,6 +736,7 @@ class EAInstallTools
 
                 // Insert new customer if not found
                 if (!$customer_id) {
+                    // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
                     $inserted = $wpdb->insert("{$wpdb->prefix}ea_customers", [
                         'name'    => $name,
                         'email'   => $email,
@@ -743,6 +747,7 @@ class EAInstallTools
                     if ($inserted) {
                         $customer_id = $wpdb->insert_id;
                         if (empty($appointment->customer_id) && $customer_id) {
+                            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
                             $wpdb->update(
                                 "{$wpdb->prefix}ea_appointments",
                                 ['customer_id' => $customer_id],
