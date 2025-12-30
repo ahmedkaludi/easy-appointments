@@ -6,7 +6,7 @@ if (!defined('WPINC')) {
     die;
 }
 
-class EAVacationActions
+class EasyEAVacationActions
 {
     /**
      * @var string

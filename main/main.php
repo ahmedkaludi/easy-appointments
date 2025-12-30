@@ -121,11 +121,11 @@ class EasyAppointment
             $frontend = $this->container['frontend'];
             $frontend->init();
 
-            /** @var EAFullCalendar $full_calendar */
+            /** @var EasyEAFullCalendar $full_calendar */
             $full_calendar = $this->container['fullcalendar']; // not ready yet
             $full_calendar->init();
 
-            /** @var EAUserFieldMapper $field_mapper */
+            /** @var EasyEAUserFieldMapper $field_mapper */
             $field_mapper = $this->container['user_field_mapper'];
             $field_mapper->init();
         }
@@ -192,7 +192,7 @@ class EasyAppointment
         };
 
         $this->container['fullcalendar'] = function ($container) {
-            return new EAFullCalendar($container['db_models'], $container['logic'], $container['options'], $container['datetime']);
+            return new EasyEAFullCalendar($container['db_models'], $container['logic'], $container['options'], $container['datetime']);
         };
 
         $this->container['ajax'] = function ($container) {
@@ -204,7 +204,7 @@ class EasyAppointment
         };
 
         $this->container['user_field_mapper'] = function ($container) {
-            return new EAUserFieldMapper();
+            return new EasyEAUserFieldMapper();
         };
     }
 
@@ -242,7 +242,7 @@ class EasyAppointment
      */
     public static function uninstall()
     {
-        $uninstall = new EAUninstallTools();
+        $uninstall = new EasyEAUninstallTools();
 
         $uninstall->drop_db();
         $uninstall->delete_db_version();
@@ -271,7 +271,12 @@ class EasyAppointment
 
     public function register_text_domain()
     {
-        load_plugin_textdomain('easy-appointments', '', basename(dirname(__FILE__)) . '/languages/');
+        load_plugin_textdomain(
+            'easy-appointments',
+            false,
+            dirname( plugin_basename( __FILE__ ) ) . '/languages/'
+        );
+
     }
 
 
@@ -281,7 +286,7 @@ class EasyAppointment
     public function register_api()
     {
         // register API endpoints
-        new EAMainApi($this->get_container()); // not ready yet
+        new EasyEAMainApi($this->get_container()); // not ready yet
     }
 
     /**
@@ -317,7 +322,7 @@ class EasyAppointment
 
     public function delete_old_data()
     {
-        $gdpr = new EAGDPRActions($this->container['db_models']);
+        $gdpr = new EasyEAGDPRActions($this->container['db_models']);
         $gdpr->clear_old_custom_data();
     }
 
@@ -336,9 +341,10 @@ class EasyAppointment
             WHERE status != %s
             AND end_date < %s
         ";
-        /* phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter */
+        // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
         $wpdb->query(
             $wpdb->prepare(
+                // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
                 $sql,
                 'expired',
                 'confirmed',

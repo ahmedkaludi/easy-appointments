@@ -1,6 +1,9 @@
 <?php
 
 // If this file is called directly, abort.
+
+use GuzzleHttp\Promise\Is;
+
 if (!defined('WPINC')) {
     die;
 }
@@ -206,6 +209,7 @@ class EAAjax
 
         // Delete each ID
         foreach ($ids as $id) {
+            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
             $wpdb->delete($table, [ 'id' => intval($id) ]);
         }
 
@@ -239,7 +243,7 @@ class EAAjax
         }
 
 
-        $appointments = $_POST['appointments'];
+        $appointments = sanitize_text_field( wp_unslash( $_POST['appointments'] ) );
         $current_datetime = current_time('mysql');
         foreach ($appointments as $appointment_id) {
             $appointment = $this->models->get_row('ea_appointments', $appointment_id, ARRAY_A);
@@ -279,6 +283,7 @@ class EAAjax
             FROM {$table_name}
             WHERE (date > %s) 
             OR (date = %s AND start > %s)";
+        // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
         $appointments = $wpdb->get_results($wpdb->prepare($query, $current_date, $current_date, $current_time), ARRAY_A);
         
         
@@ -294,6 +299,7 @@ class EAAjax
                 SET status = %s
                 WHERE id = %d
             ";
+            // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
             $response = $wpdb->query($wpdb->prepare($update_query, 'abandoned', $appointment_id));
         }
         if ($response === false) {
@@ -310,14 +316,14 @@ class EAAjax
         if ( ! isset( $_POST['ezappoint_security_nonce'] ) ){
            return; 
         }
-        if ( !wp_verify_nonce( $_POST['ezappoint_security_nonce'], 'ea_send_query_message' ) ){
+        if ( !wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['ezappoint_security_nonce'] ) ), 'ea_send_query_message' ) ){
            return;  
         }   
         if ( !current_user_can( 'manage_options' ) ) {
             return;  					
         }
-        $message        = sanitize_textarea_field($_POST['message']); 
-        $email          = sanitize_email($_POST['email']);
+        $message        = isset($_POST['message']) ? sanitize_textarea_field( wp_unslash( $_POST['message'] ) ) : '';
+        $email          = isset($_POST['email']) ? sanitize_email(wp_unslash($_POST['email'])) : '';
                                 
         if(function_exists('wp_get_current_user')){
             $user           = wp_get_current_user();
@@ -354,7 +360,7 @@ class EAAjax
     public function ajax_front_end()
     {
         $this->validate_nonce();
-
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- nonce already validated
         $data = $_GET;
 
         $white_list = array('location', 'service', 'worker', 'next');
@@ -385,10 +391,13 @@ class EAAjax
         unset($_GET['action']);
 
         $block_time = (int)$this->options->get_option_value('block.time', 0);
-
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- nonce already validated
         $location = isset($_GET['location']) ? sanitize_text_field( wp_unslash( $_GET['location'] ) ) : '';
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- nonce already validated
         $service  = isset($_GET['service'])  ? sanitize_text_field( wp_unslash( $_GET['service'] ) )  : '';
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- nonce already validated
         $worker   = isset($_GET['worker'])   ? sanitize_text_field( wp_unslash( $_GET['worker'] ) )   : '';
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- nonce already validated
         $date     = isset($_GET['date'])     ? sanitize_text_field( wp_unslash( $_GET['date'] ) )     : '';
 
 
@@ -407,6 +416,7 @@ class EAAjax
                 ORDER BY day_to DESC
                 LIMIT 1",
                 $location, $service, $worker, $date);
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
         $connection_details = $wpdb->get_row($query1);
         $result =  array('calendar_slots' =>$slots, 'connection_details' => $connection_details);
        
@@ -421,11 +431,11 @@ class EAAjax
         $this->validate_captcha();
 
         $table = 'ea_appointments';
-
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- nonce already validated
         $data = $_GET;
 
         // PHP 5.2
-        //$enum = new ReflectionClass('EAAppointmentFields');
+        //$enum = new ReflectionClass('EasyEAAppointmentFields');
         //$dont_remove = $enum->getConstants();
         $dont_remove = array(
             'id',
@@ -483,7 +493,7 @@ class EAAjax
 
         $data['end'] = gmdate('H:i', $end_time);
 
-        $data['ip'] = sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) );
+        $data['ip'] = isset($_SERVER['REMOTE_ADDR']) ? sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) ) : '';
 
         $data['session'] = session_id();
 
@@ -535,6 +545,7 @@ class EAAjax
         $this->validate_captcha();
 
         $table = 'ea_appointments';
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- nonce already validated
         $data = $_GET;
 
         $multiple_allowed = intval($this->options->get_option_value('is_multiple_booking_allowed', 0));
@@ -627,7 +638,7 @@ class EAAjax
 
         // store metadata
         $data['status'] = 'reservation';
-        $data['ip'] = $_SERVER['REMOTE_ADDR'];
+        $data['ip'] = isset($_SERVER['REMOTE_ADDR']) ? sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) ) : '';
         $data['session'] = session_id();
 
         if (is_user_logged_in()) $data['user'] = get_current_user_id();
@@ -658,6 +669,7 @@ class EAAjax
         global $wpdb;
 
         $table = 'ea_appointments';
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- nonce already validated
         $data = $_GET;
 
         $allowed_keys = array(
@@ -695,7 +707,7 @@ class EAAjax
 
         // Default setup
         $data['status'] = 'reservation';
-        $data['ip'] = sanitize_text_field( wp_unslash($_SERVER['REMOTE_ADDR'] ) );
+        $data['ip'] = isset($_SERVER['REMOTE_ADDR']) ? sanitize_text_field( wp_unslash($_SERVER['REMOTE_ADDR'] ) ) : '';
         $data['session'] = session_id();
 
         if (is_user_logged_in()) {
@@ -714,6 +726,7 @@ class EAAjax
         $recurrence_id = $repeat_booking > 0 ? 'rec_' . uniqid() : null;
 
         $initial_date = $data['date'];
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
         $connection = $wpdb->get_row($wpdb->prepare(
             "SELECT * FROM {$wpdb->prefix}ea_connections WHERE 
             location = %d AND service = %d AND worker = %d AND is_working = 1
@@ -830,7 +843,7 @@ class EAAjax
         $this->validate_nonce();
 
         $table = 'ea_appointments';
-
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- nonce already validated
         $data = $_GET;
 
         unset($data['action']);
@@ -842,23 +855,23 @@ class EAAjax
         
 
         // check IP
-        if ($appointment['ip'] != sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) ) ) {
-            $this->send_err_json_result('{"err":true}');
+
+        $remote_ip = isset( $_SERVER['REMOTE_ADDR'] )
+            ? sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) )
+            : '';
+
+        if ( $appointment['ip'] !== $remote_ip ) {
+            $this->send_err_json_result( '{"err":true}' );
         }
+
 
         if (isset($appointment['recurrence_id']) && !empty($appointment['recurrence_id'])) {
             global $wpdb;
 
             $recurrence_id = $appointment['recurrence_id'];
             $table_a = $wpdb->prefix . 'ea_appointments';
-
-            $appointments = $wpdb->get_results(
-                $wpdb->prepare(
-                    "SELECT * FROM {$table_a} WHERE recurrence_id = %s",
-                    $recurrence_id
-                ),
-                ARRAY_A
-            );
+            // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+            $appointments = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$table_a} WHERE recurrence_id = %s", $recurrence_id ), ARRAY_A );
 
             
             foreach ($appointments as $appointment) {
@@ -967,7 +980,7 @@ class EAAjax
         $this->validate_nonce();
 
         $table = 'ea_appointments';
-
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- nonce already validated
         $data = $_GET;
 
         $hash = wp_hash($data['id']);
@@ -1057,7 +1070,7 @@ class EAAjax
         // case of update
         if (array_key_exists('options', $data)) {
 
-            do_action('ea_update_options', $data['options']);
+            do_action('easy_ea_update_options', $data['options']);
 
             foreach ($data['options'] as $option) {
                 // update single option
@@ -1068,7 +1081,7 @@ class EAAjax
         if (array_key_exists('fields', $data)) {
             foreach ($data['fields'] as $option) {
                 // update single option
-                $option['slug'] = EAMetaFields::parse_field_slug_name($option, $this->models->get_next_meta_field_id());
+                $option['slug'] = EasyEAMetaFields::parse_field_slug_name($option, $this->models->get_next_meta_field_id());
                 $response['fields'][] = $this->models->replace('ea_meta_fields', $option);
             }
         }
@@ -1218,6 +1231,7 @@ class EAAjax
             $where = array(
                 'id' => $id
             );
+            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
             $updated = $wpdb->update($table_name, $update_data, $where);
         }
     }
@@ -1391,7 +1405,7 @@ class EAAjax
         // we need to parse new and update case
         if ($this->type == 'NEW' || $this->type == 'UPDATE') {
 
-            $data['slug'] = EAMetaFields::parse_field_slug_name($data, $this->models->get_next_meta_field_id());
+            $data['slug'] = EasyEAMetaFields::parse_field_slug_name($data, $this->models->get_next_meta_field_id());
 
             $response = $this->models->replace($table, $data, true);
 
@@ -1445,7 +1459,7 @@ class EAAjax
         $this->parse_input_data();
 
         $response = array();
-
+        
         if ($this->type === 'GET') {
             $response = $this->models->get_all_rows('ea_error_logs');
         }
@@ -1458,9 +1472,10 @@ class EAAjax
         $this->validate_admin_nonce();
 
         $this->validate_access_rights('tools');
-
-        $address = sanitize_text_field( wp_unslash($_POST['address']));
-        $native = sanitize_text_field( wp_unslash($_POST['native']));
+        // phpcs:ignore WordPress.Security.NonceVerification.Missing
+        $address = isset($_POST['address']) ? sanitize_textarea_field( wp_unslash($_POST['address'])) : '';
+        // phpcs:ignore WordPress.Security.NonceVerification.Missing
+        $native = isset($_POST['native']) ? sanitize_text_field( wp_unslash($_POST['native'])) : '';
 
         if (!filter_var($address, FILTER_VALIDATE_EMAIL)) {
             die(esc_html__('Invalid email address!', 'easy-appointments'));
@@ -1514,16 +1529,20 @@ class EAAjax
             'ea_meta_fields',
             'ea_log_errors',
         ];
-
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
         $wpdb->query("SET FOREIGN_KEY_CHECKS=0;");
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
         $wpdb->query("SET AUTOCOMMIT = 0;");
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
         $wpdb->query("START TRANSACTION;");
 
         foreach ($tables as $table) {
+            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
             $wpdb->query("TRUNCATE TABLE {$wpdb->prefix}{$table}");
         }
-
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
         $wpdb->query("SET FOREIGN_KEY_CHECKS=1;");
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
         $wpdb->query("COMMIT;");
 
         $option_name = 'easy_app_db_version';
@@ -1687,6 +1706,7 @@ class EAAjax
     {
         global $wpdb;
         $count_query = "SELECT count(*) FROM {$wpdb->prefix}ea_meta_fields";
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared
         $num = (int) $wpdb->get_var($count_query);
         if ($num > 0) {
             return;
@@ -1700,6 +1720,7 @@ class EAAjax
 
         // insert options
         foreach ($wp_ea_options as $row) {
+            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
             $wpdb->insert(
                 $table_name,
                 $row
@@ -1712,6 +1733,7 @@ class EAAjax
         $table_name = $wpdb->prefix . 'ea_meta_fields';
 
         foreach ($default_fields as $row) {
+            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
             $wpdb->insert(
                 $table_name,
                 $row
@@ -1724,7 +1746,7 @@ class EAAjax
      */
     private function parse_input_data()
     {
-        $method = sanitize_text_field( wp_unslash($_SERVER['REQUEST_METHOD']));
+        $method = isset($_SERVER['REQUEST_METHOD']) ? sanitize_text_field( wp_unslash($_SERVER['REQUEST_METHOD'])) : '';
 
         if (!empty($_REQUEST['_method'])) {
             $method = strtoupper($_REQUEST['_method']);
@@ -2240,6 +2262,7 @@ class EAAjax
         $user_id = $user_id > 0 ? $user_id : null;
 
         // Check if customer exists
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
         $existing_customer = $wpdb->get_row($wpdb->prepare(
             "SELECT id, user_id FROM {$wpdb->prefix}ea_customers WHERE email = %s",
             $email
@@ -2247,6 +2270,7 @@ class EAAjax
 
         if (!$existing_customer) {
             // Insert new customer
+            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
             $inserted = $wpdb->insert("{$wpdb->prefix}ea_customers", [
                 'name'    => $name,
                 'email'   => $email,
@@ -2256,6 +2280,7 @@ class EAAjax
 
             if ($inserted) {
                 $customer_id = $wpdb->insert_id;
+                // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
                 $wpdb->update(
                     "{$wpdb->prefix}ea_appointments",
                     ['customer_id' => $customer_id],
@@ -2271,6 +2296,7 @@ class EAAjax
             if (!in_array($user_id, $existing_user_ids)) {
                 $existing_user_ids[] = $user_id;
                 $new_user_id_string = implode(',', array_unique($existing_user_ids));
+                // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
                 $wpdb->update(
                     "{$wpdb->prefix}ea_customers",
                     ['user_id' => $new_user_id_string],
@@ -2281,6 +2307,7 @@ class EAAjax
             }
 
             // Optional: Also update appointment with existing customer ID
+            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
             $wpdb->update(
                 "{$wpdb->prefix}ea_appointments",
                 ['customer_id' => $existing_customer->id],
@@ -2311,9 +2338,11 @@ class EAAjax
         }
 
         $total_sql = "SELECT COUNT(*) FROM $table " . ($search_sql ? $search_sql : '');
+        // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
         $total_customers = $wpdb->get_var($wpdb->prepare($total_sql, ...$params));
-
+        
         $query_sql = "SELECT * FROM $table " . ($search_sql ? $search_sql : '') . " ORDER BY id DESC LIMIT %d OFFSET %d";
+        // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
         $customers = $wpdb->get_results($wpdb->prepare($query_sql, ...array_merge($params, [$per_page, $offset])));
 
         wp_send_json([
@@ -2340,6 +2369,7 @@ class EAAjax
         $current_user_id = get_current_user_id();
 
         // Check for duplicate email for the same user_id (excluding the current customer ID)
+        // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
         $duplicate = $wpdb->get_var($wpdb->prepare(
             "SELECT COUNT(*) FROM $table WHERE email = %s AND user_id = %d AND id != %d",
             $email,
@@ -2358,7 +2388,7 @@ class EAAjax
             'address' => $address,
             'user_id' => $current_user_id, // ensure user_id is always stored
         ];
-
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
         $updated = $wpdb->update($table, $data, ['id' => $id]);
 
         if ($updated !== false) {
@@ -2382,7 +2412,7 @@ class EAAjax
         if (!$customer_id) {
             wp_send_json_error(['message' => esc_html__('Invalid customer ID.', 'easy-appointments')]);
         }
-
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
         $deleted = $wpdb->delete(
             $wpdb->prefix . 'ea_customers',
             ['id' => $customer_id],
@@ -2411,6 +2441,7 @@ class EAAjax
         $current_user_id = get_current_user_id();
 
         // Check for duplicate email for the same user_id
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
         $existing = $wpdb->get_var($wpdb->prepare(
             "SELECT COUNT(*) FROM {$wpdb->prefix}ea_customers WHERE email = %s AND user_id = %d",
             $email,
@@ -2422,6 +2453,7 @@ class EAAjax
         }
 
         // Proceed to insert
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
         $inserted = $wpdb->insert("{$wpdb->prefix}ea_customers", [
             'name'    => $name,
             'email'   => $email,
@@ -2445,7 +2477,7 @@ class EAAjax
         $type = isset($_POST['type']) && $_POST['type'] === 'past' ? 'past' : 'upcoming';
 
         global $wpdb;
-
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
         $customer = $wpdb->get_row(
             $wpdb->prepare("SELECT * FROM {$wpdb->prefix}ea_customers WHERE id = %d", $id),
             ARRAY_A
@@ -2457,7 +2489,7 @@ class EAAjax
 
         $date_compare = $type === 'past' ? '<' : '>=';
         $today = current_time('Y-m-d');
-
+        // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
         $appointments = $wpdb->get_results(
             $wpdb->prepare("
                 SELECT 
@@ -2500,7 +2532,7 @@ class EAAjax
         // Assume `user_id` column is a comma-separated list of user IDs like: 1,2,3
         // We use FIND_IN_SET for matching
         $like_clause = '%' . $wpdb->esc_like($q) . '%';
-
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
         $results = $wpdb->get_results($wpdb->prepare(
             "
             SELECT id, name, email 
@@ -2525,6 +2557,7 @@ class EAAjax
 
             global $wpdb;
             $id = absint($_POST['id']);
+            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
             $cust = $wpdb->get_row($wpdb->prepare(
                 "SELECT * FROM {$wpdb->prefix}ea_customers WHERE id = %d", $id
             ), ARRAY_A);
@@ -2567,7 +2600,7 @@ class EAAjax
             $value['app_id'] = $id;
             $this->models->replace($fields, $value, true, true);
         }
-
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
         $wpdb->update(
             $wpdb->prefix . 'ea_customers',
             [

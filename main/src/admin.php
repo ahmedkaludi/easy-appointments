@@ -783,7 +783,7 @@ class EAAdminPanel
 
         $settings = $this->options->get_options();
         $settings['rest_url'] = get_rest_url();
-        $settings['rest_url_vacation'] = EAVacationActions::get_url();
+        $settings['rest_url_vacation'] = EasyEAVacationActions::get_url();
 
         $wpurl = get_bloginfo('wpurl');
         $url   = get_bloginfo('url');
@@ -929,7 +929,7 @@ class EAAdminPanel
 
         $settings = $this->options->get_options();
         $settings['rest_url'] = get_rest_url();
-        $settings['rest_url_clear_log'] = EALogActions::clear_error_url();
+        $settings['rest_url_clear_log'] = EasyEALogActions::clear_error_url();
        
         $settings['image_base'] = str_replace("/wp-content", "", content_url());
         wp_localize_script('ea-admin-bundle', 'ea_settings', $settings);
@@ -968,7 +968,7 @@ class EAAdminPanel
 
 //        $settings['image_base'] = $wpurl === $url ? '' : $wpurl;
         $settings['image_base'] = str_replace("/wp-content", "", content_url());
-        $settings['rest_url_extend_connections'] = EALogActions::extend_connection_url();
+        $settings['rest_url_extend_connections'] = EasyEALogActions::extend_connection_url();
 
         wp_localize_script('ea-admin-bundle', 'ea_settings', $settings);
 
@@ -1055,7 +1055,7 @@ class EAAdminPanel
         $wpurl = get_bloginfo('wpurl');
         $url   = get_bloginfo('url');
         $settings['image_base'] = str_replace("/wp-content", "", content_url());
-        $settings['rest_url_extend_connections'] = EALogActions::extend_connection_url();
+        $settings['rest_url_extend_connections'] = EasyEALogActions::extend_connection_url();
 
         wp_localize_script('ea-admin-bundle', 'ea_settings', $settings);
 
@@ -1089,7 +1089,7 @@ class EAAdminPanel
 
         $settings = $this->options->get_options();
         $settings['rest_url'] = get_rest_url();
-        $settings['rest_url_clear_log'] = EALogActions::clear_error_url();
+        $settings['rest_url_clear_log'] = EasyEALogActions::clear_error_url();
 
         $wpurl = get_bloginfo('wpurl');
         $url   = get_bloginfo('url');

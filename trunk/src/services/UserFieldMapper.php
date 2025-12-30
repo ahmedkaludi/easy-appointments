@@ -1,6 +1,6 @@
 <?php
 
-class EAUserFieldMapper
+class EasyEAUserFieldMapper
 {
     public function __construct() { }
 

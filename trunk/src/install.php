@@ -330,6 +330,7 @@ class EAInstallTools
 
             // add relations
             foreach ($alter_querys as $alter_query) {
+                // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter
                 $this->wpdb->query($alter_query);
             }
 
@@ -499,6 +500,7 @@ class EAInstallTools
         }
 
         // Check if parent is enabled
+        // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter
         $parent_value = $wpdb->get_var($wpdb->prepare(
             "SELECT ea_value FROM $table_name WHERE ea_key = %s",
             $parent_key
@@ -510,6 +512,7 @@ class EAInstallTools
 
         // Insert or update each child key
         foreach ($children as $key) {
+            // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter
             $existing = $wpdb->get_var($wpdb->prepare(
                 "SELECT COUNT(*) FROM $table_name WHERE ea_key = %s",
                 $key
@@ -660,6 +663,7 @@ class EAInstallTools
             }
 
             $query .= implode(', ', $place_holders);
+            // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter
             $this->wpdb->query($this->wpdb->prepare("$query ", $values));
         }
     }

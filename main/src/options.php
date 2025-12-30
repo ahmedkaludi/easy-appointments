@@ -26,7 +26,7 @@ class EAOptions
     {
         $this->wpdb = $wpdb;
 
-        add_action('ea_update_options', array($this, 'manage_gdpr_cron'));
+        add_action('easy_ea_update_options', array($this, 'manage_gdpr_cron'));
         add_filter('easy-appointments-user-ajax-capabilities', array($this, 'manage_capabilities'), 2, 1000);
         add_filter('easy-appointments-user-menu-capabilities', array($this, 'manage_page_capabilities'), 2, 1000);
     }

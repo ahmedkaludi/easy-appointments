@@ -10,7 +10,7 @@ if (!defined('WPINC')) {
  *
  * Create whole DB stracture
  */
-class EAUninstallTools
+class EasyEAUninstallTools
 {
 
     /**
@@ -63,6 +63,7 @@ class EAUninstallTools
         $wpdb->query("START TRANSACTION;");
 
         foreach ($tables as $table) {
+            // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
             $wpdb->query("TRUNCATE TABLE {$wpdb->prefix}{$table}");
         }
 

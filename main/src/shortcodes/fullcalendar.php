@@ -6,9 +6,9 @@ if (!defined('WPINC')) {
 }
 
 /**
- * Class EAFullCalendar
+ * Class EasyEAFullCalendar
  */
-class EAFullCalendar
+class EasyEAFullCalendar
 {
 
     /**
@@ -75,13 +75,17 @@ class EAFullCalendar
 
         wp_register_style(
             'ea-full-calendar-style',
-            EA_PLUGIN_URL . 'js/libs/fullcalendar/fullcalendar.css'
+            EA_PLUGIN_URL . 'js/libs/fullcalendar/fullcalendar.css',
+            array(),
+            EASY_APPOINTMENTS_VERSION
         );
 
         // admin style
         wp_register_style(
             'ea-full-calendar-custom-css',
-            EA_PLUGIN_URL . 'css/full-calendar.css'
+            EA_PLUGIN_URL . 'css/full-calendar.css',
+            array(),
+            EASY_APPOINTMENTS_VERSION
         );
     }
 

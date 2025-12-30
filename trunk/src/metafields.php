@@ -8,7 +8,7 @@ if (!defined('WPINC')) {
 /**
  *
  */
-class EAMetaFields
+class EasyEAMetaFields
 {
 
     // We need to compile with PHP 5.2

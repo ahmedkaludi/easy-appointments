@@ -52,18 +52,18 @@
             </tr>
 
             <?php
-            $count = 1;
-            foreach ($meta as $field) {
-                if(array_key_exists($field->slug, $data)) {
-                    if($count++ % 2 == 1) {
+            $easy_ea_count = 1;
+            foreach ($meta as $easy_ea_field) {
+                if(array_key_exists($easy_ea_field->slug, $data)) {
+                    if($easy_ea_count++ % 2 == 1) {
                         echo '<tr>
-                                    <td style="text-align:left;">' . esc_html($field->label) . '</td>
-                                    <td style="text-align: right; font-weight: bold;">' . esc_html($data[$field->slug]) . '</td>
+                                    <td style="text-align:left;">' . esc_html($easy_ea_field->label) . '</td>
+                                    <td style="text-align: right; font-weight: bold;">' . esc_html($data[$easy_ea_field->slug]) . '</td>
                               </tr>';
                     } else {
                         echo '<tr>
-                                    <td style="text-align:left; background-color: #CCFFFF;">' . esc_html($field->label) . '</td>
-                                    <td style="text-align: right; font-weight: bold; background-color: #CCFFFF;">' . esc_html($data[$field->slug]) . '</td>
+                                    <td style="text-align:left; background-color: #CCFFFF;">' . esc_html($easy_ea_field->label) . '</td>
+                                    <td style="text-align: right; font-weight: bold; background-color: #CCFFFF;">' . esc_html($data[$easy_ea_field->slug]) . '</td>
                               </tr>';
                     }
                 }

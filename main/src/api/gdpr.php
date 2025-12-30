@@ -5,7 +5,7 @@ if (!defined('WPINC')) {
     die;
 }
 
-class EAGDPRActions {
+class EasyEAGDPRActions {
     /**
      * @var string
      */

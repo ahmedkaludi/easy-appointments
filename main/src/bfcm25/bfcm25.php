@@ -6,10 +6,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 /* * BFCM Banner Integration
  * Loads assets from assets/css and assets/js
  */
-add_action('admin_enqueue_scripts', 'ea_enqueue_bfcm_assets');
+add_action('admin_enqueue_scripts', 'easy_ea_enqueue_bfcm_assets');
 
-function ea_enqueue_bfcm_assets($hook) { 
- 
+function easy_ea_enqueue_bfcm_assets($hook) { 
+
     // var_dump($hook);
     if ( $hook !== 'toplevel_page_amp_options' ) {
         return;

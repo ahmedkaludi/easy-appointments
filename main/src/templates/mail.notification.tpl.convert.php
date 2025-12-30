@@ -52,17 +52,17 @@
             </tr>
 
             <?php
-            $count = 1;
-            foreach ($meta_fields as $field) {
-                if($count++ % 2 == 1) {
+            $easy_ea_count = 1;
+            foreach ($meta_fields as $easy_ea_field) {
+                if($easy_ea_count++ % 2 == 1) {
                     echo '<tr>
-                                <td style="text-align:left;">' . esc_html($field->label) . '</td>
-                                <td style="text-align: right; font-weight: bold;">#' . esc_attr($field->slug) . '#</td>
+                                <td style="text-align:left;">' . esc_html($easy_ea_field->label) . '</td>
+                                <td style="text-align: right; font-weight: bold;">#' . esc_attr($easy_ea_field->slug) . '#</td>
                           </tr>';
                 } else {
                     echo '<tr>
-                                <td style="text-align:left; background-color: #CCFFFF;">' . esc_html($field->label) . '</td>
-                                <td style="text-align: right; font-weight: bold; background-color: #CCFFFF;">#' . esc_attr($field->slug) . '#</td>
+                                <td style="text-align:left; background-color: #CCFFFF;">' . esc_html($easy_ea_field->label) . '</td>
+                                <td style="text-align: right; font-weight: bold; background-color: #CCFFFF;">#' . esc_attr($easy_ea_field->slug) . '#</td>
                           </tr>';
                 }
             }

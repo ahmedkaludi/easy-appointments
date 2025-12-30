@@ -207,7 +207,7 @@
                         </div>
                         <?php
                         global $wp_roles;
-                        $roles = $wp_roles->roles;
+                        $easy_ea_roles = $wp_roles->roles;
                         ?>
 
                         <div class="form-item">
@@ -217,8 +217,8 @@
                                     name="customer_search_roles[]"
                                     data-key="customer_search_roles">
 
-                                <?php foreach ($roles as $role_key => $role) : ?>
-                                    <option value="<?php echo esc_attr($role_key); ?>"
+                                <?php foreach ($easy_ea_roles as $easy_ea_role_key => $role) : ?>
+                                    <option value="<?php echo esc_attr($easy_ea_role_key); ?>"
                                     <%
                                         var roleSetting = _.findWhere(settings, { ea_key: 'customer_search_roles' });
                                         var selectedRoles = [];
@@ -231,7 +231,7 @@
                                             }
                                         }
 
-                                        if (_.contains(selectedRoles, '<?php echo esc_js($role_key); ?>')) {
+                                        if (_.contains(selectedRoles, '<?php echo esc_js($easy_ea_role_key); ?>')) {
                                     %> selected <% } %>>
                                         <?php echo esc_html($role['name']); ?>
                                     </option>
@@ -328,10 +328,10 @@
                     <div class="form-item">
                         <div class="form-wrap">
                             <?php esc_html_e('Current logged in user have:', 'easy-appointments'); ?> <small>x<?php
-                            $data = get_userdata(get_current_user_id());
-                            if (is_object($data)) {
+                            $easy_ea_data = get_userdata(get_current_user_id());
+                            if (is_object($easy_ea_data)) {
                                 // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-                                echo implode(', ', array_keys($data->allcaps));
+                                echo implode(', ', array_keys($easy_ea_data->allcaps));
                             }
                             ?></small>
                         </div>
@@ -1114,7 +1114,7 @@
         <label>Default value</label><input type="text" class="field-default_value" name="field-default_value" value="<%- item.default_value %>">
         <small>You can put values from logged in user (list of keys: <?php 
         // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-        echo EAUserFieldMapper::all_field_keys(); ?>)</small>
+        echo EasyEAUserFieldMapper::all_field_keys(); ?>)</small>
     </p>
     <% } %>
 

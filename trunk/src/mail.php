@@ -68,7 +68,7 @@ class EAMail
         // email notification
         add_action('easy_ea_user_email_notification', array($this, 'send_user_email_notification_action'), 10, 1);
         add_action('easy_ea_repeat_appointment_mail_notification', array($this, 'send_repeat_appointment_mail_notification'), 10, 2);
-        add_action('ea_admin_email_notification', array($this, 'send_admin_email_notification_action'), 10, 2);
+        add_action('easy_ea_admin_email_notification', array($this, 'send_admin_email_notification_action'), 10, 2);
 
         // we want to check if it is link from EA mail
         add_action('wp', array($this, 'parse_mail_link'));
@@ -77,8 +77,8 @@ class EAMail
         add_filter('ea_format_notification_params', array($this, 'format_data'), 100, 2);
 
         // wrap email template into html
-        add_filter('ea_admin_mail_template', array($this, 'wrap_email_with_html_tags'), 10, 1);
-        add_filter('ea_customer_mail_template', array($this, 'wrap_email_with_html_tags'), 10, 1);
+        add_filter('easy_ea_admin_mail_template', array($this, 'wrap_email_with_html_tags'), 10, 1);
+        add_filter('easy_ea_customer_mail_template', array($this, 'wrap_email_with_html_tags'), 10, 1);
 
         $this->time_zone = $this->get_wp_timezone();
     }
@@ -225,9 +225,9 @@ EOT;
             do_action('easy_ea_user_email_notification', $app_data['id']);
 
             // for admin
-            do_action('ea_admin_email_notification', $app_data['id']);
+            do_action('easy_ea_admin_email_notification', $app_data['id']);
 
-            $url = apply_filters( 'ea_confirmed_redirect_url', get_home_url());
+            $url = apply_filters( 'easy_ea_confirmed_redirect_url', get_home_url());
 
             header('Refresh:3; url=' . $url);
             wp_die(esc_html__('Appointment has been confirmed.', 'easy-appointments'));
@@ -255,16 +255,16 @@ EOT;
             do_action('easy_ea_user_email_notification', $app_data['id']);
 
             // for admin
-            do_action('ea_admin_email_notification', $app_data['id']);
+            do_action('easy_ea_admin_email_notification', $app_data['id']);
 
             if (new DateTime() > new DateTime($app_data['date'] . ' ' . $app_data['start'])) {
-                $url = apply_filters( 'ea_cant_be_canceled_redirect_url', get_home_url());
+                $url = apply_filters( 'easy_ea_cant_be_canceled_redirect_url', get_home_url());
 
                 header('Refresh:3; url=' . $url);
                 wp_die(esc_html__('Appointment can\'t be cancelled', 'easy-appointments'));
             }
 
-            $url = apply_filters( 'ea_cancel_redirect_url', get_home_url());
+            $url = apply_filters( 'easy_ea_cancel_redirect_url', get_home_url());
 
 
             // Parse redirect options
@@ -565,11 +565,11 @@ EOT;
 
         $subject = str_replace(array_keys($params), array_values($params), $subject_template);
 
-        $emails = apply_filters('ea_admin_mail_address_list', $emails, $raw_data);
+        $emails = apply_filters('easy_ea_admin_mail_address_list', $emails, $raw_data);
 
         $body_template = $this->options->get_option_value('mail.admin', '');
 
-        $body_template = apply_filters('ea_admin_mail_template', $body_template);
+        $body_template = apply_filters('easy_ea_admin_mail_template', $body_template);
 
         if (!empty($body_template)) {
             // custom email
@@ -594,7 +594,7 @@ EOT;
 
         $files = array();
 
-        $files = apply_filters('ea_admin_mail_attachments', $files, $raw_data);
+        $files = apply_filters('easy_ea_admin_mail_attachments', $files, $raw_data);
 
         if (empty($files)) {
             $files = array();
@@ -712,12 +712,12 @@ EOT;
         $subject_template = $this->options->get_option_value('pending.subject.visitor.email', 'Reservation : #id#');
 
         // Hook for customize subject of email template
-        $subject_template = apply_filters( 'ea_customer_mail_subject_template', $subject_template);
+        $subject_template = apply_filters( 'easy_ea_customer_mail_subject_template', $subject_template);
 
         $body_template = $this->options->get_option_value('mail.' . $app->status, 'mail');
 
         // Hook for customize body of email template
-        $body_template = apply_filters( 'ea_customer_mail_template', $body_template, $app_array, $params );
+        $body_template = apply_filters( 'easy_ea_customer_mail_template', $body_template, $app_array, $params );
 
         $send_from = $this->options->get_option_value('send.from.email', '');
 
@@ -763,7 +763,7 @@ EOT;
 
             $files = array();
 
-            $files = apply_filters('ea_user_mail_attachments', $files, $app_array);
+            $files = apply_filters('easy_ea_user_mail_attachments', $files, $app_array);
 
             if (empty($files)) {
                 $files = array();
@@ -822,7 +822,7 @@ EOT;
         $subject_template = $this->options->get_option_value('pending.subject.visitor.email', 'Reservation : #id#');
 
         // Hook for customize subject of email template
-        $subject_template = apply_filters( 'ea_customer_mail_subject_template', $subject_template);
+        $subject_template = apply_filters( 'easy_ea_customer_mail_subject_template', $subject_template);
 
         $body_template = $this->options->get_option_value('mail.' . $app->status, 'mail');
 
@@ -837,7 +837,7 @@ EOT;
         }
         $email_body .= esc_html__('Thank you for using our service!', 'easy-appointments');
         $body_template = $email_body. "\n\n" . $body_template;
-        $body_template = apply_filters( 'ea_customer_mail_template', $body_template, $app_array, $params );
+        $body_template = apply_filters( 'easy_ea_customer_mail_template', $body_template, $app_array, $params );
 
         $send_from = $this->options->get_option_value('send.from.email', '');
 
@@ -883,7 +883,7 @@ EOT;
 
             $files = array();
 
-            $files = apply_filters('ea_user_mail_attachments', $files, $app_array);
+            $files = apply_filters('easy_ea_user_mail_attachments', $files, $app_array);
 
             if (empty($files)) {
                 $files = array();
