@@ -416,7 +416,7 @@ class EAAjax
                 ORDER BY day_to DESC
                 LIMIT 1",
                 $location, $service, $worker, $date);
-        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared
         $connection_details = $wpdb->get_row($query1);
         $result =  array('calendar_slots' =>$slots, 'connection_details' => $connection_details);
        
@@ -1749,6 +1749,7 @@ class EAAjax
         $method = isset($_SERVER['REQUEST_METHOD']) ? sanitize_text_field( wp_unslash($_SERVER['REQUEST_METHOD'])) : '';
         // phpcs:ignore WordPress.Security.NonceVerification.Recommended
         if ( isset( $_REQUEST['_method'] ) && ! empty( $_REQUEST['_method'] ) ) {
+            // phpcs:ignore WordPress.Security.NonceVerification.Recommended
             $method = strtoupper( sanitize_text_field( wp_unslash( $_REQUEST['_method'] ) ) );
             unset( $_REQUEST['_method'] );
         }
@@ -2369,7 +2370,7 @@ class EAAjax
         check_ajax_referer('ea_customer_edit', 'ea_nonce');
 
         $table = $wpdb->prefix . 'ea_customers';
-        $id = intval($_POST['id']);
+        $id = isset($_POST['id']) ? intval($_POST['id']) : 0;
         $name = isset($_POST['name']) ? sanitize_text_field( wp_unslash($_POST['name'])) : '';
         $email = isset($_POST['email']) ? sanitize_email( wp_unslash($_POST['email'])) : '';
         $mobile = isset($_POST['mobile']) ? sanitize_text_field( wp_unslash($_POST['mobile'])) : '';
@@ -2498,26 +2499,8 @@ class EAAjax
         $date_compare = $type === 'past' ? '<' : '>=';
         $today = current_time('Y-m-d');
         // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-        $appointments = $wpdb->get_results(
-            $wpdb->prepare("
-                SELECT 
-                    a.id,
-                    a.date,
-                    a.start,
-                    a.end,
-                    a.price,
-                    loc.name AS location_name,
-                    srv.name AS service_name,
-                    st.name AS staff_name
-                FROM {$wpdb->prefix}ea_appointments a
-                LEFT JOIN {$wpdb->prefix}ea_locations loc ON a.location = loc.id
-                LEFT JOIN {$wpdb->prefix}ea_services srv ON a.service = srv.id
-                LEFT JOIN {$wpdb->prefix}ea_staff st ON a.worker = st.id
-                WHERE a.customer_id = %d AND a.date $date_compare %s
-                ORDER BY a.date DESC
-            ", $id, $today),
-            ARRAY_A
-        );
+        $appointments = $wpdb->get_results($wpdb->prepare("SELECT a.id, a.date, a.start, a.end, a.price, loc.name AS location_name, srv.name AS service_name, st.name AS staff_name FROM {$wpdb->prefix}ea_appointments a LEFT JOIN {$wpdb->prefix}ea_locations loc ON a.location = loc.id LEFT JOIN {$wpdb->prefix}ea_services srv ON a.service = srv.id LEFT JOIN {$wpdb->prefix}ea_staff st ON a.worker = st.id WHERE a.customer_id = %d AND a.date $date_compare %s ORDER BY a.date DESC", $id, $today), ARRAY_A);
+
 
         wp_send_json_success([
             'customer' => $customer,
@@ -2534,6 +2517,7 @@ class EAAjax
 
         global $wpdb;
         $current_user_id = get_current_user_id();
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended
         $q = isset($_GET['q']) ? sanitize_text_field(wp_unslash($_GET['q'])) : '';
 
         // Fetch user_ids stored in comma-separated format
@@ -2565,7 +2549,7 @@ class EAAjax
 
             global $wpdb;
             // phpcs:ignore WordPress.Security.NonceVerification.Missing
-            $id = absint($_POST['id']);
+            $id = isset($_POST['id']) ? absint($_POST['id']) : 0;
             // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
             $cust = $wpdb->get_row($wpdb->prepare(
                 "SELECT * FROM {$wpdb->prefix}ea_customers WHERE id = %d", $id

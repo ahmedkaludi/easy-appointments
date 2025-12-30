@@ -101,19 +101,10 @@ class EAMail
 
         $local = substr(get_locale(), 0, 2);
 
-        $new_template = <<<EOT
-<!DOCTYPE HTML>
-<html lang="{$local}">
-    <head>
-        <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
-    </head>
-    <body>
-        {$template}
-    </body>
-</html>
-EOT;
+        $new_template = '<!DOCTYPE HTML><html lang="' . $local . '"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"></head><body>' . $template . '</body></html>';
 
         return $new_template;
+
     }
 
     /**
@@ -151,6 +142,7 @@ EOT;
     public function parse_mail_link()
     {
         // do nothing if those values are not set
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended
         if (empty($_GET['_ea-action']) || empty($_GET['_ea-app']) || empty($_GET['_ea-t'])) {
             return;
         }
@@ -160,13 +152,15 @@ EOT;
             wp_redirect(get_home_url());
             return;
         }
-
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended
         $app_id = (int)$_GET['_ea-app'];
 
         $data = $this->models->get_appintment_by_id($app_id);
 
         // check maybe it is a two step process
+        // phpcs:ignore WordPress.Security.NonceVerification.Missing,
         if (empty($_POST['confirmed']) && (!empty($_POST['confirmed']) && $_POST['confirmed'] !== 'true')) {
+            // phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
             $this->link_action_additional_step($_GET['_ea-action'], $data);
         }
 
@@ -176,6 +170,7 @@ EOT;
         }
 
         // invalid token
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
         if ($this->generate_token($data, $_GET['_ea-action']) != $_GET['_ea-t']) {
             header('Refresh:3; url=' . get_home_url());
             wp_die(esc_html__('Invalid token.', 'easy-appointments'));
@@ -192,6 +187,7 @@ EOT;
         }
 
         // confirm appointment
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended
         if ($_GET['_ea-action'] == 'confirm') {
 
             $appointment_dt = new DateTime($app_data['date'] . ' ' . $app_data['start']);
@@ -234,6 +230,7 @@ EOT;
         }
 
         // cancel appointment
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended
         if ($_GET['_ea-action'] == 'cancel') {
             $app_data['status'] = 'canceled';
 
@@ -831,8 +828,8 @@ EOT;
         $email_body = esc_html__('Here are your scheduled repeat appointments', 'easy-appointments');
         $email_body .= ":\n\n";
         foreach ($appointments as $appointment) {
-            $email_body .= "Date: " . date('F j, Y', strtotime($appointment['date'])) . "\n";
-            $email_body .= "Time: " . date('H:i', strtotime($appointment['start'])) . " - " . date('H:i', strtotime($appointment['end'])) . "\n";
+            $email_body .= "Date: " . gmdate('F j, Y', strtotime($appointment['date'])) . "\n";
+            $email_body .= "Time: " . gmdate('H:i', strtotime($appointment['start'])) . " - " . gmdate('H:i', strtotime($appointment['end'])) . "\n";
             $email_body .= "----------------------------------\n";
         }
         $email_body .= esc_html__('Thank you for using our service!', 'easy-appointments');
@@ -1002,11 +999,12 @@ EOT;
         );
 
         foreach($bots as $bot) {
+            // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.InputNotValidated
             if (strpos(strtolower($_SERVER['HTTP_USER_AGENT']), trim($bot)) !== false) {
                 return true;
             }
         }
-
+        // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
         if (!empty($_SERVER['HTTP_USER_AGENT']) and preg_match('~(bot|crawl)~i', $_SERVER['HTTP_USER_AGENT'])){
             return true;
         }

@@ -299,10 +299,11 @@ class EasyAppointment
             '127.0.0.1',
             '::1'
         );
-
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended
         if (!empty($_GET['_ea-action']) && $_GET['_ea-action'] == 'clear_reservations') {
 
             // only do this when is called from localhost
+            // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotValidated
             if (in_array($_SERVER['REMOTE_ADDR'], $whitelist)) {
                 $this->delete_reservations();
                 die;

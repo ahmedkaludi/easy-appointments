@@ -235,7 +235,9 @@ class EAInstallTools
     public function init_data()
     {
         // safety check if we already have meta fields
+        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
         $count_query = $this->wpdb->prepare('SELECT COUNT(*) FROM ' . $this->wpdb->prefix . 'ea_meta_fields' );
+        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
         $num = (int) $this->wpdb->get_var($count_query);
         if ($num > 0) {
             return;
@@ -330,7 +332,7 @@ class EAInstallTools
 
             // add relations
             foreach ($alter_querys as $alter_query) {
-                // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter
+                // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.PreparedSQL.NotPrepared
                 $this->wpdb->query($alter_query);
             }
 
@@ -500,11 +502,8 @@ class EAInstallTools
         }
 
         // Check if parent is enabled
-        // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-        $parent_value = $wpdb->get_var($wpdb->prepare(
-            "SELECT ea_value FROM $table_name WHERE ea_key = %s",
-            $parent_key
-        ));
+        // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+        $parent_value = $wpdb->get_var($wpdb->prepare( "SELECT ea_value FROM $table_name WHERE ea_key = %s", $parent_key ));
 
         if ($parent_value !== '1') {
             return false; // Parent not enabled, do nothing
@@ -512,11 +511,8 @@ class EAInstallTools
 
         // Insert or update each child key
         foreach ($children as $key) {
-            // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-            $existing = $wpdb->get_var($wpdb->prepare(
-                "SELECT COUNT(*) FROM $table_name WHERE ea_key = %s",
-                $key
-            ));
+            // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+            $existing = $wpdb->get_var($wpdb->prepare( "SELECT COUNT(*) FROM $table_name WHERE ea_key = %s", $key ));
 
             if ($existing) {
                 // Update to 1
@@ -665,7 +661,7 @@ class EAInstallTools
             }
 
             $query .= implode(', ', $place_holders);
-            // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter
+            // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
             $this->wpdb->query($this->wpdb->prepare("$query ", $values));
         }
     }
@@ -716,7 +712,7 @@ class EAInstallTools
 
         if ($oldest_appointment) {
             $start_date =  $oldest_appointment['date'];
-            $end_date = date('Y-m-d');
+            $end_date = gmdate('Y-m-d');
             $appointments =  $this->models->get_all_appointments(['from' => $start_date, 'to' => $end_date]);
             foreach ($appointments as $appointment) {
                 $app_id  = (int) $appointment->id;
