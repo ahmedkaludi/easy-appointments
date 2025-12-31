@@ -244,7 +244,7 @@ class EasyAppointment
     {
         $uninstall = new EasyEAUninstallTools();
 
-        $uninstall->drop_db();
+        // $uninstall->drop_db();
         $uninstall->delete_db_version();
         $uninstall->clear_cron();
     }
