@@ -1900,7 +1900,7 @@ class EAAjax
 
             fputcsv($out, $app);
         }
-
+        // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose
         fclose($out);
         die;
     }
@@ -2208,21 +2208,19 @@ class EAAjax
 
         // Try first curl
         if ($curl_enabled) {
-            $ch = curl_init();
-
-            curl_setopt_array($ch, [
-                CURLOPT_URL => 'https://www.google.com/recaptcha/api/siteverify',
-                CURLOPT_POST => true,
-                CURLOPT_POSTFIELDS => [
-                    'secret' => $secret,
-                    'response' => $captcha,
-                    'remoteip' => isset($_SERVER['REMOTE_ADDR']) ? sanitize_text_field( wp_unslash($_SERVER['REMOTE_ADDR']) ) : ''
-                ],
-                CURLOPT_RETURNTRANSFER => true
-            ]);
-
-            $response = curl_exec($ch);
-            curl_close($ch);
+            $response = wp_remote_post(
+                'https://www.google.com/recaptcha/api/siteverify',
+                [
+                    'body' => [
+                        'secret'   => $secret,
+                        'response' => $captcha,
+                        'remoteip' => isset( $_SERVER['REMOTE_ADDR'] )
+                            ? sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) )
+                            : '',
+                    ],
+                    'timeout' => 15,
+                ]
+            );
 
         } else {
 
