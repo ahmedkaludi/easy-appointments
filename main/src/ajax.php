@@ -2222,6 +2222,14 @@ class EAAjax
                 ]
             );
 
+
+            if (is_wp_error($response)) {
+                $this->send_err_json_result(
+                    '{"message":"' . esc_html__('Captcha verification failed.', 'easy-appointments') . '"}'
+                );
+            }
+            $response = wp_remote_retrieve_body($response);
+
         } else {
 
             // if not use regular remote file open
