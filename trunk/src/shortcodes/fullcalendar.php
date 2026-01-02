@@ -186,58 +186,55 @@ class EasyEAFullCalendar
 
         // event link
         if (!empty($this->options->get_option_value('fullcalendar.event.show'))) {
-            $event_click_link = <<<EOT
-                    element.addClass('thickbox');
-                    element.addClass('ea-full-calendar-dialog-event');
-                    element.attr('href', wpApiSettings.root + 'easy-appointments/v1/appointment/' + event.id + '?hash=' + event.hash + '&eventpopup=yes&_wpnonce=' + wpApiSettings.nonce + '&width=100%&height=100%');
-                    element.attr('title', '#' + event.id + ' - ' + _.escape(event.title));
-            EOT;
+            $event_click_link =
+              "element.addClass('thickbox');" .
+              "element.addClass('ea-full-calendar-dialog-event');" .
+              "element.attr('href', wpApiSettings.root + 'easy-appointments/v1/appointment/' + event.id + '?hash=' + event.hash + '&eventpopup=yes&_wpnonce=' + wpApiSettings.nonce + '&width=100%&height=100%');" .
+              "element.attr('title', '#' + event.id + ' - ' + _.escape(event.title));";
           if (!empty($this->options->get_option_value('fullcalendar.manage_appointment.show'))) {
-            $event_click_link = <<<EOT
-              var current_user = "{$current_user}";
-              if (current_user && current_user > 0 && current_user === event.user) {
-                    element.addClass('thickbox');
-                    element.addClass('ea-full-calendar-dialog-event');
-                    element.attr('href', wpApiSettings.root + 'easy-appointments/v1/appointment/' + event.id + '?hash=' + event.hash + '&eventpopup=yes&edit=yes&_wpnonce=' + wpApiSettings.nonce + '&width=100%&height=100%');
-                    element.attr('title', '#' + event.id + ' - ' + _.escape(event.title));
-              }
-            EOT;
+            $event_click_link =
+            "var current_user = \"" . esc_js($current_user) . "\";" .
+            "if (current_user && current_user > 0 && current_user === event.user) {" .
+                "element.addClass('thickbox');" .
+                "element.addClass('ea-full-calendar-dialog-event');" .
+                "element.attr('href', wpApiSettings.root + 'easy-appointments/v1/appointment/' + event.id + '?hash=' + event.hash + '&eventpopup=yes&edit=yes&_wpnonce=' + wpApiSettings.nonce + '&width=100%&height=100%');" .
+                "element.attr('title', '#' + event.id + ' - ' + _.escape(event.title));" .
+            "}";
             
           }
            
         }else{
           if (!empty($this->options->get_option_value('fullcalendar.manage_appointment.show'))) {
-            $event_click_link = <<<EOT
-              var current_user = "{$current_user}";
-              if (current_user && current_user > 0 && current_user === event.user) {
-                    element.addClass('thickbox');
-                    element.addClass('ea-full-calendar-dialog-event');
-                    element.attr('href', wpApiSettings.root + 'easy-appointments/v1/appointment/' + event.id + '?hash=' + event.hash + '&edit=yes&_wpnonce=' + wpApiSettings.nonce + '&width=100%&height=100%');
-                    element.attr('title', '#' + event.id + ' - ' + _.escape(event.title));
-              }
-            EOT;            
+            $event_click_link =
+            "var current_user = \"" . esc_js($current_user) . "\";" .
+            "if (current_user && current_user > 0 && current_user === event.user) {" .
+                "element.addClass('thickbox');" .
+                "element.addClass('ea-full-calendar-dialog-event');" .
+                "element.attr('href', wpApiSettings.root + 'easy-appointments/v1/appointment/' + event.id + '?hash=' + event.hash + '&edit=yes&_wpnonce=' + wpApiSettings.nonce + '&width=100%&height=100%');" .
+                "element.attr('title', '#' + event.id + ' - ' + _.escape(event.title));" .
+            "}";
+            
           }
 
         }
         $event_click_ajax = "";
         if (!empty($this->options->get_option_value('fullcalendar.manage_appointment.show')) && $current_user) {
             $ajaxurl = admin_url('admin-ajax.php');
-            $event_click_ajax = <<<EOT
-                  jQuery(document).on('submit', '#ea-appointment-edit-form', function (e) {
-                      e.preventDefault();
-                      var ajax_url = "{$ajaxurl}";
+            $event_click_ajax =
+            "jQuery(document).on('submit', '#ea-appointment-edit-form', function (e) {" .
+                "e.preventDefault();" .
+                "var ajax_url = \"" . esc_js($ajaxurl) . "\";" .
+                "const formData = jQuery(this).serialize();" .
+                "jQuery.post(ajax_url, formData + '&action=ea_update_customer_data', function (res) {" .
+                    "if (res.success) {" .
+                        "alert('Updated successfully.');" .
+                    "} else {" .
+                        "alert('Failed to update.');" .
+                    "}" .
+                "});" .
+            "});";
 
-                      const formData = jQuery(this).serialize();
-
-                      jQuery.post(ajax_url, formData + '&action=ea_update_customer_data', function (res) {
-                          if (res.success) {
-                              alert('Updated successfully.');
-                          } else {
-                              alert('Failed to update.');
-                          }
-                      });
-                  });
-            EOT;     
+    
         }        
 
         $column_header_format = '';
@@ -246,130 +243,122 @@ class EasyEAFullCalendar
             $column_header_format = "columnHeaderFormat: '{$code_params['column_header_format']}',";
         }
 
-        $script_section = <<<EOT
-<style>{$customCss}</style>
-<script>
-  jQuery(document).ready(function() {
+        $script_section =
+    "<style>{$customCss}</style>" .
+    "<script>" .
+      "jQuery(document).ready(function() {" .
 
-    jQuery(document).on('click', '.ea-edit-appointment-icon', function (e) {
-        jQuery(".ea-edit-appointment-wrapper").show();
-        jQuery("#ea_event_popup").hide();
-        jQuery(".ea-edit-appointment-icon").hide();
-    });
-    jQuery(document).on('click', '.ea-cancel-edit', function (e) {
-        jQuery(".ea-edit-appointment-wrapper").hide();
-        jQuery("#ea_event_popup").show();
-        jQuery(".ea-edit-appointment-icon").show();
-    });
-  
-    jQuery('#ea-calendar-color-map-{$id}').find('.status').hover(
-        function(event) {
-            var el = jQuery(event.target);
-            var classSelector = '.' + el.data('class');
-            jQuery('#ea-full-calendar-{$id}').find('.fc-event:not(' + classSelector + ')').animate({ opacity: 1/2 }, 200);
-        },
-    function(event){
-        jQuery('#ea-full-calendar-{$id}').find('.fc-event').animate({ opacity: 1 }, 100);
-    });
+        "jQuery(document).on('click', '.ea-edit-appointment-icon', function (e) {" .
+            "jQuery('.ea-edit-appointment-wrapper').show();" .
+            "jQuery('#ea_event_popup').hide();" .
+            "jQuery('.ea-edit-appointment-icon').hide();" .
+        "});" .
 
-    jQuery('#ea-full-calendar-{$id}').fullCalendar({
-      header: {
-        left: 'prev,next today',
-        center: 'title',
-        right: '{$code_params['views']}'
-      },
-      dayNamesShort: {$day_names_short},
-      dayNames: {$day_names},
-      monthNamesShort: {$month_names_short},
-      monthNames: {$month_names},
-      buttonText: {
-        today: '{$button_labels[0]}',
-        month: '{$button_labels[1]}',
-        week:  '{$button_labels[2]}',
-        day:   '{$button_labels[3]}',
-        list:  '{$button_labels[4]}'
-      },
-      views: {
-        month: {
-          titleFormat: '{$code_params['month_header_format']}',
-        },
-        week: {
-          titleFormat: '{$code_params['week_header_format']}',
-        },
-        day: {
-          titleFormat: '{$code_params['day_header_format']}',
-        }
-      },
-      isRTL: {$is_rtl},
-      defaultView: '{$code_params['default_view']}',
-      showNonCurrentDates: false,
-      timeFormat: '{$code_params['time_format']}',
-      {$column_header_format}
-      displayEventEnd: {$display_end_time},
-      weekNumbers: {$show_week_numbers},
-      firstDay: {$code_params['start_of_week']},
-      defaultDate: '{$code_params['default_date']}',
-      navLinks: true, // can click day/week names to navigate views
-      editable: false,
-      eventLimit: true, // allow "more" link when too many events
-      events: {
-        url: wpApiSettings.root + 'easy-appointments/v1/appointments',
-        type: 'GET',
-        data: {
-          _wpnonce: wpApiSettings.nonce,
-          hide_cancelled: '{$code_params['hide_cancelled']}',
-          {$location_param}
-          {$service_param}
-          {$worker_param}
-          {$service_color}
-          title_field: '{$code_params['title_field']}',
-        },
-        error: function() {
-          console.log('there was an error while fetching events!');
-        },
-        textColor: 'white' // a non-ajax option
-      },
-      eventClick: function(calEvent, jsEvent, view) {
-        // console.log(calEvent, jsEvent, view);
-      },
-      eventRender: function(event, element) {
-        var statusMapping = {
-          canceled: 'graffit',
-          confirmed: 'darkgreen',
-          pending: 'grape',
-          reserved: 'darkblue'
-        }
- 
-        element.addClass(statusMapping[event.status]);
-        {$event_click_link}
-      }
-    });
-    {$event_click_ajax}
-  });
-</script>
-EOT;
+        "jQuery(document).on('click', '.ea-cancel-edit', function (e) {" .
+            "jQuery('.ea-edit-appointment-wrapper').hide();" .
+            "jQuery('#ea_event_popup').show();" .
+            "jQuery('.ea-edit-appointment-icon').show();" .
+        "});" .
+
+        "jQuery('#ea-calendar-color-map-{$id}').find('.status').hover(" .
+            "function(event) {" .
+                "var el = jQuery(event.target);" .
+                "var classSelector = '.' + el.data('class');" .
+                "jQuery('#ea-full-calendar-{$id}').find('.fc-event:not(' + classSelector + ')').animate({ opacity: 1/2 }, 200);" .
+            "}," .
+            "function(event){" .
+                "jQuery('#ea-full-calendar-{$id}').find('.fc-event').animate({ opacity: 1 }, 100);" .
+            "}" .
+        ");" .
+
+        "jQuery('#ea-full-calendar-{$id}').fullCalendar({" .
+            "header: {" .
+                "left: 'prev,next today'," .
+                "center: 'title'," .
+                "right: '{$code_params['views']}'" .
+            "}," .
+            "dayNamesShort: {$day_names_short}," .
+            "dayNames: {$day_names}," .
+            "monthNamesShort: {$month_names_short}," .
+            "monthNames: {$month_names}," .
+            "buttonText: {" .
+                "today: '{$button_labels[0]}'," .
+                "month: '{$button_labels[1]}'," .
+                "week: '{$button_labels[2]}'," .
+                "day: '{$button_labels[3]}'," .
+                "list: '{$button_labels[4]}'" .
+            "}," .
+            "views: {" .
+                "month: { titleFormat: '{$code_params['month_header_format']}' }," .
+                "week: { titleFormat: '{$code_params['week_header_format']}' }," .
+                "day: { titleFormat: '{$code_params['day_header_format']}' }" .
+            "}," .
+            "isRTL: {$is_rtl}," .
+            "defaultView: '{$code_params['default_view']}'," .
+            "showNonCurrentDates: false," .
+            "timeFormat: '{$code_params['time_format']}'," .
+            "{$column_header_format}" .
+            "displayEventEnd: {$display_end_time}," .
+            "weekNumbers: {$show_week_numbers}," .
+            "firstDay: {$code_params['start_of_week']}," .
+            "defaultDate: '{$code_params['default_date']}'," .
+            "navLinks: true," .
+            "editable: false," .
+            "eventLimit: true," .
+            "events: {" .
+                "url: wpApiSettings.root + 'easy-appointments/v1/appointments'," .
+                "type: 'GET'," .
+                "data: {" .
+                    "_wpnonce: wpApiSettings.nonce," .
+                    "hide_cancelled: '{$code_params['hide_cancelled']}'," .
+                    "{$location_param}" .
+                    "{$service_param}" .
+                    "{$worker_param}" .
+                    "{$service_color}" .
+                    "title_field: '{$code_params['title_field']}'," .
+                "}," .
+                "error: function() { console.log('there was an error while fetching events!'); }," .
+                "textColor: 'white'" .
+            "}," .
+            "eventClick: function(calEvent, jsEvent, view) {}," .
+            "eventRender: function(event, element) {" .
+                "var statusMapping = {" .
+                    "canceled: 'graffit'," .
+                    "confirmed: 'darkgreen'," .
+                    "pending: 'grape'," .
+                    "reserved: 'darkblue'" .
+                "};" .
+                "element.addClass(statusMapping[event.status]);" .
+                "{$event_click_link}" .
+            "}" .
+        "});" .
+
+        "{$event_click_ajax}" .
+
+      "});" .
+    "</script>";
+
 
         // wp_add_inline_script( 'ea-full-calendar', $script_section);
 
         $statuses = $this->logic->getStatus();
         $status_label = __('Status', 'easy-appointments');
 
-        $status_html = <<<EOT
-<div class="fc">
-    <div id="ea-calendar-color-map-{$id}" class="ea-calendar-color-map fc-view-container">
-        <div>{$status_label}</div>
-        <div data-class="grape" class="fc-event status grape">{$statuses['pending']}</div>
-        <div data-class="darkgreen" class="fc-event status darkgreen">{$statuses['confirmed']}</div>
-        <div data-class="darkblue" class="fc-event status darkblue">{$statuses['reservation']}</div>
-        <div data-class="graffit" class="fc-event status graffit">{$statuses['canceled']}</div>
-    </div>
-</div>
-EOT;
+        $status_html =
+        '<div class="fc">' .
+            '<div id="ea-calendar-color-map-' . $id . '" class="ea-calendar-color-map fc-view-container">' .
+                '<div>' . $status_label . '</div>' .
+                '<div data-class="grape" class="fc-event status grape">' . $statuses['pending'] . '</div>' .
+                '<div data-class="darkgreen" class="fc-event status darkgreen">' . $statuses['confirmed'] . '</div>' .
+                '<div data-class="darkblue" class="fc-event status darkblue">' . $statuses['reservation'] . '</div>' .
+                '<div data-class="graffit" class="fc-event status graffit">' . $statuses['canceled'] . '</div>' .
+            '</div>' .
+        '</div>';
+
 
         // html and status legend
-        $html = <<<EOT
-<div id="ea-full-calendar-{$id}"></div>
-EOT;
+        $html = '<div id="ea-full-calendar-' . $id . '"></div>';
+
         if (!$service_color) {
             $html .= $status_html;
         }
