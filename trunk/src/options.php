@@ -110,6 +110,7 @@ class EAOptions
             'show.display_thankyou_note'    => '0',
             'show.customer_search_front'    => '0',
             'customer_search_password_only' => '0',
+            'delete_data_on_uninstall'      => '0',
             'customer_search_roles'         => '[]',
             'cancel.scroll'                 => 'calendar',
             'multiple.work'                 => '1',

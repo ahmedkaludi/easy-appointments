@@ -181,6 +181,7 @@ class EATableColumns
             'show.display_thankyou_note',
             'show.customer_search_front',
             'customer_search_password_only',
+            'delete_data_on_uninstall',
             'customer_search_roles',
             'show_remaining_slots',
             'show_week',

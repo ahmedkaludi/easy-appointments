@@ -136,8 +136,6 @@ class EasyAppointment
         $ajax->init();
 
         $this->install();
-
-        // Register API endpoints
     }
 
     /**
@@ -243,8 +241,12 @@ class EasyAppointment
     public static function uninstall()
     {
         $uninstall = new EasyEAUninstallTools();
-
-        // $uninstall->drop_db();
+        global $wpdb;
+        $options = new EAOptions($wpdb);
+        $all_options = $options->get_options();
+        if (isset($all_options['delete_data_on_uninstall']) && $all_options['delete_data_on_uninstall'] == '1') {
+            $uninstall->drop_db();
+        }
         $uninstall->delete_db_version();
         $uninstall->clear_cron();
     }

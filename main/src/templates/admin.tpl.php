@@ -262,6 +262,27 @@
                                 ) { %> checked <% } %> />
                         </div>
                     </div>
+                    <div class="form-item">
+                        <div class="label-with-tooltip">
+                            <label for="delete_data_on_uninstall">
+                                <?php esc_html_e('Remove Data on Uninstall?', 'easy-appointments'); ?>
+                            </label>
+                            <span class="tooltip tooltip-right"
+                                data-tooltip="<?php esc_html_e('Check this box if you would like to completely remove all of its data when the plugin is deleted.', 'easy-appointments'); ?>">
+                            </span>
+                        </div>
+
+                        <div class="field-wrap">
+                            <input type="checkbox"
+                                class="field"
+                                name="delete_data_on_uninstall"
+                                data-key="delete_data_on_uninstall"
+                                <% if (
+                                        typeof _.findWhere(settings,{ea_key:'delete_data_on_uninstall'}) !== 'undefined'
+                                        && _.findWhere(settings,{ea_key:'delete_data_on_uninstall'}).ea_value == '1'
+                                ) { %> checked <% } %> />
+                        </div>
+                    </div>
 
 
                 </div>
