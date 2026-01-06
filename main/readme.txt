@@ -5,7 +5,7 @@ Tags: appointment, appointments, Booking, calendar, reservation
 Requires at least: 3.7
 Tested up to: 6.9
 Requires PHP: 5.3
-Stable tag: 3.12.17
+Stable tag: 3.12.18
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -212,6 +212,13 @@ Note: you can have only one calendar on one page.
 25. Admin panel - Report - Export page
 
 == Changelog ==
+= 3.12.18 (2026-01-06)
+* Added an option for single-user (super admin only) appointment management without customer search field #198
+* Fixed Admin shouldn't be allowed to confirm the booking after time. #216
+* Enhancement Rollback removed the data. #226
+* Enhancement improve the Manage appointmennt in popup option. #225
+* Enhancement PCP check #224
+
 = 3.12.17 (2025-12-12)
 * Added to allow selecting multiple slots at a time. #180
 * Added an option to delete the bulk connections. #217
