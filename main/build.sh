@@ -59,6 +59,7 @@ cp -R ./main/js/libs/fullcalendar/* ./trunk/js/libs/fullcalendar/
 cp ./main/js/admin-router.js ./trunk/js/
 cp ./main/js/admin.prod.js ./trunk/js/
 cp ./main/js/frontend.js ./trunk/js/
+cp ./main/js/select2.min.js ./trunk/js/
 cp ./main/js/frontend-bootstrap.js ./trunk/js/
 cp ./main/js/report.prod.js ./trunk/js/
 cp ./main/js/settings.prod.js ./trunk/js/
