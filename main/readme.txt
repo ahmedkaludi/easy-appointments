@@ -183,6 +183,16 @@ Value is worker #id number. Examples :
 
 Note: you can have only one calendar on one page.
 
+== External services ==
+
+FullCalendar
+
+This plugin uses the FullCalendar JavaScript library to display interactive calendars and events within the plugin interface.
+FullCalendar itself does not collect or transmit personal data. All calendar data is generated and managed locally within the plugin or retrieved from configured services such as Google Calendar.
+
+This service is provided by FullCalendar LLC
+Terms of use and Policy : https://fullcalendar.io/license
+
 == Screenshots ==
 
 1. Responsive front end two column `[ea_bootstrap layout_cols="2"]` - part1
