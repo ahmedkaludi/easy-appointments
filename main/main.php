@@ -246,9 +246,9 @@ class EasyAppointment
         $all_options = $options->get_options();
         if (isset($all_options['delete_data_on_uninstall']) && $all_options['delete_data_on_uninstall'] == '1') {
             $uninstall->drop_db();
+            $uninstall->delete_db_version();
+            $uninstall->clear_cron();
         }
-        $uninstall->delete_db_version();
-        $uninstall->clear_cron();
     }
 
     /**
