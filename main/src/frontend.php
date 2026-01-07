@@ -360,7 +360,17 @@ class Easy_EA_Frontend
                         <div style="display: inline-flex;">
                             <?php 
                              // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-                             echo apply_filters('easy_ea_checkout_button', '<button class="ea-btn ea-submit">' . esc_html_e('Submit', 'easy-appointments') . '</button>'); ?>
+                             echo apply_filters(
+                                    'easy_ea_checkout_button',
+                                    '<button class="ea-btn ea-submit"
+                                        style="
+                                            display:inline-flex;
+                                            align-items:center;
+                                            justify-content:center;
+                                        ">'
+                                        . esc_html__('Submit', 'easy-appointments') .
+                                    '</button>'
+                                ); ?>
                             <button class="ea-btn ea-cancel"><?php esc_html_e('Cancel', 'easy-appointments'); ?></button>
                         </div>
                     </div>

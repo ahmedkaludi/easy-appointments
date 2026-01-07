@@ -222,7 +222,7 @@ Terms of use and Policy : https://fullcalendar.io/license
 25. Admin panel - Report - Export page
 
 == Changelog ==
-= 3.12.18 (2026-01-06)
+= 3.12.18 (2026-01-07)
 * Added an option for single-user (super admin only) appointment management without customer search field #198
 * Fixed Admin shouldn't be allowed to confirm the booking after time. #216
 * Enhancement Rollback removed the data. #226
