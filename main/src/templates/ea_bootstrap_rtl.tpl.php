@@ -26,7 +26,7 @@
         <div class="step form-group">
             <div class="block"></div>
             <div class="col-sm-8">
-                <select name="service" data-c="service" class="filter form-control" data-currency="<?php echo $this->options->get_option_value("trans.currency");?>">
+                <select name="service" data-c="service" class="filter form-control" data-currency="<?php echo esc_attr($this->options->get_option_value("trans.currency")); ?>">
                     <?php $this->get_options('services', $location_id, $service_id, $worker_id) ?>
                 </select>
             </div>
@@ -136,7 +136,9 @@
 
             <div class="form-group">
                 <div class="col-sm-offset-4 col-sm-8 ea-actions-group" style="display: inline-flex;">
-                    <?php echo apply_filters('ea_checkout_button', '<button class="ea-btn ea-submit btn btn-primary"><%- settings[\'trans.submit\'] %></button>');?>
+                    <?php 
+                    // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+                    echo apply_filters('easy_ea_checkout_button', '<button class="ea-btn ea-submit btn btn-primary"><%- settings[\'trans.submit\'] %></button>');?>
                     <button class="ea-btn ea-cancel btn btn-default"><%- settings['trans.cancel'] %></button>
                 </div>
             </div>

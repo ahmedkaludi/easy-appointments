@@ -5,7 +5,7 @@ if (!defined('WPINC')) {
     die;
 }
 
-class EAApiFullCalendar
+class EasyEAApiFullCalendar
 {
     /**
      * The namespace.
@@ -86,7 +86,7 @@ class EAApiFullCalendar
      */
     public function get_items_permissions_check( $request ) {
         // just for demo page
-        $have_access = apply_filters( 'ea_calendar_public_access', false);
+        $have_access = apply_filters( 'easy_ea_calendar_public_access', false);
 
         if ( ! current_user_can( 'read' ) && !$have_access ) {
             return new WP_Error( 'rest_forbidden', esc_html__( 'You cannot view the category resource.', 'easy-appointments' ), array( 'status' => $this->authorization_status_code() ) );
@@ -356,6 +356,7 @@ class EAApiFullCalendar
 
             if ($eventpopup) {
                 $display = "none";
+                // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
                 echo '<div id="ea_event_popup">' . $template->apply($data) . '</div>';
             }
 
@@ -377,17 +378,17 @@ class EAApiFullCalendar
                                 $value       = isset($app[$field->slug]) ? esc_attr($app[$field->slug]) : '';
                             ?>
                             <div class="form-group">
-                                <label for="<?php echo $slug; ?>"><strong><?php echo $label; ?></strong><?php echo $required ? ' *' : ''; ?></label>
+                                <label for="<?php echo esc_attr($slug); ?>"><strong><?php echo esc_attr($label); ?></strong><?php echo $required ? ' *' : ''; ?></label>
                                 <div>
                                     <?php if ($field->type === 'INPUT'): ?>
-                                        <input class="form-control custom-field" id="<?php echo $slug; ?>" name="<?php echo $slug; ?>"
+                                        <input class="form-control custom-field" id="<?php echo esc_attr($slug); ?>" name="<?php echo esc_attr($slug); ?>"
                                             type="<?php echo $field->validation === 'email' ? 'email' : 'text'; ?>"
-                                            value="<?php echo $value; ?>" placeholder="<?php echo $placeholder; ?>" maxlength="499" <?php echo $required; ?> />
+                                            value="<?php echo esc_attr($value); ?>" placeholder="<?php echo esc_attr($placeholder); ?>" maxlength="499" <?php echo esc_attr($required); ?> />
                                     <?php elseif ($field->type === 'TEXTAREA'): ?>
-                                        <textarea class="form-control custom-field" id="<?php echo $slug; ?>" name="<?php echo $slug; ?>" rows="3"
-                                            maxlength="499" placeholder="<?php echo $placeholder; ?>" <?php echo $required; ?>><?php echo $value; ?></textarea>
+                                        <textarea class="form-control custom-field" id="<?php echo esc_attr($slug); ?>" name="<?php echo esc_attr($slug); ?>" rows="3"
+                                            maxlength="499" placeholder="<?php echo esc_attr($placeholder); ?>" <?php echo esc_attr($required); ?>><?php echo esc_html($value); ?></textarea>
                                     <?php elseif ($field->type === 'SELECT'): ?>
-                                        <select class="form-control custom-field" id="<?php echo $slug; ?>" name="<?php echo $slug; ?>" <?php echo $required; ?>>
+                                        <select class="form-control custom-field" id="<?php echo esc_attr($slug); ?>" name="<?php echo esc_attr($slug); ?>" <?php echo esc_attr($required); ?>>
                                             <?php foreach (explode(',', $field->mixed) as $option): ?>
                                                 <?php $option = trim($option); ?>
                                                 <option value="<?php echo esc_attr($option); ?>" <?php selected($value, $option); ?>>
@@ -422,7 +423,7 @@ class EAApiFullCalendar
                 </div>
                 <?php
             }
-
+            // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
             echo ob_get_clean();
         } catch (\Leuffen\TextTemplate\TemplateParsingException $e) {
             echo '';

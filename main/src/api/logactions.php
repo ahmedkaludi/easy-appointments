@@ -5,7 +5,7 @@ if (!defined('WPINC')) {
     die;
 }
 
-class EALogActions {
+class EasyEALogActions {
     /**
      * @var string
      */
@@ -90,7 +90,7 @@ class EALogActions {
     }
 
     public function clear_log_file() {
-        do_action('EA_CLEAR_LOG');
+        do_action('Easy_EA_CLEAR_LOG');
 
         return __('Log file removed', 'easy-appointments');
     }

@@ -79,7 +79,9 @@ const WorkersPage = () => {
   const save = (model, isEdit) => (isEdit ? onEdit(model) : onCreate(model));
 
   const onEditClick = row => {
-    haveGoogleToken(row.id);
+    if (isPro) {
+      haveGoogleToken(row.id);
+    }
     setActiveWorker(row);
     toggleSidebar();
   };

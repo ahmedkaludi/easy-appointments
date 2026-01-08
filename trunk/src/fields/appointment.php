@@ -3,7 +3,7 @@
 /**
  * Fields for Appointments
  */
-interface EAAppointmentFields
+interface EasyEAAppointmentFields
 {
     // because PHP 5.2
 //	const ID          = 'id';

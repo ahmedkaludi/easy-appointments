@@ -351,7 +351,9 @@
 
         function loadAppointments(custId, type = 'upcoming') {
             showScreenLoader();
-            var eaNonce = "<?php echo wp_create_nonce('ea_customer_edit'); ?>";
+            var eaNonce = "<?php 
+            // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+            echo wp_create_nonce('ea_customer_edit'); ?>";
             var my_modal = jQuery('#ea-customer-modal');
             my_modal.find('.edit-btn').attr('data-id', custId);
             jQuery.post(ajaxurl, {
@@ -565,7 +567,9 @@
             }
 
             showScreenLoader();
-            var eaNonce = "<?php echo wp_create_nonce('ea_customer_delete'); ?>";
+            var eaNonce = "<?php 
+            // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+            echo wp_create_nonce('ea_customer_delete'); ?>";
 
             jQuery.post(ajaxurl, {
                 action: 'ea_delete_customer',

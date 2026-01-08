@@ -62,15 +62,14 @@
                     <div class="block"></div>
                     <h3><%- settings['trans.personal-informations'] %></h3>
                     <small><%- settings['trans.fields'] %></small>
-                    <% if (settings['show.customer_search_front'] == 1) { %>
-                        <% if (settings['is_user_logged_in'] == 1) { %>
+                    <% if (settings['allow_customer_search'] == 1) { %>
                             <div class="form-group">
                                 <label class="col-sm-4 control-label"><?php echo esc_html($this->options->get_option_value("trans.customer_search_label")); ?></label>
                                 <div class="col-sm-8">
                                     <input id="ea_customer_search" class="form-control" type="text" placeholder="<?php echo esc_html($this->options->get_option_value("trans.customer_search_label")); ?>" />
                                 </div>
                             </div>
-                        <% } %>
+                        
                     <% } %>
                     <% _.each(settings.MetaFields, function(item,key,list) { %>
                     <% if (item.visible == "0") { return; } %>
@@ -183,13 +182,21 @@
                         <div style="width: 100%; padding: 20px;" class="g-recaptcha" data-sitekey="<%- settings['captcha.site-key'] %>"></div>
                     <% } %>
 
-                    <?php echo apply_filters('ea_payment_select', ''); ?>
-                    <?php echo apply_filters('ea_stripe_checkout', ''); ?>
-                    <?php echo apply_filters('ea_razorpay_checkout', ''); ?>
+                    <?php 
+                    // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+                    echo apply_filters('easy_ea_payment_select', ''); ?>
+                    <?php 
+                    // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+                    echo apply_filters('easy_ea_stripe_checkout', ''); ?>
+                    <?php 
+                    // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+                    echo apply_filters('easy_ea_razorpay_checkout', ''); ?>
 
                     <div class="form-group">
                         <div class="col-sm-12 ea-actions-group" style="display: inline-flex; align-items: center; justify-content: center;">
-                            <?php echo apply_filters('ea_checkout_button', '<button class="ea-btn ea-submit btn btn-primary booking-button"><%- settings[\'trans.submit\'] %></button>'); ?>
+                            <?php 
+                            // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+                            echo apply_filters('easy_ea_checkout_button', '<button class="ea-btn ea-submit btn btn-primary booking-button"><%- settings[\'trans.submit\'] %></button>'); ?>
                             <button class="ea-btn ea-cancel btn btn-default"><%- settings['trans.cancel'] %></button>
                         </div>
                     </div>

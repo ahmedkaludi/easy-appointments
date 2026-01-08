@@ -4,7 +4,7 @@
  * Plugin Name: Easy Appointments
  * Plugin URI: https://easy-appointments.com/
  * Description: Simple and easy to use management system for Appointments and Bookings
- * Version: 3.12.17
+ * Version: 3.12.18
  * Requires PHP: 5.3
  * Author: Nikola Loncar
  * Author URI: https://easy-appointments.com/
@@ -21,7 +21,7 @@ if (!defined('WPINC')) {
 /**
  * Currently plugin version.
  */
-define( 'EASY_APPOINTMENTS_VERSION', '3.12.17' );
+define( 'EASY_APPOINTMENTS_VERSION', '3.12.18' );
 
 // path for source files
 define('EA_SRC_DIR', dirname(__FILE__) . '/src/');
@@ -35,22 +35,22 @@ define('EA_PLUGIN_DIR', plugin_dir_path( __FILE__));
 
 // Register the autoloader that loads everything except the Google namespace.
 if (version_compare(PHP_VERSION, '5.3', '<')) {
-    if (!function_exists('ea_autoload')) {
-        function ea_autoload($class)
+    if (!function_exists('easy_ea_autoload')) {
+        function easy_ea_autoload($class)
         {
-            global $ea_class_location;
+            global $easy_ea_class_location;
 
-            if (empty($ea_class_location)) {
-                $ea_class_location = include dirname(__FILE__) . '/vendor/composer/autoload_classmap.php';
+            if (empty($easy_ea_class_location)) {
+                $easy_ea_class_location = include dirname(__FILE__) . '/vendor/composer/autoload_classmap.php';
             }
 
-            if (is_array($ea_class_location) && array_key_exists($class, $ea_class_location)) {
-                require_once $ea_class_location[$class];
+            if (is_array($easy_ea_class_location) && array_key_exists($class, $easy_ea_class_location)) {
+                require_once $easy_ea_class_location[$class];
             }
         }
     }
     // register autoloader
-    spl_autoload_register('ea_autoload');
+    spl_autoload_register('easy_ea_autoload');
 } else {
     // PHP 5.3.0+ use composer auto loader
     require_once dirname(__FILE__) . '/vendor/autoload.php';
@@ -96,6 +96,9 @@ class EasyAppointment
 
         // cron
         add_action('easyapp_hourly_event', array($this, 'delete_reservations'));
+        // daily expire appointments cron
+        add_action('ea_daily_expire_appointments', array($this, 'expire_old_appointments'));
+
         add_action('ea_gdpr_auto_delete', array($this, 'delete_old_data'));
 
         // we want to check if it is link from EA mail
@@ -114,15 +117,15 @@ class EasyAppointment
             $admin = $this->container['admin_panel'];
             $admin->init();
         } else {
-            /** @var EAFrontend $frontend */
+            /** @var Easy_EA_Frontend $frontend */
             $frontend = $this->container['frontend'];
             $frontend->init();
 
-            /** @var EAFullCalendar $full_calendar */
+            /** @var EasyEAFullCalendar $full_calendar */
             $full_calendar = $this->container['fullcalendar']; // not ready yet
             $full_calendar->init();
 
-            /** @var EAUserFieldMapper $field_mapper */
+            /** @var EasyEAUserFieldMapper $field_mapper */
             $field_mapper = $this->container['user_field_mapper'];
             $field_mapper->init();
         }
@@ -133,8 +136,6 @@ class EasyAppointment
         $ajax->init();
 
         $this->install();
-
-        // Register API endpoints
     }
 
     /**
@@ -185,11 +186,11 @@ class EasyAppointment
         };
 
         $this->container['frontend'] = function ($container) {
-            return new EAFrontend($container['db_models'], $container['options'], $container['datetime'], $container['utils']);
+            return new Easy_EA_Frontend($container['db_models'], $container['options'], $container['datetime'], $container['utils']);
         };
 
         $this->container['fullcalendar'] = function ($container) {
-            return new EAFullCalendar($container['db_models'], $container['logic'], $container['options'], $container['datetime']);
+            return new EasyEAFullCalendar($container['db_models'], $container['logic'], $container['options'], $container['datetime']);
         };
 
         $this->container['ajax'] = function ($container) {
@@ -201,7 +202,7 @@ class EasyAppointment
         };
 
         $this->container['user_field_mapper'] = function ($container) {
-            return new EAUserFieldMapper();
+            return new EasyEAUserFieldMapper();
         };
     }
 
@@ -229,6 +230,9 @@ class EasyAppointment
         if ( wp_next_scheduled( 'easyapp_hourly_event' ) === false ) {
             wp_schedule_event(time(), 'hourly', 'easyapp_hourly_event');
         }
+        if (wp_next_scheduled('ea_daily_expire_appointments') === false) {
+            wp_schedule_event(strtotime('00:05:00'), 'daily', 'ea_daily_expire_appointments');
+        }
     }
 
     /**
@@ -236,11 +240,15 @@ class EasyAppointment
      */
     public static function uninstall()
     {
-        $uninstall = new EAUninstallTools();
-
-        $uninstall->drop_db();
-        $uninstall->delete_db_version();
-        $uninstall->clear_cron();
+        $uninstall = new EasyEAUninstallTools();
+        global $wpdb;
+        $options = new EAOptions($wpdb);
+        $all_options = $options->get_options();
+        if (isset($all_options['delete_data_on_uninstall']) && $all_options['delete_data_on_uninstall'] == '1') {
+            $uninstall->drop_db();
+            $uninstall->delete_db_version();
+            $uninstall->clear_cron();
+        }
     }
 
     /**
@@ -249,6 +257,7 @@ class EasyAppointment
     public static function remove_scheduled_event()
     {
         wp_clear_scheduled_hook('easyapp_hourly_event');
+        wp_clear_scheduled_hook('ea_daily_expire_appointments');
     }
 
     public function update()
@@ -264,7 +273,12 @@ class EasyAppointment
 
     public function register_text_domain()
     {
-        load_plugin_textdomain('easy-appointments', FALSE, basename(dirname(__FILE__)) . '/languages/');
+        load_plugin_textdomain(
+            'easy-appointments',
+            false,
+            dirname( plugin_basename( __FILE__ ) ) . '/languages/'
+        );
+
     }
 
 
@@ -274,7 +288,7 @@ class EasyAppointment
     public function register_api()
     {
         // register API endpoints
-        new EAMainApi($this->get_container()); // not ready yet
+        new EasyEAMainApi($this->get_container()); // not ready yet
     }
 
     /**
@@ -287,10 +301,11 @@ class EasyAppointment
             '127.0.0.1',
             '::1'
         );
-
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended
         if (!empty($_GET['_ea-action']) && $_GET['_ea-action'] == 'clear_reservations') {
 
             // only do this when is called from localhost
+            // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotValidated
             if (in_array($_SERVER['REMOTE_ADDR'], $whitelist)) {
                 $this->delete_reservations();
                 die;
@@ -310,16 +325,44 @@ class EasyAppointment
 
     public function delete_old_data()
     {
-        $gdpr = new EAGDPRActions($this->container['db_models']);
+        $gdpr = new EasyEAGDPRActions($this->container['db_models']);
         $gdpr->clear_old_custom_data();
     }
+
+        /**
+     * Mark past unconfirmed appointments as expired
+     */
+    public function expire_old_appointments()
+    {
+        global $wpdb;
+
+        $table = $wpdb->prefix . 'ea_appointments';
+
+        $sql = "
+            UPDATE {$table}
+            SET status = %s
+            WHERE status != %s
+            AND end_date < %s
+        ";
+        // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+        $wpdb->query(
+            $wpdb->prepare(
+                // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+                $sql,
+                'expired',
+                'confirmed',
+                current_time('mysql')
+            )
+        );
+    }
+
 }
 
 /**
  * INIT EASY APPOINTMENTS
  */
-$ea_app = new EasyAppointment;
-$ea_app->init();
+$easy_ea_app = new EasyAppointment;
+$easy_ea_app->init();
 /**
  * END
  */

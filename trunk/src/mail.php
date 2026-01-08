@@ -66,9 +66,9 @@ class EAMail
     public function init()
     {
         // email notification
-        add_action('ea_user_email_notification', array($this, 'send_user_email_notification_action'), 10, 1);
-        add_action('ea_repeat_appointment_mail_notification', array($this, 'send_repeat_appointment_mail_notification'), 10, 2);
-        add_action('ea_admin_email_notification', array($this, 'send_admin_email_notification_action'), 10, 2);
+        add_action('easy_ea_user_email_notification', array($this, 'send_user_email_notification_action'), 10, 1);
+        add_action('easy_ea_repeat_appointment_mail_notification', array($this, 'send_repeat_appointment_mail_notification'), 10, 2);
+        add_action('easy_ea_admin_email_notification', array($this, 'send_admin_email_notification_action'), 10, 2);
 
         // we want to check if it is link from EA mail
         add_action('wp', array($this, 'parse_mail_link'));
@@ -77,8 +77,8 @@ class EAMail
         add_filter('ea_format_notification_params', array($this, 'format_data'), 100, 2);
 
         // wrap email template into html
-        add_filter('ea_admin_mail_template', array($this, 'wrap_email_with_html_tags'), 10, 1);
-        add_filter('ea_customer_mail_template', array($this, 'wrap_email_with_html_tags'), 10, 1);
+        add_filter('easy_ea_admin_mail_template', array($this, 'wrap_email_with_html_tags'), 10, 1);
+        add_filter('easy_ea_customer_mail_template', array($this, 'wrap_email_with_html_tags'), 10, 1);
 
         $this->time_zone = $this->get_wp_timezone();
     }
@@ -101,19 +101,10 @@ class EAMail
 
         $local = substr(get_locale(), 0, 2);
 
-        $new_template = <<<EOT
-<!DOCTYPE HTML>
-<html lang="{$local}">
-    <head>
-        <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
-    </head>
-    <body>
-        {$template}
-    </body>
-</html>
-EOT;
+        $new_template = '<!DOCTYPE HTML><html lang="' . $local . '"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"></head><body>' . $template . '</body></html>';
 
         return $new_template;
+
     }
 
     /**
@@ -151,22 +142,25 @@ EOT;
     public function parse_mail_link()
     {
         // do nothing if those values are not set
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended
         if (empty($_GET['_ea-action']) || empty($_GET['_ea-app']) || empty($_GET['_ea-t'])) {
             return;
         }
 
         // simple user agent check
         if ($this->is_bot()) {
-            wp_redirect(get_home_url());
+            wp_safe_redirect(get_home_url());
             return;
         }
-
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended
         $app_id = (int)$_GET['_ea-app'];
 
         $data = $this->models->get_appintment_by_id($app_id);
 
         // check maybe it is a two step process
+        // phpcs:ignore WordPress.Security.NonceVerification.Missing,
         if (empty($_POST['confirmed']) && (!empty($_POST['confirmed']) && $_POST['confirmed'] !== 'true')) {
+            // phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
             $this->link_action_additional_step($_GET['_ea-action'], $data);
         }
 
@@ -176,6 +170,7 @@ EOT;
         }
 
         // invalid token
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
         if ($this->generate_token($data, $_GET['_ea-action']) != $_GET['_ea-t']) {
             header('Refresh:3; url=' . get_home_url());
             wp_die(esc_html__('Invalid token.', 'easy-appointments'));
@@ -192,7 +187,16 @@ EOT;
         }
 
         // confirm appointment
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended
         if ($_GET['_ea-action'] == 'confirm') {
+
+            $appointment_dt = new DateTime($app_data['date'] . ' ' . $app_data['start']);
+            $current_dt     = new DateTime(current_time('Y-m-d H:i'));
+
+            if ($appointment_dt < $current_dt) {
+                header('Refresh:3; url=' . get_home_url());
+                wp_die(esc_html__('Appointment can’t be confirmed because it is in the past.', 'easy-appointments'));
+            }
 
             if ($data['status'] === 'confirm') {
                 header('Refresh:3; url=' . get_home_url());
@@ -211,21 +215,22 @@ EOT;
             $response = $this->models->replace($table, $app_data, true);
 
             // trigger new appointment
-            do_action('ea_new_app', $app_data['id'], $app_data);
+            do_action('easy_ea_new_app', $app_data['id'], $app_data);
 
             // for user
-            do_action('ea_user_email_notification', $app_data['id']);
+            do_action('easy_ea_user_email_notification', $app_data['id']);
 
             // for admin
-            do_action('ea_admin_email_notification', $app_data['id']);
+            do_action('easy_ea_admin_email_notification', $app_data['id']);
 
-            $url = apply_filters( 'ea_confirmed_redirect_url', get_home_url());
+            $url = apply_filters( 'easy_ea_confirmed_redirect_url', get_home_url());
 
             header('Refresh:3; url=' . $url);
             wp_die(esc_html__('Appointment has been confirmed.', 'easy-appointments'));
         }
 
         // cancel appointment
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended
         if ($_GET['_ea-action'] == 'cancel') {
             $app_data['status'] = 'canceled';
 
@@ -241,22 +246,22 @@ EOT;
             $response = $this->models->replace($table, $app_data, true);
 
             // trigger new appointment
-            do_action('ea_new_app', $app_data['id'], $app_data);
+            do_action('easy_ea_new_app', $app_data['id'], $app_data);
 
             // for user
-            do_action('ea_user_email_notification', $app_data['id']);
+            do_action('easy_ea_user_email_notification', $app_data['id']);
 
             // for admin
-            do_action('ea_admin_email_notification', $app_data['id']);
+            do_action('easy_ea_admin_email_notification', $app_data['id']);
 
             if (new DateTime() > new DateTime($app_data['date'] . ' ' . $app_data['start'])) {
-                $url = apply_filters( 'ea_cant_be_canceled_redirect_url', get_home_url());
+                $url = apply_filters( 'easy_ea_cant_be_canceled_redirect_url', get_home_url());
 
                 header('Refresh:3; url=' . $url);
                 wp_die(esc_html__('Appointment can\'t be cancelled', 'easy-appointments'));
             }
 
-            $url = apply_filters( 'ea_cancel_redirect_url', get_home_url());
+            $url = apply_filters( 'easy_ea_cancel_redirect_url', get_home_url());
 
 
             // Parse redirect options
@@ -306,7 +311,7 @@ EOT;
         ob_start();
         require $template_path;
         $content = ob_get_clean();
-
+        // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
         wp_die($content, $title);
     }
 
@@ -557,11 +562,11 @@ EOT;
 
         $subject = str_replace(array_keys($params), array_values($params), $subject_template);
 
-        $emails = apply_filters('ea_admin_mail_address_list', $emails, $raw_data);
+        $emails = apply_filters('easy_ea_admin_mail_address_list', $emails, $raw_data);
 
         $body_template = $this->options->get_option_value('mail.admin', '');
 
-        $body_template = apply_filters('ea_admin_mail_template', $body_template);
+        $body_template = apply_filters('easy_ea_admin_mail_template', $body_template);
 
         if (!empty($body_template)) {
             // custom email
@@ -586,7 +591,7 @@ EOT;
 
         $files = array();
 
-        $files = apply_filters('ea_admin_mail_attachments', $files, $raw_data);
+        $files = apply_filters('easy_ea_admin_mail_attachments', $files, $raw_data);
 
         if (empty($files)) {
             $files = array();
@@ -704,12 +709,12 @@ EOT;
         $subject_template = $this->options->get_option_value('pending.subject.visitor.email', 'Reservation : #id#');
 
         // Hook for customize subject of email template
-        $subject_template = apply_filters( 'ea_customer_mail_subject_template', $subject_template);
+        $subject_template = apply_filters( 'easy_ea_customer_mail_subject_template', $subject_template);
 
         $body_template = $this->options->get_option_value('mail.' . $app->status, 'mail');
 
         // Hook for customize body of email template
-        $body_template = apply_filters( 'ea_customer_mail_template', $body_template, $app_array, $params );
+        $body_template = apply_filters( 'easy_ea_customer_mail_template', $body_template, $app_array, $params );
 
         $send_from = $this->options->get_option_value('send.from.email', '');
 
@@ -755,7 +760,7 @@ EOT;
 
             $files = array();
 
-            $files = apply_filters('ea_user_mail_attachments', $files, $app_array);
+            $files = apply_filters('easy_ea_user_mail_attachments', $files, $app_array);
 
             if (empty($files)) {
                 $files = array();
@@ -814,7 +819,7 @@ EOT;
         $subject_template = $this->options->get_option_value('pending.subject.visitor.email', 'Reservation : #id#');
 
         // Hook for customize subject of email template
-        $subject_template = apply_filters( 'ea_customer_mail_subject_template', $subject_template);
+        $subject_template = apply_filters( 'easy_ea_customer_mail_subject_template', $subject_template);
 
         $body_template = $this->options->get_option_value('mail.' . $app->status, 'mail');
 
@@ -823,13 +828,13 @@ EOT;
         $email_body = esc_html__('Here are your scheduled repeat appointments', 'easy-appointments');
         $email_body .= ":\n\n";
         foreach ($appointments as $appointment) {
-            $email_body .= "Date: " . date('F j, Y', strtotime($appointment['date'])) . "\n";
-            $email_body .= "Time: " . date('H:i', strtotime($appointment['start'])) . " - " . date('H:i', strtotime($appointment['end'])) . "\n";
+            $email_body .= "Date: " . gmdate('F j, Y', strtotime($appointment['date'])) . "\n";
+            $email_body .= "Time: " . gmdate('H:i', strtotime($appointment['start'])) . " - " . gmdate('H:i', strtotime($appointment['end'])) . "\n";
             $email_body .= "----------------------------------\n";
         }
         $email_body .= esc_html__('Thank you for using our service!', 'easy-appointments');
         $body_template = $email_body. "\n\n" . $body_template;
-        $body_template = apply_filters( 'ea_customer_mail_template', $body_template, $app_array, $params );
+        $body_template = apply_filters( 'easy_ea_customer_mail_template', $body_template, $app_array, $params );
 
         $send_from = $this->options->get_option_value('send.from.email', '');
 
@@ -875,7 +880,7 @@ EOT;
 
             $files = array();
 
-            $files = apply_filters('ea_user_mail_attachments', $files, $app_array);
+            $files = apply_filters('easy_ea_user_mail_attachments', $files, $app_array);
 
             if (empty($files)) {
                 $files = array();
@@ -994,11 +999,12 @@ EOT;
         );
 
         foreach($bots as $bot) {
+            // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.InputNotValidated
             if (strpos(strtolower($_SERVER['HTTP_USER_AGENT']), trim($bot)) !== false) {
                 return true;
             }
         }
-
+        // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
         if (!empty($_SERVER['HTTP_USER_AGENT']) and preg_match('~(bot|crawl)~i', $_SERVER['HTTP_USER_AGENT'])){
             return true;
         }

@@ -26,7 +26,7 @@ class EAOptions
     {
         $this->wpdb = $wpdb;
 
-        add_action('ea_update_options', array($this, 'manage_gdpr_cron'));
+        add_action('easy_ea_update_options', array($this, 'manage_gdpr_cron'));
         add_filter('easy-appointments-user-ajax-capabilities', array($this, 'manage_capabilities'), 2, 1000);
         add_filter('easy-appointments-user-menu-capabilities', array($this, 'manage_page_capabilities'), 2, 1000);
     }
@@ -109,6 +109,9 @@ class EAOptions
             'show.iagree'                   => '0',
             'show.display_thankyou_note'    => '0',
             'show.customer_search_front'    => '0',
+            'customer_search_password_only' => '0',
+            'delete_data_on_uninstall'      => '0',
+            'customer_search_roles'         => '[]',
             'cancel.scroll'                 => 'calendar',
             'multiple.work'                 => '1',
             'compatibility.mode'            => '0',
@@ -160,6 +163,10 @@ class EAOptions
             'user.access.reports'           => '',
             'max.appointments_by_user'      => '0',
             'is_multiple_booking_allowed'   => '0',
+            'pending_message'   => 'Your appointment has been submitted and is currently pending approval. You will be notified once it is confirmed.',
+            'confirmed_message'   => 'Your appointment has been confirmed. Thank you!',
+            'reservation_message'   => 'Your appointment has been reserved. You will be notified once it is confirmed.',
+            'trans.confirmation-title'   => 'Thank You for Booking!',
         );
     }
 
@@ -274,12 +281,12 @@ class EAOptions
      */
     protected function get_options_from_db()
     {
-        $table_name = $this->wpdb->prefix . 'ea_options';
+        $table_name = esc_sql( $this->wpdb->prefix . 'ea_options' );
 
-        $query =
-            "SELECT ea_key, ea_value 
-             FROM $table_name";
-
+        /* phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter */
+        $query = "SELECT ea_key, ea_value FROM {$table_name}";
+        
+        /* phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared */
         $output = $this->wpdb->get_results($query, OBJECT_K);
 
         $db_options = array();

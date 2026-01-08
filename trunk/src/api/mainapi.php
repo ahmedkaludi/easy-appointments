@@ -1,23 +1,23 @@
 <?php
 
-class EAMainApi
+class EasyEAMainApi
 {
     /**
-     * EAMainApi constructor.
+     * EasyEAMainApi constructor.
      * @param tad_EA52_Container $container
      */
     public function __construct($container)
     {
-        $controller = new EAApiFullCalendar($container['db_models'], $container['options'], $container['mail']);
+        $controller = new EasyEAApiFullCalendar($container['db_models'], $container['options'], $container['mail']);
         $controller->register_routes();
 
-        $logController = new EALogActions($container['db_models']);
+        $logController = new EasyEALogActions($container['db_models']);
         $logController->register_routes();
 
-        $gdpr = new EAGDPRActions($container['db_models']);
+        $gdpr = new EasyEAGDPRActions($container['db_models']);
         $gdpr->register_routes();
 
-        $vacation = new EAVacationActions($container['db_models'], $container['options']);
+        $vacation = new EasyEAVacationActions($container['db_models'], $container['options']);
         $vacation->register_routes();
     }
 

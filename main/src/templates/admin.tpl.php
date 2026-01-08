@@ -1,8 +1,8 @@
 <script type="text/template" id="ea-settings-main">
-<?php 
+    <?php
     get_current_screen()->render_screen_meta();
-    
-?>
+
+    ?>
     <div class="wrap">
         <div id="tab-content"></div>
     </div>
@@ -82,8 +82,8 @@
                                   data-tooltip="<?php esc_html_e('If you can\'t EDIT or DELETE conecntion or any other settings, you should mark this option. NOTE: After saving this options you must refresh page!', 'easy-appointments'); ?>"></span>
                         </div>
                         <div class="field-wrap">
-                            <input class="field" data-key="compatibility.mode"
-                                   name="compatibility.mode" type="checkbox" <% if
+                            <!-- phpcs:ignore Generic.PHP.DisallowAlternativePHPTags -->
+                            <input class="field" data-key="compatibility.mode" name="compatibility.mode" type="checkbox" <% if
                             (_.findWhere(settings, {ea_key:'compatibility.mode'}).ea_value == "1") {
                             %>checked<% } %>>
                         </div>
@@ -166,7 +166,7 @@
                             "reservation") {
                             %>selected="selected"<% } %>><%- eaData.Status.reservation %></option>
                         </select>
-                        <div id="ea-select-status-notification" style="display: none"><?php esc_html_e('Reservation status is short term, if you don\'t change it within 5 minutes it will be set to cancelled' , 'easy-appointments');?></div>
+                        <div id="ea-select-status-notification" style="display: none"><?php esc_html_e('Reservation status is short term, if you don\'t change it within 5 minutes it will be set to cancelled', 'easy-appointments'); ?></div>
                     </div>
                     <div class="form-item">
                         <div class="label-with-tooltip">
@@ -195,6 +195,96 @@
                             {ea_key:'show.customer_search_front'}).ea_value == '1') { %>checked<% } %> />
                         </div>
                     </div>
+
+                    <div class="form-item">
+                        <div class="label-with-tooltip">
+                            <label for="customer_search_roles">
+                                <?php esc_html_e('Customer Search Roles', 'easy-appointments'); ?>
+                            </label>
+                            <span class="tooltip tooltip-right"
+                                data-tooltip="<?php esc_html_e('Show customer search only for selected user roles', 'easy-appointments'); ?>">
+                            </span>
+                        </div>
+                        <?php
+                        global $wp_roles;
+                        $easy_ea_roles = $wp_roles->roles;
+                        ?>
+
+                        <div class="form-item">
+                            <select multiple
+                                    class="field"
+                                    style="height: auto;"
+                                    name="customer_search_roles[]"
+                                    data-key="customer_search_roles">
+
+                                <?php foreach ($easy_ea_roles as $easy_ea_role_key => $role) : ?>
+                                    <option value="<?php echo esc_attr($easy_ea_role_key); ?>"
+                                    <%
+                                        var roleSetting = _.findWhere(settings, { ea_key: 'customer_search_roles' });
+                                        var selectedRoles = [];
+
+                                        if (roleSetting && roleSetting.ea_value) {
+                                            try {
+                                                selectedRoles = JSON.parse(roleSetting.ea_value);
+                                            } catch (e) {
+                                                selectedRoles = [];
+                                            }
+                                        }
+
+                                        if (_.contains(selectedRoles, '<?php echo esc_js($easy_ea_role_key); ?>')) {
+                                    %> selected <% } %>>
+                                        <?php echo esc_html($role['name']); ?>
+                                    </option>
+                                <?php endforeach; ?>
+
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-item">
+                        <div class="label-with-tooltip">
+                            <label for="customer_search_password_only">
+                                <?php esc_html_e('Password Protected Only', 'easy-appointments'); ?>
+                            </label>
+                            <span class="tooltip tooltip-right"
+                                data-tooltip="<?php esc_html_e('Display customer search only on password-protected pages', 'easy-appointments'); ?>">
+                            </span>
+                        </div>
+
+                        <div class="field-wrap">
+                            <input type="checkbox"
+                                class="field"
+                                name="customer_search_password_only"
+                                data-key="customer_search_password_only"
+                                <% if (
+                                        typeof _.findWhere(settings,{ea_key:'customer_search_password_only'}) !== 'undefined'
+                                        && _.findWhere(settings,{ea_key:'customer_search_password_only'}).ea_value == '1'
+                                ) { %> checked <% } %> />
+                        </div>
+                    </div>
+                    <div class="form-item">
+                        <div class="label-with-tooltip">
+                            <label for="delete_data_on_uninstall">
+                                <?php esc_html_e('Remove Data on Uninstall?', 'easy-appointments'); ?>
+                            </label>
+                            <span class="tooltip tooltip-right"
+                                data-tooltip="<?php esc_html_e('Check this box if you would like to completely remove all of its data when the plugin is deleted.', 'easy-appointments'); ?>">
+                            </span>
+                        </div>
+
+                        <div class="field-wrap">
+                            <input type="checkbox"
+                                class="field"
+                                name="delete_data_on_uninstall"
+                                data-key="delete_data_on_uninstall"
+                                <% if (
+                                        typeof _.findWhere(settings,{ea_key:'delete_data_on_uninstall'}) !== 'undefined'
+                                        && _.findWhere(settings,{ea_key:'delete_data_on_uninstall'}).ea_value == '1'
+                                ) { %> checked <% } %> />
+                        </div>
+                    </div>
+
+
                 </div>
                 
             </div>
@@ -258,10 +348,11 @@
                     </div>
                     <div class="form-item">
                         <div class="form-wrap">
-                            <?php _e('Current logged in user have:', 'easy-appointments'); ?> <small>x<?php
-                            $data = get_userdata( get_current_user_id() );
-                            if ( is_object( $data) ) {
-                                echo implode(', ', array_keys($data->allcaps));
+                            <?php esc_html_e('Current logged in user have:', 'easy-appointments'); ?> <small>x<?php
+                            $easy_ea_data = get_userdata(get_current_user_id());
+                            if (is_object($easy_ea_data)) {
+                                // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+                                echo implode(', ', array_keys($easy_ea_data->allcaps));
                             }
                             ?></small>
                         </div>
@@ -326,7 +417,9 @@
                             </tbody>
                         </table>
                         <a id="load-default-admin-template" href="#" style="padding-top: 5px; padding-bottom: 5px; display: none;"><?php esc_html_e('Load default admin template', 'easy-appointments'); ?></a>
-                        <div><small><?php esc_html_e('Available tags', 'easy-appointments'); ?>: #id#, #date#, #start#, #end#, #status#, #created#, #price#, #ip#, #link_confirm#, #link_cancel#, #url_confirm#, #url_cancel#, #service_name#, #service_duration#, #service_price#, #worker_name#, #workeresc_html_email#, #worker_phone#, #location_name#, #location_address#, #location_location#, <?php echo implode(', ', EADBModels::get_custom_fields_tags()); ?></small></div>
+                        <div><small><?php esc_html_e('Available tags', 'easy-appointments'); ?>: #id#, #date#, #start#, #end#, #status#, #created#, #price#, #ip#, #link_confirm#, #link_cancel#, #url_confirm#, #url_cancel#, #service_name#, #service_duration#, #service_price#, #worker_name#, #workeresc_html_email#, #worker_phone#, #location_name#, #location_address#, #location_location#, <?php
+                        // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+                         echo implode(', ', EADBModels::get_custom_fields_tags()); ?></small></div>
                     </div>
                     <div class="form-item">
                         <div class="label-with-tooltip">
@@ -490,9 +583,9 @@
                   </div>
                   <div class="form-item">
                       <div class="label-with-tooltip">
-                          <label for=""><?php _e('Manage appointmennt in popup', 'easy-appointments'); ?></label>
+                          <label for=""><?php esc_attr_e('Manage appointmennt in popup', 'easy-appointments'); ?></label>
                           <span class="tooltip tooltip-right"
-                                data-tooltip="<?php _e('Popup dialog for modify appointment details.', 'easy-appointments'); ?>"></span>
+                                data-tooltip="<?php esc_attr_e('Popup dialog for modify appointment details, It works only for logged in users.', 'easy-appointments'); ?>"></span>
                       </div>
                       <div class="field-wrap">
                           <input class="field" data-key="fullcalendar.manage_appointment.show"
@@ -503,9 +596,9 @@
                   </div>
                   <div class="form-item">
                       <div class="label-with-tooltip">
-                          <label for=""><?php esc_html_e('Show event content in popup', 'easy-appointments'); ?></label>
+                          <label for=""><?php esc_attr_e('Show event content in popup', 'easy-appointments'); ?></label>
                           <span class="tooltip tooltip-right"
-                                data-tooltip="<?php esc_html_e('Popup dialog for event content.', 'easy-appointments'); ?>"></span>
+                                data-tooltip="<?php esc_attr_e('Popup dialog for event content.', 'easy-appointments'); ?>"></span>
                       </div>
                       <div class="field-wrap">
                           <input class="field" data-key="fullcalendar.event.show"
@@ -516,14 +609,14 @@
                   </div>
                   <div class="form-item">
                       <div class="label-with-tooltip">
-                          <label for=""><?php esc_html_e('Event content in popup', 'easy-appointments'); ?></label>
+                          <label for=""><?php esc_attr_e('Event content in popup', 'easy-appointments'); ?></label>
                           <span class="tooltip tooltip-right"
-                                data-tooltip="<?php esc_html_e('Event content when clicked on event', 'easy-appointments'); ?>"></span>
+                                data-tooltip="<?php esc_attr_e('Event content when clicked on event', 'easy-appointments'); ?>"></span>
                       </div>
                       <textarea id="fullcalendar-event-template" class="field" name="fullcalendar.event.template" data-key="fullcalendar.event.template"><%- (_.findWhere(settings, {ea_key:'fullcalendar.event.template'})).ea_value %></textarea>
-                      <small><?php esc_html_e('Example', 'easy-appointments'); ?> : (<a href="https://easy-appointments.com/documentation/templates/" target="_blank"><?php esc_html_e('Full documentation', 'easy-appointments');?></a>)</small>
+                      <small><?php esc_attr_e('Example', 'easy-appointments'); ?> : (<a href="https://easy-appointments.com/documentation/templates/" target="_blank"><?php esc_attr_e('Full documentation', 'easy-appointments'); ?></a>)</small>
                       <div style="display: inline-block"><code>{= event.location_name}</code><small> / </small><code>{= language}</code><small> / </small><code>{= link_confirm}</code></div>
-                      <small><?php esc_html_e('To get all available options use', 'easy-appointments'); ?> :</small>
+                      <small><?php esc_attr_e('To get all available options use', 'easy-appointments'); ?> :</small>
                       <code>{= __CONTEXT__ | raw}</code>
                   </div>
               </div>
@@ -725,8 +818,8 @@
                                   data-tooltip="<?php esc_html_e('Show labels above or inline with fields option on [ea_bootstrap] shortcode.', 'easy-appointments'); ?>"></span>
                         </div>
                         <div>
-                            <img data-value="0" class="form-label-option" title="inline" src="<?php echo plugin_dir_url( __DIR__ ) . '../img/label-inline.png';?>"/>
-                            <img data-value="1" class="form-label-option" title="above" src="<?php echo plugin_dir_url( __DIR__ ) . '../img/label-above.png';?>"/>
+                            <img data-value="0" class="form-label-option" title="inline" src="<?php echo esc_url(plugin_dir_url(__DIR__) . '../img/label-inline.png'); ?>"/>
+                            <img data-value="1" class="form-label-option" title="above" src="<?php echo esc_url(plugin_dir_url(__DIR__) . '../img/label-above.png'); ?>"/>
                             <input class="field" type="hidden" name="form.label.above"
                                    data-key="form.label.above" value="<%- _.findWhere(settings,
                             {ea_key:'form.label.above'}).ea_value %>" />
@@ -739,8 +832,8 @@
                                   data-tooltip="<?php esc_html_e('Show From or From-To label on time slot in [ea_bootstrap] shortcode.', 'easy-appointments'); ?>"></span>
                         </div>
                         <div>
-                            <img data-value="1" class="select-label-option" title="From - To" width="200px" src="<?php echo plugin_dir_url( __DIR__ ) . '../img/label-from-to.png';?>"/>
-                            <img data-value="0" class="select-label-option" title="From" width="200px" src="<?php echo plugin_dir_url( __DIR__ ) . '../img/label-from.png';?>"/>
+                            <img data-value="1" class="select-label-option" title="From - To" width="200px" src="<?php echo esc_url(plugin_dir_url(__DIR__) . '../img/label-from-to.png'); ?>"/>
+                            <img data-value="0" class="select-label-option" title="From" width="200px" src="<?php echo esc_url(plugin_dir_url(__DIR__) . '../img/label-from.png'); ?>"/>
                             <input class="field" type="hidden" name="label.from_to"
                                    data-key="label.from_to" value="<%- _.findWhere(settings,
                             {ea_key:'label.from_to'}).ea_value %>" />
@@ -846,13 +939,37 @@
 
                     <div class="form-item">
                         <div class="label-with-tooltip">
-                            <label for="show.display_thankyou_note"><?php esc_html_e('Display Thank You Note', 'easy-appointments'); ?></label>
+                            <label for="show.display_thankyou_note"><?php esc_html_e('Display Thank You Note & Status messages', 'easy-appointments'); ?></label>
                         </div>
                         <div class="field-wrap">
                             <input class="field" type="checkbox" name="show.display_thankyou_note"
                                    data-key="show.display_thankyou_note"<% if (typeof _.findWhere(settings,
                             {ea_key:'show.display_thankyou_note'}) !== 'undefined' && _.findWhere(settings,
                             {ea_key:'show.display_thankyou_note'}).ea_value == '1') { %>checked<% } %> />
+                        </div>
+                        <div class="form-item inline-fields">
+                            <div class="form-item">
+                                <label for=""><?php esc_html_e('Heading', 'easy-appointments'); ?></label>
+                                <input class="field" data-key="trans.confirmation-title" name="trans.confirmation-title" type="text" value="<%- _.findWhere(settings, {ea_key:'trans.confirmation-title'}).ea_value %>">
+                            </div>
+                        </div>
+                        <div class="form-item inline-fields">
+                            <div class="form-item">
+                                <label for=""><?php esc_html_e('Pending', 'easy-appointments'); ?></label>
+                                <input class="field" data-key="pending_message" name="pending_message" type="text" value="<%- _.findWhere(settings, {ea_key:'pending_message'}).ea_value %>">
+                            </div>
+                        </div>
+                        <div class="form-item inline-fields">
+                            <div class="form-item">
+                                <label for=""><?php esc_html_e('Confirmed', 'easy-appointments'); ?></label>
+                                <input class="field" data-key="confirmed_message" name="confirmed_message" type="text" value="<%- _.findWhere(settings, {ea_key:'confirmed_message'}).ea_value %>">
+                            </div>
+                        </div>
+                        <div class="form-item inline-fields">
+                            <div class="form-item">
+                                <label for=""><?php esc_html_e('Reservation', 'easy-appointments'); ?></label>
+                                <input class="field" data-key="reservation_message" name="reservation_message" type="text" value="<%- _.findWhere(settings, {ea_key:'reservation_message'}).ea_value %>">
+                            </div>
                         </div>
                     </div>
                     <div class="form-item" style="background-color: #ccc; padding: 15px;">
@@ -921,7 +1038,7 @@
                             <input class="field" type="checkbox" name="gdpr.auto_remove" style="margin-right: 10px;" data-key="gdpr.auto_remove"<%
                             if (typeof _.findWhere(settings, {ea_key:'gdpr.auto_remove'}) !== 'undefined' &&
                             _.findWhere(settings, {ea_key:'gdpr.auto_remove'}).ea_value == '1') { %>checked<%
-                            } %> /> <?php esc_html_e('Auto remove data via Cron that runs once a day','easy-appointments');?><button class="button button-primary btn-gdpr-delete-data button-field" style="margin-left: 10px"><?php esc_html_e('Remove data now', 'easy-appointments'); ?></button>
+                            } %> /> <?php esc_html_e('Auto remove data via Cron that runs once a day', 'easy-appointments'); ?><button class="button button-primary btn-gdpr-delete-data button-field" style="margin-left: 10px"><?php esc_html_e('Remove data now', 'easy-appointments'); ?></button>
                         </div>
                     </div>
                 </div>
@@ -976,7 +1093,7 @@
         </div>
         
         <br><br>
-        <?php ea_newsletter_form(); ?>
+        <?php easy_ea_newsletter_form(); ?>
     </div>
 </script>
 
@@ -996,7 +1113,7 @@
 </script>
 
 <script type="text/template" id="ea-tpl-custom-form-options">
-<div class="field-settings">
+    <div class="field-settings">
     <% if (item.slug && item.slug.length > 0) { %>
     <p><label>Slug :</label>
         <input type="text" class="field-slug" name="field-slug"
@@ -1016,22 +1133,24 @@
     <% if (item.type !== "PHONE" && item.type !== "SELECT" && item.type !== "MASKED") { %>
     <p>
         <label>Default value</label><input type="text" class="field-default_value" name="field-default_value" value="<%- item.default_value %>">
-        <small>You can put values from logged in user (list of keys: <?php echo EAUserFieldMapper::all_field_keys(); ?>)</small>
+        <small>You can put values from logged in user (list of keys: <?php 
+        // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+        echo EasyEAUserFieldMapper::all_field_keys(); ?>)</small>
     </p>
     <% } %>
 
     <% if (item.type === "PHONE") { %>
     <p>
-        <label>Default value</label><select class="field-default_value" name="field-default_value"><?php require __DIR__ . '/phone.list.tpl.php';?></select>
+        <label>Default value</label><select class="field-default_value" name="field-default_value"><?php require __DIR__ . '/phone.list.tpl.php'; ?></select>
     </p>
     <% } %>
 
     <% if (item.type === "MASKED") { %>
     <p>
         <label>Mask</label><input type="text" class="field-default_value" name="field-default_value" value="<%- item.default_value %>">
-        <p><?php esc_html_e('Mask options', 'easy-appointments');?> : </p>
+        <p><?php esc_html_e('Mask options', 'easy-appointments'); ?> : </p>
         <code>9 : numeric</code> , <code>a : alphabetical</code> , <code>* : alphanumeric</code>
-        <p><?php esc_html_e('Example', 'easy-appointments');?> : </p>
+        <p><?php esc_html_e('Example', 'easy-appointments'); ?> : </p>
         <code>(99) 9999[9]-9999</code> , <code>999-999-9999</code> , <code>aa-9{1,4}</code>
     </p>
     <% } %>
@@ -1092,53 +1211,62 @@
 </script>
 <script>
     jQuery(document).ready(function($) {
-        $(document).on('submit','#ea_newsletter',function(e){
+        $(document).on('submit', '#ea_newsletter', function(e) {
             e.preventDefault();
             var form = jQuery(this);
             var email = form.find('input[name="newsletter-email"]').val();
-            jQuery.post(ea_obj.ajax_url, {action:'ea_newsletter_submit',email:email,ea_security_nonce:ea_obj.ea_security_nonce},
-            function (data) {
-                if (data.status == 200) {
-                    alert(data.message); // 👉 show success message
-                } else {
-                    alert("Something went wrong");
-                }
-            },
-            "json"
+            jQuery.post(ea_obj.ajax_url, {
+                    action: 'easy_ea_newsletter_submit',
+                    email: email,
+                    ea_security_nonce: ea_obj.ea_security_nonce
+                },
+                function(data) {
+                    if (data.status == 200) {
+                        alert(data.message); // 👉 show success message
+                    } else {
+                        alert("Something went wrong");
+                    }
+                },
+                "json"
             );
             return true;
         });
-        $(document).on('click','.ea_newsletter_hide',function(e){
+        $(document).on('click', '.ea_newsletter_hide', function(e) {
             e.preventDefault();
             jQuery('.ea-newsletter-wrapper').css("display", "none");
             var form = jQuery(this);
-            jQuery.post(ajaxurl, {action:'ea_newsletter_hide_form',ea_security_nonce:ea_obj.ea_security_nonce},
-            function(data) {}
+            jQuery.post(ajaxurl, {
+                    action: 'easy_ea_newsletter_hide_form',
+                    ea_security_nonce: ea_obj.ea_security_nonce
+                },
+                function(data) {}
             );
             return true;
         });
-        function checked_worker_count(){
+
+        function checked_worker_count() {
             var checkedCount = $('.ea_send_worker_email:checked').length;
-            if (checkedCount > 0){
+            if (checkedCount > 0) {
                 $('.ea_worker_mail_group').show();
-            }else{
+            } else {
                 $('.ea_worker_mail_group').hide();
 
             }
-        }   
-        function checked_user_count(){
+        }
+
+        function checked_user_count() {
             var checkedCount = $('.ea_send_user_email:checked').length;
-            if (checkedCount > 0){
+            if (checkedCount > 0) {
                 $('.ea_user_mail_group').show();
-            }else{
+            } else {
                 $('.ea_user_mail_group').hide();
 
             }
-        }   
-        $('body').on('change','.ea_send_worker_email', function() {
+        }
+        $('body').on('change', '.ea_send_worker_email', function() {
             checked_worker_count();
         });
-        $('body').on('change','.ea_send_user_email', function() {
+        $('body').on('change', '.ea_send_user_email', function() {
             checked_user_count();
         });
 

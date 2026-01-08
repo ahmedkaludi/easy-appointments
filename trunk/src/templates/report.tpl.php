@@ -77,9 +77,11 @@
                 <div class="field">
                     <a id="ea-export-customize-columns-toggle" href="#"><?php esc_html_e('Click to customize columns for export', 'easy-appointments'); ?></a>
                     <div id="ea-export-customize-columns" style="display: none;">
-                        <p>Columns: <b><?php echo implode(', ', $this->models->get_all_tags_for_template()); ?></b></p>
+                        <p>Columns: <b><?php 
+                        // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+                        echo implode(', ', $this->models->get_all_tags_for_template()); ?></b></p>
                         <?php esc_html_e('Place fields separate by , for example: id,name,email', 'easy-appointments'); ?>
-                        <p><input id="ea-export-custom-columns" type="text" style="" value="<?php echo get_option('ea_excel_columns', ''); ?>"/></p>
+                        <p><input id="ea-export-custom-columns" type="text" style="" value="<?php echo esc_attr(get_option('ea_excel_columns', '')); ?>"/></p>
                         <button id="ea-export-save-custom-columns" class="btn button-primary"><?php esc_html_e('Save settings', 'easy-appointments'); ?></button>
                     </div>
                 </div>

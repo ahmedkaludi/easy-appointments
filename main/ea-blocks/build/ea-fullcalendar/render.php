@@ -1,7 +1,5 @@
 <?php
-error_log('inside render');
-function render_ea_fullcalendar_block( $attributes ) {
-    error_log('inside render render_ea_fullcalendar_block');
+function easy_ea_render_fullcalendar_block( $attributes ) {
 	$location = isset( $attributes['location'] ) ? intval( $attributes['location'] ) : 0;
 	$service  = isset( $attributes['service'] ) ? intval( $attributes['service'] ) : 0;
 	$worker   = isset( $attributes['worker'] ) ? intval( $attributes['worker'] ) : 0;

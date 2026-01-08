@@ -1466,7 +1466,7 @@
 
 })(jQuery);
 jQuery(document).ready(function () {
-    if (ea_settings['show.customer_search_front'] == 1) {
+    if (ea_settings['allow_customer_search'] == 1) {
         jQuery('#ea_customer_search').select2({
             placeholder: ea_settings['trans.customer_search_label'],
             minimumInputLength: 2,
