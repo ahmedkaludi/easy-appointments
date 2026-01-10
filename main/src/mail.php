@@ -100,6 +100,7 @@ class EAMail
         }
 
         $local = substr(get_locale(), 0, 2);
+        error_log($template);
 
         $new_template = '<!DOCTYPE HTML><html lang="' . $local . '"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"></head><body>' . $template . '</body></html>';
 
@@ -557,6 +558,18 @@ class EAMail
         $links['#url_confirm#'] = $this->generate_url($raw_data, 'confirm');
 
         $subject_template = $this->options->get_option_value('pending.subject.email', 'Notification : #id#');
+        $enable_status_subjects = $this->options->get_option_value('enable_status_subjects', '0');
+        if ($enable_status_subjects == '1') {
+            if ($raw_data['status'] == 'pending') {
+                $subject_template = $this->options->get_option_value('pending_subject_admin', $subject_template);
+            } elseif ($raw_data['status'] == 'confirmed') {
+                $subject_template = $this->options->get_option_value('confirmed_subject_admin', $subject_template);
+            } elseif ($raw_data['status'] == 'canceled') {
+                $subject_template = $this->options->get_option_value('cancelled_subject_admin', $subject_template);
+            } elseif ($raw_data['status'] == 'reservation') {
+                $subject_template = $this->options->get_option_value('reservation_subject_admin', $subject_template);
+            }
+        }
         $send_from = $this->options->get_option_value('send.from.email', '');
         $admin_reply_to_address = $this->options->get_option_value('admin_reply_to_address', '');
 
@@ -667,9 +680,11 @@ class EAMail
         $app = $this->models->get_row($table_name, $app_id);
 
         $app_array = $this->models->get_appintment_by_id($app_id);
+        error_log(print_r($app_array, true));
 
         // escape input data
         $app_array = $this->escape_data($app_array);
+        error_log(print_r($app_array, true));
 
         $params = array();
 
@@ -707,6 +722,19 @@ class EAMail
         $params['#url_confirm#'] = $this->generate_url($app_array, 'confirm');
 
         $subject_template = $this->options->get_option_value('pending.subject.visitor.email', 'Reservation : #id#');
+        $enable_status_subjects = $this->options->get_option_value('enable_status_subjects', '0');
+
+        if ($enable_status_subjects == '1') {
+            if ($app_array['status'] == 'pending') {
+                $subject_template = $this->options->get_option_value('pending_subject_visitor', $subject_template);
+            } elseif ($app_array['status'] == 'confirmed') {
+                $subject_template = $this->options->get_option_value('confirmed_subject_visitor', $subject_template);
+            } elseif ($app_array['status'] == 'canceled') {
+                $subject_template = $this->options->get_option_value('canceled_subject_visitor', $subject_template);
+            } elseif ($app_array['status'] == 'reservation') {
+                $subject_template = $this->options->get_option_value('reservation_subject_visitor', $subject_template);
+            }
+        }
 
         // Hook for customize subject of email template
         $subject_template = apply_filters( 'easy_ea_customer_mail_subject_template', $subject_template);
@@ -817,6 +845,20 @@ class EAMail
         $params['#url_confirm#'] = $this->generate_url($app_array, 'confirm');
 
         $subject_template = $this->options->get_option_value('pending.subject.visitor.email', 'Reservation : #id#');
+
+        $enable_status_subjects = $this->options->get_option_value('enable_status_subjects', '0');
+
+        if ($enable_status_subjects == '1') {
+            if ($app_array['status'] == 'pending') {
+                $subject_template = $this->options->get_option_value('pending_subject_visitor', $subject_template);
+            } elseif ($app_array['status'] == 'confirmed') {
+                $subject_template = $this->options->get_option_value('confirmed_subject_visitor', $subject_template);
+            } elseif ($app_array['status'] == 'canceled') {
+                $subject_template = $this->options->get_option_value('canceled_subject_visitor', $subject_template);
+            } elseif ($app_array['status'] == 'reservation') {
+                $subject_template = $this->options->get_option_value('reservation_subject_visitor', $subject_template);
+            }
+        }
 
         // Hook for customize subject of email template
         $subject_template = apply_filters( 'easy_ea_customer_mail_subject_template', $subject_template);

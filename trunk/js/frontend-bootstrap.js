@@ -1203,7 +1203,9 @@
                 }
             }, 'json')
             .fail(jQuery.proxy(function (response, status, error) {
-                alert(response.responseJSON.message);
+                if (response.responseJSON.message) {
+                    alert(response.responseJSON.message);                    
+                }
                 this.$element.find('.ea-submit').prop('disabled', false);
             }, plugin));
         },

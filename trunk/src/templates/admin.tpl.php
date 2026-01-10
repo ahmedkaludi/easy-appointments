@@ -443,26 +443,7 @@
                                type="text"
                                value="<%- _.findWhere(settings, {ea_key:'pending.email'}).ea_value %>">
                     </div>
-                    <div class="form-item">
-                        <div class="label-with-tooltip">
-                            <label for=""><?php esc_html_e('Admin notification subject', 'easy-appointments'); ?></label>
-                            <span class="tooltip tooltip-right"
-                                  data-tooltip="<?php esc_html_e('You can use any tag that is available as in custom email notifications.', 'easy-appointments'); ?>"></span>
-                        </div>
-                        <input class="field" data-key="pending.subject.email"
-                               name="pending.subject.email" type="text"
-                               value="<%- _.findWhere(settings, {ea_key:'pending.subject.email'}).ea_value %>">
-                    </div>
-                    <div class="form-item">
-                        <div class="label-with-tooltip">
-                            <label for=""><?php esc_html_e('Visitor notification subject', 'easy-appointments'); ?></label>
-                            <span class="tooltip tooltip-right"
-                                  data-tooltip="<?php esc_html_e('You can use any tag that is available as in custom email notifications.', 'easy-appointments'); ?>"></span>
-                        </div>
-                        <input class="field" data-key="pending.subject.visitor.email"
-                               name="pending.subject.visitor.email" type="text"
-                               value="<%- _.findWhere(settings, {ea_key:'pending.subject.visitor.email'}).ea_value %>">
-                    </div>
+                    
                     <div class="form-item">
                         <div class="label-with-tooltip">
                             <label for=""><?php esc_html_e('Admin Reply-To Address', 'easy-appointments'); ?></label>
@@ -562,6 +543,100 @@
                                type="text"
                                value="<%- _.findWhere(settings, {ea_key:'send.from.email'}).ea_value %>">
                     </div>
+                    <div class="form-item">
+                        <div class="label-with-tooltip">
+                            <label for=""><?php esc_html_e('Admin notification subject', 'easy-appointments'); ?></label>
+                            <span class="tooltip tooltip-right"
+                                  data-tooltip="<?php esc_html_e('You can use any tag that is available as in custom email notifications.', 'easy-appointments'); ?>"></span>
+                        </div>
+                        <input class="field" data-key="pending.subject.email"
+                               name="pending.subject.email" type="text"
+                               value="<%- _.findWhere(settings, {ea_key:'pending.subject.email'}).ea_value %>">
+                    </div>
+                    <div class="form-item">
+                        <div class="label-with-tooltip">
+                            <label for=""><?php esc_html_e('Visitor notification subject', 'easy-appointments'); ?></label>
+                            <span class="tooltip tooltip-right"
+                                  data-tooltip="<?php esc_html_e('You can use any tag that is available as in custom email notifications.', 'easy-appointments'); ?>"></span>
+                        </div>
+                        <input class="field" data-key="pending.subject.visitor.email"
+                               name="pending.subject.visitor.email" type="text"
+                               value="<%- _.findWhere(settings, {ea_key:'pending.subject.visitor.email'}).ea_value %>">
+                    </div>
+                    <div class="form-item">
+                        <div class="label-with-tooltip">
+                            <label for="enable_status_subjects">
+                                <?php esc_html_e('Enable different subjects per status', 'easy-appointments'); ?>
+                            </label>
+                            <span class="tooltip tooltip-right"
+                                data-tooltip="<?php esc_html_e('Allows setting different email subjects for Pending, Confirmed, Cancelled and Reservation statuses.', 'easy-appointments'); ?>">
+                            </span>
+                        </div>
+                        <div class="field-wrap">
+                            <input class="field"
+                                type="checkbox"
+                                data-key="enable_status_subjects"
+                                name="enable_status_subjects"
+                                <% if (_.findWhere(settings, {ea_key:'enable_status_subjects'}).ea_value == "1") { %>checked<% } %>>
+                        </div>
+                    </div>
+                    <div class="form-item ea-status-subjects">
+                        <label><?php esc_html_e('Pending – Admin subject', 'easy-appointments'); ?></label>
+                        <input class="field" data-key="pending_subject_admin"
+                            name="pending_subject_admin" type="text"
+                            value="<%- _.findWhere(settings, {ea_key:'pending_subject_admin'}).ea_value %>">
+                    </div>
+
+                    <div class="form-item ea-status-subjects">
+                        <label><?php esc_html_e('Pending – Visitor subject', 'easy-appointments'); ?></label>
+                        <input class="field" data-key="pending_subject_visitor"
+                            name="pending_subject_visitor" type="text"
+                            value="<%- _.findWhere(settings, {ea_key:'pending_subject_visitor'}).ea_value %>">
+                    </div>
+                    <div class="form-item ea-status-subjects">
+                        <label><?php esc_html_e('Confirmed – Admin subject', 'easy-appointments'); ?></label>
+                        <input class="field" data-key="confirmed_subject_admin"
+                            name="confirmed_subject_admin" type="text"
+                            value="<%- _.findWhere(settings, {ea_key:'confirmed_subject_admin'}).ea_value %>">
+                    </div>
+
+                    <div class="form-item ea-status-subjects">
+                        <label><?php esc_html_e('Confirmed – Visitor subject', 'easy-appointments'); ?></label>
+                        <input class="field" data-key="confirmed_subject_visitor"
+                            name="confirmed_subject_visitor" type="text"
+                            value="<%- _.findWhere(settings, {ea_key:'confirmed_subject_visitor'}).ea_value %>">
+                    </div>
+                    <div class="form-item ea-status-subjects">
+                        <label><?php esc_html_e('Cancelled – Admin subject', 'easy-appointments'); ?></label>
+                        <input class="field" data-key="cancelled_subject_admin"
+                            name="cancelled_subject_admin" type="text"
+                            value="<%- _.findWhere(settings, {ea_key:'cancelled_subject_admin'}).ea_value %>">
+                    </div>
+
+                    <div class="form-item ea-status-subjects">
+                        <label><?php esc_html_e('Cancelled – Visitor subject', 'easy-appointments'); ?></label>
+                        <input class="field" data-key="cancelled_subject_visitor"
+                            name="cancelled_subject_visitor" type="text"
+                            value="<%- _.findWhere(settings, {ea_key:'cancelled_subject_visitor'}).ea_value %>">
+                    </div>
+                    <div class="form-item ea-status-subjects">
+                        <label><?php esc_html_e('Reservation – Admin subject', 'easy-appointments'); ?></label>
+                        <input class="field" data-key="reservation_subject_admin"
+                            name="reservation_subject_admin" type="text"
+                            value="<%- _.findWhere(settings, {ea_key:'reservation_subject_admin'}).ea_value %>">
+                    </div>
+
+                    <div class="form-item ea-status-subjects">
+                        <label><?php esc_html_e('Reservation – Visitor subject', 'easy-appointments'); ?></label>
+                        <input class="field" data-key="reservation_subject_visitor"
+                            name="reservation_subject_visitor" type="text"
+                            value="<%- _.findWhere(settings, {ea_key:'reservation_subject_visitor'}).ea_value %>">
+                    </div>
+
+
+
+
+
                 </div>
             </div>
 
@@ -1273,6 +1348,19 @@
         setInterval(() => {
             checked_worker_count();
             checked_user_count();
+            toggleStatusSubjects();
         }, 2000);
+
+        
+
+        function toggleStatusSubjects() {
+            var enabled = $('[name="enable_status_subjects"]').is(':checked');
+            $('.ea-status-subjects').toggle(enabled);
+        }
+
+        
+
+        $(document).on('change', '[name="enable_status_subjects"]', toggleStatusSubjects);
+
     });
 </script>
