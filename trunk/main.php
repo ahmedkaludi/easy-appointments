@@ -30,7 +30,7 @@ define('EA_SRC_DIR', dirname(__FILE__) . '/src/');
 define('EA_JS_DIR', dirname(__FILE__) . '/js/');
 
 // url for EA plugin dir
-define('EA_PLUGIN_URL', plugins_url(null, __FILE__) . '/');
+define('EA_PLUGIN_URL', plugins_url('', __FILE__) . '/');
 define('EA_PLUGIN_DIR', plugin_dir_path( __FILE__));
 
 // Register the autoloader that loads everything except the Google namespace.
