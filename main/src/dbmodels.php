@@ -293,7 +293,7 @@ class EADBModels
             }
 
 
-            if (strlen($value) > 0 && substr($value, 0, 1) == '0') {
+            if (strlen((string) $value) > 0 && substr((string) $value, 0, 1) == '0') {
                 $types[] = '%s';
             } else {
                 if (is_float($value) && !$forceStrings) {
