@@ -2362,8 +2362,16 @@ class EAAjax
         }
 
         $total_sql = "SELECT COUNT(*) FROM $table " . ($search_sql ? $search_sql : '');
-        // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-        $total_customers = $wpdb->get_var($wpdb->prepare($total_sql, ...$params));
+
+        if (!empty($params)) {
+            // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+            $total_customers = $wpdb->get_var(
+                $wpdb->prepare($total_sql, ...$params)
+            );
+        } else {
+            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+            $total_customers = $wpdb->get_var($total_sql);
+        }
         
         $query_sql = "SELECT * FROM $table " . ($search_sql ? $search_sql : '') . " ORDER BY id DESC LIMIT %d OFFSET %d";
         // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
