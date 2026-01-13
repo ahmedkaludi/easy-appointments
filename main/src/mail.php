@@ -100,7 +100,6 @@ class EAMail
         }
 
         $local = substr(get_locale(), 0, 2);
-        error_log($template);
 
         $new_template = '<!DOCTYPE HTML><html lang="' . $local . '"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"></head><body>' . $template . '</body></html>';
 
@@ -680,12 +679,9 @@ class EAMail
         $app = $this->models->get_row($table_name, $app_id);
 
         $app_array = $this->models->get_appintment_by_id($app_id);
-        error_log(print_r($app_array, true));
 
         // escape input data
         $app_array = $this->escape_data($app_array);
-        error_log(print_r($app_array, true));
-
         $params = array();
 
         $time_format = get_option('time_format', 'H:i');

@@ -1157,7 +1157,7 @@ class EAAjax
         }
 
         if (isset($this->data['_mail'])) {
-            $this->mail->send_status_change_mail($response->id);
+            $this->mail->send_user_email_notification_action($response->id);
             $this->mail->send_admin_email_notification_action($response->id);
         }
 
