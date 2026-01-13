@@ -207,6 +207,9 @@
                     booking_data.date = parentForm.find('.date').datepicker().val();
                     booking_data.time = parentForm.find('.selected-time').data('val');
                     booking_data.price = parentForm.find('[name="service"] > option:selected').data('price');
+                    if (ea_settings['is_multiple_booking_allowed'] == '1') {
+                        booking_data.price = parentForm.find('.selected-time').length * booking_data.price;
+                    }
 
                     var format = ea_settings['date_format'] + ' ' + ea_settings['time_format'];
                     booking_data.date_time = moment(booking_data.date + 'T' + booking_data.time, ea_settings['defult_detafime_format']).format(format);
