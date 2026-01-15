@@ -24,7 +24,7 @@
             </tr>
             <tr>
                 <td style="text-align:left; background-color: #CCFFFF;"><?php esc_html_e('Worker', 'easy-appointments');?></td>
-                <td style="text-align: right; font-weight: bold; background-color: #CCFFFF;"><?php esc_html($data['worker_name']);?></td>
+                <td style="text-align: right; font-weight: bold; background-color: #CCFFFF;"><?php echo esc_html($data['worker_name']);?></td>
             </tr>
             <tr>
                 <td style="text-align:left;"><?php esc_html_e('Date', 'easy-appointments');?></td>
@@ -47,7 +47,7 @@
                 <td style="text-align: right; font-weight: bold;"><?php echo esc_html($data['price']);?></td>
             </tr>
             <tr>
-                <td style="text-align: left; background-color: #CCFFFF;">IP</td>
+                <td style="text-align: left; background-color: #CCFFFF;"><?php esc_html_e('IP', 'easy-appointments');?></td>
                 <td style="text-align: right; font-weight: bold; background-color: #CCFFFF;"><?php echo esc_html($data['ip']);?></td>
             </tr>
 

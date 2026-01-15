@@ -968,7 +968,7 @@ class EAMail
         $clean = array();
 
         foreach ($data as $key => $value) {
-            $clean[$key] = htmlspecialchars($value ?? '', ENT_QUOTES, 'UTF-8');
+            $clean[$key] = htmlspecialchars((isset($value) ? $value : ''), ENT_QUOTES, 'UTF-8');
         }
 
         return $clean;

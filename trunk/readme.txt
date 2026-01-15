@@ -87,6 +87,7 @@ There is extension plugin that you can buy and add to your Easy Appointments plu
     - Mail
 * WooCommerce integration
 * PayPal integration
+* WhatsApp Notification integration
 
 For more info follow the link for <a href="https://easy-appointments.com/#extension">Extension plugin</a>
 
@@ -222,7 +223,7 @@ Terms of use and Policy : https://fullcalendar.io/license
 25. Admin panel - Report - Export page
 
 == Changelog ==
-= 3.12.19 (2026-01-13)
+= 3.12.19 (2026-01-15)
 * Added message integration with WhatsApp #227
 * Added an option to set different email subjects for each email. #209
 * Fixed Latest plugin version 3.12.16 have php deprecated issues when using php 8.1+ #205
