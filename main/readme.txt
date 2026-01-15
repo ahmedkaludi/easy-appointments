@@ -87,6 +87,7 @@ There is extension plugin that you can buy and add to your Easy Appointments plu
     - Mail
 * WooCommerce integration
 * PayPal integration
+* WhatsApp Notification integration
 
 For more info follow the link for <a href="https://easy-appointments.com/#extension">Extension plugin</a>
 

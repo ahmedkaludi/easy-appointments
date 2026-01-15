@@ -2437,7 +2437,7 @@ class EAAjax
         }
 
         global $wpdb;
-        $customer_id = intval($_POST['customer_id'] ?? 0);
+        $customer_id = isset($_POST['customer_id']) ? intval($_POST['customer_id']) : 0;
         $user_id = get_current_user_id();
 
         if (!$customer_id) {
@@ -2463,10 +2463,10 @@ class EAAjax
         }
         check_ajax_referer('ea_customer_edit', 'ea_nonce');
 
-        $name    = sanitize_text_field( wp_unslash($_POST['name'] ?? ''));
-        $email   = sanitize_email( wp_unslash($_POST['email'] ?? ''));
-        $mobile  = sanitize_text_field( wp_unslash($_POST['mobile'] ?? ''));
-        $address = sanitize_textarea_field( wp_unslash($_POST['address'] ?? ''));
+        $name    = isset($_POST['name'])    ? sanitize_text_field(wp_unslash($_POST['name']))    : '';
+        $email   = isset($_POST['email'])   ? sanitize_email(wp_unslash($_POST['email']))        : '';
+        $mobile  = isset($_POST['mobile'])  ? sanitize_text_field(wp_unslash($_POST['mobile']))  : '';
+        $address = isset($_POST['address']) ? sanitize_textarea_field(wp_unslash($_POST['address'])) : '';
 
         global $wpdb;
         $current_user_id = get_current_user_id();
