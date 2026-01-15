@@ -8,19 +8,19 @@
             <tbody>
             <tr>
                 <td style="text-align:left; background-color: #CCFFFF;"><?php esc_html_e('Id', 'easy-appointments');?></td>
-                <td style="text-align: right; font-weight: bold; background-color: #CCFFFF;"><?php esc_html($data['id']);?></td>
+                <td style="text-align: right; font-weight: bold; background-color: #CCFFFF;"><?php echo esc_html($data['id']);?></td>
             </tr>
             <tr>
                 <td style="text-align:left;"><?php esc_html_e('Status', 'easy-appointments');?></td>
-                <td style="text-align: right; font-weight: bold;"><?php esc_html($data['status']);?></td>
+                <td style="text-align: right; font-weight: bold;"><?php echo esc_html($data['status']);?></td>
             </tr>
             <tr>
                 <td style="text-align:left; background-color: #CCFFFF;"><?php esc_html_e('Location', 'easy-appointments');?></td>
-                <td style="text-align: right; font-weight: bold; background-color: #CCFFFF;"><?php esc_html($data['location_name']);?></td>
+                <td style="text-align: right; font-weight: bold; background-color: #CCFFFF;"><?php echo esc_html($data['location_name']);?></td>
             </tr>
             <tr>
                 <td style="text-align:left;"><?php esc_html_e('Service', 'easy-appointments');?></td>
-                <td style="text-align: right; font-weight: bold;"><?php esc_html($data['service_name']);?></td>
+                <td style="text-align: right; font-weight: bold;"><?php echo esc_html($data['service_name']);?></td>
             </tr>
             <tr>
                 <td style="text-align:left; background-color: #CCFFFF;"><?php esc_html_e('Worker', 'easy-appointments');?></td>
@@ -28,27 +28,27 @@
             </tr>
             <tr>
                 <td style="text-align:left;"><?php esc_html_e('Date', 'easy-appointments');?></td>
-                <td style="text-align: right; font-weight: bold;"><?php esc_html($data['date']);?></td>
+                <td style="text-align: right; font-weight: bold;"><?php echo esc_html($data['date']);?></td>
             </tr>
             <tr>
                 <td style="text-align:left; background-color: #CCFFFF;"><?php esc_html_e('Start', 'easy-appointments');?></td>
-                <td style="text-align: right; font-weight: bold; background-color: #CCFFFF;"><?php esc_html($data['start']);?></td>
+                <td style="text-align: right; font-weight: bold; background-color: #CCFFFF;"><?php echo esc_html($data['start']);?></td>
             </tr>
             <tr>
                 <td style="text-align:left;"><?php esc_html_e('End', 'easy-appointments');?></td>
-                <td style="text-align: right; font-weight: bold;"><?php esc_html($data['end']);?></td>
+                <td style="text-align: right; font-weight: bold;"><?php echo esc_html($data['end']);?></td>
             </tr>
             <tr>
                 <td style="text-align:left; background-color: #CCFFFF;"><?php esc_html_e('Created', 'easy-appointments');?></td>
-                <td style="text-align: right; font-weight: bold; background-color: #CCFFFF;"><?php esc_html($data['created']);?></td>
+                <td style="text-align: right; font-weight: bold; background-color: #CCFFFF;"><?php echo esc_html($data['created']);?></td>
             </tr>
             <tr>
                 <td style="text-align:left;"><?php esc_html_e('Price', 'easy-appointments');?></td>
-                <td style="text-align: right; font-weight: bold;"><?php esc_html($data['price']);?></td>
+                <td style="text-align: right; font-weight: bold;"><?php echo esc_html($data['price']);?></td>
             </tr>
             <tr>
                 <td style="text-align: left; background-color: #CCFFFF;">IP</td>
-                <td style="text-align: right; font-weight: bold; background-color: #CCFFFF;"><?php esc_html($data['ip']);?></td>
+                <td style="text-align: right; font-weight: bold; background-color: #CCFFFF;"><?php echo esc_html($data['ip']);?></td>
             </tr>
 
             <?php

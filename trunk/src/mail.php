@@ -470,8 +470,8 @@ class EAMail
         $token = $this->generate_token($data, $action);
         $link = $this->generate_link($data['id'], $token, $action);
 
-        if ($link_text == '') {
-            $link_text = $link;
+        if ($link_text === '') {
+            $link_text = ucfirst($action) . ' Appointment';
         }
 
         return "<a href='$link' target='_blank'>$link_text</a>";
