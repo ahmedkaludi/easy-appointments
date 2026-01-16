@@ -81,42 +81,6 @@ class EAAdminPanel
 
     }
 
-    public function handle_customers_ajax() {
-        global $wpdb;
-
-        $table = $wpdb->prefix . 'ea_customers';
-        $per_page = 10;
-        // phpcs:ignore WordPress.Security.NonceVerification.Missing
-        $paged = isset( $_POST['paged'] ) ? max( 1, intval( $_POST['paged'] ) ) : 1;
-
-        $offset = ( $paged - 1 ) * $per_page;
-
-        // phpcs:ignore WordPress.Security.NonceVerification.Missing
-        $search = isset( $_POST['search'] ) ? sanitize_text_field( wp_unslash( $_POST['search'] ) ) : '';
-        $search_sql = '';
-        $params = [];
-
-        if (!empty($search)) {
-            $search_sql = "WHERE name LIKE %s OR email LIKE %s OR mobile LIKE %s";
-            $like = '%' . $wpdb->esc_like($search) . '%';
-            $params = [$like, $like, $like];
-        }
-
-        $total_sql = "SELECT COUNT(*) FROM $table " . ($search_sql ? $search_sql : '');
-        // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-        $total_customers = $wpdb->get_var($wpdb->prepare($total_sql, ...$params));
-
-        $query_sql = "SELECT * FROM $table " . ($search_sql ? $search_sql : '') . " ORDER BY id DESC LIMIT %d OFFSET %d";
-        // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-        $customers = $wpdb->get_results($wpdb->prepare($query_sql, ...array_merge($params, [$per_page, $offset])));
-
-        wp_send_json([
-            'data' => $customers,
-            'total_pages' => ceil($total_customers / $per_page),
-            'paged' => $paged,
-        ]);
-    }
-
 
 
     public function handle_update_customer_ajax() {
@@ -167,10 +131,11 @@ class EAAdminPanel
         }
         check_ajax_referer('ea_customer_edit', 'ea_nonce');
 
-        $name    = sanitize_text_field(wp_unslash($_POST['name'] ?? ''));
-        $email   = sanitize_email(wp_unslash($_POST['email'] ?? ''));
-        $mobile  = sanitize_text_field(wp_unslash($_POST['mobile'] ?? ''));
-        $address = sanitize_textarea_field(wp_unslash($_POST['address'] ?? ''));
+        $name    = isset($_POST['name'])    ? sanitize_text_field(wp_unslash($_POST['name']))    : '';
+        $email   = isset($_POST['email'])   ? sanitize_email(wp_unslash($_POST['email']))        : '';
+        $mobile  = isset($_POST['mobile'])  ? sanitize_text_field(wp_unslash($_POST['mobile']))  : '';
+        $address = isset($_POST['address']) ? sanitize_textarea_field(wp_unslash($_POST['address'])) : '';
+
 
         global $wpdb;
         // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery

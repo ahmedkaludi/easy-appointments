@@ -1157,7 +1157,7 @@ class EAAjax
         }
 
         if (isset($this->data['_mail'])) {
-            $this->mail->send_status_change_mail($response->id);
+            $this->mail->send_user_email_notification_action($response->id);
             $this->mail->send_admin_email_notification_action($response->id);
         }
 
@@ -1599,6 +1599,15 @@ class EAAjax
             'compatibility.mode'            => '0',
             'pending.subject.email'         => 'New Reservation #id#',
             'send.from.email'               => '',
+            'enable_status_subjects'        => '0',
+            'pending_subject_admin'         => '',
+            'pending_subject_visitor'       => '',
+            'confirmed_subject_admin'       => '',
+            'confirmed_subject_visitor'     => '',
+            'cancelled_subject_admin'       => '',
+            'cancelled_subject_visitor'     => '',
+            'reservation_subject_admin'     => '',
+            'reservation_subject_visitor'   => '',
             'css.off'                       => '0',
             'submit.redirect'               => '',
             'advance.redirect'              => '[]',
@@ -2353,8 +2362,16 @@ class EAAjax
         }
 
         $total_sql = "SELECT COUNT(*) FROM $table " . ($search_sql ? $search_sql : '');
-        // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-        $total_customers = $wpdb->get_var($wpdb->prepare($total_sql, ...$params));
+
+        if (!empty($params)) {
+            // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+            $total_customers = $wpdb->get_var(
+                $wpdb->prepare($total_sql, ...$params)
+            );
+        } else {
+            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+            $total_customers = $wpdb->get_var($total_sql);
+        }
         
         $query_sql = "SELECT * FROM $table " . ($search_sql ? $search_sql : '') . " ORDER BY id DESC LIMIT %d OFFSET %d";
         // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching

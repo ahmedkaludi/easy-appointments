@@ -287,7 +287,7 @@ function easy_ea_blocks_render_shortcode(WP_REST_Request $request)
 
 	// Extract shortcode name
 	preg_match('/^\[(\w+)/', $shortcode, $matches);
-	$shortcode_tag = $matches[1] ?? '';
+	$shortcode_tag = isset($matches[1]) ? $matches[1] : '';
 
 	if (!in_array($shortcode_tag, $allowed_shortcodes, true)) {
 		return new WP_REST_Response([
