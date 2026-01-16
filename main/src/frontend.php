@@ -359,8 +359,8 @@ class Easy_EA_Frontend
 
                         <div style="display: inline-flex;">
                             <?php 
-                             // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-                             echo apply_filters(
+                                // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+                                echo apply_filters(
                                     'easy_ea_checkout_button',
                                     '<button class="ea-btn ea-submit"
                                         style="
@@ -370,7 +370,8 @@ class Easy_EA_Frontend
                                         ">'
                                         . esc_html__('Submit', 'easy-appointments') .
                                     '</button>'
-                                ); ?>
+                                );
+                            ?>
                             <button class="ea-btn ea-cancel"><?php esc_html_e('Cancel', 'easy-appointments'); ?></button>
                         </div>
                     </div>
@@ -864,7 +865,7 @@ class Easy_EA_Frontend
                     $price_attr = !empty($row->price) ? " data-price='" . esc_attr($row->price) . "'" : '';
                     echo sprintf(
                         '<option value="%d" selected="selected"%s>%s</option>',
-                        esc_attr( $rows->id ),
+                        esc_attr( $row->id ),
                         wp_kses_post( $price_attr ),
                         esc_html( $name )
                     );
@@ -880,7 +881,7 @@ class Easy_EA_Frontend
                     $price_attr = !empty($row->price) ? " data-price='" . esc_attr($row->price) . "'" : '';
                     echo sprintf(
                         '<option value="%d" selected="selected"%s>%s</option>',
-                        esc_attr( $rows->id ),
+                        esc_attr( $row->id ),
                         wp_kses_post( $price_attr ),
                         esc_html( $name )
                     );

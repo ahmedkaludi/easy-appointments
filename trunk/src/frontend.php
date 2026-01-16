@@ -865,7 +865,7 @@ class Easy_EA_Frontend
                     $price_attr = !empty($row->price) ? " data-price='" . esc_attr($row->price) . "'" : '';
                     echo sprintf(
                         '<option value="%d" selected="selected"%s>%s</option>',
-                        esc_attr( $rows->id ),
+                        esc_attr( $row->id ),
                         wp_kses_post( $price_attr ),
                         esc_html( $name )
                     );
@@ -881,7 +881,7 @@ class Easy_EA_Frontend
                     $price_attr = !empty($row->price) ? " data-price='" . esc_attr($row->price) . "'" : '';
                     echo sprintf(
                         '<option value="%d" selected="selected"%s>%s</option>',
-                        esc_attr( $rows->id ),
+                        esc_attr( $row->id ),
                         wp_kses_post( $price_attr ),
                         esc_html( $name )
                     );
