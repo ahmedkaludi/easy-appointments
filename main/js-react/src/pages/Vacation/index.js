@@ -59,11 +59,18 @@ const Vacation = () => {
       toggleSidebar();
       setVacations(data);
     } catch (e) {
+      console.error('Error editing vacation:', e);
       throw new Error(e);
     }
   };
 
-  const save = (model, isEdit) => (isEdit ? onEdit(model) : onCreate(model));
+  const save = model => {
+    if (activeVacation && activeVacation.id) {
+      return onEdit(model);
+    }
+
+    return onCreate(model);
+  };
 
   const onEditClick = row => {
     setActiveVacation(row);
