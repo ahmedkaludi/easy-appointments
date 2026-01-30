@@ -284,7 +284,13 @@
                         </div>
                     </div>
 
-
+                    
+                    <div class="form-item"> <div class="label-with-tooltip"> <label> <?php esc_html_e('Export Plugin Data', 'easy-appointments'); ?> </label> <span class="tooltip tooltip-right" data-tooltip="<?php esc_html_e('Export or import all Easy Appointments data including services, staff, appointments, customers and settings.', 'easy-appointments'); ?>"> </span> </div> <div class="field-wrap"> <!-- EXPORT --> <button type="button" class="button button-secondary" id="ea-full-export"> <?php esc_html_e('Export All Data', 'easy-appointments'); ?> </button> </div> </div> <div class="form-item"> <div class="label-with-tooltip"> <label> <?php esc_html_e('Import Plugin Data', 'easy-appointments'); ?> </label> <span class="tooltip tooltip-right" data-tooltip="<?php esc_html_e('⚠ Import will overwrite ALL existing Easy Appointments data.', 'easy-appointments'); ?>"> </span> </div> <div class="field-wrap"> <!-- IMPORT --> <input type="file" id="ea-full-import-file" accept=".json" /> <button type="button" class="button button-primary" id="ea-full-import"> <?php esc_html_e('Import Data', 'easy-appointments'); ?> </button> </div> </div>
+                    <hr />
+                    
+                    
+                    
+                    
                 </div>
                 
             </div>
@@ -349,12 +355,12 @@
                     <div class="form-item">
                         <div class="form-wrap">
                             <?php esc_html_e('Current logged in user have:', 'easy-appointments'); ?> <small>x<?php
-                            $easy_ea_data = get_userdata(get_current_user_id());
-                            if (is_object($easy_ea_data)) {
-                                // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-                                echo implode(', ', array_keys($easy_ea_data->allcaps));
-                            }
-                            ?></small>
+                                                                                                                $easy_ea_data = get_userdata(get_current_user_id());
+                                                                                                                if (is_object($easy_ea_data)) {
+                                                                                                                    // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+                                                                                                                    echo implode(', ', array_keys($easy_ea_data->allcaps));
+                                                                                                                }
+                                                                                                                ?></small>
                         </div>
                     </div>
                 </div>
@@ -418,8 +424,8 @@
                         </table>
                         <a id="load-default-admin-template" href="#" style="padding-top: 5px; padding-bottom: 5px; display: none;"><?php esc_html_e('Load default admin template', 'easy-appointments'); ?></a>
                         <div><small><?php esc_html_e('Available tags', 'easy-appointments'); ?>: #id#, #date#, #start#, #end#, #status#, #created#, #price#, #ip#, #link_confirm#, #link_cancel#, #url_confirm#, #url_cancel#, #service_name#, #service_duration#, #service_price#, #worker_name#, #workeresc_html_email#, #worker_phone#, #location_name#, #location_address#, #location_location#, <?php
-                        // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-                         echo implode(', ', EADBModels::get_custom_fields_tags()); ?></small></div>
+                                                                                                                                                                                                                                                                                                                                                                                                        // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+                                                                                                                                                                                                                                                                                                                                                                                                        echo implode(', ', EADBModels::get_custom_fields_tags()); ?></small></div>
                     </div>
                     <div class="form-item">
                         <div class="label-with-tooltip">
@@ -1208,9 +1214,9 @@
     <% if (item.type !== "PHONE" && item.type !== "SELECT" && item.type !== "MASKED") { %>
     <p>
         <label>Default value</label><input type="text" class="field-default_value" name="field-default_value" value="<%- item.default_value %>">
-        <small>You can put values from logged in user (list of keys: <?php 
-        // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-        echo EasyEAUserFieldMapper::all_field_keys(); ?>)</small>
+        <small>You can put values from logged in user (list of keys: <?php
+                                                                        // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+                                                                        echo EasyEAUserFieldMapper::all_field_keys(); ?>)</small>
     </p>
     <% } %>
 
@@ -1351,16 +1357,62 @@
             toggleStatusSubjects();
         }, 2000);
 
-        
+
 
         function toggleStatusSubjects() {
             var enabled = $('[name="enable_status_subjects"]').is(':checked');
             $('.ea-status-subjects').toggle(enabled);
         }
 
-        
+
 
         $(document).on('change', '[name="enable_status_subjects"]', toggleStatusSubjects);
+
+        $(document).on('click', '#ea-full-export', function() {
+            console.log('Export clicked');
+            if (!confirm('Export all Easy Appointments data?')) {
+                return;
+            }
+
+            window.location.href =
+                ajaxurl +
+                '?action=ea_full_export&_wpnonce=' +
+                ea_obj.ea_security_nonce;
+        });
+
+        $(document).on('click', '#ea-full-import', function() {
+
+            const fileInput = document.getElementById('ea-full-import-file');
+
+            if (!fileInput.files.length) {
+                alert('Please select a JSON backup file.');
+                return;
+            }
+
+            if (!confirm('⚠ This will DELETE existing data and import backup. Continue?')) {
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('action', 'ea_full_import');
+            formData.append('_wpnonce', ea_obj.ea_security_nonce);
+            formData.append('file', fileInput.files[0]);
+
+            $.ajax({
+                url: ajaxurl,
+                method: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function(res) {
+                    alert(res.data || 'Import completed successfully.');
+                    location.reload();
+                },
+                error: function(xhr) {
+                    alert(xhr.responseJSON?.data || 'Import failed.');
+                }
+            });
+        });
 
     });
 </script>
