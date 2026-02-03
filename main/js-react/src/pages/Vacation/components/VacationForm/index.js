@@ -34,8 +34,11 @@ export const VacationForm = ({ model, onSave, onCancel }) => {
       }
     }
 
-    // ✅ If validation passes
-    onSave(formData);
+    const payload = {
+      ...(model || {}), // keeps id when editing
+      ...formData
+    };
+    onSave(payload);
   };
 
   return (

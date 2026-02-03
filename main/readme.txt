@@ -5,7 +5,7 @@ Tags: appointment, appointments, Booking, calendar, reservation
 Requires at least: 3.7
 Tested up to: 6.9
 Requires PHP: 5.3
-Stable tag: 3.12.19
+Stable tag: 3.12.20
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -88,6 +88,7 @@ There is extension plugin that you can buy and add to your Easy Appointments plu
 * WooCommerce integration
 * PayPal integration
 * WhatsApp Notification integration
+* AI Booking Assistant
 
 For more info follow the link for <a href="https://easy-appointments.com/#extension">Extension plugin</a>
 
@@ -223,6 +224,15 @@ Terms of use and Policy : https://fullcalendar.io/license
 25. Admin panel - Report - Export page
 
 == Changelog ==
+== Changelog ==
+= 3.12.20 (2026-01-31)
+* Added Full compatibilty with Polylang Plugin. #189
+* Added AI Chatbot for bookings #113
+* Added option to custom color in Google Calendar booking #242
+* Fixed Location in ea_bootstrap creating problem #235
+* Fixed Conflict with wpbakery builder #238
+* Fixed Need to check with vacation saving funtionality. #236
+
 = 3.12.19 (2026-01-15)
 * Added message integration with WhatsApp #227
 * Added an option to set different email subjects for each email. #209

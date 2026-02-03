@@ -418,9 +418,8 @@ class Easy_EA_Frontend
             $r = !empty($item->required);
 
             $star = ($r) ? ' * ' : ' ';
-
             $html .= '<p>';
-            $html .= '<label>' . esc_html($item->label) . $star . ': </label>';
+            $html .= '<label>' . esc_attr__($item->label,'easy-appointments') . $star . ': </label>';
 
             if ($item->type == 'INPUT') {
                 $msg = ($r) ? 'data-rule-required="true" data-msg-required="' . __('This field is required.', 'easy-appointments') . '"' : '';
@@ -712,6 +711,11 @@ class Easy_EA_Frontend
         $rows = $this->models->get_all_rows("ea_meta_fields", array(), array('position' => 'ASC'));
 
         $rows = apply_filters( 'easy_ea_form_rows', $rows);
+        foreach ( $rows as $row ) {
+            if ( ! empty( $row->label ) ) {
+                $row->label = esc_html__( $row->label, 'easy-appointments' );
+            }
+        }
         $settings['MetaFields'] = $rows;
 
         wp_enqueue_script('underscore');
@@ -865,7 +869,7 @@ class Easy_EA_Frontend
                     $price_attr = !empty($row->price) ? " data-price='" . esc_attr($row->price) . "'" : '';
                     echo sprintf(
                         '<option value="%d" selected="selected"%s>%s</option>',
-                        esc_attr( $rows->id ),
+                        esc_attr( $row->id ),
                         wp_kses_post( $price_attr ),
                         esc_html( $name )
                     );
@@ -881,7 +885,7 @@ class Easy_EA_Frontend
                     $price_attr = !empty($row->price) ? " data-price='" . esc_attr($row->price) . "'" : '';
                     echo sprintf(
                         '<option value="%d" selected="selected"%s>%s</option>',
-                        esc_attr( $rows->id ),
+                        esc_attr( $row->id ),
                         wp_kses_post( $price_attr ),
                         esc_html( $name )
                     );

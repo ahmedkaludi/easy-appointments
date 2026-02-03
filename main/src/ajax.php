@@ -186,10 +186,126 @@ class EAAjax
             add_action('wp_ajax_ea_get_customer_detail_ajax', [$this, 'handle_customer_detail_ajax']);
             add_action('wp_ajax_ea_delete_customer' , [$this, 'ea_handle_delete_customer']);
             add_action('wp_ajax_ea_delete_multiple_connections' , [$this, 'ea_delete_multiple_connections']);
+
+            add_action('wp_ajax_ea_full_export', [$this, 'ea_ajax_full_export']);
+            add_action('wp_ajax_ea_full_import', [$this, 'ea_ajax_full_import']);
+
             
         }
         
     }
+
+    private function get_ea_tables() {
+        return [
+            'ea_options',
+            'ea_locations',
+            'ea_services',
+            'ea_staff',
+            'ea_connections',
+            'ea_meta_fields',
+            'ea_appointments',
+            'ea_fields',
+            'ea_customers',
+            'ea_error_logs',
+        ];
+    }
+
+
+    public function ea_ajax_full_export() {
+        // print_r($_REQUEST);die;
+        if (isset( $_REQUEST['_wpnonce'] ) && current_user_can('manage_options') && (wp_verify_nonce( sanitize_text_field( wp_unslash( $_REQUEST['_wpnonce'] ) ), 'ea_ajax_check_nonce' ) )){
+
+            global $wpdb;
+
+            $export = [
+                'plugin'         => 'easy-appointments',
+                'plugin_version' => EASY_APPOINTMENTS_VERSION,
+                'db_version'     => get_option('easy_app_db_version'),
+                'exported_at'    => current_time('mysql'),
+                'tables'         => [],
+            ];
+
+            foreach ($this->get_ea_tables() as $table) {
+                $full = $wpdb->prefix . $table;
+                // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
+                $export['tables'][$table] = $wpdb->get_results(
+                    "SELECT * FROM {$full}",
+                    ARRAY_A
+                );
+            }
+
+            header('Content-Type: application/json');
+            header('Content-Disposition: attachment; filename=easy-appointments-backup-' . date('Ymd-His') . '.json');
+            header('Pragma: no-cache');
+            header('Expires: 0');
+
+            echo wp_json_encode($export);
+            exit;
+        } else {
+            wp_send_json_error('Unauthorized');
+        }
+    }
+
+    public function ea_ajax_full_import() {
+
+        if (! isset( $_REQUEST['_wpnonce'] ) || !wp_verify_nonce( sanitize_text_field( wp_unslash( $_REQUEST['_wpnonce'] ) ), 'ea_ajax_check_nonce' )) {
+            wp_send_json_error('Unauthorized');
+        }
+
+        if (empty($_FILES['file']['tmp_name'])) {
+            wp_send_json_error('No file uploaded');
+        }
+
+        $json = file_get_contents($_FILES['file']['tmp_name']);
+        $data = json_decode($json, true);
+
+        if (empty($data['tables'])) {
+            wp_send_json_error('Invalid backup file');
+        }
+
+        global $wpdb;
+
+        // Safety
+        $wpdb->query('SET FOREIGN_KEY_CHECKS=0');
+        $wpdb->query('START TRANSACTION');
+
+        try {
+
+            foreach ($this->get_ea_tables() as $table) {
+
+                if (!isset($data['tables'][$table])) {
+                    continue;
+                }
+
+                $full = $wpdb->prefix . $table;
+
+                // Clear table
+                $wpdb->query("TRUNCATE TABLE {$full}");
+
+                foreach ($data['tables'][$table] as $row) {
+                    $wpdb->insert($full, $row);
+                }
+            }
+
+            if (!empty($data['db_version'])) {
+                update_option('easy_app_db_version', $data['db_version']);
+            }
+
+            $wpdb->query('COMMIT');
+            $wpdb->query('SET FOREIGN_KEY_CHECKS=1');
+
+            wp_send_json_success('Import completed');
+
+        } catch (Exception $e) {
+
+            $wpdb->query('ROLLBACK');
+            $wpdb->query('SET FOREIGN_KEY_CHECKS=1');
+
+            wp_send_json_error('Import failed');
+        }
+    }
+
+
 
     function ea_delete_multiple_connections() {
 
@@ -2437,7 +2553,7 @@ class EAAjax
         }
 
         global $wpdb;
-        $customer_id = intval($_POST['customer_id'] ?? 0);
+        $customer_id = isset($_POST['customer_id']) ? intval($_POST['customer_id']) : 0;
         $user_id = get_current_user_id();
 
         if (!$customer_id) {
@@ -2463,10 +2579,10 @@ class EAAjax
         }
         check_ajax_referer('ea_customer_edit', 'ea_nonce');
 
-        $name    = sanitize_text_field( wp_unslash($_POST['name'] ?? ''));
-        $email   = sanitize_email( wp_unslash($_POST['email'] ?? ''));
-        $mobile  = sanitize_text_field( wp_unslash($_POST['mobile'] ?? ''));
-        $address = sanitize_textarea_field( wp_unslash($_POST['address'] ?? ''));
+        $name    = isset($_POST['name'])    ? sanitize_text_field(wp_unslash($_POST['name']))    : '';
+        $email   = isset($_POST['email'])   ? sanitize_email(wp_unslash($_POST['email']))        : '';
+        $mobile  = isset($_POST['mobile'])  ? sanitize_text_field(wp_unslash($_POST['mobile']))  : '';
+        $address = isset($_POST['address']) ? sanitize_textarea_field(wp_unslash($_POST['address'])) : '';
 
         global $wpdb;
         $current_user_id = get_current_user_id();
