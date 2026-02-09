@@ -707,19 +707,34 @@
                 <span class="separator vertical"></span>
                 <div class="form-container">
                     <div class="form-item">
-                        <label for=""><?php esc_html_e('Service', 'easy-appointments'); ?></label>
+                        <label for=""><?php esc_html_e('Service Label', 'easy-appointments'); ?></label>
                         <input class="field" data-key="trans.service" name="service" type="text"
                                value="<%- _.findWhere(settings, {ea_key:'trans.service'}).ea_value %>">
                     </div>
                     <div class="form-item">
-                        <label for=""><?php esc_html_e('Location', 'easy-appointments'); ?></label>
+                        <label for=""><?php esc_html_e('Service Dropdown Default Option', 'easy-appointments'); ?></label>
+                        <input class="field" data-key="trans.service_option" name="service" type="text"
+                               value="<%- _.findWhere(settings, {ea_key:'trans.service_option'}).ea_value %>">
+                    </div>
+                    <div class="form-item">
+                        <label for=""><?php esc_html_e('Location Label', 'easy-appointments'); ?></label>
                         <input class="field" data-key="trans.location" name="location" type="text"
                                value="<%- _.findWhere(settings, {ea_key:'trans.location'}).ea_value %>">
                     </div>
                     <div class="form-item">
-                        <label for=""><?php esc_html_e('Worker', 'easy-appointments'); ?></label>
+                        <label for=""><?php esc_html_e('Location Dropdown Default Option', 'easy-appointments'); ?></label>
+                        <input class="field" data-key="trans.location_option" name="location" type="text"
+                               value="<%- _.findWhere(settings, {ea_key:'trans.location_option'}).ea_value %>">
+                    </div>
+                    <div class="form-item">
+                        <label for=""><?php esc_html_e('Worker Label', 'easy-appointments'); ?></label>
                         <input class="field" data-key="trans.worker" name="worker" type="text"
                                value="<%- _.findWhere(settings, {ea_key:'trans.worker'}).ea_value %>">
+                    </div>
+                    <div class="form-item">
+                        <label for=""><?php esc_html_e('Worker Dropdown Default Option', 'easy-appointments'); ?></label>
+                        <input class="field" data-key="trans.worker_option" name="worker" type="text"
+                               value="<%- _.findWhere(settings, {ea_key:'trans.worker_option'}).ea_value %>">
                     </div>
                     <div class="form-item">
                         <div class="label-with-tooltip">
@@ -730,6 +745,16 @@
                         <input class="field" data-key="trans.done_message" name="done_message"
                                type="text"
                                value="<%- _.findWhere(settings, {ea_key:'trans.done_message'}).ea_value %>">
+                    </div>
+                    <div class="form-item">
+                        <div class="label-with-tooltip">
+                            <label for=""><?php esc_html_e('Submit Button Text', 'easy-appointments'); ?></label>
+                            <span class="tooltip tooltip-right"
+                                  data-tooltip="<?php esc_html_e('Text will display on submit button in frontend booking form', 'easy-appointments'); ?>"></span>
+                        </div>
+                        <input class="field" data-key="trans.submit_button_text" name="submit_button_text"
+                               type="text"
+                               value="<%- _.findWhere(settings, {ea_key:'trans.submit_button_text'}).ea_value %>">
                     </div>
                     <div class="form-item">
                         <label for=""><?php esc_html_e('Search Customer', 'easy-appointments'); ?></label>
