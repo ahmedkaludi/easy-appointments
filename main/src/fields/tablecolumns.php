@@ -142,6 +142,7 @@ class EATableColumns
             'advance.redirect',
             'advance_cancel.redirect',
             'block.time',
+            'cancel_time',
             'block_days',
             'block_days_tooltip',
             'cal_auto_select',

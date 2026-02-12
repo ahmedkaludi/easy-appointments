@@ -834,6 +834,15 @@
                         <input class="field" data-key="block.time" name="block.time" type="text"
                                value="<%- _.findWhere(settings, {ea_key:'block.time'}).ea_value %>">
                     </div>
+                    <div class="form-item">
+                        <div class="label-with-tooltip">
+                            <label for=""><?php esc_html_e('Cancel Booking Before hour', 'easy-appointments'); ?></label>
+                            <span class="tooltip tooltip-right"
+                                  data-tooltip="<?php esc_html_e('Users are allowed to cancel their appointments only up to hours before the scheduled time.', 'easy-appointments'); ?>"></span>
+                        </div>
+                        <input class="field" data-key="cancel_time" name="cancel_time" type="time"
+                               value="<%- _.findWhere(settings, {ea_key:'cancel_time'}).ea_value %>">
+                    </div>
                 </div>
             </div>
 

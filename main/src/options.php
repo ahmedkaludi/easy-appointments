@@ -138,6 +138,7 @@ class EAOptions
             'admin_reply_to_address'        => '',
             'visitor_reply_to_address'      => '',
             'block.time'                    => '0',
+            'cancel_time'                    => '0',
             'max.appointments'              => '5',
             'pre.reservation'               => '0',
             'default.status'                => 'pending',

@@ -1734,6 +1734,7 @@ class EAAjax
             'advance_cancel.redirect'       => '[]',
             'pending.subject.visitor.email' => 'Reservation #id#',
             'block.time'                    => '0',
+            'cancel_time'                    => '0',
             'max.appointments'              => '5',
             'pre.reservation'               => '0',
             'default.status'                => 'pending',

@@ -243,6 +243,34 @@ class EAMail
                 wp_die(esc_html__('Appointment can\'t be cancelled!', 'easy-appointments'));
             }
 
+            $cancel_time = $this->options->get_option_value('cancel_time');
+            if (!empty($cancel_time)) {
+                // Convert appointment datetime
+                $appointment_dt = new DateTime($app_data['date'] . ' ' . $app_data['start']);
+                $current_dt     = new DateTime(current_time('Y-m-d H:i'));
+
+                // Calculate difference in minutes
+                $diff_seconds = $appointment_dt->getTimestamp() - $current_dt->getTimestamp();
+                $diff_minutes = floor($diff_seconds / 60);
+
+                // If cancel_time stored as hours → convert to minutes
+                $cancel_minutes = intval($cancel_time) * 60;
+
+                if ($diff_minutes < $cancel_minutes) {
+                    wp_die(
+                        esc_html__('Cancellation is not allowed within the specified time before the appointment.', 'easy-appointments')
+                    );
+                }
+            }
+            
+
+            if (new DateTime() > new DateTime($app_data['date'] . ' ' . $app_data['start'])) {
+                $url = apply_filters( 'easy_ea_cant_be_canceled_redirect_url', get_home_url());
+
+                header('Refresh:3; url=' . $url);
+                wp_die(esc_html__('Appointment can\'t be cancelled', 'easy-appointments'));
+            }
+
             $response = $this->models->replace($table, $app_data, true);
 
             // trigger new appointment
@@ -254,12 +282,7 @@ class EAMail
             // for admin
             do_action('easy_ea_admin_email_notification', $app_data['id']);
 
-            if (new DateTime() > new DateTime($app_data['date'] . ' ' . $app_data['start'])) {
-                $url = apply_filters( 'easy_ea_cant_be_canceled_redirect_url', get_home_url());
-
-                header('Refresh:3; url=' . $url);
-                wp_die(esc_html__('Appointment can\'t be cancelled', 'easy-appointments'));
-            }
+            
 
             $url = apply_filters( 'easy_ea_cancel_redirect_url', get_home_url());
 
