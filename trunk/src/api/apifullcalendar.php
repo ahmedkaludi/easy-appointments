@@ -171,28 +171,40 @@ class EasyEAApiFullCalendar
         $fields = $this->db_models->get_all_rows('ea_meta_fields', array(), array('position' => 'ASC'));
         $services = $this->db_models->get_all_rows('ea_services', array(), array('id' => 'ASC'));
 
+        if (
+            !current_user_can('manage_options') &&
+            !empty($this->options->get_option_value('fullcalendar.my_booking_full_calendar'))
+        ) {
+            $current_user_id = get_current_user_id();
+
+            $res = array_filter($res, function ($element) use ($current_user_id) {
+                return (int) $element->user === (int) $current_user_id;
+            });
+        }
+
+
         $res = array_map(function($element) use ($fields, $title_key, $services, $service_color) {
-            $result = array(
-                'start'  => $element->date . 'T' . $element->start,
-                'end'    => $element->end_date . 'T' . $element->end,
-                'status' => $element->status,
-                'id'     => $element->id,
-                'user'     => $element->user,
-                'hash'   => $this->calculate_hash($element->id),
-            );
-
-            if ($service_color) {
-                foreach ($services as $service) {
-                    if ($service->id !== $element->service) {
-                        continue;
+                $result = array(
+                    'start'  => $element->date . 'T' . $element->start,
+                    'end'    => $element->end_date . 'T' . $element->end,
+                    'status' => $element->status,
+                    'id'     => $element->id,
+                    'user'     => $element->user,
+                    'hash'   => $this->calculate_hash($element->id),
+                );
+    
+                if ($service_color) {
+                    foreach ($services as $service) {
+                        if ($service->id !== $element->service) {
+                            continue;
+                        }
+    
+                        $result['color'] = $service->service_color;
+                        break;
                     }
-
-                    $result['color'] = $service->service_color;
-                    break;
                 }
-            }
-
-            $result['title'] = $element->{$title_key};
+    
+                $result['title'] = $element->{$title_key};
 
             return $result;
         }, $res);

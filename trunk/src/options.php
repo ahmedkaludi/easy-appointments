@@ -164,6 +164,8 @@ class EAOptions
             'captcha.secret-key'            => '',
             'captcha3.secret-key'           => '',
             'fullcalendar.public'           => '0',
+            'fullcalendar.my_booking'       => '0',
+            'fullcalendar.my_booking_full_calendar'       => '0',
             'fullcalendar.event.show'       => '0',
             'fullcalendar.manage_appointment.show'       => '0',
             'fullcalendar.event.template'   => '',

@@ -664,6 +664,32 @@
                   </div>
                   <div class="form-item">
                       <div class="label-with-tooltip">
+                          <label for="fullcalendar.my_booking"><?php esc_html_e('Display My Bookings menu appointments based on the logged-in user', 'easy-appointments'); ?></label>
+                          <span class="tooltip tooltip-right"
+                                data-tooltip="<?php esc_html_e('Allow only logged in users can see there booking in FullCalendar.', 'easy-appointments'); ?>"></span>
+                      </div>
+                      <div class="field-wrap">
+                          <input class="field" data-key="fullcalendar.my_booking"
+                                 name="fullcalendar.my_booking" type="checkbox" <% if
+                          (_.findWhere(settings, {ea_key:'fullcalendar.my_booking'}).ea_value == "1") {
+                          %>checked<% } %>>
+                      </div>
+                  </div>
+                  <div class="form-item">
+                      <div class="label-with-tooltip">
+                          <label for="fullcalendar.my_booking_full_calendar"><?php esc_html_e('Display appointments in the full calendar based on the logged-in user', 'easy-appointments'); ?></label>
+                          <span class="tooltip tooltip-right"
+                                data-tooltip="<?php esc_html_e('Allow only logged in users can see there booking in FullCalendar.', 'easy-appointments'); ?>"></span>
+                      </div>
+                      <div class="field-wrap">
+                          <input class="field" data-key="fullcalendar.my_booking_full_calendar"
+                                 name="fullcalendar.my_booking_full_calendar" type="checkbox" <% if
+                          (_.findWhere(settings, {ea_key:'fullcalendar.my_booking_full_calendar'}).ea_value == "1") {
+                          %>checked<% } %>>
+                      </div>
+                  </div>
+                  <div class="form-item">
+                      <div class="label-with-tooltip">
                           <label for=""><?php esc_attr_e('Manage appointmennt in popup', 'easy-appointments'); ?></label>
                           <span class="tooltip tooltip-right"
                                 data-tooltip="<?php esc_attr_e('Popup dialog for modify appointment details, It works only for logged in users.', 'easy-appointments'); ?>"></span>
