@@ -389,8 +389,78 @@
                                         <a class="mail-tab"
                                            data-textarea="#mail-confirmed"><?php esc_html_e('Confirmed', 'easy-appointments'); ?></a>
                                         <a class="mail-tab"
-                                           data-textarea="#mail-admin"><?php esc_html_e('Admin', 'easy-appointments'); ?></a>
+                                           data-textarea="#mail-admin-all"><?php esc_html_e('Admin', 'easy-appointments'); ?></a>
                                     </p>
+                                    <div id="admin-subtabs-row" style="display:none; margin:10px 0 15px 0;">
+
+                                        <div class="nav-tab-wrapper">
+                                            <a href="#" class="nav-tab admin-sub-tab nav-tab-active"
+                                            data-textarea="#mail-admin-all">
+                                                <?php esc_html_e('All Status', 'easy-appointments'); ?>
+                                            </a>
+
+                                            <a href="#" class="nav-tab admin-sub-tab"
+                                            data-textarea="#mail-admin-pending">
+                                                <?php esc_html_e('Pending', 'easy-appointments'); ?>
+                                            </a>
+
+                                            <a href="#" class="nav-tab admin-sub-tab"
+                                            data-textarea="#mail-admin-reservation">
+                                                <?php esc_html_e('Reservation', 'easy-appointments'); ?>
+                                            </a>
+
+                                            <a href="#" class="nav-tab admin-sub-tab"
+                                            data-textarea="#mail-admin-confirmed">
+                                                <?php esc_html_e('Confirmed', 'easy-appointments'); ?>
+                                            </a>
+
+                                            <a href="#" class="nav-tab admin-sub-tab"
+                                            data-textarea="#mail-admin-canceled">
+                                                <?php esc_html_e('Cancelled', 'easy-appointments'); ?>
+                                            </a>
+                                        </div>
+
+                                        <!-- Hidden Admin Templates -->
+                                        <div style="display:none;">
+                                            <textarea id="mail-admin-all" class="field"
+                                                data-key="mail.admin">
+                                                <%- (_.findWhere(settings,{ea_key:'mail.admin'}) 
+                                                ? _.findWhere(settings,{ea_key:'mail.admin'}).ea_value 
+                                                : '') %>
+                                            </textarea>
+
+                                            <textarea id="mail-admin-pending" class="field"
+                                                data-key="mail.admin.pending">
+                                                <%- (_.findWhere(settings,{ea_key:'mail.admin.pending'}) 
+                                                ? _.findWhere(settings,{ea_key:'mail.admin.pending'}).ea_value 
+                                                : '') %>
+                                            </textarea>
+
+                                            <textarea id="mail-admin-reservation"
+                                                class="field"
+                                                data-key="mail.admin.reservation">
+                                                <%- (_.findWhere(settings,{ea_key:'mail.admin.reservation'}) 
+                                                ? _.findWhere(settings,{ea_key:'mail.admin.reservation'}).ea_value 
+                                                : '') %>
+                                            </textarea>
+
+                                            <textarea id="mail-admin-confirmed" class="field"
+                                                data-key="mail.admin.confirmed">
+                                                <%- (_.findWhere(settings,{ea_key:'mail.admin.confirmed'}) 
+                                                ? _.findWhere(settings,{ea_key:'mail.admin.confirmed'}).ea_value 
+                                                : '') %>
+                                            </textarea>
+
+                                            <textarea id="mail-admin-canceled" class="field"
+                                                data-key="mail.admin.canceled">
+                                                <%- (_.findWhere(settings,{ea_key:'mail.admin.canceled'}) 
+                                                ? _.findWhere(settings,{ea_key:'mail.admin.canceled'}).ea_value 
+                                                : '') %>
+                                            </textarea>
+                                        </div>
+
+                                    </div>
+
                                     <textarea id="mail-template" style="height: 150px;"
                                               name="mail-template"><%- _.findWhere(settings, {ea_key:'mail.pending'}).ea_value %></textarea>
                                 </td>
@@ -415,11 +485,8 @@
                                               data-key="mail.confirmed"><%- _.findWhere(settings, {ea_key:'mail.confirmed'}).ea_value %></textarea>
                                 </td>
                             </tr>
-                            <tr style="display:none;">
-                                <td colspan="2">
-                                    <textarea id="mail-admin" class="field" data-key="mail.admin"><%- (_.findWhere(settings, {ea_key:'mail.admin'}) != null) ? _.findWhere(settings, {ea_key:'mail.admin'}).ea_value: '' %></textarea>
-                                </td>
-                            </tr>
+
+
                             </tbody>
                         </table>
                         <a id="load-default-admin-template" href="#" style="padding-top: 5px; padding-bottom: 5px; display: none;"><?php esc_html_e('Load default admin template', 'easy-appointments'); ?></a>
@@ -833,6 +900,15 @@
                         </div>
                         <input class="field" data-key="block.time" name="block.time" type="text"
                                value="<%- _.findWhere(settings, {ea_key:'block.time'}).ea_value %>">
+                    </div>
+                    <div class="form-item">
+                        <div class="label-with-tooltip">
+                            <label for=""><?php esc_html_e('Cancel Booking Before hour', 'easy-appointments'); ?></label>
+                            <span class="tooltip tooltip-right"
+                                  data-tooltip="<?php esc_html_e('Users are allowed to cancel their appointments only up to hours before the scheduled time.', 'easy-appointments'); ?>"></span>
+                        </div>
+                        <input class="field" data-key="cancel_time" name="cancel_time" type="time"
+                               value="<%- _.findWhere(settings, {ea_key:'cancel_time'}).ea_value %>">
                     </div>
                 </div>
             </div>
@@ -1463,7 +1539,8 @@
                     alert(xhr.responseJSON?.data || 'Import failed.');
                 }
             });
-        });
+        });       
+
 
     });
 </script>

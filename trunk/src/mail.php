@@ -393,10 +393,12 @@ class EAMail
             $table_name = 'ea_appointments';
             $app = $this->models->get_row($table_name, $app_id);
             $enable_actions = $this->get_user_email_notification_active();
-            if (!empty($enable_actions) && !in_array($app->status, $enable_actions)) {
-                return;
+            // $this->send_status_change_mail($app_id);
+            if (!empty($enable_actions)) {
+                if (in_array($app->status, $enable_actions)) {
+                    $this->send_status_change_mail($app_id);
+                }
             }
-            $this->send_status_change_mail($app_id);
         }
     }
     /**
@@ -424,12 +426,13 @@ class EAMail
             if (!empty($enable_actions)) {
                 $table_name = 'ea_appointments';
                 $app = $this->models->get_row($table_name, $app_id);
-                if (!in_array($app->status, $enable_actions)) {
-                    return;
+                if (in_array($app->status, $enable_actions)) {
+                    $this->send_notification(array('id' => $app_id), $worker_only);
                 }
             }
+
+
         }
-        $this->send_notification(array('id' => $app_id), $worker_only);
     }
 
     /**
@@ -601,7 +604,19 @@ class EAMail
 
         $body_template = $this->options->get_option_value('mail.admin', '');
 
+        if ($enable_status_subjects == '1') {
+            if ($raw_data['status'] == 'pending') {
+                $body_template = $this->options->get_option_value('mail.admin.pending', $body_template);
+            } elseif ($raw_data['status'] == 'confirmed') {
+                $body_template = $this->options->get_option_value('mail.admin.confirmed', $body_template);
+            } elseif ($raw_data['status'] == 'canceled') {
+                $body_template = $this->options->get_option_value('mail.admin.canceled', $body_template);
+            } elseif ($raw_data['status'] == 'reservation') {
+                $body_template = $this->options->get_option_value('mail.admin.reservation', $body_template);
+            }
+        }
         $body_template = apply_filters('easy_ea_admin_mail_template', $body_template);
+
 
         if (!empty($body_template)) {
             // custom email
@@ -749,7 +764,7 @@ class EAMail
             } elseif ($app_array['status'] == 'confirmed') {
                 $subject_template = $this->options->get_option_value('confirmed_subject_visitor', $subject_template);
             } elseif ($app_array['status'] == 'canceled') {
-                $subject_template = $this->options->get_option_value('canceled_subject_visitor', $subject_template);
+                $subject_template = $this->options->get_option_value('cancelled_subject_visitor', $subject_template);
             } elseif ($app_array['status'] == 'reservation') {
                 $subject_template = $this->options->get_option_value('reservation_subject_visitor', $subject_template);
             }

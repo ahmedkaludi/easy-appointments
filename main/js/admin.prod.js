@@ -88,6 +88,7 @@
             "click .item-delete": "deleteOption",
             "click .remove-select-option": "removeSelectedOption",
             "click .mail-tab": "selectMailNotification",
+            "click .admin-sub-tab": "selectAdminSubTab",
             "click .tab-selection a": "tabClicked",
             "click .btn-add-redirect": "addAdvanceRedirect",
             "click .remove-advance-redirect": "removeAdvanceRedirect",
@@ -204,34 +205,91 @@
         },
 
         selectMailNotification: function(event) {
-            // save previous content from tinyMCE
+
+            var $newTemplate = jQuery(event.currentTarget);
+
+            // Save previous editor content
             this.updateMailTemplate();
 
-            // process new content
-            var $newTemplate = jQuery(event.target);
             var elemId = $newTemplate.data('textarea');
+            var newContent = this.$el.find(elemId).val() || '';
 
-            var newContent = this.$el.find(elemId).val();
-
-            if (this.tinymceOn) {
+            if (this.tinymceOn && tinymce.get('mail-template')) {
                 tinymce.get('mail-template').setContent(newContent);
-
-                // clear the stack of undo
                 tinymce.activeEditor.undoManager.clear();
             } else {
                 this.$el.find('#mail-template').val(newContent);
             }
 
-            if (elemId === '#mail-admin') {
-                // show load admin template button
+            // ADMIN MODE
+            if (elemId === '#mail-admin-all') {
+
+                this.$el.find('#admin-subtabs-row').show();
                 this.$el.find('#load-default-admin-template').show();
+
+                // Activate first sub tab properly
+                this.$el.find('.admin-sub-tab').removeClass('nav-tab-active');
+                this.$el.find('.admin-sub-tab[data-textarea="#mail-admin-all"]')
+                    .addClass('nav-tab-active');
+
             } else {
-                // hide admin template button
+
+                this.$el.find('#admin-subtabs-row').hide();
                 this.$el.find('#load-default-admin-template').hide();
             }
 
-            this.$el.find('.mail-tab').filter('.selected').removeClass('selected');
+            this.$el.find('.mail-tab').removeClass('selected');
             $newTemplate.addClass('selected');
+        },
+
+
+
+        selectAdminSubTab: function(e) {
+
+            e.preventDefault();
+
+            var activeTab = this.$el.find('.admin-sub-tab.nav-tab-active');
+            var activeTarget = activeTab.data('textarea');
+
+            // Save ONLY if switching from a real status (not first load)
+            if (activeTarget) {
+
+                var currentContent = this.tinymceOn && tinymce.get('mail-template')
+                    ? tinymce.get('mail-template').getContent()
+                    : this.$el.find('#mail-template').val();
+
+                this.$el.find(activeTarget).val(currentContent);
+            }
+
+            this.$el.find('.admin-sub-tab').removeClass('nav-tab-active');
+
+            var $tab = jQuery(e.currentTarget);
+            $tab.addClass('nav-tab-active');
+
+            var newTarget = $tab.data('textarea');
+
+            var statusValue = this.$el.find(newTarget).val() || '';
+
+            // 🔥 Load fallback only visually
+            if (!statusValue && newTarget !== '#mail-admin-all') {
+
+                var fallback = this.$el.find('#mail-admin-all').val() || '';
+
+                if (this.tinymceOn && tinymce.get('mail-template')) {
+                    tinymce.get('mail-template').setContent(fallback);
+                } else {
+                    this.$el.find('#mail-template').val(fallback);
+                }
+
+                return; // IMPORTANT: do NOT copy fallback into textarea
+            }
+
+            if (this.tinymceOn && tinymce.get('mail-template')) {
+                tinymce.get('mail-template').setContent(statusValue);
+                tinymce.activeEditor.undoManager.clear();
+            } else {
+                this.$el.find('#mail-template').val(statusValue);
+            }
         },
 
         loadDefaultTemplate: function () {
