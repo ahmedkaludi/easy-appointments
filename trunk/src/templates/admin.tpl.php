@@ -496,6 +496,18 @@
                     </div>
                     <div class="form-item">
                         <div class="label-with-tooltip">
+                            <label for="mail.send_email_notification"><?php esc_html_e('Send email notification on edit', 'easy-appointments'); ?></label>
+                            <span class="tooltip tooltip-right"
+                                  data-tooltip="<?php esc_html_e('Send email notification when an appointment is edited. you can also change this in appointments edit screen.', 'easy-appointments'); ?>"></span>
+                        </div>
+                        <div class="field-wrap">
+                            <input class="field" data-key="mail.send_email_notification" name="mail.send_email_notification"
+                                   type="checkbox" <% if (_.findWhere(settings,
+                            {ea_key:'mail.send_email_notification'}).ea_value == "1") { %>checked<% } %>>
+                        </div>
+                    </div>
+                    <div class="form-item">
+                        <div class="label-with-tooltip">
                             <label for="mail.action.two_step"><?php esc_html_e('Two step action links in email', 'easy-appointments'); ?></label>
                             <span class="tooltip tooltip-right"
                                   data-tooltip="<?php esc_html_e('Sometimes Mail servers can open links from email for inspection. That will trigger actions such as #link_confirm#, #link_cancel#. Mark this option if you want to have additional prompt for user action via links.', 'easy-appointments'); ?>"></span>

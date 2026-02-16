@@ -1696,6 +1696,7 @@ class EAAjax
             'mail.admin.canceled'                    => '',
             'mail.admin.reservation'                    => '',
             'mail.action.two_step'          => '0',
+            'mail.send_email_notification'          => '1',
             'trans.service'                 => 'Service',
             'trans.location'                => 'Location',
             'trans.worker'                  => 'Worker',

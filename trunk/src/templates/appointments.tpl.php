@@ -1,3 +1,6 @@
+<script>
+    window.ea_settings = <?php echo wp_json_encode($settings); ?>;
+</script>
 <script type="text/template" id="ea-appointments-main">
 <?php 
 	get_current_screen()->render_screen_meta();
@@ -261,7 +264,14 @@
 			<tr>
 				<td colspan="6">
 					<label for="send-mail"> <?php esc_html_e('Send email notification :', 'easy-appointments');?> </label>
-					<input name="send-mail" type="checkbox" checked="checked">
+					<input 
+						name="send-mail" 
+						type="checkbox"
+						value="1"
+						class="send-mail"
+						data-prop="send_mail"
+						<% if (ea_settings['mail.send_email_notification'] == 1) { %>checked="checked"<% } %>
+>
 				</td>
 				<td colspan="2" style="text-align: right;">
 					<button class="button button-primary btn-save"><?php esc_html_e('Save', 'easy-appointments');?></button>
