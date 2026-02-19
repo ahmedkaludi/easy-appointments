@@ -898,13 +898,13 @@ class Easy_EA_Frontend
         $default_value = esc_html($placeholder);
         if ($default_value == '-') {
             if ($type === 'services') {
-                $default_value = ea_helper_polylang_trans($this->options->get_option_value("trans.service_option"));                
+                $default_value = easy_ea_helper_polylang_trans($this->options->get_option_value("trans.service_option"));                
             }
             if ($type === 'locations') {
-                $default_value = ea_helper_polylang_trans($this->options->get_option_value("trans.location_option"));
+                $default_value = easy_ea_helper_polylang_trans($this->options->get_option_value("trans.location_option"));
             }
             if ($type === 'staff') {
-                $default_value = ea_helper_polylang_trans($this->options->get_option_value("trans.worker_option"));
+                $default_value = easy_ea_helper_polylang_trans($this->options->get_option_value("trans.worker_option"));
             }
             $default_value = esc_html__('Select', 'easy-appointments').' '.$default_value;
             
@@ -986,7 +986,7 @@ class Easy_EA_Frontend
     }
 }
 
-function ea_helper_polylang_trans($string) {   
+function easy_ea_helper_polylang_trans($string) {   
 
     if ( function_exists( 'pll__' ) ) {
         $string = esc_html( pll__( $string ) );
