@@ -78,11 +78,65 @@ class EAAdminPanel
 
         // Init action
         add_action('admin_init', array($this, 'init_scripts'));
+        add_action('admin_init', array($this, 'ea_init_polylang_register_strings'));
         //add_action( 'admin_enqueue_scripts', array( $this, 'init' ) );
+    }
+
+    function ea_register_option_strings() {
+        if ( function_exists( 'pll_register_string' ) ) {
+            $options =  array(
+                'trans.service'                 => 'Service',
+                'trans.location'                => 'Location',
+                'trans.worker'                  => 'Worker',
+                'trans.service_option'          => 'Select Service',
+                'trans.location_option'         => 'Select Location',
+                'trans.worker_option'           => 'Select Worker',
+                'trans.done_message'            => 'Done',
+                'trans.submit_button_text'      => 'Submit',
+                'trans.create_new_booking'      => 'Create New Booking',
+                'pending.subject.email'         => 'New Reservation #id#',
+                'pending.subject.visitor.email' => 'Reservation #id#',
+                'gdpr.label'                    => 'By using this form you agree with the storage and handling of your data by this website.',
+                'gdpr.message'                  => 'You need to accept the privacy checkbox',
+            );
+    
+            foreach ( $options as $key => $value ) {
+                $my_string = $this->options->get_option_value($key, $value);
+                if ( ! empty( $my_string ) ) {
+                    $this->ea_polylang_register_strings( $my_string );
+                }
+            }
+        }
+
     }
 
 
 
+    function ea_polylang_register_strings( $my_string ) {
+        if ( function_exists( 'pll_register_string' ) ) {
+            pll_register_string(
+                'ea_label_' . md5( $my_string ), // unique key
+                $my_string,
+                'Easy Appointments'
+            );
+        }
+    }
+
+    public function ea_init_polylang_register_strings() {
+        $this->ea_register_option_strings();
+        $rows = $this->models->get_all_rows("ea_meta_fields", array(), array('position' => 'ASC'));
+        $rows = apply_filters( 'easy_ea_form_rows', $rows);
+        foreach ( $rows as $row ) {
+            if ( ! empty( $row->label ) ) {
+                $this->ea_polylang_register_strings( $row->label );
+                if ( function_exists( 'pll__' ) ) {
+                    $row->label = esc_html( pll__( $row->label ) );
+                } else {
+                    $row->label = esc_html( $row->label );
+                }
+            }
+        }
+    }
     public function my_booking_menu() {
 
         if (!is_user_logged_in()) {

@@ -11,7 +11,7 @@
                 <div class="step form-group">
                     <div class="block"></div>
                     <label class="ea-label col-sm-4 control-label">
-                        <?php echo esc_html($this->options->get_option_value('trans.location')); ?>
+                        <?php echo ea_helper_polylang_trans($this->options->get_option_value('trans.location')); ?>
                     </label>
                     <div class="col-sm-8">
                         <select name="location" data-c="location" class="filter form-control">
@@ -23,7 +23,7 @@
                 <div class="step form-group">
                     <div class="block"></div>
                     <label class="ea-label col-sm-4 control-label">
-                        <?php echo esc_html($this->options->get_option_value("trans.service")); ?>
+                        <?php echo ea_helper_polylang_trans($this->options->get_option_value("trans.service")); ?>
                     </label>
                     <div class="col-sm-8">
                         <select name="service" data-c="service" class="filter form-control"
@@ -36,7 +36,7 @@
                 <div class="step form-group">
                     <div class="block"></div>
                     <label class="ea-label col-sm-4 control-label">
-                        <?php echo esc_html($this->options->get_option_value("trans.worker")); ?>
+                        <?php echo ea_helper_polylang_trans($this->options->get_option_value("trans.worker")); ?>
                     </label>
                     <div class="col-sm-8">
                         <select name="worker" data-c="worker" class="filter form-control">

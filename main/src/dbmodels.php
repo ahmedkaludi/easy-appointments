@@ -115,6 +115,7 @@ class EADBModels
         $worker = '';
         $status = '';
         $search = '';
+        $user = '';
 
         if (array_key_exists('location', $data)) {
             $location = ' AND location = %d';
