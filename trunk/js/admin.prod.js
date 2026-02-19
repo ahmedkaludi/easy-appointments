@@ -227,12 +227,28 @@
                 this.$el.find('#admin-subtabs-row').show();
                 this.$el.find('#load-default-admin-template').show();
 
-                // Activate first sub tab properly
-                this.$el.find('.admin-sub-tab').removeClass('nav-tab-active');
-                this.$el.find('.admin-sub-tab[data-textarea="#mail-admin-all"]')
-                    .addClass('nav-tab-active');
+                var firstTab = this.$el.find('.admin-sub-tab:first');
 
-            } else {
+                this.$el.find('.admin-sub-tab').removeClass('nav-tab-active');
+                firstTab.addClass('nav-tab-active');
+
+                var target = firstTab.data('textarea');
+
+                var content = this.$el.find(target).val() || '';
+
+                var that = this;
+
+                setTimeout(function(){
+
+                    if (that.tinymceOn && tinymce.get('mail-template')) {
+                        tinymce.get('mail-template').setContent(content);
+                        tinymce.activeEditor.undoManager.clear();
+                    } else {
+                        that.$el.find('#mail-template').val(content);
+                    }
+
+                }, 50);
+            }else {
 
                 this.$el.find('#admin-subtabs-row').hide();
                 this.$el.find('#load-default-admin-template').hide();
@@ -315,16 +331,35 @@
         },
 
         updateMailTemplate: function() {
-            var prevContent = '';
-            var $prevTemplate = this.$el.find('.mail-tab').filter('.selected');
 
-            if (this.tinymceOn) {
+            var prevContent = '';
+
+            if (this.tinymceOn && tinymce.get('mail-template')) {
                 prevContent = tinymce.get('mail-template').getContent();
             } else {
                 prevContent = this.$el.find('#mail-template').val();
             }
 
-            this.$el.find($prevTemplate.data('textarea')).val(prevContent);
+            // 🔥 If ADMIN mode active
+            if (this.$el.find('#admin-subtabs-row').is(':visible')) {
+
+                var activeAdminTab = this.$el.find('.admin-sub-tab.nav-tab-active');
+                var target = activeAdminTab.data('textarea');
+
+                if (target) {
+                    this.$el.find(target).val(prevContent);
+                }
+
+            } else {
+
+                // Normal mail tab
+                var $prevTemplate = this.$el.find('.mail-tab.selected');
+                var target = $prevTemplate.data('textarea');
+
+                if (target) {
+                    this.$el.find(target).val(prevContent);
+                }
+            }
         },
 
         updateFullCalendarTemplate: function() {

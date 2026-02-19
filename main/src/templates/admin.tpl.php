@@ -394,11 +394,6 @@
                                     <div id="admin-subtabs-row" style="display:none; margin:10px 0 15px 0;">
 
                                         <div class="nav-tab-wrapper">
-                                            <a href="#" class="nav-tab admin-sub-tab nav-tab-active"
-                                            data-textarea="#mail-admin-all">
-                                                <?php esc_html_e('All Status', 'easy-appointments'); ?>
-                                            </a>
-
                                             <a href="#" class="nav-tab admin-sub-tab"
                                             data-textarea="#mail-admin-pending">
                                                 <?php esc_html_e('Pending', 'easy-appointments'); ?>
@@ -422,43 +417,46 @@
 
                                         <!-- Hidden Admin Templates -->
                                         <div style="display:none;">
-                                            <textarea id="mail-admin-all" class="field"
-                                                data-key="mail.admin">
-                                                <%- (_.findWhere(settings,{ea_key:'mail.admin'}) 
-                                                ? _.findWhere(settings,{ea_key:'mail.admin'}).ea_value 
-                                                : '') %>
-                                            </textarea>
+
+                                            <%
+                                                var adminAll = _.findWhere(settings,{ea_key:'mail.admin'});
+
+                                                function clean(val){
+                                                    return val ? val.trim() : '';
+                                                }
+
+                                                function getAdminValue(key){
+                                                    var item = _.findWhere(settings,{ea_key:key});
+
+                                                    return clean(item && item.ea_value)
+                                                        ? item.ea_value
+                                                        : clean(adminAll && adminAll.ea_value)
+                                                            ? adminAll.ea_value
+                                                            : '';
+                                                }
+                                            %>
 
                                             <textarea id="mail-admin-pending" class="field"
                                                 data-key="mail.admin.pending">
-                                                <%- (_.findWhere(settings,{ea_key:'mail.admin.pending'}) 
-                                                ? _.findWhere(settings,{ea_key:'mail.admin.pending'}).ea_value 
-                                                : '') %>
+                                                <%- getAdminValue('mail.admin.pending') %>
                                             </textarea>
 
-                                            <textarea id="mail-admin-reservation"
-                                                class="field"
+                                            <textarea id="mail-admin-reservation" class="field"
                                                 data-key="mail.admin.reservation">
-                                                <%- (_.findWhere(settings,{ea_key:'mail.admin.reservation'}) 
-                                                ? _.findWhere(settings,{ea_key:'mail.admin.reservation'}).ea_value 
-                                                : '') %>
+                                                <%- getAdminValue('mail.admin.reservation') %>
                                             </textarea>
 
                                             <textarea id="mail-admin-confirmed" class="field"
                                                 data-key="mail.admin.confirmed">
-                                                <%- (_.findWhere(settings,{ea_key:'mail.admin.confirmed'}) 
-                                                ? _.findWhere(settings,{ea_key:'mail.admin.confirmed'}).ea_value 
-                                                : '') %>
+                                                <%- getAdminValue('mail.admin.confirmed') %>
                                             </textarea>
 
                                             <textarea id="mail-admin-canceled" class="field"
                                                 data-key="mail.admin.canceled">
-                                                <%- (_.findWhere(settings,{ea_key:'mail.admin.canceled'}) 
-                                                ? _.findWhere(settings,{ea_key:'mail.admin.canceled'}).ea_value 
-                                                : '') %>
+                                                <%- getAdminValue('mail.admin.canceled') %>
                                             </textarea>
-                                        </div>
 
+                                        </div>
                                     </div>
 
                                     <textarea id="mail-template" style="height: 150px;"
