@@ -11,7 +11,7 @@
                 <div class="step form-group">
                     <div class="block"></div>
                     <label class="ea-label col-sm-4 control-label">
-                        <?php echo esc_html($this->options->get_option_value('trans.location')); ?>
+                        <?php echo easy_ea_helper_polylang_trans($this->options->get_option_value('trans.location')); ?>
                     </label>
                     <div class="col-sm-8">
                         <select name="location" data-c="location" class="filter form-control">
@@ -23,7 +23,7 @@
                 <div class="step form-group">
                     <div class="block"></div>
                     <label class="ea-label col-sm-4 control-label">
-                        <?php echo esc_html($this->options->get_option_value("trans.service")); ?>
+                        <?php echo easy_ea_helper_polylang_trans($this->options->get_option_value("trans.service")); ?>
                     </label>
                     <div class="col-sm-8">
                         <select name="service" data-c="service" class="filter form-control"
@@ -36,7 +36,7 @@
                 <div class="step form-group">
                     <div class="block"></div>
                     <label class="ea-label col-sm-4 control-label">
-                        <?php echo esc_html($this->options->get_option_value("trans.worker")); ?>
+                        <?php echo easy_ea_helper_polylang_trans($this->options->get_option_value("trans.worker")); ?>
                     </label>
                     <div class="col-sm-8">
                         <select name="worker" data-c="worker" class="filter form-control">
@@ -196,7 +196,7 @@
                         <div class="col-sm-12 ea-actions-group" style="display: inline-flex; align-items: center; justify-content: center;">
                             <?php 
                             // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-                            echo apply_filters('easy_ea_checkout_button', '<button class="ea-btn ea-submit btn btn-primary booking-button"><%- settings[\'trans.submit\'] %></button>'); ?>
+                            echo apply_filters('easy_ea_checkout_button', '<button class="ea-btn ea-submit btn btn-primary booking-button"><%- settings[\'trans.submit_button_text\'] %></button>'); ?>
                             <button class="ea-btn ea-cancel btn btn-default"><%- settings['trans.cancel'] %></button>
                         </div>
                     </div>

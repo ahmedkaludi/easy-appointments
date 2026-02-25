@@ -389,8 +389,76 @@
                                         <a class="mail-tab"
                                            data-textarea="#mail-confirmed"><?php esc_html_e('Confirmed', 'easy-appointments'); ?></a>
                                         <a class="mail-tab"
-                                           data-textarea="#mail-admin"><?php esc_html_e('Admin', 'easy-appointments'); ?></a>
+                                           data-textarea="#mail-admin-all"><?php esc_html_e('Admin', 'easy-appointments'); ?></a>
                                     </p>
+                                    <div id="admin-subtabs-row" style="display:none; margin:10px 0 15px 0;">
+
+                                        <div class="nav-tab-wrapper">
+                                            <a href="#" class="nav-tab admin-sub-tab"
+                                            data-textarea="#mail-admin-pending">
+                                                <?php esc_html_e('Pending', 'easy-appointments'); ?>
+                                            </a>
+
+                                            <a href="#" class="nav-tab admin-sub-tab"
+                                            data-textarea="#mail-admin-reservation">
+                                                <?php esc_html_e('Reservation', 'easy-appointments'); ?>
+                                            </a>
+
+                                            <a href="#" class="nav-tab admin-sub-tab"
+                                            data-textarea="#mail-admin-confirmed">
+                                                <?php esc_html_e('Confirmed', 'easy-appointments'); ?>
+                                            </a>
+
+                                            <a href="#" class="nav-tab admin-sub-tab"
+                                            data-textarea="#mail-admin-canceled">
+                                                <?php esc_html_e('Cancelled', 'easy-appointments'); ?>
+                                            </a>
+                                        </div>
+
+                                        <!-- Hidden Admin Templates -->
+                                        <div style="display:none;">
+
+                                            <%
+                                                var adminAll = _.findWhere(settings,{ea_key:'mail.admin'});
+
+                                                function clean(val){
+                                                    return val ? val.trim() : '';
+                                                }
+
+                                                function getAdminValue(key){
+                                                    var item = _.findWhere(settings,{ea_key:key});
+
+                                                    return clean(item && item.ea_value)
+                                                        ? item.ea_value
+                                                        : clean(adminAll && adminAll.ea_value)
+                                                            ? adminAll.ea_value
+                                                            : '';
+                                                }
+                                            %>
+
+                                            <textarea id="mail-admin-pending" class="field"
+                                                data-key="mail.admin.pending">
+                                                <%- getAdminValue('mail.admin.pending') %>
+                                            </textarea>
+
+                                            <textarea id="mail-admin-reservation" class="field"
+                                                data-key="mail.admin.reservation">
+                                                <%- getAdminValue('mail.admin.reservation') %>
+                                            </textarea>
+
+                                            <textarea id="mail-admin-confirmed" class="field"
+                                                data-key="mail.admin.confirmed">
+                                                <%- getAdminValue('mail.admin.confirmed') %>
+                                            </textarea>
+
+                                            <textarea id="mail-admin-canceled" class="field"
+                                                data-key="mail.admin.canceled">
+                                                <%- getAdminValue('mail.admin.canceled') %>
+                                            </textarea>
+
+                                        </div>
+                                    </div>
+
                                     <textarea id="mail-template" style="height: 150px;"
                                               name="mail-template"><%- _.findWhere(settings, {ea_key:'mail.pending'}).ea_value %></textarea>
                                 </td>
@@ -415,17 +483,26 @@
                                               data-key="mail.confirmed"><%- _.findWhere(settings, {ea_key:'mail.confirmed'}).ea_value %></textarea>
                                 </td>
                             </tr>
-                            <tr style="display:none;">
-                                <td colspan="2">
-                                    <textarea id="mail-admin" class="field" data-key="mail.admin"><%- (_.findWhere(settings, {ea_key:'mail.admin'}) != null) ? _.findWhere(settings, {ea_key:'mail.admin'}).ea_value: '' %></textarea>
-                                </td>
-                            </tr>
+
+
                             </tbody>
                         </table>
                         <a id="load-default-admin-template" href="#" style="padding-top: 5px; padding-bottom: 5px; display: none;"><?php esc_html_e('Load default admin template', 'easy-appointments'); ?></a>
                         <div><small><?php esc_html_e('Available tags', 'easy-appointments'); ?>: #id#, #date#, #start#, #end#, #status#, #created#, #price#, #ip#, #link_confirm#, #link_cancel#, #url_confirm#, #url_cancel#, #service_name#, #service_duration#, #service_price#, #worker_name#, #workeresc_html_email#, #worker_phone#, #location_name#, #location_address#, #location_location#, <?php
                                                                                                                                                                                                                                                                                                                                                                                                         // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
                                                                                                                                                                                                                                                                                                                                                                                                         echo implode(', ', EADBModels::get_custom_fields_tags()); ?></small></div>
+                    </div>
+                    <div class="form-item">
+                        <div class="label-with-tooltip">
+                            <label for="mail.send_email_notification"><?php esc_html_e('Send email notification on edit', 'easy-appointments'); ?></label>
+                            <span class="tooltip tooltip-right"
+                                  data-tooltip="<?php esc_html_e('Send email notification when an appointment is edited. you can also change this in appointments edit screen.', 'easy-appointments'); ?>"></span>
+                        </div>
+                        <div class="field-wrap">
+                            <input class="field" data-key="mail.send_email_notification" name="mail.send_email_notification"
+                                   type="checkbox" <% if (_.findWhere(settings,
+                            {ea_key:'mail.send_email_notification'}).ea_value == "1") { %>checked<% } %>>
+                        </div>
                     </div>
                     <div class="form-item">
                         <div class="label-with-tooltip">
@@ -664,6 +741,32 @@
                   </div>
                   <div class="form-item">
                       <div class="label-with-tooltip">
+                          <label for="fullcalendar.my_booking"><?php esc_html_e('Display My Bookings menu appointments based on the logged-in user', 'easy-appointments'); ?></label>
+                          <span class="tooltip tooltip-right"
+                                data-tooltip="<?php esc_html_e('Allow only logged in users can see there booking in FullCalendar.', 'easy-appointments'); ?>"></span>
+                      </div>
+                      <div class="field-wrap">
+                          <input class="field" data-key="fullcalendar.my_booking"
+                                 name="fullcalendar.my_booking" type="checkbox" <% if
+                          (_.findWhere(settings, {ea_key:'fullcalendar.my_booking'}).ea_value == "1") {
+                          %>checked<% } %>>
+                      </div>
+                  </div>
+                  <div class="form-item">
+                      <div class="label-with-tooltip">
+                          <label for="fullcalendar.my_booking_full_calendar"><?php esc_html_e('Display appointments in the full calendar based on the logged-in user', 'easy-appointments'); ?></label>
+                          <span class="tooltip tooltip-right"
+                                data-tooltip="<?php esc_html_e('Allow only logged in users can see there booking in FullCalendar.', 'easy-appointments'); ?>"></span>
+                      </div>
+                      <div class="field-wrap">
+                          <input class="field" data-key="fullcalendar.my_booking_full_calendar"
+                                 name="fullcalendar.my_booking_full_calendar" type="checkbox" <% if
+                          (_.findWhere(settings, {ea_key:'fullcalendar.my_booking_full_calendar'}).ea_value == "1") {
+                          %>checked<% } %>>
+                      </div>
+                  </div>
+                  <div class="form-item">
+                      <div class="label-with-tooltip">
                           <label for=""><?php esc_attr_e('Manage appointmennt in popup', 'easy-appointments'); ?></label>
                           <span class="tooltip tooltip-right"
                                 data-tooltip="<?php esc_attr_e('Popup dialog for modify appointment details, It works only for logged in users.', 'easy-appointments'); ?>"></span>
@@ -707,19 +810,34 @@
                 <span class="separator vertical"></span>
                 <div class="form-container">
                     <div class="form-item">
-                        <label for=""><?php esc_html_e('Service', 'easy-appointments'); ?></label>
+                        <label for=""><?php esc_html_e('Service Label', 'easy-appointments'); ?></label>
                         <input class="field" data-key="trans.service" name="service" type="text"
                                value="<%- _.findWhere(settings, {ea_key:'trans.service'}).ea_value %>">
                     </div>
                     <div class="form-item">
-                        <label for=""><?php esc_html_e('Location', 'easy-appointments'); ?></label>
+                        <label for=""><?php esc_html_e('Service Dropdown Default Option', 'easy-appointments'); ?></label>
+                        <input class="field" data-key="trans.service_option" name="service" type="text"
+                               value="<%- _.findWhere(settings, {ea_key:'trans.service_option'}).ea_value %>">
+                    </div>
+                    <div class="form-item">
+                        <label for=""><?php esc_html_e('Location Label', 'easy-appointments'); ?></label>
                         <input class="field" data-key="trans.location" name="location" type="text"
                                value="<%- _.findWhere(settings, {ea_key:'trans.location'}).ea_value %>">
                     </div>
                     <div class="form-item">
-                        <label for=""><?php esc_html_e('Worker', 'easy-appointments'); ?></label>
+                        <label for=""><?php esc_html_e('Location Dropdown Default Option', 'easy-appointments'); ?></label>
+                        <input class="field" data-key="trans.location_option" name="location" type="text"
+                               value="<%- _.findWhere(settings, {ea_key:'trans.location_option'}).ea_value %>">
+                    </div>
+                    <div class="form-item">
+                        <label for=""><?php esc_html_e('Worker Label', 'easy-appointments'); ?></label>
                         <input class="field" data-key="trans.worker" name="worker" type="text"
                                value="<%- _.findWhere(settings, {ea_key:'trans.worker'}).ea_value %>">
+                    </div>
+                    <div class="form-item">
+                        <label for=""><?php esc_html_e('Worker Dropdown Default Option', 'easy-appointments'); ?></label>
+                        <input class="field" data-key="trans.worker_option" name="worker" type="text"
+                               value="<%- _.findWhere(settings, {ea_key:'trans.worker_option'}).ea_value %>">
                     </div>
                     <div class="form-item">
                         <div class="label-with-tooltip">
@@ -730,6 +848,16 @@
                         <input class="field" data-key="trans.done_message" name="done_message"
                                type="text"
                                value="<%- _.findWhere(settings, {ea_key:'trans.done_message'}).ea_value %>">
+                    </div>
+                    <div class="form-item">
+                        <div class="label-with-tooltip">
+                            <label for=""><?php esc_html_e('Submit Button Text', 'easy-appointments'); ?></label>
+                            <span class="tooltip tooltip-right"
+                                  data-tooltip="<?php esc_html_e('Text will display on submit button in frontend booking form', 'easy-appointments'); ?>"></span>
+                        </div>
+                        <input class="field" data-key="trans.submit_button_text" name="submit_button_text"
+                               type="text"
+                               value="<%- _.findWhere(settings, {ea_key:'trans.submit_button_text'}).ea_value %>">
                     </div>
                     <div class="form-item">
                         <label for=""><?php esc_html_e('Search Customer', 'easy-appointments'); ?></label>
@@ -782,6 +910,15 @@
                         </div>
                         <input class="field" data-key="block.time" name="block.time" type="text"
                                value="<%- _.findWhere(settings, {ea_key:'block.time'}).ea_value %>">
+                    </div>
+                    <div class="form-item">
+                        <div class="label-with-tooltip">
+                            <label for=""><?php esc_html_e('Cancel Booking Before hour', 'easy-appointments'); ?></label>
+                            <span class="tooltip tooltip-right"
+                                  data-tooltip="<?php esc_html_e('Users are allowed to cancel their appointments only up to hours before the scheduled time.', 'easy-appointments'); ?>"></span>
+                        </div>
+                        <input class="field" data-key="cancel_time" name="cancel_time" type="time"
+                               value="<%- _.findWhere(settings, {ea_key:'cancel_time'}).ea_value %>">
                     </div>
                 </div>
             </div>
@@ -1412,7 +1549,8 @@
                     alert(xhr.responseJSON?.data || 'Import failed.');
                 }
             });
-        });
+        });       
+
 
     });
 </script>

@@ -115,6 +115,7 @@ class EADBModels
         $worker = '';
         $status = '';
         $search = '';
+        $user = '';
 
         if (array_key_exists('location', $data)) {
             $location = ' AND location = %d';
@@ -136,6 +137,11 @@ class EADBModels
             $params[] = $data['status'];
         }
 
+        if (array_key_exists('user', $data)) {
+            $user = ' AND user = %d';
+            $params[] = (int) $data['user'];
+        }
+
         if (array_key_exists('search', $data)) {
             $search = " AND id IN (SELECT app_id FROM $tableFields WHERE `value` LIKE %s)";
             $params[] = '%' . $this->wpdb->esc_like($data['search']) . '%';
@@ -143,7 +149,7 @@ class EADBModels
 
         $query = "SELECT * 
 			FROM $tableName
-			WHERE 1 AND date >= %s AND date <= %s {$location}{$service}{$worker}{$status}{$search}
+			WHERE 1 AND date >= %s AND date <= %s {$location}{$service}{$worker}{$status}{$user}{$search}
 			ORDER BY id DESC";
         // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.PreparedSQL.NotPrepared
         $apps = $this->wpdb->get_results($this->wpdb->prepare($query, $params), OBJECT_K);

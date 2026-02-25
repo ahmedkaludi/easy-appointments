@@ -20,7 +20,7 @@
                     </select>
                 </div>
             <label class="ea-label col-sm-4 control-label ea-rtl-label">
-                <?php echo esc_html($this->options->get_option_value("trans.location"));?>
+                <?php echo easy_ea_helper_polylang_trans($this->options->get_option_value("trans.location"));?>
             </label>
         </div>
         <div class="step form-group">
@@ -31,7 +31,7 @@
                 </select>
             </div>
             <label class="ea-label col-sm-4 control-label ea-rtl-label">
-                <?php echo esc_html($this->options->get_option_value("trans.service")); ?>
+                <?php echo easy_ea_helper_polylang_trans($this->options->get_option_value("trans.service")); ?>
             </label>
         </div>
         <div class="step form-group">
@@ -42,7 +42,7 @@
                 </select>
             </div>
             <label class="ea-label col-sm-4 control-label ea-rtl-label">
-                <?php echo esc_html($this->options->get_option_value("trans.worker")); ?>
+                <?php echo easy_ea_helper_polylang_trans($this->options->get_option_value("trans.worker")); ?>
             </label>
         </div>
         <div class="step calendar" class="filter">
@@ -138,7 +138,7 @@
                 <div class="col-sm-offset-4 col-sm-8 ea-actions-group" style="display: inline-flex;">
                     <?php 
                     // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-                    echo apply_filters('easy_ea_checkout_button', '<button class="ea-btn ea-submit btn btn-primary"><%- settings[\'trans.submit\'] %></button>');?>
+                    echo apply_filters('easy_ea_checkout_button', '<button class="ea-btn ea-submit btn btn-primary"><%- settings[\'trans.submit_button_text\'] %></button>');?>
                     <button class="ea-btn ea-cancel btn btn-default"><%- settings['trans.cancel'] %></button>
                 </div>
             </div>

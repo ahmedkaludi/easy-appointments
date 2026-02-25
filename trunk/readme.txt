@@ -5,7 +5,7 @@ Tags: appointment, appointments, Booking, calendar, reservation
 Requires at least: 3.7
 Tested up to: 6.9
 Requires PHP: 5.3
-Stable tag: 3.12.20
+Stable tag: 3.12.21
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -224,6 +224,15 @@ Terms of use and Policy : https://fullcalendar.io/license
 25. Admin panel - Report - Export page
 
 == Changelog ==
+= 3.12.21 (2026-02-24)
+* Added Full compatibilty with Polylang Plugin. #189
+* Added feature to display user appointments based on the client #199
+* Added feature to cancel the appointment during timing. #144
+* Added Customization Option to Dropdown Menu in Location, Service, worker. And Also Add an option to change the name of Booking review 'Submit' button.  #244
+* Added old appointment updating date automatically #245
+* Added seperate Box for admin mails #248
+* Fixed Appointments are continuously syncing to Google Calendar in a loop, creating duplicate records. #251
+
 = 3.12.20 (2026-01-31)
 * Added Full compatibilty with Polylang Plugin. #189
 * Added AI Chatbot for bookings #113

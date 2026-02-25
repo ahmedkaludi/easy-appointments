@@ -74,12 +74,219 @@ class EAAdminPanel
     {
         // Hook for adding admin menus
         add_action('admin_menu', array($this, 'add_menu_pages'));
+        add_action('admin_menu', array($this, 'my_booking_menu'));
 
         // Init action
         add_action('admin_init', array($this, 'init_scripts'));
+        add_action('admin_init', array($this, 'easy_ea_init_polylang_register_strings'));
         //add_action( 'admin_enqueue_scripts', array( $this, 'init' ) );
+    }
+
+    function easy_ea_register_option_strings() {
+        if ( function_exists( 'pll_register_string' ) ) {
+            $options =  array(
+                'trans.service'                 => 'Service',
+                'trans.location'                => 'Location',
+                'trans.worker'                  => 'Worker',
+                'trans.service_option'          => 'Select Service',
+                'trans.location_option'         => 'Select Location',
+                'trans.worker_option'           => 'Select Worker',
+                'trans.done_message'            => 'Done',
+                'trans.submit_button_text'      => 'Submit',
+                'trans.create_new_booking'      => 'Create New Booking',
+                'pending.subject.email'         => 'New Reservation #id#',
+                'pending.subject.visitor.email' => 'Reservation #id#',
+                'gdpr.label'                    => 'By using this form you agree with the storage and handling of your data by this website.',
+                'gdpr.message'                  => 'You need to accept the privacy checkbox',
+            );
+    
+            foreach ( $options as $key => $value ) {
+                $my_string = $this->options->get_option_value($key, $value);
+                if ( ! empty( $my_string ) ) {
+                    $this->easy_ea_polylang_register_strings( $my_string );
+                }
+            }
+        }
 
     }
+
+
+
+    function easy_ea_polylang_register_strings( $my_string ) {
+        if ( function_exists( 'pll_register_string' ) ) {
+            pll_register_string(
+                'ea_label_' . md5( $my_string ), // unique key
+                $my_string,
+                'Easy Appointments'
+            );
+        }
+    }
+
+    public function easy_ea_init_polylang_register_strings() {
+        $this->easy_ea_register_option_strings();
+        $rows = $this->models->get_all_rows("ea_meta_fields", array(), array('position' => 'ASC'));
+        $rows = apply_filters( 'easy_ea_form_rows', $rows);
+        foreach ( $rows as $row ) {
+            if ( ! empty( $row->label ) ) {
+                $this->easy_ea_polylang_register_strings( $row->label );
+                if ( function_exists( 'pll__' ) ) {
+                    $row->label = esc_html( pll__( $row->label ) );
+                } else {
+                    $row->label = esc_html( $row->label );
+                }
+            }
+        }
+    }
+    public function my_booking_menu() {
+
+        if (!is_user_logged_in()) {
+            return;
+        }
+        if (current_user_can('manage_options')) {
+            return;
+        }
+
+        if (!empty($this->options->get_option_value('fullcalendar.my_booking'))) {
+
+            add_menu_page(
+                esc_html__('My Bookings', 'easy-appointments'),
+                esc_html__('My Bookings', 'easy-appointments'),
+                'read',
+                'my-bookings',
+                array($this, 'render_my_bookings_page'),
+                'dashicons-calendar-alt',
+                30
+            );
+        }
+    }
+
+    public function render_my_bookings_page() {
+        global $wpdb;
+
+        $current_user = wp_get_current_user();
+
+        if (!$current_user || !$current_user->ID) {
+            echo '<div class="wrap"><p>' . esc_html__('User not found.', 'easy-appointments') . '</p></div>';
+            return;
+        }
+
+        $user_id = (int) $current_user->ID;
+
+        // ===== FILTER (Default: upcoming) =====
+        $filter = isset($_GET['filter']) ? sanitize_text_field($_GET['filter']) : 'upcoming';
+
+        $today = current_time('Y-m-d');
+
+        $where_date = "AND a.date >= %s";
+        if ($filter === 'past') {
+            $where_date = "AND a.date < %s";
+        }
+
+        // ===== PAGINATION =====
+        $per_page = 10;
+        $paged = isset($_GET['paged']) ? max(1, intval($_GET['paged'])) : 1;
+        $offset = ($paged - 1) * $per_page;
+
+        // ===== TOTAL COUNT =====
+        $total = $wpdb->get_var(
+            $wpdb->prepare(
+                "SELECT COUNT(*) 
+                FROM {$wpdb->prefix}ea_appointments a
+                WHERE a.user = %d $where_date",
+                $user_id,
+                $today
+            )
+        );
+
+        $total_pages = ceil($total / $per_page);
+
+        // ===== FETCH DATA =====
+        $appointments = $wpdb->get_results(
+            $wpdb->prepare(
+                "SELECT 
+                    a.id,
+                    a.date,
+                    a.start,
+                    a.end,
+                    a.status,
+                    s.name  AS service_name,
+                    l.name  AS location_name,
+                    st.name AS staff_name
+                FROM {$wpdb->prefix}ea_appointments a
+                LEFT JOIN {$wpdb->prefix}ea_services  s  ON s.id  = a.service
+                LEFT JOIN {$wpdb->prefix}ea_locations l  ON l.id  = a.location
+                LEFT JOIN {$wpdb->prefix}ea_staff     st ON st.id = a.worker
+                WHERE a.user = %d
+                $where_date
+                ORDER BY a.date ASC
+                LIMIT %d OFFSET %d",
+                $user_id,
+                $today,
+                $per_page,
+                $offset
+            )
+        );
+
+        echo '<div class="wrap">';
+        echo '<h1>' . esc_html__('My Bookings', 'easy-appointments') . '</h1>';
+
+        // ===== FILTER BUTTONS =====
+        echo '<div style="margin-bottom:15px;">';
+        echo '<a class="button ' . ($filter === 'upcoming' ? 'button-primary' : '') . '" href="?page=my-bookings&filter=upcoming">' . esc_html__('Upcoming', 'easy-appointments') . '</a> ';
+        echo '<a class="button ' . ($filter === 'past' ? 'button-primary' : '') . '" href="?page=my-bookings&filter=past">' . esc_html__('Past', 'easy-appointments') . '</a>';
+        echo '</div>';
+
+        
+
+        echo '<table class="widefat striped">';
+        echo '<thead>
+                <tr>
+                    <th>' . esc_html__('Date', 'easy-appointments') . '</th>
+                    <th>' . esc_html__('Time', 'easy-appointments') . '</th>
+                    <th>' . esc_html__('Service', 'easy-appointments') . '</th>
+                    <th>' . esc_html__('Location', 'easy-appointments') . '</th>
+                    <th>' . esc_html__('Employee', 'easy-appointments') . '</th>
+                    <th>' . esc_html__('Status', 'easy-appointments') . '</th>
+                </tr>
+            </thead>
+            <tbody>';
+
+        if (empty($appointments)) {
+            echo '<tr>
+                    <td colspan="6">' . esc_html__('No bookings found.', 'easy-appointments') . '</td>';
+            echo '</tr>';
+            echo '</tbody></table>';
+            return;
+        }
+
+        foreach ($appointments as $a) {
+            echo '<tr>
+                    <td>' . esc_html($a->date) . '</td>
+                    <td>' . esc_html($a->start . ' - ' . $a->end) . '</td>
+                    <td>' . esc_html($a->service_name ?: '-') . '</td>
+                    <td>' . esc_html($a->location_name ?: '-') . '</td>
+                    <td>' . esc_html($a->staff_name ?: '-') . '</td>
+                    <td>' . esc_html(ucfirst($a->status)) . '</td>
+                </tr>';
+        }
+
+        echo '</tbody></table>';
+
+        // ===== PAGINATION LINKS =====
+        if ($total_pages > 1) {
+            echo '<div class="tablenav"><div class="tablenav-pages">';
+
+            for ($i = 1; $i <= $total_pages; $i++) {
+                $class = ($i == $paged) ? 'button button-primary' : 'button';
+                echo '<a class="' . $class . '" href="?page=my-bookings&filter=' . esc_attr($filter) . '&paged=' . $i . '">' . $i . '</a> ';
+            }
+
+            echo '</div></div>';
+        }
+
+        echo '</div>';
+    }
+
 
 
 
