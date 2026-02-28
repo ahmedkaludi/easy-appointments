@@ -173,6 +173,7 @@ class EAOptions
             'fullcalendar.my_booking'       => '0',
             'fullcalendar.my_booking_full_calendar'       => '0',
             'fullcalendar.event.show'       => '0',
+            'fullcalendar.event.title_fields'       => '',
             'fullcalendar.manage_appointment.show'       => '0',
             'fullcalendar.event.template'   => '',
             'shortcode.compress'            => '1',

@@ -1766,6 +1766,7 @@ class EAAjax
             'fullcalendar.my_booking'       => '0',
             'fullcalendar.my_booking_full_calendar'       => '0',
             'fullcalendar.event.show'       => '0',
+            'fullcalendar.event.title_fields'       => '',
             'fullcalendar.event.template'   => '',
             'shortcode.compress'            => '1',
             'label.from_to'                 => '0',

@@ -792,6 +792,66 @@
                       </div>
                   </div>
                   <div class="form-item">
+                        <div class="label-with-tooltip">
+                            <label><?php esc_html_e('Event title display fields', 'easy-appointments'); ?></label>
+                            <span class="tooltip tooltip-right"
+                                data-tooltip="<?php esc_attr_e('Select what should be shown inside calendar event block.', 'easy-appointments'); ?>">
+                            </span>
+                        </div>
+
+                        <%
+                            var titleSetting = _.findWhere(settings, {ea_key:'fullcalendar.event.title_fields'});
+                            var selectedFields = [];
+
+                            if (titleSetting && titleSetting.ea_value) {
+                                selectedFields = titleSetting.ea_value.split(',');
+                            } else {
+                                selectedFields = ['name']; // default
+                            }
+                        %>
+
+                        <div class="field-wrap">
+
+                            
+                                <input type="checkbox" style="margin: 0 5px 0 0;"
+                                    class="ea-title-field field"
+                                    value="name"
+                                    <% if (_.contains(selectedFields, 'name')) { %>checked<% } %> >
+                                <?php esc_html_e('Name', 'easy-appointments'); ?>
+                            
+
+                            
+                                <input type="checkbox" style="margin: 0 5px 0 10px;"
+                                    class="ea-title-field field"
+                                    value="location_name"
+                                    <% if (_.contains(selectedFields, 'location_name')) { %>checked<% } %> >
+                                <?php esc_html_e('Location', 'easy-appointments'); ?>
+                            
+
+                            
+                                <input type="checkbox" style="margin: 0 5px 0 10px;"
+                                    class="ea-title-field field"
+                                    value="service_name"
+                                    <% if (_.contains(selectedFields, 'service_name')) { %>checked<% } %> >
+                                <?php esc_html_e('Service', 'easy-appointments'); ?>
+                            
+
+                            
+                                <input type="checkbox" style="margin: 0 5px 0 10px;"
+                                    class="ea-title-field field"
+                                    value="worker_name"
+                                    <% if (_.contains(selectedFields, 'worker_name')) { %>checked<% } %> >
+                                <?php esc_html_e('Worker', 'easy-appointments'); ?>
+                            
+
+                            <!-- hidden real field -->
+                            <input type="hidden"
+                                class="field"
+                                data-key="fullcalendar.event.title_fields"
+                                value="<%- selectedFields.join(',') %>">
+                        </div>
+                    </div>
+                  <div class="form-item">
                       <div class="label-with-tooltip">
                           <label for=""><?php esc_attr_e('Event content in popup', 'easy-appointments'); ?></label>
                           <span class="tooltip tooltip-right"
@@ -1429,6 +1489,22 @@
 </script>
 <script>
     jQuery(document).ready(function($) {
+
+        $(document).on('change', '.ea-title-field', function () {
+
+            var values = [];
+
+            $('.ea-title-field:checked').each(function () {
+                values.push($(this).val());
+            });
+
+            if (values.length === 0) {
+                values = ['name']; // fallback
+                $('.ea-title-field[value="name"]').prop('checked', true);
+            }
+
+            $('[data-key="fullcalendar.event.title_fields"]').val(values.join(','));
+        });
         $(document).on('submit', '#ea_newsletter', function(e) {
             e.preventDefault();
             var form = jQuery(this);
