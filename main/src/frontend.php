@@ -906,7 +906,6 @@ class Easy_EA_Frontend
             if ($type === 'staff') {
                 $default_value = easy_ea_helper_polylang_trans($this->options->get_option_value("trans.worker_option"));
             }
-            $default_value = esc_html__('Select', 'easy-appointments').' '.$default_value;
             
         }
         printf(
