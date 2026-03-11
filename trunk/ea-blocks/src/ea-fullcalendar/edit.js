@@ -34,12 +34,6 @@ export default function Edit({ attributes, setAttributes }) {
 		if (service) fetchOptions("worker", setWorkers, { service_id: service });
 	}, [service]);
 
-	// useEffect(() => {
-	// 	apiFetch({ path: "/wp/v2/eablocks/ea_appointments" })
-	// 		.then((data) => setEvents(data))
-	// 		.catch((err) => console.error("Error fetching appointments:", err));
-	// }, []);
-
     useEffect(() => {
         if (!location || !service || !worker) return;
     
@@ -48,7 +42,6 @@ export default function Edit({ attributes, setAttributes }) {
             service,
             worker,
         }).toString();
-        console.log(queryString);
     
         apiFetch({ path: `/wp/v2/eablocks/ea_appointments?${queryString}` })
             .then((data) => {
