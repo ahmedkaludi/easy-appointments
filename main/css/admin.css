@@ -458,3 +458,20 @@ textarea[data-key="custom.css"] {
     font-weight: 600;
     border-bottom: 2px solid #2271b1;
 }
+
+.label-with-tooltip label {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+	margin-top: 7px;
+}
+
+.ea-status-heading{
+    margin-top:20px;
+    font-size:15px;
+    font-weight:600;
+    padding-bottom:6px;
+}
+.ea-status-subjects{
+	margin-left:10px;
+}

@@ -398,6 +398,11 @@ class EAMail
                 if (in_array($app->status, $enable_actions)) {
                     $this->send_status_change_mail($app_id);
                 }
+            }else{
+                $default_status = $this->options->get_option_value('default.status');
+                if ($app->status == $default_status) {
+                    $this->send_status_change_mail($app_id);
+                }
             }
         }
     }
@@ -423,14 +428,18 @@ class EAMail
     {
         if ($this->options->get_option_value('send.worker.email', '0') == '1') {
             $enable_actions = $this->get_worker_email_notification_active();
+            $table_name = 'ea_appointments';
+            $app = $this->models->get_row($table_name, $app_id);
             if (!empty($enable_actions)) {
-                $table_name = 'ea_appointments';
-                $app = $this->models->get_row($table_name, $app_id);
                 if (in_array($app->status, $enable_actions)) {
                     $this->send_notification(array('id' => $app_id), $worker_only);
                 }
+            }else{
+                $default_status = $this->options->get_option_value('default.status');
+                if ($app->status == $default_status) {
+                    $this->send_status_change_mail($app_id);
+                }
             }
-
 
         }
     }
