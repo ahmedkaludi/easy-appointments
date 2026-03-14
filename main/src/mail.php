@@ -612,17 +612,15 @@ class EAMail
         $emails = apply_filters('easy_ea_admin_mail_address_list', $emails, $raw_data);
 
         $body_template = $this->options->get_option_value('mail.admin', '');
-
-        if ($enable_status_subjects == '1') {
-            if ($raw_data['status'] == 'pending') {
-                $body_template = $this->options->get_option_value('mail.admin.pending', $body_template);
-            } elseif ($raw_data['status'] == 'confirmed') {
-                $body_template = $this->options->get_option_value('mail.admin.confirmed', $body_template);
-            } elseif ($raw_data['status'] == 'canceled') {
-                $body_template = $this->options->get_option_value('mail.admin.canceled', $body_template);
-            } elseif ($raw_data['status'] == 'reservation') {
-                $body_template = $this->options->get_option_value('mail.admin.reservation', $body_template);
-            }
+        
+        if ($raw_data['status'] == 'pending') {
+            $body_template = $this->options->get_option_value('mail.admin.pending', $body_template);
+        } elseif ($raw_data['status'] == 'confirmed') {
+            $body_template = $this->options->get_option_value('mail.admin.confirmed', $body_template);
+        } elseif ($raw_data['status'] == 'canceled') {
+            $body_template = $this->options->get_option_value('mail.admin.canceled', $body_template);
+        } elseif ($raw_data['status'] == 'reservation') {
+            $body_template = $this->options->get_option_value('mail.admin.reservation', $body_template);
         }
         $body_template = apply_filters('easy_ea_admin_mail_template', $body_template);
 
