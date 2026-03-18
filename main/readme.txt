@@ -228,7 +228,6 @@ Terms of use and Policy : https://fullcalendar.io/license
 * Added An Option To Show Specific infomration on Calendar. #252
 * Fixed Admin Email Notifications Ignore Custom Template and Send Default Template #261
 * Fixed Few strings are untranslatable #256
-* Fixed Code Improvement #259
 * Fixed Mail notifications stop working for users and workers after updating to the latest version of the plugin. #260
 
 = 3.12.21 (2026-02-24)
