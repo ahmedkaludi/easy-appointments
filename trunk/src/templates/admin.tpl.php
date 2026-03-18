@@ -543,18 +543,24 @@
                                name="visitor_reply_to_address" type="text"
                                value="<%- _.findWhere(settings, {ea_key:'visitor_reply_to_address'}).ea_value %>">
                     </div>
-                    <div class="form-item">
-                        <div class="label-with-tooltip">
-                            <label for="send.worker.email"><?php esc_html_e('Send email to worker', 'easy-appointments'); ?></label>
+                    <div class="form-item" style="border: 1px solid #ececec; padding-left: 10px; border-radius: 4px;">
+                        <div class="label-with-tooltip" style="display:flex; align-items:center; gap:8px;">
+        
+                            <label for="send.worker.email" style="display:flex; align-items:center; gap:6px;">
+                                <input class="field ea_send_worker_email"
+                                    data-key="send.worker.email"
+                                    name="send.worker.email"
+                                    type="checkbox"
+                                    <% if (_.findWhere(settings, {ea_key:'send.worker.email'}).ea_value == "1") { %>checked<% } %>>
+                                
+                                <?php esc_html_e('Send email to worker', 'easy-appointments'); ?>
+                            </label>
                             <span class="tooltip tooltip-right"
-                                  data-tooltip="<?php esc_html_e('Mark this option if you want to employee receive admin email after filing the form.', 'easy-appointments'); ?>"></span>
+                                data-tooltip="<?php esc_html_e('Mark this option if you want to employee receive admin email after filing the form.', 'easy-appointments'); ?>">
+                            </span>
                         </div>
-                        <div class="field-wrap">
-                            <input class="field ea_send_worker_email" data-key="send.worker.email"
-                                   name="send.worker.email" type="checkbox" style="transform: scale(1.2);transform: scale(0.5); transform: scale(1.2);" <% if
-                            (_.findWhere(settings, {ea_key:'send.worker.email'}).ea_value == "1") {
-                            %>checked<% } %>>
-                            <div class="ea_worker_mail_group" style="margin-left: 20px;">
+                        <div class="field-wrap ea_worker_mail_group" style="border: none; padding: 0;">                           
+                            <div class="">
                                 <div class="label-with-tooltip">
                                     <label for="send.worker.pending_email"><input class="field" id="send.worker.pending_email" data-key="send.worker.pending_email"
                                         name="send.worker.pending_email" type="checkbox" <% if
@@ -581,17 +587,18 @@
                         </div>                        
                     </div>
                     
-                    <div class="form-item">
-                        <div class="label-with-tooltip">
-                            <label for="send.user.email"><?php esc_html_e('Send email to user', 'easy-appointments'); ?></label>
+                    <div class="form-item" style="border: 1px solid #ececec; padding-left: 10px; border-radius: 4px;">
+                        <div class="label-with-tooltip" style="display:flex; align-items:center; gap:8px;">
+                            <label for="send.user.email" style="display:flex; align-items:center; gap:6px;">
+                                <input class="field ea_send_user_email" data-key="send.user.email" name="send.user.email"
+                                   type="checkbox" <% if (_.findWhere(settings,
+                            {ea_key:'send.user.email'}).ea_value == "1") { %>checked<% } %>>
+                            <?php esc_html_e('Send email to user', 'easy-appointments'); ?></label>
                             <span class="tooltip tooltip-right"
                                   data-tooltip="<?php esc_html_e('Mark this option if you want to user receive email after filing the form.', 'easy-appointments'); ?>"></span>
                         </div>
-                        <div class="field-wrap">
-                            <input class="field ea_send_user_email" data-key="send.user.email" name="send.user.email" style="transform: scale(1.2);transform: scale(0.5); transform: scale(1.2);"
-                                   type="checkbox" <% if (_.findWhere(settings,
-                            {ea_key:'send.user.email'}).ea_value == "1") { %>checked<% } %>>
-                            <div class="ea_user_mail_group" style="margin-left: 20px;">
+                        <div class="field-wrap ea_user_mail_group" style="border: none; padding: 0;">                            
+                            <div>
                                 <div class="label-with-tooltip">
                                     <label for="send.user.pending_email"><input class="field" id="send.user.pending_email" data-key="send.user.pending_email"
                                         name="send.user.pending_email" type="checkbox" <% if
@@ -661,7 +668,6 @@
                                 type="checkbox"
                                 data-key="enable_status_subjects"
                                 name="enable_status_subjects"
-                                style="transform: scale(1.2);transform: scale(0.5); transform: scale(1.2);"
                                 <% if (_.findWhere(settings, {ea_key:'enable_status_subjects'}).ea_value == "1") { %>checked<% } %>>
                         </div>
                     </div>
@@ -1596,7 +1602,6 @@
         $(document).on('change', '[name="enable_status_subjects"]', toggleStatusSubjects);
 
         $(document).on('click', '#ea-full-export', function() {
-            console.log('Export clicked');
             if (!confirm('Export all Easy Appointments data?')) {
                 return;
             }
@@ -1639,8 +1644,38 @@
                     alert(xhr.responseJSON?.data || 'Import failed.');
                 }
             });
-        });       
+        });
 
+        function applyDefaultOnce() {
+            var workerChecked = $('.ea_worker_mail_group input[type="checkbox"]:checked').length;
+            var userChecked   = $('.ea_user_mail_group input[type="checkbox"]:checked').length;
 
+            if (workerChecked > 0 || userChecked > 0) {
+                return;
+            }
+
+            var status = jQuery('#ea-select-status').val();
+
+            var map = {
+                pending: 'pending_email',
+                confirmed: 'confirmed_email',
+                reservation: 'reservation_email'
+            };
+
+            var key = map[status];
+
+            if (key) {
+                // Worker
+                $('input[data-key="send.worker.' + key + '"]').prop('checked', true);
+                $('.ea_send_worker_email').prop('checked', true);
+
+                // User
+                $('input[data-key="send.user.' + key + '"]').prop('checked', true);
+                $('.ea_send_user_email').prop('checked', true);
+            }
+        }
+        setTimeout(function () {
+            applyDefaultOnce();
+        }, 500);
     });
 </script>
