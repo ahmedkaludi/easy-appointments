@@ -170,6 +170,24 @@ class EasyEAApiFullCalendar
 
         $fields = $this->db_models->get_all_rows('ea_meta_fields', array(), array('position' => 'ASC'));
         $services = $this->db_models->get_all_rows('ea_services', array(), array('id' => 'ASC'));
+        $locations = $this->db_models->get_all_rows('ea_locations', array(), array('id' => 'ASC'));
+        $workers   = $this->db_models->get_all_rows('ea_staff', array(), array('id' => 'ASC'));
+        
+
+        $service_map = [];
+        foreach ($services as $s) {
+            $service_map[$s->id] = $s->name;
+        }
+
+        $location_map = [];
+        foreach ($locations as $l) {
+            $location_map[$l->id] = $l->name;
+        }
+
+        $worker_map = [];
+        foreach ($workers as $w) {
+            $worker_map[$w->id] = $w->name;
+        }
 
         if (
             !current_user_can('manage_options') &&
@@ -183,7 +201,7 @@ class EasyEAApiFullCalendar
         }
 
 
-        $res = array_map(function($element) use ($fields, $title_key, $services, $service_color) {
+        $res = array_map(function($element) use ($fields, $title_key, $services, $service_color, $service_map, $location_map, $worker_map) {
                 $result = array(
                     'start'  => $element->date . 'T' . $element->start,
                     'end'    => $element->end_date . 'T' . $element->end,
@@ -204,7 +222,49 @@ class EasyEAApiFullCalendar
                     }
                 }
     
-                $result['title'] = $element->{$title_key};
+                // $result['title'] = $element->{$title_key};
+                            $title_fields_option = $this->options->get_option_value(
+                'fullcalendar.event.title_fields',
+                'name'
+            );
+
+            $title_fields = explode(',', $title_fields_option);
+
+            $title_parts = [];
+
+            foreach ($title_fields as $field) {
+                switch ($field) {
+                    case 'name':
+                        if (!empty($element->name)) {
+                            $title_parts[] = $element->name;
+                        }
+                    break;
+
+                    case 'location_name':
+                        if (isset($location_map[$element->location])) {
+                            $title_parts[] = $location_map[$element->location];
+                        }
+                    break;
+
+                    case 'service_name':
+                        if (isset($service_map[$element->service])) {
+                            $title_parts[] = $service_map[$element->service];
+                        }
+                    break;
+
+                    case 'worker_name':
+                        if (isset($worker_map[$element->worker])) {
+                            $title_parts[] = $worker_map[$element->worker];
+                        }
+                    break;
+                }
+            }
+
+            if (empty($title_parts)) {
+                $title_parts[] = $element->name;
+            }
+
+            $result['title'] = implode(", ", $title_parts);
 
             return $result;
         }, $res);

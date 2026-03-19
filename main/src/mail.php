@@ -398,6 +398,11 @@ class EAMail
                 if (in_array($app->status, $enable_actions)) {
                     $this->send_status_change_mail($app_id);
                 }
+            }else{
+                $default_status = $this->options->get_option_value('default.status');
+                if ($app->status == $default_status) {
+                    $this->send_status_change_mail($app_id);
+                }
             }
         }
     }
@@ -423,14 +428,18 @@ class EAMail
     {
         if ($this->options->get_option_value('send.worker.email', '0') == '1') {
             $enable_actions = $this->get_worker_email_notification_active();
+            $table_name = 'ea_appointments';
+            $app = $this->models->get_row($table_name, $app_id);
             if (!empty($enable_actions)) {
-                $table_name = 'ea_appointments';
-                $app = $this->models->get_row($table_name, $app_id);
                 if (in_array($app->status, $enable_actions)) {
                     $this->send_notification(array('id' => $app_id), $worker_only);
                 }
+            }else{
+                $default_status = $this->options->get_option_value('default.status');
+                if ($app->status == $default_status) {
+                    $this->send_status_change_mail($app_id);
+                }
             }
-
 
         }
     }
@@ -603,17 +612,15 @@ class EAMail
         $emails = apply_filters('easy_ea_admin_mail_address_list', $emails, $raw_data);
 
         $body_template = $this->options->get_option_value('mail.admin', '');
-
-        if ($enable_status_subjects == '1') {
-            if ($raw_data['status'] == 'pending') {
-                $body_template = $this->options->get_option_value('mail.admin.pending', $body_template);
-            } elseif ($raw_data['status'] == 'confirmed') {
-                $body_template = $this->options->get_option_value('mail.admin.confirmed', $body_template);
-            } elseif ($raw_data['status'] == 'canceled') {
-                $body_template = $this->options->get_option_value('mail.admin.canceled', $body_template);
-            } elseif ($raw_data['status'] == 'reservation') {
-                $body_template = $this->options->get_option_value('mail.admin.reservation', $body_template);
-            }
+        
+        if ($raw_data['status'] == 'pending') {
+            $body_template = $this->options->get_option_value('mail.admin.pending', $body_template);
+        } elseif ($raw_data['status'] == 'confirmed') {
+            $body_template = $this->options->get_option_value('mail.admin.confirmed', $body_template);
+        } elseif ($raw_data['status'] == 'canceled') {
+            $body_template = $this->options->get_option_value('mail.admin.canceled', $body_template);
+        } elseif ($raw_data['status'] == 'reservation') {
+            $body_template = $this->options->get_option_value('mail.admin.reservation', $body_template);
         }
         $body_template = apply_filters('easy_ea_admin_mail_template', $body_template);
 

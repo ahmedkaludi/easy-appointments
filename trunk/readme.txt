@@ -5,7 +5,7 @@ Tags: appointment, appointments, Booking, calendar, reservation
 Requires at least: 3.7
 Tested up to: 6.9
 Requires PHP: 5.3
-Stable tag: 3.12.21
+Stable tag: 3.12.22
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -224,6 +224,12 @@ Terms of use and Policy : https://fullcalendar.io/license
 25. Admin panel - Report - Export page
 
 == Changelog ==
+= 3.12.22 (2026-03-18)
+* Added An Option To Show Specific infomration on Calendar. #252
+* Fixed Admin Email Notifications Ignore Custom Template and Send Default Template #261
+* Fixed Few strings are untranslatable #256
+* Fixed Mail notifications stop working for users and workers after updating to the latest version of the plugin. #260
+
 = 3.12.21 (2026-02-24)
 * Added Full compatibilty with Polylang Plugin. #189
 * Added feature to display user appointments based on the client #199

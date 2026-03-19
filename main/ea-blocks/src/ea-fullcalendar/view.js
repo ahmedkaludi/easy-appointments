@@ -7,7 +7,11 @@ import interactionPlugin from "@fullcalendar/interaction";
 import "@fullcalendar/common/main.css";
 import "@fullcalendar/daygrid/main.css";
 import "@fullcalendar/timegrid/main.css";
-
+if (window.eaFullCalendarData?.nonce) {
+	apiFetch.use(
+		apiFetch.createNonceMiddleware(window.eaFullCalendarData.nonce)
+	);
+}
 export default function View({ attributes }) {
 	const { location, service, worker } = attributes;
 	const [events, setEvents] = useState([]);
@@ -24,7 +28,6 @@ export default function View({ attributes }) {
 
 		apiFetch({ path: `/wp/v2/eablocks/ea_appointments?${queryString}` })
 			.then((data) => {
-				console.log(data)
 				const formatted = data.map((appointment) => ({
 					id: appointment.id,
 					title: appointment.name,

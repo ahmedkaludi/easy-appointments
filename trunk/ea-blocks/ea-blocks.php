@@ -59,6 +59,7 @@ function easy_ea_render_fullcalendar_block($attributes)
 			'location' => $location,
 			'service'  => $service,
 			'worker'   => $worker,
+			'nonce'    => wp_create_nonce('wp_rest'),
 		]) . ';',
 		'before'
 	);
@@ -187,7 +188,20 @@ add_action('rest_api_init', function () {
 	register_rest_route('wp/v2/eablocks', '/ea_appointments/', [
 		'methods'  => 'GET',
 		'callback' => 'easy_ea_block_get_appointments',
-		'permission_callback' => '__return_true', // Secure this if needed
+		'permission_callback' => function ($request) {
+
+			$nonce = $request->get_header('X-WP-Nonce');
+
+			if (! wp_verify_nonce($nonce, 'wp_rest')) {
+				return new WP_Error(
+					'rest_forbidden',
+					'Invalid nonce',
+					['status' => 403]
+				);
+			}
+
+			return current_user_can('manage_options');
+		}
 	]);
 });
 

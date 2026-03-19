@@ -543,77 +543,85 @@
                                name="visitor_reply_to_address" type="text"
                                value="<%- _.findWhere(settings, {ea_key:'visitor_reply_to_address'}).ea_value %>">
                     </div>
-                    <div class="form-item">
-                        <div class="label-with-tooltip">
-                            <label for="send.worker.email"><?php esc_html_e('Send email to worker', 'easy-appointments'); ?></label>
+                    <div class="form-item" style="border: 1px solid #ececec; padding-left: 10px; border-radius: 4px;">
+                        <div class="label-with-tooltip" style="display:flex; align-items:center; gap:8px;">
+        
+                            <label for="send.worker.email" style="display:flex; align-items:center; gap:6px;">
+                                <input class="field ea_send_worker_email"
+                                    data-key="send.worker.email"
+                                    name="send.worker.email"
+                                    type="checkbox"
+                                    <% if (_.findWhere(settings, {ea_key:'send.worker.email'}).ea_value == "1") { %>checked<% } %>>
+                                
+                                <?php esc_html_e('Send email to worker', 'easy-appointments'); ?>
+                            </label>
                             <span class="tooltip tooltip-right"
-                                  data-tooltip="<?php esc_html_e('Mark this option if you want to employee receive admin email after filing the form.', 'easy-appointments'); ?>"></span>
+                                data-tooltip="<?php esc_html_e('Mark this option if you want to employee receive admin email after filing the form.', 'easy-appointments'); ?>">
+                            </span>
                         </div>
-                        <div class="field-wrap">
-                            <input class="field ea_send_worker_email" data-key="send.worker.email"
-                                   name="send.worker.email" type="checkbox" <% if
-                            (_.findWhere(settings, {ea_key:'send.worker.email'}).ea_value == "1") {
-                            %>checked<% } %>>
+                        <div class="field-wrap ea_worker_mail_group" style="border: none; padding: 0;">                           
+                            <div class="">
+                                <div class="label-with-tooltip">
+                                    <label for="send.worker.pending_email"><input class="field" id="send.worker.pending_email" data-key="send.worker.pending_email"
+                                        name="send.worker.pending_email" type="checkbox" <% if
+                                    (_.findWhere(settings, {ea_key:'send.worker.pending_email'}).ea_value == "1") {
+                                    %>checked<% } %>> <?php esc_html_e('Pending', 'easy-appointments'); ?>
+                                    </label>&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <label for="send.worker.reservation_email"><input class="field" data-key="send.worker.reservation_email"
+                                        name="send.worker.reservation_email" id="send.worker.reservation_email" type="checkbox" <% if
+                                    (_.findWhere(settings, {ea_key:'send.worker.reservation_email'}).ea_value == "1") {
+                                    %>checked<% } %>> <?php esc_html_e('Reservation', 'easy-appointments'); ?>
+                                    </label>&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <label for="send.worker.cancelled_email"><input class="field" data-key="send.worker.cancelled_email"
+                                        name="send.worker.cancelled_email" id="send.worker.cancelled_email" type="checkbox" <% if
+                                    (_.findWhere(settings, {ea_key:'send.worker.cancelled_email'}).ea_value == "1") {
+                                    %>checked<% } %>> <?php esc_html_e('Cancelled', 'easy-appointments'); ?>
+                                    </label>&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <label for="send.worker.confirmed_email"><input class="field" data-key="send.worker.confirmed_email"
+                                        name="send.worker.confirmed_email" id="send.worker.confirmed_email" type="checkbox" <% if
+                                    (_.findWhere(settings, {ea_key:'send.worker.confirmed_email'}).ea_value == "1") {
+                                    %>checked<% } %>> <?php esc_html_e('Confirmed', 'easy-appointments'); ?>
+                                    </label>
+                                </div>
+                            </div>
                         </div>                        
                     </div>
-                    <div class="form-item ea_worker_mail_group" style="margin-left: 12px;">
-                        <div class="label-with-tooltip">
-                            <label for="send.worker.pending_email"><input class="field" id="send.worker.pending_email" data-key="send.worker.pending_email"
-                                name="send.worker.pending_email" type="checkbox" <% if
-                            (_.findWhere(settings, {ea_key:'send.worker.pending_email'}).ea_value == "1") {
-                            %>checked<% } %>> <?php esc_html_e('Pending', 'easy-appointments'); ?>
-                            </label>&nbsp;&nbsp;&nbsp;&nbsp;
-                            <label for="send.worker.reservation_email"><input class="field" data-key="send.worker.reservation_email"
-                                name="send.worker.reservation_email" id="send.worker.reservation_email" type="checkbox" <% if
-                            (_.findWhere(settings, {ea_key:'send.worker.reservation_email'}).ea_value == "1") {
-                            %>checked<% } %>> <?php esc_html_e('Reservation', 'easy-appointments'); ?>
-                            </label>&nbsp;&nbsp;&nbsp;&nbsp;
-                            <label for="send.worker.cancelled_email"><input class="field" data-key="send.worker.cancelled_email"
-                                name="send.worker.cancelled_email" id="send.worker.cancelled_email" type="checkbox" <% if
-                            (_.findWhere(settings, {ea_key:'send.worker.cancelled_email'}).ea_value == "1") {
-                            %>checked<% } %>> <?php esc_html_e('Cancelled', 'easy-appointments'); ?>
-                            </label>&nbsp;&nbsp;&nbsp;&nbsp;
-                            <label for="send.worker.confirmed_email"><input class="field" data-key="send.worker.confirmed_email"
-                                name="send.worker.confirmed_email" id="send.worker.confirmed_email" type="checkbox" <% if
-                            (_.findWhere(settings, {ea_key:'send.worker.confirmed_email'}).ea_value == "1") {
-                            %>checked<% } %>> <?php esc_html_e('Confirmed', 'easy-appointments'); ?>
-                            </label>
-                        </div>
-                    </div>
-                    <div class="form-item">
-                        <div class="label-with-tooltip">
-                            <label for="send.user.email"><?php esc_html_e('Send email to user', 'easy-appointments'); ?></label>
+                    
+                    <div class="form-item" style="border: 1px solid #ececec; padding-left: 10px; border-radius: 4px;">
+                        <div class="label-with-tooltip" style="display:flex; align-items:center; gap:8px;">
+                            <label for="send.user.email" style="display:flex; align-items:center; gap:6px;">
+                                <input class="field ea_send_user_email" data-key="send.user.email" name="send.user.email"
+                                   type="checkbox" <% if (_.findWhere(settings,
+                            {ea_key:'send.user.email'}).ea_value == "1") { %>checked<% } %>>
+                            <?php esc_html_e('Send email to user', 'easy-appointments'); ?></label>
                             <span class="tooltip tooltip-right"
                                   data-tooltip="<?php esc_html_e('Mark this option if you want to user receive email after filing the form.', 'easy-appointments'); ?>"></span>
                         </div>
-                        <div class="field-wrap">
-                            <input class="field ea_send_user_email" data-key="send.user.email" name="send.user.email"
-                                   type="checkbox" <% if (_.findWhere(settings,
-                            {ea_key:'send.user.email'}).ea_value == "1") { %>checked<% } %>>
-                        </div>
-                    </div>
-                    <div class="form-item ea_user_mail_group" style="margin-left: 12px;">
-                        <div class="label-with-tooltip">
-                            <label for="send.user.pending_email"><input class="field" id="send.user.pending_email" data-key="send.user.pending_email"
-                                name="send.user.pending_email" type="checkbox" <% if
-                            (_.findWhere(settings, {ea_key:'send.user.pending_email'}).ea_value == "1") {
-                            %>checked<% } %>> <?php esc_html_e('Pending', 'easy-appointments'); ?>
-                            </label>&nbsp;&nbsp;&nbsp;&nbsp;
-                            <label for="send.user.reservation_email"><input class="field" data-key="send.user.reservation_email"
-                                name="send.user.reservation_email" id="send.user.reservation_email" type="checkbox" <% if
-                            (_.findWhere(settings, {ea_key:'send.user.reservation_email'}).ea_value == "1") {
-                            %>checked<% } %>> <?php esc_html_e('Reservation', 'easy-appointments'); ?>
-                            </label>&nbsp;&nbsp;&nbsp;&nbsp;
-                            <label for="send.user.cancelled_email"><input class="field" data-key="send.user.cancelled_email"
-                                name="send.user.cancelled_email" id="send.user.cancelled_email" type="checkbox" <% if
-                            (_.findWhere(settings, {ea_key:'send.user.cancelled_email'}).ea_value == "1") {
-                            %>checked<% } %>> <?php esc_html_e('Cancelled', 'easy-appointments'); ?>
-                            </label>&nbsp;&nbsp;&nbsp;&nbsp;
-                            <label for="send.user.confirmed_email"><input class="field" data-key="send.user.confirmed_email"
-                                name="send.user.confirmed_email" id="send.user.confirmed_email" type="checkbox" <% if
-                            (_.findWhere(settings, {ea_key:'send.user.confirmed_email'}).ea_value == "1") {
-                            %>checked<% } %>> <?php esc_html_e('Confirmed', 'easy-appointments'); ?>
-                            </label>
+                        <div class="field-wrap ea_user_mail_group" style="border: none; padding: 0;">                            
+                            <div>
+                                <div class="label-with-tooltip">
+                                    <label for="send.user.pending_email"><input class="field" id="send.user.pending_email" data-key="send.user.pending_email"
+                                        name="send.user.pending_email" type="checkbox" <% if
+                                    (_.findWhere(settings, {ea_key:'send.user.pending_email'}).ea_value == "1") {
+                                    %>checked<% } %>> <?php esc_html_e('Pending', 'easy-appointments'); ?>
+                                    </label>&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <label for="send.user.reservation_email"><input class="field" data-key="send.user.reservation_email"
+                                        name="send.user.reservation_email" id="send.user.reservation_email" type="checkbox" <% if
+                                    (_.findWhere(settings, {ea_key:'send.user.reservation_email'}).ea_value == "1") {
+                                    %>checked<% } %>> <?php esc_html_e('Reservation', 'easy-appointments'); ?>
+                                    </label>&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <label for="send.user.cancelled_email"><input class="field" data-key="send.user.cancelled_email"
+                                        name="send.user.cancelled_email" id="send.user.cancelled_email" type="checkbox" <% if
+                                    (_.findWhere(settings, {ea_key:'send.user.cancelled_email'}).ea_value == "1") {
+                                    %>checked<% } %>> <?php esc_html_e('Cancelled', 'easy-appointments'); ?>
+                                    </label>&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <label for="send.user.confirmed_email"><input class="field" data-key="send.user.confirmed_email"
+                                        name="send.user.confirmed_email" id="send.user.confirmed_email" type="checkbox" <% if
+                                    (_.findWhere(settings, {ea_key:'send.user.confirmed_email'}).ea_value == "1") {
+                                    %>checked<% } %>> <?php esc_html_e('Confirmed', 'easy-appointments'); ?>
+                                    </label>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="form-item">
@@ -663,54 +671,66 @@
                                 <% if (_.findWhere(settings, {ea_key:'enable_status_subjects'}).ea_value == "1") { %>checked<% } %>>
                         </div>
                     </div>
+
+
+                    <!-- ADMIN SUBJECTS -->
+                    <h3 class="ea-status-heading ea-status-subjects"><?php esc_html_e('Admin Subjects', 'easy-appointments'); ?></h3>
+
                     <div class="form-item ea-status-subjects">
-                        <label><?php esc_html_e('Pending – Admin subject', 'easy-appointments'); ?></label>
+                        <label><?php esc_html_e('Pending', 'easy-appointments'); ?></label>
                         <input class="field" data-key="pending_subject_admin"
                             name="pending_subject_admin" type="text"
                             value="<%- _.findWhere(settings, {ea_key:'pending_subject_admin'}).ea_value %>">
                     </div>
 
                     <div class="form-item ea-status-subjects">
-                        <label><?php esc_html_e('Pending – Visitor subject', 'easy-appointments'); ?></label>
-                        <input class="field" data-key="pending_subject_visitor"
-                            name="pending_subject_visitor" type="text"
-                            value="<%- _.findWhere(settings, {ea_key:'pending_subject_visitor'}).ea_value %>">
-                    </div>
-                    <div class="form-item ea-status-subjects">
-                        <label><?php esc_html_e('Confirmed – Admin subject', 'easy-appointments'); ?></label>
+                        <label><?php esc_html_e('Confirmed', 'easy-appointments'); ?></label>
                         <input class="field" data-key="confirmed_subject_admin"
                             name="confirmed_subject_admin" type="text"
                             value="<%- _.findWhere(settings, {ea_key:'confirmed_subject_admin'}).ea_value %>">
                     </div>
 
                     <div class="form-item ea-status-subjects">
-                        <label><?php esc_html_e('Confirmed – Visitor subject', 'easy-appointments'); ?></label>
-                        <input class="field" data-key="confirmed_subject_visitor"
-                            name="confirmed_subject_visitor" type="text"
-                            value="<%- _.findWhere(settings, {ea_key:'confirmed_subject_visitor'}).ea_value %>">
-                    </div>
-                    <div class="form-item ea-status-subjects">
-                        <label><?php esc_html_e('Cancelled – Admin subject', 'easy-appointments'); ?></label>
+                        <label><?php esc_html_e('Cancelled', 'easy-appointments'); ?></label>
                         <input class="field" data-key="cancelled_subject_admin"
                             name="cancelled_subject_admin" type="text"
                             value="<%- _.findWhere(settings, {ea_key:'cancelled_subject_admin'}).ea_value %>">
                     </div>
 
                     <div class="form-item ea-status-subjects">
-                        <label><?php esc_html_e('Cancelled – Visitor subject', 'easy-appointments'); ?></label>
-                        <input class="field" data-key="cancelled_subject_visitor"
-                            name="cancelled_subject_visitor" type="text"
-                            value="<%- _.findWhere(settings, {ea_key:'cancelled_subject_visitor'}).ea_value %>">
-                    </div>
-                    <div class="form-item ea-status-subjects">
-                        <label><?php esc_html_e('Reservation – Admin subject', 'easy-appointments'); ?></label>
+                        <label><?php esc_html_e('Reservation', 'easy-appointments'); ?></label>
                         <input class="field" data-key="reservation_subject_admin"
                             name="reservation_subject_admin" type="text"
                             value="<%- _.findWhere(settings, {ea_key:'reservation_subject_admin'}).ea_value %>">
                     </div>
 
+
+                    <!-- VISITOR SUBJECTS -->
+                    <h3 class="ea-status-heading ea-status-subjects"><?php esc_html_e('Visitor Subjects', 'easy-appointments'); ?></h3>
+
                     <div class="form-item ea-status-subjects">
-                        <label><?php esc_html_e('Reservation – Visitor subject', 'easy-appointments'); ?></label>
+                        <label><?php esc_html_e('Pending', 'easy-appointments'); ?></label>
+                        <input class="field" data-key="pending_subject_visitor"
+                            name="pending_subject_visitor" type="text"
+                            value="<%- _.findWhere(settings, {ea_key:'pending_subject_visitor'}).ea_value %>">
+                    </div>
+
+                    <div class="form-item ea-status-subjects">
+                        <label><?php esc_html_e('Confirmed', 'easy-appointments'); ?></label>
+                        <input class="field" data-key="confirmed_subject_visitor"
+                            name="confirmed_subject_visitor" type="text"
+                            value="<%- _.findWhere(settings, {ea_key:'confirmed_subject_visitor'}).ea_value %>">
+                    </div>
+
+                    <div class="form-item ea-status-subjects">
+                        <label><?php esc_html_e('Cancelled', 'easy-appointments'); ?></label>
+                        <input class="field" data-key="cancelled_subject_visitor"
+                            name="cancelled_subject_visitor" type="text"
+                            value="<%- _.findWhere(settings, {ea_key:'cancelled_subject_visitor'}).ea_value %>">
+                    </div>
+
+                    <div class="form-item ea-status-subjects">
+                        <label><?php esc_html_e('Reservation', 'easy-appointments'); ?></label>
                         <input class="field" data-key="reservation_subject_visitor"
                             name="reservation_subject_visitor" type="text"
                             value="<%- _.findWhere(settings, {ea_key:'reservation_subject_visitor'}).ea_value %>">
@@ -791,6 +811,66 @@
                           %>checked<% } %>>
                       </div>
                   </div>
+                  <div class="form-item">
+                        <div class="label-with-tooltip">
+                            <label><?php esc_html_e('Event title display fields', 'easy-appointments'); ?></label>
+                            <span class="tooltip tooltip-right"
+                                data-tooltip="<?php esc_attr_e('Select what should be shown inside calendar event block.', 'easy-appointments'); ?>">
+                            </span>
+                        </div>
+
+                        <%
+                            var titleSetting = _.findWhere(settings, {ea_key:'fullcalendar.event.title_fields'});
+                            var selectedFields = [];
+
+                            if (titleSetting && titleSetting.ea_value) {
+                                selectedFields = titleSetting.ea_value.split(',');
+                            } else {
+                                selectedFields = ['name']; // default
+                            }
+                        %>
+
+                        <div class="field-wrap">
+
+                            
+                                <input type="checkbox" style="margin: 0 5px 0 0;"
+                                    class="ea-title-field field"
+                                    value="name"
+                                    <% if (_.contains(selectedFields, 'name')) { %>checked<% } %> >
+                                <?php esc_html_e('Name', 'easy-appointments'); ?>
+                            
+
+                            
+                                <input type="checkbox" style="margin: 0 5px 0 10px;"
+                                    class="ea-title-field field"
+                                    value="location_name"
+                                    <% if (_.contains(selectedFields, 'location_name')) { %>checked<% } %> >
+                                <?php esc_html_e('Location', 'easy-appointments'); ?>
+                            
+
+                            
+                                <input type="checkbox" style="margin: 0 5px 0 10px;"
+                                    class="ea-title-field field"
+                                    value="service_name"
+                                    <% if (_.contains(selectedFields, 'service_name')) { %>checked<% } %> >
+                                <?php esc_html_e('Service', 'easy-appointments'); ?>
+                            
+
+                            
+                                <input type="checkbox" style="margin: 0 5px 0 10px;"
+                                    class="ea-title-field field"
+                                    value="worker_name"
+                                    <% if (_.contains(selectedFields, 'worker_name')) { %>checked<% } %> >
+                                <?php esc_html_e('Worker', 'easy-appointments'); ?>
+                            
+
+                            <!-- hidden real field -->
+                            <input type="hidden"
+                                class="field"
+                                data-key="fullcalendar.event.title_fields"
+                                value="<%- selectedFields.join(',') %>">
+                        </div>
+                    </div>
                   <div class="form-item">
                       <div class="label-with-tooltip">
                           <label for=""><?php esc_attr_e('Event content in popup', 'easy-appointments'); ?></label>
@@ -1429,6 +1509,22 @@
 </script>
 <script>
     jQuery(document).ready(function($) {
+
+        $(document).on('change', '.ea-title-field', function () {
+
+            var values = [];
+
+            $('.ea-title-field:checked').each(function () {
+                values.push($(this).val());
+            });
+
+            if (values.length === 0) {
+                values = ['name']; // fallback
+                $('.ea-title-field[value="name"]').prop('checked', true);
+            }
+
+            $('[data-key="fullcalendar.event.title_fields"]').val(values.join(','));
+        });
         $(document).on('submit', '#ea_newsletter', function(e) {
             e.preventDefault();
             var form = jQuery(this);
@@ -1506,7 +1602,6 @@
         $(document).on('change', '[name="enable_status_subjects"]', toggleStatusSubjects);
 
         $(document).on('click', '#ea-full-export', function() {
-            console.log('Export clicked');
             if (!confirm('Export all Easy Appointments data?')) {
                 return;
             }
@@ -1549,8 +1644,38 @@
                     alert(xhr.responseJSON?.data || 'Import failed.');
                 }
             });
-        });       
+        });
 
+        function applyDefaultOnce() {
+            var workerChecked = $('.ea_worker_mail_group input[type="checkbox"]:checked').length;
+            var userChecked   = $('.ea_user_mail_group input[type="checkbox"]:checked').length;
 
+            if (workerChecked > 0 || userChecked > 0) {
+                return; //
+            }
+
+            var status = jQuery('#ea-select-status').val();
+
+            var map = {
+                pending: 'pending_email',
+                confirmed: 'confirmed_email',
+                reservation: 'reservation_email'
+            };
+
+            var key = map[status];
+
+            if (key) {
+                // Worker
+                $('input[data-key="send.worker.' + key + '"]').prop('checked', true);
+                $('.ea_send_worker_email').prop('checked', true);
+
+                // User
+                $('input[data-key="send.user.' + key + '"]').prop('checked', true);
+                $('.ea_send_user_email').prop('checked', true);
+            }
+        }
+        setTimeout(function () {
+            applyDefaultOnce();
+        }, 500);
     });
 </script>
