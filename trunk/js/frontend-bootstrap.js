@@ -739,7 +739,7 @@
                 jQuery.each(response, function (index, element) {
                     var selectLabel = fromTo ? element.show + ' - ' + element.ends : element.show;
 
-                    //  Check if time falls into partial vacation window
+                    // Check partial vacation
                     var isDisabled = false;
                     if (window.ea_partial_vacations && window.ea_partial_vacations.length > 0) {
                         var selectedWorker = plugin.$element.find('[name="worker"]').val();
@@ -756,9 +756,29 @@
                     }
 
                     if (element.count > 0 && !isDisabled) {
-                        next_element.append('<a href="#" class="time-value' + classAMPM + '" data-val="' + element.value + '">' + selectLabel + '</a>');
+                        if (ea_settings['show_remaining_slots'] === '1') {
+                            next_element.append(
+                                '<a href="#" class="time-value slots' + classAMPM + '" data-val="' + element.value + '">' 
+                                + selectLabel + ' (' + element.count + ')</a>'
+                            );
+                        } else {
+                            next_element.append(
+                                '<a href="#" class="time-value' + classAMPM + '" data-val="' + element.value + '">' 
+                                + selectLabel + '</a>'
+                            );
+                        }
                     } else {
-                        next_element.append('<a class="time-disabled' + classAMPM + '" title="Vacation">' + selectLabel + '</a>');
+                        if (ea_settings['show_remaining_slots'] === '1') {
+                            next_element.append(
+                                '<a class="time-disabled slots' + classAMPM + '">' 
+                                + selectLabel + ' (0)</a>'
+                            );
+                        } else {
+                            next_element.append(
+                                '<a class="time-disabled' + classAMPM + '" title="Vacation">' 
+                                + selectLabel + '</a>'
+                            );
+                        }
                     }
                 });
 
