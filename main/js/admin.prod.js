@@ -542,8 +542,12 @@
 
             var $btn = jQuery(e.currentTarget);
             var $li = $btn.closest('li');
-            var name = '' + $li.data('name');
-            var element = this.fields.findWhere({ label: name });
+            var rawName = '' + $li.data('name');
+            var name = _.unescape(rawName); // 🔥 FIX
+
+            var element = this.fields.find(function(model) {
+                return model.get('label') === name;
+            });
 
             var options = [];
 

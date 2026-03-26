@@ -419,7 +419,7 @@ class Easy_EA_Frontend
 
             $star = ($r) ? ' * ' : ' ';
             $html .= '<p>';
-            $html .= '<label>' . esc_attr__($item->label,'easy-appointments') . $star . ': </label>';
+            $html .= '<label>' . esc_html__($item->label,'easy-appointments') . $star . ': </label>';
 
             if ($item->type == 'INPUT') {
                 $msg = ($r) ? 'data-rule-required="true" data-msg-required="' . __('This field is required.', 'easy-appointments') . '"' : '';

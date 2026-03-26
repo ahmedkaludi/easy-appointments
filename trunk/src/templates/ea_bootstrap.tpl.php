@@ -77,7 +77,7 @@
                     <input id="<%- item.slug %>" name="<%- item.slug %>" type="hidden" value="<%- item.default_value %>" class="custom-field" />
                     <% return; } %>
                     <div class="form-group">
-                        <label class="col-sm-4 control-label"><%- item.label %> <% if (item.required == "1") { %>*<% }
+                        <label class="col-sm-4 control-label"><%= item.label %> <% if (item.required == "1") { %>*<% }
                             %></label>
                         <div class="col-sm-8">
                             <!-- INPUT TYPE -->
