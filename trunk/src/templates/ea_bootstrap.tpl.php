@@ -43,7 +43,14 @@
                             <?php $this->get_options('staff', $location_id, $service_id, $worker_id, $code_params['select_placeholder']) ?>
                         </select>
                     </div>
-                </div>                
+                </div> 
+                
+                <div class="form-group">
+                    <div class="col-sm-4"></div>
+                    <div class="col-sm-8">
+                        <div id="ea-service-description" class="ea-service-description"></div>
+                    </div>
+                </div>
                 <div class="step calendar" class="filter">
                     <div class="block"></div>
                     <div class="date"></div>

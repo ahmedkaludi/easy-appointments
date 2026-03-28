@@ -160,6 +160,7 @@ class EAInstallTools
             daily_limit int(11) DEFAULT 0,
             price decimal(10,2) DEFAULT NULL,
             advance_booking_days int(4) DEFAULT 0,
+            description TEXT NULL,
             PRIMARY KEY (id)
         ) ' . $charset_collate . ';';
 
@@ -211,6 +212,8 @@ class EAInstallTools
             ADD CONSTRAINT ' . $table_prefix . 'ea_connections_ibfk_1 FOREIGN KEY (location) REFERENCES ' . $table_prefix . 'ea_locations (id) ON DELETE CASCADE,
             ADD CONSTRAINT ' . $table_prefix . 'ea_connections_ibfk_2 FOREIGN KEY (service) REFERENCES ' . $table_prefix . 'ea_services (id) ON DELETE CASCADE,
             ADD CONSTRAINT ' . $table_prefix . 'ea_connections_ibfk_3 FOREIGN KEY (worker) REFERENCES ' . $table_prefix . 'ea_staff (id) ON DELETE CASCADE';
+
+        $alter_querys[] = 'ALTER TABLE ' . $table_prefix . 'ea_services ADD COLUMN description TEXT NULL';
 
         require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 

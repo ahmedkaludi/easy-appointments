@@ -1651,7 +1651,7 @@
             var userChecked   = $('.ea_user_mail_group input[type="checkbox"]:checked').length;
 
             if (workerChecked > 0 || userChecked > 0) {
-                return;
+                return; //
             }
 
             var status = jQuery('#ea-select-status').val();

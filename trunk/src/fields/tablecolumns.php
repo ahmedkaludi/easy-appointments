@@ -72,6 +72,7 @@ class EATableColumns
             'ea_services' => array(
                 'id',
                 'name',
+                'description',
                 'service_color',
                 'sequence',
                 'duration',

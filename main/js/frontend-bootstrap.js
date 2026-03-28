@@ -472,6 +472,15 @@
         getNextOptions: function (event) {
             var current = jQuery(event.target);
 
+            if (current.data('c') === 'service') {
+                var desc = current.find('option:selected').data('description') || '';
+                if (desc) {
+                    jQuery('#ea-service-description').text(desc).show();
+                } else {
+                    jQuery('#ea-service-description').hide();
+                }
+            }
+
             var step = current.closest('.step');
 
             // blur next options
@@ -538,6 +547,9 @@
                 }
                 if (options.next == 'worker') {
                     default_option_value = ea_settings['trans.worker_option'];
+                    var selectedService = plugin.$element.find('[name="service"] option:selected');
+                    var desc = selectedService.data('description') || '';
+                    jQuery('#ea-service-description').text(desc).toggle(!!desc);
                 }
                 plugin.$element.find('[id="repeat_booking"]').parents('.form-group').hide();
                 // default
@@ -570,6 +582,7 @@
                     if ('slot_step' in element) {
                         $option.data('slot_step', element.slot_step);
                         $option.data('duration', element.duration);
+                        $option.data('description', element.description);
                     }
 
                     next_element.append($option);
