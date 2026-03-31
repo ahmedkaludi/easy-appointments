@@ -243,8 +243,7 @@ class EasyEAFullCalendar
             $column_header_format = "columnHeaderFormat: '{$code_params['column_header_format']}',";
         }
 
-        $script_section =
-    "<style>{$customCss}</style>" .
+    $script_section =    
     "<script>" .
       "jQuery(document).ready(function() {" .
 
@@ -344,7 +343,7 @@ class EasyEAFullCalendar
         $statuses = $this->logic->getStatus();
         $status_label = __('Status', 'easy-appointments');
 
-        $status_html =
+        $status_html =        
         '<div class="fc">' .
             '<div id="ea-calendar-color-map-' . $id . '" class="ea-calendar-color-map fc-view-container">' .
                 '<div>' . $status_label . '</div>' .
@@ -359,11 +358,13 @@ class EasyEAFullCalendar
         // html and status legend
         $html = '<div id="ea-full-calendar-' . $id . '"></div>';
 
+        $html .= "<style>{$customCss}</style>";
         if (!$service_color) {
             $html .= $status_html;
         }
 
-        $html .= $script_section;
+        // $html .= $script_section;
+        wp_add_inline_script('ea-full-calendar', $script_section);
 
         return $html;
     }

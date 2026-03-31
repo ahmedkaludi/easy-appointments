@@ -862,6 +862,12 @@
                                     value="worker_name"
                                     <% if (_.contains(selectedFields, 'worker_name')) { %>checked<% } %> >
                                 <?php esc_html_e('Worker', 'easy-appointments'); ?>
+                                
+                                <input type="checkbox" style="margin: 0 5px 0 10px;"
+                                    class="ea-title-field field"
+                                    value="calendar_price"
+                                    <% if (_.contains(selectedFields, 'calendar_price')) { %>checked<% } %> >
+                                <?php esc_html_e('Price', 'easy-appointments'); ?>
                             
 
                             <!-- hidden real field -->
