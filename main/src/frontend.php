@@ -67,11 +67,7 @@ class Easy_EA_Frontend
      * Front end init
      */
     public function init_scripts()
-    {
-        // start session
-        if (!headers_sent() && !session_id()) {
-            session_start();
-        }
+    {       
 
         // bootstrap script
         wp_register_script(
@@ -205,6 +201,10 @@ class Easy_EA_Frontend
      */
     public function standard_app($atts)
     {
+        // start session
+        if (!headers_sent() && !session_id()) {
+            session_start();
+        }
         $code_params = shortcode_atts(array(
             'scroll_off'           => false,
             'save_form_content'    => true,
@@ -600,6 +600,10 @@ class Easy_EA_Frontend
      */
     public function ea_bootstrap($atts)
     {
+        // start session
+        if (!headers_sent() && !session_id()) {
+            session_start();
+        }
 
         $code_params = shortcode_atts(array(
             'location'             => null,
