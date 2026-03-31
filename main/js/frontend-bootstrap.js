@@ -751,9 +751,8 @@
                 // TR > TD WITH TIME SLOTS
                 jQuery.each(response, function (index, element) {
                     var selectLabel = fromTo ? element.show + ' - ' + element.ends : element.show;
-
-                    // Check partial vacation
                     var isDisabled = false;
+                    var tooltip_title = "";
                     if (window.ea_partial_vacations && window.ea_partial_vacations.length > 0) {
                         var selectedWorker = plugin.$element.find('[name="worker"]').val();
                         window.ea_partial_vacations.forEach(function(vac) {
@@ -762,6 +761,7 @@
                                 var start = moment(vac.start, 'HH:mm');
                                 var end = moment(vac.end, 'HH:mm');
                                 if (slotTime.isBetween(start, end, null, '[)')) {
+                                    tooltip_title = vac.tooltip;
                                     isDisabled = true;
                                 }
                             }
@@ -783,12 +783,12 @@
                     } else {
                         if (ea_settings['show_remaining_slots'] === '1') {
                             next_element.append(
-                                '<a class="time-disabled slots' + classAMPM + '">' 
+                                '<a class="time-disabled slots' + classAMPM + '" title="' + tooltip_title + '">' 
                                 + selectLabel + ' (0)</a>'
                             );
                         } else {
                             next_element.append(
-                                '<a class="time-disabled' + classAMPM + '" title="Vacation">' 
+                                '<a class="time-disabled' + classAMPM + '" title="' + tooltip_title + '">' 
                                 + selectLabel + '</a>'
                             );
                         }
