@@ -362,9 +362,18 @@ class EasyEAFullCalendar
         if (!$service_color) {
             $html .= $status_html;
         }
+        
+        $script_section_clean = str_replace(
+            array('<script>', '</script>'),
+            '',
+            $script_section
+        );
 
-        // $html .= $script_section;
-        wp_add_inline_script('ea-full-calendar', $script_section);
+        if (wp_script_is('ea-full-calendar', 'enqueued')) {
+            wp_add_inline_script('ea-full-calendar', $script_section_clean, 'after');
+        } else {
+            $html .= $script_section;
+        }
 
         return $html;
     }
