@@ -224,6 +224,9 @@ Terms of use and Policy : https://fullcalendar.io/license
 25. Admin panel - Report - Export page
 
 == Changelog ==
+= 3.12.23.1 (2026-04-02)
+* Fixed Unable to access Admin panel in Mail notification after an update 3.12.23 #268
+
 = 3.12.23 (2026-04-01)
 * Added An Option Description of service in frontend #246
 * Fixed Admin shouldn't be allowed to confirm the booking after time. #216
