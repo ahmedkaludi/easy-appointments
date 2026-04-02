@@ -4,7 +4,7 @@
  * Plugin Name: Easy Appointments
  * Plugin URI: https://easy-appointments.com/
  * Description: Simple and easy to use management system for Appointments and Bookings
- * Version: 3.12.22
+ * Version: 3.12.23
  * Requires PHP: 5.3
  * Author: Nikola Loncar
  * Author URI: https://easy-appointments.com/
@@ -21,7 +21,7 @@ if (!defined('WPINC')) {
 /**
  * Currently plugin version.
  */
-define( 'EASY_APPOINTMENTS_VERSION', '3.12.22' );
+define( 'EASY_APPOINTMENTS_VERSION', '3.12.23' );
 
 // path for source files
 define('EA_SRC_DIR', dirname(__FILE__) . '/src/');
@@ -97,7 +97,7 @@ class EasyAppointment
         // cron
         add_action('easyapp_hourly_event', array($this, 'delete_reservations'));
         // daily expire appointments cron
-        add_action('ea_daily_expire_appointments', array($this, 'expire_old_appointments'));
+        // add_action('ea_daily_expire_appointments', array($this, 'expire_old_appointments'));
 
         add_action('ea_gdpr_auto_delete', array($this, 'delete_old_data'));
 
@@ -230,8 +230,9 @@ class EasyAppointment
         if ( wp_next_scheduled( 'easyapp_hourly_event' ) === false ) {
             wp_schedule_event(time(), 'hourly', 'easyapp_hourly_event');
         }
-        if (wp_next_scheduled('ea_daily_expire_appointments') === false) {
-            wp_schedule_event(strtotime('00:05:00'), 'daily', 'ea_daily_expire_appointments');
+        if (wp_next_scheduled('ea_daily_expire_appointments') === true) {
+            wp_clear_scheduled_hook('ea_daily_expire_appointments');
+            // wp_schedule_event(strtotime('00:05:00'), 'daily', 'ea_daily_expire_appointments');
         }
     }
 

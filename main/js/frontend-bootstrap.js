@@ -472,6 +472,15 @@
         getNextOptions: function (event) {
             var current = jQuery(event.target);
 
+            if (current.data('c') === 'service') {
+                var desc = current.find('option:selected').data('description') || '';
+                if (desc) {
+                    jQuery('#ea-service-description').text(desc).show();
+                } else {
+                    jQuery('#ea-service-description').hide();
+                }
+            }
+
             var step = current.closest('.step');
 
             // blur next options
@@ -538,6 +547,9 @@
                 }
                 if (options.next == 'worker') {
                     default_option_value = ea_settings['trans.worker_option'];
+                    var selectedService = plugin.$element.find('[name="service"] option:selected');
+                    var desc = selectedService.data('description') || '';
+                    jQuery('#ea-service-description').text(desc).toggle(!!desc);
                 }
                 plugin.$element.find('[id="repeat_booking"]').parents('.form-group').hide();
                 // default
@@ -570,6 +582,7 @@
                     if ('slot_step' in element) {
                         $option.data('slot_step', element.slot_step);
                         $option.data('duration', element.duration);
+                        $option.data('description', element.description);
                     }
 
                     next_element.append($option);
@@ -738,9 +751,8 @@
                 // TR > TD WITH TIME SLOTS
                 jQuery.each(response, function (index, element) {
                     var selectLabel = fromTo ? element.show + ' - ' + element.ends : element.show;
-
-                    //  Check if time falls into partial vacation window
                     var isDisabled = false;
+                    var tooltip_title = "";
                     if (window.ea_partial_vacations && window.ea_partial_vacations.length > 0) {
                         var selectedWorker = plugin.$element.find('[name="worker"]').val();
                         window.ea_partial_vacations.forEach(function(vac) {
@@ -749,6 +761,7 @@
                                 var start = moment(vac.start, 'HH:mm');
                                 var end = moment(vac.end, 'HH:mm');
                                 if (slotTime.isBetween(start, end, null, '[)')) {
+                                    tooltip_title = vac.tooltip;
                                     isDisabled = true;
                                 }
                             }
@@ -756,9 +769,29 @@
                     }
 
                     if (element.count > 0 && !isDisabled) {
-                        next_element.append('<a href="#" class="time-value' + classAMPM + '" data-val="' + element.value + '">' + selectLabel + '</a>');
+                        if (ea_settings['show_remaining_slots'] === '1') {
+                            next_element.append(
+                                '<a href="#" class="time-value slots' + classAMPM + '" data-val="' + element.value + '">' 
+                                + selectLabel + ' (' + element.count + ')</a>'
+                            );
+                        } else {
+                            next_element.append(
+                                '<a href="#" class="time-value' + classAMPM + '" data-val="' + element.value + '">' 
+                                + selectLabel + '</a>'
+                            );
+                        }
                     } else {
-                        next_element.append('<a class="time-disabled' + classAMPM + '" title="Vacation">' + selectLabel + '</a>');
+                        if (ea_settings['show_remaining_slots'] === '1') {
+                            next_element.append(
+                                '<a class="time-disabled slots' + classAMPM + '" title="' + tooltip_title + '">' 
+                                + selectLabel + ' (0)</a>'
+                            );
+                        } else {
+                            next_element.append(
+                                '<a class="time-disabled' + classAMPM + '" title="' + tooltip_title + '">' 
+                                + selectLabel + '</a>'
+                            );
+                        }
                     }
                 });
 

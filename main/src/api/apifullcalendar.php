@@ -257,6 +257,12 @@ class EasyEAApiFullCalendar
                             $title_parts[] = $worker_map[$element->worker];
                         }
                     break;
+                    case 'calendar_price':
+                        if (!empty($element->price)) {
+                            $currency = $this->options->get_option_value('trans.currency');
+                            $title_parts[] =  $element->price . ' ' . $currency;
+                        }
+                    break;
                 }
             }
 

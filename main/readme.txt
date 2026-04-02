@@ -3,9 +3,9 @@ Contributors: easyappointments
 Donate link: https://easy-appointments.com/
 Tags: appointment, appointments, Booking, calendar, reservation
 Requires at least: 3.7
-Tested up to: 6.9
+Tested up to: 7.0
 Requires PHP: 5.3
-Stable tag: 3.12.22
+Stable tag: 3.12.23
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -224,6 +224,16 @@ Terms of use and Policy : https://fullcalendar.io/license
 25. Admin panel - Report - Export page
 
 == Changelog ==
+= 3.12.23 (2026-04-01)
+* Added An Option Description of service in frontend #246
+* Fixed Admin shouldn't be allowed to confirm the booking after time. #216
+* Fixed [show_remaining_slots = "1"] attribute is not working after version 3.12.16 #262
+* Fixed Easy Appointments Starts Global PHP Session and Breaks Full Page Caching (Nginx / SiteGround) #250
+* Fixed Special characters in custom form fields are not saved or reflected on the frontend #257
+* Fixed Google Calendar sync fails for existing workers causing double bookings; ‘Link Calendar’ shows white screen #265
+* Fixed When hovering on reserved/booked slots, it shows 'vacation'.#254
+* Added Need an option to display Price on booking frontend. #264
+
 = 3.12.22 (2026-03-18)
 * Added An Option To Show Specific infomration on Calendar. #252
 * Fixed Admin Email Notifications Ignore Custom Template and Send Default Template #261

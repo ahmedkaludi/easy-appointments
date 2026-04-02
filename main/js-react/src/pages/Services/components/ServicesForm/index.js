@@ -9,11 +9,13 @@ import { SlotStepField } from './fields/SlotStepField';
 import { DailyLimitField } from './fields/DailyLimitField';
 import { AdvanceBookingDayField } from './fields/AdvanceBookingDayField';
 import { ServiceColorField } from './fields/ServiceColorField';
+import { DescriptionField } from './fields/DescriptionField';
 import { Form, MultiFieldWrap } from '../../../../ea-components';
 
 export const ServicesForm = ({ model, onSave, onCancel }) => (
   <Form model={model} onCancel={onCancel} onSave={onSave}>
     <NameField />
+    <DescriptionField />
     <MinutesField
       name="duration"
       label={__('Duration *', 'easy-appointments')}

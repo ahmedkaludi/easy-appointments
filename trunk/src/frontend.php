@@ -67,11 +67,7 @@ class Easy_EA_Frontend
      * Front end init
      */
     public function init_scripts()
-    {
-        // start session
-        if (!headers_sent() && !session_id()) {
-            session_start();
-        }
+    {       
 
         // bootstrap script
         wp_register_script(
@@ -205,6 +201,10 @@ class Easy_EA_Frontend
      */
     public function standard_app($atts)
     {
+        // start session
+        if (!headers_sent() && !session_id()) {
+            session_start();
+        }
         $code_params = shortcode_atts(array(
             'scroll_off'           => false,
             'save_form_content'    => true,
@@ -419,7 +419,7 @@ class Easy_EA_Frontend
 
             $star = ($r) ? ' * ' : ' ';
             $html .= '<p>';
-            $html .= '<label>' . esc_attr__($item->label,'easy-appointments') . $star . ': </label>';
+            $html .= '<label>' . esc_html__($item->label,'easy-appointments') . $star . ': </label>';
 
             if ($item->type == 'INPUT') {
                 $msg = ($r) ? 'data-rule-required="true" data-msg-required="' . __('This field is required.', 'easy-appointments') . '"' : '';
@@ -600,6 +600,10 @@ class Easy_EA_Frontend
      */
     public function ea_bootstrap($atts)
     {
+        // start session
+        if (!headers_sent() && !session_id()) {
+            session_start();
+        }
 
         $code_params = shortcode_atts(array(
             'location'             => null,
@@ -813,9 +817,10 @@ class Easy_EA_Frontend
                 $slot_step = (int) $rows[0]->slot_step;
 
                 echo sprintf(
-                    '<option data-duration="%d" data-slot_step="%d" value="%d" selected="selected"%s>%s</option>',
+                    '<option data-duration="%d" data-slot_step="%d" data-description="%s" value="%d" selected="selected"%s>%s</option>',
                     esc_attr( $duration ),
                     esc_attr( $slot_step ),
+                    esc_attr( $rows[0]->description ),
                     esc_attr( $rows[0]->id ),
                     wp_kses_post( $price_attr ),
                     esc_html( $name )
@@ -849,13 +854,17 @@ class Easy_EA_Frontend
                     }
 
                     printf(
-                        '<option value="%s" data-duration="%s" data-slot_step="%s" selected="selected"%s>%s</option>',
-                        esc_attr( $row->id ),
-                        esc_attr( $duration ),
-                        esc_attr( $slot_step ),
-                        // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-                        $price_attr, // already escaped above
-                        esc_html( $name )
+                        '<option value="%s" 
+                            data-duration="%s" 
+                            data-slot_step="%s" 
+                            data-description="%s"
+                            %s>%s</option>',
+                        esc_attr($row->id),
+                        esc_attr($duration),
+                        esc_attr($slot_step),
+                        esc_attr($row->description),  // 👈 ADD THIS
+                        $price_attr,
+                        esc_html($name_price)
                     );
                     return;
                 }
@@ -943,10 +952,11 @@ class Easy_EA_Frontend
 
                     // for service
                     printf(
-                        '<option value="%s" data-duration="%s" data-slot_step="%s">%s</option>',
+                        '<option value="%s" data-duration="%s" data-slot_step="%s" data-description="%s">%s</option>',
                         esc_attr( $row->id ),
                         esc_attr( $duration ),
                         esc_attr( $slot_step ),
+                        esc_attr($row->description),
                         esc_html( $name )
                     );
 
@@ -963,13 +973,17 @@ class Easy_EA_Frontend
                 }
 
                 printf(
-                    '<option value="%s" data-duration="%s" data-slot_step="%s"%s>%s</option>',
-                    esc_attr( $row->id ),
-                    esc_attr( $duration ),
-                    esc_attr( $slot_step ),
-                    // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-                    $price_attr, // already escaped above
-                    esc_html( $name_price )
+                    '<option value="%s" 
+                        data-duration="%s" 
+                        data-slot_step="%s" 
+                        data-description="%s"
+                        %s>%s</option>',
+                    esc_attr($row->id),
+                    esc_attr($duration),
+                    esc_attr($slot_step),
+                    esc_attr($row->description),
+                    $price_attr,
+                    esc_html($name_price)
                 );
 
             } else {
