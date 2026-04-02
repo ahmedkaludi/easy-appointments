@@ -88,6 +88,7 @@
             "click .item-delete": "deleteOption",
             "click .remove-select-option": "removeSelectedOption",
             "click .mail-tab": "selectMailNotification",
+            "click .admin-sub-tab": "selectAdminSubTab",
             "click .tab-selection a": "tabClicked",
             "click .btn-add-redirect": "addAdvanceRedirect",
             "click .remove-advance-redirect": "removeAdvanceRedirect",
@@ -204,34 +205,107 @@
         },
 
         selectMailNotification: function(event) {
-            // save previous content from tinyMCE
+
+            var $newTemplate = jQuery(event.currentTarget);
+
+            // Save previous editor content
             this.updateMailTemplate();
 
-            // process new content
-            var $newTemplate = jQuery(event.target);
             var elemId = $newTemplate.data('textarea');
+            var newContent = this.$el.find(elemId).val() || '';
 
-            var newContent = this.$el.find(elemId).val();
-
-            if (this.tinymceOn) {
+            if (this.tinymceOn && tinymce.get('mail-template')) {
                 tinymce.get('mail-template').setContent(newContent);
-
-                // clear the stack of undo
                 tinymce.activeEditor.undoManager.clear();
             } else {
                 this.$el.find('#mail-template').val(newContent);
             }
 
-            if (elemId === '#mail-admin') {
-                // show load admin template button
+            // ADMIN MODE
+            if (elemId === '#mail-admin-all') {
+
+                this.$el.find('#admin-subtabs-row').show();
                 this.$el.find('#load-default-admin-template').show();
-            } else {
-                // hide admin template button
+
+                var firstTab = this.$el.find('.admin-sub-tab:first');
+
+                this.$el.find('.admin-sub-tab').removeClass('nav-tab-active');
+                firstTab.addClass('nav-tab-active');
+
+                var target = firstTab.data('textarea');
+
+                var content = this.$el.find(target).val() || '';
+
+                var that = this;
+
+                setTimeout(function(){
+
+                    if (that.tinymceOn && tinymce.get('mail-template')) {
+                        tinymce.get('mail-template').setContent(content);
+                        tinymce.activeEditor.undoManager.clear();
+                    } else {
+                        that.$el.find('#mail-template').val(content);
+                    }
+
+                }, 50);
+            }else {
+
+                this.$el.find('#admin-subtabs-row').hide();
                 this.$el.find('#load-default-admin-template').hide();
             }
 
-            this.$el.find('.mail-tab').filter('.selected').removeClass('selected');
+            this.$el.find('.mail-tab').removeClass('selected');
             $newTemplate.addClass('selected');
+        },
+
+
+
+        selectAdminSubTab: function(e) {
+
+            e.preventDefault();
+
+            var activeTab = this.$el.find('.admin-sub-tab.nav-tab-active');
+            var activeTarget = activeTab.data('textarea');
+
+            // Save ONLY if switching from a real status (not first load)
+            if (activeTarget) {
+
+                var currentContent = this.tinymceOn && tinymce.get('mail-template')
+                    ? tinymce.get('mail-template').getContent()
+                    : this.$el.find('#mail-template').val();
+
+                this.$el.find(activeTarget).val(currentContent);
+            }
+
+            this.$el.find('.admin-sub-tab').removeClass('nav-tab-active');
+
+            var $tab = jQuery(e.currentTarget);
+            $tab.addClass('nav-tab-active');
+
+            var newTarget = $tab.data('textarea');
+
+            var statusValue = this.$el.find(newTarget).val() || '';
+
+            // 🔥 Load fallback only visually
+            if (!statusValue && newTarget !== '#mail-admin-all') {
+
+                var fallback = this.$el.find('#mail-admin-all').val() || '';
+
+                if (this.tinymceOn && tinymce.get('mail-template')) {
+                    tinymce.get('mail-template').setContent(fallback);
+                } else {
+                    this.$el.find('#mail-template').val(fallback);
+                }
+
+                return; // IMPORTANT: do NOT copy fallback into textarea
+            }
+
+            if (this.tinymceOn && tinymce.get('mail-template')) {
+                tinymce.get('mail-template').setContent(statusValue);
+                tinymce.activeEditor.undoManager.clear();
+            } else {
+                this.$el.find('#mail-template').val(statusValue);
+            }
         },
 
         loadDefaultTemplate: function () {
@@ -257,16 +331,35 @@
         },
 
         updateMailTemplate: function() {
-            var prevContent = '';
-            var $prevTemplate = this.$el.find('.mail-tab').filter('.selected');
 
-            if (this.tinymceOn) {
+            var prevContent = '';
+
+            if (this.tinymceOn && tinymce.get('mail-template')) {
                 prevContent = tinymce.get('mail-template').getContent();
             } else {
                 prevContent = this.$el.find('#mail-template').val();
             }
 
-            this.$el.find($prevTemplate.data('textarea')).val(prevContent);
+            // 🔥 If ADMIN mode active
+            if (this.$el.find('#admin-subtabs-row').is(':visible')) {
+
+                var activeAdminTab = this.$el.find('.admin-sub-tab.nav-tab-active');
+                var target = activeAdminTab.data('textarea');
+
+                if (target) {
+                    this.$el.find(target).val(prevContent);
+                }
+
+            } else {
+
+                // Normal mail tab
+                var $prevTemplate = this.$el.find('.mail-tab.selected');
+                var target = $prevTemplate.data('textarea');
+
+                if (target) {
+                    this.$el.find(target).val(prevContent);
+                }
+            }
         },
 
         updateFullCalendarTemplate: function() {
