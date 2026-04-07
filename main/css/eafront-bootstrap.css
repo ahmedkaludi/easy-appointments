@@ -382,6 +382,10 @@
   width: 100%;  
 }
 
+#ea-service-description {
+    white-space: pre-line;
+}
+
 @media (min-width: 768px) {
   .ea-form-v2 .form-horizontal .control-label {
     text-align: left;

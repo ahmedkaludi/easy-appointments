@@ -25,18 +25,32 @@ const startGreaterThanEnd = (a, b) => {
   return !!(dateA > dateB);
 };
 
+const add50Years = date => {
+  const d = new Date(date);
+  d.setFullYear(d.getFullYear() + 50);
+  return d;
+};
+
 const EndDate = ({ value, updateFieldValue, error, model }) => {
   const fromDate = model.day_from;
+  const isUnlimited = model.is_unlimited;
 
   useEffect(() => {
+    if (isUnlimited === '1' && fromDate) {
+      const futureDate = add50Years(new Date(fromDate));
+      updateFieldValue(formatDate(futureDate));
+      return;
+    }
+
     if (!fromDate) {
       return;
     }
+
     if (startGreaterThanEnd(fromDate, value)) {
       const end = getNextDay(new Date(fromDate));
       updateFieldValue(formatDate(end));
     }
-  }, [fromDate]);
+  }, [fromDate, isUnlimited]);
 
   const onChange = date => updateFieldValue(formatDate(date));
 
@@ -50,6 +64,7 @@ const EndDate = ({ value, updateFieldValue, error, model }) => {
       error={error}
       adornment
       disablePast={false}
+      disabled={isUnlimited === '1'} // 👈 disable manual edit
       {...minDate}
     />
   );

@@ -11,6 +11,7 @@ import { EndDateField } from './fields/EndDateField';
 import { StartTimeField } from './fields/StartTimeField';
 import { EndTimeField } from './fields/EndTimeField';
 import { RepeatWeeksField } from './fields/RepeatWeeksField';
+import { UnlimitedEndDateField } from './fields/UnlimitedEndDateField';
 
 export const ConnectionsForm = ({ model, onSave, onCancel }) => (
   <Form model={model} onCancel={onCancel} onSave={onSave}>
@@ -20,7 +21,7 @@ export const ConnectionsForm = ({ model, onSave, onCancel }) => (
     <NumberOfSlotsField />
     <DaysOfWeekField />
     <RepeatWeeksField />
-
+    <UnlimitedEndDateField />
     <MultiFieldWrap
       label="Date range"
       className="ea-form-field"
