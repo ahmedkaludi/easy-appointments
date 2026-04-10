@@ -19,31 +19,66 @@
                         </select>
                     </div>
                 </div>
-                <!-- WORKER -->
-                <div class="step form-group">
-                    <div class="block"></div>
-                    <label class="ea-label col-sm-4 control-label">
-                        <?php echo easy_ea_helper_polylang_trans($this->options->get_option_value("trans.service")); ?>
-                    </label>
-                    <div class="col-sm-8">
-                        <select name="service" data-c="service" class="filter form-control"
-                                data-currency="<?php echo esc_attr($this->options->get_option_value("trans.currency")); ?>">
-                            <?php $this->get_options('services', $location_id, $service_id, $worker_id, $code_params['select_placeholder']) ?>
-                        </select>
+                <% if (settings['field_order'] == 'worker_first') { %>
+                    
+                    <!-- WORKER FIRST -->
+                    <div class="step form-group">
+                        <div class="block"></div>
+                        <label class="ea-label col-sm-4 control-label">
+                            <?php echo easy_ea_helper_polylang_trans($this->options->get_option_value("trans.worker")); ?>
+                        </label>
+                        <div class="col-sm-8">
+                            <select name="worker" data-c="worker" class="filter form-control">
+                                <?php $this->get_options('staff', $location_id, $service_id, $worker_id, $code_params['select_placeholder']) ?>
+                            </select>
+                        </div>
                     </div>
-                </div>
-                <!-- SERVICE -->
-                <div class="step form-group">
-                    <div class="block"></div>
-                    <label class="ea-label col-sm-4 control-label">
-                        <?php echo easy_ea_helper_polylang_trans($this->options->get_option_value("trans.worker")); ?>
-                    </label>
-                    <div class="col-sm-8">
-                        <select name="worker" data-c="worker" class="filter form-control">
-                            <?php $this->get_options('staff', $location_id, $service_id, $worker_id, $code_params['select_placeholder']) ?>
-                        </select>
+
+                    <!-- SERVICE SECOND -->
+                    <div class="step form-group">
+                        <div class="block"></div>
+                        <label class="ea-label col-sm-4 control-label">
+                            <?php echo easy_ea_helper_polylang_trans($this->options->get_option_value("trans.service")); ?>
+                        </label>
+                        <div class="col-sm-8">
+                            <select name="service" data-c="service" class="filter form-control"
+                                    data-currency="<?php echo esc_attr($this->options->get_option_value("trans.currency")); ?>">
+                                <?php $this->get_options('services', $location_id, $service_id, $worker_id, $code_params['select_placeholder']) ?>
+                            </select>
+                        </div>
                     </div>
-                </div> 
+
+                <% } else { %>
+
+                
+
+                    <!-- DEFAULT (SERVICE FIRST) -->
+                    <div class="step form-group">
+                        <div class="block"><?php echo $settings['field_order']; ?></div>
+                        <label class="ea-label col-sm-4 control-label">
+                            <?php echo easy_ea_helper_polylang_trans($this->options->get_option_value("trans.service")); ?>
+                        </label>
+                        <div class="col-sm-8">
+                            <select name="service" data-c="service" class="filter form-control"
+                                    data-currency="<?php echo esc_attr($this->options->get_option_value("trans.currency")); ?>">
+                                <?php $this->get_options('services', $location_id, $service_id, $worker_id, $code_params['select_placeholder']) ?>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="step form-group">
+                        <div class="block"></div>
+                        <label class="ea-label col-sm-4 control-label">
+                            <?php echo easy_ea_helper_polylang_trans($this->options->get_option_value("trans.worker")); ?>
+                        </label>
+                        <div class="col-sm-8">
+                            <select name="worker" data-c="worker" class="filter form-control">
+                                <?php $this->get_options('staff', $location_id, $service_id, $worker_id, $code_params['select_placeholder']) ?>
+                            </select>
+                        </div>
+                    </div>
+
+                <% } %>
                 
                 <div class="form-group">
                     <div class="col-sm-4"></div>

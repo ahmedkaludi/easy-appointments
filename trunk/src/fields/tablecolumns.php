@@ -234,6 +234,7 @@ class EATableColumns
             'pending_message',
             'confirmed_message',
             'reservation_message',
+            'field_order',
             'trans.confirmation-title',
         );
 
