@@ -904,11 +904,23 @@ class EAAjax
 
                     if (array_key_exists($f->slug, $data)) {
                         // remove slashes and convert special chars
-                        $fields['value'] = stripslashes($data[$f->slug]);
+                        $value = isset($data[$f->slug]) ? wp_unslash($data[$f->slug]) : '';
+                        if ($f->type === 'TEXTAREA') {
+                            $fields['value'] = sanitize_textarea_field($value);
+                        } else {
+                            $fields['value'] = sanitize_text_field($value);
+                        }
                     } else if (array_key_exists(str_replace('-', '_', $f->slug), $data)) {
                         // FIX for issue with pay_pal field that have _ in data but real slug has -
                         // remove slashes and convert special chars
-                        $fields['value'] = stripslashes($data[str_replace('-', '_', $f->slug)]);
+                        $key = str_replace('-', '_', $f->slug);
+                        $value = wp_unslash($data[$key]);
+
+                        if ($f->type === 'TEXTAREA') {
+                            $fields['value'] = sanitize_textarea_field($value);
+                        } else {
+                            $fields['value'] = sanitize_text_field($value);
+                        }
                     } else {
                         $fields['value'] = '';
                     }
@@ -946,11 +958,23 @@ class EAAjax
 
                 if (array_key_exists($f->slug, $data)) {
                     // remove slashes and convert special chars
-                    $fields['value'] = stripslashes($data[$f->slug]);
+                    $value = isset($data[$f->slug]) ? wp_unslash($data[$f->slug]) : '';
+                    if ($f->type === 'TEXTAREA') {
+                        $fields['value'] = sanitize_textarea_field($value);
+                    } else {
+                        $fields['value'] = sanitize_text_field($value);
+                    }
                 } else if (array_key_exists(str_replace('-', '_', $f->slug), $data)) {
                     // FIX for issue with pay_pal field that have _ in data but real slug has -
                     // remove slashes and convert special chars
-                    $fields['value'] = stripslashes($data[str_replace('-', '_', $f->slug)]);
+                    $key = str_replace('-', '_', $f->slug);
+                    $value = wp_unslash($data[$key]);
+
+                    if ($f->type === 'TEXTAREA') {
+                        $fields['value'] = sanitize_textarea_field($value);
+                    } else {
+                        $fields['value'] = sanitize_text_field($value);
+                    }
                 } else {
                     $fields['value'] = '';
                 }
