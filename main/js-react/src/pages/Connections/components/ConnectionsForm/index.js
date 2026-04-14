@@ -1,7 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { Form, DoubleField, MultiFieldWrap } from '../../../../ea-components';
+import {
+  Form,
+  DoubleField,
+  MultiFieldWrap,
+  Field
+} from '../../../../ea-components';
 import { DaysOfWeekField } from './fields/DaysOfWeekField';
 import { SelectField } from './fields/SelectField';
 import { NumberOfSlotsField } from './fields/NumberOfSlotsField';
@@ -21,15 +26,22 @@ export const ConnectionsForm = ({ model, onSave, onCancel }) => (
     <NumberOfSlotsField />
     <DaysOfWeekField />
     <RepeatWeeksField />
-    <UnlimitedEndDateField />
     <MultiFieldWrap
       label="Date range"
       className="ea-form-field"
       info="Define date range when this connection is going to be active">
-      <DoubleField>
-        <StartDateField />
-        <EndDateField />
-      </DoubleField>
+      <Field
+        name="is_unlimited"
+        component={({ value }) => {
+          return (
+            <DoubleField>
+              <StartDateField />
+              {value !== '1' && <EndDateField />}
+            </DoubleField>
+          );
+        }}
+      />
+      <UnlimitedEndDateField />
     </MultiFieldWrap>
 
     <MultiFieldWrap

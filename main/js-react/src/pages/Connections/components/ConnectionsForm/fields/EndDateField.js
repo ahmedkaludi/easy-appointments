@@ -42,9 +42,7 @@ const EndDate = ({ value, updateFieldValue, error, model }) => {
       return;
     }
 
-    if (!fromDate) {
-      return;
-    }
+    if (!fromDate) return;
 
     if (startGreaterThanEnd(fromDate, value)) {
       const end = getNextDay(new Date(fromDate));
@@ -56,15 +54,18 @@ const EndDate = ({ value, updateFieldValue, error, model }) => {
 
   const minDate = fromDate ? { minDate: new Date(fromDate) } : {};
 
+  // ✅ FIX
+  const safeValue = value && value.length === 10 ? value : '';
+
   return (
     <DatePicker
       label={__('End date *', 'easy-appointments')}
-      value={value}
+      value={safeValue}
       onChange={onChange}
       error={error}
       adornment
       disablePast={false}
-      disabled={isUnlimited === '1'} // 👈 disable manual edit
+      disabled={isUnlimited === '1'}
       {...minDate}
     />
   );
