@@ -36,7 +36,7 @@ export const ConnectionsForm = ({ model, onSave, onCancel }) => (
           return (
             <DoubleField>
               <StartDateField />
-              {value !== '1' && <EndDateField />}
+              <EndDateField />
             </DoubleField>
           );
         }}

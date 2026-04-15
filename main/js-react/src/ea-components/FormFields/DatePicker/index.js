@@ -13,7 +13,8 @@ const DatePickerField = ({
   error,
   minDate,
   adornment,
-  disablePast
+  disablePast,
+  disabled
 }) => {
   const adornmentProps = adornment
     ? {
@@ -42,6 +43,7 @@ const DatePickerField = ({
         fullWidth
         disablePast={disablePast}
         disableToolbar
+        disabled={disabled}
         {...adornmentProps}
       />
     </MuiPickersUtilsProvider>
@@ -59,7 +61,8 @@ DatePickerField.defaultProps = {
   value: null,
   label: '',
   onChange: f => f,
-  disablePast: true
+  disablePast: true,
+  disabled: false
 };
 
 export default DatePickerField;

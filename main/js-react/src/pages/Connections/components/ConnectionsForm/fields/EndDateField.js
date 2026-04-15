@@ -50,7 +50,10 @@ const EndDate = ({ value, updateFieldValue, error, model }) => {
     }
   }, [fromDate, isUnlimited]);
 
-  const onChange = date => updateFieldValue(formatDate(date));
+  const onChange = date => {
+    if (isUnlimited === '1') return;
+    updateFieldValue(formatDate(date));
+  };
 
   const minDate = fromDate ? { minDate: new Date(fromDate) } : {};
 

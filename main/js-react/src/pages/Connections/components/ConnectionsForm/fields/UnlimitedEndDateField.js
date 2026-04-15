@@ -9,7 +9,7 @@ const isUnlimitedRange = (from, to) => {
 
   const diffYears = end.getFullYear() - start.getFullYear();
 
-  return diffYears >= 10; // detect ~50 years
+  return diffYears >= 10;
 };
 
 // ✅ Inner component (hooks allowed here)
