@@ -259,6 +259,13 @@ Terms of use and Policy : https://fullcalendar.io/license
 25. Admin panel - Report - Export page
 
 == Changelog ==
+= 3.12.24 (2026-04-15)
+* Fixed improvement in the Pro version, as some warnings are still appearing #237
+* Added There should be an infinite end date selection in connections creation #118
+* Added Need to add feature to change order of services #240
+* Fixed Security issue reported by Patchstack.
+
+
 = 3.12.23.1 (2026-04-02)
 * Fixed Unable to access Admin panel in Mail notification after an update 3.12.23 #268
 
