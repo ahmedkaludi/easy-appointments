@@ -5,7 +5,7 @@ Tags: appointment, appointments, Booking, calendar, reservation
 Requires at least: 3.7
 Tested up to: 7.0
 Requires PHP: 5.3
-Stable tag: 3.12.24
+Stable tag: 3.12.24.1
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -14,7 +14,7 @@ The easiest way to accept bookings on WordPress for free. Set up a beautiful app
 == Description ==
 **Easy Appointments** lets you add a fully-featured booking system to any WordPress site — in minutes. Whether you run a salon, clinic, law firm, gym, or tutoring business, your customers book online while you stay in control of your calendar.
 
-Over 10,000+ active sites trust Easy Appointments to handle their bookings every day.
+Over **10,000+ active sites** trust Easy Appointments to handle their bookings every day.
 
 == Perfect for ==
 
@@ -261,6 +261,9 @@ Terms of use and Policy : https://fullcalendar.io/license
 25. Admin panel - Report - Export page
 
 == Changelog ==
+= 3.12.24.1 (2026-04-16)
+* Fixed Unwanted lable dispalying in front #273
+
 = 3.12.24 (2026-04-15)
 * Fixed improvement in the Pro version, as some warnings are still appearing #237
 * Added There should be an infinite end date selection in connections creation #118
