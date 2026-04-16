@@ -12,7 +12,9 @@ License URI: http://www.gnu.org/licenses/gpl-2.0.html
 The easiest way to accept bookings on WordPress for free. Set up a beautiful appointment booking form for your business in minutes — no coding needed. Extremely flexible time management and custom email notifications.
 
 == Description ==
-Easy Appointments lets you add a fully-featured booking system to any WordPress site — in minutes. Whether you run a salon, clinic, law firm, gym, or tutoring business, your customers book online while you stay in control of your calendar.
+**Easy Appointments** lets you add a fully-featured booking system to any WordPress site — in minutes. Whether you run a salon, clinic, law firm, gym, or tutoring business, your customers book online while you stay in control of your calendar.
+
+Over 10,000+ active sites trust Easy Appointments to handle their bookings every day.
 
 == Perfect for ==
 

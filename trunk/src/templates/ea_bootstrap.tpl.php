@@ -54,7 +54,7 @@
 
                     <!-- DEFAULT (SERVICE FIRST) -->
                     <div class="step form-group">
-                        <div class="block"><?php echo $settings['field_order']; ?></div>
+                        <div class="block"></div>
                         <label class="ea-label col-sm-4 control-label">
                             <?php echo easy_ea_helper_polylang_trans($this->options->get_option_value("trans.service")); ?>
                         </label>

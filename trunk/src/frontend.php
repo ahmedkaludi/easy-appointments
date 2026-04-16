@@ -703,8 +703,6 @@ class Easy_EA_Frontend
         $settings['default_datetime_format'] = $this->datetime->convert_to_moment_format($this->datetime->default_format());
         $settings['field_order'] = $code_params['order'];
 
-        // print_r($settings);die;
-
         // CUSTOM CSS
         $customCss = $settings['custom.css'];
         $customCss = wp_strip_all_tags($customCss);
