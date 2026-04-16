@@ -625,7 +625,8 @@ class Easy_EA_Frontend
             'block_days'           => null,
             'block_days_tooltip'   => '',
             'select_placeholder'   => '-',
-            'auto_select_option'   => '0'
+            'auto_select_option'   => '0',
+            'order'                => 'service_first'
         ), $atts);
 
         // check params
@@ -700,6 +701,9 @@ class Easy_EA_Frontend
         $settings['time_format'] = $this->datetime->convert_to_moment_format(get_option('time_format', 'H:i'));
         $settings['date_format'] = $this->datetime->convert_to_moment_format(get_option('date_format', 'F j, Y'));
         $settings['default_datetime_format'] = $this->datetime->convert_to_moment_format($this->datetime->default_format());
+        $settings['field_order'] = $code_params['order'];
+
+        // print_r($settings);die;
 
         // CUSTOM CSS
         $customCss = $settings['custom.css'];

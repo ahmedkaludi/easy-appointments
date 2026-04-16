@@ -540,121 +540,6 @@ class EAAjax
         $this->send_ok_json_result($result);
     }
 
-    public function ooajax_res_appointment()
-    {
-        $this->validate_nonce();
-
-        $this->validate_captcha();
-
-        $table = 'ea_appointments';
-        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- nonce already validated
-        $data = $_GET;
-
-        // PHP 5.2
-        //$enum = new ReflectionClass('EasyEAAppointmentFields');
-        //$dont_remove = $enum->getConstants();
-        $dont_remove = array(
-            'id',
-            'location',
-            'service',
-            'worker',
-            'name',
-            'email',
-            'phone',
-            'date',
-            'start',
-            'end',
-            'end_date',
-            'description',
-            'status',
-            'user',
-            'created',
-            'price',
-            'ip',
-            'session'
-        );
-
-        foreach ($data as $key => $rem) {
-            if (!in_array($key, $dont_remove)) {
-                unset($data[$key]);
-            }
-        }
-
-        unset($data['action']);
-
-        $block_time = (int)$this->options->get_option_value('block.time', 0);
-
-        // get open slots for that day
-        $open_slots = $this->logic->get_open_slots($data['location'], $data['service'], $data['worker'], $data['date'], null, true, $block_time);
-
-        $is_free = false;
-
-        foreach ($open_slots as $value) {
-            if ($value['value'] === $data['start'] && $value['count'] > 0) {
-                $is_free = true;
-                break;
-            }
-        }
-
-        if (!$is_free) {
-            $translation = __('Slot is taken', 'easy-appointments');
-            $this->send_err_json_result('{"err": true, "message": "' . $translation . '"}');
-        }
-
-        $data['status'] = 'reservation';
-        $service = $this->models->get_row('ea_services', $data['service']);
-
-        $data['price'] = $service->price;
-        $end_time = strtotime("{$data['start']} + {$service->duration} minute");
-
-        $data['end'] = gmdate('H:i', $end_time);
-
-        $data['ip'] = isset($_SERVER['REMOTE_ADDR']) ? sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) ) : '';
-
-        $data['session'] = session_id();
-
-        if (is_user_logged_in() ) {
-            $current_user_id = get_current_user_id();
-            $data['user'] = $current_user_id;
-        }
-
-        $check = $this->logic->can_make_reservation_by_user($data);
-
-        if (!$check['status'] && is_user_logged_in()) {
-            $resp = array(
-                'err'     => true,
-                'message' => $check['message']
-            );
-            $this->send_err_json_result(json_encode($resp));
-        }
-
-        $check = $this->logic->can_make_reservation($data);
-
-        if (!$check['status'] && !is_user_logged_in()) {
-            $resp = array(
-                'err'     => true,
-                'message' => $check['message']
-            );
-            $this->send_err_json_result(json_encode($resp));
-        }
-
-        $response = $this->models->replace($table, $data, true);
-
-        if ($response == false) {
-            $resp = array(
-                'err'     => true,
-                'message' => __('Something went wrong! Please try again.', 'easy-appointments')
-            );
-            $this->send_err_json_result(json_encode($resp));
-        }
-
-        if ($response->id) {
-            $response->_hash = wp_hash($response->id);
-        }
-
-        $this->send_ok_json_result($response);
-    }
-
     public function ajax_res_appointment()
     {
         $this->validate_nonce();
@@ -677,6 +562,9 @@ class EAAjax
         foreach ($data as $key => $rem) {
             if (!in_array($key, $dont_remove)) unset($data[$key]);
         }
+
+        unset($data['id']);
+        $data['id'] = null;
         unset($data['action']);
 
         $block_time = (int)$this->options->get_option_value('block.time', 0);
@@ -1016,11 +904,23 @@ class EAAjax
 
                     if (array_key_exists($f->slug, $data)) {
                         // remove slashes and convert special chars
-                        $fields['value'] = stripslashes($data[$f->slug]);
+                        $value = isset($data[$f->slug]) ? wp_unslash($data[$f->slug]) : '';
+                        if ($f->type === 'TEXTAREA') {
+                            $fields['value'] = sanitize_textarea_field($value);
+                        } else {
+                            $fields['value'] = sanitize_text_field($value);
+                        }
                     } else if (array_key_exists(str_replace('-', '_', $f->slug), $data)) {
                         // FIX for issue with pay_pal field that have _ in data but real slug has -
                         // remove slashes and convert special chars
-                        $fields['value'] = stripslashes($data[str_replace('-', '_', $f->slug)]);
+                        $key = str_replace('-', '_', $f->slug);
+                        $value = wp_unslash($data[$key]);
+
+                        if ($f->type === 'TEXTAREA') {
+                            $fields['value'] = sanitize_textarea_field($value);
+                        } else {
+                            $fields['value'] = sanitize_text_field($value);
+                        }
                     } else {
                         $fields['value'] = '';
                     }
@@ -1058,11 +958,23 @@ class EAAjax
 
                 if (array_key_exists($f->slug, $data)) {
                     // remove slashes and convert special chars
-                    $fields['value'] = stripslashes($data[$f->slug]);
+                    $value = isset($data[$f->slug]) ? wp_unslash($data[$f->slug]) : '';
+                    if ($f->type === 'TEXTAREA') {
+                        $fields['value'] = sanitize_textarea_field($value);
+                    } else {
+                        $fields['value'] = sanitize_text_field($value);
+                    }
                 } else if (array_key_exists(str_replace('-', '_', $f->slug), $data)) {
                     // FIX for issue with pay_pal field that have _ in data but real slug has -
                     // remove slashes and convert special chars
-                    $fields['value'] = stripslashes($data[str_replace('-', '_', $f->slug)]);
+                    $key = str_replace('-', '_', $f->slug);
+                    $value = wp_unslash($data[$key]);
+
+                    if ($f->type === 'TEXTAREA') {
+                        $fields['value'] = sanitize_textarea_field($value);
+                    } else {
+                        $fields['value'] = sanitize_text_field($value);
+                    }
                 } else {
                     $fields['value'] = '';
                 }
@@ -2278,8 +2190,8 @@ class EAAjax
 
         $value = $this->options->get_option_value('nonce.off');
 
-        if (empty($value)) {
-            return;
+        if (!empty($value)) {
+            return; // skip ONLY if explicitly disabled
         }
 
         check_ajax_referer('ea-bootstrap-form', 'check');

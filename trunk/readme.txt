@@ -5,16 +5,23 @@ Tags: appointment, appointments, Booking, calendar, reservation
 Requires at least: 3.7
 Tested up to: 7.0
 Requires PHP: 5.3
-Stable tag: 3.12.23
+Stable tag: 3.12.24
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Add Booking system to your WordPress site and manage Appointments with ease. Extremely flexible time management and custom email notifications.
+The easiest way to accept bookings on WordPress for free. Set up a beautiful appointment booking form for your business in minutes — no coding needed. Extremely flexible time management and custom email notifications.
 
 == Description ==
-Add Booking Appointments system to your WordPress site and manage Appointments with ease. Extremely flexible time management. Multiple location, services and workers. Email notifications.
+Easy Appointments lets you add a fully-featured booking system to any WordPress site — in minutes. Whether you run a salon, clinic, law firm, gym, or tutoring business, your customers book online while you stay in control of your calendar.
 
-Can be used for : <strong>Lawyers</strong>, <strong>Salons</strong>, <strong>Mechanic</strong>, <strong>Cleaning services</strong>, <strong>Doctors</strong>, <strong>Spas</strong>, <strong>Personal trainers </strong>, <strong>Private Lessons</strong>, <strong>Escape rooms</strong> etc,
+== Perfect for ==
+
+* 💇 **Beauty & wellness** — salons, spas, massage therapists, barbers  
+* 🏥 **Health & medical** — doctors, dentists, physiotherapists, therapists  
+* ⚖️ **Professional services** — lawyers, accountants, consultants  
+* 🏋️ **Fitness & coaching** — personal trainers, yoga instructors, tutors  
+* 🔧 **Trades & home services** — mechanics, cleaners, plumbers  
+* 🏨 **Hospitality & leisure** — escape rooms, photography studios, event venues
 
 = Live Demo =
 <a href="https://easy-appointments.com/responsive-single-column-layout/">**Responsive Appointment form**</a><br>
@@ -25,7 +32,27 @@ Can be used for : <strong>Lawyers</strong>, <strong>Salons</strong>, <strong>Mec
 = Doc =
 <a href="https://easy-appointments.com/documentation/">Documentation</a>
 
-= Features =
+== Everything you need to run your bookings ==
+
+📅 **Flexible scheduling, your way**  
+Set your availability exactly how you need it — multiple locations, multiple staff, multiple services, all with independent time slots. Supports even the most complex schedules without writing a line of code.
+
+📧 **Automatic email notifications**  
+Customers get instant booking confirmations. Staff get notified.  
+You can customise every email template, trigger reminders, and let customers confirm or cancel via a link — no chasing required.
+
+📱 **Booking forms that look great everywhere**  
+Responsive single or two-column layouts that work on mobile, tablet, and desktop. Embed anywhere with a simple shortcode.
+
+🛠️ **Build the form you need**  
+Add custom fields, require information, set up Google reCAPTCHA to block spam, and drag-and-drop your fields into any order.
+
+🌍 **Works in any language**  
+Translated into 10+ languages. Date picker localised for 77 locales. Full translation support for your custom labels.
+
+📊 **Reports & exports**  
+View your booking calendar at a glance and export appointments to CSV for use in Excel, Google Sheets, or your CRM.
+= More Features =
 
 * Multiple **Locations**
 * Multiple **Services**
@@ -76,19 +103,18 @@ Can be used for : <strong>Lawyers</strong>, <strong>Salons</strong>, <strong>Mec
     - Time table overview
     - **Export to CSV (for Calc, Excel...)**
 
-= Need even more like Google Calendar, iCalendar, WooCommerce, Room Booking or SMS support? =
-There is extension plugin that you can buy and add to your Easy Appointments plugin :
+== 🚀 Need more power? Upgrade to Easy Appointments Pro ==
 
-* Google Calendar with 2 way sync
-* iCalendar
-* Notifications SMS & Mail (custom template for each status as well for reminder and follow up messages)
-    - Twilio SMS
-    - Omnicom SMS (Greece 🇬🇷)
-    - Mail
-* WooCommerce integration
-* PayPal integration
-* WhatsApp Notification integration
-* AI Booking Assistant
+The Pro extension unlocks everything serious businesses need:
+
+* **Google Calendar sync** — 2-way sync so your team always sees the full picture  
+* **SMS & WhatsApp notifications** — reduce no-shows with automated reminders via Twilio  
+* **Online payments** — collect deposits or full payment via Stripe, PayPal, or WooCommerce at booking  
+* **AI Booking Assistant** — let customers book via a conversational chat widget  
+* **iCalendar feeds** — sync with Apple Calendar, Outlook, and any .ics-compatible app  
+* **Room & resource booking** — book meeting rooms, equipment, or any shared resource  
+
+👉 **[See Pro plans and pricing →](https://easy-appointments.com/)**
 
 For more info follow the link for <a href="https://easy-appointments.com/#extension">Extension plugin</a>
 
@@ -123,6 +149,15 @@ layout_cols : default value 1
 example : [ea_bootstrap width="800px" scroll_off="true" layout_cols="2"]
 
 == Frequently Asked Questions ==
+
+= Is Easy Appointments free? =
+Yes — the core plugin is 100% free and includes everything you need to start accepting bookings. Pro extensions are available for teams that need Google Calendar sync, SMS reminders, and online payments.
+
+= Do customers need a WordPress account to book? =
+No. Customers book through the public-facing form without needing to register or log in.
+
+= Will it work with my theme? =
+Yes. Easy Appointments uses a responsive Bootstrap layout that adapts to any WordPress theme. You can also apply custom CSS to match your branding.
 
 = How to set custom cron task for clearing reserved slots =
 Create cron task on your host that have this link : `wget -q -O - <STIE_URL>/?_ea-action=clear_reservations > /dev/null 2>&1` . This will delete all reservations older than 6min.
@@ -224,6 +259,16 @@ Terms of use and Policy : https://fullcalendar.io/license
 25. Admin panel - Report - Export page
 
 == Changelog ==
+= 3.12.24 (2026-04-15)
+* Fixed improvement in the Pro version, as some warnings are still appearing #237
+* Added There should be an infinite end date selection in connections creation #118
+* Added Need to add feature to change order of services #240
+* Fixed Security issue reported by Patchstack.
+
+
+= 3.12.23.1 (2026-04-02)
+* Fixed Unable to access Admin panel in Mail notification after an update 3.12.23 #268
+
 = 3.12.23 (2026-04-01)
 * Added An Option Description of service in frontend #246
 * Fixed Admin shouldn't be allowed to confirm the booking after time. #216
@@ -233,7 +278,6 @@ Terms of use and Policy : https://fullcalendar.io/license
 * Fixed Google Calendar sync fails for existing workers causing double bookings; ‘Link Calendar’ shows white screen #265
 * Fixed When hovering on reserved/booked slots, it shows 'vacation'.#254
 * Added Need an option to display Price on booking frontend. #264
-
 
 = 3.12.22 (2026-03-18)
 * Added An Option To Show Specific infomration on Calendar. #252
