@@ -141,10 +141,11 @@
         </tbody>
     </table>
     <div>
-        <a href="#" class="add-new-h2 add-new" id="ea-add-customer-btn">
+        <a href="#" class="button" id="ea-add-customer-btn">
             <i class="fa fa-plus"></i>
             <?php esc_html_e('Add New Customer', 'easy-appointments'); ?>
         </a>
+        &nbsp;<button class="button" id="ea-delete-all-customers" style="top:5px;  border: 1px solid rgb(214, 54, 56); color: rgb(214, 54, 56);"><i class="fa fa-trash"></i> <?php esc_html_e('Delete All Customers', 'easy-appointments'); ?></button>
     </div>
 </div>
 
@@ -205,7 +206,7 @@
     <button id="ea-close-customer-modal" class="button" style="float:right;">&times;</button>
     <div class="ea-customer-header" style="display: flex; margin-bottom: 15px;">
         <h4 id="ea-customer-modal-title" style="margin:0px"><?php esc_html_e('Customer Detail', 'easy-appointments'); ?></h4>
-        &nbsp;<button class="button btn-sm edit-btn" data-id=""><i class="fa fa-pencil"></i></button>
+        &nbsp;<button class="button btn-sm edit-btn" data-id=""><i class="fa fa-pencil"></i></button>        
     </div>
 
 
@@ -291,6 +292,29 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
+        jQuery(document).on('click', '#ea-delete-all-customers', function(e) {
+            console.log('111');
+            e.preventDefault();
+            var ea_customer_delete_nonce = "<?php 
+            // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+            echo wp_create_nonce('ea_customer_delete'); ?>";
+
+            if (!confirm('⚠️ This will delete ALL customers. Are you sure?')) {
+                return;
+            }
+
+            jQuery.post(ajaxurl, {
+                action: 'ea_delete_all_customers',
+                ea_nonce: ea_customer_delete_nonce
+            }, function(res) {
+                if (res.success) {
+                    alert('All customers deleted');
+                    location.reload();
+                } else {
+                    alert(res.data?.message || 'Error deleting customers');
+                }
+            });
+        });
         function fetchCustomers(search = '', page = 1) {
             showScreenLoader();
             jQuery('#customer-table-body').html('<tr><td colspan="5"></td></tr>');
@@ -315,6 +339,11 @@
                     pag += '<button class="button page-btn" data-page="' + i + '" ' + (i === res.paged ? 'disabled' : '') + '>' + i + '</button> ';
                 }
                 jQuery('#pagination').html(pag);
+                if (res.total_pages > 0) {
+                    jQuery('#ea-delete-all-customers').show();
+                } else {
+                    jQuery('#ea-delete-all-customers').hide();
+                }
             });
         }
 

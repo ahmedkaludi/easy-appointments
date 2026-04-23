@@ -43,6 +43,21 @@ class EasyEAGDPRActions {
         $query = "DELETE f FROM $table_app a INNER JOIN $table_fields f ON (a.id = f.app_id) WHERE a.end_date <= (now() - interval 6 month) AND a.end_date IS NOT NULL";
         $this->db_models->get_wpdb()->query($query);
 
+        global $wpdb;
+        $table_customer = $wpdb->prefix . 'ea_customers';
+        $table_app      = $wpdb->prefix . 'ea_appointments';
+        $customer_ids = $wpdb->get_col("
+            SELECT DISTINCT customer_id 
+            FROM $table_app
+            WHERE customer_id IS NOT NULL
+            AND date >= (NOW() - INTERVAL 6 MONTH)
+        ");
+        $placeholders = implode(',', array_fill(0, count($customer_ids), '%d'));
+        $wpdb->query($wpdb->prepare("
+            DELETE FROM $table_customer
+            WHERE id IN ($placeholders)
+        ", ...$customer_ids));
+
         return __('Data deleted', 'easy-appointments');
     }
 }

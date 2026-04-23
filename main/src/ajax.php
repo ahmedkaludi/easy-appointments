@@ -184,6 +184,7 @@ class EAAjax
             add_action('wp_ajax_ea_update_customer_ajax', [$this, 'handle_update_customer_ajax']);
             add_action('wp_ajax_ea_insert_customer_ajax', [$this, 'handle_insert_customer_ajax']);
             add_action('wp_ajax_ea_get_customer_detail_ajax', [$this, 'handle_customer_detail_ajax']);
+            add_action('wp_ajax_ea_delete_all_customers', [$this, 'ea_delete_all_customers']);
             add_action('wp_ajax_ea_delete_customer' , [$this, 'ea_handle_delete_customer']);
             add_action('wp_ajax_ea_delete_multiple_connections' , [$this, 'ea_delete_multiple_connections']);
 
@@ -208,6 +209,32 @@ class EAAjax
             'ea_customers',
             'ea_error_logs',
         ];
+    }
+
+    public function ea_delete_all_customers() {
+
+        check_ajax_referer('ea_customer_delete', 'ea_nonce');
+
+        if (!current_user_can('manage_options')) {
+            wp_send_json_error(['message' => 'Unauthorized'], 403);
+        }
+
+        global $wpdb;
+
+        $customers_table = $wpdb->prefix . 'ea_customers';
+        $appointments_table = $wpdb->prefix . 'ea_appointments';
+
+        // Delete all customers
+        $deleted = $wpdb->query("DELETE FROM {$customers_table}");
+
+        // Remove references from appointments
+        $wpdb->query("UPDATE {$appointments_table} SET customer_id = NULL");
+
+        if ($deleted !== false) {
+            wp_send_json_success();
+        }
+
+        wp_send_json_error(['message' => 'Delete failed']);
     }
 
 
