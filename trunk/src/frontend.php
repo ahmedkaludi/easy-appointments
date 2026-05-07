@@ -866,7 +866,7 @@ class Easy_EA_Frontend
                         esc_attr($slot_step),
                         esc_attr($row->description),  // 👈 ADD THIS
                         $price_attr,
-                        esc_html($name_price)
+                        esc_html($name)
                     );
                     return;
                 }
