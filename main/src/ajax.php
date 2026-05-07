@@ -2207,6 +2207,13 @@ class EAAjax
             case 'UPDATE':
             case 'NEW':
                 $response = $this->models->replace($table, $data, true);
+                if ($table === 'ea_staff' && !empty($response->id)) {
+                    if ($this->type === 'UPDATE') {
+                        do_action('ea_staff_updated', $response->id, $data);
+                    } else {
+                        do_action('ea_staff_created', $response->id, $data);
+                    }
+                }
                 break;
             case 'DELETE':
                 // phpcs:ignore WordPress.Security.NonceVerification.Recommended
