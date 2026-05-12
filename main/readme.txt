@@ -5,7 +5,7 @@ Tags: appointment, appointments, Booking, calendar, reservation
 Requires at least: 3.7
 Tested up to: 7.0
 Requires PHP: 5.3
-Stable tag: 3.12.24.1
+Stable tag: 3.12.25
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -261,6 +261,15 @@ Terms of use and Policy : https://fullcalendar.io/license
 25. Admin panel - Report - Export page
 
 == Changelog ==
+= 3.12.25 (2026-05-12)
+* Fixed Improve Google Calendar Import to Prevent Multiple/Duplicate Imports #279
+* Fixed improvement in Easy Appointment Calendar. #190
+* Added An Option to Disable or Auto-Delete Customer Data for GDPR Compliance #274
+* Added a feature to customize redirection feature #197
+* Added an option to export appointments data #275
+* Added tag to include employee description #278
+* Fixed Booking Overview: ‘Duration’ Field Does Not Display Service Name After Renaming Label #280
+
 = 3.12.24.1 (2026-04-16)
 * Fixed Unwanted lable dispalying in front #273
 
