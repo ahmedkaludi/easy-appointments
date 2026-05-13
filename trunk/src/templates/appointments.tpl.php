@@ -96,6 +96,10 @@
 				<i class="fa fa-times"></i>
 				<?php esc_html_e('Delete Selected', 'easy-appointments');?>
 			</a>
+			<a href="#" id="ea-export-btn" class="add-new-h2" style="margin-left:10px;">
+			    <i class="fa fa-file-excel-o"></i>
+			    <?php esc_html_e('Export Excel', 'easy-appointments'); ?>
+			</a>
             <div class="ea-sort-fields">
                 <label><?php esc_html_e('Sort By', 'easy-appointments');?>:</label>
                 <select id="ea-sort-by" name="ea-sort-by">
@@ -298,6 +302,30 @@
 	echo wp_create_nonce('appointments_nonce'); ?>";
 
 jQuery(document).ready(function($) {
+	$('#ea-export-btn').on('click', function(e) {
+	    e.preventDefault();
+
+	    let params = {
+	        action: 'ea_export_appointments_excel',
+	        _wpnonce: '<?php echo wp_create_nonce("ea_export_excel_nonce"); ?>'
+	    };
+
+	    // Collect all filters automatically
+	    $('#ea-appointments-table-filter [data-c]').each(function() {
+	        let key = $(this).data('c');
+	        let value = $(this).val();
+
+	        if (value !== '' && value !== null) {
+	            params[key] = value;
+	        }
+	    });
+
+	    // Build URL
+	    let url = ajaxurl + '?' + $.param(params);
+
+	    // Redirect → triggers download
+	    window.location.href = url;
+	});
 	function check_is_any_cancel_checkbox(){
 		if ($('.ea-appointment-checkbox').length < 1){
 			$('.ea-cancel-all-selected').hide();

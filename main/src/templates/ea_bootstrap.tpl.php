@@ -10,11 +10,11 @@
                 <!-- LOCATION -->
                 <div class="step form-group">
                     <div class="block"></div>
-                    <label class="ea-label col-sm-4 control-label">
+                    <label for="location" class="ea-label col-sm-4 control-label">
                         <?php echo easy_ea_helper_polylang_trans($this->options->get_option_value('trans.location')); ?>
                     </label>
                     <div class="col-sm-8">
-                        <select name="location" data-c="location" class="filter form-control">
+                        <select id="location" name="location" data-c="location" class="filter form-control">
                             <?php $this->get_options('locations', $location_id, $service_id, $worker_id, $code_params['select_placeholder']); ?>
                         </select>
                     </div>
@@ -24,11 +24,11 @@
                     <!-- WORKER FIRST -->
                     <div class="step form-group">
                         <div class="block"></div>
-                        <label class="ea-label col-sm-4 control-label">
+                        <label for="worker" class="ea-label col-sm-4 control-label">
                             <?php echo easy_ea_helper_polylang_trans($this->options->get_option_value("trans.worker")); ?>
                         </label>
                         <div class="col-sm-8">
-                            <select name="worker" data-c="worker" class="filter form-control">
+                            <select id="worker" name="worker" data-c="worker" class="filter form-control">
                                 <?php $this->get_options('staff', $location_id, $service_id, $worker_id, $code_params['select_placeholder']) ?>
                             </select>
                         </div>
@@ -37,11 +37,11 @@
                     <!-- SERVICE SECOND -->
                     <div class="step form-group">
                         <div class="block"></div>
-                        <label class="ea-label col-sm-4 control-label">
+                        <label for="service" class="ea-label col-sm-4 control-label">
                             <?php echo easy_ea_helper_polylang_trans($this->options->get_option_value("trans.service")); ?>
                         </label>
                         <div class="col-sm-8">
-                            <select name="service" data-c="service" class="filter form-control"
+                            <select id="service" name="service" data-c="service" class="filter form-control"
                                     data-currency="<?php echo esc_attr($this->options->get_option_value("trans.currency")); ?>">
                                 <?php $this->get_options('services', $location_id, $service_id, $worker_id, $code_params['select_placeholder']) ?>
                             </select>
@@ -54,12 +54,12 @@
 
                     <!-- DEFAULT (SERVICE FIRST) -->
                     <div class="step form-group">
-                        <div class="block"><?php echo $settings['field_order']; ?></div>
-                        <label class="ea-label col-sm-4 control-label">
+                        <div class="block"></div>
+                        <label for="service" class="ea-label col-sm-4 control-label">
                             <?php echo easy_ea_helper_polylang_trans($this->options->get_option_value("trans.service")); ?>
                         </label>
                         <div class="col-sm-8">
-                            <select name="service" data-c="service" class="filter form-control"
+                            <select id="service" name="service" data-c="service" class="filter form-control"
                                     data-currency="<?php echo esc_attr($this->options->get_option_value("trans.currency")); ?>">
                                 <?php $this->get_options('services', $location_id, $service_id, $worker_id, $code_params['select_placeholder']) ?>
                             </select>
@@ -68,11 +68,11 @@
 
                     <div class="step form-group">
                         <div class="block"></div>
-                        <label class="ea-label col-sm-4 control-label">
+                        <label for="worker" class="ea-label col-sm-4 control-label">
                             <?php echo easy_ea_helper_polylang_trans($this->options->get_option_value("trans.worker")); ?>
                         </label>
                         <div class="col-sm-8">
-                            <select name="worker" data-c="worker" class="filter form-control">
+                            <select id="worker" name="worker" data-c="worker" class="filter form-control">
                                 <?php $this->get_options('staff', $location_id, $service_id, $worker_id, $code_params['select_placeholder']) ?>
                             </select>
                         </div>
@@ -106,7 +106,7 @@
                     <small><%- settings['trans.fields'] %></small>
                     <% if (settings['allow_customer_search'] == 1) { %>
                             <div class="form-group">
-                                <label class="col-sm-4 control-label"><?php echo esc_html($this->options->get_option_value("trans.customer_search_label")); ?></label>
+                                <label for="ea_customer_search" class="col-sm-4 control-label"><?php echo esc_html($this->options->get_option_value("trans.customer_search_label")); ?></label>
                                 <div class="col-sm-8">
                                     <input id="ea_customer_search" class="form-control" type="text" placeholder="<?php echo esc_html($this->options->get_option_value("trans.customer_search_label")); ?>" />
                                 </div>
@@ -119,7 +119,7 @@
                     <input id="<%- item.slug %>" name="<%- item.slug %>" type="hidden" value="<%- item.default_value %>" class="custom-field" />
                     <% return; } %>
                     <div class="form-group">
-                        <label class="col-sm-4 control-label"><%= item.label %> <% if (item.required == "1") { %>*<% }
+                        <label for="<%- item.slug %>" class="col-sm-4 control-label"><%= item.label %> <% if (item.required == "1") { %>*<% }
                             %></label>
                         <div class="col-sm-8">
                             <!-- INPUT TYPE -->

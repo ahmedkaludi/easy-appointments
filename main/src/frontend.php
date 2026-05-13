@@ -703,8 +703,6 @@ class Easy_EA_Frontend
         $settings['default_datetime_format'] = $this->datetime->convert_to_moment_format($this->datetime->default_format());
         $settings['field_order'] = $code_params['order'];
 
-        // print_r($settings);die;
-
         // CUSTOM CSS
         $customCss = $settings['custom.css'];
         $customCss = wp_strip_all_tags($customCss);
@@ -868,7 +866,7 @@ class Easy_EA_Frontend
                         esc_attr($slot_step),
                         esc_attr($row->description),  // 👈 ADD THIS
                         $price_attr,
-                        esc_html($name_price)
+                        esc_html($name)
                     );
                     return;
                 }

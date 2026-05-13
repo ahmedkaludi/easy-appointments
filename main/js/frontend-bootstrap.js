@@ -1213,6 +1213,13 @@
                 plugin.triggerEvent();
 
                 var redirected = false;
+                options.worker_name = plugin.$element.find('[name="worker"] option:selected').text();
+                options.service_name = plugin.$element.find('[name="service"] option:selected').text();
+                options.location_name = plugin.$element.find('[name="location"] option:selected').text();
+
+                // time + datetime
+                options.start_time = plugin.$element.find('.selected-time').data('val');
+                options.date_time = plugin.$element.find('.date').val() + ' ' + options.start_time;
 
                 // if there is redirect do that
                 if (ea_settings['advance.redirect'] !== '') {

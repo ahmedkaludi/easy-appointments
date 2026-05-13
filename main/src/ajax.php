@@ -184,15 +184,216 @@ class EAAjax
             add_action('wp_ajax_ea_update_customer_ajax', [$this, 'handle_update_customer_ajax']);
             add_action('wp_ajax_ea_insert_customer_ajax', [$this, 'handle_insert_customer_ajax']);
             add_action('wp_ajax_ea_get_customer_detail_ajax', [$this, 'handle_customer_detail_ajax']);
+            add_action('wp_ajax_ea_delete_all_customers', [$this, 'ea_delete_all_customers']);
             add_action('wp_ajax_ea_delete_customer' , [$this, 'ea_handle_delete_customer']);
             add_action('wp_ajax_ea_delete_multiple_connections' , [$this, 'ea_delete_multiple_connections']);
 
             add_action('wp_ajax_ea_full_export', [$this, 'ea_ajax_full_export']);
             add_action('wp_ajax_ea_full_import', [$this, 'ea_ajax_full_import']);
+            add_action('wp_ajax_ea_export_appointments_excel', [$this,'ea_export_appointments_excel']);
 
             
         }
         
+    }
+
+    public function ea_export_appointments_excel() {
+        if (!is_user_logged_in()) {
+            wp_die('Unauthorized');
+        }
+
+        if (!isset($_GET['_wpnonce']) || 
+            !wp_verify_nonce($_GET['_wpnonce'], 'ea_export_excel_nonce')) {
+            wp_die('Invalid nonce');
+        }
+
+        global $wpdb;
+
+        $table_fields = $wpdb->prefix . 'ea_fields';
+        $table_meta   = $wpdb->prefix . 'ea_meta_fields';
+
+        
+        $location = isset($_GET['location']) ? intval($_GET['location']) : '';
+        $service  = isset($_GET['service']) ? intval($_GET['service']) : '';
+        $worker   = isset($_GET['worker']) ? intval($_GET['worker']) : '';
+        $status   = isset($_GET['status']) ? sanitize_text_field($_GET['status']) : '';
+        $search   = isset($_GET['search']) ? sanitize_text_field($_GET['search']) : '';
+        $from     = isset($_GET['from']) ? sanitize_text_field($_GET['from']) : '';
+        $to       = isset($_GET['to']) ? sanitize_text_field($_GET['to']) : '';
+
+        // Fix date format
+        $from = !empty($from) ? date('Y-m-d', strtotime($from)) : '';
+        $to   = !empty($to)   ? date('Y-m-d', strtotime($to))   : '';
+
+        // Employee restriction
+        if ( function_exists('ea_is_employee') && ea_is_employee() ) {
+            $worker = get_current_user_id();
+        }
+
+        
+        $filters = [];
+
+        if (!empty($location)) $filters['location'] = $location;
+        if (!empty($service))  $filters['service']  = $service;
+        if (!empty($worker))   $filters['worker']   = $worker;
+        if (!empty($from))     $filters['from']     = $from;
+        if (!empty($to))       $filters['to']       = $to;
+
+        
+        $models = new EADBModels($wpdb, new EATableColumns(), new EAOptions($wpdb));
+        $appointments = $models->get_all_appointments($filters);
+
+        
+        if (!empty($appointments)) {
+
+            $table_fields = $wpdb->prefix . 'ea_fields';
+
+            // Load all field values for filtering
+            $ids = array_map(fn($a) => intval($a->id), $appointments);
+            $ids_in = implode(',', $ids);
+
+            $field_map = [];
+
+            if (!empty($ids_in)) {
+                $rows = $wpdb->get_results("
+                    SELECT app_id, value 
+                    FROM $table_fields
+                    WHERE app_id IN ($ids_in)
+                ");
+
+                foreach ($rows as $r) {
+                    $field_map[$r->app_id][] = strtolower($r->value);
+                }
+            }
+
+            // Apply filters
+            $appointments = array_filter($appointments, function($row) use ($status, $search, $field_map) {
+
+                
+                if (!empty($status) && $row->status !== $status) {
+                    return false;
+                }
+
+                
+                if (!empty($search)) {
+
+                    $search = strtolower($search);
+
+                    $found = false;
+
+                    // Search in custom fields
+                    if (isset($field_map[$row->id])) {
+                        foreach ($field_map[$row->id] as $value) {
+                            if (strpos($value, $search) !== false) {
+                                $found = true;
+                                break;
+                            }
+                        }
+                    }
+
+                    if (!$found) {
+                        return false;
+                    }
+                }
+
+                return true;
+            });
+
+            // Reindex array
+            $appointments = array_values($appointments);
+        }
+
+        if (empty($appointments)) {
+            wp_die('No data found');
+        }
+        $workersTmp   = $models->get_all_rows('ea_staff');
+        $locationsTmp = $models->get_all_rows('ea_locations');
+        $servicesTmp  = $models->get_all_rows('ea_services');
+
+        $workers = [];
+        $locations = [];
+        $services = [];
+
+        foreach ($workersTmp as $w) {
+            $workers[$w->id] = $w->name;
+        }
+
+        foreach ($locationsTmp as $l) {
+            $locations[$l->id] = $l->name;
+        }
+
+        foreach ($servicesTmp as $s) {
+            $services[$s->id] = $s->name;
+        }
+
+        
+        $meta_fields = $wpdb->get_results("
+            SELECT id, slug, label 
+            FROM $table_meta 
+            ORDER BY position ASC
+        ");
+        $appointment_ids = array_map(fn($a) => intval($a->id), $appointments);
+        $ids_in = implode(',', $appointment_ids);
+
+        $field_values = [];
+
+        if (!empty($ids_in)) {
+            $rows = $wpdb->get_results("
+                SELECT app_id, field_id, value 
+                FROM $table_fields
+                WHERE app_id IN ($ids_in)
+            ");
+
+            foreach ($rows as $r) {
+                $field_values[$r->app_id][$r->field_id] = $r->value;
+            }
+        }
+
+        
+        header("Content-Type: application/vnd.ms-excel");
+        header("Content-Disposition: attachment; filename=appointments-" . date('Y-m-d') . ".xls");
+        header("Pragma: no-cache");
+        header("Expires: 0");
+        echo "\xEF\xBB\xBF";
+
+        echo "<table border='1'>";
+
+        echo "<tr>
+        <th>" . esc_html__('ID', 'easy-appointments') . "</th>
+        <th>" . esc_html__('Location', 'easy-appointments') . "</th>
+        <th>" . esc_html__('Service', 'easy-appointments') . "</th>
+        <th>" . esc_html__('Worker', 'easy-appointments') . "</th>";
+        foreach ($meta_fields as $field) {
+            echo "<th>" . esc_html($field->label) . "</th>";
+        }
+
+        echo"<th>" . esc_html__('Start', 'easy-appointments') . "</th>
+        <th>" . esc_html__('End', 'easy-appointments') . "</th>
+        <th>" . esc_html__('Status', 'easy-appointments') . "</th>";
+
+
+        echo "</tr>";
+        foreach ($appointments as $row) {
+
+            echo "<tr>
+                <td>{$row->id}</td>
+                <td>" . esc_html($locations[$row->location] ?? $row->location) . "</td>
+                <td>" . esc_html($services[$row->service] ?? $row->service) . "</td>
+                <td>" . esc_html($workers[$row->worker] ?? $row->worker) . "</td>";
+                foreach ($meta_fields as $field) {
+                    $value = $field_values[$row->id][$field->id] ?? '';
+                    echo "<td>" . esc_html($value) . "</td>";
+                }
+                echo"<td>{$row->start}</td>
+                <td>{$row->end}</td>
+                <td>{$row->status}</td>";
+
+
+            echo "</tr>";
+        }
+
+        echo "</table>";
+        exit;
     }
 
     private function get_ea_tables() {
@@ -208,6 +409,32 @@ class EAAjax
             'ea_customers',
             'ea_error_logs',
         ];
+    }
+
+    public function ea_delete_all_customers() {
+
+        check_ajax_referer('ea_customer_delete', 'ea_nonce');
+
+        if (!current_user_can('manage_options')) {
+            wp_send_json_error(['message' => 'Unauthorized'], 403);
+        }
+
+        global $wpdb;
+
+        $customers_table = $wpdb->prefix . 'ea_customers';
+        $appointments_table = $wpdb->prefix . 'ea_appointments';
+
+        // Delete all customers
+        $deleted = $wpdb->query("DELETE FROM {$customers_table}");
+
+        // Remove references from appointments
+        $wpdb->query("UPDATE {$appointments_table} SET customer_id = NULL");
+
+        if ($deleted !== false) {
+            wp_send_json_success();
+        }
+
+        wp_send_json_error(['message' => 'Delete failed']);
     }
 
 
@@ -1980,6 +2207,13 @@ class EAAjax
             case 'UPDATE':
             case 'NEW':
                 $response = $this->models->replace($table, $data, true);
+                if ($table === 'ea_staff' && !empty($response->id)) {
+                    if ($this->type === 'UPDATE') {
+                        do_action('ea_staff_updated', $response->id, $data);
+                    } else {
+                        do_action('ea_staff_created', $response->id, $data);
+                    }
+                }
                 break;
             case 'DELETE':
                 // phpcs:ignore WordPress.Security.NonceVerification.Recommended
