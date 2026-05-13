@@ -722,6 +722,11 @@ class EAAjax
 
         $orderPart = $this->models->get_order_by_part($mapping[$data['next']], true);
 
+        // Support multiple services from shortcode
+        if (!empty($data['service']) && strpos($data['service'], ',') !== false) {
+            $data['service_ids'] = array_filter(array_map('intval', explode(',', $data['service'])));
+        }
+
         $result = $this->models->get_next($data, $orderPart);
 
         $this->send_ok_json_result($result);

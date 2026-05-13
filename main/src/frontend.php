@@ -603,7 +603,7 @@ class Easy_EA_Frontend
         // start session
         if (!headers_sent() && !session_id()) {
             session_start();
-        }
+        }       
 
         $code_params = shortcode_atts(array(
             'location'             => null,
@@ -628,6 +628,23 @@ class Easy_EA_Frontend
             'auto_select_option'   => '0',
             'order'                => 'service_first'
         ), $atts);
+
+        $service_id = $code_params['service'];
+
+        $service_ids = [];
+
+        if (!empty($service_id)) {
+
+            $service_ids = array_filter(
+                array_unique(
+                    array_map('intval', explode(',', $service_id))
+                )
+            );
+
+            $service_id = implode(',', $service_ids);
+        }
+
+        $code_params['service'] = $service_id;
 
         // check params
         apply_filters('easy_ea_bootstrap_shortcode_params', $atts);
