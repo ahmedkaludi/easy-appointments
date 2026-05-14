@@ -76,6 +76,7 @@
         template : _.template( jQuery("#ea-tpl-custumize").html() ),
         template_fields : _.template(jQuery("#ea-tpl-custom-forms").html()),
         template_options : _.template(jQuery("#ea-tpl-custom-form-options").html()),
+        template_webhook : _.template(jQuery("#ea-tpl-webhook-item").html()),
 
         tinymceOn : true,
 
@@ -99,6 +100,10 @@
             "click .form-label-option": "changeFormLabelStyle",
             "click .select-label-option": "changeSelectLabelStyle",
             "click .btn-gdpr-delete-data": "gdprDeleteData",
+            "click #ea-add-webhook-row": "addWebhookRow",
+            "click .ea-remove-webhook": "removeWebhookRow",
+            "change .ea-webhook-event": "webhookChanged",
+            "keyup .ea-webhook-url": "webhookChanged",
             "click #load-default-admin-template": "loadDefaultTemplate"
         },
 
@@ -169,6 +174,7 @@
 
             this.changeFormLabelStyleInit();
             this.changeSelectLabelStyleInit();
+            this.renderWebhooks();
 
             return this;
         },
@@ -870,6 +876,109 @@
                     alert(result);
                 }
             });
+        },
+        renderWebhooks: function()
+        {
+            var data = this.getWebhookData();
+
+            var obj = this;
+
+            this.$el.find('#ea-webhook-list').html('');
+
+            _.each(data, function(item){
+
+                obj.$el.find('#ea-webhook-list').append(
+                    obj.template_webhook({
+                        item: item
+                    })
+                );
+            });
+        },
+
+        getWebhookData: function()
+        {
+            var raw = this.$el.find('#ea-webhook-storage').val();
+
+            if (!raw || raw.length === 0) {
+                return [];
+            }
+
+            try {
+                return JSON.parse(raw);
+            } catch(e) {
+                return [];
+            }
+        },
+
+        saveWebhookData: function(data)
+        {
+            this.$el.find('#ea-webhook-storage').val(
+                JSON.stringify(data)
+            );
+        },
+
+        collectWebhookData: function()
+        {
+            var data = [];
+
+            this.$el.find('#ea-webhook-list .ea-webhook-item').each(function(){
+
+                var row = $(this);
+
+                var events = [];
+
+                row.find('.ea-webhook-event:checked').each(function(){
+
+                    events.push($(this).val());
+
+                });
+
+                data.push({
+                    url: row.find('.ea-webhook-url').val(),
+                    events: events
+                });
+            });
+
+            this.saveWebhookData(data);
+        },
+
+        addWebhookRow: function(e)
+        {
+            console.log('add row');
+            e.preventDefault();
+
+            var data = this.getWebhookData();
+
+            data.push({
+                url: '',
+                events: []
+            });
+
+            this.saveWebhookData(data);
+
+            this.renderWebhooks();
+        },
+
+        removeWebhookRow: function(e)
+        {
+            e.preventDefault();
+
+            var index = $(e.currentTarget)
+                .closest('.ea-webhook-item')
+                .index();
+
+            var data = this.getWebhookData();
+
+            data.splice(index, 1);
+
+            this.saveWebhookData(data);
+
+            this.renderWebhooks();
+        },
+
+        webhookChanged: function()
+        {
+            this.collectWebhookData();
         }
     });    /**
      * Main Admin View

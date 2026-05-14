@@ -57,6 +57,7 @@ if (version_compare(PHP_VERSION, '5.3', '<')) {
 }
 
 require_once dirname(__FILE__) . '/ea-blocks/ea-blocks.php';
+require_once dirname(__FILE__) . '/src/webhook.php';
 
 /**
  * Entry point

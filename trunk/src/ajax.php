@@ -1921,6 +1921,7 @@ class EAAjax
             'user.access.reports'           => '',
             'max.appointments_by_user'      => '0',
             'is_multiple_booking_allowed'   => '0',
+            'webhook.endpoints'             => '[]',
         );
     }
 

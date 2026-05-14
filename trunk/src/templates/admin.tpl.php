@@ -51,6 +51,12 @@
                     <a data-tab="tab-money" href="#">
                         <span class="icon icon-money"></span><span class="text-label"><?php esc_html_e('Money Format', 'easy-appointments'); ?></span>
                     </a>
+                    <a data-tab="tab-webhooks" href="#">
+                        <span class="icon icon-mail"></span>
+                        <span class="text-label">
+                            <?php esc_html_e('Webhooks', 'easy-appointments'); ?>
+                        </span>
+                    </a>
                 </div>
                 <div class="button-wrap">
                     <button class="button button-primary btn-save-settings"><?php esc_html_e('Save', 'easy-appointments'); ?></button>
@@ -489,8 +495,8 @@
                         </table>
                         <a id="load-default-admin-template" href="#" style="padding-top: 5px; padding-bottom: 5px; display: none;"><?php esc_html_e('Load default admin template', 'easy-appointments'); ?></a>
                         <div><small><?php esc_html_e('Available tags', 'easy-appointments'); ?>: #id#, #date#, #start#, #end#, #status#, #created#, #price#, #ip#, #link_confirm#, #link_cancel#, #url_confirm#, #url_cancel#, #service_name#, #service_duration#, #service_price#, #worker_name#, #worker_email#, #worker_phone#,#worker_description#, #location_name#, #location_address#, #location_location#, <?php
-                                                                                                                                                                                                                                                                                                                                                                                                        // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-                                                                                                                                                                                                                                                                                                                                                                                                        echo implode(', ', EADBModels::get_custom_fields_tags()); ?></small></div>
+                                                                                                                                                                                                                                                                                                                                                                                                                    // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+                                                                                                                                                                                                                                                                                                                                                                                                                    echo implode(', ', EADBModels::get_custom_fields_tags()); ?></small></div>
                     </div>
                     <div class="form-item">
                         <div class="label-with-tooltip">
@@ -1156,7 +1162,6 @@
                             {ea_key:'show.iagree'}).ea_value == '1') { %>checked<% } %> />
                         </div>
                     </div>
-                    <hr />
                     <div class="form-item" style="background-color: #ccc">
                         <blockquote><?php esc_html_e('Note: you can use dynamic form values for redirect params. Redirect example: https://example.com/customer_name={{name}}. This will put value from custom form field with slug `name` to that redirect value. Please check custom form fields for slug names of the fields and just put them in {{}} where you need that param.', 'easy-appointments'); ?></blockquote>
                     </div>
@@ -1196,7 +1201,6 @@
                     <div class="form-item">
                         <ul id="custom-redirect-list" class="list-form-item"></ul>
                     </div>
-                    <hr>
                     <div class="form-item">
                         <label for=""><?php esc_html_e('After cancel go to', 'easy-appointments'); ?></label>
                         <select data-key="cancel.scroll" class="field" name="cancel.scroll">
@@ -1394,9 +1398,46 @@
                     </div>
                 </div>
             </div>
+
+            <div id="tab-webhooks" class="form-section hidden">
+                <span class="separator vertical"></span>
+
+                <div class="form-container">
+
+                    <div class="form-item">
+                        <span class="pure-text">
+                            <?php esc_html_e(
+                                'Add multiple webhook endpoints and assign events for each endpoint.',
+                                'easy-appointments'
+                            ); ?>
+                        </span>
+                    </div>
+
+                    <div class="form-item">
+                        <button type="button"
+                                class="button button-primary"
+                                id="ea-add-webhook-row">
+
+                            <?php esc_html_e('Add Webhook', 'easy-appointments'); ?>
+                        </button>
+                    </div>
+
+                    <div class="form-item">
+
+                        <ul id="ea-webhook-list" class="list-form-item"></ul>
+
+                        <input type="hidden"
+                            id="ea-webhook-storage"
+                            class="field"
+                            data-key="webhook.endpoints"
+                            value="<%- typeof ea_settings['webhook.endpoints'] !== 'undefined' ? ea_settings['webhook.endpoints'] : '[]' %>">
+                    </div>
+
+                </div>
+            </div>
         </div>
         
-        <br><br>
+        <br><br><br><br>
         <?php easy_ea_newsletter_form(); ?>
     </div>
 </script>
@@ -1504,23 +1545,143 @@
         <button id="close-advance-redirect" class="button-primary" disabled>Close</button>
     </div>
 </script>
+<script type="text/template" id="ea-tpl-webhook-item">
+
+    <li class="ea-webhook-item">
+
+        <div style="
+            border:1px solid #dcdcde;
+            background:#fff;
+            padding:15px;
+            border-radius:4px;
+            margin-bottom:15px;
+        ">
+
+            <div class="form-item">
+
+                <label>
+                    <?php esc_html_e('Endpoint URL', 'easy-appointments'); ?>
+                </label>
+
+                <input type="text"
+                    class="ea-webhook-url"
+                    placeholder="https://example.com/webhook"
+                    value="<%- item.url %>"
+                    style="width:80%;">
+            </div>
+
+            <div class="form-item">
+
+                <label>
+                    <strong>
+                        <?php esc_html_e('Webhook Events', 'easy-appointments'); ?>
+                    </strong>
+                </label>
+
+                <div style="
+                    margin-top:10px;
+                    display:grid;
+                    grid-template-columns:repeat(2,minmax(200px,1fr));
+                    gap:8px;
+                ">
+
+                    <label>
+                        <input type="checkbox"
+                            class="ea-webhook-event"
+                            value="appointment_created"
+                            <% if (_.contains(item.events, 'appointment_created')) { %>checked<% } %>>
+
+                        <?php esc_html_e('Appointment created', 'easy-appointments'); ?>
+                    </label>
+
+                    <label>
+                        <input type="checkbox"
+                            class="ea-webhook-event"
+                            value="appointment_updated"
+                            <% if (_.contains(item.events, 'appointment_updated')) { %>checked<% } %>>
+
+                        <?php esc_html_e('Appointment updated', 'easy-appointments'); ?>
+                    </label>
+
+                    <label>
+                        <input type="checkbox"
+                            class="ea-webhook-event"
+                            value="appointment_status_changed"
+                            <% if (_.contains(item.events, 'appointment_status_changed')) { %>checked<% } %>>
+
+                        <?php esc_html_e('Appointment status changed', 'easy-appointments'); ?>
+                    </label>
+
+                    <label>
+                        <input type="checkbox"
+                            class="ea-webhook-event"
+                            value="appointment_confirmed"
+                            <% if (_.contains(item.events, 'appointment_confirmed')) { %>checked<% } %>>
+
+                        <?php esc_html_e('Appointment confirmed', 'easy-appointments'); ?>
+                    </label>
+
+                    <label>
+                        <input type="checkbox"
+                            class="ea-webhook-event"
+                            value="appointment_pending"
+                            <% if (_.contains(item.events, 'appointment_pending')) { %>checked<% } %>>
+
+                        <?php esc_html_e('Appointment pending', 'easy-appointments'); ?>
+                    </label>
+
+                    <label>
+                        <input type="checkbox"
+                            class="ea-webhook-event"
+                            value="appointment_reserved"
+                            <% if (_.contains(item.events, 'appointment_reserved')) { %>checked<% } %>>
+
+                        <?php esc_html_e('Appointment reserved', 'easy-appointments'); ?>
+                    </label>
+
+                    <label>
+                        <input type="checkbox"
+                            class="ea-webhook-event"
+                            value="appointment_cancelled"
+                            <% if (_.contains(item.events, 'appointment_cancelled')) { %>checked<% } %>>
+
+                        <?php esc_html_e('Appointment cancelled', 'easy-appointments'); ?>
+                    </label>
+
+                </div>
+            </div>
+
+            <div class="form-item">
+
+                <button type="button"
+                        class="button ea-remove-webhook">
+
+                    <?php esc_html_e('Remove', 'easy-appointments'); ?>
+                </button>
+            </div>
+
+        </div>
+    </li>
+
+</script>
 
 <script type="text/template" id="ea-tpl-single-advance-redirect">
     <li>
         <span class="bulk-value"><%- _.findWhere(locations, {id:row.location})?.name %></span>
         <span class="bulk-value"><%- _.findWhere(services,  {id:row.service})?.name %></span>
-        <span class="bulk-value"><%- _.findWhere(workers,   {id:row.worker})?.name s%></span>
+        <span class="bulk-value"><%- _.findWhere(workers,   {id:row.worker})?.name %></span>
         <span style="display: inline-block;"><button class="button bulk-connection-remove">Remove</button></span>
     </li>
 </script>
+
 <script>
     jQuery(document).ready(function($) {
 
-        $(document).on('change', '.ea-title-field', function () {
+        $(document).on('change', '.ea-title-field', function() {
 
             var values = [];
 
-            $('.ea-title-field:checked').each(function () {
+            $('.ea-title-field:checked').each(function() {
                 values.push($(this).val());
             });
 
@@ -1654,7 +1815,7 @@
 
         function applyDefaultOnce() {
             var workerChecked = $('.ea_worker_mail_group input[type="checkbox"]:checked').length;
-            var userChecked   = $('.ea_user_mail_group input[type="checkbox"]:checked').length;
+            var userChecked = $('.ea_user_mail_group input[type="checkbox"]:checked').length;
 
             if (workerChecked > 0 || userChecked > 0) {
                 return; //
@@ -1680,7 +1841,7 @@
                 $('.ea_send_user_email').prop('checked', true);
             }
         }
-        setTimeout(function () {
+        setTimeout(function() {
             applyDefaultOnce();
         }, 500);
     });
