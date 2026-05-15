@@ -475,7 +475,7 @@
             if (current.data('c') === 'service') {
                 var desc = current.find('option:selected').data('description') || '';
                 if (desc) {
-                    jQuery('#ea-service-description').text(desc).show();
+                    jQuery('#ea-service-description').html(desc).show();
                 } else {
                     jQuery('#ea-service-description').hide();
                 }

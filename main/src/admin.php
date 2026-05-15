@@ -1064,6 +1064,7 @@ class EAAdminPanel
 
         wp_enqueue_style('ea-admin-bundle-css');
         wp_enqueue_script('ea-admin-bundle');
+        wp_enqueue_editor();
 
         $settings = $this->options->get_options();
         $settings['rest_url'] = get_rest_url();
