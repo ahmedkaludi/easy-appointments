@@ -273,19 +273,14 @@
 
         selectTimes: function ($element) {
             var plugin = this;
-
-            // =======================
-            // FEATURE FLAG CHECK
-            // =======================
             if (ea_settings['is_multiple_booking_allowed'] != '1') {
-                // ----------------------------------------
-                // ORIGINAL SINGLE-SLOT LOGIC (unchanged)
-                // ----------------------------------------
                 var serviceData = plugin.$element.find('[name="service"] > option:selected').data();
                 var duration = serviceData.duration;
                 var slot_step = serviceData.slot_step;
 
-                var takeSlots = 1; // original logic
+                // FIX: calculate required slots based on service duration
+                var takeSlots = parseInt(duration) / parseInt(slot_step);
+
                 var $nextSlots = $element.nextAll();
 
                 var forSelection = [];
