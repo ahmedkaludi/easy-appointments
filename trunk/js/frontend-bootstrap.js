@@ -1625,4 +1625,11 @@ jQuery(document).ready(function() {
     jQuery('#custom-recurrence-modal').hide();
     jQuery('#custom-recurrence-overlay').hide();
   });
+    jQuery(document).on('ea-timeslot:selected', function () {
+
+        setTimeout(function () {
+            jQuery('#ea-payment-select input[type="radio"]:checked').trigger('click');
+        }, 50);
+
+    });
 });
