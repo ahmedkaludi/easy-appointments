@@ -67,7 +67,6 @@
                 if (vacation.time && vacation.time.fullDay === false) {
                     var startTime = vacation.time.startTime ? moment(vacation.time.startTime) : null;
                     var endTime = vacation.time.endTime ? moment(vacation.time.endTime) : null;
-
                     if (startTime && endTime) {
                         // attach a flag so we can disable specific time slots later
                         if (!window.ea_partial_vacations) window.ea_partial_vacations = [];
@@ -81,6 +80,7 @@
                         return true; // don't block the whole day
                     }
                 }
+
 
                 response = [false, 'blocked vacation', vacation.tooltip];
 
@@ -277,9 +277,9 @@
                 var serviceData = plugin.$element.find('[name="service"] > option:selected').data();
                 var duration = serviceData.duration;
                 var slot_step = serviceData.slot_step;
-
+                 var takeSlots = 1;
                 // FIX: calculate required slots based on service duration
-                var takeSlots = parseInt(duration) / parseInt(slot_step);
+                // var takeSlots = parseInt(duration) / parseInt(slot_step);
 
                 var $nextSlots = $element.nextAll();
 
@@ -755,7 +755,21 @@
                                 var slotTime = moment(element.value, 'HH:mm');
                                 var start = moment(vac.start, 'HH:mm');
                                 var end = moment(vac.end, 'HH:mm');
-                                if (slotTime.isBetween(start, end, null, '[)')) {
+                                var serviceDuration = parseInt(
+                                    plugin.$element.find('[name="service"] > option:selected').data('duration')
+                                ) || 0;
+
+                                // appointment start
+                                var appointmentStart = moment(element.value, 'HH:mm');
+
+                                // appointment end
+                                var appointmentEnd = appointmentStart.clone().add(serviceDuration, 'minutes');
+
+                                // overlap check
+                                if (
+                                    appointmentStart.isBefore(end) &&
+                                    appointmentEnd.isAfter(start)
+                                ) {
                                     tooltip_title = vac.tooltip;
                                     isDisabled = true;
                                 }
