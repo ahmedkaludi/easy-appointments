@@ -837,6 +837,11 @@ class EAAjax
             $end_ts   = strtotime($data['date'] . ' ' . $data['end']);
 
             if ($end_ts <= $start_ts) {
+                $end_ts = strtotime('+1 day', $end_ts);
+                $data['end_date'] = gmdate('Y-m-d', $end_ts);
+            }
+
+            if ($end_ts <= $start_ts) {
                 $this->send_err_json_result('{"err":true,"message":"Invalid range"}');
             }
 
