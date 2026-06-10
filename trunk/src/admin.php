@@ -865,7 +865,30 @@ class EAAdminPanel
 
         wp_localize_script('ea-appointments', 'ea_settings', $settings);
         wp_localize_script('ea-appointments', 'ea_vacations', json_decode($data_vacation));
-        wp_localize_script('ea-appointments', 'ea_app_status', $this->logic->getStatus());
+        // wp_localize_script('ea-appointments', 'ea_app_status', $this->logic->getStatus());
+                // Provide status list for appointments page. If EA Client Portal plugin
+        // is active and current user is Administrator or Employee, limit the
+        // statuses to only Confirmed and Cancelled (simpler dropdown for portal).
+        $statuses = $this->logic->getStatus();
+
+        if ( ! function_exists( 'is_plugin_active' ) ) {
+            if ( file_exists( ABSPATH . 'wp-admin/includes/plugin.php' ) ) {
+                include_once ABSPATH . 'wp-admin/includes/plugin.php';
+            }
+        }
+
+        if ( function_exists( 'is_plugin_active' ) && is_plugin_active( 'ea-client-portal/ea-client-portal.php' ) ) {
+            // Only limit statuses for EA Client Portal employee users.
+            if ( function_exists( 'ea_is_employee' ) && ea_is_employee() ) {
+                $statuses = array(
+                    'canceled'  => __('cancelled', 'easy-appointments'),
+                    'confirmed' => __('confirmed', 'easy-appointments'),
+                );
+            }
+        }
+
+        wp_localize_script('ea-appointments', 'ea_app_status', apply_filters('ea_client_portal_appointment_statuses', $statuses));
+
         wp_localize_script('ea-appointments', 'ea_connections', $this->models->get_connections_combinations());
 
         $screen = get_current_screen();
