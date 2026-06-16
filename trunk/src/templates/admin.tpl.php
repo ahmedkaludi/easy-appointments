@@ -291,7 +291,7 @@
                     </div>
 
                     
-                    <div class="form-item"> <div class="label-with-tooltip"> <label> <?php esc_html_e('Export Plugin Data', 'easy-appointments'); ?> </label> <span class="tooltip tooltip-right" data-tooltip="<?php esc_html_e('Export or import all Easy Appointments data including services, staff, appointments, customers and settings.', 'easy-appointments'); ?>"> </span> </div> <div class="field-wrap"> <!-- EXPORT --> <button type="button" class="button button-secondary" id="ea-full-export"> <?php esc_html_e('Export All Data', 'easy-appointments'); ?> </button> </div> </div> <div class="form-item"> <div class="label-with-tooltip"> <label> <?php esc_html_e('Import Plugin Data', 'easy-appointments'); ?> </label> <span class="tooltip tooltip-right" data-tooltip="<?php esc_html_e('⚠ Import will overwrite ALL existing Easy Appointments data.', 'easy-appointments'); ?>"> </span> </div> <div class="field-wrap"> <!-- IMPORT --> <input type="file" id="ea-full-import-file" accept=".json" /> <button type="button" class="button button-primary" id="ea-full-import"> <?php esc_html_e('Import Data', 'easy-appointments'); ?> </button> </div> </div>
+                    <div class="form-item"> <div class="label-with-tooltip"> <label> <?php esc_html_e('Export Plugin Data', 'easy-appointments'); ?> </label> <span class="tooltip tooltip-right" data-tooltip="<?php esc_html_e('Export or import all Easy Appointments data including services, staff, appointments, customers and settings.', 'easy-appointments'); ?>"> </span> </div> <div class="field-wrap"> <!-- EXPORT --> <button type="button" class="button button-secondary" id="ea-full-export" style="line-height: 2; min-height:30px;"> <?php esc_html_e('Export All Data', 'easy-appointments'); ?> </button> </div> </div> <div class="form-item"> <div class="label-with-tooltip"> <label> <?php esc_html_e('Import Plugin Data', 'easy-appointments'); ?> </label> <span class="tooltip tooltip-right" data-tooltip="<?php esc_html_e('⚠ Import will overwrite ALL existing Easy Appointments data.', 'easy-appointments'); ?>"> </span> </div> <div class="field-wrap"> <!-- IMPORT --> <input type="file" id="ea-full-import-file" accept=".json" /> <button type="button" class="button button-primary" id="ea-full-import" style="line-height: 2; min-height:30px;"> <?php esc_html_e('Import Data', 'easy-appointments'); ?> </button> <span id="ea-full-import-spinner" class="spinner" style="display:none; margin-left: 10px; vertical-align: middle;"></span> </div> </div>
                     <hr />
                     
                     
@@ -1782,6 +1782,8 @@
         $(document).on('click', '#ea-full-import', function() {
 
             const fileInput = document.getElementById('ea-full-import-file');
+            const importButton = $('#ea-full-import');
+            const importSpinner = $('#ea-full-import-spinner');
 
             if (!fileInput.files.length) {
                 alert('Please select a JSON backup file.');
@@ -1797,12 +1799,21 @@
             formData.append('_wpnonce', ea_obj.ea_security_nonce);
             formData.append('file', fileInput.files[0]);
 
+            importButton.prop('disabled', true);
+            importSpinner.show();
+            importButton.data('original-text', importButton.text()).text('Importing...');
+
             $.ajax({
                 url: ajaxurl,
                 method: 'POST',
                 data: formData,
                 processData: false,
                 contentType: false,
+                complete: function() {
+                    importButton.prop('disabled', false);
+                    importSpinner.hide();
+                    importButton.text(importButton.data('original-text') || '<?php esc_html_e('Import Data', 'easy-appointments'); ?>');
+                },
                 success: function(res) {
                     alert(res.data || 'Import completed successfully.');
                     location.reload();
