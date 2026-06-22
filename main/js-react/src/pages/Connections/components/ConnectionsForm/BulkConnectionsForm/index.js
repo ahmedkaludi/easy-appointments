@@ -16,6 +16,7 @@ import { StartTimeField } from '../fields/StartTimeField';
 import { EndTimeField } from '../fields/EndTimeField';
 import { MultiSelectField } from '../fields/MultiSelectField';
 import { RepeatWeeksField } from '../fields/RepeatWeeksField';
+import { UnlimitedEndDateField } from '../fields/UnlimitedEndDateField';
 
 export const BulkConnectionsForm = ({ model, onBulkSave, onCancel }) => (
   <Form model={model} onCancel={onCancel} onSave={onBulkSave}>
@@ -34,6 +35,8 @@ export const BulkConnectionsForm = ({ model, onBulkSave, onCancel }) => (
         <StartDateField />
         <EndDateField />
       </DoubleField>
+
+      <UnlimitedEndDateField />
     </MultiFieldWrap>
 
     <MultiFieldWrap
