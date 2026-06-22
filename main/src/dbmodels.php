@@ -237,7 +237,16 @@ class EADBModels
 			ORDER BY {$order}";
 
         // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.PreparedSQL.NotPrepared
-        return json_encode($this->wpdb->get_results($query));
+        $rows = $this->wpdb->get_results($query);
+
+        if ($table_name === 'ea_locations') {
+            $rows = apply_filters('ea_get_locations', $rows);
+        } elseif ($table_name === 'ea_services') {
+            $rows = apply_filters('ea_get_services', $rows);
+        } elseif ($table_name === 'ea_staff') {
+            $rows = apply_filters('ea_get_workers', $rows);
+        }
+        return json_encode(array_values($rows));
     }
 
     /**

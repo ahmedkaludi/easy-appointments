@@ -227,10 +227,10 @@ class EAAjax
 
         // Employee restriction
         if ( function_exists('ea_is_employee') && ea_is_employee() ) {
-            $worker = get_current_user_id();
+            $staff_id = function_exists('ea_get_staff_id') ? ea_get_staff_id() : 0;
+            $worker = !empty($staff_id) ? $staff_id : get_current_user_id();
         }
 
-        
         $filters = [];
 
         if (!empty($location)) $filters['location'] = $location;
@@ -301,6 +301,58 @@ class EAAjax
 
             // Reindex array
             $appointments = array_values($appointments);
+
+            // Respect sorting from Appointments screen if provided
+            $sort = '';
+            if (isset($_GET['sort'])) {
+                $sort = sanitize_text_field(wp_unslash($_GET['sort']));
+            } elseif (isset($_GET['ea-sort-by'])) {
+                $sort = sanitize_text_field(wp_unslash($_GET['ea-sort-by']));
+            }
+
+            $order = '';
+            if (isset($_GET['order'])) {
+                $order = strtoupper(sanitize_text_field(wp_unslash($_GET['order'])));
+            } elseif (isset($_GET['ea-order-by'])) {
+                $order = strtoupper(sanitize_text_field(wp_unslash($_GET['ea-order-by'])));
+            }
+
+            if (!empty($sort)) {
+                usort($appointments, function ($a, $b) use ($sort, $order) {
+                    $dir = ($order === 'ASC') ? 1 : -1;
+
+                    switch ($sort) {
+                        case 'id':
+                            $va = intval($a->id);
+                            $vb = intval($b->id);
+                            break;
+                        case 'created':
+                            $va = strtotime($a->created ?? '');
+                            $vb = strtotime($b->created ?? '');
+                            break;
+                        case 'date':
+                            // sort by date then start time to match UI ordering
+                            $va = strtotime(($a->date ?? '') . ' ' . ($a->start ?? ''));
+                            $vb = strtotime(($b->date ?? '') . ' ' . ($b->start ?? ''));
+                            break;
+                        default:
+                            $va = property_exists($a, $sort) ? $a->{$sort} : null;
+                            $vb = property_exists($b, $sort) ? $b->{$sort} : null;
+                            // normalize
+                            if (is_numeric($va) && is_numeric($vb)) {
+                                $va = $va + 0;
+                                $vb = $vb + 0;
+                            } else {
+                                $va = (string) $va;
+                                $vb = (string) $vb;
+                            }
+                            break;
+                    }
+
+                    if ($va == $vb) return 0;
+                    return ($va < $vb) ? -1 * $dir : 1 * $dir;
+                });
+            }
         }
 
         if (empty($appointments)) {
@@ -332,6 +384,11 @@ class EAAjax
             FROM $table_meta 
             ORDER BY position ASC
         ");
+        $meta_fields_by_slug = [];
+
+        foreach ($meta_fields as $field) {
+            $meta_fields_by_slug[$field->slug] = $field;
+        }
         $appointment_ids = array_map(fn($a) => intval($a->id), $appointments);
         $ids_in = implode(',', $appointment_ids);
 
@@ -349,50 +406,111 @@ class EAAjax
             }
         }
 
-        
-        header("Content-Type: application/vnd.ms-excel");
-        header("Content-Disposition: attachment; filename=appointments-" . date('Y-m-d') . ".xls");
-        header("Pragma: no-cache");
-        header("Expires: 0");
+        $allowed_fields = get_option(
+            'ea_export_fields',
+            []
+        );
+        if (empty($allowed_fields)) {
+            $allowed_fields = [
+                'id',
+                'location',
+                'service',
+                'worker',
+                'start',
+                'end',
+                'status'
+            ];
+
+            foreach ($meta_fields as $field) {
+                $allowed_fields[] = $field->slug;
+            }
+        }
+
+        header('Content-Type: text/csv; charset=UTF-8');
+        header('Content-Disposition: attachment; filename=appointments-' . date('Y-m-d') . '.csv');
+        header('Pragma: no-cache');
+        header('Expires: 0');
         echo "\xEF\xBB\xBF";
 
-        echo "<table border='1'>";
-
-        echo "<tr>
-        <th>" . esc_html__('ID', 'easy-appointments') . "</th>
-        <th>" . esc_html__('Location', 'easy-appointments') . "</th>
-        <th>" . esc_html__('Service', 'easy-appointments') . "</th>
-        <th>" . esc_html__('Worker', 'easy-appointments') . "</th>";
-        foreach ($meta_fields as $field) {
-            echo "<th>" . esc_html($field->label) . "</th>";
+        $output = fopen('php://output', 'w');
+        if ($output === false) {
+            wp_die('Unable to write CSV output');
         }
 
-        echo"<th>" . esc_html__('Start', 'easy-appointments') . "</th>
-        <th>" . esc_html__('End', 'easy-appointments') . "</th>
-        <th>" . esc_html__('Status', 'easy-appointments') . "</th>";
+        $csv_headers = [];
+        foreach ($allowed_fields as $column) {
+            switch ($column) {
+                case 'id':
+                    $csv_headers[] = 'ID';
+                    break;
+                case 'location':
+                    $csv_headers[] = 'Location';
+                    break;
+                case 'service':
+                    $csv_headers[] = 'Service';
+                    break;
+                case 'worker':
+                    $csv_headers[] = 'Worker';
+                    break;
+                case 'start':
+                    $csv_headers[] = 'Start';
+                    break;
+                case 'end':
+                    $csv_headers[] = 'End';
+                    break;
+                case 'status':
+                    $csv_headers[] = 'Status';
+                    break;
+                default:
+                    if (isset($meta_fields_by_slug[$column])) {
+                        $csv_headers[] = $meta_fields_by_slug[$column]->label;
+                    }
+                    break;
+            }
+        }
 
+        fputcsv($output, $csv_headers);
 
-        echo "</tr>";
         foreach ($appointments as $row) {
+            $csv_row = [];
 
-            echo "<tr>
-                <td>{$row->id}</td>
-                <td>" . esc_html($locations[$row->location] ?? $row->location) . "</td>
-                <td>" . esc_html($services[$row->service] ?? $row->service) . "</td>
-                <td>" . esc_html($workers[$row->worker] ?? $row->worker) . "</td>";
-                foreach ($meta_fields as $field) {
-                    $value = $field_values[$row->id][$field->id] ?? '';
-                    echo "<td>" . esc_html($value) . "</td>";
+            foreach ($allowed_fields as $column) {
+                switch ($column) {
+                    case 'id':
+                        $csv_row[] = $row->id;
+                        break;
+                    case 'location':
+                        $csv_row[] = $locations[$row->location] ?? $row->location;
+                        break;
+                    case 'service':
+                        $csv_row[] = $services[$row->service] ?? $row->service;
+                        break;
+                    case 'worker':
+                        $csv_row[] = $workers[$row->worker] ?? $row->worker;
+                        break;
+                    case 'start':
+                        $csv_row[] = $row->start;
+                        break;
+                    case 'end':
+                        $csv_row[] = $row->end;
+                        break;
+                    case 'status':
+                        $csv_row[] = $row->status;
+                        break;
+                    default:
+                        if (isset($meta_fields_by_slug[$column])) {
+                            $field = $meta_fields_by_slug[$column];
+                            $value = $field_values[$row->id][$field->id] ?? '';
+                            $csv_row[] = $value;
+                        }
+                        break;
                 }
-                echo"<td>{$row->start}</td>
-                <td>{$row->end}</td>
-                <td>{$row->status}</td>";
+            }
 
-
-            echo "</tr>";
+            fputcsv($output, $csv_row);
         }
 
-        echo "</table>";
+        fclose($output);
         exit;
     }
 
