@@ -5,7 +5,7 @@ import { __, _x } from '../../../../services/Localization';
 import { SortCommunicator } from '../../../../communicators';
 import { ContentBox, BasicTable, TableSorter } from '../../../../ea-components';
 
-const LOCATIONS_CONFIG = {
+const BASE_CONFIG = {
   id: {
     header: __('Id', 'easy-appointments'),
     headerStyle: { maxWidth: '50px' },
@@ -50,10 +50,45 @@ export const LocationsTable = ({
   onEdit,
   onDelete,
   onSort,
-  processing
+  processing,
+  selectedIds,
+  toggleSelect
 }) => {
+  const allSelected = selectedIds.length === data.length && data.length > 0;
+
+  const CONFIG = {
+    select: {
+      header: (
+        <input
+          type="checkbox"
+          checked={allSelected}
+          onChange={e => {
+            if (e.target.checked) {
+              const allIds = data.map(item => item.id);
+              toggleSelect('ALL', allIds);
+            } else {
+              toggleSelect('NONE', []);
+            }
+          }}
+        />
+      ),
+      type: 'component',
+      position: 'left',
+      render: row => (
+        <input
+          type="checkbox"
+          checked={selectedIds.includes(row.id)}
+          onChange={() => toggleSelect(row.id)}
+        />
+      )
+    },
+    ...BASE_CONFIG
+  };
   const adaptedData = data.map(record => ({
     ...record,
+    select: {
+      id: record.id
+    },
     actions: [
       {
         tooltip: __('Edit', 'easy-appointments'),
@@ -78,7 +113,7 @@ export const LocationsTable = ({
         sortingFunc={SortCommunicator.saveSortLocations}
         onSortingDone={onSort}
       />
-      <BasicTable data={adaptedData} config={LOCATIONS_CONFIG} />
+      <BasicTable data={adaptedData} config={CONFIG} />
     </ContentBox>
   );
 };
