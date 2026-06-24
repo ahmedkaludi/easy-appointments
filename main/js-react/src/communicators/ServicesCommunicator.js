@@ -58,4 +58,10 @@ export class ServicesCommunicator {
 
     return await http.postJSON(url, JSON.stringify(data));
   }
+
+  static async deleteMultiple(ids) {
+    const url = `${this.url}&action=ea_delete_multiple_services`;
+
+    return await http.postJSON(url, JSON.stringify({ ids }));
+  }
 }

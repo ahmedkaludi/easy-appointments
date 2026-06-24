@@ -86,10 +86,43 @@ export const ServicesTable = ({
   onEdit,
   onDelete,
   onSort,
-  processing
+  processing,
+  selectedIds,
+  toggleSelect
 }) => {
+  const allSelected = selectedIds.length === data.length && data.length > 0;
+  const dynamicConfig = {
+    select: {
+      header: (
+        <input
+          type="checkbox"
+          checked={allSelected}
+          onChange={e => {
+            if (e.target.checked) {
+              const allIds = data.map(item => item.id);
+              toggleSelect('ALL', allIds);
+            } else {
+              toggleSelect('NONE', []);
+            }
+          }}
+        />
+      ),
+      type: 'component',
+      position: 'left',
+      render: row => (
+        <input
+          type="checkbox"
+          checked={selectedIds.includes(row.id)}
+          onChange={() => toggleSelect(row.id)}
+        />
+      )
+    },
+    ...SERVICES_CONFIG
+  };
+
   const adaptedData = data.map(record => ({
     ...record,
+    select: { id: record.id },
     actions: [
       {
         tooltip: __('Edit', 'easy-appointments'),
@@ -115,7 +148,7 @@ export const ServicesTable = ({
         onSortingDone={onSort}
         hint={__('* value in minutes', 'easy-appointments')}
       />
-      <ServiceDragTable data={adaptedData} config={SERVICES_CONFIG} />
+      <ServiceDragTable data={adaptedData} config={dynamicConfig} />
     </ContentBox>
   );
 };
@@ -125,7 +158,9 @@ ServicesTable.propTypes = {
   onEdit: PropTypes.func.isRequired,
   onDelete: PropTypes.func.isRequired,
   onSort: PropTypes.func.isRequired,
-  processing: PropTypes.string
+  processing: PropTypes.string,
+  selectedIds: PropTypes.array.isRequired,
+  toggleSelect: PropTypes.func.isRequired
 };
 
 ServicesTable.defaultProps = {

@@ -153,7 +153,7 @@ const LocationsPage = () => {
       callback: deleteSelected,
       icon: 'trash',
       color: 'red',
-      text: `Delete Selected (${selectedIds.length})`
+      text: 'Delete Selected'
     });
   }
 
