@@ -57,10 +57,43 @@ export const WorkersTable = ({
   onEdit,
   onDelete,
   onSort,
-  processing
+  processing,
+  selectedIds,
+  toggleSelect
 }) => {
+  const allSelected = selectedIds.length === data.length && data.length > 0;
+  const dynamicConfig = {
+    select: {
+      header: (
+        <input
+          type="checkbox"
+          checked={allSelected}
+          onChange={e => {
+            if (e.target.checked) {
+              const allIds = data.map(item => item.id);
+              toggleSelect('ALL', allIds);
+            } else {
+              toggleSelect('NONE', []);
+            }
+          }}
+        />
+      ),
+      type: 'component',
+      position: 'left',
+      render: row => (
+        <input
+          type="checkbox"
+          checked={selectedIds.includes(row.id)}
+          onChange={() => toggleSelect(row.id)}
+        />
+      )
+    },
+    ...WORKERS_CONFIG
+  };
+
   const adaptedData = data.map(record => ({
     ...record,
+    select: { id: record.id },
     actions: [
       {
         tooltip: 'Edit',
@@ -85,7 +118,7 @@ export const WorkersTable = ({
         sortingFunc={SortCommunicator.saveSortWorkers}
         onSortingDone={onSort}
       />
-      <BasicTable data={adaptedData} config={WORKERS_CONFIG} />
+      <BasicTable data={adaptedData} config={dynamicConfig} />
     </ContentBox>
   );
 };
@@ -95,7 +128,9 @@ WorkersTable.propTypes = {
   onEdit: PropTypes.func.isRequired,
   onDelete: PropTypes.func.isRequired,
   onSort: PropTypes.func.isRequired,
-  processing: PropTypes.string
+  processing: PropTypes.string,
+  selectedIds: PropTypes.array.isRequired,
+  toggleSelect: PropTypes.func.isRequired
 };
 
 WorkersTable.defaultProps = {

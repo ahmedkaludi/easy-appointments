@@ -190,6 +190,7 @@ class EAAjax
             add_action('wp_ajax_ea_delete_customer' , [$this, 'ea_handle_delete_customer']);
             add_action('wp_ajax_ea_delete_multiple_connections' , [$this, 'ea_delete_multiple_connections']);
             add_action('wp_ajax_ea_delete_multiple_locations', [$this, 'ea_delete_multiple_locations']);
+            add_action('wp_ajax_ea_delete_multiple_workers', [$this, 'ea_delete_multiple_workers']);
 
             add_action('wp_ajax_ea_full_export', [$this, 'ea_ajax_full_export']);
             add_action('wp_ajax_ea_full_import', [$this, 'ea_ajax_full_import']);
@@ -762,6 +763,72 @@ class EAAjax
         global $wpdb;
 
         $table = $wpdb->prefix . 'ea_services';
+
+        $ids = array_map('absint', $data['ids']);
+        $ids = array_filter($ids);
+
+        if (empty($ids)) {
+            wp_send_json_error(
+                esc_html__(
+                    'Invalid IDs.',
+                    'easy-appointments'
+                )
+            );
+        }
+
+        $placeholders = implode(
+            ',',
+            array_fill(0, count($ids), '%d')
+        );
+
+        $query = $wpdb->prepare(
+            "DELETE FROM {$table}
+            WHERE id IN ($placeholders)",
+            $ids
+        );
+
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
+        $deleted = $wpdb->query($query);
+
+        if ($deleted === false) {
+            wp_send_json_error(
+                esc_html__(
+                    'Delete failed.',
+                    'easy-appointments'
+                )
+            );
+        }
+
+        wp_send_json_success([
+            'deleted' => $deleted
+        ]);
+    }
+
+    public function ea_delete_multiple_workers() {
+
+        $this->validate_admin_nonce();
+
+        $this->validate_access_rights('workers');
+
+        $body = file_get_contents('php://input');
+        $data = json_decode($body, true);
+
+        if (
+            !isset($data['ids']) ||
+            !is_array($data['ids']) ||
+            empty($data['ids'])
+        ) {
+            wp_send_json_error(
+                esc_html__(
+                    'No valid IDs provided.',
+                    'easy-appointments'
+                )
+            );
+        }
+
+        global $wpdb;
+
+        $table = $wpdb->prefix . 'ea_staff';
 
         $ids = array_map('absint', $data['ids']);
         $ids = array_filter($ids);
