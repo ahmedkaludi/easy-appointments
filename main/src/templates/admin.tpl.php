@@ -83,25 +83,25 @@
                     </div>
                     <div class="form-item">
                         <div class="label-with-tooltip">
-                            <label for=""><?php esc_html_e('Compatibility mode', 'easy-appointments'); ?></label>
+                            <label for="compatibility-mode"><?php esc_html_e('Compatibility mode', 'easy-appointments'); ?></label>
                             <span class="tooltip tooltip-right"
                                   data-tooltip="<?php esc_html_e('If you can\'t EDIT or DELETE conecntion or any other settings, you should mark this option. NOTE: After saving this options you must refresh page!', 'easy-appointments'); ?>"></span>
                         </div>
                         <div class="field-wrap">
                             <!-- phpcs:ignore Generic.PHP.DisallowAlternativePHPTags -->
-                            <input class="field" data-key="compatibility.mode" name="compatibility.mode" type="checkbox" <% if
+                            <input class="field" id="compatibility-mode" data-key="compatibility.mode" name="compatibility.mode" type="checkbox" <% if
                             (_.findWhere(settings, {ea_key:'compatibility.mode'}).ea_value == "1") {
                             %>checked<% } %>>
                         </div>
                     </div>
                     <div class="form-item">
                         <div class="label-with-tooltip">
-                            <label for=""><?php esc_html_e('Allow Multi Slot Selection', 'easy-appointments'); ?></label>
+                            <label for="is-multiple-booking-allowed"><?php esc_html_e('Allow Multi Slot Selection', 'easy-appointments'); ?></label>
                             <span class="tooltip tooltip-right"
                                   data-tooltip="<?php esc_html_e('If you want allow multiple slot to select for booking, you should mark this option. NOTE: After saving this options you must refresh page!', 'easy-appointments'); ?>"></span>
                         </div>
                         <div class="field-wrap">
-                            <input class="field" data-key="is_multiple_booking_allowed"
+                            <input class="field" id="is-multiple-booking-allowed" data-key="is_multiple_booking_allowed"
                                    name="is_multiple_booking_allowed" type="checkbox" <% if
                             (_.findWhere(settings, {ea_key:'is_multiple_booking_allowed'}).ea_value == "1") {
                             %>checked<% } %>>
@@ -130,24 +130,24 @@
                     </div>
                     <div class="form-item">
                         <div class="label-with-tooltip">
-                            <label><?php esc_html_e('Auto reservation', 'easy-appointments'); ?></label>
+                            <label for="pre-reservation"><?php esc_html_e('Auto reservation', 'easy-appointments'); ?></label>
                             <span class="tooltip tooltip-right"
                                   data-tooltip="<?php esc_html_e('Make reservation at moment user select date and time!', 'easy-appointments'); ?>"></span>
                         </div>
                         <div class="field-wrap">
-                            <input class="field" data-key="pre.reservation" name="pre.reservation"
+                            <input class="field" id="pre-reservation" data-key="pre.reservation" name="pre.reservation"
                                    type="checkbox" <% if (_.findWhere(settings,
                             {ea_key:'pre.reservation'}).ea_value == "1") { %>checked<% } %>>
                         </div>
                     </div>
                     <div class="form-item">
                         <div class="label-with-tooltip">
-                            <label for=""><?php esc_html_e('Turn nonce off', 'easy-appointments'); ?></label>
+                            <label for="nonce-off"><?php esc_html_e('Turn nonce off', 'easy-appointments'); ?></label>
                             <span class="tooltip tooltip-right"
                                   data-tooltip="<?php esc_html_e('if you have issues with validation code that is expired in form you can turn off nonce but you are doing that on your own risk.', 'easy-appointments'); ?>"></span>
                         </div>
                         <div class="field-wrap">
-                            <input class="field" data-key="nonce.off" name="nonce.off"
+                            <input class="field" id="nonce-off" data-key="nonce.off" name="nonce.off"
                                    type="checkbox" <% if (_.findWhere(settings,
                             {ea_key:'nonce.off'}).ea_value == "1") { %>checked<% } %>>
                         </div>
@@ -176,12 +176,12 @@
                     </div>
                     <div class="form-item">
                         <div class="label-with-tooltip">
-                            <label for=""><?php esc_html_e('Compress shortcode output (removes new lines from templates).', 'easy-appointments'); ?></label>
+                            <label for="shortcode-compress"><?php esc_html_e('Compress shortcode output (removes new lines from templates).', 'easy-appointments'); ?></label>
                             <span class="tooltip tooltip-right"
                                   data-tooltip="<?php esc_html_e('WordPress can add auto paragraph html element for each line break. This option prevents WP from doing that on EA shortcode.', 'easy-appointments'); ?>"></span>
                         </div>
                         <div class="field-wrap">
-                            <input class="field" data-key="shortcode.compress"
+                            <input class="field" id="shortcode-compress" data-key="shortcode.compress"
                                    name="shortcode.compress" type="checkbox" <% if
                             (_.findWhere(settings, {ea_key:'shortcode.compress'}).ea_value == "1") {
                             %>checked<% } %>>
@@ -190,12 +190,12 @@
 
                     <div class="form-item">
                         <div class="label-with-tooltip">
-                            <label for="show.customer_search_front"><?php esc_html_e('Customer Search', 'easy-appointments'); ?></label>
+                            <label for="show-customer-search-front"><?php esc_html_e('Customer Search', 'easy-appointments'); ?></label>
                             <span class="tooltip tooltip-right"
                                   data-tooltip="<?php esc_html_e('This will allow to search customer in front from dropdown', 'easy-appointments'); ?>"></span>
                         </div>
                         <div class="field-wrap">
-                            <input class="field" type="checkbox" name="show.customer_search_front"
+                            <input class="field" id="show-customer-search-front" type="checkbox" name="show.customer_search_front"
                                    data-key="show.customer_search_front"<% if (typeof _.findWhere(settings,
                             {ea_key:'show.customer_search_front'}) !== 'undefined' && _.findWhere(settings,
                             {ea_key:'show.customer_search_front'}).ea_value == '1') { %>checked<% } %> />
@@ -249,7 +249,7 @@
 
                     <div class="form-item">
                         <div class="label-with-tooltip">
-                            <label for="customer_search_password_only">
+                            <label for="customer-search-password-only">
                                 <?php esc_html_e('Password Protected Only', 'easy-appointments'); ?>
                             </label>
                             <span class="tooltip tooltip-right"
@@ -260,6 +260,7 @@
                         <div class="field-wrap">
                             <input type="checkbox"
                                 class="field"
+                                id="customer-search-password-only"
                                 name="customer_search_password_only"
                                 data-key="customer_search_password_only"
                                 <% if (
@@ -270,7 +271,7 @@
                     </div>
                     <div class="form-item">
                         <div class="label-with-tooltip">
-                            <label for="delete_data_on_uninstall">
+                            <label for="delete-data-on-uninstall">
                                 <?php esc_html_e('Remove Data on Uninstall?', 'easy-appointments'); ?>
                             </label>
                             <span class="tooltip tooltip-right"
@@ -281,6 +282,7 @@
                         <div class="field-wrap">
                             <input type="checkbox"
                                 class="field"
+                                id="delete-data-on-uninstall"
                                 name="delete_data_on_uninstall"
                                 data-key="delete_data_on_uninstall"
                                 <% if (
@@ -552,8 +554,9 @@
                     <div class="form-item" style="border: 1px solid #ececec; padding-left: 10px; border-radius: 4px;">
                         <div class="label-with-tooltip" style="display:flex; align-items:center; gap:8px;">
         
-                            <label for="send.worker.email" style="display:flex; align-items:center; gap:6px;">
+                            <label for="send-worker-email" style="display:flex; align-items:center; gap:6px;">
                                 <input class="field ea_send_worker_email"
+                                    id="send-worker-email"
                                     data-key="send.worker.email"
                                     name="send.worker.email"
                                     type="checkbox"
@@ -595,8 +598,8 @@
                     
                     <div class="form-item" style="border: 1px solid #ececec; padding-left: 10px; border-radius: 4px;">
                         <div class="label-with-tooltip" style="display:flex; align-items:center; gap:8px;">
-                            <label for="send.user.email" style="display:flex; align-items:center; gap:6px;">
-                                <input class="field ea_send_user_email" data-key="send.user.email" name="send.user.email"
+                            <label for="send-user-email" style="display:flex; align-items:center; gap:6px;">
+                                <input class="field ea_send_user_email" id="send-user-email" data-key="send.user.email" name="send.user.email"
                                    type="checkbox" <% if (_.findWhere(settings,
                             {ea_key:'send.user.email'}).ea_value == "1") { %>checked<% } %>>
                             <?php esc_html_e('Send email to user', 'easy-appointments'); ?></label>
@@ -662,7 +665,7 @@
                     </div>
                     <div class="form-item">
                         <div class="label-with-tooltip">
-                            <label for="enable_status_subjects">
+                            <label for="enable-status-subjects">
                                 <?php esc_html_e('Enable different subjects per status', 'easy-appointments'); ?>
                             </label>
                             <span class="tooltip tooltip-right"
@@ -671,6 +674,7 @@
                         </div>
                         <div class="field-wrap">
                             <input class="field"
+                                id="enable-status-subjects"
                                 type="checkbox"
                                 data-key="enable_status_subjects"
                                 name="enable_status_subjects"
@@ -1114,9 +1118,9 @@
                         <textarea class="field" data-key="custom.css"><% if (typeof _.findWhere(settings, {ea_key:'custom.css'}) !== 'undefined') { %><%- (_.findWhere(settings, {ea_key:'custom.css'})).ea_value %><% } %></textarea>
                     </div>
                     <div class="form-item">
-                        <label for="send.worker.email"><?php esc_html_e('Turn off css files', 'easy-appointments'); ?></label>
+                        <label for="css-off"><?php esc_html_e('Turn off css files', 'easy-appointments'); ?></label>
                         <div class="field-wrap">
-                            <input class="field" data-key="css.off" name="css.off" type="checkbox"
+                            <input class="field" id="css-off" data-key="css.off" name="css.off" type="checkbox"
                             <% if (_.findWhere(settings,
                             {ea_key:'css.off'}).ea_value == "1") { %>checked<% } %>>
                         </div>
@@ -1151,12 +1155,12 @@
                     </div>
                     <div class="form-item">
                         <div class="label-with-tooltip">
-                            <label for="send.worker.email"><?php esc_html_e('I agree field', 'easy-appointments'); ?></label>
+                            <label for="show-iagree"><?php esc_html_e('I agree field', 'easy-appointments'); ?></label>
                             <span class="tooltip tooltip-right"
                                   data-tooltip="<?php esc_html_e('I agree option at the end of form. If this is marked user must confirm "I agree" checkbox.', 'easy-appointments'); ?>"></span>
                         </div>
                         <div class="field-wrap">
-                            <input class="field" type="checkbox" name="show.iagree"
+                            <input class="field" id="show-iagree" type="checkbox" name="show.iagree"
                                    data-key="show.iagree"<% if (typeof _.findWhere(settings,
                             {ea_key:'show.iagree'}) !== 'undefined' && _.findWhere(settings,
                             {ea_key:'show.iagree'}).ea_value == '1') { %>checked<% } %> />
@@ -1247,10 +1251,10 @@
 
                     <div class="form-item">
                         <div class="label-with-tooltip">
-                            <label for="show.display_thankyou_note"><?php esc_html_e('Display Thank You Note & Status messages', 'easy-appointments'); ?></label>
+                            <label for="show-display-thankyou-note"><?php esc_html_e('Display Thank You Note & Status messages', 'easy-appointments'); ?></label>
                         </div>
                         <div class="field-wrap">
-                            <input class="field" type="checkbox" name="show.display_thankyou_note"
+                            <input class="field" id="show-display-thankyou-note" type="checkbox" name="show.display_thankyou_note"
                                    data-key="show.display_thankyou_note"<% if (typeof _.findWhere(settings,
                             {ea_key:'show.display_thankyou_note'}) !== 'undefined' && _.findWhere(settings,
                             {ea_key:'show.display_thankyou_note'}).ea_value == '1') { %>checked<% } %> />
@@ -1298,12 +1302,12 @@
                 <div class="form-container">
                     <div class="form-item">
                         <div class="label-with-tooltip">
-                            <label for="send.worker.email"><?php esc_html_e('Turn on checkbox', 'easy-appointments'); ?></label>
+                            <label for="gdpr-on"><?php esc_html_e('Turn on checkbox', 'easy-appointments'); ?></label>
                             <span class="tooltip tooltip-right"
                                   data-tooltip="<?php esc_html_e('GDPR section checkbox.', 'easy-appointments'); ?>"></span>
                         </div>
                         <div class="field-wrap">
-                            <input class="field" type="checkbox" name="gdpr.on" data-key="gdpr.on"<%
+                            <input class="field" id="gdpr-on" type="checkbox" name="gdpr.on" data-key="gdpr.on"<%
                             if (typeof _.findWhere(settings, {ea_key:'gdpr.on'}) !== 'undefined' &&
                             _.findWhere(settings, {ea_key:'gdpr.on'}).ea_value == '1') { %>checked<%
                             } %> />
@@ -1338,12 +1342,12 @@
                     </div>
                     <div class="form-item">
                         <div class="label-with-tooltip">
-                            <label for=""><?php esc_html_e('Clear customer data older then 6 months', 'easy-appointments'); ?></label>
+                            <label for="gdpr-auto-remove"><?php esc_html_e('Clear customer data older then 6 months', 'easy-appointments'); ?></label>
                             <span class="tooltip tooltip-right"
                                   data-tooltip="<?php esc_html_e('This action will remove custom form field values older then 6 months. After that appointments older then 6 months will not hold any customer related data.', 'easy-appointments'); ?>"></span>
                         </div>
                         <div class="field-wrap button">
-                            <input class="field" type="checkbox" name="gdpr.auto_remove" style="margin-right: 10px;" data-key="gdpr.auto_remove"<%
+                            <input class="field" id="gdpr-auto-remove" type="checkbox" name="gdpr.auto_remove" style="margin-right: 10px;" data-key="gdpr.auto_remove"<%
                             if (typeof _.findWhere(settings, {ea_key:'gdpr.auto_remove'}) !== 'undefined' &&
                             _.findWhere(settings, {ea_key:'gdpr.auto_remove'}).ea_value == '1') { %>checked<%
                             } %> /> <?php esc_html_e('Auto remove data via Cron that runs once a day', 'easy-appointments'); ?><button class="button button-primary btn-gdpr-delete-data button-field" style="margin-left: 10px"><?php esc_html_e('Remove data now', 'easy-appointments'); ?></button>
@@ -1361,25 +1365,25 @@
                                value="<%- _.findWhere(settings, {ea_key:'trans.currency'}).ea_value %>">
                     </div>
                     <div class="form-item">
-                        <label for="currency.before"><?php esc_html_e('Currency before price', 'easy-appointments'); ?></label>
+                        <label for="currency-before"><?php esc_html_e('Currency before price', 'easy-appointments'); ?></label>
                         <div class="field-wrap">
-                            <input class="field" data-key="currency.before" name="currency.before"
+                            <input class="field" id="currency-before" data-key="currency.before" name="currency.before"
                                    type="checkbox" <% if (_.findWhere(settings,
                             {ea_key:'currency.before'}).ea_value == "1") { %>checked<% } %>>
                         </div>
                     </div>
                     <div class="form-item">
-                        <label for="currency.before"><?php esc_html_e('Hide decimal in price', 'easy-appointments'); ?></label>
+                        <label for="hide-decimal-in-price"><?php esc_html_e('Hide decimal in price', 'easy-appointments'); ?></label>
                         <div class="field-wrap">
-                            <input class="field" data-key="hide.decimal_in_price" name="hide.decimal_in_price"
+                            <input class="field" id="hide-decimal-in-price" data-key="hide.decimal_in_price" name="hide.decimal_in_price"
                                    type="checkbox" <% if (_.findWhere(settings,
                             {ea_key:'hide.decimal_in_price'}).ea_value == "1") { %>checked<% } %>>
                         </div>
                     </div>
                     <div class="form-item">
-                        <label for="price.hide.service"><?php esc_html_e('Hide price in service select', 'easy-appointments'); ?></label>
+                        <label for="price-hide-service"><?php esc_html_e('Hide price in service select', 'easy-appointments'); ?></label>
                         <div class="field-wrap">
-                            <input class="field" data-key="price.hide.service" name="price.hide.service"
+                            <input class="field" id="price-hide-service" data-key="price.hide.service" name="price.hide.service"
                                    type="checkbox" <% if (_.findWhere(settings,
                             {ea_key:'price.hide.service'}).ea_value == "1") { %>checked<% } %>>
                         </div>
