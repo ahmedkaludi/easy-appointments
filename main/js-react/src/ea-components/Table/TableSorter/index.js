@@ -10,7 +10,13 @@ const ORDER_OPTIONS = [
   { value: 'DESC', label: 'DESC' }
 ];
 
-const TableSorter = ({ columns, sortingFunc, onSortingDone, hint }) => {
+const TableSorter = ({
+  columns,
+  sortingFunc,
+  onSortingDone,
+  hint,
+  children
+}) => {
   const [params, setParams] = useState(DEFAULT_PARAMS);
 
   const onChange = async newState => {
@@ -52,6 +58,7 @@ const TableSorter = ({ columns, sortingFunc, onSortingDone, hint }) => {
           options={ORDER_OPTIONS}
           customClass="standalone ea-min-width-100"
         />
+        {children}
       </div>
       {hint && <span className="ea-text font-size-xs pl-1">{hint}</span>}
     </div>
@@ -62,13 +69,15 @@ TableSorter.propTypes = {
   columns: PropTypes.arrayOf(PropTypes.any),
   sortingFunc: PropTypes.func.isRequired,
   onSortingDone: PropTypes.func,
-  hint: PropTypes.string
+  hint: PropTypes.string,
+  children: PropTypes.node
 };
 
 TableSorter.defaultProps = {
   columns: [],
   onSortingDone: f => f,
-  hint: null
+  hint: null,
+  children: null
 };
 
 export default TableSorter;
