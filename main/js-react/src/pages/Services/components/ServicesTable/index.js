@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 import { __, _x } from '../../../../services/Localization';
 import { SortCommunicator } from '../../../../communicators';
@@ -81,6 +81,18 @@ const COLUMNS = [
   { value: 'sequence', label: __('Sequence', 'easy-appointments') }
 ];
 
+const SEARCHABLE_COLUMNS = [
+  'id',
+  'name',
+  'duration',
+  'slot_step',
+  'block_before',
+  'block_after',
+  'daily_limit',
+  'price',
+  'service_color'
+];
+
 export const ServicesTable = ({
   data,
   onEdit,
@@ -90,7 +102,29 @@ export const ServicesTable = ({
   selectedIds,
   toggleSelect
 }) => {
-  const allSelected = selectedIds.length === data.length && data.length > 0;
+  const [searchTerm, setSearchTerm] = useState('');
+  const normalizedSearchTerm = searchTerm.trim().toLowerCase();
+
+  const filteredData = useMemo(() => {
+    if (!normalizedSearchTerm) {
+      return data;
+    }
+
+    return data.filter(record =>
+      SEARCHABLE_COLUMNS.some(column =>
+        String(record[column] || '')
+          .toLowerCase()
+          .includes(normalizedSearchTerm)
+      )
+    );
+  }, [data, normalizedSearchTerm]);
+
+  const visibleSelectedIds = selectedIds.filter(id =>
+    filteredData.some(item => item.id === id)
+  );
+  const allSelected =
+    visibleSelectedIds.length === filteredData.length &&
+    filteredData.length > 0;
   const dynamicConfig = {
     select: {
       header: (
@@ -99,7 +133,7 @@ export const ServicesTable = ({
           checked={allSelected}
           onChange={e => {
             if (e.target.checked) {
-              const allIds = data.map(item => item.id);
+              const allIds = filteredData.map(item => item.id);
               toggleSelect('ALL', allIds);
             } else {
               toggleSelect('NONE', []);
@@ -120,7 +154,7 @@ export const ServicesTable = ({
     ...SERVICES_CONFIG
   };
 
-  const adaptedData = data.map(record => ({
+  const adaptedData = filteredData.map(record => ({
     ...record,
     select: { id: record.id },
     actions: [
@@ -146,8 +180,18 @@ export const ServicesTable = ({
         columns={COLUMNS}
         sortingFunc={SortCommunicator.saveSortServices}
         onSortingDone={onSort}
-        hint={__('* value in minutes', 'easy-appointments')}
-      />
+        hint={__('* value in minutes', 'easy-appointments')}>
+        <input
+          type="text"
+          className="form-control ea-services-search ml-2"
+          placeholder={__(
+            'Search by name, duration, price or color',
+            'easy-appointments'
+          )}
+          value={searchTerm}
+          onChange={event => setSearchTerm(event.target.value)}
+        />
+      </TableSorter>
       <ServiceDragTable data={adaptedData} config={dynamicConfig} />
     </ContentBox>
   );
