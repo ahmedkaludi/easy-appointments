@@ -923,8 +923,8 @@ class EAAjax
             wp_send_json_error( [ 'message' => esc_html__( 'No appointments selected.', 'easy-appointments' ) ] );
         }
 
-
-        $appointments = sanitize_text_field( wp_unslash( $_POST['appointments'] ) );
+        $response = false;
+        $appointments = isset($_POST['appointments']) ? array_map('absint', wp_unslash($_POST['appointments'])) : [];
         $current_datetime = current_time('mysql');
         foreach ($appointments as $appointment_id) {
             $appointment = $this->models->get_row('ea_appointments', $appointment_id, ARRAY_A);
@@ -932,7 +932,7 @@ class EAAjax
             if ($appointment) {
                 if (strtotime($appointment['date']) > strtotime($current_datetime)) {
                     $data = [
-                        'status' => 'abandoned',
+                        'status' => 'canceled',
                         'id' => $appointment_id
                     ];
                     foreach ($appointment as $key => $value) {
@@ -981,7 +981,7 @@ class EAAjax
                 WHERE id = %d
             ";
             // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-            $response = $wpdb->query($wpdb->prepare($update_query, 'abandoned', $appointment_id));
+            $response = $wpdb->query($wpdb->prepare($update_query, 'canceled', $appointment_id));
         }
         if ($response === false) {
             $this->send_err_json_result('{"err":true}');
