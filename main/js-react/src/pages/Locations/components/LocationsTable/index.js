@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 
 import { __, _x } from '../../../../services/Localization';
@@ -45,6 +45,8 @@ const COLUMNS = [
   { value: 'location', label: __('Location', 'easy-appointments') }
 ];
 
+const SEARCHABLE_COLUMNS = ['id', 'name', 'address', 'location'];
+
 export const LocationsTable = ({
   data,
   onEdit,
@@ -54,7 +56,29 @@ export const LocationsTable = ({
   selectedIds,
   toggleSelect
 }) => {
-  const allSelected = selectedIds.length === data.length && data.length > 0;
+  const [searchTerm, setSearchTerm] = useState('');
+  const normalizedSearchTerm = searchTerm.trim().toLowerCase();
+
+  const filteredData = useMemo(() => {
+    if (!normalizedSearchTerm) {
+      return data;
+    }
+
+    return data.filter(record =>
+      SEARCHABLE_COLUMNS.some(column =>
+        String(record[column] || '')
+          .toLowerCase()
+          .includes(normalizedSearchTerm)
+      )
+    );
+  }, [data, normalizedSearchTerm]);
+
+  const visibleSelectedIds = selectedIds.filter(id =>
+    filteredData.some(item => item.id === id)
+  );
+  const allSelected =
+    visibleSelectedIds.length === filteredData.length &&
+    filteredData.length > 0;
 
   const CONFIG = {
     select: {
@@ -64,7 +88,7 @@ export const LocationsTable = ({
           checked={allSelected}
           onChange={e => {
             if (e.target.checked) {
-              const allIds = data.map(item => item.id);
+              const allIds = filteredData.map(item => item.id);
               toggleSelect('ALL', allIds);
             } else {
               toggleSelect('NONE', []);
@@ -84,7 +108,7 @@ export const LocationsTable = ({
     },
     ...BASE_CONFIG
   };
-  const adaptedData = data.map(record => ({
+  const adaptedData = filteredData.map(record => ({
     ...record,
     select: {
       id: record.id
@@ -111,8 +135,18 @@ export const LocationsTable = ({
       <TableSorter
         columns={COLUMNS}
         sortingFunc={SortCommunicator.saveSortLocations}
-        onSortingDone={onSort}
-      />
+        onSortingDone={onSort}>
+        <input
+          type="text"
+          className="form-control ea-locations-search ml-2"
+          placeholder={__(
+            'Search by name, address or location',
+            'easy-appointments'
+          )}
+          value={searchTerm}
+          onChange={event => setSearchTerm(event.target.value)}
+        />
+      </TableSorter>
       <BasicTable data={adaptedData} config={CONFIG} />
     </ContentBox>
   );
@@ -123,7 +157,9 @@ LocationsTable.propTypes = {
   onEdit: PropTypes.func.isRequired,
   onDelete: PropTypes.func.isRequired,
   onSort: PropTypes.func.isRequired,
-  processing: PropTypes.string
+  processing: PropTypes.string,
+  selectedIds: PropTypes.array.isRequired,
+  toggleSelect: PropTypes.func.isRequired
 };
 
 LocationsTable.defaultProps = {
