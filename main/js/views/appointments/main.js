@@ -55,15 +55,15 @@ EA.MainView = Backbone.View.extend({
 
         var period = localStorage.getItem('ea-appointments-period');
 
-        if (period) {
-            this.$el.find('#ea-period')
-                .val(period)
-                .change();
-
-            return;
+        if (!period) {
+            period = 'week';
         }
 
-        this.filterChange();
+        this.$el.find('#ea-period')
+            .val(period)
+            .trigger('change');
+
+        return;
     },
 
     /**
