@@ -85,11 +85,12 @@ class EasyEAApiFullCalendar
      * @return bool|WP_Error
      */
     public function get_items_permissions_check( $request ) {
-        // just for demo page
         $have_access = apply_filters( 'easy_ea_calendar_public_access', false);
 
-        if ( ! current_user_can( 'read' ) && !$have_access ) {
-            return new WP_Error( 'rest_forbidden', esc_html__( 'You cannot view the category resource.', 'easy-appointments' ), array( 'status' => $this->authorization_status_code() ) );
+        if ( ! current_user_can( 'edit_posts' ) && ! current_user_can( 'manage_options' ) ) {
+            if ( ! $have_access ) {
+                return new WP_Error( 'rest_forbidden', esc_html__( 'You cannot view the category resource.', 'easy-appointments' ), array( 'status' => $this->authorization_status_code() ) );
+            }
         }
 
         return true;
@@ -207,8 +208,7 @@ class EasyEAApiFullCalendar
                     'end'    => $element->end_date . 'T' . $element->end,
                     'status' => $element->status,
                     'id'     => $element->id,
-                    'user'     => $element->user,
-                    'hash'   => $this->calculate_hash($element->id),
+                    'user'   => $element->user,
                 );
     
                 if ($service_color) {

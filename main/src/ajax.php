@@ -202,9 +202,15 @@ class EAAjax
     }
 
     public function ea_export_appointments_excel() {
-        if (!is_user_logged_in()) {
+        if ( ! is_user_logged_in() ) {
             wp_die('Unauthorized');
         }
+
+        if ( ! current_user_can( 'manage_options' ) ) {
+            wp_die( esc_html__( 'Unauthorized', 'easy-appointments' ) );
+        }
+
+        $this->validate_access_rights( 'reports' );
 
         if (!isset($_GET['_wpnonce']) || 
             !wp_verify_nonce($_GET['_wpnonce'], 'ea_export_excel_nonce')) {
@@ -601,6 +607,8 @@ class EAAjax
             wp_send_json_error('Unauthorized');
         }
 
+        $this->validate_access_rights( 'tools' );
+
         if ($_FILES['file']['error'] !== UPLOAD_ERR_OK) {
             $upload_errors = array(
                 UPLOAD_ERR_INI_SIZE   => esc_html__('File exceeds upload_max_filesize', 'easy-appointments'),
@@ -872,40 +880,96 @@ class EAAjax
 
 
 
-    function ea_delete_multiple_connections() {
+    public function ea_delete_multiple_connections() {
 
-        // Read JSON body
-        $body = file_get_contents('php://input');
-        $data = json_decode($body, true);
-
-        // Ensure IDs exist
-        if (!isset($data['ids']) || !is_array($data['ids'])) {
-            wp_send_json_error('No valid IDs provided.');
+        if ( ! current_user_can( 'manage_options' ) ) {
+            wp_send_json_error( esc_html__( 'Unauthorized', 'easy-appointments' ), 403 );
         }
 
-        $ids = $data['ids'];
+        $this->validate_admin_nonce();
+
+        $this->validate_access_rights( 'connections' );
+
+        $body = file_get_contents( 'php://input' );
+        $data = json_decode( $body, true );
+
+        if (
+            ! isset( $data['ids'] ) ||
+            ! is_array( $data['ids'] ) ||
+            empty( $data['ids'] )
+        ) {
+            wp_send_json_error(
+                esc_html__(
+                    'No valid IDs provided.',
+                    'easy-appointments'
+                )
+            );
+        }
+
+        $ids = array_filter(
+            array_map(
+                'absint',
+                $data['ids']
+            )
+        );
+
+        if ( empty( $ids ) ) {
+            wp_send_json_error(
+                esc_html__(
+                    'Invalid IDs.',
+                    'easy-appointments'
+                )
+            );
+        }
 
         global $wpdb;
+
         $table = $wpdb->prefix . 'ea_connections';
 
-        // Delete each ID
-        foreach ($ids as $id) {
-            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-            $wpdb->delete($table, [ 'id' => intval($id) ]);
+        $placeholders = implode(
+            ',',
+            array_fill( 0, count( $ids ), '%d' )
+        );
+
+        $query = $wpdb->prepare(
+            "DELETE FROM {$table} WHERE id IN ($placeholders)",
+            $ids
+        );
+
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
+        $deleted = $wpdb->query( $query );
+
+        if ( false === $deleted ) {
+            wp_send_json_error(
+                esc_html__(
+                    'Delete failed.',
+                    'easy-appointments'
+                )
+            );
         }
 
-        wp_send_json_success(1);
+        wp_send_json_success(
+            array(
+                'deleted' => $deleted,
+            )
+        );
     }
 
 
     public function cancel_selected_appointments_callback() {
+        if ( ! is_user_logged_in() ) {
+            wp_send_json_error( [ 'message' => esc_html__( 'Unauthorized', 'easy-appointments' ) ], 401 );
+        }
+
         $nonce = isset( $_POST['appointments_nonce'] )
             ? sanitize_text_field( wp_unslash( $_POST['appointments_nonce'] ) )
             : '';
 
         if ( ! wp_verify_nonce( $nonce, 'appointments_nonce' ) ) {
-            wp_send_json_error( [ 'message' => esc_html__( 'Security check failed.', 'easy-appointments' ) ] );
+            wp_send_json_error( [ 'message' => esc_html__( 'Security check failed.', 'easy-appointments' ) ], 403 );
         }
+
+        $this->validate_access_rights( 'appointments' );
 
         $cancel_to = isset( $_POST['cancel_to'] )
             ? sanitize_text_field( wp_unslash( $_POST['cancel_to'] ) )
@@ -955,6 +1019,11 @@ class EAAjax
     }
 
     public function cancel_upcoming_all() {
+        if ( ! is_user_logged_in() ) {
+            wp_send_json_error( [ 'message' => esc_html__( 'Unauthorized', 'easy-appointments' ) ], 401 );
+        }
+
+        $this->validate_access_rights( 'appointments' );
         global $wpdb;
         $current_time = current_time('H:i:s');
         $current_date = current_time('Y-m-d');
@@ -1732,6 +1801,10 @@ class EAAjax
 
     public function ajax_appointments()
     {
+        if ( ! current_user_can( 'manage_options' ) ) {
+            wp_send_json_error( esc_html__( 'Unauthorized', 'easy-appointments' ), 403 );
+        }
+
         $this->validate_admin_nonce();
 
         $data = $this->parse_input_data();
@@ -1747,6 +1820,10 @@ class EAAjax
 
     public function ajax_appointment()
     {
+        if ( ! current_user_can( 'manage_options' ) ) {
+            wp_send_json_error( esc_html__( 'Unauthorized', 'easy-appointments' ), 403 );
+        }
+
         $this->validate_admin_nonce();
 
         $response = $this->parse_appointment(false);
@@ -1769,12 +1846,16 @@ class EAAjax
 
     public function delete_selected_appointment()
     {
+        if ( ! is_user_logged_in() ) {
+            wp_send_json_error(array('message' => esc_html__('Unauthorized', 'easy-appointments')), 401);
+        }
+
         if (!isset($_POST['appointments_nonce']) || !wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['appointments_nonce'] ) ), 'appointments_nonce')) {
             wp_send_json_error(array('message' => esc_html__('Security check failed.', 'easy-appointments')));
         }
 
-        if ( !current_user_can( 'manage_options' ) ) {
-            return;  					
+        if ( ! current_user_can( 'manage_options' ) ) {
+            wp_send_json_error(array('message' => esc_html__('Unauthorized', 'easy-appointments')), 403);
         }
         
         if (!isset($_POST['appointments']) || !is_array($_POST['appointments'])) {
@@ -2968,15 +3049,40 @@ class EAAjax
 
 
     public function handle_customers_ajax() {
+
+        if ( ! is_user_logged_in() ) {
+            wp_send_json_error(
+                array(
+                    'message' => esc_html__( 'Unauthorized.', 'easy-appointments' ),
+                ),
+                401
+            );
+        }
+
+        check_ajax_referer( 'ea_customer_list', 'ea_nonce' );
+
+        if ( ! current_user_can( 'manage_options' ) ) {
+            wp_send_json_error(
+                array(
+                    'message' => esc_html__( 'Unauthorized.', 'easy-appointments' ),
+                ),
+                403
+            );
+        }
+
         global $wpdb;
 
         $table = $wpdb->prefix . 'ea_customers';
         $per_page = 10;
         // phpcs:ignore WordPress.Security.NonceVerification.Missing
-        $paged = isset($_POST['paged']) ? max(1, intval($_POST['paged'])) : 1;
+        $paged = isset( $_POST['paged'] )
+        ? max( 1, absint( wp_unslash( $_POST['paged'] ) ) )
+        : 1;
         $offset = ($paged - 1) * $per_page;
         // phpcs:ignore WordPress.Security.NonceVerification.Missing
-        $search = isset($_POST['search']) ? sanitize_text_field( wp_unslash($_POST['search'])) : '';
+        $search = isset( $_POST['search'] )
+                    ? sanitize_text_field( wp_unslash( $_POST['search'] ) )
+                    : '';
         $search_sql = '';
         $params = [];
 
@@ -3125,6 +3231,21 @@ class EAAjax
         }
     }
     public function handle_customer_detail_ajax() {
+        if ( ! is_user_logged_in() ) {
+            wp_send_json_error(
+                array(
+                    'message' => esc_html__( 'Unauthorized.', 'easy-appointments' ),
+                ),
+                401
+            );
+        }
+
+        check_ajax_referer(
+            'ea_customer_detail',
+            'ea_nonce'
+        );
+
+        $this->validate_access_rights( 'customers' );
         if ( ! current_user_can('manage_options') ) {
             wp_send_json_error('Permission denied', 403);
         }
@@ -3196,12 +3317,26 @@ class EAAjax
             $this->validate_nonce();
 
             global $wpdb;
+            $current_user_id = get_current_user_id();
             // phpcs:ignore WordPress.Security.NonceVerification.Missing
             $id = isset($_POST['id']) ? absint($_POST['id']) : 0;
             // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
             $cust = $wpdb->get_row($wpdb->prepare(
-                "SELECT * FROM {$wpdb->prefix}ea_customers WHERE id = %d", $id
+                "SELECT id, name, email, mobile, address, user_id FROM {$wpdb->prefix}ea_customers WHERE id = %d", $id
             ), ARRAY_A);
+
+            if (empty($cust)) {
+                wp_send_json([], 404);
+            }
+
+            if (current_user_can('manage_options')) {
+                wp_send_json($cust);
+            }
+
+            $allowed_user_ids = array_filter(array_map('trim', explode(',', (string) ($cust['user_id'] ?? ''))));
+            if (!in_array((string) $current_user_id, $allowed_user_ids, true)) {
+                wp_send_json([], 403);
+            }
 
             wp_send_json($cust);
         }
@@ -3217,6 +3352,19 @@ class EAAjax
         }
         $data = $_POST;
         $id =  isset($data['appointment_id']) ? absint( sanitize_text_field(wp_unslash($data['appointment_id'])) ) : 0;
+
+        if (empty($id)) {
+            wp_send_json_error(esc_html__('Invalid appointment', 'easy-appointments'), 400);
+        }
+
+        $appointment = $this->models->get_row('ea_appointments', $id, ARRAY_A);
+        if (empty($appointment)) {
+            wp_send_json_error(esc_html__('Appointment not found', 'easy-appointments'), 404);
+        }
+
+        if ( ! current_user_can('manage_options') && (int) ($appointment['user'] ?? 0) !== get_current_user_id() ) {
+            wp_send_json_error(esc_html__('Unauthorized', 'easy-appointments'), 403);
+        }
         $name = sanitize_text_field(wp_unslash($data['name']));
         $email = sanitize_email(wp_unslash($data['email']));
         $phone = sanitize_text_field(wp_unslash($data['phone']));
@@ -3241,17 +3389,33 @@ class EAAjax
             $value['app_id'] = $id;
             $this->models->replace($fields, $value, true, true);
         }
-        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-        $wpdb->update(
-            $wpdb->prefix . 'ea_customers',
-            [
-                'name' => $name,
-                'email' => $email,
-                'phone' => $phone,
-                'description' => $description
-            ],
-            ['email' => $email]
-        );
+        $customer_id = isset($appointment['customer_id']) ? absint($appointment['customer_id']) : 0;
+
+        if ($customer_id > 0) {
+            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+            $wpdb->update(
+                $wpdb->prefix . 'ea_customers',
+                [
+                    'name' => $name,
+                    'email' => $email,
+                    'phone' => $phone,
+                    'description' => $description
+                ],
+                ['id' => $customer_id]
+            );
+        } else {
+            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+            $wpdb->update(
+                $wpdb->prefix . 'ea_customers',
+                [
+                    'name' => $name,
+                    'email' => $email,
+                    'phone' => $phone,
+                    'description' => $description
+                ],
+                ['email' => $email]
+            );
+        }
 
         wp_send_json_success();
     }
