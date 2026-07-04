@@ -1,3 +1,7 @@
+<?php
+// phpcs:disable Generic.PHP.DisallowAlternativePHPTags
+defined( 'ABSPATH' ) || exit;
+?>
 <option value="">-</option>
 <option data-countryCode="DZ" value="213">Algeria (+213)</option>
 <option data-countryCode="AD" value="376">Andorra (+376)</option>
@@ -213,3 +217,6 @@
 <option data-countryCode="YE" value="967">Yemen (South)(+967)</option>
 <option data-countryCode="ZM" value="260">Zambia (+260)</option>
 <option data-countryCode="ZW" value="263">Zimbabwe (+263)</option>
+<?php
+// phpcs:enable Generic.PHP.DisallowAlternativePHPTags
+?>

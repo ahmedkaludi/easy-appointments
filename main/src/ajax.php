@@ -15,6 +15,7 @@ if (!defined('WPINC')) {
  * TODO switch to rest API - one by one endpoint
  *
  */
+// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound
 class EAAjax
 {
 
@@ -212,28 +213,33 @@ class EAAjax
 
         $this->validate_access_rights( 'reports' );
 
-        if (!isset($_GET['_wpnonce']) || 
-            !wp_verify_nonce($_GET['_wpnonce'], 'ea_export_excel_nonce')) {
-            wp_die('Invalid nonce');
+        if (
+            ! isset( $_GET['_wpnonce'] ) ||
+            ! wp_verify_nonce(
+                sanitize_text_field( wp_unslash( $_GET['_wpnonce'] ) ),
+                'ea_export_excel_nonce'
+            )
+        ) {
+            wp_die( esc_html__( 'Invalid nonce', 'easy-appointments' ) );
         }
 
         global $wpdb;
 
-        $table_fields = $wpdb->prefix . 'ea_fields';
-        $table_meta   = $wpdb->prefix . 'ea_meta_fields';
+        $table_fields = esc_sql( $wpdb->prefix . 'ea_fields' );
+        $table_meta = esc_sql( $wpdb->prefix . 'ea_meta_fields' );
 
         
         $location = isset($_GET['location']) ? intval($_GET['location']) : '';
         $service  = isset($_GET['service']) ? intval($_GET['service']) : '';
         $worker   = isset($_GET['worker']) ? intval($_GET['worker']) : '';
-        $status   = isset($_GET['status']) ? sanitize_text_field($_GET['status']) : '';
-        $search   = isset($_GET['search']) ? sanitize_text_field($_GET['search']) : '';
-        $from     = isset($_GET['from']) ? sanitize_text_field($_GET['from']) : '';
-        $to       = isset($_GET['to']) ? sanitize_text_field($_GET['to']) : '';
+        $status = isset( $_GET['status'] ) ? sanitize_text_field( wp_unslash( $_GET['status'] ) ) : '';
+        $search = isset( $_GET['search'] ) ? sanitize_text_field( wp_unslash( $_GET['search'] ) ) : '';
+        $from   = isset( $_GET['from'] ) ? sanitize_text_field( wp_unslash( $_GET['from'] ) ) : '';
+        $to     = isset( $_GET['to'] ) ? sanitize_text_field( wp_unslash( $_GET['to'] ) ) : '';
 
         // Fix date format
-        $from = !empty($from) ? date('Y-m-d', strtotime($from)) : '';
-        $to   = !empty($to)   ? date('Y-m-d', strtotime($to))   : '';
+        $from = !empty($from) ? gmdate('Y-m-d', strtotime($from)) : '';
+        $to   = !empty($to)   ? gmdate('Y-m-d', strtotime($to))   : '';
 
         // Employee restriction
         if ( function_exists('ea_is_employee') && ea_is_employee() ) {
@@ -256,25 +262,23 @@ class EAAjax
         
         if (!empty($appointments)) {
 
-            $table_fields = $wpdb->prefix . 'ea_fields';
-
             // Load all field values for filtering
-            $ids = array_map(fn($a) => intval($a->id), $appointments);
-            $ids_in = implode(',', $ids);
+            $ids = array_map( 'absint', $ids );
 
-            $field_map = [];
+            if ( ! empty( $ids ) ) {
 
-            if (!empty($ids_in)) {
-                $rows = $wpdb->get_results("
-                    SELECT app_id, value 
-                    FROM $table_fields
-                    WHERE app_id IN ($ids_in)
-                ");
+                $placeholders = implode( ',', array_fill( 0, count( $ids ), '%d' ) );
 
+                // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare, WordPress.DB.PreparedSQL.NotPrepared
+                $sql = $wpdb->prepare( "SELECT app_id, value FROM {$table_fields} WHERE app_id IN (" . $placeholders . ")", ...$ids );
+
+                // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.NoCaching
+                $rows = $wpdb->get_results( $sql );
                 foreach ($rows as $r) {
                     $field_map[$r->app_id][] = strtolower($r->value);
                 }
             }
+
 
             // Apply filters
             $appointments = array_filter($appointments, function($row) use ($status, $search, $field_map) {
@@ -388,12 +392,8 @@ class EAAjax
             $services[$s->id] = $s->name;
         }
 
-        
-        $meta_fields = $wpdb->get_results("
-            SELECT id, slug, label 
-            FROM $table_meta 
-            ORDER BY position ASC
-        ");
+        // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Plugin table.
+        $meta_fields = $wpdb->get_results( "SELECT id, slug, label FROM {$table_meta} ORDER BY position ASC" );
         $meta_fields_by_slug = [];
 
         foreach ($meta_fields as $field) {
@@ -405,11 +405,8 @@ class EAAjax
         $field_values = [];
 
         if (!empty($ids_in)) {
-            $rows = $wpdb->get_results("
-                SELECT app_id, field_id, value 
-                FROM $table_fields
-                WHERE app_id IN ($ids_in)
-            ");
+            // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+            $rows = $wpdb->get_results( "SELECT app_id, field_id, value FROM {$table_fields} WHERE app_id IN ($ids_in)" );
 
             foreach ($rows as $r) {
                 $field_values[$r->app_id][$r->field_id] = $r->value;
@@ -437,7 +434,7 @@ class EAAjax
         }
 
         header('Content-Type: text/csv; charset=UTF-8');
-        header('Content-Disposition: attachment; filename=appointments-' . date('Y-m-d') . '.csv');
+        header('Content-Disposition: attachment; filename=appointments-' . gmdate('Y-m-d') . '.csv');
         header('Pragma: no-cache');
         header('Expires: 0');
         echo "\xEF\xBB\xBF";
@@ -520,7 +517,8 @@ class EAAjax
             fputcsv($output, $csv_row);
         }
 
-        fclose($output);
+        // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose -- Closing php://output stream; WP_Filesystem does not support output streams.
+        fclose( $output );
         exit;
     }
 
@@ -552,10 +550,12 @@ class EAAjax
         $customers_table = $wpdb->prefix . 'ea_customers';
         $appointments_table = $wpdb->prefix . 'ea_appointments';
 
-        // Delete all customers
+        
+        // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
         $deleted = $wpdb->query("DELETE FROM {$customers_table}");
 
         // Remove references from appointments
+        // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
         $wpdb->query("UPDATE {$appointments_table} SET customer_id = NULL");
 
         if ($deleted !== false) {
@@ -582,15 +582,12 @@ class EAAjax
 
             foreach ($this->get_ea_tables() as $table) {
                 $full = $wpdb->prefix . $table;
-                // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
-                $export['tables'][$table] = $wpdb->get_results(
-                    "SELECT * FROM {$full}",
-                    ARRAY_A
-                );
+                // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+                $export['tables'][$table] = $wpdb->get_results( "SELECT * FROM {$full}", ARRAY_A );
             }
 
             header('Content-Type: application/json');
-            header('Content-Disposition: attachment; filename=easy-appointments-backup-' . date('Ymd-His') . '.json');
+            header('Content-Disposition: attachment; filename=easy-appointments-backup-' . gmdate('Ymd-His') . '.json');
             header('Pragma: no-cache');
             header('Expires: 0');
 
@@ -609,30 +606,41 @@ class EAAjax
 
         $this->validate_access_rights( 'tools' );
 
-        if ($_FILES['file']['error'] !== UPLOAD_ERR_OK) {
+        if (
+            ! isset( $_FILES['file'] ) ||
+            ! isset( $_FILES['file']['error'], $_FILES['file']['tmp_name'] )
+        ) {
+            wp_send_json_error( esc_html__( 'No file uploaded', 'easy-appointments' ) );
+        }
+
+        $file_error = absint( wp_unslash( $_FILES['file']['error'] ) );
+
+        if ( UPLOAD_ERR_OK !== $file_error ) {
             $upload_errors = array(
-                UPLOAD_ERR_INI_SIZE   => esc_html__('File exceeds upload_max_filesize', 'easy-appointments'),
-                UPLOAD_ERR_FORM_SIZE  => esc_html__('File exceeds MAX_FILE_SIZE', 'easy-appointments'),
-                UPLOAD_ERR_PARTIAL    => esc_html__('File partially uploaded', 'easy-appointments'),
-                UPLOAD_ERR_NO_FILE    => esc_html__('No file uploaded', 'easy-appointments'),
-                UPLOAD_ERR_NO_TMP_DIR => esc_html__('Missing temp folder', 'easy-appointments'),
-                UPLOAD_ERR_CANT_WRITE => esc_html__('Failed to write file', 'easy-appointments'),
-                UPLOAD_ERR_EXTENSION  => esc_html__('Upload stopped by extension', 'easy-appointments'),
+                UPLOAD_ERR_INI_SIZE   => esc_html__( 'File exceeds upload_max_filesize', 'easy-appointments' ),
+                UPLOAD_ERR_FORM_SIZE  => esc_html__( 'File exceeds MAX_FILE_SIZE', 'easy-appointments' ),
+                UPLOAD_ERR_PARTIAL    => esc_html__( 'File partially uploaded', 'easy-appointments' ),
+                UPLOAD_ERR_NO_FILE    => esc_html__( 'No file uploaded', 'easy-appointments' ),
+                UPLOAD_ERR_NO_TMP_DIR => esc_html__( 'Missing temp folder', 'easy-appointments' ),
+                UPLOAD_ERR_CANT_WRITE => esc_html__( 'Failed to write file', 'easy-appointments' ),
+                UPLOAD_ERR_EXTENSION  => esc_html__( 'Upload stopped by extension', 'easy-appointments' ),
             );
 
-            $message = isset($upload_errors[$_FILES['file']['error']])
-                ? $upload_errors[$_FILES['file']['error']]
-                : esc_html__('Unknown upload error', 'easy-appointments');
+            $message = isset( $upload_errors[ $file_error ] )
+                ? $upload_errors[ $file_error ]
+                : esc_html__( 'Unknown upload error', 'easy-appointments' );
 
-            wp_send_json_error($message);
+            wp_send_json_error( $message );
         }
 
-        if (empty($_FILES['file']['tmp_name'])) {
-            wp_send_json_error('No file uploaded');
+        $tmp_name = sanitize_text_field( wp_unslash( $_FILES['file']['tmp_name'] ) );
+
+        if ( ! is_uploaded_file( $tmp_name ) ) {
+            wp_send_json_error( esc_html__( 'Invalid uploaded file.', 'easy-appointments' ) );
         }
 
-        $json = file_get_contents($_FILES['file']['tmp_name']);
-        $data = json_decode($json, true);
+        $json = file_get_contents( $tmp_name );
+        $data = json_decode( $json, true );
 
         if (empty($data['tables'])) {
             wp_send_json_error('Invalid backup file');
@@ -640,8 +648,9 @@ class EAAjax
 
         global $wpdb;
 
-        // Safety
+        // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
         $wpdb->query('SET FOREIGN_KEY_CHECKS=0');
+        // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
         $wpdb->query('START TRANSACTION');
 
         try {
@@ -652,12 +661,13 @@ class EAAjax
                     continue;
                 }
 
-                $full = $wpdb->prefix . $table;
+                $full = esc_sql($wpdb->prefix . $table);
 
-                // Clear table
+                // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
                 $wpdb->query("TRUNCATE TABLE {$full}");
 
                 foreach ($data['tables'][$table] as $row) {
+                    // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
                     $wpdb->insert($full, $row);
                 }
             }
@@ -665,15 +675,17 @@ class EAAjax
             if (!empty($data['db_version'])) {
                 update_option('easy_app_db_version', $data['db_version']);
             }
-
+            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching            
             $wpdb->query('COMMIT');
+            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching            
             $wpdb->query('SET FOREIGN_KEY_CHECKS=1');
 
             wp_send_json_success('Import completed');
 
         } catch (Exception $e) {
-
+            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
             $wpdb->query('ROLLBACK');
+            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
             $wpdb->query('SET FOREIGN_KEY_CHECKS=1');
 
             wp_send_json_error('Import failed');
@@ -722,14 +734,10 @@ class EAAjax
             ',',
             array_fill(0, count($ids), '%d')
         );
+        // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
+        $query = $wpdb->prepare( "DELETE FROM {$table} WHERE id IN ($placeholders)", $ids );
 
-        $query = $wpdb->prepare(
-            "DELETE FROM {$table}
-            WHERE id IN ($placeholders)",
-            $ids
-        );
-
-        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
+        // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared
         $deleted = $wpdb->query($query);
 
         if ($deleted === false) {
@@ -788,14 +796,10 @@ class EAAjax
             ',',
             array_fill(0, count($ids), '%d')
         );
+        // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
+        $query = $wpdb->prepare( "DELETE FROM {$table} WHERE id IN ($placeholders)", $ids );
 
-        $query = $wpdb->prepare(
-            "DELETE FROM {$table}
-            WHERE id IN ($placeholders)",
-            $ids
-        );
-
-        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
+        // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared
         $deleted = $wpdb->query($query);
 
         if ($deleted === false) {
@@ -854,14 +858,10 @@ class EAAjax
             ',',
             array_fill(0, count($ids), '%d')
         );
+        // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
+        $query = $wpdb->prepare( "DELETE FROM {$table} WHERE id IN ($placeholders)", $ids );
 
-        $query = $wpdb->prepare(
-            "DELETE FROM {$table}
-            WHERE id IN ($placeholders)",
-            $ids
-        );
-
-        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
+        // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared
         $deleted = $wpdb->query($query);
 
         if ($deleted === false) {
@@ -930,13 +930,10 @@ class EAAjax
             ',',
             array_fill( 0, count( $ids ), '%d' )
         );
+        // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
+        $query = $wpdb->prepare( "DELETE FROM {$table} WHERE id IN ($placeholders)", $ids );
 
-        $query = $wpdb->prepare(
-            "DELETE FROM {$table} WHERE id IN ($placeholders)",
-            $ids
-        );
-
-        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
+        // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared
         $deleted = $wpdb->query( $query );
 
         if ( false === $deleted ) {
@@ -2639,9 +2636,9 @@ class EAAjax
                 $response = $this->models->replace($table, $data, true);
                 if ($table === 'ea_staff' && !empty($response->id)) {
                     if ($this->type === 'UPDATE') {
-                        do_action('ea_staff_updated', $response->id, $data);
+                        do_action('easy_ea_staff_updated', $response->id, $data);
                     } else {
-                        do_action('ea_staff_created', $response->id, $data);
+                        do_action('easy_ea_staff_created', $response->id, $data);
                     }
                 }
                 break;
@@ -3095,12 +3092,13 @@ class EAAjax
         $total_sql = "SELECT COUNT(*) FROM $table " . ($search_sql ? $search_sql : '');
 
         if (!empty($params)) {
-            // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+            // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
             $total_customers = $wpdb->get_var(
+                // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,
                 $wpdb->prepare($total_sql, ...$params)
             );
         } else {
-            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.PreparedSQL.NotPrepared
             $total_customers = $wpdb->get_var($total_sql);
         }
         

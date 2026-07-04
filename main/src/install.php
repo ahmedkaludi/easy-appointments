@@ -10,6 +10,7 @@ if (!defined('WPINC')) {
  *
  * Create whole DB structure
  */
+// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound
 class EAInstallTools
 {
 

@@ -8,6 +8,7 @@ if (!defined('WPINC')) {
 /**
  * Ajax communication
  */
+// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound
 class EADateTime
 {
 

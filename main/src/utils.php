@@ -8,6 +8,7 @@ if (!defined('WPINC')) {
 /**
  * Utils class
  */
+// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound
 class EAUtils
 {
     public function get_template_path($template_file_name)

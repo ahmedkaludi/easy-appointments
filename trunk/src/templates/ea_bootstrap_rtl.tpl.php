@@ -1,3 +1,7 @@
+<?php
+// phpcs:disable Generic.PHP.DisallowAlternativePHPTags
+defined( 'ABSPATH' ) || exit;
+?>
 <style type="text/css">
     .ea-rtl-label.ea-rtl-label.ea-rtl-label.ea-rtl-label {
         /*text-align: left;*/
@@ -20,7 +24,7 @@
                     </select>
                 </div>
             <label class="ea-label col-sm-4 control-label ea-rtl-label">
-                <?php echo easy_ea_helper_polylang_trans($this->options->get_option_value("trans.location"));?>
+                <?php echo esc_html( easy_ea_helper_polylang_trans($this->options->get_option_value("trans.location")) ); ?>
             </label>
         </div>
         <div class="step form-group">
@@ -31,7 +35,7 @@
                 </select>
             </div>
             <label class="ea-label col-sm-4 control-label ea-rtl-label">
-                <?php echo easy_ea_helper_polylang_trans($this->options->get_option_value("trans.service")); ?>
+                <?php echo esc_html( easy_ea_helper_polylang_trans($this->options->get_option_value("trans.service")) ); ?>
             </label>
         </div>
         <div class="step form-group">
@@ -42,7 +46,7 @@
                 </select>
             </div>
             <label class="ea-label col-sm-4 control-label ea-rtl-label">
-                <?php echo easy_ea_helper_polylang_trans($this->options->get_option_value("trans.worker")); ?>
+                <?php echo esc_html( easy_ea_helper_polylang_trans($this->options->get_option_value("trans.worker")) ); ?>
             </label>
         </div>
         <div class="step calendar" class="filter">
@@ -150,3 +154,6 @@
 </div>
 <div id="ea-loader"></div>
 </script>
+<?php
+// phpcs:enable Generic.PHP.DisallowAlternativePHPTags
+?>

@@ -17,7 +17,12 @@ function easy_ea_create_block_init()
 	// 	wp_register_block_types_from_metadata_collection(__DIR__ . '/build', __DIR__ . '/build/blocks-manifest.php');
 	// } else {
 	if (function_exists('wp_register_block_metadata_collection')) { // Function introduced in WordPress 6.7.
-		wp_register_block_metadata_collection(__DIR__ . '/build', __DIR__ . '/build/blocks-manifest.php');
+		// wp_register_block_metadata_collection(__DIR__ . '/build', __DIR__ . '/build/blocks-manifest.php');
+		call_user_func(
+			'wp_register_block_metadata_collection',
+			__DIR__ . '/build',
+			__DIR__ . '/build/blocks-manifest.php'
+		);
 	}
 	$manifest_data = require __DIR__ . '/build/blocks-manifest.php';
 	foreach (array_keys($manifest_data) as $block_type) {

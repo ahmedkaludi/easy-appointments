@@ -3,7 +3,7 @@
 if (!defined('ABSPATH')) {
     exit;
 }
-
+// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound
 class EAWebhook
 {
     /**
@@ -86,13 +86,28 @@ class EAWebhook
 
         global $wpdb;
 
-        $appointment = $wpdb->get_row(
-            $wpdb->prepare(
-                "SELECT * FROM {$wpdb->prefix}ea_appointments WHERE id = %d",
-                $appointment_id
-            ),
-            ARRAY_A
-        );
+        $cache_key = 'ea_webhook_appointment_' . absint( $appointment_id );
+
+        $appointment = wp_cache_get( $cache_key, 'easy_appointments' );
+
+        if ( false === $appointment ) {
+
+            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
+            $appointment = $wpdb->get_row(
+                $wpdb->prepare(
+                    "SELECT * FROM {$wpdb->prefix}ea_appointments WHERE id = %d",
+                    $appointment_id
+                ),
+                ARRAY_A
+            );
+
+            wp_cache_set(
+                $cache_key,
+                $appointment,
+                'easy_appointments',
+                MINUTE_IN_SECONDS
+            );
+        }
 
         if (empty($appointment)) {
             return;
@@ -197,17 +212,33 @@ class EAWebhook
 
         global $wpdb;
 
-        $webhook_value = $wpdb->get_var(
-            $wpdb->prepare(
-                "SELECT ea_value FROM {$wpdb->prefix}ea_options WHERE `ea_key` = %s",
-                'webhook.endpoints'
-            )
+        $webhooks = wp_cache_get(
+            'ea_webhook_endpoints',
+            'easy_appointments'
         );
 
-        $webhooks = json_decode(
-            $webhook_value,
-            true
-        );
+        if ( false === $webhooks ) {
+
+            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
+            $webhook_value = $wpdb->get_var(
+                $wpdb->prepare(
+                    "SELECT ea_value FROM {$wpdb->prefix}ea_options WHERE ea_key = %s",
+                    'webhook.endpoints'
+                )
+            );
+
+            $webhooks = json_decode(
+                $webhook_value,
+                true
+            );
+
+            wp_cache_set(
+                'ea_webhook_endpoints',
+                $webhooks,
+                'easy_appointments',
+                MINUTE_IN_SECONDS
+            );
+        }
 
         if (
             empty($webhooks) ||

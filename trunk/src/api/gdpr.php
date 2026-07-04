@@ -38,26 +38,35 @@ class EasyEAGDPRActions {
     }
 
     public function clear_old_custom_data() {
-        $table_app = $this->db_models->get_wpdb()->prefix . 'ea_appointments';
-        $table_fields = $this->db_models->get_wpdb()->prefix . 'ea_fields';
-        $query = "DELETE f FROM $table_app a INNER JOIN $table_fields f ON (a.id = f.app_id) WHERE a.end_date <= (now() - interval 6 month) AND a.end_date IS NOT NULL";
-        $this->db_models->get_wpdb()->query($query);
+        global $wpdb;
+
+        $table_app    = esc_sql( $wpdb->prefix . 'ea_appointments' );
+        $table_fields = esc_sql( $wpdb->prefix . 'ea_fields' );
+
+        $query = "
+            DELETE f
+            FROM {$table_app} AS a
+            INNER JOIN {$table_fields} AS f
+                ON a.id = f.app_id
+            WHERE a.end_date <= ( NOW() - INTERVAL 6 MONTH )
+            AND a.end_date IS NOT NULL
+        ";
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared -- Required for GDPR cleanup.
+        $wpdb->query( $query );
 
         global $wpdb;
-        $table_customer = $wpdb->prefix . 'ea_customers';
-        $table_app      = $wpdb->prefix . 'ea_appointments';
-        $customer_ids = $wpdb->get_col("
-            SELECT DISTINCT customer_id 
-            FROM $table_app
-            WHERE customer_id IS NOT NULL
-            AND date >= (NOW() - INTERVAL 6 MONTH)
-        ");
-        $placeholders = implode(',', array_fill(0, count($customer_ids), '%d'));
-        $wpdb->query($wpdb->prepare("
-            DELETE FROM $table_customer
-            WHERE id IN ($placeholders)
-        ", ...$customer_ids));
-
-        return __('Data deleted', 'easy-appointments');
+        $table_customer = esc_sql( $wpdb->prefix . 'ea_customers' );
+        $table_app      = esc_sql( $wpdb->prefix . 'ea_appointments' );
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Required for GDPR cleanup.
+        $customer_ids = $wpdb->get_col( "SELECT DISTINCT customer_id FROM {$table_app} WHERE customer_id IS NOT NULL AND date >= ( NOW() - INTERVAL 6 MONTH )" );
+        if ( ! empty( $customer_ids ) ) {
+            $placeholders = implode( ',', array_fill( 0, count( $customer_ids ), '%d' ) );
+            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Required for GDPR cleanup.
+            $wpdb->query(
+                // phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+                $wpdb->prepare( "DELETE FROM {$table_customer} WHERE id IN ($placeholders)", $customer_ids )
+            );
+        }
+        return esc_html__( 'Data deleted', 'easy-appointments'  );
     }
 }

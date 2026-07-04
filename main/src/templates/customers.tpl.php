@@ -1,3 +1,7 @@
+<?php
+// phpcs:disable Generic.PHP.DisallowAlternativePHPTags
+defined( 'ABSPATH' ) || exit;
+?>
 <style>
     @keyframes spin {
         to {
@@ -628,3 +632,6 @@
         });
     });
 </script>
+<?php
+// phpcs:enable Generic.PHP.DisallowAlternativePHPTags
+?>

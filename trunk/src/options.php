@@ -9,6 +9,7 @@ if (!defined('WPINC')) {
 /**
  * Class Options service
  */
+// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound
 class EAOptions
 {
     /**

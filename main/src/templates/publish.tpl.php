@@ -1,3 +1,7 @@
+<?php
+// phpcs:disable Generic.PHP.DisallowAlternativePHPTags
+defined( 'ABSPATH' ) || exit;
+?>
 <style>
     body {
         background-color: #f4f7fa;
@@ -181,3 +185,6 @@
     </div>
 
 </div>
+<?php
+// phpcs:enable Generic.PHP.DisallowAlternativePHPTags
+?>

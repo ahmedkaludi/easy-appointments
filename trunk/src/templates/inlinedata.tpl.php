@@ -1,3 +1,7 @@
+<?php
+// phpcs:disable Generic.PHP.DisallowAlternativePHPTags
+defined( 'ABSPATH' ) || exit;
+?>
 <script>
     window.eaData = {};
     var ea = window.eaData;
@@ -44,3 +48,6 @@
 
     ea.Status = <?php echo wp_json_encode( $this->logic->getStatus() ); ?>;
 </script>
+<?php
+// phpcs:enable Generic.PHP.DisallowAlternativePHPTags
+?>

@@ -2,14 +2,14 @@
 Contributors: easyappointments
 Donate link: https://easy-appointments.com/
 Tags: appointment, appointments, Booking, calendar, reservation
-Requires at least: 3.7
+Requires at least: 5.0
 Tested up to: 7.0
 Requires PHP: 5.3
 Stable tag: 3.12.25
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-The easiest way to accept bookings on WordPress for free. Set up a beautiful appointment booking form for your business in minutes — no coding needed. Extremely flexible time management and custom email notifications.
+The easiest free WordPress booking plugin. Create beautiful appointment booking forms with flexible scheduling and email notifications.
 
 == Description ==
 **Easy Appointments** lets you add a fully-featured booking system to any WordPress site — in minutes. Whether you run a salon, clinic, law firm, gym, or tutoring business, your customers book online while you stay in control of your calendar.

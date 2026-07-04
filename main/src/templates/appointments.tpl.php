@@ -1,3 +1,7 @@
+<?php
+defined( 'ABSPATH' ) || exit;
+// phpcs:disable Generic.PHP.DisallowAlternativePHPTags
+?>
 <script>
     window.ea_settings = <?php echo wp_json_encode($settings); ?>;
 </script>
@@ -306,10 +310,11 @@
 jQuery(document).ready(function($) {
 	$('#ea-export-btn').on('click', function(e) {
 	    e.preventDefault();
+		console.log('Export button clicked');
 
 	    let params = {
 	        action: 'ea_export_appointments_excel',
-	        _wpnonce: '<?php echo wp_create_nonce("ea_export_excel_nonce"); ?>'
+	        _wpnonce: '<?php echo esc_js( wp_create_nonce( 'ea_export_excel_nonce' ) ); ?>'
 	    };
 
 	    // Collect all filters automatically
@@ -441,3 +446,6 @@ jQuery(document).ready(function($) {
 });
 
 </script>
+<?php
+// phpcs:enable Generic.PHP.DisallowAlternativePHPTags
+?>

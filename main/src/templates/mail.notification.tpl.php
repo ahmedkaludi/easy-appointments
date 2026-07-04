@@ -1,3 +1,7 @@
+<?php
+// phpcs:disable Generic.PHP.DisallowAlternativePHPTags
+defined( 'ABSPATH' ) || exit;
+?>
 <!DOCTYPE HTML>
 <html lang="en">
     <head>
@@ -75,3 +79,6 @@
         <p style="font-weight: bold">- #link_cancel#</p>
     </body>
 </html>
+<?php
+// phpcs:enable Generic.PHP.DisallowAlternativePHPTags
+?>

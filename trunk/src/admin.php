@@ -8,6 +8,7 @@ if (!defined('WPINC')) {
 /**
  * Admin panel
  */
+// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound
 class EAAdminPanel
 {
     protected $compatibility_mode;
@@ -172,60 +173,108 @@ class EAAdminPanel
 
         $user_id = (int) $current_user->ID;
 
-        // ===== FILTER (Default: upcoming) =====
-        $filter = isset($_GET['filter']) ? sanitize_text_field($_GET['filter']) : 'upcoming';
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only filter parameter.
+        $filter = isset( $_GET['filter'] ) ? sanitize_key( wp_unslash( $_GET['filter'] ) ) : 'upcoming';
+
+        if ( ! in_array( $filter, array( 'upcoming', 'past' ), true ) ) {
+            $filter = 'upcoming';
+        }
 
         $today = current_time('Y-m-d');
 
-        $where_date = "AND a.date >= %s";
-        if ($filter === 'past') {
-            $where_date = "AND a.date < %s";
-        }
-
         // ===== PAGINATION =====
         $per_page = 10;
-        $paged = isset($_GET['paged']) ? max(1, intval($_GET['paged'])) : 1;
-        $offset = ($paged - 1) * $per_page;
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only pagination parameter.
+        $paged    = isset( $_GET['paged'] ) ? max( 1, absint( wp_unslash( $_GET['paged'] ) ) ) : 1;
+        $offset   = ( $paged - 1 ) * $per_page;
 
-        // ===== TOTAL COUNT =====
-        $total = $wpdb->get_var(
-            $wpdb->prepare(
-                "SELECT COUNT(*) 
-                FROM {$wpdb->prefix}ea_appointments a
-                WHERE a.user = %d $where_date",
-                $user_id,
-                $today
-            )
-        );
+        $cache_key = 'ea_booking_total_' . md5( $user_id . '|' . $filter . '|' . $today );
+
+        $total = wp_cache_get( $cache_key, 'easy_appointments' );
+
+        if ( false === $total ) {
+            if ( 'past' === $filter ) {
+                $sql = $wpdb->prepare(
+                    "SELECT COUNT(*)
+                    FROM {$wpdb->prefix}ea_appointments a
+                    WHERE a.user = %d
+                    AND a.date < %s",
+                    $user_id,
+                    $today
+                );
+            } else {
+                $sql = $wpdb->prepare(
+                    "SELECT COUNT(*)
+                    FROM {$wpdb->prefix}ea_appointments a
+                    WHERE a.user = %d
+                    AND a.date >= %s",
+                    $user_id,
+                    $today
+                );
+            }
+            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQL.NotPrepared -- Querying plugin custom table.
+            $total = (int) $wpdb->get_var( $sql );
+
+            wp_cache_set( $cache_key, $total, 'easy_appointments', HOUR_IN_SECONDS );
+        }
 
         $total_pages = ceil($total / $per_page);
 
         // ===== FETCH DATA =====
-        $appointments = $wpdb->get_results(
-            $wpdb->prepare(
-                "SELECT 
+        if ( 'past' === $filter ) {
+
+            $sql = $wpdb->prepare(
+                "SELECT
                     a.id,
                     a.date,
                     a.start,
                     a.end,
                     a.status,
-                    s.name  AS service_name,
-                    l.name  AS location_name,
+                    s.name AS service_name,
+                    l.name AS location_name,
                     st.name AS staff_name
                 FROM {$wpdb->prefix}ea_appointments a
-                LEFT JOIN {$wpdb->prefix}ea_services  s  ON s.id  = a.service
-                LEFT JOIN {$wpdb->prefix}ea_locations l  ON l.id  = a.location
-                LEFT JOIN {$wpdb->prefix}ea_staff     st ON st.id = a.worker
+                LEFT JOIN {$wpdb->prefix}ea_services s ON s.id = a.service
+                LEFT JOIN {$wpdb->prefix}ea_locations l ON l.id = a.location
+                LEFT JOIN {$wpdb->prefix}ea_staff st ON st.id = a.worker
                 WHERE a.user = %d
-                $where_date
+                AND a.date < %s
+                ORDER BY a.date DESC
+                LIMIT %d OFFSET %d",
+                $user_id,
+                $today,
+                $per_page,
+                $offset
+            );
+
+        } else {
+
+            $sql = $wpdb->prepare(
+                "SELECT
+                    a.id,
+                    a.date,
+                    a.start,
+                    a.end,
+                    a.status,
+                    s.name AS service_name,
+                    l.name AS location_name,
+                    st.name AS staff_name
+                FROM {$wpdb->prefix}ea_appointments a
+                LEFT JOIN {$wpdb->prefix}ea_services s ON s.id = a.service
+                LEFT JOIN {$wpdb->prefix}ea_locations l ON l.id = a.location
+                LEFT JOIN {$wpdb->prefix}ea_staff st ON st.id = a.worker
+                WHERE a.user = %d
+                AND a.date >= %s
                 ORDER BY a.date ASC
                 LIMIT %d OFFSET %d",
                 $user_id,
                 $today,
                 $per_page,
                 $offset
-            )
-        );
+            );
+        }
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQL.NotPrepared -- Querying plugin custom table.
+        $appointments = $wpdb->get_results( $sql );
 
         echo '<div class="wrap">';
         echo '<h1>' . esc_html__('My Bookings', 'easy-appointments') . '</h1>';
@@ -271,14 +320,22 @@ class EAAdminPanel
         }
 
         echo '</tbody></table>';
-
-        // ===== PAGINATION LINKS =====
         if ($total_pages > 1) {
             echo '<div class="tablenav"><div class="tablenav-pages">';
 
             for ($i = 1; $i <= $total_pages; $i++) {
-                $class = ($i == $paged) ? 'button button-primary' : 'button';
-                echo '<a class="' . $class . '" href="?page=my-bookings&filter=' . esc_attr($filter) . '&paged=' . $i . '">' . $i . '</a> ';
+                $class = ( $i == $paged ) ? 'button button-primary' : 'button';
+
+                $url = add_query_arg(
+                    array(
+                        'page'   => 'my-bookings',
+                        'filter' => $filter,
+                        'paged'  => absint( $i ),
+                    ),
+                    admin_url( 'admin.php' )
+                );
+
+                echo '<a class="' . esc_attr( $class ) . '" href="' . esc_url( $url ) . '">' . esc_html( $i ) . '</a> ';
             }
 
             echo '</div></div>';
@@ -384,15 +441,6 @@ class EAAdminPanel
             true
         );
 
-        // bootstrap script
-        wp_register_script(
-            'ea-momentjs',
-            EA_PLUGIN_URL . 'js/libs/moment.min.js',
-            array(),
-            EASY_APPOINTMENTS_VERSION,
-            true
-        );
-
         // admin panel script
         wp_register_script(
             'time-picker',
@@ -434,7 +482,7 @@ class EAAdminPanel
             EA_PLUGIN_URL . 'js/admin.prod.js',
             array(
                 'jquery',
-                'ea-momentjs',
+                'moment',
                 'jquery-ui-datepicker',
                 'ea-datepicker-localization',
                 'time-picker',
@@ -455,7 +503,7 @@ class EAAdminPanel
             EA_PLUGIN_URL . 'js/settings.prod.js',
             array(
                 'jquery',
-                'ea-momentjs',
+                'moment',
                 'jquery-ui-datepicker',
                 'ea-datepicker-localization',
                 'time-picker',
@@ -887,7 +935,7 @@ class EAAdminPanel
             }
         }
 
-        wp_localize_script('ea-appointments', 'ea_app_status', apply_filters('ea_client_portal_appointment_statuses', $statuses));
+        wp_localize_script('ea-appointments', 'ea_app_status', apply_filters('easy_ea_client_portal_appointment_statuses', $statuses));
 
         wp_localize_script('ea-appointments', 'ea_connections', $this->models->get_connections_combinations());
 
@@ -971,7 +1019,7 @@ class EAAdminPanel
             return;
         }
 
-        load_plugin_textdomain('easy-appointments', false, EA_PLUGIN_DIR  . 'languages/');
+        // load_plugin_textdomain('easy-appointments', false, EA_PLUGIN_DIR  . 'languages/');
 
         wp_enqueue_style('ea-admin-bundle-css');
         wp_enqueue_script('ea-admin-bundle');
@@ -1015,7 +1063,7 @@ class EAAdminPanel
             return;
         }
 
-        load_plugin_textdomain('easy-appointments', false, EA_PLUGIN_DIR  . 'languages/');
+        // load_plugin_textdomain('easy-appointments', false, EA_PLUGIN_DIR  . 'languages/');
 
         wp_enqueue_style('ea-admin-bundle-css');
         wp_enqueue_script('ea-admin-bundle');
@@ -1049,7 +1097,7 @@ class EAAdminPanel
             return;
         }
 
-        load_plugin_textdomain('easy-appointments', false, EA_PLUGIN_DIR  . 'languages/');
+        // load_plugin_textdomain('easy-appointments', false, EA_PLUGIN_DIR  . 'languages/');
 
         wp_enqueue_style('ea-admin-bundle-css');
         wp_enqueue_script('ea-admin-bundle');
@@ -1083,7 +1131,7 @@ class EAAdminPanel
             return;
         }
 
-        load_plugin_textdomain('easy-appointments', false, EA_PLUGIN_DIR  . 'languages/');
+        // load_plugin_textdomain('easy-appointments', false, EA_PLUGIN_DIR  . 'languages/');
 
         wp_enqueue_style('ea-admin-bundle-css');
         wp_enqueue_script('ea-admin-bundle');
@@ -1118,7 +1166,7 @@ class EAAdminPanel
             return;
         }
 
-        load_plugin_textdomain('easy-appointments', false, EA_PLUGIN_DIR  . 'languages/');
+        // load_plugin_textdomain('easy-appointments', false, EA_PLUGIN_DIR  . 'languages/');
 
         wp_enqueue_style('ea-admin-bundle-css');
         wp_enqueue_script('ea-admin-bundle');
@@ -1149,7 +1197,7 @@ class EAAdminPanel
             return;
         }
 
-        load_plugin_textdomain('easy-appointments', false, EA_PLUGIN_DIR  . 'languages/');
+        // load_plugin_textdomain('easy-appointments', false, EA_PLUGIN_DIR  . 'languages/');
 
         wp_enqueue_style('ea-admin-bundle-css');
         wp_enqueue_script('ea-admin-bundle');
@@ -1239,7 +1287,7 @@ class EAAdminPanel
         $this->total_pages = $total_pages;
 
         // Enqueue styles/scripts
-        load_plugin_textdomain('easy-appointments', false, EA_PLUGIN_DIR  . 'languages/');
+        // load_plugin_textdomain('easy-appointments', false, EA_PLUGIN_DIR  . 'languages/');
         wp_enqueue_style('ea-admin-bundle-css');
         wp_enqueue_script('ea-admin-bundle');
 
@@ -1278,7 +1326,7 @@ class EAAdminPanel
             return;
         }
 
-        load_plugin_textdomain('easy-appointments', false, EA_PLUGIN_DIR  . 'languages/');
+        // load_plugin_textdomain('easy-appointments', false, EA_PLUGIN_DIR  . 'languages/');
 
         wp_enqueue_style('ea-admin-bundle-css');
         wp_enqueue_script('ea-admin-bundle');

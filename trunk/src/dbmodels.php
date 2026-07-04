@@ -11,6 +11,7 @@ if (!defined('WPINC')) {
 /**
  * DataBase models
  */
+// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound
 class EADBModels
 {
     /**
@@ -240,11 +241,11 @@ class EADBModels
         $rows = $this->wpdb->get_results($query);
 
         if ($table_name === 'ea_locations') {
-            $rows = apply_filters('ea_get_locations', $rows);
+            $rows = apply_filters('easy_ea_get_locations', $rows);
         } elseif ($table_name === 'ea_services') {
-            $rows = apply_filters('ea_get_services', $rows);
+            $rows = apply_filters('easy_ea_get_services', $rows);
         } elseif ($table_name === 'ea_staff') {
-            $rows = apply_filters('ea_get_workers', $rows);
+            $rows = apply_filters('easy_ea_get_workers', $rows);
         }
         return json_encode(array_values($rows));
     }
@@ -490,10 +491,7 @@ class EADBModels
         }
 
         // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
-        $query = $this->wpdb->prepare(
-            "SELECT DISTINCT {$options['next']} FROM $table_name WHERE 1=1$vars",
-            $values
-        );
+        $query = $this->wpdb->prepare( "SELECT DISTINCT {$options['next']} FROM $table_name WHERE 1=1$vars", $values );
 
         // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.PreparedSQL.NotPrepared
         $next_rows_raw = $this->wpdb->get_results($query, ARRAY_N);

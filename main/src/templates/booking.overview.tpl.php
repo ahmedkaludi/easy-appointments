@@ -1,3 +1,7 @@
+<?php
+// phpcs:disable Generic.PHP.DisallowAlternativePHPTags
+defined( 'ABSPATH' ) || exit;
+?>
 <style>
     body .wp-block-post-content a:not(.wp-element-button) {
         color: #000000;
@@ -125,3 +129,6 @@
         </div>
     </div>
 </script>
+<?php
+// phpcs:enable Generic.PHP.DisallowAlternativePHPTags
+?>

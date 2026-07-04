@@ -1,3 +1,7 @@
+<?php
+defined( 'ABSPATH' ) || exit;
+// phpcs:disable Generic.PHP.DisallowAlternativePHPTags.MaybeASPOpenTagFound, Generic.PHP.DisallowAlternativePHPTags
+?>
 <script type="text/template" id="ea-settings-main">
     <?php
     get_current_screen()->render_screen_meta();
@@ -1861,3 +1865,6 @@
         }, 500);
     });
 </script>
+<?php
+// phpcs:enable Generic.PHP.DisallowAlternativePHPTags
+?>
