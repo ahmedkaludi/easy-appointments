@@ -8,6 +8,7 @@ if (!defined('WPINC')) {
 /**
  * Event handler for EMAIL notifications and actions
  */
+// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound
 class EAMail
 {
     // PHP 5.2

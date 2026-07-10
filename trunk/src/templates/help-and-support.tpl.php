@@ -1,3 +1,7 @@
+<?php
+// phpcs:disable Generic.PHP.DisallowAlternativePHPTags
+defined( 'ABSPATH' ) || exit;
+?>
 <style>
     .ezappoint-tabcontent {
     border-top: none;
@@ -495,3 +499,6 @@ function addCustomSpan()
     });
     });
 </script>
+<?php
+// phpcs:enable Generic.PHP.DisallowAlternativePHPTags
+?>

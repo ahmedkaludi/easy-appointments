@@ -11,6 +11,7 @@ if (!defined('WPINC')) {
 /**
  * DataBase models
  */
+// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound
 class EADBModels
 {
     /**
@@ -237,7 +238,16 @@ class EADBModels
 			ORDER BY {$order}";
 
         // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.PreparedSQL.NotPrepared
-        return json_encode($this->wpdb->get_results($query));
+        $rows = $this->wpdb->get_results($query);
+
+        if ($table_name === 'ea_locations') {
+            $rows = apply_filters('easy_ea_get_locations', $rows);
+        } elseif ($table_name === 'ea_services') {
+            $rows = apply_filters('easy_ea_get_services', $rows);
+        } elseif ($table_name === 'ea_staff') {
+            $rows = apply_filters('easy_ea_get_workers', $rows);
+        }
+        return json_encode(array_values($rows));
     }
 
     /**
@@ -381,7 +391,7 @@ class EADBModels
      * @param string $order
      * @return array|null|object
      */
-    public function get_next($options, $order = '')
+    public function oldget_next($options, $order = '')
     {
         $table_name = $this->wpdb->prefix . 'ea_connections';
 
@@ -429,6 +439,95 @@ class EADBModels
         if ($order != '') {
             $query .= $order;
         }
+        // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.PreparedSQL.NotPrepared
+        return $this->wpdb->get_results($query);
+    }
+
+    public function get_next($options, $order = '')
+    {
+        $table_name = $this->wpdb->prefix . 'ea_connections';
+
+        $options['next'] = $this->table_columns->validate_next_step($options['next']);
+
+        $vars = '';
+        $values = array();
+
+        foreach ($options as $key => $value) {
+
+            if ($key === 'next') {
+                continue;
+            }
+
+            // =========================
+            // MULTIPLE SERVICES SUPPORT
+            // =========================
+            if ($key === 'service' && strpos((string)$value, ',') !== false) {
+
+                $ids = array_filter(
+                    array_map('intval', explode(',', $value))
+                );
+
+                if (!empty($ids)) {
+
+                    $vars .= " AND $key IN (" . implode(',', $ids) . ")";
+                }
+
+                continue;
+            }
+
+            // =========================
+            // NORMAL EXISTING LOGIC
+            // =========================
+            if (is_numeric($value)) {
+
+                $vars .= " AND $key=%d";
+
+            } else {
+
+                $vars .= " AND $key=%s";
+            }
+
+            $values[] = $value;
+        }
+
+        // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
+        $query = $this->wpdb->prepare( "SELECT DISTINCT {$options['next']} FROM $table_name WHERE 1=1$vars", $values );
+
+        // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.PreparedSQL.NotPrepared
+        $next_rows_raw = $this->wpdb->get_results($query, ARRAY_N);
+
+        $next_rows = array();
+
+        foreach ($next_rows_raw as $value) {
+
+            $next_rows[] = intval($value[0]);
+        }
+
+        // prevent SQL error
+        if (empty($next_rows)) {
+            return array();
+        }
+
+        $ids = implode(',', $next_rows);
+
+        if ($options['next'] == 'worker') {
+
+            $entity_table = 'staff';
+
+        } else {
+
+            $entity_table = $options['next'] . 's';
+        }
+
+        $next_table = $this->wpdb->prefix . "ea_{$entity_table}";
+
+        $query = "SELECT * FROM $next_table WHERE id IN ({$ids})";
+
+        if ($order != '') {
+
+            $query .= $order;
+        }
+
         // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.PreparedSQL.NotPrepared
         return $this->wpdb->get_results($query);
     }
@@ -518,8 +617,24 @@ class EADBModels
             case 'ea_locations':
                 $query  = "SELECT DISTINCT l.* FROM {$table} l INNER JOIN $connections c ON (l.id = c.location) WHERE c.is_working=1";
 
-                if (!empty($service_id) && is_numeric($service_id)) {
-                    $query .= ' AND c.service=' . $service_id;
+                if (!empty($service_id)) {
+
+                    // Multiple services support
+                    if (strpos((string)$service_id, ',') !== false) {
+
+                        $service_ids = array_filter(
+                            array_map('intval', explode(',', $service_id))
+                        );
+
+                        if (!empty($service_ids)) {
+
+                            $query .= ' AND c.service IN (' . implode(',', $service_ids) . ')';
+                        }
+
+                    } elseif (is_numeric($service_id)) {
+
+                        $query .= ' AND c.service=' . intval($service_id);
+                    }
                 }
 
                 if (!empty($worker_id) && is_numeric($worker_id)) {
@@ -530,14 +645,40 @@ class EADBModels
 
                 break;
             case 'ea_services':
-                $query  = "SELECT DISTINCT s.* FROM {$table} s INNER JOIN $connections c ON (s.id = c.service) WHERE c.is_working=1";
+
+                $query  = "SELECT DISTINCT s.* 
+                        FROM {$table} s 
+                        INNER JOIN $connections c ON (s.id = c.service) 
+                        WHERE c.is_working=1";
 
                 if (!empty($location_id) && is_numeric($location_id)) {
-                    $query .= ' AND c.location=' . $location_id;
+                    $query .= ' AND c.location=' . intval($location_id);
+                }
+
+                // =========================
+                // MULTIPLE SERVICES SUPPORT
+                // =========================
+                if (!empty($service_id)) {
+
+                    if (strpos((string)$service_id, ',') !== false) {
+
+                        $service_ids = array_filter(
+                            array_map('intval', explode(',', $service_id))
+                        );
+
+                        if (!empty($service_ids)) {
+
+                            $query .= ' AND c.service IN (' . implode(',', $service_ids) . ')';
+                        }
+
+                    } elseif (is_numeric($service_id)) {
+
+                        $query .= ' AND c.service=' . intval($service_id);
+                    }
                 }
 
                 if (!empty($worker_id) && is_numeric($worker_id)) {
-                    $query .= ' AND c.worker=' . $worker_id;
+                    $query .= ' AND c.worker=' . intval($worker_id);
                 }
 
                 $query .= $this->get_order_by_part('ea_services', true);
@@ -550,8 +691,24 @@ class EADBModels
                     $query .= ' AND c.location=' . $location_id;
                 }
 
-                if (!empty($service_id) && is_numeric($service_id)) {
-                    $query .= ' AND c.service=' . $service_id;
+                if (!empty($service_id)) {
+
+                    // Multiple services support
+                    if (strpos((string)$service_id, ',') !== false) {
+
+                        $service_ids = array_filter(
+                            array_map('intval', explode(',', $service_id))
+                        );
+
+                        if (!empty($service_ids)) {
+
+                            $query .= ' AND c.service IN (' . implode(',', $service_ids) . ')';
+                        }
+
+                    } elseif (is_numeric($service_id)) {
+
+                        $query .= ' AND c.service=' . intval($service_id);
+                    }
                 }
 
                 $query .= $this->get_order_by_part('ea_workers', true);

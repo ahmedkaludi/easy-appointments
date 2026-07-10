@@ -8,6 +8,7 @@ if (!defined('WPINC')) {
 /**
  * Report class
  */
+// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound
 class EAReport
 {
 

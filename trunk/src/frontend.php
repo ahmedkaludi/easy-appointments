@@ -69,15 +69,7 @@ class Easy_EA_Frontend
     public function init_scripts()
     {       
 
-        // bootstrap script
-        wp_register_script(
-            'ea-momentjs',
-            EA_PLUGIN_URL . 'js/libs/moment.min.js',
-            array(),
-            EASY_APPOINTMENTS_VERSION,
-            true
-        );
-
+        
         wp_register_script(
             'ea-validator',
             EA_PLUGIN_URL . 'js/libs/jquery.validate.min.js',
@@ -106,7 +98,7 @@ class Easy_EA_Frontend
         wp_register_script(
             'ea-front-end',
             EA_PLUGIN_URL . 'js/frontend.js',
-            array('jquery', 'jquery-ui-datepicker', 'ea-datepicker-localization', 'ea-momentjs', 'ea-masked'),
+            array('jquery', 'jquery-ui-datepicker', 'ea-datepicker-localization', 'moment', 'ea-masked'),
             EASY_APPOINTMENTS_VERSION,
             true
         );
@@ -124,7 +116,7 @@ class Easy_EA_Frontend
         wp_register_script(
             'ea-front-bootstrap',
             EA_PLUGIN_URL . 'js/frontend-bootstrap.js',
-            array('jquery', 'jquery-ui-datepicker', 'ea-datepicker-localization', 'ea-momentjs', 'ea-masked'),
+            array('jquery', 'jquery-ui-datepicker', 'ea-datepicker-localization', 'moment', 'ea-masked'),
             EASY_APPOINTMENTS_VERSION,
             true
         );
@@ -419,7 +411,7 @@ class Easy_EA_Frontend
 
             $star = ($r) ? ' * ' : ' ';
             $html .= '<p>';
-            $html .= '<label>' . esc_html__($item->label,'easy-appointments') . $star . ': </label>';
+            $html .= '<label>' . esc_html($item->label,'easy-appointments') . $star . ': </label>';
 
             if ($item->type == 'INPUT') {
                 $msg = ($r) ? 'data-rule-required="true" data-msg-required="' . __('This field is required.', 'easy-appointments') . '"' : '';
@@ -603,7 +595,7 @@ class Easy_EA_Frontend
         // start session
         if (!headers_sent() && !session_id()) {
             session_start();
-        }
+        }       
 
         $code_params = shortcode_atts(array(
             'location'             => null,
@@ -628,6 +620,23 @@ class Easy_EA_Frontend
             'auto_select_option'   => '0',
             'order'                => 'service_first'
         ), $atts);
+
+        $service_id = $code_params['service'];
+
+        $service_ids = [];
+
+        if (!empty($service_id)) {
+
+            $service_ids = array_filter(
+                array_unique(
+                    array_map('intval', explode(',', $service_id))
+                )
+            );
+
+            $service_id = implode(',', $service_ids);
+        }
+
+        $code_params['service'] = $service_id;
 
         // check params
         apply_filters('easy_ea_bootstrap_shortcode_params', $atts);
@@ -719,7 +728,7 @@ class Easy_EA_Frontend
         $rows = apply_filters( 'easy_ea_form_rows', $rows);
         foreach ( $rows as $row ) {
             if ( ! empty( $row->label ) ) {
-                $row->label = esc_html__( $row->label, 'easy-appointments' );
+                $row->label = esc_html( $row->label, 'easy-appointments' );
             }
         }
         $settings['MetaFields'] = $rows;
@@ -864,8 +873,10 @@ class Easy_EA_Frontend
                         esc_attr($row->id),
                         esc_attr($duration),
                         esc_attr($slot_step),
-                        esc_attr($row->description),  // 👈 ADD THIS
-                        $price_attr,
+                        esc_attr($row->description),
+                        ! empty( $row->price )
+                            ? sprintf( ' data-price="%s"', esc_attr( $row->price ) )
+                            : '',
                         esc_html($name)
                     );
                     return;
@@ -984,7 +995,7 @@ class Easy_EA_Frontend
                     esc_attr($duration),
                     esc_attr($slot_step),
                     esc_attr($row->description),
-                    $price_attr,
+                    !empty($row->price) ? " data-price='" . esc_attr($row->price) . "'" : '',
                     esc_html($name_price)
                 );
 

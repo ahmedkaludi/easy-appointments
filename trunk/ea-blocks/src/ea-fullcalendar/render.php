@@ -1,4 +1,6 @@
 <?php
+defined( 'ABSPATH' ) || exit;
+
 function easy_ea_render_fullcalendar_block( $attributes ) {
 	$location = isset( $attributes['location'] ) ? intval( $attributes['location'] ) : 0;
 	$service  = isset( $attributes['service'] ) ? intval( $attributes['service'] ) : 0;

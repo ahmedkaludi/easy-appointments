@@ -68,7 +68,7 @@ class EasyEAFullCalendar
         wp_register_script(
             'ea-full-calendar',
             EA_PLUGIN_URL . 'js/libs/fullcalendar/fullcalendar.min.js',
-            array('jquery', 'ea-momentjs', 'wp-api', 'thickbox', 'underscore'),
+            array('jquery', 'moment', 'wp-api', 'thickbox', 'underscore'),
             '2.0.0',
             true
         );

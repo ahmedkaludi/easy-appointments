@@ -10,6 +10,7 @@ if (!defined('WPINC')) {
  * Class responsible for App logic
  * reservation, free times...
  */
+// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound
 class EALogic
 {
 

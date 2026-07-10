@@ -1,3 +1,7 @@
+<?php
+// phpcs:disable Generic.PHP.DisallowAlternativePHPTags
+defined( 'ABSPATH' ) || exit;
+?>
 <style>
     @keyframes spin {
         to {
@@ -291,6 +295,9 @@
 
 
 <script>
+    var eaCustomerListNonce = "<?php echo esc_js(wp_create_nonce('ea_customer_list')); ?>";
+    var eaCustomerDetailNonce = "<?php echo esc_js(wp_create_nonce('ea_customer_detail')); ?>";
+
     document.addEventListener('DOMContentLoaded', function() {
         jQuery(document).on('click', '#ea-delete-all-customers', function(e) {
             console.log('111');
@@ -320,6 +327,7 @@
             jQuery('#customer-table-body').html('<tr><td colspan="5"></td></tr>');
             jQuery.post(ajaxurl, {
                 action: 'ea_get_customers_ajax',
+                ea_nonce: eaCustomerListNonce,
                 search,
                 paged: page
             }, function(res) {
@@ -387,6 +395,7 @@
             my_modal.find('.edit-btn').attr('data-id', custId);
             jQuery.post(ajaxurl, {
                 action: 'ea_get_customer_detail_ajax',
+                ea_nonce: eaCustomerDetailNonce,
                 id: custId,
                 type: type
             }, function(res) {
@@ -623,3 +632,6 @@
         });
     });
 </script>
+<?php
+// phpcs:enable Generic.PHP.DisallowAlternativePHPTags
+?>

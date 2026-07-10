@@ -17,6 +17,8 @@ const ServicesPage = () => {
   const [services, setServices] = useState([]);
   const [activeService, setActiveService] = useState(null);
   const [processing, setProcessing] = useState(null);
+  const [selectedIds, setSelectedIds] = useState([]);
+  const [showBulkDelete, setShowBulkDelete] = useState(false);
 
   const loadServices = async () => {
     try {
@@ -31,6 +33,50 @@ const ServicesPage = () => {
   useEffect(() => {
     loadServices();
   }, []);
+
+  const toggleSelect = (id, allIds = []) => {
+    if (id === 'ALL') {
+      setSelectedIds(allIds);
+      setShowBulkDelete(true);
+      return;
+    }
+
+    if (id === 'NONE') {
+      setSelectedIds([]);
+      setShowBulkDelete(false);
+      return;
+    }
+
+    let updated = [];
+
+    if (selectedIds.includes(id)) {
+      updated = selectedIds.filter(item => item !== id);
+    } else {
+      updated = [...selectedIds, id];
+    }
+
+    setSelectedIds(updated);
+    setShowBulkDelete(updated.length > 0);
+  };
+
+  const deleteSelected = async () => {
+    const confirmDelete = window.confirm(
+      `Delete ${selectedIds.length} services?`
+    );
+
+    if (!confirmDelete) {
+      return;
+    }
+
+    try {
+      await ServicesCommunicator.deleteMultiple(selectedIds);
+      setServices(services.filter(item => !selectedIds.includes(item.id)));
+      setSelectedIds([]);
+      setShowBulkDelete(false);
+    } catch (e) {
+      console.error(e);
+    }
+  };
 
   const toggleSidebar = () => {
     if (open && activeService) {
@@ -92,11 +138,22 @@ const ServicesPage = () => {
     setProcessing(null);
   };
 
-  const headerAction = {
-    callback: toggleSidebar,
-    icon: 'briefcase',
-    text: __('Add service', 'easy-appointments')
-  };
+  const headerAction = [
+    {
+      callback: toggleSidebar,
+      icon: 'briefcase',
+      text: __('Add service', 'easy-appointments')
+    }
+  ];
+
+  if (showBulkDelete) {
+    headerAction.unshift({
+      callback: deleteSelected,
+      icon: 'trash',
+      color: 'red',
+      text: 'Delete Selected'
+    });
+  }
 
   const title = activeService
     ? __('Edit services', 'easy-appointments')
@@ -119,6 +176,8 @@ const ServicesPage = () => {
           onDelete={onDeleteClick}
           onSort={loadServices}
           processing={processing}
+          selectedIds={selectedIds}
+          toggleSelect={toggleSelect}
         />
       </PageContentWrap>
 

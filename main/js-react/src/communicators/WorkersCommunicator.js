@@ -57,6 +57,12 @@ export class WorkersCommunicator {
     return response === 1;
   }
 
+  static async deleteMultiple(ids) {
+    const url = `${this.url}&action=ea_delete_multiple_workers`;
+
+    return await http.postJSON(url, JSON.stringify({ ids }));
+  }
+
   static async googleSignOut(id) {
     const url = `${this.url}&action=ea_remove_google_calendar&_method=DELETE&id=${id}`;
 

@@ -2,4 +2,21 @@ div#ea-admin-services {
   .ea-loader {
     min-height: 300px;
   }
+
+  .ea-services-search {
+    width: 300px;
+    max-width: 32vw;
+    height: 38px;
+    color: #333333;
+    border: 1px solid rgba(0, 0, 0, 0.23);
+    border-radius: 4px;
+    box-shadow: none;
+    font-size: 14px;
+
+    &:hover,
+    &:focus {
+      border-color: $eaprimary;
+      box-shadow: none;
+    }
+  }
 }

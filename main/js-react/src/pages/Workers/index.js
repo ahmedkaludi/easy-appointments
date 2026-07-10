@@ -19,6 +19,8 @@ const WorkersPage = () => {
   const [workers, setWorkers] = useState([]);
   const [activeWorker, setActiveWorker] = useState(null);
   const [processing, setProcessing] = useState(null);
+  const [selectedIds, setSelectedIds] = useState([]);
+  const [showBulkDelete, setShowBulkDelete] = useState(false);
 
   const loadWorkers = async () => {
     try {
@@ -43,6 +45,50 @@ const WorkersPage = () => {
     loadWorkers();
     isProPluginExist();
   }, []);
+
+  const toggleSelect = (id, allIds = []) => {
+    if (id === 'ALL') {
+      setSelectedIds(allIds);
+      setShowBulkDelete(true);
+      return;
+    }
+
+    if (id === 'NONE') {
+      setSelectedIds([]);
+      setShowBulkDelete(false);
+      return;
+    }
+
+    let updated = [];
+
+    if (selectedIds.includes(id)) {
+      updated = selectedIds.filter(item => item !== id);
+    } else {
+      updated = [...selectedIds, id];
+    }
+
+    setSelectedIds(updated);
+    setShowBulkDelete(updated.length > 0);
+  };
+
+  const deleteSelected = async () => {
+    const confirmDelete = window.confirm(
+      `Delete ${selectedIds.length} employees?`
+    );
+
+    if (!confirmDelete) {
+      return;
+    }
+
+    try {
+      await WorkersCommunicator.deleteMultiple(selectedIds);
+      setWorkers(workers.filter(item => !selectedIds.includes(item.id)));
+      setSelectedIds([]);
+      setShowBulkDelete(false);
+    } catch (e) {
+      console.error(e);
+    }
+  };
 
   const toggleSidebar = () => {
     if (open && activeWorker) {
@@ -130,11 +176,22 @@ const WorkersPage = () => {
     setProcessing(null);
   };
 
-  const headerAction = {
-    callback: toggleSidebar,
-    icon: 'user-plus',
-    text: __('Add employee', 'easy-appointments')
-  };
+  const headerAction = [
+    {
+      callback: toggleSidebar,
+      icon: 'user-plus',
+      text: __('Add employee', 'easy-appointments')
+    }
+  ];
+
+  if (showBulkDelete) {
+    headerAction.unshift({
+      callback: deleteSelected,
+      icon: 'trash',
+      color: 'red',
+      text: 'Delete Selected'
+    });
+  }
 
   const title = activeWorker
     ? __('Edit employee', 'easy-appointments')
@@ -157,6 +214,8 @@ const WorkersPage = () => {
           onDelete={onDeleteClick}
           onSort={loadWorkers}
           processing={processing}
+          selectedIds={selectedIds}
+          toggleSelect={toggleSelect}
         />
       </PageContentWrap>
 

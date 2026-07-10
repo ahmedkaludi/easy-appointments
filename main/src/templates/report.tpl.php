@@ -1,3 +1,7 @@
+<?php
+// phpcs:disable Generic.PHP.DisallowAlternativePHPTags
+defined( 'ABSPATH' ) || exit;
+?>
 <script type="text/template" id="ea-report-main">
     <div class="report-container">
         <div id="tab-header" style="padding-top: 20px; padding-bottom: 20px">
@@ -103,3 +107,6 @@
         </form>
     </div>
 </script>
+<?php
+// phpcs:enable Generic.PHP.DisallowAlternativePHPTags
+?>

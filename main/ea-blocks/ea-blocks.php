@@ -17,7 +17,12 @@ function easy_ea_create_block_init()
 	// 	wp_register_block_types_from_metadata_collection(__DIR__ . '/build', __DIR__ . '/build/blocks-manifest.php');
 	// } else {
 	if (function_exists('wp_register_block_metadata_collection')) { // Function introduced in WordPress 6.7.
-		wp_register_block_metadata_collection(__DIR__ . '/build', __DIR__ . '/build/blocks-manifest.php');
+		// wp_register_block_metadata_collection(__DIR__ . '/build', __DIR__ . '/build/blocks-manifest.php');
+		call_user_func(
+			'wp_register_block_metadata_collection',
+			__DIR__ . '/build',
+			__DIR__ . '/build/blocks-manifest.php'
+		);
 	}
 	$manifest_data = require __DIR__ . '/build/blocks-manifest.php';
 	foreach (array_keys($manifest_data) as $block_type) {
@@ -299,15 +304,23 @@ function easy_ea_blocks_render_shortcode(WP_REST_Request $request)
 	// Simple allowlist (whitelist) of permitted shortcodes
 	$allowed_shortcodes = ['location', 'service', 'worker'];
 
-	// Extract shortcode name
-	preg_match('/^\[(\w+)/', $shortcode, $matches);
-	$shortcode_tag = isset($matches[1]) ? $matches[1] : '';
-
-	if (!in_array($shortcode_tag, $allowed_shortcodes, true)) {
+	if (!is_string($shortcode) || empty($shortcode)) {
 		return new WP_REST_Response([
 			'success' => false,
 			'message' => esc_html__('Shortcode not allowed.', 'easy-appointments')
 		], 403);
+	}
+
+	preg_match_all('/\[(\/?)([a-zA-Z0-9_-]+)/', $shortcode, $matches);
+	$shortcode_tags = array_values(array_unique(array_filter($matches[2])));
+
+	foreach ($shortcode_tags as $shortcode_tag) {
+		if (!in_array($shortcode_tag, $allowed_shortcodes, true)) {
+			return new WP_REST_Response([
+				'success' => false,
+				'message' => esc_html__('Shortcode not allowed.', 'easy-appointments')
+			], 403);
+		}
 	}
 
 	return new WP_REST_Response([

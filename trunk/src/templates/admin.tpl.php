@@ -1,3 +1,7 @@
+<?php
+defined( 'ABSPATH' ) || exit;
+// phpcs:disable Generic.PHP.DisallowAlternativePHPTags.MaybeASPOpenTagFound, Generic.PHP.DisallowAlternativePHPTags
+?>
 <script type="text/template" id="ea-settings-main">
     <?php
     get_current_screen()->render_screen_meta();
@@ -51,6 +55,12 @@
                     <a data-tab="tab-money" href="#">
                         <span class="icon icon-money"></span><span class="text-label"><?php esc_html_e('Money Format', 'easy-appointments'); ?></span>
                     </a>
+                    <a data-tab="tab-webhooks" href="#">
+                        <span class="icon icon-mail"></span>
+                        <span class="text-label">
+                            <?php esc_html_e('Webhooks', 'easy-appointments'); ?>
+                        </span>
+                    </a>
                 </div>
                 <div class="button-wrap">
                     <button class="button button-primary btn-save-settings"><?php esc_html_e('Save', 'easy-appointments'); ?></button>
@@ -77,25 +87,25 @@
                     </div>
                     <div class="form-item">
                         <div class="label-with-tooltip">
-                            <label for=""><?php esc_html_e('Compatibility mode', 'easy-appointments'); ?></label>
+                            <label for="compatibility-mode"><?php esc_html_e('Compatibility mode', 'easy-appointments'); ?></label>
                             <span class="tooltip tooltip-right"
                                   data-tooltip="<?php esc_html_e('If you can\'t EDIT or DELETE conecntion or any other settings, you should mark this option. NOTE: After saving this options you must refresh page!', 'easy-appointments'); ?>"></span>
                         </div>
                         <div class="field-wrap">
                             <!-- phpcs:ignore Generic.PHP.DisallowAlternativePHPTags -->
-                            <input class="field" data-key="compatibility.mode" name="compatibility.mode" type="checkbox" <% if
+                            <input class="field" id="compatibility-mode" data-key="compatibility.mode" name="compatibility.mode" type="checkbox" <% if
                             (_.findWhere(settings, {ea_key:'compatibility.mode'}).ea_value == "1") {
                             %>checked<% } %>>
                         </div>
                     </div>
                     <div class="form-item">
                         <div class="label-with-tooltip">
-                            <label for=""><?php esc_html_e('Allow Multi Slot Selection', 'easy-appointments'); ?></label>
+                            <label for="is-multiple-booking-allowed"><?php esc_html_e('Allow Multi Slot Selection', 'easy-appointments'); ?></label>
                             <span class="tooltip tooltip-right"
                                   data-tooltip="<?php esc_html_e('If you want allow multiple slot to select for booking, you should mark this option. NOTE: After saving this options you must refresh page!', 'easy-appointments'); ?>"></span>
                         </div>
                         <div class="field-wrap">
-                            <input class="field" data-key="is_multiple_booking_allowed"
+                            <input class="field" id="is-multiple-booking-allowed" data-key="is_multiple_booking_allowed"
                                    name="is_multiple_booking_allowed" type="checkbox" <% if
                             (_.findWhere(settings, {ea_key:'is_multiple_booking_allowed'}).ea_value == "1") {
                             %>checked<% } %>>
@@ -124,24 +134,24 @@
                     </div>
                     <div class="form-item">
                         <div class="label-with-tooltip">
-                            <label><?php esc_html_e('Auto reservation', 'easy-appointments'); ?></label>
+                            <label for="pre-reservation"><?php esc_html_e('Auto reservation', 'easy-appointments'); ?></label>
                             <span class="tooltip tooltip-right"
                                   data-tooltip="<?php esc_html_e('Make reservation at moment user select date and time!', 'easy-appointments'); ?>"></span>
                         </div>
                         <div class="field-wrap">
-                            <input class="field" data-key="pre.reservation" name="pre.reservation"
+                            <input class="field" id="pre-reservation" data-key="pre.reservation" name="pre.reservation"
                                    type="checkbox" <% if (_.findWhere(settings,
                             {ea_key:'pre.reservation'}).ea_value == "1") { %>checked<% } %>>
                         </div>
                     </div>
                     <div class="form-item">
                         <div class="label-with-tooltip">
-                            <label for=""><?php esc_html_e('Turn nonce off', 'easy-appointments'); ?></label>
+                            <label for="nonce-off"><?php esc_html_e('Turn nonce off', 'easy-appointments'); ?></label>
                             <span class="tooltip tooltip-right"
                                   data-tooltip="<?php esc_html_e('if you have issues with validation code that is expired in form you can turn off nonce but you are doing that on your own risk.', 'easy-appointments'); ?>"></span>
                         </div>
                         <div class="field-wrap">
-                            <input class="field" data-key="nonce.off" name="nonce.off"
+                            <input class="field" id="nonce-off" data-key="nonce.off" name="nonce.off"
                                    type="checkbox" <% if (_.findWhere(settings,
                             {ea_key:'nonce.off'}).ea_value == "1") { %>checked<% } %>>
                         </div>
@@ -170,12 +180,12 @@
                     </div>
                     <div class="form-item">
                         <div class="label-with-tooltip">
-                            <label for=""><?php esc_html_e('Compress shortcode output (removes new lines from templates).', 'easy-appointments'); ?></label>
+                            <label for="shortcode-compress"><?php esc_html_e('Compress shortcode output (removes new lines from templates).', 'easy-appointments'); ?></label>
                             <span class="tooltip tooltip-right"
                                   data-tooltip="<?php esc_html_e('WordPress can add auto paragraph html element for each line break. This option prevents WP from doing that on EA shortcode.', 'easy-appointments'); ?>"></span>
                         </div>
                         <div class="field-wrap">
-                            <input class="field" data-key="shortcode.compress"
+                            <input class="field" id="shortcode-compress" data-key="shortcode.compress"
                                    name="shortcode.compress" type="checkbox" <% if
                             (_.findWhere(settings, {ea_key:'shortcode.compress'}).ea_value == "1") {
                             %>checked<% } %>>
@@ -184,12 +194,12 @@
 
                     <div class="form-item">
                         <div class="label-with-tooltip">
-                            <label for="show.customer_search_front"><?php esc_html_e('Customer Search', 'easy-appointments'); ?></label>
+                            <label for="show-customer-search-front"><?php esc_html_e('Customer Search', 'easy-appointments'); ?></label>
                             <span class="tooltip tooltip-right"
                                   data-tooltip="<?php esc_html_e('This will allow to search customer in front from dropdown', 'easy-appointments'); ?>"></span>
                         </div>
                         <div class="field-wrap">
-                            <input class="field" type="checkbox" name="show.customer_search_front"
+                            <input class="field" id="show-customer-search-front" type="checkbox" name="show.customer_search_front"
                                    data-key="show.customer_search_front"<% if (typeof _.findWhere(settings,
                             {ea_key:'show.customer_search_front'}) !== 'undefined' && _.findWhere(settings,
                             {ea_key:'show.customer_search_front'}).ea_value == '1') { %>checked<% } %> />
@@ -243,7 +253,7 @@
 
                     <div class="form-item">
                         <div class="label-with-tooltip">
-                            <label for="customer_search_password_only">
+                            <label for="customer-search-password-only">
                                 <?php esc_html_e('Password Protected Only', 'easy-appointments'); ?>
                             </label>
                             <span class="tooltip tooltip-right"
@@ -254,6 +264,7 @@
                         <div class="field-wrap">
                             <input type="checkbox"
                                 class="field"
+                                id="customer-search-password-only"
                                 name="customer_search_password_only"
                                 data-key="customer_search_password_only"
                                 <% if (
@@ -264,7 +275,7 @@
                     </div>
                     <div class="form-item">
                         <div class="label-with-tooltip">
-                            <label for="delete_data_on_uninstall">
+                            <label for="delete-data-on-uninstall">
                                 <?php esc_html_e('Remove Data on Uninstall?', 'easy-appointments'); ?>
                             </label>
                             <span class="tooltip tooltip-right"
@@ -275,6 +286,7 @@
                         <div class="field-wrap">
                             <input type="checkbox"
                                 class="field"
+                                id="delete-data-on-uninstall"
                                 name="delete_data_on_uninstall"
                                 data-key="delete_data_on_uninstall"
                                 <% if (
@@ -285,7 +297,7 @@
                     </div>
 
                     
-                    <div class="form-item"> <div class="label-with-tooltip"> <label> <?php esc_html_e('Export Plugin Data', 'easy-appointments'); ?> </label> <span class="tooltip tooltip-right" data-tooltip="<?php esc_html_e('Export or import all Easy Appointments data including services, staff, appointments, customers and settings.', 'easy-appointments'); ?>"> </span> </div> <div class="field-wrap"> <!-- EXPORT --> <button type="button" class="button button-secondary" id="ea-full-export"> <?php esc_html_e('Export All Data', 'easy-appointments'); ?> </button> </div> </div> <div class="form-item"> <div class="label-with-tooltip"> <label> <?php esc_html_e('Import Plugin Data', 'easy-appointments'); ?> </label> <span class="tooltip tooltip-right" data-tooltip="<?php esc_html_e('⚠ Import will overwrite ALL existing Easy Appointments data.', 'easy-appointments'); ?>"> </span> </div> <div class="field-wrap"> <!-- IMPORT --> <input type="file" id="ea-full-import-file" accept=".json" /> <button type="button" class="button button-primary" id="ea-full-import"> <?php esc_html_e('Import Data', 'easy-appointments'); ?> </button> </div> </div>
+                    <div class="form-item"> <div class="label-with-tooltip"> <label> <?php esc_html_e('Export Plugin Data', 'easy-appointments'); ?> </label> <span class="tooltip tooltip-right" data-tooltip="<?php esc_html_e('Export or import all Easy Appointments data including services, staff, appointments, customers and settings.', 'easy-appointments'); ?>"> </span> </div> <div class="field-wrap"> <!-- EXPORT --> <button type="button" class="button button-secondary" id="ea-full-export" style="line-height: 2; min-height:30px;"> <?php esc_html_e('Export All Data', 'easy-appointments'); ?> </button> </div> </div> <div class="form-item"> <div class="label-with-tooltip"> <label> <?php esc_html_e('Import Plugin Data', 'easy-appointments'); ?> </label> <span class="tooltip tooltip-right" data-tooltip="<?php esc_html_e('⚠ Import will overwrite ALL existing Easy Appointments data.', 'easy-appointments'); ?>"> </span> </div> <div class="field-wrap"> <!-- IMPORT --> <input type="file" id="ea-full-import-file" accept=".json" /> <button type="button" class="button button-primary" id="ea-full-import" style="line-height: 2; min-height:30px;"> <?php esc_html_e('Import Data', 'easy-appointments'); ?> </button> <span id="ea-full-import-spinner" class="spinner" style="display:none; margin-left: 10px; vertical-align: middle;"></span> </div> </div>
                     <hr />
                     
                     
@@ -489,8 +501,8 @@
                         </table>
                         <a id="load-default-admin-template" href="#" style="padding-top: 5px; padding-bottom: 5px; display: none;"><?php esc_html_e('Load default admin template', 'easy-appointments'); ?></a>
                         <div><small><?php esc_html_e('Available tags', 'easy-appointments'); ?>: #id#, #date#, #start#, #end#, #status#, #created#, #price#, #ip#, #link_confirm#, #link_cancel#, #url_confirm#, #url_cancel#, #service_name#, #service_duration#, #service_price#, #worker_name#, #worker_email#, #worker_phone#,#worker_description#, #location_name#, #location_address#, #location_location#, <?php
-                                                                                                                                                                                                                                                                                                                                                                                                        // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-                                                                                                                                                                                                                                                                                                                                                                                                        echo implode(', ', EADBModels::get_custom_fields_tags()); ?></small></div>
+                                                                                                                                                                                                                                                                                                                                                                                                                    // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+                                                                                                                                                                                                                                                                                                                                                                                                                    echo implode(', ', EADBModels::get_custom_fields_tags()); ?></small></div>
                     </div>
                     <div class="form-item">
                         <div class="label-with-tooltip">
@@ -546,8 +558,9 @@
                     <div class="form-item" style="border: 1px solid #ececec; padding-left: 10px; border-radius: 4px;">
                         <div class="label-with-tooltip" style="display:flex; align-items:center; gap:8px;">
         
-                            <label for="send.worker.email" style="display:flex; align-items:center; gap:6px;">
+                            <label for="send-worker-email" style="display:flex; align-items:center; gap:6px;">
                                 <input class="field ea_send_worker_email"
+                                    id="send-worker-email"
                                     data-key="send.worker.email"
                                     name="send.worker.email"
                                     type="checkbox"
@@ -589,8 +602,8 @@
                     
                     <div class="form-item" style="border: 1px solid #ececec; padding-left: 10px; border-radius: 4px;">
                         <div class="label-with-tooltip" style="display:flex; align-items:center; gap:8px;">
-                            <label for="send.user.email" style="display:flex; align-items:center; gap:6px;">
-                                <input class="field ea_send_user_email" data-key="send.user.email" name="send.user.email"
+                            <label for="send-user-email" style="display:flex; align-items:center; gap:6px;">
+                                <input class="field ea_send_user_email" id="send-user-email" data-key="send.user.email" name="send.user.email"
                                    type="checkbox" <% if (_.findWhere(settings,
                             {ea_key:'send.user.email'}).ea_value == "1") { %>checked<% } %>>
                             <?php esc_html_e('Send email to user', 'easy-appointments'); ?></label>
@@ -656,7 +669,7 @@
                     </div>
                     <div class="form-item">
                         <div class="label-with-tooltip">
-                            <label for="enable_status_subjects">
+                            <label for="enable-status-subjects">
                                 <?php esc_html_e('Enable different subjects per status', 'easy-appointments'); ?>
                             </label>
                             <span class="tooltip tooltip-right"
@@ -665,6 +678,7 @@
                         </div>
                         <div class="field-wrap">
                             <input class="field"
+                                id="enable-status-subjects"
                                 type="checkbox"
                                 data-key="enable_status_subjects"
                                 name="enable_status_subjects"
@@ -1108,9 +1122,9 @@
                         <textarea class="field" data-key="custom.css"><% if (typeof _.findWhere(settings, {ea_key:'custom.css'}) !== 'undefined') { %><%- (_.findWhere(settings, {ea_key:'custom.css'})).ea_value %><% } %></textarea>
                     </div>
                     <div class="form-item">
-                        <label for="send.worker.email"><?php esc_html_e('Turn off css files', 'easy-appointments'); ?></label>
+                        <label for="css-off"><?php esc_html_e('Turn off css files', 'easy-appointments'); ?></label>
                         <div class="field-wrap">
-                            <input class="field" data-key="css.off" name="css.off" type="checkbox"
+                            <input class="field" id="css-off" data-key="css.off" name="css.off" type="checkbox"
                             <% if (_.findWhere(settings,
                             {ea_key:'css.off'}).ea_value == "1") { %>checked<% } %>>
                         </div>
@@ -1145,18 +1159,17 @@
                     </div>
                     <div class="form-item">
                         <div class="label-with-tooltip">
-                            <label for="send.worker.email"><?php esc_html_e('I agree field', 'easy-appointments'); ?></label>
+                            <label for="show-iagree"><?php esc_html_e('I agree field', 'easy-appointments'); ?></label>
                             <span class="tooltip tooltip-right"
                                   data-tooltip="<?php esc_html_e('I agree option at the end of form. If this is marked user must confirm "I agree" checkbox.', 'easy-appointments'); ?>"></span>
                         </div>
                         <div class="field-wrap">
-                            <input class="field" type="checkbox" name="show.iagree"
+                            <input class="field" id="show-iagree" type="checkbox" name="show.iagree"
                                    data-key="show.iagree"<% if (typeof _.findWhere(settings,
                             {ea_key:'show.iagree'}) !== 'undefined' && _.findWhere(settings,
                             {ea_key:'show.iagree'}).ea_value == '1') { %>checked<% } %> />
                         </div>
                     </div>
-                    <hr />
                     <div class="form-item" style="background-color: #ccc">
                         <blockquote><?php esc_html_e('Note: you can use dynamic form values for redirect params. Redirect example: https://example.com/customer_name={{name}}. This will put value from custom form field with slug `name` to that redirect value. Please check custom form fields for slug names of the fields and just put them in {{}} where you need that param.', 'easy-appointments'); ?></blockquote>
                     </div>
@@ -1196,7 +1209,6 @@
                     <div class="form-item">
                         <ul id="custom-redirect-list" class="list-form-item"></ul>
                     </div>
-                    <hr>
                     <div class="form-item">
                         <label for=""><?php esc_html_e('After cancel go to', 'easy-appointments'); ?></label>
                         <select data-key="cancel.scroll" class="field" name="cancel.scroll">
@@ -1243,10 +1255,10 @@
 
                     <div class="form-item">
                         <div class="label-with-tooltip">
-                            <label for="show.display_thankyou_note"><?php esc_html_e('Display Thank You Note & Status messages', 'easy-appointments'); ?></label>
+                            <label for="show-display-thankyou-note"><?php esc_html_e('Display Thank You Note & Status messages', 'easy-appointments'); ?></label>
                         </div>
                         <div class="field-wrap">
-                            <input class="field" type="checkbox" name="show.display_thankyou_note"
+                            <input class="field" id="show-display-thankyou-note" type="checkbox" name="show.display_thankyou_note"
                                    data-key="show.display_thankyou_note"<% if (typeof _.findWhere(settings,
                             {ea_key:'show.display_thankyou_note'}) !== 'undefined' && _.findWhere(settings,
                             {ea_key:'show.display_thankyou_note'}).ea_value == '1') { %>checked<% } %> />
@@ -1294,12 +1306,12 @@
                 <div class="form-container">
                     <div class="form-item">
                         <div class="label-with-tooltip">
-                            <label for="send.worker.email"><?php esc_html_e('Turn on checkbox', 'easy-appointments'); ?></label>
+                            <label for="gdpr-on"><?php esc_html_e('Turn on checkbox', 'easy-appointments'); ?></label>
                             <span class="tooltip tooltip-right"
                                   data-tooltip="<?php esc_html_e('GDPR section checkbox.', 'easy-appointments'); ?>"></span>
                         </div>
                         <div class="field-wrap">
-                            <input class="field" type="checkbox" name="gdpr.on" data-key="gdpr.on"<%
+                            <input class="field" id="gdpr-on" type="checkbox" name="gdpr.on" data-key="gdpr.on"<%
                             if (typeof _.findWhere(settings, {ea_key:'gdpr.on'}) !== 'undefined' &&
                             _.findWhere(settings, {ea_key:'gdpr.on'}).ea_value == '1') { %>checked<%
                             } %> />
@@ -1334,12 +1346,12 @@
                     </div>
                     <div class="form-item">
                         <div class="label-with-tooltip">
-                            <label for=""><?php esc_html_e('Clear customer data older then 6 months', 'easy-appointments'); ?></label>
+                            <label for="gdpr-auto-remove"><?php esc_html_e('Clear customer data older then 6 months', 'easy-appointments'); ?></label>
                             <span class="tooltip tooltip-right"
                                   data-tooltip="<?php esc_html_e('This action will remove custom form field values older then 6 months. After that appointments older then 6 months will not hold any customer related data.', 'easy-appointments'); ?>"></span>
                         </div>
                         <div class="field-wrap button">
-                            <input class="field" type="checkbox" name="gdpr.auto_remove" style="margin-right: 10px;" data-key="gdpr.auto_remove"<%
+                            <input class="field" id="gdpr-auto-remove" type="checkbox" name="gdpr.auto_remove" style="margin-right: 10px;" data-key="gdpr.auto_remove"<%
                             if (typeof _.findWhere(settings, {ea_key:'gdpr.auto_remove'}) !== 'undefined' &&
                             _.findWhere(settings, {ea_key:'gdpr.auto_remove'}).ea_value == '1') { %>checked<%
                             } %> /> <?php esc_html_e('Auto remove data via Cron that runs once a day', 'easy-appointments'); ?><button class="button button-primary btn-gdpr-delete-data button-field" style="margin-left: 10px"><?php esc_html_e('Remove data now', 'easy-appointments'); ?></button>
@@ -1357,25 +1369,25 @@
                                value="<%- _.findWhere(settings, {ea_key:'trans.currency'}).ea_value %>">
                     </div>
                     <div class="form-item">
-                        <label for="currency.before"><?php esc_html_e('Currency before price', 'easy-appointments'); ?></label>
+                        <label for="currency-before"><?php esc_html_e('Currency before price', 'easy-appointments'); ?></label>
                         <div class="field-wrap">
-                            <input class="field" data-key="currency.before" name="currency.before"
+                            <input class="field" id="currency-before" data-key="currency.before" name="currency.before"
                                    type="checkbox" <% if (_.findWhere(settings,
                             {ea_key:'currency.before'}).ea_value == "1") { %>checked<% } %>>
                         </div>
                     </div>
                     <div class="form-item">
-                        <label for="currency.before"><?php esc_html_e('Hide decimal in price', 'easy-appointments'); ?></label>
+                        <label for="hide-decimal-in-price"><?php esc_html_e('Hide decimal in price', 'easy-appointments'); ?></label>
                         <div class="field-wrap">
-                            <input class="field" data-key="hide.decimal_in_price" name="hide.decimal_in_price"
+                            <input class="field" id="hide-decimal-in-price" data-key="hide.decimal_in_price" name="hide.decimal_in_price"
                                    type="checkbox" <% if (_.findWhere(settings,
                             {ea_key:'hide.decimal_in_price'}).ea_value == "1") { %>checked<% } %>>
                         </div>
                     </div>
                     <div class="form-item">
-                        <label for="price.hide.service"><?php esc_html_e('Hide price in service select', 'easy-appointments'); ?></label>
+                        <label for="price-hide-service"><?php esc_html_e('Hide price in service select', 'easy-appointments'); ?></label>
                         <div class="field-wrap">
-                            <input class="field" data-key="price.hide.service" name="price.hide.service"
+                            <input class="field" id="price-hide-service" data-key="price.hide.service" name="price.hide.service"
                                    type="checkbox" <% if (_.findWhere(settings,
                             {ea_key:'price.hide.service'}).ea_value == "1") { %>checked<% } %>>
                         </div>
@@ -1394,9 +1406,46 @@
                     </div>
                 </div>
             </div>
+
+            <div id="tab-webhooks" class="form-section hidden">
+                <span class="separator vertical"></span>
+
+                <div class="form-container">
+
+                    <div class="form-item">
+                        <span class="pure-text">
+                            <?php esc_html_e(
+                                'Add multiple webhook endpoints and assign events for each endpoint.',
+                                'easy-appointments'
+                            ); ?>
+                        </span>
+                    </div>
+
+                    <div class="form-item">
+                        <button type="button"
+                                class="button button-primary"
+                                id="ea-add-webhook-row">
+
+                            <?php esc_html_e('Add Webhook', 'easy-appointments'); ?>
+                        </button>
+                    </div>
+
+                    <div class="form-item">
+
+                        <ul id="ea-webhook-list" class="list-form-item"></ul>
+
+                        <input type="hidden"
+                            id="ea-webhook-storage"
+                            class="field"
+                            data-key="webhook.endpoints"
+                            value="<%- typeof ea_settings['webhook.endpoints'] !== 'undefined' ? ea_settings['webhook.endpoints'] : '[]' %>">
+                    </div>
+
+                </div>
+            </div>
         </div>
         
-        <br><br>
+        <br><br><br><br>
         <?php easy_ea_newsletter_form(); ?>
     </div>
 </script>
@@ -1504,23 +1553,143 @@
         <button id="close-advance-redirect" class="button-primary" disabled>Close</button>
     </div>
 </script>
+<script type="text/template" id="ea-tpl-webhook-item">
+
+    <li class="ea-webhook-item">
+
+        <div style="
+            border:1px solid #dcdcde;
+            background:#fff;
+            padding:15px;
+            border-radius:4px;
+            margin-bottom:15px;
+        ">
+
+            <div class="form-item">
+
+                <label>
+                    <?php esc_html_e('Endpoint URL', 'easy-appointments'); ?>
+                </label>
+
+                <input type="text"
+                    class="ea-webhook-url"
+                    placeholder="https://example.com/webhook"
+                    value="<%- item.url %>"
+                    style="width:80%;">
+            </div>
+
+            <div class="form-item">
+
+                <label>
+                    <strong>
+                        <?php esc_html_e('Webhook Events', 'easy-appointments'); ?>
+                    </strong>
+                </label>
+
+                <div style="
+                    margin-top:10px;
+                    display:grid;
+                    grid-template-columns:repeat(2,minmax(200px,1fr));
+                    gap:8px;
+                ">
+
+                    <label>
+                        <input type="checkbox"
+                            class="ea-webhook-event"
+                            value="appointment_created"
+                            <% if (_.contains(item.events, 'appointment_created')) { %>checked<% } %>>
+
+                        <?php esc_html_e('Appointment created', 'easy-appointments'); ?>
+                    </label>
+
+                    <label>
+                        <input type="checkbox"
+                            class="ea-webhook-event"
+                            value="appointment_updated"
+                            <% if (_.contains(item.events, 'appointment_updated')) { %>checked<% } %>>
+
+                        <?php esc_html_e('Appointment updated', 'easy-appointments'); ?>
+                    </label>
+
+                    <label>
+                        <input type="checkbox"
+                            class="ea-webhook-event"
+                            value="appointment_status_changed"
+                            <% if (_.contains(item.events, 'appointment_status_changed')) { %>checked<% } %>>
+
+                        <?php esc_html_e('Appointment status changed', 'easy-appointments'); ?>
+                    </label>
+
+                    <label>
+                        <input type="checkbox"
+                            class="ea-webhook-event"
+                            value="appointment_confirmed"
+                            <% if (_.contains(item.events, 'appointment_confirmed')) { %>checked<% } %>>
+
+                        <?php esc_html_e('Appointment confirmed', 'easy-appointments'); ?>
+                    </label>
+
+                    <label>
+                        <input type="checkbox"
+                            class="ea-webhook-event"
+                            value="appointment_pending"
+                            <% if (_.contains(item.events, 'appointment_pending')) { %>checked<% } %>>
+
+                        <?php esc_html_e('Appointment pending', 'easy-appointments'); ?>
+                    </label>
+
+                    <label>
+                        <input type="checkbox"
+                            class="ea-webhook-event"
+                            value="appointment_reserved"
+                            <% if (_.contains(item.events, 'appointment_reserved')) { %>checked<% } %>>
+
+                        <?php esc_html_e('Appointment reserved', 'easy-appointments'); ?>
+                    </label>
+
+                    <label>
+                        <input type="checkbox"
+                            class="ea-webhook-event"
+                            value="appointment_cancelled"
+                            <% if (_.contains(item.events, 'appointment_cancelled')) { %>checked<% } %>>
+
+                        <?php esc_html_e('Appointment cancelled', 'easy-appointments'); ?>
+                    </label>
+
+                </div>
+            </div>
+
+            <div class="form-item">
+
+                <button type="button"
+                        class="button ea-remove-webhook">
+
+                    <?php esc_html_e('Remove', 'easy-appointments'); ?>
+                </button>
+            </div>
+
+        </div>
+    </li>
+
+</script>
 
 <script type="text/template" id="ea-tpl-single-advance-redirect">
     <li>
         <span class="bulk-value"><%- _.findWhere(locations, {id:row.location})?.name %></span>
         <span class="bulk-value"><%- _.findWhere(services,  {id:row.service})?.name %></span>
-        <span class="bulk-value"><%- _.findWhere(workers,   {id:row.worker})?.name s%></span>
+        <span class="bulk-value"><%- _.findWhere(workers,   {id:row.worker})?.name %></span>
         <span style="display: inline-block;"><button class="button bulk-connection-remove">Remove</button></span>
     </li>
 </script>
+
 <script>
     jQuery(document).ready(function($) {
 
-        $(document).on('change', '.ea-title-field', function () {
+        $(document).on('change', '.ea-title-field', function() {
 
             var values = [];
 
-            $('.ea-title-field:checked').each(function () {
+            $('.ea-title-field:checked').each(function() {
                 values.push($(this).val());
             });
 
@@ -1621,6 +1790,8 @@
         $(document).on('click', '#ea-full-import', function() {
 
             const fileInput = document.getElementById('ea-full-import-file');
+            const importButton = $('#ea-full-import');
+            const importSpinner = $('#ea-full-import-spinner');
 
             if (!fileInput.files.length) {
                 alert('Please select a JSON backup file.');
@@ -1636,12 +1807,21 @@
             formData.append('_wpnonce', ea_obj.ea_security_nonce);
             formData.append('file', fileInput.files[0]);
 
+            importButton.prop('disabled', true);
+            importSpinner.show();
+            importButton.data('original-text', importButton.text()).text('Importing...');
+
             $.ajax({
                 url: ajaxurl,
                 method: 'POST',
                 data: formData,
                 processData: false,
                 contentType: false,
+                complete: function() {
+                    importButton.prop('disabled', false);
+                    importSpinner.hide();
+                    importButton.text(importButton.data('original-text') || '<?php esc_html_e('Import Data', 'easy-appointments'); ?>');
+                },
                 success: function(res) {
                     alert(res.data || 'Import completed successfully.');
                     location.reload();
@@ -1654,7 +1834,7 @@
 
         function applyDefaultOnce() {
             var workerChecked = $('.ea_worker_mail_group input[type="checkbox"]:checked').length;
-            var userChecked   = $('.ea_user_mail_group input[type="checkbox"]:checked').length;
+            var userChecked = $('.ea_user_mail_group input[type="checkbox"]:checked').length;
 
             if (workerChecked > 0 || userChecked > 0) {
                 return; //
@@ -1680,8 +1860,11 @@
                 $('.ea_send_user_email').prop('checked', true);
             }
         }
-        setTimeout(function () {
+        setTimeout(function() {
             applyDefaultOnce();
         }, 500);
     });
 </script>
+<?php
+// phpcs:enable Generic.PHP.DisallowAlternativePHPTags
+?>

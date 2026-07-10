@@ -17,6 +17,8 @@ const LocationsPage = () => {
   const [locations, setLocations] = useState([]);
   const [activeLocation, setActiveLocation] = useState(null);
   const [processing, setProcessing] = useState(null);
+  const [selectedIds, setSelectedIds] = useState([]);
+  const [showBulkDelete, setShowBulkDelete] = useState(false);
 
   const loadLocations = async () => {
     try {
@@ -31,6 +33,52 @@ const LocationsPage = () => {
   useEffect(() => {
     loadLocations();
   }, []);
+
+  const toggleSelect = (id, allIds = []) => {
+    if (id === 'ALL') {
+      setSelectedIds(allIds);
+      setShowBulkDelete(true);
+      return;
+    }
+
+    if (id === 'NONE') {
+      setSelectedIds([]);
+      setShowBulkDelete(false);
+      return;
+    }
+
+    let updated = [];
+
+    if (selectedIds.includes(id)) {
+      updated = selectedIds.filter(item => item !== id);
+    } else {
+      updated = [...selectedIds, id];
+    }
+
+    setSelectedIds(updated);
+    setShowBulkDelete(updated.length > 0);
+  };
+
+  const deleteSelected = async () => {
+    const confirmDelete = window.confirm(
+      `Delete ${selectedIds.length} locations?`
+    );
+
+    if (!confirmDelete) {
+      return;
+    }
+
+    try {
+      await LocationsCommunicator.deleteMultiple(selectedIds);
+
+      setLocations(locations.filter(item => !selectedIds.includes(item.id)));
+
+      setSelectedIds([]);
+      setShowBulkDelete(false);
+    } catch (e) {
+      console.error(e);
+    }
+  };
 
   const toggleSidebar = () => {
     if (open && activeLocation) {
@@ -92,11 +140,22 @@ const LocationsPage = () => {
     setProcessing(null);
   };
 
-  const headerAction = {
-    callback: toggleSidebar,
-    icon: 'map-marker-alt',
-    text: __('Add location', 'easy-appointments')
-  };
+  const headerAction = [
+    {
+      callback: toggleSidebar,
+      icon: 'map-marker-alt',
+      text: __('Add location', 'easy-appointments')
+    }
+  ];
+
+  if (showBulkDelete) {
+    headerAction.unshift({
+      callback: deleteSelected,
+      icon: 'trash',
+      color: 'red',
+      text: 'Delete Selected'
+    });
+  }
 
   const title = activeLocation
     ? __('Edit location', 'easy-appointments')
@@ -116,6 +175,8 @@ const LocationsPage = () => {
           onDelete={onDeleteClick}
           onSort={loadLocations}
           processing={processing}
+          selectedIds={selectedIds}
+          toggleSelect={toggleSelect}
         />
       </PageContentWrap>
 

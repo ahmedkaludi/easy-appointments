@@ -2,14 +2,14 @@
 Contributors: easyappointments
 Donate link: https://easy-appointments.com/
 Tags: appointment, appointments, Booking, calendar, reservation
-Requires at least: 3.7
+Requires at least: 5.0
 Tested up to: 7.0
 Requires PHP: 5.3
-Stable tag: 3.12.25
+Stable tag: 3.12.28
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-The easiest way to accept bookings on WordPress for free. Set up a beautiful appointment booking form for your business in minutes — no coding needed. Extremely flexible time management and custom email notifications.
+The easiest free WordPress booking plugin. Create beautiful appointment booking forms with flexible scheduling and email notifications.
 
 == Description ==
 **Easy Appointments** lets you add a fully-featured booking system to any WordPress site — in minutes. Whether you run a salon, clinic, law firm, gym, or tutoring business, your customers book online while you stay in control of your calendar.
@@ -261,6 +261,37 @@ Terms of use and Policy : https://fullcalendar.io/license
 25. Admin panel - Report - Export page
 
 == Changelog ==
+= 3.12.28 (2026-07-04)
+* Fixed Security issue: missing authorization on customer listing AJAX handler allowing PII exposure. Reported by Mustafa Ahmed.
+* Fixed Security issue: missing authorization allowing bulk cancellation of appointments (CVE-2026-11992). Reported by Wordfence (armx64).
+* Fixed Security issue: missing authorization on customer/appointment/connection AJAX handlers allowing data exposure and manipulation. Reported by Wordfence (Ryoma Nishioka, Vamshi Krishna Upadrasta).
+* Fixed Security issue: missing authorization allowing Contributor-level read/modify/delete of appointments. Reported by Youssef massoudi.
+* Fixed Security issue: missing authorization allowing deletion of booking connections. Reported by WEI HSIANG WANG.
+* Fixed Security issue: missing ownership check allowing disclosure of customer personal data. Reported by Mark Moore.
+* Fixed Security issue: missing ownership check allowing cross-user appointment modification. Reported by Duy Tran.
+* Fixed Security issue: missing authorization on calendar REST endpoint and shortcode allowlist bypass. Reported by Phyo Ko Ko.
+* Added TinyMCE Editor to Service Description and Support #service_description# Email Tag #270
+* Fixed Multiple services in shortcode not working #276
+* Fixed Vacation Time Which Allows Service Bookings That Overlap Vacation Hours #286
+* Fixed Label click not working (for issue) in Settings #297
+* Added Multiple deletion in location #294
+* Added Multiple deletion in services #295
+* Added Multiple deletion in employee #296
+* Added Search filter with text in employee location and services #298
+* Added a webhook to receive update about bookings #258
+* Code improvements #305
+
+
+= 3.12.27 (2026-07-01)
+* Added an "All" option to the Quick Time Filter dropdown in the Appointments List section #300
+* Fixed Appointment getting abandoned status #299
+
+= 3.12.26 (2026-06-12)
+* Fixed Import is not working #285
+* Fixed Stripe button is not visible #287
+* Fixed Vacation disappears when editing Mail box content #290
+* Added Support Full 24/7 Availability and Cross-Midnight Bookings #288
+
 = 3.12.25 (2026-05-12)
 * Fixed Improve Google Calendar Import to Prevent Multiple/Duplicate Imports #279
 * Fixed improvement in Easy Appointment Calendar. #190

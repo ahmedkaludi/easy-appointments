@@ -50,4 +50,10 @@ export class LocationsCommunicator {
 
     return response === 1;
   }
+
+  static async deleteMultiple(ids) {
+    const url = `${this.url}&action=ea_delete_multiple_locations`;
+
+    return await http.postJSON(url, JSON.stringify({ ids }));
+  }
 }

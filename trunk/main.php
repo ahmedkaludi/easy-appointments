@@ -4,10 +4,11 @@
  * Plugin Name: Easy Appointments
  * Plugin URI: https://easy-appointments.com/
  * Description: Simple and easy to use management system for Appointments and Bookings
- * Version: 3.12.25
+ * Version: 3.12.28
  * Requires PHP: 5.3
  * Author: Nikola Loncar
  * Author URI: https://easy-appointments.com/
+ * License: GPL v2 or later
  * Text Domain: easy-appointments
  * Domain Path: /languages
  */
@@ -21,16 +22,20 @@ if (!defined('WPINC')) {
 /**
  * Currently plugin version.
  */
-define( 'EASY_APPOINTMENTS_VERSION', '3.12.25' );
+define( 'EASY_APPOINTMENTS_VERSION', '3.12.28' );
 
 // path for source files
+// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedConstantFound
 define('EA_SRC_DIR', dirname(__FILE__) . '/src/');
 
 // path for JS files
+// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedConstantFound
 define('EA_JS_DIR', dirname(__FILE__) . '/js/');
 
 // url for EA plugin dir
+// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedConstantFound
 define('EA_PLUGIN_URL', plugins_url('', __FILE__) . '/');
+// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedConstantFound
 define('EA_PLUGIN_DIR', plugin_dir_path( __FILE__));
 
 // Register the autoloader that loads everything except the Google namespace.
@@ -57,6 +62,7 @@ if (version_compare(PHP_VERSION, '5.3', '<')) {
 }
 
 require_once dirname(__FILE__) . '/ea-blocks/ea-blocks.php';
+require_once dirname(__FILE__) . '/src/webhook.php';
 
 /**
  * Entry point
@@ -274,11 +280,11 @@ class EasyAppointment
 
     public function register_text_domain()
     {
-        load_plugin_textdomain(
-            'easy-appointments',
-            false,
-            dirname( plugin_basename( __FILE__ ) ) . '/languages/'
-        );
+        // load_plugin_textdomain(
+        //     'easy-appointments',
+        //     false,
+        //     dirname( plugin_basename( __FILE__ ) ) . '/languages/'
+        // );
 
     }
 

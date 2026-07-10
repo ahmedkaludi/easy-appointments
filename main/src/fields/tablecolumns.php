@@ -231,6 +231,7 @@ class EATableColumns
             'form_class',
             'label.from_to',
             'is_multiple_booking_allowed',
+            'webhook.endpoints',
             'pending_message',
             'confirmed_message',
             'reservation_message',

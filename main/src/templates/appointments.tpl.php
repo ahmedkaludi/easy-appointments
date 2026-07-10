@@ -1,3 +1,7 @@
+<?php
+defined( 'ABSPATH' ) || exit;
+// phpcs:disable Generic.PHP.DisallowAlternativePHPTags
+?>
 <script>
     window.ea_settings = <?php echo wp_json_encode($settings); ?>;
 </script>
@@ -51,7 +55,8 @@
 					<td class="filter-select">
 						<select name="ea-filter-status" id="ea-filter-status" data-c="status">
 							<option value="">-</option>
-							<% _.each(cache.Status,function(item,key,list){ %>
+							<% var _statuses = (typeof ea_app_status !== 'undefined') ? ea_app_status : cache.Status; %>
+							<% _.each(_statuses,function(item,key,list){ %>
 								<option value="<%- key %>"><%- item %></option>
 							<% });%>
 						</select>
@@ -252,7 +257,8 @@
 				</td>
 				<td>
 					<select name="ea-select-status" data-prop="status">
-						<% _.each(cache.Status,function(item,key,list){
+						<% var _statuses_edit = (typeof ea_app_status !== 'undefined') ? ea_app_status : cache.Status; %>
+						<% _.each(_statuses_edit,function(item,key,list){
 							if(key == row.status) { %>
 								<option value="<%- key %>" selected="selected"><%- item %></option>
 						<% } else { %>
@@ -304,10 +310,11 @@
 jQuery(document).ready(function($) {
 	$('#ea-export-btn').on('click', function(e) {
 	    e.preventDefault();
+		console.log('Export button clicked');
 
 	    let params = {
 	        action: 'ea_export_appointments_excel',
-	        _wpnonce: '<?php echo wp_create_nonce("ea_export_excel_nonce"); ?>'
+	        _wpnonce: '<?php echo esc_js( wp_create_nonce( 'ea_export_excel_nonce' ) ); ?>'
 	    };
 
 	    // Collect all filters automatically
@@ -320,8 +327,13 @@ jQuery(document).ready(function($) {
 	        }
 	    });
 
-	    // Build URL
-	    let url = ajaxurl + '?' + $.param(params);
+	    		// Include current sort/order from UI so export matches view
+		params.sort = $('#ea-sort-by').val();
+		params.order = $('#ea-order-by').val();
+
+		// Build URL
+		let url = ajaxurl + '?' + $.param(params);
+
 
 	    // Redirect → triggers download
 	    window.location.href = url;
@@ -434,3 +446,6 @@ jQuery(document).ready(function($) {
 });
 
 </script>
+<?php
+// phpcs:enable Generic.PHP.DisallowAlternativePHPTags
+?>

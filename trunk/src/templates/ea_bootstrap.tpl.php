@@ -1,3 +1,7 @@
+<?php
+// phpcs:disable Generic.PHP.DisallowAlternativePHPTags
+defined( 'ABSPATH' ) || exit;
+?>
 <script type="text/javascript">
     var ea_ajaxurl = '<?php echo esc_url( admin_url("admin-ajax.php") ); ?>';
 </script>
@@ -11,7 +15,7 @@
                 <div class="step form-group">
                     <div class="block"></div>
                     <label for="location" class="ea-label col-sm-4 control-label">
-                        <?php echo easy_ea_helper_polylang_trans($this->options->get_option_value('trans.location')); ?>
+                        <?php echo esc_html( easy_ea_helper_polylang_trans( $this->options->get_option_value( 'trans.location' ) ) ); ?>
                     </label>
                     <div class="col-sm-8">
                         <select id="location" name="location" data-c="location" class="filter form-control">
@@ -25,7 +29,7 @@
                     <div class="step form-group">
                         <div class="block"></div>
                         <label for="worker" class="ea-label col-sm-4 control-label">
-                            <?php echo easy_ea_helper_polylang_trans($this->options->get_option_value("trans.worker")); ?>
+                            <?php echo esc_html( easy_ea_helper_polylang_trans($this->options->get_option_value("trans.worker")) ); ?>
                         </label>
                         <div class="col-sm-8">
                             <select id="worker" name="worker" data-c="worker" class="filter form-control">
@@ -38,7 +42,7 @@
                     <div class="step form-group">
                         <div class="block"></div>
                         <label for="service" class="ea-label col-sm-4 control-label">
-                            <?php echo easy_ea_helper_polylang_trans($this->options->get_option_value("trans.service")); ?>
+                            <?php echo esc_html( easy_ea_helper_polylang_trans($this->options->get_option_value("trans.service")) ); ?>
                         </label>
                         <div class="col-sm-8">
                             <select id="service" name="service" data-c="service" class="filter form-control"
@@ -56,7 +60,7 @@
                     <div class="step form-group">
                         <div class="block"></div>
                         <label for="service" class="ea-label col-sm-4 control-label">
-                            <?php echo easy_ea_helper_polylang_trans($this->options->get_option_value("trans.service")); ?>
+                            <?php echo esc_html( easy_ea_helper_polylang_trans($this->options->get_option_value("trans.service")) ); ?>
                         </label>
                         <div class="col-sm-8">
                             <select id="service" name="service" data-c="service" class="filter form-control"
@@ -69,7 +73,7 @@
                     <div class="step form-group">
                         <div class="block"></div>
                         <label for="worker" class="ea-label col-sm-4 control-label">
-                            <?php echo easy_ea_helper_polylang_trans($this->options->get_option_value("trans.worker")); ?>
+                            <?php echo esc_html( easy_ea_helper_polylang_trans($this->options->get_option_value("trans.worker")) ); ?>
                         </label>
                         <div class="col-sm-8">
                             <select id="worker" name="worker" data-c="worker" class="filter form-control">
@@ -286,3 +290,6 @@
 
 
 </script>
+<?php
+// phpcs:enable Generic.PHP.DisallowAlternativePHPTags
+?>

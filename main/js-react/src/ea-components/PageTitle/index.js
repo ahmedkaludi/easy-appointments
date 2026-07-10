@@ -53,8 +53,12 @@ const PageTitle = ({
               <Button
                 onClick={a.callback}
                 variant="contained"
-                color="primary"
-                style={{ marginLeft: '10px' }}>
+                color={a.color || 'primary'}
+                style={{
+                  marginLeft: '10px',
+                  backgroundColor: a.color === 'red' ? '#f44336' : undefined,
+                  color: a.color === 'red' ? '#fff' : undefined
+                }}>
                 <span className="btn-wrapper--icon">
                   <FontAwesomeIcon icon={['fas', `${a.icon}`]} />
                 </span>
