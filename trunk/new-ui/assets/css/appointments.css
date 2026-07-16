@@ -736,3 +736,176 @@
         grid-template-columns: 1fr;
     }
 }
+
+/* ---------- Custom Confirm Modal ---------- */
+.ea-mnui-confirm-overlay {
+    --ea-blue: #2563eb;
+    --ea-blue-dark: #1d4ed8;
+    --ea-blue-light: #eef4ff;
+    --ea-red: #d63638;
+    --ea-red-dark: #b91c1c;
+    --ea-red-light: #fef3f2;
+    --ea-border: #e5e7eb;
+    --ea-text: #111827;
+    --ea-text-muted: #4b5563;
+    --ea-radius-lg: 12px;
+    --ea-radius-md: 8px;
+
+    display: flex;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(15, 23, 42, 0.3);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    z-index: 999999;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.ea-mnui-confirm-overlay.is-open {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+}
+
+.ea-mnui-confirm-box {
+    background: #ffffff;
+    border-radius: var(--ea-radius-lg);
+    width: 440px;
+    max-width: 90vw;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    transform: scale(0.95);
+    transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    border: 1px solid var(--ea-border);
+}
+
+.ea-mnui-confirm-overlay.is-open .ea-mnui-confirm-box {
+    transform: scale(1);
+}
+
+.ea-mnui-confirm-content {
+    display: flex;
+    padding: 24px;
+    gap: 16px;
+    align-items: flex-start;
+}
+
+.ea-mnui-confirm-icon-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.ea-mnui-confirm-icon-wrap.is-danger {
+    background: var(--ea-red-light);
+    color: var(--ea-red);
+    border: 1px solid #fee4e2;
+}
+
+.ea-mnui-confirm-icon-wrap.is-primary {
+    background: var(--ea-blue-light);
+    color: var(--ea-blue);
+    border: 1px solid #d1e9ff;
+}
+
+.ea-mnui-confirm-text {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex-grow: 1;
+}
+
+.ea-mnui-confirm-title {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--ea-text);
+    line-height: 1.3;
+}
+
+.ea-mnui-confirm-message {
+    margin: 0;
+    font-size: 14px;
+    color: var(--ea-text-muted);
+    line-height: 1.5;
+}
+
+.ea-mnui-confirm-footer {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 12px;
+    padding: 16px 24px;
+    background: #f9fafb;
+    border-top: 1px solid var(--ea-border);
+}
+
+.ea-mnui-confirm-footer .ea-mnui-btn {
+    border-radius: var(--ea-radius-md);
+    padding: 9px 18px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition: all 0.15s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1.2;
+}
+
+.ea-mnui-confirm-footer .ea-mnui-btn-ghost {
+    background: #ffffff;
+    border-color: #d0d5dd;
+    color: #344054;
+    box-shadow: 0 1px 2px rgba(16, 24, 40, 0.05);
+}
+
+.ea-mnui-confirm-footer .ea-mnui-btn-ghost:hover {
+    background: #f9fafb;
+    border-color: #d0d5dd;
+    color: #1d2939;
+}
+
+.ea-mnui-confirm-footer .ea-mnui-btn-danger {
+    background: var(--ea-red);
+    border-color: var(--ea-red);
+    color: #ffffff;
+    box-shadow: 0 1px 2px rgba(16, 24, 40, 0.05);
+}
+
+.ea-mnui-confirm-footer .ea-mnui-btn-danger:hover {
+    background: var(--ea-red-dark);
+    border-color: var(--ea-red-dark);
+    color: #ffffff !important;
+}
+
+.ea-mnui-confirm-footer .ea-mnui-btn-primary {
+    background: var(--ea-blue);
+    border-color: var(--ea-blue);
+    color: #ffffff;
+    box-shadow: 0 1px 2px rgba(16, 24, 40, 0.05);
+}
+
+.ea-mnui-confirm-footer .ea-mnui-btn-primary:hover {
+    background: var(--ea-blue-dark);
+    border-color: var(--ea-blue-dark);
+    color: #ffffff !important;
+}

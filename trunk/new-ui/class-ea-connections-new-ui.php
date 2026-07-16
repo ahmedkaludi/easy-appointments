@@ -161,9 +161,17 @@ class EA_Connections_New_UI
         wp_enqueue_script('moment');
 
         wp_enqueue_script(
+            'ea-new-common-ui',
+            $base_url . 'js/common.js',
+            array('jquery'),
+            $js_ver,
+            true
+        );
+
+        wp_enqueue_script(
             'ea-new-connections-ui',
             $base_url . 'js/connections.js',
-            array('jquery', 'jquery-ui-datepicker', 'moment'),
+            array('jquery', 'jquery-ui-datepicker', 'moment', 'ea-new-common-ui'),
             $js_ver,
             true
         );

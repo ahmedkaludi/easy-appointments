@@ -434,7 +434,9 @@
                     '<td class="ea-naui-col-actions">' +
                         '<button type="button" class="ea-naui-icon-btn ea-naui-edit" title="' + escapeHtml(i18n.edit) + '">&#9998;</button>' +
                         '<button type="button" class="ea-naui-icon-btn ea-naui-clone" title="' + escapeHtml(i18n.clone) + '">&#128203;</button>' +
-                        '<button type="button" class="ea-naui-icon-btn ea-naui-danger ea-naui-delete" title="' + escapeHtml(i18n.delete) + '">&#10005;</button>' +
+                        '<button type="button" class="ea-naui-icon-btn ea-naui-danger ea-naui-delete" title="' + escapeHtml(i18n.delete) + '">' +
+                            '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle; display:inline-block;"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>' +
+                        '</button>' +
                     '</td>' +
                 '</tr>'
             );
@@ -584,24 +586,29 @@
                 return;
             }
 
-            if (!window.confirm(i18n.confirmDeleteSelected)) {
-                return;
-            }
-
-            $.ajax({
-                url: cfg.ajaxUrl,
-                method: 'POST',
-                dataType: 'json',
-                data: {
-                    action: 'delete_selected_appointment',
-                    appointments: ids,
-                    appointments_nonce: cfg.bulkNonce
+            window.eaConfirm({
+                title: 'Delete Appointments',
+                message: i18n.confirmDeleteSelected,
+                confirmLabel: i18n.delete || 'Delete',
+                cancelLabel: i18n.cancel || 'Cancel',
+                isDanger: true,
+                onConfirm: function () {
+                    $.ajax({
+                        url: cfg.ajaxUrl,
+                        method: 'POST',
+                        dataType: 'json',
+                        data: {
+                            action: 'delete_selected_appointment',
+                            appointments: ids,
+                            appointments_nonce: cfg.bulkNonce
+                        }
+                    }).done(function () {
+                        showNotice(i18n.deletedSuccess);
+                        loadAppointments();
+                    }).fail(function () {
+                        showNotice(i18n.genericError);
+                    });
                 }
-            }).done(function () {
-                showNotice(i18n.deletedSuccess);
-                loadAppointments();
-            }).fail(function () {
-                showNotice(i18n.genericError);
             });
         });
 
@@ -825,17 +832,22 @@
         $app.on('click', '.ea-naui-delete', function () {
             var row = $(this).closest('tr').data('row');
 
-            if (!window.confirm(i18n.confirmDelete)) {
-                return;
-            }
+            window.eaConfirm({
+                title: 'Delete Appointment',
+                message: i18n.confirmDelete,
+                confirmLabel: i18n.delete || 'Delete',
+                cancelLabel: i18n.cancel || 'Cancel',
+                isDanger: true,
+                onConfirm: function () {
+                    var url = cfg.ajaxUrl + '?action=ea_appointment&id=' + encodeURIComponent(row.id) +
+                        '&_wpnonce=' + encodeURIComponent(cfg.restNonce) + '&_method=DELETE';
 
-            var url = cfg.ajaxUrl + '?action=ea_appointment&id=' + encodeURIComponent(row.id) +
-                '&_wpnonce=' + encodeURIComponent(cfg.restNonce) + '&_method=DELETE';
-
-            $.post(url).done(function () {
-                loadAppointments();
-            }).fail(function () {
-                showNotice(i18n.genericError);
+                    $.post(url).done(function () {
+                        loadAppointments();
+                    }).fail(function () {
+                        showNotice(i18n.genericError);
+                    });
+                }
             });
         });
 
