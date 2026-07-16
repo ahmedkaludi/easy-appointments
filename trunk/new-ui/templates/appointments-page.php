@@ -177,6 +177,7 @@ if (!defined('WPINC')) {
                     <?php esc_html_e('No appointments found for the selected filters.', 'easy-appointments'); ?>
                 </div>
             </div>
+            <div id="ea-naui-pagination" class="ea-naui-pagination"></div>
         </div>
     </div>
 

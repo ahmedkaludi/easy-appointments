@@ -98,6 +98,7 @@ if (!defined('WPINC')) {
                     <?php esc_html_e('No connections found.', 'easy-appointments'); ?>
                 </div>
             </div>
+            <div id="ea-mnui-pagination" class="ea-mnui-pagination"></div>
         </div>
     </div>
 

@@ -909,3 +909,20 @@
     border-color: var(--ea-blue-dark);
     color: #ffffff !important;
 }
+
+/* ---------- Pagination ---------- */
+.ea-naui-pagination {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 14px;
+    padding: 0 24px 24px 24px;
+}
+
+.ea-naui-pagination .ea-naui-btn[disabled] {
+    background: #eef4ff;
+    border-color: #2563eb;
+    color: #1d4ed8;
+    opacity: 1;
+    cursor: default;
+}

@@ -42,6 +42,8 @@
         var editingId = null;
         var processingId = null;
         var isBulk = false;
+        var currentPage = 1;
+        var perPage = 10;
 
         var $tableBody = $('#ea-mnui-rows');
         var $emptyState = $('#ea-mnui-empty');
@@ -189,6 +191,7 @@
                 data: { action: 'ea_connections', _wpnonce: cfg.restNonce }
             }).done(function (response) {
                 connections = $.isArray(response) ? response : [];
+                currentPage = 1;
                 render();
                 showNotice('');
             }).fail(function () {
@@ -253,6 +256,33 @@
             return { badge: 'ea-mnui-badge-not-working', label: i18n.notWorking };
         }
 
+        function renderPagination(totalCount) {
+            var $pag = $('#ea-mnui-pagination');
+            $pag.empty();
+
+            var totalPages = Math.ceil(totalCount / perPage);
+
+            if (totalPages <= 1) {
+                return;
+            }
+
+            // Previous button
+            var $prevBtn = $('<button type="button" class="ea-mnui-btn ea-mnui-btn-ghost ea-mnui-page-btn" data-page="' + (currentPage - 1) + '"' + (currentPage === 1 ? ' disabled' : '') + '>&larr;</button>');
+            $pag.append($prevBtn);
+
+            for (var i = 1; i <= totalPages; i++) {
+                var $btn = $('<button type="button" class="ea-mnui-btn ea-mnui-btn-ghost ea-mnui-page-btn" data-page="' + i + '">' + i + '</button>');
+                if (i === currentPage) {
+                    $btn.prop('disabled', true);
+                }
+                $pag.append($btn);
+            }
+
+            // Next button
+            var $nextBtn = $('<button type="button" class="ea-mnui-btn ea-mnui-btn-ghost ea-mnui-page-btn" data-page="' + (currentPage + 1) + '"' + (currentPage === totalPages ? ' disabled' : '') + '>&rarr;</button>');
+            $pag.append($nextBtn);
+        }
+
         function render() {
             var list = filteredSorted();
 
@@ -260,16 +290,22 @@
 
             if (!list.length) {
                 $emptyState.show();
+                $('#ea-mnui-pagination').empty();
                 checkBulkButton();
                 return;
             }
 
             $emptyState.hide();
 
-            $.each(list, function (index, row) {
+            var startIndex = (currentPage - 1) * perPage;
+            var endIndex = startIndex + perPage;
+            var pageRecords = list.slice(startIndex, endIndex);
+
+            $.each(pageRecords, function (index, row) {
                 $tableBody.append(buildRow(row));
             });
 
+            renderPagination(list.length);
             checkBulkButton();
         }
 
@@ -398,6 +434,7 @@
          */
         $app.on('keyup change', '#ea-mnui-search', function () {
             searchTerm = $(this).val() || '';
+            currentPage = 1;
             render();
         });
 
@@ -416,7 +453,17 @@
             $('.ea-mnui-set-sort').removeClass('ea-mnui-sort-active');
             $(this).addClass('ea-mnui-sort-active');
 
+            currentPage = 1;
             render();
+        });
+
+        $app.on('click', '.ea-mnui-page-btn', function (e) {
+            e.preventDefault();
+            var page = parseInt($(this).data('page'), 10);
+            if (page && page !== currentPage) {
+                currentPage = page;
+                render();
+            }
         });
 
         $app.on('click', '.ea-mnui-refresh', function (e) {

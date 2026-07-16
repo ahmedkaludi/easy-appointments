@@ -36,6 +36,8 @@
         var appointments = [];
         var sortBy = 'id';
         var orderBy = 'DESC';
+        var currentPage = 1;
+        var perPage = 10;
 
         var $tableBody = $('#ea-naui-rows');
         var $emptyState = $('#ea-naui-empty');
@@ -332,6 +334,7 @@
                 data: $.extend({ action: 'ea_appointments', _wpnonce: cfg.restNonce }, getFilters())
             }).done(function (response) {
                 appointments = $.isArray(response) ? response : [];
+                currentPage = 1;
                 sortAppointments();
                 renderRows();
                 showNotice('');
@@ -372,19 +375,55 @@
             return row[field.slug] !== undefined && row[field.slug] !== null ? row[field.slug] : '';
         }
 
+        function renderPagination() {
+            var $pag = $('#ea-naui-pagination');
+            $pag.empty();
+
+            var totalPages = Math.ceil(appointments.length / perPage);
+
+            if (totalPages <= 1) {
+                return;
+            }
+
+            // Previous button
+            var $prevBtn = $('<button type="button" class="ea-naui-btn ea-naui-btn-ghost ea-naui-page-btn" data-page="' + (currentPage - 1) + '"' + (currentPage === 1 ? ' disabled' : '') + '>&larr;</button>');
+            $pag.append($prevBtn);
+
+            for (var i = 1; i <= totalPages; i++) {
+                var $btn = $('<button type="button" class="ea-naui-btn ea-naui-btn-ghost ea-naui-page-btn" data-page="' + i + '">' + i + '</button>');
+                if (i === currentPage) {
+                    $btn.prop('disabled', true);
+                }
+                $pag.append($btn);
+            }
+
+            // Next button
+            var $nextBtn = $('<button type="button" class="ea-naui-btn ea-naui-btn-ghost ea-naui-page-btn" data-page="' + (currentPage + 1) + '"' + (currentPage === totalPages ? ' disabled' : '') + '>&rarr;</button>');
+            $pag.append($nextBtn);
+        }
+
         function renderRows() {
             $tableBody.empty();
 
             if (!appointments.length) {
                 $emptyState.show();
+                $('#ea-naui-pagination').empty();
+                checkBulkButtons();
                 return;
             }
 
             $emptyState.hide();
 
-            $.each(appointments, function (index, row) {
+            var startIndex = (currentPage - 1) * perPage;
+            var endIndex = startIndex + perPage;
+            var pageAppointments = appointments.slice(startIndex, endIndex);
+
+            $.each(pageAppointments, function (index, row) {
                 $tableBody.append(buildRow(row));
             });
+
+            renderPagination();
+            checkBulkButtons();
         }
 
         function buildRow(row) {
@@ -849,6 +888,15 @@
                     });
                 }
             });
+        });
+
+        $app.on('click', '.ea-naui-page-btn', function (e) {
+            e.preventDefault();
+            var page = parseInt($(this).data('page'), 10);
+            if (page && page !== currentPage) {
+                currentPage = page;
+                renderRows();
+            }
         });
 
         $('#ea-naui-drawer-close, .ea-naui-drawer-cancel').on('click', function (e) {
