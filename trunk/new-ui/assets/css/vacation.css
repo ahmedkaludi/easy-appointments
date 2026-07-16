@@ -1,0 +1,186 @@
+/**
+ * Easy Appointments - New Vacation UI styles.
+ * Loaded after the shared manage.css (.ea-mnui-*) design system used by
+ * Locations/Services/Workers/Connections. Only adds the handful of
+ * widgets unique to this screen: tag pills for the table's Employees/
+ * Dates columns, the date-add row + removable date chips, the full-day
+ * toggle, row action icon buttons, and field-error visibility - defined
+ * defensively here in case manage.css doesn't already cover them, so
+ * this page renders correctly on its own either way.
+ */
+
+/* ---------- Field error visibility ---------- */
+
+.ea-mnui-field-error {
+    display: none;
+    margin-top: 4px;
+    font-size: 12px;
+    color: #d63638;
+}
+
+.ea-mnui-field.has-error .ea-mnui-field-error {
+    display: block;
+}
+
+.ea-mnui-field.has-error input,
+.ea-mnui-field.has-error select,
+.ea-mnui-field.has-error textarea {
+    border-color: #d63638 !important;
+}
+
+/* ---------- Table tag pills (Employees / Dates columns) ---------- */
+
+.ea-mnui-tag-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+}
+
+.ea-mnui-tag {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 600;
+    background: #eef4ff;
+    color: #1d4ed8;
+    border: 1px solid #d6e4ff;
+    white-space: nowrap;
+}
+
+.ea-mnui-tag-muted {
+    background: #f6f7fb;
+    color: #6b7280;
+    border-color: #e5e7eb;
+}
+
+/* ---------- Row action icon buttons ---------- */
+
+.ea-mnui-icon-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    border: 1px solid #e5e7eb;
+    background: #fff;
+    cursor: pointer;
+    margin-right: 4px;
+    color: #6b7280;
+    padding: 0;
+}
+
+.ea-mnui-icon-btn:hover {
+    background: #f6f7fb;
+    color: #111827;
+}
+
+.ea-mnui-icon-btn .dashicons {
+    width: 16px;
+    height: 16px;
+    font-size: 16px;
+    line-height: 1;
+}
+
+.ea-mnui-icon-btn.ea-mnui-danger:hover {
+    background: #fef3f2;
+    border-color: #fecdca;
+    color: #d63638;
+}
+
+/* ---------- Employee chips inside the drawer ---------- */
+
+.ea-mnui-chip-group-scroll {
+    max-height: 160px;
+    overflow-y: auto;
+    padding: 2px;
+}
+
+.ea-mnui-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border-radius: 999px;
+    border: 1px solid #e5e7eb;
+    background: #fff;
+    font-size: 12px;
+    cursor: pointer;
+    margin: 3px 6px 3px 0;
+}
+
+.ea-mnui-chip input[type="checkbox"] {
+    margin: 0;
+}
+
+.ea-mnui-chip.is-checked {
+    background: #eef4ff;
+    border-color: #2563eb;
+    color: #1d4ed8;
+}
+
+/* ---------- Date add row + date chips ---------- */
+
+.ea-mnui-date-add-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 10px;
+}
+
+.ea-mnui-date-add-row .ea-mnui-date-input {
+    flex: 1;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 8px 12px;
+    font-size: 13px;
+    background: #fff;
+}
+
+.ea-mnui-vacation-dates {
+    min-height: 0;
+}
+
+.ea-mnui-date-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 6px 4px 12px;
+    border-radius: 999px;
+    border: 1px solid #d6e4ff;
+    background: #eef4ff;
+    color: #1d4ed8;
+    font-size: 12px;
+    margin: 3px 6px 3px 0;
+}
+
+.ea-mnui-date-chip-remove {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    border: none;
+    background: transparent;
+    color: #1d4ed8;
+    font-size: 14px;
+    line-height: 1;
+    cursor: pointer;
+    padding: 0;
+}
+
+.ea-mnui-date-chip-remove:hover {
+    background: rgba(29, 78, 216, 0.12);
+}
+
+/* ---------- Full day toggle ---------- */
+
+.ea-mnui-fullday-toggle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: #374151;
+    margin: 6px 0 12px;
+}

@@ -63,6 +63,17 @@ if (version_compare(PHP_VERSION, '5.3', '<')) {
 
 require_once dirname(__FILE__) . '/ea-blocks/ea-blocks.php';
 require_once dirname(__FILE__) . '/src/webhook.php';
+require_once dirname(__FILE__) . '/new-ui/class-ea-appointments-new-ui.php';
+require EA_PLUGIN_DIR . 'new-ui/class-ea-locations-new-ui.php';
+require EA_PLUGIN_DIR . 'new-ui/class-ea-services-new-ui.php';
+require EA_PLUGIN_DIR . 'new-ui/class-ea-workers-new-ui.php';
+require EA_PLUGIN_DIR . 'new-ui/class-ea-connections-new-ui.php';
+require EA_PLUGIN_DIR . 'new-ui/class-ea-publish-new-ui.php';
+require EA_PLUGIN_DIR . 'new-ui/class-ea-customers-new-ui.php';
+require_once dirname(__FILE__) . '/new-ui/class-ea-settings-new-ui.php';
+require EA_PLUGIN_DIR . 'new-ui/class-ea-vacation-new-ui.php';
+require EA_PLUGIN_DIR . 'new-ui/class-ea-help-support-new-ui.php';
+require EA_PLUGIN_DIR . 'new-ui/class-ea-ui-mode-switcher.php';
 
 /**
  * Entry point
@@ -117,11 +128,15 @@ class EasyAppointment
         $mail = $this->container['mail'];
         $mail->init();
 
+
         // admin panel split loading for optimization
         if (is_admin()) {
             /** @var EAAdminPanel $admin */
             $admin = $this->container['admin_panel'];
             $admin->init();
+
+            $ui_switcher = new EA_UI_Switcher();
+            $ui_switcher->init();
         } else {
             /** @var Easy_EA_Frontend $frontend */
             $frontend = $this->container['frontend'];

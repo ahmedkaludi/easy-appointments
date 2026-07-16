@@ -1,0 +1,166 @@
+/**
+ * Easy Appointments - New Customers UI styles.
+ * Loaded after the shared manage.css (.ea-mnui-*) design system used by
+ * Locations/Services/Workers/Connections/Vacation. Adds the widgets
+ * unique to this screen: pagination buttons, and the appointment-history
+ * tabs/table inside the customer detail drawer. Also includes defensive
+ * copies of the field-error and icon-button rules (same pattern used in
+ * vacation.css) in case manage.css doesn't already define them, so this
+ * page renders correctly on its own either way.
+ */
+
+/* ---------- Field error visibility (defensive, see vacation.css) ---------- */
+
+.ea-mnui-field-error {
+    display: none;
+    margin-top: 4px;
+    font-size: 12px;
+    color: #d63638;
+}
+
+.ea-mnui-field.has-error .ea-mnui-field-error {
+    display: block;
+}
+
+.ea-mnui-field.has-error input,
+.ea-mnui-field.has-error select,
+.ea-mnui-field.has-error textarea {
+    border-color: #d63638 !important;
+}
+
+/* ---------- Row action icon buttons (defensive, see vacation.css) ---------- */
+
+.ea-mnui-icon-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    border: 1px solid #e5e7eb;
+    background: #fff;
+    cursor: pointer;
+    margin-right: 4px;
+    color: #6b7280;
+    padding: 0;
+}
+
+.ea-mnui-icon-btn:hover {
+    background: #f6f7fb;
+    color: #111827;
+}
+
+.ea-mnui-icon-btn .dashicons {
+    width: 16px;
+    height: 16px;
+    font-size: 16px;
+    line-height: 1;
+}
+
+.ea-mnui-icon-btn.ea-mnui-danger:hover {
+    background: #fef3f2;
+    border-color: #fecdca;
+    color: #d63638;
+}
+
+/* ---------- Toolbar search + button ---------- */
+
+.ea-mnui-search-wrap {
+    display: flex;
+    gap: 8px;
+    flex: 1;
+    max-width: 420px;
+}
+
+.ea-mnui-search-wrap .ea-mnui-search {
+    flex: 1;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 8px 12px;
+    font-size: 13px;
+    background: #fff;
+}
+
+/* ---------- Pagination ---------- */
+
+.ea-mnui-pagination {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 14px;
+}
+
+.ea-mnui-pagination .ea-mnui-btn[disabled] {
+    background: #eef4ff;
+    border-color: #2563eb;
+    color: #1d4ed8;
+    opacity: 1;
+    cursor: default;
+}
+
+/* ---------- Wider drawer for the customer detail view ---------- */
+
+.ea-mnui-drawer-wide {
+    width: 900px;
+}
+
+/* ---------- Appointment history tabs ---------- */
+
+.ea-mnui-appt-tabs {
+    display: flex;
+    gap: 6px;
+    margin: 18px 0 10px;
+    border-bottom: 1px solid #e5e7eb;
+    padding-bottom: 0;
+}
+
+.ea-mnui-appt-tab {
+    border: none;
+    background: transparent;
+    padding: 8px 4px;
+    margin-right: 14px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #6b7280;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+}
+
+.ea-mnui-appt-tab.is-active {
+    color: #1d4ed8;
+    border-bottom-color: #2563eb;
+}
+
+/* ---------- Appointment history mini table ---------- */
+
+.ea-mnui-appt-table-wrap {
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.ea-mnui-appt-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.ea-mnui-appt-table thead th {
+    text-align: left;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    color: #6b7280;
+    background: #f6f7fb;
+    border-bottom: 1px solid #e5e7eb;
+    padding: 8px 12px;
+}
+
+.ea-mnui-appt-table td {
+    padding: 10px 12px;
+    border-bottom: 1px solid #f0f0f0;
+    font-size: 13px;
+}
+
+.ea-mnui-appt-table tr:last-child td {
+    border-bottom: none;
+}

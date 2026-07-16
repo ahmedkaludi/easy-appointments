@@ -1,0 +1,1308 @@
+/**
+ * Easy Appointments - New Locations / Workers (Employees) UI styles.
+ * Namespaced under .ea-mnui ("Manage New UI") to avoid any collision with
+ * existing plugin CSS. Uses the same design tokens introduced by the
+ * New Appointments UI (.ea-naui) / New Settings UI (.ea-nsui) for visual
+ * consistency across every new admin screen.
+ *
+ * Shared by both class-ea-locations-new-ui.php and class-ea-workers-new-ui.php
+ * so the two simple CRUD screens (list + drawer form) stay pixel-consistent
+ * without duplicating the same ~500 lines of CSS twice.
+ */
+
+.ea-mnui-wrap {
+    margin: 20px 20px 20px 0;
+}
+
+.ea-mnui {
+    --ea-blue: #2563eb;
+    --ea-blue-dark: #1d4ed8;
+    --ea-blue-light: #eef4ff;
+    --ea-red: #d63638;
+    --ea-red-light: #fef3f2;
+    --ea-green: #027a48;
+    --ea-green-light: #ecfdf3;
+    --ea-text: #111827;
+    --ea-text-muted: #6b7280;
+    --ea-border: #e5e7eb;
+    --ea-bg: #f6f7fb;
+    --ea-card: #ffffff;
+    --ea-radius: 10px;
+
+    background: var(--ea-bg);
+    border: 1px solid var(--ea-border);
+    border-radius: var(--ea-radius);
+    overflow: hidden;
+    font-size: 14px;
+    color: var(--ea-text);
+    box-shadow: 0 1px 2px rgba(16, 24, 40, 0.04);
+}
+
+.ea-mnui * {
+    box-sizing: border-box;
+}
+
+/* ---------- Header ---------- */
+
+.ea-mnui-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    background: var(--ea-card);
+    border-bottom: 1px solid var(--ea-border);
+    padding: 16px 24px;
+}
+
+.ea-mnui-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.ea-mnui-brand-icon {
+    display: inline-flex;
+    color: var(--ea-blue);
+}
+
+.ea-mnui-brand h1 {
+    font-size: 18px;
+    font-weight: 700;
+    margin: 0;
+    padding: 0;
+    line-height: 1;
+    color: var(--ea-text);
+}
+
+.ea-mnui-version {
+    font-size: 12px;
+    color: var(--ea-text-muted);
+    background: var(--ea-bg);
+    border: 1px solid var(--ea-border);
+    border-radius: 999px;
+    padding: 2px 10px;
+}
+
+.ea-mnui-header-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+/* ---------- Buttons ---------- */
+
+.ea-mnui-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    border-radius: 8px;
+    padding: 8px 16px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    border: 1px solid transparent;
+    text-decoration: none;
+    transition: background 0.15s ease, border-color 0.15s ease, opacity 0.15s ease;
+}
+
+.ea-mnui-btn-primary {
+    background: var(--ea-blue);
+    border-color: var(--ea-blue);
+    color: #fff;
+}
+
+.ea-mnui-btn-primary:hover {
+    background: darkblue;
+    border-color: darkblue;
+    color: #fff !important;
+}
+
+.ea-mnui-btn-ghost {
+    background: #fff;
+    border-color: var(--ea-border);
+    color: var(--ea-text);
+}
+
+.ea-mnui-btn-ghost:hover {
+    background: var(--ea-bg);
+    color: var(--ea-text);
+}
+
+.ea-mnui-btn-danger {
+    background: var(--ea-red-light);
+    border-color: #fecdca;
+    color: var(--ea-red);
+}
+
+.ea-mnui-btn-danger:hover {
+    background: #fee4e2;
+    color: var(--ea-red);
+}
+
+.ea-mnui-btn[disabled] {
+    opacity: 0.6;
+    cursor: default;
+    pointer-events: none;
+}
+
+/* ---------- Body ---------- */
+
+.ea-mnui-body {
+    padding: 20px 24px 28px;
+}
+
+/* ---------- Toolbar ---------- */
+
+.ea-mnui-toolbar {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.ea-mnui-select-all-label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ea-text-muted);
+    cursor: pointer;
+}
+
+.ea-mnui-toolbar-actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.ea-mnui-search-wrap {
+    margin-left: auto;
+}
+
+.ea-mnui-wrap .ea-mnui-search {
+    border: 1px solid var(--ea-border);
+    border-radius: 8px;
+    padding: 8px 12px;
+    font-size: 13px;
+    width: 280px;
+    max-width: 60vw;
+    background: #fff;
+}
+
+.ea-mnui-wrap .ea-mnui-search:focus {
+    outline: none;
+    border-color: var(--ea-blue);
+    box-shadow: 0 0 0 3px var(--ea-blue-light);
+}
+
+.ea-mnui-status-msg {
+    font-size: 12px;
+    color: var(--ea-text-muted);
+    font-style: italic;
+}
+
+/* ---------- Table ---------- */
+
+.ea-mnui-table-wrap {
+    background: var(--ea-card);
+    border: 1px solid var(--ea-border);
+    border-radius: var(--ea-radius);
+    overflow: hidden;
+    overflow-x: auto;
+}
+
+.ea-mnui-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.ea-mnui-table thead th {
+    text-align: left;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--ea-text-muted);
+    background: var(--ea-bg);
+    border-bottom: 1px solid var(--ea-border);
+    padding: 12px 14px;
+    white-space: nowrap;
+}
+
+.ea-mnui-table thead th a {
+    color: var(--ea-text-muted);
+    text-decoration: none;
+}
+
+.ea-mnui-table thead th a:hover {
+    color: var(--ea-blue);
+}
+
+.ea-mnui-table thead th a.ea-mnui-sort-active {
+    color: var(--ea-blue);
+}
+
+.ea-mnui-table td {
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--ea-border);
+    font-size: 13px;
+    vertical-align: top;
+}
+
+.ea-mnui-row:hover {
+    background: var(--ea-bg);
+}
+
+.ea-mnui-row:last-child td {
+    border-bottom: none;
+}
+
+.ea-mnui-col-check {
+    width: 34px;
+}
+
+.ea-mnui-col-name strong {
+    display: block;
+}
+
+.ea-mnui-sub {
+    font-size: 12px;
+    color: var(--ea-text-muted);
+    white-space: pre-line;
+}
+
+.ea-mnui-col-actions {
+    white-space: nowrap;
+    width: 120px;
+}
+
+.ea-mnui-icon-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    border: 1px solid var(--ea-border);
+    background: #fff;
+    cursor: pointer;
+    margin-right: 4px;
+    font-size: 13px;
+    color: var(--ea-text-muted);
+}
+
+.ea-mnui-icon-btn:hover {
+    background: var(--ea-bg);
+    color: var(--ea-text);
+}
+
+.ea-mnui-icon-btn.ea-mnui-danger:hover {
+    background: var(--ea-red-light);
+    border-color: #fecdca;
+    color: var(--ea-red);
+}
+
+.ea-mnui-icon-btn[disabled] {
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+.ea-mnui-empty {
+    padding: 40px 20px;
+    text-align: center;
+    color: var(--ea-text-muted);
+    font-size: 13px;
+}
+
+.ea-mnui-transparent-mask {
+    position: absolute;
+    inset: 0;
+    background: rgba(255, 255, 255, 0.5);
+    z-index: 5;
+}
+
+.ea-mnui-table-wrap {
+    position: relative;
+}
+
+/* ---------- Google Calendar action icon (Workers list / Pro) ---------- */
+
+.ea-mnui-google-btn {
+    padding: 0;
+}
+
+.ea-mnui-google-unlinked {
+    text-decoration: none;
+}
+
+.ea-mnui-google-linked {
+    border-color: #abefc6;
+    background: var(--ea-green-light);
+}
+
+.ea-mnui-google-linked:hover {
+    background: #d7f5e3;
+}
+
+.ea-mnui-google-checking {
+    cursor: default;
+    animation: ea-mnui-spin 1s linear infinite;
+}
+
+@keyframes ea-mnui-spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* ---------- Drawer ---------- */
+
+.ea-mnui-drawer-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(17, 24, 39, 0.45);
+    z-index: 100000;
+}
+
+.ea-mnui-drawer-overlay.is-open {
+    display: block;
+}
+
+.ea-mnui-drawer {
+    --ea-blue: #2563eb;
+    --ea-blue-light: #eef4ff;
+    --ea-border: #e5e7eb;
+    --ea-radius: 10px;
+
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: 560px;
+    max-width: 94vw;
+    max-height: 90vh;
+    height: auto;
+    background: #fff;
+    border-radius: var(--ea-radius);
+    box-shadow: 0 20px 60px rgba(16, 24, 40, 0.25);
+    z-index: 100001;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    opacity: 0;
+    pointer-events: none;
+    transform: translate(-50%, -50%) scale(0.96);
+    transition: opacity 0.15s ease, transform 0.15s ease;
+    font-size: 14px;
+    color: #111827;
+}
+
+.ea-mnui-drawer * {
+    box-sizing: border-box;
+}
+
+.ea-mnui-drawer.is-open {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translate(-50%, -50%) scale(1);
+}
+
+#ea-mnui-drawer-form {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-height: 0;
+}
+
+.ea-mnui-drawer-header,
+.ea-mnui-drawer-footer {
+    flex-shrink: 0;
+}
+
+.ea-mnui-drawer-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 20px;
+    background: #f6f7fb;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.ea-mnui-drawer-header h2 {
+    font-size: 16px;
+    margin: 0;
+}
+
+.ea-mnui-drawer-close {
+    background: transparent;
+    border: none;
+    font-size: 22px;
+    line-height: 1;
+    cursor: pointer;
+    color: #6b7280;
+    width: 30px;
+    height: 30px;
+    border-radius: 6px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.ea-mnui-drawer-close:hover {
+    background: #e5e7eb;
+    color: #111827;
+}
+
+.ea-mnui-drawer-body {
+    padding: 18px 20px;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    flex: 1 1 auto;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.ea-mnui-field label {
+    font-size: 12px;
+    font-weight: 600;
+    color: #6b7280;
+    margin-bottom: 4px;
+    display: block;
+}
+
+.ea-mnui-field .ea-mnui-required {
+    color: var(--ea-red, #d63638);
+}
+
+.ea-mnui-wrap .ea-mnui-field input[type="text"],
+.ea-mnui-wrap .ea-mnui-field input[type="email"],
+.ea-mnui-wrap .ea-mnui-field input[type="tel"],
+.ea-mnui-wrap .ea-mnui-field input[type="number"],
+.ea-mnui-wrap .ea-mnui-field textarea {
+    width: 100%;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 8px 12px;
+    font-size: 13px;
+    font-family: inherit;
+}
+
+.ea-mnui-wrap .ea-mnui-field input:focus,
+.ea-mnui-wrap .ea-mnui-field textarea:focus {
+    outline: none;
+    border-color: var(--ea-blue, #2563eb);
+    box-shadow: 0 0 0 3px var(--ea-blue-light, #eef4ff);
+}
+
+.ea-mnui-wrap .ea-mnui-field.has-error input,
+.ea-mnui-wrap .ea-mnui-field.has-error textarea {
+    border-color: var(--ea-red, #d63638);
+}
+
+.ea-mnui-field-error {
+    display: none;
+    font-size: 11.5px;
+    color: var(--ea-red, #d63638);
+    margin-top: 3px;
+}
+
+.ea-mnui-field.has-error .ea-mnui-field-error {
+    display: block;
+}
+
+.ea-mnui-drawer-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    padding: 16px 20px;
+    background: #fff;
+    border-top: 1px solid #e5e7eb;
+}
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 782px) {
+    .ea-mnui-toolbar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .ea-mnui-search-wrap {
+        margin-left: 0;
+    }
+
+    .ea-mnui-wrap .ea-mnui-search {
+        width: 100%;
+        max-width: none;
+    }
+
+    .ea-mnui-drawer {
+        width: 94vw;
+    }
+}
+
+/* ---------- Color picker (Services) ---------- */
+
+.ea-mnui-color-picker-wrap {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.ea-mnui-color-preview {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    border: 2px solid var(--ea-border);
+    flex-shrink: 0;
+}
+
+.ea-mnui-color-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    flex: 1;
+}
+
+.ea-mnui-color-option {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: transform 0.15s ease, border-color 0.15s ease;
+}
+
+.ea-mnui-color-option:hover {
+    transform: scale(1.1);
+}
+
+.ea-mnui-color-option.selected {
+    border-color: #111827;
+    transform: scale(1.15);
+}
+
+.ea-mnui-color-dot {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 1px solid var(--ea-border);
+}
+
+.ea-mnui-field-hint {
+    font-size: 11px;
+    color: var(--ea-text-muted);
+    margin-top: 4px;
+    margin-bottom: 0;
+}
+
+.ea-mnui-services-form-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px 16px;
+}
+
+.ea-mnui-services-form-grid .ea-mnui-field[data-field="service_color"],
+.ea-mnui-services-form-grid .ea-mnui-field[data-field="description"] {
+    grid-column: 1 / -1;
+}
+
+@media (max-width: 782px) {
+    .ea-mnui-services-form-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ---------- Tooltip Tip ---------- */
+.ea-mnui-tip {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    border: 1px solid var(--ea-border, #e5e7eb);
+    color: var(--ea-text-muted, #6b7280);
+    font-size: 10.5px;
+    font-weight: 600;
+    cursor: help;
+    position: relative;
+    margin-left: 6px;
+    vertical-align: middle;
+}
+
+.ea-mnui-tip:hover::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    top: 50%;
+    right: calc(100% + 8px);
+    left: auto;
+    bottom: auto;
+    width: 240px;
+    transform: translateY(-50%);
+    background: #111827;
+    color: #fff;
+    font-weight: 400;
+    font-size: 11.5px;
+    line-height: 1.4;
+    padding: 8px 10px;
+    border-radius: 6px;
+    white-space: normal;
+    z-index: 20;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+/* ==================================================================
+   Connections (shared by class-ea-connections-new-ui.php)
+   ================================================================== */
+
+/* Wider drawer so the Location/Service/Employee + days/date/time
+   fields fit with little to no vertical scrolling. */
+.ea-mnui-drawer.ea-mnui-drawer-wide {
+    width: 960px;
+    max-width: 96vw;
+    max-height: 92vh;
+}
+
+@media (max-width: 990px) {
+    .ea-mnui-drawer.ea-mnui-drawer-wide {
+        width: 94vw;
+    }
+}
+
+.ea-mnui-drawer-body.ea-mnui-connections-form-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px 16px;
+    align-content: start;
+}
+
+.ea-mnui-connections-form-grid .ea-mnui-span-full {
+    grid-column: 1 / -1;
+}
+
+@media (max-width: 782px) {
+    .ea-mnui-connections-form-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Compact sizing for selects and inputs inside connection drawer body */
+.ea-mnui-wrap .ea-mnui-drawer-body .ea-mnui-field select,
+.ea-mnui-wrap .ea-mnui-drawer-body .ea-mnui-field input[type="text"],
+.ea-mnui-wrap .ea-mnui-drawer-body .ea-mnui-field input[type="number"],
+.ea-mnui-wrap .ea-mnui-drawer-body .ea-mnui-field input[type="time"] {
+    width: 100%;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 0 10px;
+    height: 30px;
+    line-height: 28px;
+    font-size: 13px;
+    font-family: inherit;
+    background: #fff;
+    box-sizing: border-box;
+}
+
+.ea-mnui-wrap .ea-mnui-drawer-body .ea-mnui-field select:focus,
+.ea-mnui-wrap .ea-mnui-drawer-body .ea-mnui-field input[type="text"]:focus,
+.ea-mnui-wrap .ea-mnui-drawer-body .ea-mnui-field input[type="number"]:focus,
+.ea-mnui-wrap .ea-mnui-drawer-body .ea-mnui-field input[type="time"]:focus {
+    outline: none;
+    border-color: var(--ea-blue, #2563eb);
+    box-shadow: 0 0 0 3px var(--ea-blue-light, #eef4ff);
+}
+
+/* Bulk vs single mode toggling. The drawer defaults to single-connection
+   mode; adding the `is-bulk` class (done from connections.js) swaps which
+   set of fields is visible. Shared fields (slots, days, date/time range,
+   is working) have neither class and stay visible in both modes. */
+.ea-mnui-only-bulk {
+    display: none;
+}
+
+#ea-mnui-drawer.is-bulk .ea-mnui-only-bulk {
+    display: block;
+}
+
+#ea-mnui-drawer.is-bulk .ea-mnui-only-single {
+    display: none;
+}
+
+/* Bordered box used for the Date range / Time range field groups so the
+   paired inputs read as one logical field, matching the legacy React
+   MultiFieldWrap component. */
+.ea-mnui-field-group {
+    background: var(--ea-bg);
+    border: 1px solid var(--ea-border);
+    border-radius: 8px;
+    padding: 12px 14px 14px;
+}
+
+.ea-mnui-field-group > label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--ea-text-muted);
+    margin-bottom: 2px;
+    display: block;
+}
+
+.ea-mnui-field-group .ea-mnui-field-hint {
+    margin-top: 0;
+    margin-bottom: 10px;
+}
+
+.ea-mnui-field-group .ea-mnui-field {
+    margin-bottom: 0;
+}
+
+.ea-mnui-double-field {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px 14px;
+}
+
+@media (max-width: 600px) {
+    .ea-mnui-double-field {
+        grid-template-columns: 1fr;
+    }
+}
+
+.ea-mnui-checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: var(--ea-text);
+    cursor: pointer;
+}
+
+.ea-mnui-unlimited-label {
+    margin-top: 10px;
+}
+
+.ea-mnui-wrap .ea-mnui-field select,
+.ea-mnui-wrap .ea-mnui-field input[type="time"] {
+    width: 100%;
+    border: 1px solid var(--ea-border);
+    border-radius: 8px;
+    padding: 8px 12px;
+    font-size: 13px;
+    font-family: inherit;
+    background: #fff;
+}
+
+.ea-mnui-wrap .ea-mnui-field select:focus,
+.ea-mnui-wrap .ea-mnui-field input[type="time"]:focus {
+    outline: none;
+    border-color: var(--ea-blue);
+    box-shadow: 0 0 0 3px var(--ea-blue-light);
+}
+
+.ea-mnui-wrap .ea-mnui-field.has-error select,
+.ea-mnui-wrap .ea-mnui-field.has-error input[type="time"] {
+    border-color: var(--ea-red);
+}
+
+.ea-mnui-date-input {
+    cursor: pointer;
+    background: #fff;
+}
+
+/* ---------- Chip groups (Days of week / bulk Location-Service-Employee) ---------- */
+
+.ea-mnui-chip-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.ea-mnui-chip-group-scroll {
+    max-height: 130px;
+    overflow-y: auto;
+    padding: 8px;
+    border: 1px solid var(--ea-border);
+    border-radius: 8px;
+    background: #fff;
+}
+
+.ea-mnui-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border: 1px solid var(--ea-border);
+    border-radius: 999px;
+    font-size: 12.5px;
+    font-weight: 500;
+    color: var(--ea-text-muted);
+    background: #fff;
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+.ea-mnui-chip input {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+    pointer-events: none;
+}
+
+.ea-mnui-chip:hover {
+    border-color: var(--ea-blue);
+}
+
+.ea-mnui-chip.is-checked {
+    background: var(--ea-blue-light);
+    border-color: var(--ea-blue);
+    color: var(--ea-blue-dark);
+}
+
+.ea-mnui-field.has-error .ea-mnui-chip-group,
+.ea-mnui-field.has-error .ea-mnui-chip-group-scroll {
+    border-color: var(--ea-red);
+    border-radius: 8px;
+}
+
+/* ---------- Extend connections bar ---------- */
+
+.ea-mnui-extend-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    background: var(--ea-blue-light);
+    border: 1px solid #c7dbff;
+    border-radius: 8px;
+    padding: 10px 14px;
+    margin-bottom: 14px;
+    font-size: 12.5px;
+    color: #1e3a8a;
+}
+
+.ea-mnui-extend-bar .ea-mnui-btn {
+    flex-shrink: 0;
+}
+
+/* ---------- Status badge (Is working / Inactive) ----------
+   Same visual language as the New Appointments UI status badges -
+   a plain pill in the cell, no per-row background/border coloring. */
+
+.ea-mnui-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 600;
+    background: var(--ea-bg);
+    color: var(--ea-text-muted);
+    border: 1px solid var(--ea-border);
+}
+
+.ea-mnui-badge-working {
+    background: var(--ea-green-light);
+    color: var(--ea-green);
+    border-color: #d1fadf;
+}
+
+.ea-mnui-badge-not-working {
+    background: var(--ea-red-light);
+    color: var(--ea-red);
+    border-color: #fecdca;
+}
+
+.ea-mnui-badge-inactive {
+    background: var(--ea-bg);
+    color: var(--ea-text-muted);
+    border-color: var(--ea-border);
+}
+
+/* ---------- Table: connection column, day badges ---------- */
+
+.ea-mnui-col-connection {
+    min-width: 200px;
+}
+
+.ea-mnui-connection-lines {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.ea-mnui-connection-lines span {
+    font-size: 13px;
+}
+
+.ea-mnui-connection-lines .ea-mnui-connection-location {
+    font-weight: 600;
+    color: var(--ea-text);
+}
+
+.ea-mnui-connection-lines .ea-mnui-connection-sub {
+    color: var(--ea-text-muted);
+    font-size: 12px;
+}
+
+.ea-mnui-day-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    max-width: 170px;
+}
+
+.ea-mnui-day-badge {
+    display: inline-block;
+    padding: 2px 7px;
+    border-radius: 999px;
+    background: var(--ea-bg);
+    border: 1px solid var(--ea-border);
+    font-size: 11px;
+    color: var(--ea-text-muted);
+}
+
+.ea-mnui-cell-label {
+    display: block;
+    font-size: 11px;
+    color: var(--ea-text-muted);
+}
+
+.ea-mnui-cell-text {
+    display: block;
+    font-size: 13px;
+    margin-bottom: 4px;
+}
+
+.ea-mnui-cell-text:last-child {
+    margin-bottom: 0;
+}
+
+/* ---------- jQuery UI Datepicker (custom skin, no theme image sprites) ----------
+   Same skin used on the New Appointments UI screen, reused here so the
+   Connections date range fields render/position correctly inside the
+   fixed-position drawer instead of jQuery UI's default theme. */
+
+.ui-datepicker {
+    display: none;
+    position: absolute !important;
+    z-index: 100050 !important;
+    width: 17em;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    box-shadow: 0 12px 32px rgba(16, 24, 40, 0.16);
+    padding: 10px;
+    font-size: 13px;
+    font-family: inherit;
+}
+
+#ui-datepicker-div {
+    display: none;
+}
+
+.ui-datepicker .ui-datepicker-header {
+    background: transparent;
+    border: none;
+    position: relative;
+    padding: 4px 0 8px;
+}
+
+.ui-datepicker .ui-datepicker-title {
+    text-align: center;
+    font-weight: 600;
+    color: #111827;
+    font-size: 13px;
+}
+
+.ui-datepicker .ui-datepicker-prev,
+.ui-datepicker .ui-datepicker-next {
+    position: absolute;
+    top: 0;
+    width: 26px;
+    height: 26px;
+    border-radius: 6px;
+    cursor: pointer;
+    text-indent: -9999px;
+    background: #f6f7fb;
+}
+
+.ui-datepicker .ui-datepicker-prev { left: 0; }
+.ui-datepicker .ui-datepicker-next { right: 0; }
+
+.ui-datepicker .ui-datepicker-prev span,
+.ui-datepicker .ui-datepicker-next span {
+    display: none;
+}
+
+.ui-datepicker .ui-datepicker-prev:before,
+.ui-datepicker .ui-datepicker-next:before {
+    content: "";
+    position: absolute;
+    top: 9px;
+    width: 7px;
+    height: 7px;
+    border-right: 2px solid #6b7280;
+    border-top: 2px solid #6b7280;
+}
+
+.ui-datepicker .ui-datepicker-prev:before { left: 10px; transform: rotate(-135deg); }
+.ui-datepicker .ui-datepicker-next:before { left: 8px; transform: rotate(45deg); }
+
+.ui-datepicker .ui-datepicker-prev:hover,
+.ui-datepicker .ui-datepicker-next:hover {
+    background-color: #eef4ff;
+}
+
+.ui-datepicker .ui-datepicker-prev.ui-state-disabled,
+.ui-datepicker .ui-datepicker-next.ui-state-disabled {
+    opacity: 0.35;
+    cursor: default;
+    pointer-events: none;
+}
+
+.ui-datepicker table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 6px 0 0;
+}
+
+.ui-datepicker th {
+    text-align: center;
+    font-weight: 600;
+    font-size: 11px;
+    color: #6b7280;
+    padding: 6px 0;
+}
+
+.ui-datepicker td {
+    padding: 1px;
+    text-align: center;
+}
+
+.ui-datepicker td a,
+.ui-datepicker td span {
+    display: block;
+    padding: 6px 0;
+    border-radius: 6px;
+    text-decoration: none;
+    color: #111827;
+}
+
+.ui-datepicker td a:hover {
+    background: #eef4ff;
+    color: #2563eb;
+}
+
+.ui-datepicker td.ui-datepicker-today a {
+    box-shadow: inset 0 0 0 1px #2563eb;
+}
+
+.ui-datepicker td .ui-state-active {
+    background: #2563eb !important;
+    color: #fff !important;
+}
+
+.ui-datepicker .ui-state-disabled span {
+    opacity: 0.35;
+}
+
+/* ---------- Custom Confirm Modal ---------- */
+.ea-mnui-confirm-overlay {
+    --ea-blue: #2563eb;
+    --ea-blue-dark: #1d4ed8;
+    --ea-blue-light: #eef4ff;
+    --ea-red: #d63638;
+    --ea-red-dark: #b91c1c;
+    --ea-red-light: #fef3f2;
+    --ea-border: #e5e7eb;
+    --ea-text: #111827;
+    --ea-text-muted: #4b5563;
+    --ea-radius-lg: 12px;
+    --ea-radius-md: 8px;
+
+    display: flex;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(15, 23, 42, 0.3);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    z-index: 999999;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.ea-mnui-confirm-overlay.is-open {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+}
+
+.ea-mnui-confirm-box {
+    background: #ffffff;
+    border-radius: var(--ea-radius-lg);
+    width: 440px;
+    max-width: 90vw;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    transform: scale(0.95);
+    transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    border: 1px solid var(--ea-border);
+}
+
+.ea-mnui-confirm-overlay.is-open .ea-mnui-confirm-box {
+    transform: scale(1);
+}
+
+.ea-mnui-confirm-content {
+    display: flex;
+    padding: 24px;
+    gap: 16px;
+    align-items: flex-start;
+}
+
+.ea-mnui-confirm-icon-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.ea-mnui-confirm-icon-wrap.is-danger {
+    background: var(--ea-red-light);
+    color: var(--ea-red);
+    border: 1px solid #fee4e2;
+}
+
+.ea-mnui-confirm-icon-wrap.is-primary {
+    background: var(--ea-blue-light);
+    color: var(--ea-blue);
+    border: 1px solid #d1e9ff;
+}
+
+.ea-mnui-confirm-text {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex-grow: 1;
+}
+
+.ea-mnui-confirm-title {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--ea-text);
+    line-height: 1.3;
+}
+
+.ea-mnui-confirm-message {
+    margin: 0;
+    font-size: 14px;
+    color: var(--ea-text-muted);
+    line-height: 1.5;
+}
+
+.ea-mnui-confirm-footer {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 12px;
+    padding: 16px 24px;
+    background: #f9fafb;
+    border-top: 1px solid var(--ea-border);
+}
+
+.ea-mnui-confirm-footer .ea-mnui-btn {
+    border-radius: var(--ea-radius-md);
+    padding: 9px 18px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition: all 0.15s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1.2;
+}
+
+.ea-mnui-confirm-footer .ea-mnui-btn-ghost {
+    background: #ffffff;
+    border-color: #d0d5dd;
+    color: #344054;
+    box-shadow: 0 1px 2px rgba(16, 24, 40, 0.05);
+}
+
+.ea-mnui-confirm-footer .ea-mnui-btn-ghost:hover {
+    background: #f9fafb;
+    border-color: #d0d5dd;
+    color: #1d2939;
+}
+
+.ea-mnui-confirm-footer .ea-mnui-btn-danger {
+    background: var(--ea-red);
+    border-color: var(--ea-red);
+    color: #ffffff;
+    box-shadow: 0 1px 2px rgba(16, 24, 40, 0.05);
+}
+
+.ea-mnui-confirm-footer .ea-mnui-btn-danger:hover {
+    background: var(--ea-red-dark);
+    border-color: var(--ea-red-dark);
+    color: #ffffff !important;
+}
+
+.ea-mnui-confirm-footer .ea-mnui-btn-primary {
+    background: var(--ea-blue);
+    border-color: var(--ea-blue);
+    color: #ffffff;
+    box-shadow: 0 1px 2px rgba(16, 24, 40, 0.05);
+}
+
+.ea-mnui-confirm-footer .ea-mnui-btn-primary:hover {
+    background: var(--ea-blue-dark);
+    border-color: var(--ea-blue-dark);
+    color: #ffffff !important;
+}
+
+/* ---------- Pagination ---------- */
+.ea-mnui-pagination {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 14px;
+}
+
+.ea-mnui-pagination .ea-mnui-btn[disabled] {
+    background: #eef4ff;
+    border-color: #2563eb;
+    color: #1d4ed8;
+    opacity: 1;
+    cursor: default;
+}

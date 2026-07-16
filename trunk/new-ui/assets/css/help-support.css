@@ -1,0 +1,670 @@
+/**
+ * Easy Appointments - New Help & Support UI styles.
+ * Namespaced under .ea-help to avoid any collision with existing plugin CSS.
+ */
+
+.ea-help-wrap {
+    margin: 20px 20px 20px 0;
+}
+
+.ea-help {
+    --ea-blue: #2563eb;
+    --ea-blue-light: #eef4ff;
+    --ea-blue-dark: #1d4ed8;
+    --ea-text: #111827;
+    --ea-text-muted: #6b7280;
+    --ea-border: #e5e7eb;
+    --ea-bg: #f6f7fb;
+    --ea-card: #ffffff;
+    --ea-radius: 10px;
+    --ea-shadow: 0 1px 2px rgba(16, 24, 40, 0.04);
+    --ea-shadow-lg: 0 4px 20px rgba(16, 24, 40, 0.08);
+    --ea-green: #027a48;
+    --ea-green-light: #ecfdf3;
+    --ea-purple: #7c3aed;
+    --ea-purple-light: #f5f0ff;
+
+    background: var(--ea-bg);
+    border: 1px solid var(--ea-border);
+    border-radius: var(--ea-radius);
+    overflow: hidden;
+    font-size: 14px;
+    color: var(--ea-text);
+    box-shadow: var(--ea-shadow);
+}
+
+.ea-help * {
+    box-sizing: border-box;
+}
+
+/* ---------- Header ---------- */
+
+.ea-help-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    background: var(--ea-card);
+    border-bottom: 1px solid var(--ea-border);
+    padding: 16px 24px;
+}
+
+.ea-help-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.ea-help-brand-icon {
+    display: inline-flex;
+    color: var(--ea-blue);
+}
+
+.ea-help-brand h1 {
+    font-size: 18px;
+    font-weight: 700;
+    margin: 0;
+    padding: 0;
+    line-height: 1;
+    color: var(--ea-text);
+}
+
+.ea-help-version {
+    font-size: 12px;
+    color: var(--ea-text-muted);
+    background: var(--ea-bg);
+    border: 1px solid var(--ea-border);
+    border-radius: 999px;
+    padding: 2px 10px;
+}
+
+.ea-help-header-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+/* ---------- Buttons ---------- */
+
+.ea-help-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    border-radius: 8px;
+    padding: 8px 16px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    border: 1px solid transparent;
+    text-decoration: none;
+    transition: background 0.15s ease, border-color 0.15s ease, opacity 0.15s ease;
+}
+
+.ea-help-btn-primary {
+    background: var(--ea-blue);
+    border-color: var(--ea-blue);
+    color: #fff;
+}
+
+.ea-help-btn-primary:hover {
+    background: var(--ea-blue-dark);
+    border-color: var(--ea-blue-dark);
+    color: #fff !important;
+}
+
+.ea-help-btn-primary:disabled {
+    opacity: 0.6;
+    cursor: default;
+    pointer-events: none;
+}
+
+.ea-help-btn-ghost {
+    background: #fff;
+    border-color: var(--ea-border);
+    color: var(--ea-text);
+}
+
+.ea-help-btn-ghost:hover {
+    background: var(--ea-bg);
+    color: var(--ea-text);
+}
+
+.ea-help-btn-large {
+    padding: 12px 28px;
+    font-size: 15px;
+}
+
+/* ---------- Body ---------- */
+
+.ea-help-body {
+    display: flex;
+    gap: 24px;
+    padding: 24px 28px;
+    align-items: flex-start;
+}
+
+.ea-help-main {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+.ea-help-sidebar {
+    flex: 0 0 280px;
+    max-width: 280px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* ---------- Cards ---------- */
+
+.ea-help-card {
+    background: var(--ea-card);
+    border: 1px solid var(--ea-border);
+    border-radius: var(--ea-radius);
+    padding: 24px;
+    margin-bottom: 24px;
+    box-shadow: var(--ea-shadow);
+}
+
+.ea-help-card:last-child {
+    margin-bottom: 0;
+}
+
+.ea-help-card-header {
+    margin-bottom: 20px;
+}
+
+.ea-help-card-header h2 {
+    margin: 0 0 4px;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--ea-text);
+}
+
+.ea-help-card-header p {
+    margin: 0;
+    font-size: 14px;
+    color: var(--ea-text-muted);
+}
+
+/* ---------- Form ---------- */
+
+.ea-help-form {
+    max-width: 100%;
+}
+
+.ea-help-form-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    padding: 20px 0;
+    border-bottom: 1px solid var(--ea-border);
+}
+
+.ea-help-form-row:first-of-type {
+    padding-top: 0;
+}
+
+.ea-help-form-row-stacked {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+}
+
+.ea-help-form-row-label {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+.ea-help-form-row label {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--ea-text);
+    margin-bottom: 4px;
+}
+
+.ea-help-form-row-desc {
+    display: block;
+    font-size: 12.5px;
+    color: var(--ea-text-muted);
+    line-height: 1.4;
+}
+
+.ea-help-form-row-control {
+    flex: 0 0 360px;
+    max-width: 360px;
+    width: 100%;
+}
+
+.ea-help-form-row-control-full {
+    flex: 1 1 auto;
+    max-width: 100%;
+    width: 100%;
+}
+
+.ea-help-form-actions-row {
+    padding: 20px 0 0 0;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.ea-help-required {
+    color: #d63638;
+}
+
+.ea-help-wrap .ea-help-input,
+.ea-help-wrap .ea-help-select,
+.ea-help-wrap .ea-help-textarea {
+    width: 100%;
+    border: 1px solid var(--ea-border);
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 13px;
+    font-family: inherit;
+    color: var(--ea-text);
+    background: #fff;
+    box-shadow: 0 1px 2px rgba(16, 24, 40, 0.05);
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.ea-help-wrap .ea-help-input:focus,
+.ea-help-wrap .ea-help-select:focus,
+.ea-help-wrap .ea-help-textarea:focus {
+    outline: none;
+    border-color: var(--ea-blue);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+
+.ea-help-wrap .ea-help-textarea {
+    resize: vertical;
+    min-height: 120px;
+}
+
+.ea-help-wrap .ea-help-select {
+    appearance: auto;
+    cursor: pointer;
+}
+
+.ea-help-form-actions {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.ea-help-result {
+    margin-top: 16px;
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-size: 13px;
+}
+
+.ea-help-result.is-success {
+    background: var(--ea-green-light);
+    color: var(--ea-green);
+    border: 1px solid #d1fadf;
+}
+
+.ea-help-result.is-error {
+    background: #fef3f2;
+    color: #b42318;
+    border: 1px solid #fee4e2;
+}
+
+/* ---------- Spinner ---------- */
+
+.ea-help-spinner {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: ea-help-spin 0.7s linear infinite;
+    margin-right: 8px;
+    vertical-align: middle;
+}
+
+@keyframes ea-help-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* ---------- Resources Grid ---------- */
+
+.ea-help-resources-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+}
+
+.ea-help-resource-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 20px 16px;
+    background: var(--ea-bg);
+    border: 1px solid var(--ea-border);
+    border-radius: 8px;
+    text-decoration: none;
+    color: var(--ea-text);
+    transition: border-color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
+}
+
+.ea-help-resource-item:hover {
+    border-color: var(--ea-blue);
+    box-shadow: var(--ea-shadow-lg);
+    transform: translateY(-2px);
+    color: var(--ea-text);
+}
+
+.ea-help-resource-icon {
+    display: inline-flex;
+    color: var(--ea-blue);
+    margin-bottom: 8px;
+}
+
+.ea-help-resource-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--ea-text);
+}
+
+.ea-help-resource-desc {
+    font-size: 12px;
+    color: var(--ea-text-muted);
+    margin-top: 2px;
+}
+
+/* ---------- Upgrade Card ---------- */
+
+.ea-help-upgrade-card {
+    background: linear-gradient(135deg, var(--ea-purple-light) 0%, var(--ea-blue-light) 100%);
+    border: 1px solid #e6defc;
+    border-radius: var(--ea-radius);
+    padding: 32px 28px;
+    text-align: center;
+    margin-top: 24px;
+}
+
+.ea-help-upgrade-content {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.ea-help-upgrade-icon {
+    display: inline-block;
+    color: var(--ea-purple);
+    margin-bottom: 12px;
+}
+
+.ea-help-upgrade-content h3 {
+    margin: 0 0 8px;
+    font-size: 18px;
+    font-weight: 700;
+    color: #5b21b6;
+}
+
+.ea-help-upgrade-content p {
+    margin: 0 0 18px;
+    font-size: 14px;
+    color: #6d5a95;
+}
+
+.ea-help-upgrade-content .ea-help-btn-primary {
+    background: linear-gradient(90deg, var(--ea-purple) 0%, #6d28d9 100%);
+    border-color: var(--ea-purple);
+}
+
+.ea-help-upgrade-content .ea-help-btn-primary:hover {
+    opacity: 0.92;
+}
+
+/* ---------- Sidebar - Team Card ---------- */
+
+.ea-help-team-card {
+    background: var(--ea-card);
+    border: 1px solid var(--ea-border);
+    border-radius: var(--ea-radius);
+    padding: 20px;
+    text-align: center;
+    box-shadow: var(--ea-shadow);
+}
+
+.ea-help-team-card h3 {
+    margin: 0 0 6px;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--ea-text);
+}
+
+.ea-help-team-card > p {
+    margin: 0 0 16px;
+    font-size: 13px;
+    color: var(--ea-text-muted);
+}
+
+.ea-help-team-members {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.ea-help-team-member {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.ea-help-team-member img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: 2px solid var(--ea-border);
+    object-fit: cover;
+}
+
+.ea-help-team-role {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    color: var(--ea-text-muted);
+    margin-top: 4px;
+}
+
+.ea-help-team-mission {
+    margin-top: 12px;
+    font-size: 13px;
+    color: var(--ea-text-muted);
+    line-height: 1.5;
+}
+
+/* ---------- Sidebar - Support Hours ---------- */
+
+.ea-help-support-hours {
+    background: var(--ea-card);
+    border: 1px solid var(--ea-border);
+    border-radius: var(--ea-radius);
+    padding: 16px 20px;
+    box-shadow: var(--ea-shadow);
+}
+
+.ea-help-support-hours h4 {
+    margin: 0 0 10px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--ea-text);
+}
+
+.ea-help-support-hours ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.ea-help-support-hours ul li {
+    display: flex;
+    justify-content: space-between;
+    padding: 4px 0;
+    font-size: 12.5px;
+    color: var(--ea-text-muted);
+    border-bottom: 1px solid var(--ea-bg);
+}
+
+.ea-help-support-hours ul li:last-child {
+    border-bottom: none;
+}
+
+.ea-help-day {
+    color: var(--ea-text);
+    font-weight: 500;
+}
+
+.ea-help-time {
+    color: var(--ea-text-muted);
+}
+
+/* ---------- Sidebar - Premium CTA ---------- */
+
+.ea-help-premium-cta {
+    background: linear-gradient(135deg, #fef9e7 0%, #fef3f2 100%);
+    border: 1px solid #fde68a;
+    border-radius: var(--ea-radius);
+    padding: 20px;
+    text-align: center;
+}
+
+.ea-help-premium-cta-icon {
+    display: inline-block;
+    color: #d97706;
+    margin-bottom: 8px;
+}
+
+.ea-help-premium-cta h4 {
+    margin: 0 0 4px;
+    font-size: 15px;
+    font-weight: 700;
+    color: #92400e;
+}
+
+.ea-help-premium-cta p {
+    margin: 0 0 14px;
+    font-size: 12.5px;
+    color: #78350f;
+}
+
+.ea-help-premium-cta .ea-help-btn-primary {
+    background: #d97706;
+    border-color: #d97706;
+    width: 100%;
+    justify-content: center;
+}
+
+.ea-help-premium-cta .ea-help-btn-primary:hover {
+    background: #b45309;
+    border-color: #b45309;
+}
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 1024px) {
+    .ea-help-body {
+        flex-direction: column;
+    }
+
+    .ea-help-sidebar {
+        flex: 1 1 auto;
+        max-width: none;
+        width: 100%;
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+
+    .ea-help-sidebar > * {
+        flex: 1 1 220px;
+        min-width: 200px;
+    }
+}
+
+@media (max-width: 782px) {
+    .ea-help-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+
+    .ea-help-header-actions {
+        width: 100%;
+    }
+
+    .ea-help-header-actions .ea-help-btn {
+        flex: 1 1 0;
+        justify-content: center;
+    }
+
+    .ea-help-body {
+        padding: 16px;
+    }
+
+    .ea-help-resources-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .ea-help-sidebar {
+        flex-direction: column;
+    }
+
+    .ea-help-sidebar > * {
+        flex: 1 1 auto;
+    }
+
+    .ea-help-form-row {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
+        padding: 16px 0;
+    }
+
+    .ea-help-form-row-control {
+        max-width: 100%;
+        flex: 1 1 auto;
+    }
+
+    .ea-help-form-actions-row {
+        justify-content: stretch;
+        padding-top: 16px;
+    }
+
+    .ea-help-form-actions {
+        width: 100%;
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .ea-help-form-actions .ea-help-btn {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .ea-help-resources-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .ea-help-team-members {
+        gap: 12px;
+    }
+
+    .ea-help-upgrade-card {
+        padding: 20px 16px;
+    }
+}

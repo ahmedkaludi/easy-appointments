@@ -1,0 +1,738 @@
+/**
+ * Easy Appointments - New Appointments UI styles.
+ * Namespaced under .ea-naui to avoid any collision with existing plugin CSS.
+ * Uses the same design tokens introduced by the New Settings UI (.ea-nsui)
+ * for visual consistency across the new admin screens.
+ */
+
+.ea-naui-wrap {
+    margin: 20px 20px 20px 0;
+}
+
+.ea-naui-drawer {
+    --ea-blue: #2563eb;
+    --ea-blue-dark: #1d4ed8;
+    --ea-blue-light: #eef4ff;
+    --ea-red: #d63638;
+    --ea-border: #e5e7eb;
+    --ea-text: #111827;
+    --ea-text-muted: #6b7280;
+    --ea-bg: #f6f7fb;
+    --ea-card: #ffffff;
+    --ea-radius: 10px;
+}
+
+.ea-naui {
+    --ea-blue: #2563eb;
+    --ea-blue-light: #eef4ff;
+    --ea-blue-dark: #1d4ed8;
+    --ea-red: #d63638;
+    --ea-red-light: #fef3f2;
+    --ea-green: #027a48;
+    --ea-green-light: #ecfdf3;
+    --ea-amber: #b54708;
+    --ea-amber-light: #fffaeb;
+    --ea-text: #111827;
+    --ea-text-muted: #6b7280;
+    --ea-border: #e5e7eb;
+    --ea-bg: #f6f7fb;
+    --ea-card: #ffffff;
+    --ea-radius: 10px;
+
+    background: var(--ea-bg);
+    border: 1px solid var(--ea-border);
+    border-radius: var(--ea-radius);
+    overflow: hidden;
+    font-size: 14px;
+    color: var(--ea-text);
+    box-shadow: 0 1px 2px rgba(16, 24, 40, 0.04);
+}
+
+.ea-naui * {
+    box-sizing: border-box;
+}
+
+/* ---------- Header ---------- */
+
+.ea-naui-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    background: var(--ea-card);
+    border-bottom: 1px solid var(--ea-border);
+    padding: 16px 24px;
+}
+
+.ea-naui-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.ea-naui-brand-icon {
+    display: inline-flex;
+    color: var(--ea-blue);
+}
+
+.ea-naui-brand h1 {
+    font-size: 18px;
+    font-weight: 700;
+    margin: 0;
+    padding: 0;
+    line-height: 1;
+    color: var(--ea-text);
+}
+
+.ea-naui-version {
+    font-size: 12px;
+    color: var(--ea-text-muted);
+    background: var(--ea-bg);
+    border: 1px solid var(--ea-border);
+    border-radius: 999px;
+    padding: 2px 10px;
+}
+
+.ea-naui-header-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+/* ---------- Buttons ---------- */
+
+.ea-naui-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    border-radius: 8px;
+    padding: 8px 16px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    border: 1px solid transparent;
+    text-decoration: none;
+    transition: background 0.15s ease, border-color 0.15s ease, opacity 0.15s ease;
+}
+
+.ea-naui-btn-primary {
+    background: var(--ea-blue);
+    border-color: var(--ea-blue);
+    color: #fff;
+}
+
+.ea-naui-btn-primary:hover {
+    background: var(--ea-blue-dark);
+    color: #fff;
+}
+
+.ea-naui-btn-ghost {
+    background: #fff;
+    border-color: var(--ea-border);
+    color: var(--ea-text);
+}
+
+.ea-naui-btn-ghost:hover {
+    background: var(--ea-bg);
+    color: var(--ea-text);
+}
+
+.ea-naui-btn-danger {
+    background: var(--ea-red-light);
+    border-color: #fecdca;
+    color: var(--ea-red);
+}
+
+.ea-naui-btn-danger:hover {
+    background: #fee4e2;
+    color: var(--ea-red);
+}
+
+.ea-naui-btn[disabled] {
+    opacity: 0.6;
+    cursor: default;
+    pointer-events: none;
+}
+
+/* ---------- Body ---------- */
+
+.ea-naui-body {
+    padding: 20px 24px 28px;
+}
+
+/* ---------- Filters ---------- */
+
+.ea-naui-filters {
+    background: var(--ea-card);
+    border: 1px solid var(--ea-border);
+    border-radius: var(--ea-radius);
+    padding: 16px;
+    margin-bottom: 16px;
+}
+
+.ea-naui-filter-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    align-items: flex-end;
+}
+
+.ea-naui-filter-row + .ea-naui-filter-row {
+    margin-top: 14px;
+}
+
+.ea-naui-field {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 150px;
+}
+
+.ea-naui-field-grow {
+    flex: 1 1 220px;
+}
+
+.ea-naui-field label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--ea-text-muted);
+}
+
+.ea-naui-wrap .ea-naui-field select {
+    border: 1px solid var(--ea-border);
+    border-radius: 8px;
+    font-size: 13px;
+    color: var(--ea-text);
+    background: #fff;
+}
+
+
+.ea-naui-wrap .ea-naui-field input[type="text"],
+.ea-naui-wrap .ea-naui-field textarea {
+    border: 1px solid var(--ea-border);
+    border-radius: 8px;
+    padding: 8px 12px;
+    font-size: 13px;
+    color: var(--ea-text);
+    background: #fff;
+}
+
+.ea-naui-wrap .ea-naui-field select:focus,
+.ea-naui-wrap .ea-naui-field input:focus,
+.ea-naui-wrap .ea-naui-field textarea:focus {
+    outline: none;
+    border-color: var(--ea-blue);
+    box-shadow: 0 0 0 3px var(--ea-blue-light);
+}
+
+.ea-naui-field-row {
+    display: flex;
+    gap: 14px;
+}
+
+.ea-naui-field-row .ea-naui-field {
+    flex: 1;
+}
+
+.ea-naui-field-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: 4px 0;
+}
+
+.ea-naui-field-group label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--ea-text-muted);
+    margin-bottom: 2px;
+    display: block;
+}
+
+.ea-naui-wrap .ea-naui-field-group select,
+.ea-naui-wrap .ea-naui-field-group input,
+.ea-naui-wrap .ea-naui-field-group textarea {
+    width: 100%;
+    border: 1px solid var(--ea-border);
+    border-radius: 8px;
+    padding: 8px 12px;
+    font-size: 13px;
+}
+
+/* ---------- Toolbar ---------- */
+
+.ea-naui-toolbar {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.ea-naui-select-all-label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ea-text-muted);
+    cursor: pointer;
+}
+
+.ea-naui-toolbar-actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.ea-naui-status-msg {
+    margin-left: auto;
+    font-size: 12px;
+    color: var(--ea-text-muted);
+    font-style: italic;
+}
+
+/* ---------- Table ---------- */
+
+.ea-naui-table-wrap {
+    background: var(--ea-card);
+    border: 1px solid var(--ea-border);
+    border-radius: var(--ea-radius);
+    overflow: hidden;
+}
+
+.ea-naui-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.ea-naui-table thead th {
+    text-align: left;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--ea-text-muted);
+    background: var(--ea-bg);
+    border-bottom: 1px solid var(--ea-border);
+    padding: 12px 14px;
+}
+
+.ea-naui-table thead th a {
+    color: var(--ea-text-muted);
+    text-decoration: none;
+}
+
+.ea-naui-table thead th a:hover {
+    color: var(--ea-blue);
+}
+
+.ea-naui-table td {
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--ea-border);
+    font-size: 13px;
+    vertical-align: top;
+}
+
+.ea-naui-row:hover {
+    background: var(--ea-bg);
+}
+
+.ea-naui-row:last-child td {
+    border-bottom: none;
+}
+
+.ea-naui-col-check {
+    width: 34px;
+}
+
+.ea-naui-col-main strong {
+    display: block;
+}
+
+.ea-naui-sub {
+    font-size: 12px;
+    color: var(--ea-text-muted);
+}
+
+.ea-naui-col-actions {
+    white-space: nowrap;
+}
+
+.ea-naui-icon-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    border: 1px solid var(--ea-border);
+    background: #fff;
+    cursor: pointer;
+    margin-right: 4px;
+    font-size: 13px;
+    color: var(--ea-text-muted);
+}
+
+.ea-naui-icon-btn:hover {
+    background: var(--ea-bg);
+    color: var(--ea-text);
+}
+
+.ea-naui-icon-btn.ea-naui-danger:hover {
+    background: var(--ea-red-light);
+    border-color: #fecdca;
+    color: var(--ea-red);
+}
+
+.ea-naui-empty {
+    padding: 40px 20px;
+    text-align: center;
+    color: var(--ea-text-muted);
+    font-size: 13px;
+}
+
+/* ---------- Status badges ---------- */
+
+.ea-naui-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 600;
+    background: var(--ea-bg);
+    color: var(--ea-text-muted);
+    border: 1px solid var(--ea-border);
+}
+
+.ea-naui-badge-confirmed {
+    background: var(--ea-green-light);
+    color: var(--ea-green);
+    border-color: #d1fadf;
+}
+
+.ea-naui-badge-pending {
+    background: var(--ea-amber-light);
+    color: var(--ea-amber);
+    border-color: #fef0c7;
+}
+
+.ea-naui-badge-canceled {
+    background: var(--ea-red-light);
+    color: var(--ea-red);
+    border-color: #fecdca;
+}
+
+/* ---------- Drawer ---------- */
+
+.ea-naui-drawer-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(17, 24, 39, 0.45);
+    z-index: 100000;
+}
+
+.ea-naui-drawer-overlay.is-open {
+    display: block;
+}
+
+.ea-naui-drawer {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    right: auto;
+    width: 960px;
+    max-width: 96vw;
+    max-height: 92vh;
+    height: auto;
+    background: #fff;
+    border-radius: var(--ea-radius, 10px);
+    box-shadow: 0 20px 60px rgba(16, 24, 40, 0.25);
+    z-index: 100001;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    opacity: 0;
+    pointer-events: none;
+    transform: translate(-50%, -50%) scale(0.96);
+    transition: opacity 0.15s ease, transform 0.15s ease;
+    font-size: 14px;
+    color: #111827;
+}
+
+#ea-naui-drawer-form {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-height: 0;
+}
+
+.ea-naui-drawer-header,
+.ea-naui-drawer-footer {
+    flex-shrink: 0;
+}
+
+.ea-naui-drawer-body {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.ea-naui-drawer * {
+    box-sizing: border-box;
+}
+
+.ea-naui-drawer.is-open {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translate(-50%, -50%) scale(1);
+}
+
+.ea-naui-drawer-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 20px;
+    flex-shrink: 0;
+    background: #f6f7fb;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.ea-naui-drawer-header h2 {
+    font-size: 16px;
+    margin: 0;
+}
+
+.ea-naui-drawer-close {
+    background: transparent;
+    border: none;
+    font-size: 22px;
+    line-height: 1;
+    cursor: pointer;
+    color: #6b7280;
+    width: 30px;
+    height: 30px;
+    border-radius: 6px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.ea-naui-drawer-close:hover {
+    background: #e5e7eb;
+    color: #111827;
+}
+
+.ea-naui-drawer-body {
+    padding: 18px 20px;
+    overflow-y: auto;
+    flex: 1 1 auto;
+    min-height: 0;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px 16px;
+    align-content: start;
+}
+
+.ea-naui-drawer-body .ea-naui-field-group,
+.ea-naui-drawer-body .ea-naui-checkbox-label {
+    grid-column: 1 / -1;
+}
+
+.ea-naui-field-group {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px 16px;
+}
+
+.ea-naui-field-span3 {
+    grid-column: 1 / -1;
+}
+
+.ea-naui-field-span2 {
+    grid-column: 1 / -1;
+}
+
+.ea-naui-drawer-body .ea-naui-field label {
+    font-size: 12px;
+    font-weight: 600;
+    color: #6b7280;
+    margin-bottom: 4px;
+    display: block;
+}
+
+.ea-naui-wrap .ea-naui-drawer-body select,
+.ea-naui-wrap .ea-naui-drawer-body input[type="text"],
+.ea-naui-wrap .ea-naui-drawer-body textarea {
+    width: 100%;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    font-size: 13px;
+}
+
+.ea-naui-checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: #374151;
+}
+
+.ea-naui-drawer-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    padding: 16px 20px;
+    flex-shrink: 0;
+    background: #fff;
+    border-top: 1px solid #e5e7eb;
+}
+
+/* ---------- jQuery UI Datepicker (custom skin, no theme image sprites) ---------- */
+
+.ui-datepicker {
+    display: none;
+    position: absolute !important;
+    z-index: 100050 !important;
+    width: 17em;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    box-shadow: 0 12px 32px rgba(16, 24, 40, 0.16);
+    padding: 10px;
+    font-size: 13px;
+    font-family: inherit;
+}
+
+#ui-datepicker-div {
+    display: none;
+}
+
+.ui-datepicker .ui-datepicker-header {
+    background: transparent;
+    border: none;
+    position: relative;
+    padding: 4px 0 8px;
+}
+
+.ui-datepicker .ui-datepicker-title {
+    text-align: center;
+    font-weight: 600;
+    color: #111827;
+    font-size: 13px;
+}
+
+.ui-datepicker .ui-datepicker-prev,
+.ui-datepicker .ui-datepicker-next {
+    position: absolute;
+    top: 0;
+    width: 26px;
+    height: 26px;
+    border-radius: 6px;
+    cursor: pointer;
+    text-indent: -9999px;
+    background: #f6f7fb;
+}
+
+.ui-datepicker .ui-datepicker-prev { left: 0; }
+.ui-datepicker .ui-datepicker-next { right: 0; }
+
+.ui-datepicker .ui-datepicker-prev span,
+.ui-datepicker .ui-datepicker-next span {
+    display: none;
+}
+
+.ui-datepicker .ui-datepicker-prev:before,
+.ui-datepicker .ui-datepicker-next:before {
+    content: "";
+    position: absolute;
+    top: 9px;
+    width: 7px;
+    height: 7px;
+    border-right: 2px solid #6b7280;
+    border-top: 2px solid #6b7280;
+}
+
+.ui-datepicker .ui-datepicker-prev:before { left: 10px; transform: rotate(-135deg); }
+.ui-datepicker .ui-datepicker-next:before { left: 8px; transform: rotate(45deg); }
+
+.ui-datepicker .ui-datepicker-prev:hover,
+.ui-datepicker .ui-datepicker-next:hover {
+    background-color: #eef4ff;
+}
+
+.ui-datepicker .ui-datepicker-prev.ui-state-disabled,
+.ui-datepicker .ui-datepicker-next.ui-state-disabled {
+    opacity: 0.35;
+    cursor: default;
+    pointer-events: none;
+}
+
+.ui-datepicker table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 6px 0 0;
+}
+
+.ui-datepicker th {
+    text-align: center;
+    font-weight: 600;
+    font-size: 11px;
+    color: #6b7280;
+    padding: 6px 0;
+}
+
+.ui-datepicker td {
+    padding: 1px;
+    text-align: center;
+}
+
+.ui-datepicker td a,
+.ui-datepicker td span {
+    display: block;
+    padding: 6px 0;
+    border-radius: 6px;
+    text-decoration: none;
+    color: #111827;
+}
+
+.ui-datepicker td a:hover {
+    background: #eef4ff;
+    color: #2563eb;
+}
+
+.ui-datepicker td.ui-datepicker-today a {
+    box-shadow: inset 0 0 0 1px #2563eb;
+}
+
+.ui-datepicker td .ui-state-active {
+    background: #2563eb !important;
+    color: #fff !important;
+}
+
+.ui-datepicker .ui-state-disabled span {
+    opacity: 0.35;
+}
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 782px) {
+    .ea-naui-body {
+        padding: 14px;
+    }
+
+    .ea-naui-table-wrap {
+        overflow-x: auto;
+    }
+
+    .ea-naui-table {
+        min-width: 900px;
+    }
+
+    .ea-naui-drawer-body {
+        grid-template-columns: 1fr;
+    }
+}
