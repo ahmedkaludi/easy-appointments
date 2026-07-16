@@ -47,7 +47,7 @@ if ( ! defined( 'WPINC' ) ) {
                         <div class="ea-nsui-mail-tags-hint">
                             <small>
                                 <?php esc_html_e('Available tags', 'easy-appointments'); ?>:
-                                #id#, #date#, #start#, #end#, #status#, #created#, #price#, #ip#, #link_confirm#, #link_cancel#, #url_confirm#, #url_cancel#, #service_name#, #service_duration#, #service_price#, #worker_name#, #worker_email#, #worker_phone#, #worker_description#, #location_name#, #location_address#, #location_location#<?php
+                                #id#, #date#, #start#, #end#, #status#, #created#, #price#, #ip#, #link_confirm#, #link_cancel#, #url_confirm#, #url_cancel#, #service_name#, #service_duration#,#service_description#, #service_price#, #worker_name#, #worker_email#, #worker_phone#, #worker_description#, #location_name#, #location_address#, #location_location#<?php
                                     if (class_exists('EADBModels')) {
                                         $ea_nsui_custom_tags = EADBModels::get_custom_fields_tags();
                                         if (!empty($ea_nsui_custom_tags)) {

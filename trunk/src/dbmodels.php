@@ -567,7 +567,7 @@ class EADBModels
         $table_fields = $this->wpdb->prefix . 'ea_fields';
 
         /* phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare */
-        $query = $this->wpdb->prepare("SELECT a.*, s.name AS service_name, s.duration AS service_duration, s.price AS service_price, w.name AS worker_name, w.email AS worker_email, w.phone AS worker_phone, w.description AS worker_description, l.name AS location_name, l.address AS location_address, l.location AS location_location FROM {$table_app} a JOIN {$table_services} s ON (a.service = s.id) JOIN {$table_locations} l ON (a.location = l.id) JOIN {$table_workers} w ON (a.worker = w.id) WHERE a.id = %d", $id);
+        $query = $this->wpdb->prepare("SELECT a.*, s.name AS service_name, s.duration AS service_duration, s.description AS service_description, s.price AS service_price, w.name AS worker_name, w.email AS worker_email, w.phone AS worker_phone, w.description AS worker_description, l.name AS location_name, l.address AS location_address, l.location AS location_location FROM {$table_app} a JOIN {$table_services} s ON (a.service = s.id) JOIN {$table_locations} l ON (a.location = l.id) JOIN {$table_workers} w ON (a.worker = w.id) WHERE a.id = %d", $id);
 
         // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.PreparedSQL.NotPrepared, 
         $results = $this->wpdb->get_results($query, ARRAY_A);

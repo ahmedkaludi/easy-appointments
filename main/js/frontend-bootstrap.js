@@ -535,16 +535,19 @@
                 next_element.empty();
                 var default_option_value = '-';
                 if (options.next == 'service') {
+                    jQuery('#ea-service-description').hide();
                     default_option_value = ea_settings['trans.service_option'];
                 }
                 if (options.next == 'location') {
+                    jQuery('#ea-service-description').hide();
                     default_option_value = ea_settings['trans.location_option'];
                 }
                 if (options.next == 'worker') {
+                    jQuery('#ea-service-description').hide();
                     default_option_value = ea_settings['trans.worker_option'];
                     var selectedService = plugin.$element.find('[name="service"] option:selected');
                     var desc = selectedService.data('description') || '';
-                    jQuery('#ea-service-description').text(desc).toggle(!!desc);
+                    jQuery('#ea-service-description').html(desc).toggle(!!desc);
                 }
                 plugin.$element.find('[id="repeat_booking"]').parents('.form-group').hide();
                 // default
