@@ -1009,12 +1009,32 @@ class EAMail
         $this->wpdb->insert($table_name, $data, array('%s', '%s', '%s'));
     }
 
-    protected function escape_data($data)
+    protected function oldescape_data($data)
     {
         $clean = array();
 
         foreach ($data as $key => $value) {
             $clean[$key] = htmlspecialchars((isset($value) ? $value : ''), ENT_QUOTES, 'UTF-8');
+        }
+
+        return $clean;
+    }
+
+    protected function escape_data($data)
+    {
+        $clean = array();
+
+        // These come from admin WYSIWYG editors and are meant to contain markup.
+        $html_fields = array('service_description', 'worker_description');
+
+        foreach ($data as $key => $value) {
+            $value = isset($value) ? $value : '';
+
+            if (in_array($key, $html_fields, true)) {
+                $clean[$key] = wp_kses_post($value); // keep safe HTML, strip anything dangerous
+            } else {
+                $clean[$key] = htmlspecialchars($value, ENT_QUOTES, 'UTF-8');
+            }
         }
 
         return $clean;
