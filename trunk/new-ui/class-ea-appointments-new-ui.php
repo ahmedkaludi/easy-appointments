@@ -221,6 +221,7 @@ class EA_Appointments_New_UI
                 'delete'                 => esc_html__('Delete', 'easy-appointments'),
                 'save'                   => esc_html__('Save', 'easy-appointments'),
                 'saving'                 => esc_html__('Saving…', 'easy-appointments'),
+                'refreshing'             => esc_html__('Refreshing…', 'easy-appointments'),
                 'cancel'                 => esc_html__('Cancel', 'easy-appointments'),
                 'loading'                => esc_html__('Loading appointments…', 'easy-appointments'),
                 'noResults'              => esc_html__('No appointments found for the selected filters.', 'easy-appointments'),

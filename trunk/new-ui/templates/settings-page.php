@@ -412,9 +412,9 @@ if (!defined('WPINC')) {
                             </div>
                         </div>
 
-                        <div class="ea-nsui-premium-benefits-box" style="background: #f6f7fb; border: 1px solid var(--ea-border); border-radius: 8px; padding: 12px 14px; text-align: left; margin: 20px 0;">
-                            <strong style="color: var(--ea-text); font-size: 12.5px; display: block; margin-bottom: 6px;"><?php esc_html_e( 'Why Upgrade to Pro?', 'easy-appointments' ); ?></strong>
-                            <p style="font-size: 12px; color: var(--ea-text-muted); margin: 0; line-height: 1.45;">
+                        <div class="ea-nsui-premium-benefits-box">
+                            <strong><?php esc_html_e( 'Why Upgrade to Pro?', 'easy-appointments' ); ?></strong>
+                            <p>
                                 <?php esc_html_e( 'Upgrade to unlock direct synchronization with all calendars, collect customer payments via Stripe or PayPal, send automated WhatsApp/SMS notifications, and receive priority support.', 'easy-appointments' ); ?>
                             </p>
                         </div>

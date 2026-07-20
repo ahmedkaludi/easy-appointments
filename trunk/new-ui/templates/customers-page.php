@@ -94,7 +94,28 @@ if (!defined('WPINC')) {
 
                 <input type="hidden" id="ea-mnui-input-id" data-prop="id">
 
-                <div class="ea-mnui-field-group">
+                <!-- 1. Compact Customer Info Strip (only visible in Bookings View mode) -->
+                <div id="ea-mnui-customer-info-strip" class="ea-mnui-customer-info-strip" style="display:none;">
+                    <div class="ea-mnui-info-item">
+                        <strong><?php esc_html_e('Name', 'easy-appointments'); ?></strong>
+                        <span id="ea-mnui-info-name"></span>
+                    </div>
+                    <div class="ea-mnui-info-item">
+                        <strong><?php esc_html_e('Email', 'easy-appointments'); ?></strong>
+                        <span id="ea-mnui-info-email"></span>
+                    </div>
+                    <div class="ea-mnui-info-item">
+                        <strong><?php esc_html_e('Mobile', 'easy-appointments'); ?></strong>
+                        <span id="ea-mnui-info-mobile"></span>
+                    </div>
+                    <div class="ea-mnui-info-item ea-mnui-info-span3">
+                        <strong><?php esc_html_e('Address', 'easy-appointments'); ?></strong>
+                        <span id="ea-mnui-info-address"></span>
+                    </div>
+                </div>
+
+                <!-- 2. Edit Fields Section (only visible in Add/Edit modes) -->
+                <div id="ea-mnui-customer-edit-section" class="ea-mnui-customer-edit-section">
                     <div class="ea-mnui-field" data-field="name">
                         <label for="ea-mnui-input-name"><?php esc_html_e('Name', 'easy-appointments'); ?> <span class="ea-mnui-required">*</span></label>
                         <input type="text" id="ea-mnui-input-name" data-prop="name" required>
@@ -108,24 +129,27 @@ if (!defined('WPINC')) {
                     </div>
 
                     <div class="ea-mnui-field" data-field="mobile">
-                        <label for="ea-mnui-input-mobile"><?php esc_html_e('Mobile', 'easy-appointments'); ?> <span class="ea-mnui-required">*</span></label>
+                        <label for="ea-mnui-input-mobile"><?php esc_html_e('Mobile no.', 'easy-appointments'); ?> <span class="ea-mnui-required">*</span></label>
                         <input type="text" id="ea-mnui-input-mobile" data-prop="mobile" required>
                         <div class="ea-mnui-field-error"><?php esc_html_e('Mobile is required.', 'easy-appointments'); ?></div>
                     </div>
 
-                    <div class="ea-mnui-field ea-mnui-field-span2" data-field="address">
+                    <!-- Empty placeholder field to balance grid columns -->
+                    <div class="ea-mnui-field ea-mnui-field-empty"></div>
+
+                    <div class="ea-mnui-field ea-mnui-field-span-full" data-field="address">
                         <label for="ea-mnui-input-address"><?php esc_html_e('Address', 'easy-appointments'); ?></label>
-                        <textarea id="ea-mnui-input-address" data-prop="address" rows="2"></textarea>
+                        <textarea id="ea-mnui-input-address" data-prop="address" rows="3" placeholder="<?php esc_attr_e('Address', 'easy-appointments'); ?>"></textarea>
                     </div>
                 </div>
 
-                <!-- Appointment history - hidden while adding a brand new customer -->
-                <div id="ea-mnui-appointments-section" class="ea-mnui-field-span2" style="display:none;">
+                <!-- 3. Appointment history (only visible in Bookings View mode) -->
+                <div id="ea-mnui-appointments-section" style="display:none; flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; gap: 10px;">
                     <div class="ea-mnui-appt-tabs">
                         <button type="button" class="ea-mnui-appt-tab is-active" data-type="upcoming"><?php esc_html_e('Upcoming', 'easy-appointments'); ?></button>
                         <button type="button" class="ea-mnui-appt-tab" data-type="past"><?php esc_html_e('Past', 'easy-appointments'); ?></button>
                     </div>
-                    <div class="ea-mnui-appt-table-wrap">
+                    <div class="ea-mnui-appt-table-wrap" style="flex: 1 1 auto; overflow-y: auto;">
                         <table class="ea-mnui-appt-table">
                             <thead>
                                 <tr>
@@ -150,6 +174,58 @@ if (!defined('WPINC')) {
             </div>
         </form>
     </div>
+
+    <style>
+    .ea-mnui-customer-info-strip {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+        background: #f9fafb;
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+        padding: 10px 14px;
+        font-size: 13px;
+    }
+    .ea-mnui-info-item {
+        display: flex;
+        flex-direction: column;
+        gap: 1px;
+    }
+    .ea-mnui-info-item strong {
+        color: #6b7280;
+        font-size: 10px;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+    .ea-mnui-info-item span {
+        color: #111827;
+        font-weight: 500;
+        word-break: break-all;
+    }
+    .ea-mnui-info-span3 {
+        grid-column: span 3;
+    }
+
+    .ea-mnui-customer-edit-section {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px 16px;
+    }
+    .ea-mnui-field-span-full {
+        grid-column: span 2;
+    }
+    @media (max-width: 600px) {
+        .ea-mnui-customer-edit-section {
+            grid-template-columns: 1fr;
+        }
+        .ea-mnui-field-span-full {
+            grid-column: span 1;
+        }
+        .ea-mnui-field-empty {
+            display: none;
+        }
+    }
+    </style>
 
     <!-- Screen Loader -->
     <div id="ea-screen-loader"

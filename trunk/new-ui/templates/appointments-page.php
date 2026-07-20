@@ -224,10 +224,12 @@ if (!defined('WPINC')) {
                     <input type="text" id="ea-naui-input-price" data-prop="price">
                 </div>
 
-                <label class="ea-naui-checkbox-label">
-                    <input type="checkbox" id="ea-naui-send-mail">
-                    <?php esc_html_e('Send email notification', 'easy-appointments'); ?>
-                </label>
+                <div class="ea-naui-field" style="grid-column: span 2; display: flex; margin-bottom: 0; padding-top: 28px;">
+                    <label class="ea-naui-checkbox-label" style="cursor: pointer; user-select: none; display: inline-flex; align-items: center; gap: 8px;">
+                        <input type="checkbox" id="ea-naui-send-mail" style="margin: 0;">
+                        <?php esc_html_e('Send email notification', 'easy-appointments'); ?>
+                    </label>
+                </div>
             </div>
 
             <div class="ea-naui-drawer-footer">
@@ -235,5 +237,17 @@ if (!defined('WPINC')) {
                 <button type="submit" class="ea-naui-btn ea-naui-btn-primary ea-naui-drawer-save"><?php esc_html_e('Save', 'easy-appointments'); ?></button>
             </div>
         </form>
+    </div>
+</div>
+
+<!-- Screen Loader -->
+<div id="ea-screen-loader"
+    style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+           background: rgba(255, 255, 255, 0.6); z-index: 999999;
+           display: flex; align-items: center; justify-content: center;">
+    <div class="ea-loader" style="display: flex; flex-direction: column; align-items: center;">
+        <img src="<?php echo esc_url(plugins_url('src/assets/img/loader.svg', dirname(dirname(__FILE__)))); ?>"
+            alt="Loading..." style="width: 60px; height: 60px; margin-bottom: 10px;">
+        <div style="color: #333; font-size: 16px;"><?php esc_html_e('Loading Appointments...', 'easy-appointments'); ?></div>
     </div>
 </div>

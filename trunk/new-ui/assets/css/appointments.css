@@ -278,6 +278,7 @@
     font-weight: 600;
     color: var(--ea-text-muted);
     cursor: pointer;
+    margin-left: 15px;
 }
 
 .ea-naui-toolbar-actions {

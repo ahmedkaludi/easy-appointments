@@ -80,7 +80,13 @@
                 }, 3500);
             }
         }
+        function showScreenLoader() {
+            $('#ea-screen-loader').css('display', 'flex');
+        }
 
+        function hideScreenLoader() {
+            $('#ea-screen-loader').hide();
+        }
         /**
          * ---------- Formatting helpers ----------
          */
@@ -183,6 +189,7 @@
          */
         function loadConnections() {
             showNotice(i18n.loading, true);
+            showScreenLoader();
 
             $.ajax({
                 url: cfg.ajaxUrl,
@@ -194,8 +201,10 @@
                 currentPage = 1;
                 render();
                 showNotice('');
+                hideScreenLoader();
             }).fail(function () {
                 showNotice(i18n.genericError);
+                hideScreenLoader();
             });
         }
 
@@ -412,6 +421,7 @@
                 cancelLabel: i18n.cancel || 'Cancel',
                 isDanger: true,
                 onConfirm: function () {
+                    showScreenLoader();
                     var url = cfg.ajaxUrl + '?action=ea_delete_multiple_connections&_wpnonce=' + encodeURIComponent(cfg.restNonce);
 
                     $.ajax({
@@ -424,6 +434,7 @@
                         loadConnections();
                     }).fail(function () {
                         showNotice(i18n.genericError);
+                        hideScreenLoader();
                     });
                 }
             });
@@ -497,6 +508,7 @@
 
             var $btn = $(this);
             $btn.addClass('ea-mnui-btn-disabled').prop('disabled', true).text(i18n.extending);
+            showScreenLoader();
 
             var url = cfg.extendUrl + (cfg.extendUrl.indexOf('?') === -1 ? '?' : '&') + '_wpnonce=' + encodeURIComponent(cfg.restNonce);
 
@@ -505,6 +517,7 @@
                 loadConnections();
             }).fail(function () {
                 showNotice(i18n.genericError);
+                hideScreenLoader();
             }).always(function () {
                 $btn.removeClass('ea-mnui-btn-disabled').prop('disabled', false).text(i18n.extend);
             });
@@ -872,12 +885,14 @@
             delete copied.id;
 
             $btn.prop('disabled', true);
+            showScreenLoader();
 
             saveConnection(copied).done(function () {
                 showNotice(i18n.savedSuccess);
                 loadConnections();
             }).fail(function () {
                 showNotice(i18n.genericError);
+                hideScreenLoader();
             }).always(function () {
                 $btn.prop('disabled', false);
             });
@@ -900,6 +915,7 @@
                 onConfirm: function () {
                     processingId = row.id;
                     render();
+                    showScreenLoader();
 
                     var url = cfg.ajaxUrl + '?action=ea_connection&id=' + encodeURIComponent(row.id) +
                         '&_wpnonce=' + encodeURIComponent(cfg.restNonce) + '&_method=DELETE';
@@ -909,8 +925,10 @@
                             return String(item.id) !== String(row.id);
                         });
                         showNotice(i18n.deletedSuccess);
+                        loadConnections(); // Reload list to refresh table/pagination
                     }).fail(function () {
                         showNotice(i18n.genericError);
+                        hideScreenLoader();
                     }).always(function () {
                         processingId = null;
                         render();
@@ -995,6 +1013,7 @@
                 });
 
                 $submitBtn.prop('disabled', true).text(i18n.saving);
+                showScreenLoader();
 
                 saveConnection(payload).done(function () {
                     showNotice(i18n.savedSuccess);
@@ -1006,6 +1025,7 @@
                         message = xhr.responseJSON.message;
                     }
                     window.alert(message);
+                    hideScreenLoader();
                 }).always(function () {
                     $submitBtn.prop('disabled', false).text(i18n.save);
                 });
@@ -1038,6 +1058,7 @@
             }
 
             $submitBtn.prop('disabled', true).text(i18n.saving);
+            showScreenLoader();
 
             var requests = $.map(combos, function (combo) {
                 return saveConnection(combo);

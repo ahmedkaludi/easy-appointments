@@ -98,8 +98,11 @@
             $tr.append('<td>' + escapeHtml(c.mobile) + '</td>');
             $tr.append(
                 '<td class="ea-mnui-col-actions">' +
-                    '<button type="button" class="ea-mnui-icon-btn ea-mnui-view-row" title="' + escapeHtml(i18n.view || 'View') + '">' +
-                        '<span class="dashicons dashicons-visibility"></span>' +
+                    '<button type="button" class="ea-mnui-icon-btn ea-mnui-view-bookings-row" title="' + escapeHtml(i18n.viewBookings || 'View Bookings') + '">' +
+                        '<span class="dashicons dashicons-calendar-alt"></span>' +
+                    '</button>' +
+                    '<button type="button" class="ea-mnui-icon-btn ea-mnui-edit-row" title="' + escapeHtml(i18n.edit || 'Edit') + '">' +
+                        '&#9998;' +
                     '</button>' +
                     '<button type="button" class="ea-mnui-icon-btn ea-mnui-danger ea-mnui-delete-row" title="' + escapeHtml(i18n.delete || 'Delete') + '">' +
                         '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle; display:inline-block;"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>' +
@@ -117,6 +120,17 @@
         var $pag = $('#ea-mnui-pagination');
         $pag.empty();
 
+        if (totalPages <= 1) {
+            return;
+        }
+
+        // Previous button
+        var $prevBtn = $(
+            '<button type="button" class="ea-mnui-btn ea-mnui-btn-ghost ea-mnui-page-btn" data-page="' + (paged - 1) + '"' +
+            (paged === 1 ? ' disabled' : '') + '>&larr;</button>'
+        );
+        $pag.append($prevBtn);
+
         for (var i = 1; i <= totalPages; i++) {
             var $btn = $(
                 '<button type="button" class="ea-mnui-btn ea-mnui-btn-ghost ea-mnui-page-btn" data-page="' + i + '"' +
@@ -124,32 +138,53 @@
             );
             $pag.append($btn);
         }
+
+        // Next button
+        var $nextBtn = $(
+            '<button type="button" class="ea-mnui-btn ea-mnui-btn-ghost ea-mnui-page-btn" data-page="' + (paged + 1) + '"' +
+            (paged === totalPages ? ' disabled' : '') + '>&rarr;</button>'
+        );
+        $pag.append($nextBtn);
     }
 
     // ---------------------------------------------------------------
     // Detail + appointment history - ea_get_customer_detail_ajax
     // ---------------------------------------------------------------
-    function openCustomerDetail(id) {
+    function openCustomerBookings(id) {
+        resetForm(false);
         currentCustomerId = id;
         currentApptType = 'upcoming';
 
-        resetForm(false);
-        $('#ea-mnui-drawer-title').text(i18n.customerDetail || 'Customer Detail');
-        $('#ea-mnui-appointments-section').show();
+        setDrawerMode('view-bookings');
+        $('#ea-mnui-drawer-title').text(i18n.customerBookings || 'Customer Bookings');
         $('.ea-mnui-appt-tab').removeClass('is-active');
+        $('.ea-mnui-appt-tab[data-type="upcoming"]').addClass('is-open'); // class-handling done below too
         $('.ea-mnui-appt-tab[data-type="upcoming"]').addClass('is-active');
 
         openDrawer();
         loadCustomerDetail(id, currentApptType);
     }
 
+    function openCustomerEdit(id) {
+        resetForm(false);
+        currentCustomerId = id;
+
+        setDrawerMode('edit');
+        $('#ea-mnui-drawer-title').text(i18n.editCustomer || 'Edit Customer');
+
+        openDrawer();
+        loadCustomerDetail(id, null);
+    }
+
     function loadCustomerDetail(id, type) {
-        $('#ea-mnui-appt-rows').html(
-            '<tr><td colspan="7">' + escapeHtml(i18n.loadingAppointments || 'Loading appointments…') + '</td></tr>'
-        );
+        if (type) {
+            $('#ea-mnui-appt-rows').html(
+                '<tr><td colspan="7">' + escapeHtml(i18n.loadingAppointments || 'Loading appointments…') + '</td></tr>'
+            );
+        }
         showScreenLoader();
 
-        ajaxPost('ea_get_customer_detail_ajax', { id: id, type: type }, cfg.nonces.detail)
+        ajaxPost('ea_get_customer_detail_ajax', { id: id, type: type || 'upcoming' }, cfg.nonces.detail)
             .done(function (res) {
                 if (!res || !res.success) {
                     hideScreenLoader();
@@ -166,7 +201,15 @@
                 $('#ea-mnui-input-mobile').val(customer.mobile || '');
                 $('#ea-mnui-input-address').val(customer.address || '');
 
-                renderAppointmentRows(appointments);
+                // Populate compact info strip
+                $('#ea-mnui-info-name').text(customer.name || '');
+                $('#ea-mnui-info-email').text(customer.email || '');
+                $('#ea-mnui-info-mobile').text(customer.mobile || '');
+                $('#ea-mnui-info-address').text(customer.address || '—');
+
+                if (type) {
+                    renderAppointmentRows(appointments);
+                }
                 hideScreenLoader();
             })
             .fail(function () {
@@ -217,6 +260,31 @@
         $('.ea-mnui-field').removeClass('has-error');
     }
 
+    function setDrawerMode(mode) {
+        var $form = $('#ea-mnui-drawer-form');
+        var $drawer = $('#ea-mnui-drawer');
+        var $saveBtn = $form.find('.ea-mnui-drawer-save');
+        var $cancelBtn = $form.find('.ea-mnui-drawer-cancel');
+
+        if (mode === 'view-bookings') {
+            $drawer.addClass('ea-mnui-drawer-wide');
+            $form.find('input, textarea').prop('readonly', true);
+            $saveBtn.hide();
+            $cancelBtn.text(i18n.close || 'Close');
+            $('#ea-mnui-customer-edit-section').hide();
+            $('#ea-mnui-customer-info-strip').show();
+            $('#ea-mnui-appointments-section').show();
+        } else {
+            $drawer.removeClass('ea-mnui-drawer-wide');
+            $form.find('input, textarea').prop('readonly', false);
+            $saveBtn.show();
+            $cancelBtn.text(i18n.cancel || 'Cancel');
+            $('#ea-mnui-customer-info-strip').hide();
+            $('#ea-mnui-customer-edit-section').show();
+            $('#ea-mnui-appointments-section').hide();
+        }
+    }
+
     function resetForm(isAddMode) {
         currentCustomerId = null;
         clearFieldErrors();
@@ -227,9 +295,14 @@
         $('#ea-mnui-input-mobile').val('');
         $('#ea-mnui-input-address').val('');
 
+        $('#ea-mnui-info-name').text('');
+        $('#ea-mnui-info-email').text('');
+        $('#ea-mnui-info-mobile').text('');
+        $('#ea-mnui-info-address').text('');
+
         if (isAddMode) {
             $('#ea-mnui-drawer-title').text(i18n.addNew || 'Add Customer');
-            $('#ea-mnui-appointments-section').hide();
+            setDrawerMode('add');
         }
     }
 
@@ -375,10 +448,16 @@
             openDrawer();
         });
 
-        $(document).on('click', '.ea-mnui-customer-link, .ea-mnui-view-row', function (e) {
+        $(document).on('click', '.ea-mnui-customer-link, .ea-mnui-view-bookings-row', function (e) {
             e.preventDefault();
             var id = $(this).closest('tr').data('id');
-            openCustomerDetail(id);
+            openCustomerBookings(id);
+        });
+
+        $(document).on('click', '.ea-mnui-edit-row', function (e) {
+            e.preventDefault();
+            var id = $(this).closest('tr').data('id');
+            openCustomerEdit(id);
         });
 
         $(document).on('click', '.ea-mnui-delete-row', function () {

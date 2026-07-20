@@ -207,6 +207,10 @@ class EA_Customers_New_UI
             'i18n' => array(
                 'addNew'                 => esc_html__('Add Customer', 'easy-appointments'),
                 'customerDetail'         => esc_html__('Customer Detail', 'easy-appointments'),
+                'customerBookings'       => esc_html__('Customer Bookings', 'easy-appointments'),
+                'viewBookings'           => esc_html__('View Bookings', 'easy-appointments'),
+                'editCustomer'           => esc_html__('Edit Customer', 'easy-appointments'),
+                'close'                  => esc_html__('Close', 'easy-appointments'),
                 'edit'                   => esc_html__('Edit', 'easy-appointments'),
                 'view'                   => esc_html__('View', 'easy-appointments'),
                 'delete'                 => esc_html__('Delete', 'easy-appointments'),

@@ -319,10 +319,7 @@ if (!defined('WPINC')) {
                         <span class="ea-publish-copy-tooltip"><?php esc_html_e('Copy', 'easy-appointments'); ?></span>
                     </button>
                 </div>
-                <div class="ea-publish-note">
-                    <strong><?php esc_html_e('Note:', 'easy-appointments'); ?></strong>
-                    <?php esc_html_e('This feature is under development, and documentation may change.', 'easy-appointments'); ?>
-                </div>
+
                 <pre class="ea-publish-code"><code>[ea_full_calendar location="1" worker="1" service="1"]</code></pre>
                 <p style="margin-top: 8px; font-size: 13px; color: var(--ea-text-muted);">
                     <?php esc_html_e('The FullCalendar view displays appointments in a monthly/weekly calendar layout.', 'easy-appointments'); ?>

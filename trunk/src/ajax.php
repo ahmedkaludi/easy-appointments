@@ -261,6 +261,10 @@ class EAAjax
 
         
         if (!empty($appointments)) {
+            $field_map = [];
+            $ids = array_map( function( $app ) {
+                return $app->id;
+            }, $appointments );
 
             // Load all field values for filtering
             $ids = array_map( 'absint', $ids );

@@ -75,15 +75,26 @@ class EA_UI_Switcher
                 background: #dbeafe !important;
                 color: #1d4ed8 !important;
             }
-            .ea-ui-switch-notice .ea-version-badge {
-                font-size: 11px !important;
-                color: #6b7280 !important;
-                background: #f3f4f6 !important;
-                border: 1px solid #e5e7eb !important;
-                padding: 2px 8px !important;
-                border-radius: 12px !important;
-                font-weight: 500 !important;
+            .ea-ui-switch-notice .ea-switch-notice-close {
+                background: transparent !important;
+                border: none !important;
+                font-size: 20px !important;
+                line-height: 1 !important;
+                cursor: pointer !important;
+                color: #9ca3af !important;
+                width: 24px !important;
+                height: 24px !important;
+                border-radius: 50% !important;
+                display: inline-flex !important;
+                align-items: center !important;
+                justify-content: center !important;
                 margin-left: auto !important;
+                padding: 0 !important;
+                transition: background 0.2s, color 0.2s !important;
+            }
+            .ea-ui-switch-notice .ea-switch-notice-close:hover {
+                background: #f3f4f6 !important;
+                color: #1f2937 !important;
             }
         </style>
         <?php
@@ -189,7 +200,7 @@ class EA_UI_Switcher
                 <a href="<?php echo esc_url($url); ?>" class="ea-switch-link">
                     <?php echo esc_html($button_label); ?>
                 </a>
-                <span class="ea-version-badge">v<?php echo esc_html(EASY_APPOINTMENTS_VERSION); ?></span>
+                <button type="button" class="ea-switch-notice-close" id="ea-switch-notice-close-btn" aria-label="<?php esc_attr_e('Close', 'easy-appointments'); ?>">&times;</button>
             </p>
         </div>
         <script>
@@ -199,6 +210,13 @@ class EA_UI_Switcher
 
             var notice = document.getElementById('ea-ui-switch-notice');
             if (!notice) return;
+
+            var closeBtn = document.getElementById('ea-switch-notice-close-btn');
+            if (closeBtn) {
+                closeBtn.addEventListener('click', function() {
+                    notice.style.display = 'none';
+                });
+            }
 
             var observer = new MutationObserver(function() {
                 if (!document.body.contains(notice)) {

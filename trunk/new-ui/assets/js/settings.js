@@ -257,6 +257,24 @@
         });
 
         /**
+         * ---------- Toggle status subjects visibility ----------
+         */
+        function toggleStatusSubjects() {
+            var $checkbox = $('input[data-key="enable_status_subjects"]');
+            if ($checkbox.length) {
+                var enabled = $checkbox.is(':checked');
+                $('.ea-nsui-status-subject').toggle(enabled);
+                $('.ea-nsui-general-subject').toggle(!enabled);
+            }
+        }
+
+        // Initialize state on load
+        toggleStatusSubjects();
+
+        // Bind change event
+        $app.on('change', 'input[data-key="enable_status_subjects"]', toggleStatusSubjects);
+
+        /**
          * ---------- Helpers ----------
          */
         function showNotice(message, type) {
@@ -541,17 +559,20 @@
                 return;
             }
 
-            // eslint-disable-next-line no-alert
-            if (!window.confirm(eaNewSettingsUI.i18n.confirmLeaveUnsaved)) {
-                e.preventDefault();
-                e.stopImmediatePropagation();
-                return;
-            }
+            e.preventDefault();
+            e.stopImmediatePropagation();
 
-            // Confirmed: let the click proceed to navigate away, and clear
-            // the flag first so the beforeunload safety net above doesn't
-            // fire a second, redundant browser prompt right after this one.
-            markClean();
+            window.eaConfirm({
+                title: eaNewSettingsUI.i18n.confirmLeaveUnsavedTitle || 'Unsaved Changes',
+                message: eaNewSettingsUI.i18n.confirmLeaveUnsaved,
+                confirmLabel: eaNewSettingsUI.i18n.confirmLeave || 'Leave',
+                cancelLabel: eaNewSettingsUI.i18n.cancel || 'Cancel',
+                isDanger: true,
+                onConfirm: function () {
+                    markClean();
+                    window.location.href = href;
+                }
+            });
         });
 
         /**

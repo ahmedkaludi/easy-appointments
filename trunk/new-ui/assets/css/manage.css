@@ -702,6 +702,8 @@
 /* Compact sizing for selects and inputs inside connection drawer body */
 .ea-mnui-wrap .ea-mnui-drawer-body .ea-mnui-field select,
 .ea-mnui-wrap .ea-mnui-drawer-body .ea-mnui-field input[type="text"],
+.ea-mnui-wrap .ea-mnui-drawer-body .ea-mnui-field input[type="email"],
+.ea-mnui-wrap .ea-mnui-drawer-body .ea-mnui-field input[type="tel"],
 .ea-mnui-wrap .ea-mnui-drawer-body .ea-mnui-field input[type="number"],
 .ea-mnui-wrap .ea-mnui-drawer-body .ea-mnui-field input[type="time"] {
     width: 100%;
@@ -716,10 +718,24 @@
     box-sizing: border-box;
 }
 
+.ea-mnui-wrap .ea-mnui-drawer-body .ea-mnui-field textarea {
+    width: 100%;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 6px 10px;
+    font-size: 13px;
+    font-family: inherit;
+    background: #fff;
+    box-sizing: border-box;
+}
+
 .ea-mnui-wrap .ea-mnui-drawer-body .ea-mnui-field select:focus,
 .ea-mnui-wrap .ea-mnui-drawer-body .ea-mnui-field input[type="text"]:focus,
+.ea-mnui-wrap .ea-mnui-drawer-body .ea-mnui-field input[type="email"]:focus,
+.ea-mnui-wrap .ea-mnui-drawer-body .ea-mnui-field input[type="tel"]:focus,
 .ea-mnui-wrap .ea-mnui-drawer-body .ea-mnui-field input[type="number"]:focus,
-.ea-mnui-wrap .ea-mnui-drawer-body .ea-mnui-field input[type="time"]:focus {
+.ea-mnui-wrap .ea-mnui-drawer-body .ea-mnui-field input[type="time"]:focus,
+.ea-mnui-wrap .ea-mnui-drawer-body .ea-mnui-field textarea:focus {
     outline: none;
     border-color: var(--ea-blue, #2563eb);
     box-shadow: 0 0 0 3px var(--ea-blue-light, #eef4ff);

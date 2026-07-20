@@ -832,23 +832,23 @@ class EAAdminPanel
         );
 
         // Overview - report
-        $page_report_suffix = add_submenu_page(
-            'easy_app_top_level',
-            __('Reports *OLD*', 'easy-appointments'),
-            __('Reports *OLD*', 'easy-appointments'),
-            $this->user_capability_callback('manage_options', 'easy_app_reports'),
-            'easy_app_reports',
-            array($this, 'reports_page')
-        );
-
-        // Overview - report
         $page_new_report_suffix = add_submenu_page(
             'easy_app_top_level',
-            __('Reports *NEW*', 'easy-appointments'),
-            __('Reports *NEW*', 'easy-appointments'),
+            __('Reports', 'easy-appointments'),
+            __('Reports', 'easy-appointments'),
             $this->user_capability_callback('manage_options', 'easy_app_new_reports'),
             'easy_app_new_reports',
             array($this, 'new_reports_page')
+        );
+
+        // Overview - report
+        $page_report_suffix = add_submenu_page(
+            'easy_app_top_level',
+            __('Reports (Legacy)', 'easy-appointments'),
+            __('Reports (Legacy)', 'easy-appointments'),
+            $this->user_capability_callback('manage_options', 'easy_app_reports'),
+            'easy_app_reports',
+            array($this, 'reports_page')
         );
 
         // Overview - report
@@ -987,27 +987,27 @@ class EAAdminPanel
      */
     public function add_reports_menu_new_ui()
     {
+        // new reports page
+        add_submenu_page(
+            'easy_app_top_level',
+            __('Reports', 'easy-appointments'),
+            __('Reports', 'easy-appointments'),
+            $this->user_capability_callback('manage_options', 'easy_app_new_reports'),
+            'easy_app_new_reports',
+            array($this, 'new_reports_page')
+        );
+
         // reports page
         $page_report_suffix = add_submenu_page(
             'easy_app_top_level',
-            __('Reports *OLD*', 'easy-appointments'),
-            __('Reports *OLD*', 'easy-appointments'),
+            __('Reports (Legacy)', 'easy-appointments'),
+            __('Reports (Legacy)', 'easy-appointments'),
             $this->user_capability_callback('manage_options', 'easy_app_reports'),
             'easy_app_reports',
             array($this, 'reports_page')
         );
 
         add_action('load-' . $page_report_suffix, array($this, 'add_report_js'));
-
-        // new reports page
-        add_submenu_page(
-            'easy_app_top_level',
-            __('Reports *NEW*', 'easy-appointments'),
-            __('Reports *NEW*', 'easy-appointments'),
-            $this->user_capability_callback('manage_options', 'easy_app_new_reports'),
-            'easy_app_new_reports',
-            array($this, 'new_reports_page')
-        );
     }
 
     /**

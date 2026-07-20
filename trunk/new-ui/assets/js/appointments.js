@@ -150,6 +150,14 @@
             }
         }
 
+        function showScreenLoader() {
+            $('#ea-screen-loader').css('display', 'flex');
+        }
+
+        function hideScreenLoader() {
+            $('#ea-screen-loader').hide();
+        }
+
         /**
          * ---------- Cascading location -> service -> worker filters ----------
          * Mirrors the legacy behaviour exactly:
@@ -363,9 +371,10 @@
          */
         function loadAppointments() {
             showNotice(i18n.loading, true);
+            showScreenLoader();
             checkBulkButtons();
 
-            $.ajax({
+            return $.ajax({
                 url: cfg.ajaxUrl,
                 method: 'GET',
                 dataType: 'json',
@@ -376,8 +385,10 @@
                 sortAppointments();
                 renderRows();
                 showNotice('');
+                hideScreenLoader();
             }).fail(function () {
                 showNotice(i18n.genericError);
+                hideScreenLoader();
             });
         }
 
@@ -581,7 +592,15 @@
 
         $app.on('click', '.ea-naui-refresh', function (e) {
             e.preventDefault();
-            loadAppointments();
+            var $btn = $(this);
+            if ($btn.hasClass('is-refreshing')) {
+                return;
+            }
+            var originalText = $btn.text().trim();
+            $btn.addClass('is-refreshing').prop('disabled', true).text(i18n.refreshing || 'Refreshing…');
+            loadAppointments().always(function () {
+                $btn.removeClass('is-refreshing').prop('disabled', false).text(originalText);
+            });
         });
 
         /**
@@ -637,6 +656,7 @@
                 cancelLabel: i18n.cancel || 'Cancel',
                 isDanger: true,
                 onConfirm: function () {
+                    showScreenLoader();
                     $.ajax({
                         url: cfg.ajaxUrl,
                         method: 'POST',
@@ -653,9 +673,11 @@
                             loadAppointments();
                         } else {
                             showNotice(i18n.genericError);
+                            hideScreenLoader();
                         }
                     }).fail(function () {
                         showNotice(i18n.genericError);
+                        hideScreenLoader();
                     });
                 }
             });
@@ -687,6 +709,7 @@
                 cancelLabel: i18n.cancel || 'Cancel',
                 isDanger: true,
                 onConfirm: function () {
+                    showScreenLoader();
                     $.ajax({
                         url: cfg.ajaxUrl,
                         method: 'POST',
@@ -701,6 +724,7 @@
                         loadAppointments();
                     }).fail(function () {
                         showNotice(i18n.genericError);
+                        hideScreenLoader();
                     });
                 }
             });
@@ -1074,6 +1098,7 @@
                 cancelLabel: i18n.cancel || 'Cancel',
                 isDanger: true,
                 onConfirm: function () {
+                    showScreenLoader();
                     var url = cfg.ajaxUrl + '?action=ea_appointment&id=' + encodeURIComponent(row.id) +
                         '&_wpnonce=' + encodeURIComponent(cfg.restNonce) + '&_method=DELETE';
 
@@ -1081,6 +1106,7 @@
                         loadAppointments();
                     }).fail(function () {
                         showNotice(i18n.genericError);
+                        hideScreenLoader();
                     });
                 }
             });
@@ -1156,6 +1182,7 @@
 
             var $submitBtn = $drawerForm.find('.ea-naui-drawer-save');
             $submitBtn.prop('disabled', true).text(i18n.saving);
+            showScreenLoader();
 
             var url = cfg.ajaxUrl + '?action=ea_appointment&_wpnonce=' + encodeURIComponent(cfg.restNonce);
             var method = 'POST';
@@ -1181,6 +1208,7 @@
                 }
 
                 window.alert(message);
+                hideScreenLoader();
             }).always(function () {
                 $submitBtn.prop('disabled', false).text(i18n.save);
             });

@@ -93,7 +93,7 @@ if (!defined('WPINC')) {
             <div class="ea-mnui-drawer-body">
                 <div class="ea-mnui-field" data-field="name">
                     <label for="ea-mnui-input-name"><?php esc_html_e('Name', 'easy-appointments'); ?> <span class="ea-mnui-required">*</span></label>
-                    <textarea id="ea-mnui-input-name" data-prop="name" rows="1" required></textarea>
+                    <input type="text" id="ea-mnui-input-name" data-prop="name" required>
                     <div class="ea-mnui-field-error"><?php esc_html_e('Name is required.', 'easy-appointments'); ?></div>
                 </div>
 

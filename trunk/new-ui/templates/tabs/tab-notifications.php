@@ -186,7 +186,7 @@ if ( ! defined( 'WPINC' ) ) {
                                 </label>
                             </div>
                         </div>
-                        <div class="ea-nsui-row">
+                        <div class="ea-nsui-row ea-nsui-row-chips">
                             <div class="ea-nsui-row-label">
                                 <span class="ea-nsui-row-subtitle"><?php esc_html_e('Notify for status', 'easy-appointments'); ?></span>
                             </div>
@@ -227,7 +227,7 @@ if ( ! defined( 'WPINC' ) ) {
                                 </label>
                             </div>
                         </div>
-                        <div class="ea-nsui-row ea-nsui-row-last">
+                        <div class="ea-nsui-row ea-nsui-row-last ea-nsui-row-chips">
                             <div class="ea-nsui-row-label">
                                 <span class="ea-nsui-row-subtitle"><?php esc_html_e('Notify for status', 'easy-appointments'); ?></span>
                             </div>
@@ -264,7 +264,7 @@ if ( ! defined( 'WPINC' ) ) {
                     </div>
 
                     <div class="ea-nsui-card">
-                        <div class="ea-nsui-row">
+                        <div class="ea-nsui-row ea-nsui-general-subject">
                             <div class="ea-nsui-row-label">
                                 <span class="ea-nsui-row-title"><?php esc_html_e('Admin notification subject', 'easy-appointments'); ?></span>
                             </div>
@@ -272,7 +272,7 @@ if ( ! defined( 'WPINC' ) ) {
                                 <input type="text" class="ea-nsui-input" data-key="pending.subject.email" value="<?php echo esc_attr($ea_get('pending.subject.email', '')); ?>">
                             </div>
                         </div>
-                        <div class="ea-nsui-row">
+                        <div class="ea-nsui-row ea-nsui-general-subject">
                             <div class="ea-nsui-row-label">
                                 <span class="ea-nsui-row-title"><?php esc_html_e('Visitor notification subject', 'easy-appointments'); ?></span>
                             </div>
@@ -291,13 +291,13 @@ if ( ! defined( 'WPINC' ) ) {
                                 </label>
                             </div>
                         </div>
-                        <div class="ea-nsui-row ea-nsui-row-last">
+                        <div class="ea-nsui-row ea-nsui-row-last ea-nsui-status-subject">
                             <div class="ea-nsui-row-label"></div>
                             <div class="ea-nsui-row-control">
                                 <h4 class="ea-nsui-subhead"><?php esc_html_e('Admin subjects', 'easy-appointments'); ?></h4>
                             </div>
                         </div>
-                        <div class="ea-nsui-row">
+                        <div class="ea-nsui-row ea-nsui-status-subject">
                             <div class="ea-nsui-row-label">
                                 <span class="ea-nsui-row-title"><?php esc_html_e('Pending', 'easy-appointments'); ?></span>
                             </div>
@@ -305,7 +305,7 @@ if ( ! defined( 'WPINC' ) ) {
                                 <input type="text" class="ea-nsui-input" data-key="pending_subject_admin" value="<?php echo esc_attr($ea_get('pending_subject_admin', '')); ?>">
                             </div>
                         </div>
-                        <div class="ea-nsui-row">
+                        <div class="ea-nsui-row ea-nsui-status-subject">
                             <div class="ea-nsui-row-label">
                                 <span class="ea-nsui-row-title"><?php esc_html_e('Confirmed', 'easy-appointments'); ?></span>
                             </div>
@@ -313,7 +313,7 @@ if ( ! defined( 'WPINC' ) ) {
                                 <input type="text" class="ea-nsui-input" data-key="confirmed_subject_admin" value="<?php echo esc_attr($ea_get('confirmed_subject_admin', '')); ?>">
                             </div>
                         </div>
-                        <div class="ea-nsui-row">
+                        <div class="ea-nsui-row ea-nsui-status-subject">
                             <div class="ea-nsui-row-label">
                                 <span class="ea-nsui-row-title"><?php esc_html_e('Cancelled', 'easy-appointments'); ?></span>
                             </div>
@@ -321,7 +321,7 @@ if ( ! defined( 'WPINC' ) ) {
                                 <input type="text" class="ea-nsui-input" data-key="cancelled_subject_admin" value="<?php echo esc_attr($ea_get('cancelled_subject_admin', '')); ?>">
                             </div>
                         </div>
-                        <div class="ea-nsui-row">
+                        <div class="ea-nsui-row ea-nsui-status-subject">
                             <div class="ea-nsui-row-label">
                                 <span class="ea-nsui-row-title"><?php esc_html_e('Reservation', 'easy-appointments'); ?></span>
                             </div>
@@ -330,13 +330,13 @@ if ( ! defined( 'WPINC' ) ) {
                             </div>
                         </div>
 
-                        <div class="ea-nsui-row">
+                        <div class="ea-nsui-row ea-nsui-status-subject">
                             <div class="ea-nsui-row-label"></div>
                             <div class="ea-nsui-row-control">
                                 <h4 class="ea-nsui-subhead"><?php esc_html_e('Visitor subjects', 'easy-appointments'); ?></h4>
                             </div>
                         </div>
-                        <div class="ea-nsui-row">
+                        <div class="ea-nsui-row ea-nsui-status-subject">
                             <div class="ea-nsui-row-label">
                                 <span class="ea-nsui-row-title"><?php esc_html_e('Pending', 'easy-appointments'); ?></span>
                             </div>
@@ -344,7 +344,7 @@ if ( ! defined( 'WPINC' ) ) {
                                 <input type="text" class="ea-nsui-input" data-key="pending_subject_visitor" value="<?php echo esc_attr($ea_get('pending_subject_visitor', '')); ?>">
                             </div>
                         </div>
-                        <div class="ea-nsui-row">
+                        <div class="ea-nsui-row ea-nsui-status-subject">
                             <div class="ea-nsui-row-label">
                                 <span class="ea-nsui-row-title"><?php esc_html_e('Confirmed', 'easy-appointments'); ?></span>
                             </div>
@@ -352,7 +352,7 @@ if ( ! defined( 'WPINC' ) ) {
                                 <input type="text" class="ea-nsui-input" data-key="confirmed_subject_visitor" value="<?php echo esc_attr($ea_get('confirmed_subject_visitor', '')); ?>">
                             </div>
                         </div>
-                        <div class="ea-nsui-row">
+                        <div class="ea-nsui-row ea-nsui-status-subject">
                             <div class="ea-nsui-row-label">
                                 <span class="ea-nsui-row-title"><?php esc_html_e('Cancelled', 'easy-appointments'); ?></span>
                             </div>
@@ -360,7 +360,7 @@ if ( ! defined( 'WPINC' ) ) {
                                 <input type="text" class="ea-nsui-input" data-key="cancelled_subject_visitor" value="<?php echo esc_attr($ea_get('cancelled_subject_visitor', '')); ?>">
                             </div>
                         </div>
-                        <div class="ea-nsui-row ea-nsui-row-last">
+                        <div class="ea-nsui-row ea-nsui-row-last ea-nsui-status-subject">
                             <div class="ea-nsui-row-label">
                                 <span class="ea-nsui-row-title"><?php esc_html_e('Reservation', 'easy-appointments'); ?></span>
                             </div>

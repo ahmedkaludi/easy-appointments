@@ -423,9 +423,17 @@ class EA_Settings_New_UI
         );
 
         wp_enqueue_script(
+            'ea-new-common-ui',
+            $base_url . 'js/common.js',
+            array('jquery'),
+            $js_ver,
+            true
+        );
+
+        wp_enqueue_script(
             'ea-new-settings-ui',
             $base_url . 'js/settings.js',
-            array('jquery', 'jquery-ui-sortable', 'ea-select2'),
+            array('jquery', 'jquery-ui-sortable', 'ea-select2', 'ea-new-common-ui'),
             $js_ver,
             true
         );
@@ -456,10 +464,12 @@ class EA_Settings_New_UI
             'wpRestUrl'         => get_rest_url(),
             'i18n'              => array(
                 'saving'          => esc_html__('Saving…', 'easy-appointments'),
+                'cancel'          => esc_html__('Cancel', 'easy-appointments'),
                 'saveChanges'     => esc_html__('Save Changes', 'easy-appointments'),
                 'saved'           => esc_html__('Settings saved successfully.', 'easy-appointments'),
                 'error'           => esc_html__('Something went wrong while saving. Please try again.', 'easy-appointments'),
                 'confirmReset'    => esc_html__('Discard unsaved changes and reload the last saved settings?', 'easy-appointments'),
+                'confirmLeaveUnsavedTitle' => esc_html__('Unsaved Changes', 'easy-appointments'),
                 'confirmLeaveUnsaved' => esc_html__('You have unsaved changes on this Settings page. Leave without saving?', 'easy-appointments'),
                 'confirmExport'   => esc_html__('Export all Easy Appointments data?', 'easy-appointments'),
                 'selectFile'      => esc_html__('Please select a JSON backup file.', 'easy-appointments'),

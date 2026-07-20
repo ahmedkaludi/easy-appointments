@@ -127,7 +127,7 @@ if ( ! defined( 'WPINC' ) ) {
                          * format the legacy hidden field used).
                          */
                         ?>
-                        <div class="ea-nsui-row">
+                        <div class="ea-nsui-row ea-nsui-row-chips">
                             <div class="ea-nsui-row-label">
                                 <span class="ea-nsui-row-title">
                                     <?php esc_html_e('Event title display fields', 'easy-appointments'); ?>
