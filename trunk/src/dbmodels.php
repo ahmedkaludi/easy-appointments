@@ -735,7 +735,11 @@ class EADBModels
     {
         $connections = $this->wpdb->prefix . 'ea_connections';
 
-        $query = "SELECT location, service, worker FROM $connections WHERE is_working=1";
+        // Select the full scheduling fields so the admin UI can disable
+        // non-working calendar days (day_of_week / day_from / day_to).
+        // The cascade-select logic only reads location / service / worker,
+        // so extra columns are harmlessly ignored there.
+        $query = "SELECT location, service, worker, day_of_week, day_from, day_to FROM $connections WHERE is_working=1";
         // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.PreparedSQL.NotPrepared
         return $this->wpdb->get_results($query);
     }

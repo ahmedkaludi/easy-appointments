@@ -717,6 +717,20 @@
     opacity: 0.35;
 }
 
+/* Non-working day (employee not scheduled) – greyed out, not clickable */
+.ui-datepicker td.ea-naui-unavailable span {
+    opacity: 0.3;
+    color: #6b7280;
+    cursor: not-allowed;
+}
+
+/* Full-day vacation – subtle red tint */
+.ui-datepicker td.ea-naui-blocked span {
+    opacity: 0.4;
+    color: #b91c1c;
+    cursor: not-allowed;
+}
+
 /* ---------- Responsive ---------- */
 
 @media (max-width: 782px) {

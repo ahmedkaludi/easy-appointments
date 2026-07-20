@@ -837,48 +837,94 @@
 
         function vacationCheck(date) {
             var month = date.getMonth() + 1;
-            var day = date.getDate();
-            var dateString = date.getFullYear() + '-' + (month < 10 ? '0' + month : month) + '-' + (day < 10 ? '0' + day : day);
-            var workerId = $('#ea-naui-input-worker').val();
+            var day   = date.getDate();
+            var dateString = date.getFullYear() + '-' +
+                             (month < 10 ? '0' + month : month) + '-' +
+                             (day   < 10 ? '0' + day   : day);
 
-            // 1. Block days configured globally (same as old frontend.js)
+            var locationId = $('#ea-naui-input-location').val();
+            var serviceId  = $('#ea-naui-input-service').val();
+            var workerId   = $('#ea-naui-input-worker').val();
+
+            // JS Date.getDay() → 0=Sun,1=Mon,...,6=Sat
+            // day_of_week in DB is stored as a comma-separated list such as
+            // "Monday,Wednesday,Friday" (English day names).
+            var WEEK_DAY_NAMES = ['Sunday', 'Monday', 'Tuesday', 'Wednesday',
+                                  'Thursday', 'Friday', 'Saturday'];
+            var dayName = WEEK_DAY_NAMES[date.getDay()];
+
+            // ── 1. Global block-days (configured via WP admin) ────────────────
             var blockDays = cfg.blockDays || [];
             if (Array.isArray(blockDays) && blockDays.indexOf(dateString) !== -1) {
                 return [false, 'ea-naui-blocked', cfg.blockDaysTooltip || ''];
             }
 
-            // 2. Check full-day vacations only.
-            //    NOTE: The old UI (js/frontend.js vacation()) does NOT block calendar
-            //    days based on day-of-week working hours — that is handled implicitly
-            //    by the time-slot list being empty when no slots are available.
-            //    Partial-day vacations are also NOT blocked here; they are filtered
-            //    out of the time-slot list in refreshTimeSlots() instead.
+            // ── 2. Working-day check ──────────────────────────────────────────
+            // Only run when all three selectors are filled so the calendar
+            // remains fully open while the user is still choosing.
+            if (locationId && serviceId && workerId) {
+                var hasWorkingSlot = false;
+
+                $.each(connections, function (i, conn) {
+                    // Must match the selected combo exactly
+                    if (String(conn.location) !== String(locationId) ||
+                        String(conn.service)  !== String(serviceId)  ||
+                        String(conn.worker)   !== String(workerId)) {
+                        return true; // continue
+                    }
+
+                    // ── Date-range guard (day_from / day_to) ──────────────
+                    if (conn.day_from && conn.day_from > dateString) {
+                        return true; // connection not yet active
+                    }
+                    if (conn.day_to && conn.day_to < dateString) {
+                        return true; // connection already expired
+                    }
+
+                    // ── Day-of-week guard ────────────────────────────────
+                    // day_of_week is a comma-separated string e.g. "Monday,Friday"
+                    // An empty / null value means "every day".
+                    if (conn.day_of_week) {
+                        var allowed = $.map(conn.day_of_week.split(','), function (d) {
+                            return $.trim(d);
+                        });
+                        if ($.inArray(dayName, allowed) === -1) {
+                            return true; // this connection doesn't cover today
+                        }
+                    }
+
+                    // This connection is active and covers this day
+                    hasWorkingSlot = true;
+                    return false; // break
+                });
+
+                if (!hasWorkingSlot) {
+                    return [false, 'ea-naui-unavailable', ''];
+                }
+            }
+
+            // ── 3. Full-day vacation check ────────────────────────────────────
+            // Partial-day vacations are NOT blocked here — they are removed from
+            // the time-slot list inside refreshTimeSlots() instead.
             var result = [true, dateString, ''];
 
             $.each(vacations, function (i, vacation) {
-                // If the vacation targets specific workers, check the selected worker
+                // Filter by worker if the vacation targets specific workers
                 if (vacation.workers && vacation.workers.length > 0) {
-                    var workerIds = $.map(vacation.workers, function (w) {
-                        return String(w.id);
-                    });
-
-                    if ($.inArray(String(workerId), workerIds) === -1) {
-                        return true; // continue — this vacation doesn't apply
+                    var wIds = $.map(vacation.workers, function (w) { return String(w.id); });
+                    if ($.inArray(String(workerId), wIds) === -1) {
+                        return true; // continue — not this worker's vacation
                     }
                 }
 
-                // Check if the date is in this vacation's day list
                 if ($.inArray(dateString, vacation.days || []) === -1) {
-                    return true; // continue — date not in this vacation
+                    return true; // continue — date not in vacation
                 }
 
-                // Only block the calendar day for full-day vacations.
-                // Partial vacations (with a time range) only block specific
-                // time slots; the day itself remains selectable.
                 var time = vacation.time || {};
                 var isFullDay = !time || time.fullDay || (!time.startTime && !time.endTime);
                 if (!isFullDay) {
-                    return true; // partial vacation — don't block the day
+                    return true; // partial vacation — leave day enabled
                 }
 
                 result = [false, 'ea-naui-blocked', vacation.tooltip || ''];
