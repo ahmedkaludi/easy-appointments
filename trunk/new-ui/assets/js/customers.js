@@ -28,6 +28,14 @@
         $('#ea-mnui-status-msg').text(msg || '');
     }
 
+    function showScreenLoader() {
+        $('#ea-screen-loader').css('display', 'flex');
+    }
+
+    function hideScreenLoader() {
+        $('#ea-screen-loader').hide();
+    }
+
     function ajaxPost(action, data, nonceAction) {
         var payload = $.extend({ action: action, ea_nonce: nonceAction }, data);
         return $.post(cfg.ajaxUrl, payload);
@@ -43,6 +51,7 @@
         var $rows = $('#ea-mnui-rows');
         $rows.html('<tr><td colspan="5">' + escapeHtml(i18n.loading || 'Loading customers…') + '</td></tr>');
         $('#ea-mnui-empty').hide();
+        showScreenLoader();
 
         ajaxPost('ea_get_customers_ajax', {
             search: currentSearch,
@@ -50,12 +59,15 @@
         }, cfg.nonces.list).done(function (res) {
             if (!res || !res.success && !res.data) {
                 renderRows([], 1, 0);
+                hideScreenLoader();
                 return;
             }
 
             var list = res.data || [];
             renderRows(list, res.paged || currentPage, res.total_pages || 0);
+            hideScreenLoader();
         }).fail(function () {
+            hideScreenLoader();
             $rows.html('');
             setStatus(i18n.genericError || 'Something went wrong. Please try again.');
         });
@@ -134,10 +146,12 @@
         $('#ea-mnui-appt-rows').html(
             '<tr><td colspan="7">' + escapeHtml(i18n.loadingAppointments || 'Loading appointments…') + '</td></tr>'
         );
+        showScreenLoader();
 
         ajaxPost('ea_get_customer_detail_ajax', { id: id, type: type }, cfg.nonces.detail)
             .done(function (res) {
                 if (!res || !res.success) {
+                    hideScreenLoader();
                     setStatus(i18n.genericError || 'Something went wrong. Please try again.');
                     return;
                 }
@@ -152,8 +166,10 @@
                 $('#ea-mnui-input-address').val(customer.address || '');
 
                 renderAppointmentRows(appointments);
+                hideScreenLoader();
             })
             .fail(function () {
+                hideScreenLoader();
                 setStatus(i18n.genericError || 'Something went wrong. Please try again.');
             });
     }
@@ -265,6 +281,7 @@
 
         var $btn = $('.ea-mnui-drawer-save');
         $btn.prop('disabled', true).text(i18n.saving || 'Saving…');
+        showScreenLoader();
 
         ajaxPost(action, data, cfg.nonces.edit)
             .done(function (res) {
@@ -273,11 +290,13 @@
                     fetchCustomers(currentSearch, currentPage);
                     setStatus(i18n.savedSuccess || 'Customer saved successfully.');
                 } else {
+                    hideScreenLoader();
                     var msg = (res && res.data && res.data.message) || (i18n.genericError || 'Something went wrong.');
                     setStatus(msg);
                 }
             })
             .fail(function () {
+                hideScreenLoader();
                 setStatus(i18n.genericError || 'Something went wrong. Please try again.');
             })
             .always(function () {
@@ -289,33 +308,39 @@
     // Delete - ea_delete_customer / ea_delete_all_customers
     // ---------------------------------------------------------------
     function deleteCustomer(id) {
+        showScreenLoader();
         ajaxPost('ea_delete_customer', { customer_id: id }, cfg.nonces.delete)
             .done(function (res) {
                 if (res && res.success) {
                     fetchCustomers(currentSearch, currentPage);
                     setStatus(i18n.deletedSuccess || 'Customer deleted successfully.');
                 } else {
+                    hideScreenLoader();
                     var msg = (res && res.data && res.data.message) || (i18n.genericError || 'Something went wrong.');
                     setStatus(msg);
                 }
             })
             .fail(function () {
+                hideScreenLoader();
                 setStatus(i18n.genericError || 'Something went wrong. Please try again.');
             });
     }
 
     function deleteAllCustomers() {
+        showScreenLoader();
         ajaxPost('ea_delete_all_customers', {}, cfg.nonces.delete)
             .done(function (res) {
                 if (res && res.success) {
                     setStatus(i18n.deletedAllSuccess || 'All customers deleted.');
                     fetchCustomers('', 1);
                 } else {
+                    hideScreenLoader();
                     var msg = (res && res.data && res.data.message) || (i18n.genericError || 'Something went wrong.');
                     setStatus(msg);
                 }
             })
             .fail(function () {
+                hideScreenLoader();
                 setStatus(i18n.genericError || 'Something went wrong. Please try again.');
             });
     }

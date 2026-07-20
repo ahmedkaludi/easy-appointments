@@ -63,6 +63,14 @@
             }
         }
 
+        function showScreenLoader() {
+            $('#ea-screen-loader').css('display', 'flex');
+        }
+
+        function hideScreenLoader() {
+            $('#ea-screen-loader').hide();
+        }
+
         /**
          * ---------- Fetch + render list ----------
          */
@@ -71,6 +79,7 @@
                 currentPage = page;
             }
             showNotice(i18n.loading, true);
+            showScreenLoader();
 
             $.ajax({
                 url: cfg.ajaxUrl,
@@ -97,8 +106,10 @@
                 render();
                 checkAllGoogleConnections();
                 showNotice('');
+                hideScreenLoader();
             }).fail(function () {
                 showNotice(i18n.genericError);
+                hideScreenLoader();
             });
         }
 
@@ -299,6 +310,7 @@
                 cancelLabel: i18n.cancel || 'Cancel',
                 isDanger: true,
                 onConfirm: function () {
+                    showScreenLoader();
                     $.ajax({
                         url: cfg.ajaxUrl,
                         method: 'POST',
@@ -310,6 +322,7 @@
                         loadWorkers();
                     }).fail(function () {
                         showNotice(i18n.genericError);
+                        hideScreenLoader();
                     });
                 }
             });
@@ -476,6 +489,7 @@
                 onConfirm: function () {
                     processingId = row.id;
                     render();
+                    showScreenLoader();
 
                     var url = cfg.ajaxUrl + '?action=ea_worker&id=' + encodeURIComponent(row.id) +
                         '&_wpnonce=' + encodeURIComponent(cfg.restNonce) + '&_method=DELETE';
@@ -485,8 +499,10 @@
                             return String(item.id) !== String(row.id);
                         });
                         showNotice(i18n.deletedSuccess);
+                        hideScreenLoader();
                     }).fail(function () {
                         showNotice(i18n.genericError);
+                        hideScreenLoader();
                     }).always(function () {
                         processingId = null;
                         render();
@@ -519,6 +535,7 @@
                 cancelLabel: i18n.cancel || 'Cancel',
                 isDanger: true,
                 onConfirm: function () {
+                    showScreenLoader();
                     var url = cfg.ajaxUrl + '?action=ea_remove_google_calendar&id=' + encodeURIComponent(id) +
                         '&_wpnonce=' + encodeURIComponent(cfg.restNonce) + '&_method=DELETE';
 
@@ -528,8 +545,10 @@
                             updateGoogleButtonForRow(row);
                         }
                         showNotice(i18n.googleUnlinked);
+                        hideScreenLoader();
                     }).fail(function () {
                         showNotice(i18n.genericError);
+                        hideScreenLoader();
                     });
                 }
             });
@@ -563,6 +582,7 @@
 
             var $submitBtn = $drawerForm.find('.ea-mnui-drawer-save');
             $submitBtn.prop('disabled', true).text(i18n.saving);
+            showScreenLoader();
 
             var url = cfg.ajaxUrl + '?action=ea_worker&_wpnonce=' + encodeURIComponent(cfg.restNonce);
 
@@ -580,6 +600,7 @@
                 closeDrawer();
                 loadWorkers();
             }).fail(function (xhr) {
+                hideScreenLoader();
                 var message = i18n.genericError;
 
                 if (xhr.responseJSON && xhr.responseJSON.message) {
