@@ -219,6 +219,7 @@ class EA_Customers_New_UI
                 'noAppointments'         => esc_html__('No appointments found.', 'easy-appointments'),
                 'confirmDelete'          => esc_html__('Are you sure you want to delete this customer?', 'easy-appointments'),
                 'confirmDeleteAll'       => esc_html__('This will delete ALL customers. Are you sure?', 'easy-appointments'),
+                'confirmDeleteSelected'  => esc_html__('Are you sure you want to delete %d selected customers?', 'easy-appointments'),
                 'deletedSuccess'         => esc_html__('Customer deleted successfully.', 'easy-appointments'),
                 'deletedAllSuccess'      => esc_html__('All customers deleted.', 'easy-appointments'),
                 'savedSuccess'           => esc_html__('Customer saved successfully.', 'easy-appointments'),

@@ -77,6 +77,9 @@
         var $rows = $('#ea-mnui-rows');
         $rows.empty();
 
+        $('#ea-mnui-select-all').prop('checked', false);
+        $('.ea-mnui-delete-selected').hide();
+
         if (!list.length) {
             $('#ea-mnui-empty').show();
             renderPagination(paged, totalPages);
@@ -85,10 +88,9 @@
         $('#ea-mnui-empty').hide();
 
         list.forEach(function (c, index) {
-            var counter = (paged - 1) * 10 + index + 1;
             var $tr = $('<tr class="ea-mnui-row"></tr>').attr('data-id', c.id);
 
-            $tr.append('<td>' + counter + '</td>');
+            $tr.append('<td class="ea-mnui-col-check"><input type="checkbox" class="ea-mnui-row-check" data-id="' + c.id + '"></td>');
             $tr.append(
                 '<td class="ea-mnui-col-main"><a href="#" class="ea-mnui-customer-link">' + escapeHtml(c.name) + '</a></td>'
             );
@@ -102,14 +104,13 @@
                     '<button type="button" class="ea-mnui-icon-btn ea-mnui-danger ea-mnui-delete-row" title="' + escapeHtml(i18n.delete || 'Delete') + '">' +
                         '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle; display:inline-block;"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>' +
                     '</button>' +
-                '</td>'
+                    '</td>'
             );
 
             $rows.append($tr);
         });
 
         renderPagination(paged, totalPages);
-        $('.ea-mnui-delete-all').toggle(totalPages > 0);
     }
 
     function renderPagination(paged, totalPages) {
@@ -345,6 +346,23 @@
             });
     }
 
+    function deleteMultipleCustomers(ids) {
+        showScreenLoader();
+        var requests = ids.map(function(id) {
+            return ajaxPost('ea_delete_customer', { customer_id: id }, cfg.nonces.delete);
+        });
+
+        $.when.apply($, requests)
+            .done(function () {
+                fetchCustomers(currentSearch, currentPage);
+                setStatus(i18n.deletedSuccess || 'Customers deleted successfully.');
+            })
+            .fail(function () {
+                hideScreenLoader();
+                setStatus(i18n.genericError || 'Something went wrong. Please try again.');
+            });
+    }
+
     // ---------------------------------------------------------------
     // Events
     // ---------------------------------------------------------------
@@ -377,20 +395,6 @@
             });
         });
 
-        $('.ea-mnui-delete-all').on('click', function (e) {
-            e.preventDefault();
-            window.eaConfirm({
-                title: 'Delete All Customers',
-                message: i18n.confirmDeleteAll || 'This will delete ALL customers. Are you sure?',
-                confirmLabel: i18n.delete || 'Delete',
-                cancelLabel: i18n.cancel || 'Cancel',
-                isDanger: true,
-                onConfirm: function () {
-                    deleteAllCustomers();
-                }
-            });
-        });
-
         $(document).on('click', '.ea-mnui-appt-tab', function () {
             var type = $(this).data('type');
             $('.ea-mnui-appt-tab').removeClass('is-active');
@@ -401,15 +405,58 @@
             }
         });
 
-        $('#ea-mnui-search-btn').on('click', function () {
-            fetchCustomers($.trim($('#ea-mnui-search').val()), 1);
+        function checkBulkButton() {
+            var checked = $('.ea-mnui-row-check:checked').length;
+            $('.ea-mnui-delete-selected').toggle(checked > 0);
+
+            var total = $('.ea-mnui-row-check').length;
+            $('#ea-mnui-select-all').prop('checked', total > 0 && checked === total);
+        }
+
+        function selectedIds() {
+            var ids = [];
+            $('.ea-mnui-row-check:checked').each(function () {
+                ids.push($(this).closest('tr').data('id'));
+            });
+            return ids;
+        }
+
+        $(document).on('change', '#ea-mnui-select-all', function () {
+            $('.ea-mnui-row-check').prop('checked', $(this).prop('checked'));
+            checkBulkButton();
         });
 
-        $('#ea-mnui-search').on('keypress', function (e) {
-            if (e.which === 13) {
-                e.preventDefault();
-                fetchCustomers($.trim($(this).val()), 1);
+        $(document).on('change', '.ea-mnui-row-check', checkBulkButton);
+
+        $('.ea-mnui-delete-selected').on('click', function (e) {
+            e.preventDefault();
+            var ids = selectedIds();
+            if (!ids.length) return;
+
+            window.eaConfirm({
+                title: 'Delete Customers',
+                message: (i18n.confirmDeleteSelected || 'Are you sure you want to delete %d selected customers?').replace('%d', ids.length),
+                confirmLabel: i18n.delete || 'Delete',
+                cancelLabel: i18n.cancel || 'Cancel',
+                isDanger: true,
+                onConfirm: function () {
+                    deleteMultipleCustomers(ids);
+                }
+            });
+        });
+
+        var searchTimer = null;
+        $('#ea-mnui-search').on('keyup change', function () {
+            var val = $.trim($(this).val()) || '';
+            if (currentSearch === val) {
+                return;
             }
+            currentSearch = val;
+
+            window.clearTimeout(searchTimer);
+            searchTimer = window.setTimeout(function () {
+                fetchCustomers(currentSearch, 1);
+            }, 300);
         });
 
         $(document).on('click', '.ea-mnui-page-btn', function () {

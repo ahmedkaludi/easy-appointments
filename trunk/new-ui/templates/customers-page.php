@@ -27,9 +27,6 @@ if (!defined('WPINC')) {
                 <span class="ea-mnui-version">v<?php echo esc_html(EASY_APPOINTMENTS_VERSION); ?></span>
             </div>
             <div class="ea-mnui-header-actions">
-                <a href="#" class="ea-mnui-btn ea-mnui-btn-danger ea-mnui-delete-all">
-                    <?php esc_html_e('Delete All Customers', 'easy-appointments'); ?>
-                </a>
                 <a href="#" class="ea-mnui-btn ea-mnui-btn-primary ea-mnui-add-new">
                     <?php esc_html_e('Add Customer', 'easy-appointments'); ?>
                 </a>
@@ -40,15 +37,23 @@ if (!defined('WPINC')) {
 
             <!-- Toolbar -->
             <div class="ea-mnui-toolbar">
-                <div class="ea-mnui-search-wrap">
-                    <input type="text" id="ea-mnui-search" class="ea-mnui-search"
-                        placeholder="<?php esc_attr_e('Search by name, email or mobile', 'easy-appointments'); ?>">
-                    <button type="button" id="ea-mnui-search-btn" class="ea-mnui-btn ea-mnui-btn-ghost">
-                        <?php esc_html_e('Search', 'easy-appointments'); ?>
-                    </button>
+                <label class="ea-mnui-select-all-label">
+                    <input type="checkbox" id="ea-mnui-select-all">
+                    <?php esc_html_e('Select All', 'easy-appointments'); ?>
+                </label>
+
+                <div class="ea-mnui-toolbar-actions">
+                    <a href="#" class="ea-mnui-btn ea-mnui-btn-danger ea-mnui-delete-selected" style="display:none;">
+                        <?php esc_html_e('Delete Selected', 'easy-appointments'); ?>
+                    </a>
                 </div>
 
                 <span id="ea-mnui-status-msg" class="ea-mnui-status-msg"></span>
+
+                <div class="ea-mnui-search-wrap">
+                    <input type="text" id="ea-mnui-search" class="ea-mnui-search"
+                        placeholder="<?php esc_attr_e('Search by name, email or mobile', 'easy-appointments'); ?>">
+                </div>
             </div>
 
             <!-- Table -->
@@ -56,7 +61,7 @@ if (!defined('WPINC')) {
                 <table class="ea-mnui-table">
                     <thead>
                         <tr>
-                            <th class="ea-mnui-col-check" width="60px"><?php esc_html_e('#', 'easy-appointments'); ?></th>
+                            <th class="ea-mnui-col-check" width="34px"></th>
                             <th class="ea-mnui-col-main"><?php esc_html_e('Name', 'easy-appointments'); ?></th>
                             <th><?php esc_html_e('Email', 'easy-appointments'); ?></th>
                             <th><?php esc_html_e('Mobile', 'easy-appointments'); ?></th>

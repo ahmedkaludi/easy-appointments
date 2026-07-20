@@ -33,9 +33,6 @@ if (!defined('WPINC')) {
                 <span class="ea-mnui-version">v<?php echo esc_html(EASY_APPOINTMENTS_VERSION); ?></span>
             </div>
             <div class="ea-mnui-header-actions">
-                <a href="#" class="ea-mnui-btn ea-mnui-btn-ghost ea-mnui-refresh">
-                    <?php esc_html_e('Refresh', 'easy-appointments'); ?>
-                </a>
                 <a href="#" class="ea-mnui-btn ea-mnui-btn-ghost ea-mnui-add-bulk">
                     <?php esc_html_e('Add connections in bulk', 'easy-appointments'); ?>
                 </a>

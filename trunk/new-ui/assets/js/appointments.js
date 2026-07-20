@@ -152,60 +152,98 @@
 
         /**
          * ---------- Cascading location -> service -> worker filters ----------
-         * Mirrors the legacy behaviour: picking a location narrows down the
-         * services/workers shown to only those actually connected to it.
+         * Mirrors the legacy behaviour exactly:
+         *   Phase 1 (locationChanged): a location is selected → narrow services AND workers
+         *                              to only those linked to that location.
+         *   Phase 2 (serviceChanged): a service is also selected → further narrow workers
+         *                             to only those linked to location+service combination.
+         * The connections array contains only is_working=1 rows (returned by
+         * get_connections_combinations). IDs are stored as strings from the server.
          */
         function cascadeSelects($location, $service, $worker) {
-            var locationVal = $location.val();
-            var serviceVal = $service.val();
+            var locationVal = String($location.val() || '');
+            var serviceVal  = String($service.val()  || '');
+            var workerVal   = String($worker.val()   || '');
 
+            // Always reset to show all options first
             $service.children().prop('disabled', false).show();
             $worker.children().prop('disabled', false).show();
 
             if (locationVal === '') {
+                // No location selected — show everything, reset downstream
+                if (serviceVal !== '') { $service.val(''); }
+                if (workerVal  !== '') { $worker.val('');  }
                 return;
             }
 
+            // --- Phase 1: location selected — compute allowed services + workers ---
             var allowedServices = [];
-            var allowedWorkers = [];
+            var allowedWorkers  = [];
 
-            $.each(connections, function (index, connection) {
-                if (String(connection.location) === String(locationVal)) {
-                    if ($.inArray(connection.service, allowedServices) === -1) {
-                        allowedServices.push(connection.service);
+            $.each(connections, function (i, conn) {
+                if (String(conn.location) !== locationVal) { return; }
+
+                if ($.inArray(String(conn.service), allowedServices) === -1) {
+                    allowedServices.push(String(conn.service));
+                }
+
+                // If no service selected yet, all workers for this location are valid
+                if (serviceVal === '' || String(conn.service) === serviceVal) {
+                    if ($.inArray(String(conn.worker), allowedWorkers) === -1) {
+                        allowedWorkers.push(String(conn.worker));
                     }
+                }
+            });
 
-                    if (serviceVal === '' || String(connection.service) === String(serviceVal)) {
-                        if ($.inArray(connection.worker, allowedWorkers) === -1) {
-                            allowedWorkers.push(connection.worker);
+            // Hide services not in allowedServices
+            $service.children().each(function () {
+                var val = String($(this).attr('value') || '');
+                if (val === '') { return; }
+                if ($.inArray(val, allowedServices) === -1) {
+                    $(this).prop('disabled', true).hide();
+                }
+            });
+
+            // Reset service if it is no longer valid for the selected location
+            if (serviceVal !== '' && $.inArray(serviceVal, allowedServices) === -1) {
+                $service.val('');
+                serviceVal = '';
+                // Recompute allowed workers without any service filter
+                allowedWorkers = [];
+                $.each(connections, function (i, conn) {
+                    if (String(conn.location) !== locationVal) { return; }
+                    if ($.inArray(String(conn.worker), allowedWorkers) === -1) {
+                        allowedWorkers.push(String(conn.worker));
+                    }
+                });
+            }
+
+            // --- Phase 2: if a service is selected, narrow workers further ---
+            if (serviceVal !== '') {
+                var allowedWorkersForCombo = [];
+                $.each(connections, function (i, conn) {
+                    if (String(conn.location) === locationVal && String(conn.service) === serviceVal) {
+                        if ($.inArray(String(conn.worker), allowedWorkersForCombo) === -1) {
+                            allowedWorkersForCombo.push(String(conn.worker));
                         }
                     }
-                }
-            });
+                });
+                allowedWorkers = allowedWorkersForCombo;
+            }
 
-            $service.children().each(function () {
-                var value = $(this).attr('value');
-
-                if (value === '' || value === undefined) {
-                    return;
-                }
-
-                if ($.inArray(value, allowedServices) === -1) {
-                    $(this).prop('disabled', true).hide();
-                }
-            });
-
+            // Hide workers not in allowedWorkers
             $worker.children().each(function () {
-                var value = $(this).attr('value');
-
-                if (value === '' || value === undefined) {
-                    return;
-                }
-
-                if ($.inArray(value, allowedWorkers) === -1) {
+                var val = String($(this).attr('value') || '');
+                if (val === '') { return; }
+                if ($.inArray(val, allowedWorkers) === -1) {
                     $(this).prop('disabled', true).hide();
                 }
             });
+
+            // Reset worker if it is no longer valid
+            if (workerVal !== '' && $.inArray(workerVal, allowedWorkers) === -1) {
+                $worker.val('');
+            }
         }
 
         /**
@@ -733,7 +771,35 @@
 
             $('#ea-naui-drawer-title').text(drawerTitle);
 
-            $('#ea-naui-input-location').html(optionsHtml(locations, row.location, '-- ' + $('#ea-naui-input-location').data('label') + ' --'));
+            // -------------------------------------------------------
+            // Build filtered lists that mirror the old Backbone UI:
+            //  - Location  : only locations that appear in at least one
+            //                active connection (is_working=1 guaranteed by
+            //                get_connections_combinations SQL).
+            //  - Service / Worker : ALL items rendered; cascadeSelects()
+            //                called below will hide/disable those not
+            //                connected to the selected location / service,
+            //                exactly matching locationChanged()+serviceChanged()
+            //                in the old settings.prod.js.
+            // -------------------------------------------------------
+            var connectedLocationIds = [];
+            $.each(connections, function (i, conn) {
+                var lid = String(conn.location);
+                if ($.inArray(lid, connectedLocationIds) === -1) {
+                    connectedLocationIds.push(lid);
+                }
+            });
+
+            // When editing an existing appointment always keep its location
+            // in the list even if the connection was later removed.
+            var editingLocationId = row.location ? String(row.location) : '';
+            var visibleLocations = locations.filter(function (item) {
+                var id = String(item.id);
+                return $.inArray(id, connectedLocationIds) !== -1 ||
+                       (editingLocationId !== '' && id === editingLocationId);
+            });
+
+            $('#ea-naui-input-location').html(optionsHtml(visibleLocations, row.location, '-- ' + $('#ea-naui-input-location').data('label') + ' --'));
             $('#ea-naui-input-service').html(optionsHtml(services, row.service, '-- ' + $('#ea-naui-input-service').data('label') + ' --'));
             $('#ea-naui-input-worker').html(optionsHtml(workers, row.worker, '-- ' + $('#ea-naui-input-worker').data('label') + ' --'));
             $('#ea-naui-input-status').html(statusOptionsHtml(row.status));
@@ -744,10 +810,14 @@
             var dateValue = row.date ? moment(row.date, 'YYYY-MM-DD').toDate() : new Date();
 
             $('#ea-naui-input-date')
+                .datepicker('destroy')
                 .datepicker({
                     dateFormat: (jQuery.datepicker.regional[cfg.datepickerLocale] || {}).dateFormat,
                     minDate: 0,
-                    beforeShowDay: vacationCheck
+                    beforeShowDay: vacationCheck,
+                    onSelect: function () {
+                        $(this).trigger('change');
+                    }
                 })
                 .datepicker('setDate', dateValue);
 
@@ -771,26 +841,48 @@
             var dateString = date.getFullYear() + '-' + (month < 10 ? '0' + month : month) + '-' + (day < 10 ? '0' + day : day);
             var workerId = $('#ea-naui-input-worker').val();
 
+            // 1. Block days configured globally (same as old frontend.js)
+            var blockDays = cfg.blockDays || [];
+            if (Array.isArray(blockDays) && blockDays.indexOf(dateString) !== -1) {
+                return [false, 'ea-naui-blocked', cfg.blockDaysTooltip || ''];
+            }
+
+            // 2. Check full-day vacations only.
+            //    NOTE: The old UI (js/frontend.js vacation()) does NOT block calendar
+            //    days based on day-of-week working hours — that is handled implicitly
+            //    by the time-slot list being empty when no slots are available.
+            //    Partial-day vacations are also NOT blocked here; they are filtered
+            //    out of the time-slot list in refreshTimeSlots() instead.
             var result = [true, dateString, ''];
 
             $.each(vacations, function (i, vacation) {
+                // If the vacation targets specific workers, check the selected worker
                 if (vacation.workers && vacation.workers.length > 0) {
                     var workerIds = $.map(vacation.workers, function (w) {
-                        return w.id;
+                        return String(w.id);
                     });
 
-                    if ($.inArray(workerId, workerIds) === -1) {
-                        return true;
+                    if ($.inArray(String(workerId), workerIds) === -1) {
+                        return true; // continue — this vacation doesn't apply
                     }
                 }
 
+                // Check if the date is in this vacation's day list
                 if ($.inArray(dateString, vacation.days || []) === -1) {
-                    return true;
+                    return true; // continue — date not in this vacation
+                }
+
+                // Only block the calendar day for full-day vacations.
+                // Partial vacations (with a time range) only block specific
+                // time slots; the day itself remains selectable.
+                var time = vacation.time || {};
+                var isFullDay = !time || time.fullDay || (!time.startTime && !time.endTime);
+                if (!isFullDay) {
+                    return true; // partial vacation — don't block the day
                 }
 
                 result = [false, 'ea-naui-blocked', vacation.tooltip || ''];
-
-                return false;
+                return false; // break
             });
 
             return result;
@@ -827,7 +919,48 @@
             }, function (slots) {
                 var html = '';
 
+                // Find active partial vacations for this date and worker
+                var activePartialVacations = [];
+                $.each(vacations, function (i, vacation) {
+                    if (vacation.workers && vacation.workers.length > 0) {
+                        var workerIds = $.map(vacation.workers, function (w) {
+                            return String(w.id);
+                        });
+                        if ($.inArray(String(worker), workerIds) === -1) {
+                            return true;
+                        }
+                    }
+
+                    if ($.inArray(date, vacation.days || []) === -1) {
+                        return true;
+                    }
+
+                    var time = vacation.time || {};
+                    var isFullDay = !time || time.fullDay || (!time.startTime && !time.endTime);
+                    if (!isFullDay && time.startTime && time.endTime) {
+                        activePartialVacations.push({
+                            start: time.startTime,
+                            end: time.endTime
+                        });
+                    }
+                });
+
                 $.each(slots || [], function (i, slot) {
+                    var slotStart = slot.value;
+                    var slotEnd = slot.ends || slotStart;
+
+                    var isBlockedByVacation = false;
+                    $.each(activePartialVacations, function(idx, pv) {
+                        if (slotStart < pv.end && slotEnd > pv.start) {
+                            isBlockedByVacation = true;
+                            return false;
+                        }
+                    });
+
+                    if (isBlockedByVacation) {
+                        return true;
+                    }
+
                     var selected = slot.value === preselect ? ' selected' : '';
                     var disabled = slot.count < 1 ? ' disabled' : '';
                     html += '<option value="' + escapeHtml(slot.value) + '"' + selected + disabled + '>' +
@@ -908,6 +1041,7 @@
 
         $drawer.on('change', '#ea-naui-input-location', function () {
             cascadeSelects($('#ea-naui-input-location'), $('#ea-naui-input-service'), $('#ea-naui-input-worker'));
+            $('#ea-naui-input-date').datepicker('refresh');
             refreshTimeSlots();
         });
 
@@ -919,10 +1053,14 @@
                 $('#ea-naui-input-price').val(option.data('price'));
             }
 
+            $('#ea-naui-input-date').datepicker('refresh');
             refreshTimeSlots();
         });
 
-        $drawer.on('change', '#ea-naui-input-worker', refreshTimeSlots);
+        $drawer.on('change', '#ea-naui-input-worker', function () {
+            $('#ea-naui-input-date').datepicker('refresh');
+            refreshTimeSlots();
+        });
         $drawer.on('change', '#ea-naui-input-date', refreshTimeSlots);
 
         $app.on('keydown', '#ea-naui-drawer', function (e) {
