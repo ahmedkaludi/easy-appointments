@@ -42,15 +42,15 @@ if (!defined('WPINC')) {
                     <?php esc_html_e('Select All', 'easy-appointments'); ?>
                 </label>
 
-                <div class="ea-mnui-toolbar-actions">
+                <span id="ea-mnui-status-msg" class="ea-mnui-status-msg"></span>
+
+                <div class="ea-mnui-toolbar-actions" style="margin-left: auto;">
                     <a href="#" class="ea-mnui-btn ea-mnui-btn-danger ea-mnui-delete-selected" style="display:none;">
                         <?php esc_html_e('Delete Selected', 'easy-appointments'); ?>
                     </a>
                 </div>
 
-                <span id="ea-mnui-status-msg" class="ea-mnui-status-msg"></span>
-
-                <div class="ea-mnui-search-wrap">
+                <div class="ea-mnui-search-wrap" style="margin-left: 0;">
                     <input type="text" id="ea-mnui-search" class="ea-mnui-search"
                         placeholder="<?php esc_attr_e('Search by name, email or mobile', 'easy-appointments'); ?>">
                 </div>

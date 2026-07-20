@@ -134,7 +134,9 @@ if (!defined('WPINC')) {
                     <?php esc_html_e('Select All', 'easy-appointments'); ?>
                 </label>
 
-                <div class="ea-naui-toolbar-actions">
+                <span id="ea-naui-status-msg" class="ea-naui-status-msg" style="margin-left: 0;"></span>
+
+                <div class="ea-naui-toolbar-actions" style="margin-left: auto;">
                     <a href="#" class="ea-naui-btn ea-naui-btn-ghost ea-naui-cancel-all ea-naui-cancel-all-selected" data-target="all" style="display:none;">
                         <?php esc_html_e('Cancel All', 'easy-appointments'); ?>
                     </a>
@@ -145,8 +147,6 @@ if (!defined('WPINC')) {
                         <?php esc_html_e('Delete Selected', 'easy-appointments'); ?>
                     </a>
                 </div>
-
-                <span id="ea-naui-status-msg" class="ea-naui-status-msg"></span>
             </div>
 
             <!-- Table -->
