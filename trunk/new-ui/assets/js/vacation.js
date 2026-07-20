@@ -491,9 +491,16 @@
             var title = vac ? vac.title : '';
             var msg = i18n.confirmDelete ? sprintf(i18n.confirmDelete, title) : 'Delete this vacation?';
 
-            if (window.confirm(msg)) {
-                deleteVacations([String(id)]);
-            }
+            window.eaConfirm({
+                title: 'Delete Vacation',
+                message: msg,
+                confirmLabel: i18n.delete || 'Delete',
+                cancelLabel: i18n.cancel || 'Cancel',
+                isDanger: true,
+                onConfirm: function () {
+                    deleteVacations([String(id)]);
+                }
+            });
         });
 
         $('.ea-mnui-delete-selected').on('click', function (e) {
@@ -507,9 +514,16 @@
             }
 
             var msg = i18n.confirmDeleteSelected ? sprintf(i18n.confirmDeleteSelected, ids.length) : 'Delete selected vacations?';
-            if (window.confirm(msg)) {
-                deleteVacations(ids);
-            }
+            window.eaConfirm({
+                title: 'Delete Vacations',
+                message: msg,
+                confirmLabel: i18n.delete || 'Delete',
+                cancelLabel: i18n.cancel || 'Cancel',
+                isDanger: true,
+                onConfirm: function () {
+                    deleteVacations(ids);
+                }
+            });
         });
 
         $(document).on('change', '.ea-mnui-row-check', updateSelectionUi);

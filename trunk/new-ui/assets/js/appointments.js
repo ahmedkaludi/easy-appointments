@@ -618,35 +618,46 @@
             var ids = selectedIds();
 
             if (cancelTo !== 'all' && ids.length === 0) {
-                window.alert(i18n.selectOneToCancel);
+                window.eaConfirm({
+                    title: 'Cancel Appointments',
+                    message: i18n.selectOneToCancel,
+                    confirmLabel: 'OK',
+                    cancelLabel: '',
+                    isDanger: false
+                });
                 return;
             }
 
             var message = cancelTo === 'all' ? i18n.confirmCancelAll : i18n.confirmCancelSelected;
 
-            if (!window.confirm(message)) {
-                return;
-            }
-
-            $.ajax({
-                url: cfg.ajaxUrl,
-                method: 'POST',
-                dataType: 'json',
-                data: {
-                    action: 'cancel_selected_appointments',
-                    appointments: ids,
-                    cancel_to: cancelTo,
-                    appointments_nonce: cfg.bulkNonce
+            window.eaConfirm({
+                title: 'Cancel Appointments',
+                message: message,
+                confirmLabel: 'OK',
+                cancelLabel: i18n.cancel || 'Cancel',
+                isDanger: true,
+                onConfirm: function () {
+                    $.ajax({
+                        url: cfg.ajaxUrl,
+                        method: 'POST',
+                        dataType: 'json',
+                        data: {
+                            action: 'cancel_selected_appointments',
+                            appointments: ids,
+                            cancel_to: cancelTo,
+                            appointments_nonce: cfg.bulkNonce
+                        }
+                    }).done(function (response) {
+                        if (response && response.data) {
+                            showNotice(i18n.canceledSuccess);
+                            loadAppointments();
+                        } else {
+                            showNotice(i18n.genericError);
+                        }
+                    }).fail(function () {
+                        showNotice(i18n.genericError);
+                    });
                 }
-            }).done(function (response) {
-                if (response && response.data) {
-                    showNotice(i18n.canceledSuccess);
-                    loadAppointments();
-                } else {
-                    showNotice(i18n.genericError);
-                }
-            }).fail(function () {
-                showNotice(i18n.genericError);
             });
         });
 
@@ -659,7 +670,13 @@
             var ids = selectedIds();
 
             if (ids.length === 0) {
-                window.alert(i18n.selectOneToDelete);
+                window.eaConfirm({
+                    title: 'Delete Appointments',
+                    message: i18n.selectOneToDelete,
+                    confirmLabel: 'OK',
+                    cancelLabel: '',
+                    isDanger: false
+                });
                 return;
             }
 

@@ -66,14 +66,18 @@
 
         // Footer
         var $footer = $('<div class="ea-mnui-confirm-footer"></div>');
-        var $cancelBtn = $('<button type="button" class="ea-mnui-btn ea-mnui-btn-ghost ea-mnui-confirm-cancel"></button>').text(settings.cancelLabel);
+        var $cancelBtn = null;
+        if (settings.cancelLabel) {
+            $cancelBtn = $('<button type="button" class="ea-mnui-btn ea-mnui-btn-ghost ea-mnui-confirm-cancel"></button>').text(settings.cancelLabel);
+            $footer.append($cancelBtn);
+        }
         
         var submitClass = settings.isDanger ? 'ea-mnui-btn-danger' : 'ea-mnui-btn-primary';
         var $submitBtn = $('<button type="button" class="ea-mnui-btn ea-mnui-confirm-submit"></button>')
             .addClass(submitClass)
             .text(settings.confirmLabel);
 
-        $footer.append($cancelBtn).append($submitBtn);
+        $footer.append($submitBtn);
 
         $box.append($content).append($footer);
         $overlay.append($box);
