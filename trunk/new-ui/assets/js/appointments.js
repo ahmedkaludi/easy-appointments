@@ -305,7 +305,6 @@
         }
 
         function setRange(from, to) {
-            console.log('Setting range', from, to);
             $('#ea-naui-filter-from').datepicker('setDate', from || null);
             $('#ea-naui-filter-to').datepicker('setDate', to || null);
         }

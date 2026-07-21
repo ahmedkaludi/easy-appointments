@@ -37,4 +37,23 @@ if ( ! defined( 'WPINC' ) ) {
                             data-key="webhook.endpoints"
                             value="<?php echo esc_attr($ea_get('webhook.endpoints', '[]')); ?>">
                     </div>
+
+                    <div class="ea-nsui-panel-head-sub" style="margin-top: 30px;">
+                        <h3><?php esc_html_e('Interface Settings', 'easy-appointments'); ?></h3>
+                        <p><?php esc_html_e('Manage your administration interface version.', 'easy-appointments'); ?></p>
+                    </div>
+
+                    <div class="ea-nsui-card">
+                        <div class="ea-nsui-row" style="border: none;">
+                            <div class="ea-nsui-row-label">
+                                <span class="ea-nsui-row-title"><?php esc_html_e('Switch to Classic UI', 'easy-appointments'); ?></span>
+                                <span class="ea-nsui-row-desc" style="display: block; font-size: 12px; color: var(--ea-text-muted); margin-top: 4px;"><?php esc_html_e('Switch back to the legacy administration screens. You can return to the new interface at any time.', 'easy-appointments'); ?></span>
+                            </div>
+                            <div class="ea-nsui-row-control">
+                                <a href="<?php echo esc_url(EA_UI_Switcher::get_switch_url('old')); ?>" class="ea-nsui-btn ea-nsui-btn-ghost" style="text-decoration: none;">
+                                    <?php esc_html_e('Switch to Classic UI', 'easy-appointments'); ?>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
                 </section>

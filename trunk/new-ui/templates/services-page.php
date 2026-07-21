@@ -205,7 +205,7 @@ if (!defined('WPINC')) {
     <div id="ea-screen-loader"
         style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
                background: rgba(255, 255, 255, 0.6); z-index: 999999;
-               display: flex; align-items: center; justify-content: center;">
+               align-items: center; justify-content: center;">
         <div class="ea-loader" style="display: flex; flex-direction: column; align-items: center;">
             <img src="<?php echo esc_url(plugins_url('src/assets/img/loader.svg', dirname(dirname(__FILE__)))); ?>"
                 alt="Loading..." style="width: 60px; height: 60px; margin-bottom: 10px;">

@@ -332,9 +332,6 @@ if (!defined('WPINC')) {
                 <aside class="ea-nsui-right-sidebar ea-nsui-premium-sidebar">
                     <div class="ea-nsui-premium-panel">
                         <div class="ea-nsui-premium-icon-wrap" aria-hidden="true">
-                            <span class="ea-nsui-premium-spark ea-nsui-premium-spark-1">✦</span>
-                            <span class="ea-nsui-premium-spark ea-nsui-premium-spark-2">✦</span>
-                            <span class="ea-nsui-premium-spark ea-nsui-premium-spark-3">✦</span>
                             <span class="ea-nsui-premium-icon-circle">
                                 <svg viewBox="0 0 24 24" fill="none"><path d="M3 8l4 3 5-6 5 6 4-3-2 11H5L3 8z" fill="currentColor"/></svg>
                             </span>
@@ -410,13 +407,6 @@ if (!defined('WPINC')) {
                                 </div>
                                 <span class="ea-nsui-premium-feature-label"><?php esc_html_e('AI', 'easy-appointments'); ?></span>
                             </div>
-                        </div>
-
-                        <div class="ea-nsui-premium-benefits-box">
-                            <strong><?php esc_html_e( 'Why Upgrade to Pro?', 'easy-appointments' ); ?></strong>
-                            <p>
-                                <?php esc_html_e( 'Upgrade to unlock direct synchronization with all calendars, collect customer payments via Stripe or PayPal, send automated WhatsApp/SMS notifications, and receive priority support.', 'easy-appointments' ); ?>
-                            </p>
                         </div>
 
                         <a class="ea-nsui-premium-cta" href="https://easy-appointments.com#buyextension" target="_blank" rel="noopener noreferrer">

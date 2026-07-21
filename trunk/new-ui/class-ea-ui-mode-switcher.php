@@ -50,17 +50,22 @@ class EA_UI_Switcher
                 box-sizing: border-box !important;
                 min-height: auto !important;
                 font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+                overflow: visible !important;
             }
-            .ea-ui-switch-notice p {
-                margin: 0 !important;
-                padding: 0 !important;
-                font-size: 13px !important;
-                color: #374151 !important;
+            /* Used by JS to reliably hide the notice even against the flex !important above */
+            .ea-ui-switch-notice.ea-notice-hidden {
+                display: none !important;
+            }
+            .ea-ui-switch-notice .ea-switch-notice-inner {
                 display: flex !important;
                 align-items: center !important;
                 flex-wrap: wrap !important;
                 gap: 12px !important;
-                width: 100% !important;
+                font-size: 13px !important;
+                color: #374151 !important;
+                flex: 1 !important;
+                margin: 0 !important;
+                padding: 0 !important;
             }
             .ea-ui-switch-notice .ea-switch-link {
                 color: #2563eb !important;
@@ -75,24 +80,28 @@ class EA_UI_Switcher
                 background: #dbeafe !important;
                 color: #1d4ed8 !important;
             }
-            .ea-ui-switch-notice .ea-switch-notice-close {
+            .ea-switch-notice-close {
                 background: transparent !important;
                 border: none !important;
                 font-size: 20px !important;
                 line-height: 1 !important;
                 cursor: pointer !important;
                 color: #9ca3af !important;
-                width: 24px !important;
-                height: 24px !important;
+                width: 28px !important;
+                height: 28px !important;
                 border-radius: 50% !important;
                 display: inline-flex !important;
                 align-items: center !important;
                 justify-content: center !important;
-                margin-left: auto !important;
+                flex-shrink: 0 !important;
+                margin-left: 8px !important;
                 padding: 0 !important;
                 transition: background 0.2s, color 0.2s !important;
+                pointer-events: auto !important;
+                position: relative !important;
+                z-index: 999999 !important;
             }
-            .ea-ui-switch-notice .ea-switch-notice-close:hover {
+            .ea-switch-notice-close:hover {
                 background: #f3f4f6 !important;
                 color: #1f2937 !important;
             }
@@ -195,38 +204,92 @@ class EA_UI_Switcher
             : esc_html__('Try the new interface', 'easy-appointments');
         ?>
         <div class="ea-ui-switch-notice" id="ea-ui-switch-notice">
-            <p>
+            <div class="ea-switch-notice-inner">
                 <span><?php echo esc_html($message); ?></span>
                 <a href="<?php echo esc_url($url); ?>" class="ea-switch-link">
                     <?php echo esc_html($button_label); ?>
                 </a>
-                <button type="button" class="ea-switch-notice-close" id="ea-switch-notice-close-btn" aria-label="<?php esc_attr_e('Close', 'easy-appointments'); ?>">&times;</button>
-            </p>
+            </div>
+            <button type="button" class="ea-switch-notice-close" id="ea-switch-notice-close-btn" aria-label="<?php esc_attr_e('Close', 'easy-appointments'); ?>" onclick="(function(btn){var mode='<?php echo esc_js($mode); ?>';var n=document.getElementById('ea-ui-switch-notice');if(n){n.style.display='none';}if(mode==='new'){var c=parseInt(localStorage.getItem('ea_ui_notice_closed_count')||'0',10);localStorage.setItem('ea_ui_notice_closed_count',c+1);}})(this)">&times;</button>
         </div>
         <script>
         (function() {
-            var target = document.getElementById('wpbody-content');
-            if (!target) return;
-
+            var mode = '<?php echo esc_js($mode); ?>';
             var notice = document.getElementById('ea-ui-switch-notice');
             if (!notice) return;
 
-            var closeBtn = document.getElementById('ea-switch-notice-close-btn');
-            if (closeBtn) {
-                closeBtn.addEventListener('click', function() {
-                    notice.style.display = 'none';
-                });
+            /* ── Helper: reliably hide the notice even against CSS display:flex !important ── */
+            function hideNotice() {
+                notice.classList.add('ea-notice-hidden');
+                notice.style.setProperty('display', 'none', 'important');
             }
 
-            var observer = new MutationObserver(function() {
-                if (!document.body.contains(notice)) {
-                    observer.disconnect();
-                    target.insertBefore(notice, target.firstChild);
-                    observer.observe(target, { childList: true });
-                }
-            });
+            /* ── Sanitise a corrupted counter (e.g. 76 from old bug) back to exactly 2 ── */
+            var closedCount = parseInt(localStorage.getItem('ea_ui_notice_closed_count') || '0', 10);
+            if (isNaN(closedCount) || closedCount < 0) { closedCount = 0; }
+            if (mode === 'new' && closedCount > 2) {
+                /* Cap at 2 so future close clicks still count correctly */
+                localStorage.setItem('ea_ui_notice_closed_count', '2');
+                closedCount = 2;
+            }
 
-            observer.observe(target, { childList: true });
+            if (mode === 'new' && closedCount >= 2) {
+                hideNotice();
+                return;
+            }
+
+            /* ── Close handler ── */
+            function handleClose(e) {
+                if (e) { e.preventDefault(); e.stopPropagation(); }
+                hideNotice();
+                if (mode === 'new') {
+                    var c = parseInt(localStorage.getItem('ea_ui_notice_closed_count') || '0', 10);
+                    if (c > 2) { c = 2; } /* safety cap */
+                    localStorage.setItem('ea_ui_notice_closed_count', String(c + 1));
+                }
+            }
+
+            /* Attach to the button directly */
+            var closeBtn = notice.querySelector('#ea-switch-notice-close-btn');
+            if (closeBtn) {
+                closeBtn.addEventListener('click', handleClose);
+            }
+
+            /* Also listen at document capture phase as a safety net */
+            document.addEventListener('click', function(e) {
+                if (e.target && e.target.closest('#ea-switch-notice-close-btn')) {
+                    handleClose(e);
+                }
+            }, true);
+
+            /* ── MutationObserver: keep notice pinned to top of #wpbody-content ── */
+            function setupObserver() {
+                var target = document.getElementById('wpbody-content');
+                if (!target) return;
+
+                var observer = new MutationObserver(function() {
+                    if (!document.body.contains(notice)) {
+                        observer.disconnect();
+                        target.insertBefore(notice, target.firstChild);
+                        /* Re-wire close button after DOM reinsertion */
+                        var btn2 = notice.querySelector('#ea-switch-notice-close-btn');
+                        if (btn2) { btn2.addEventListener('click', handleClose); }
+                        observer.observe(target, { childList: true });
+                    }
+                });
+
+                observer.observe(target, { childList: true });
+
+                if (!document.body.contains(notice) || notice.parentNode !== target) {
+                    target.insertBefore(notice, target.firstChild);
+                }
+            }
+
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', setupObserver);
+            } else {
+                setupObserver();
+            }
         })();
         </script>
         <?php

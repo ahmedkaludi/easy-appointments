@@ -659,8 +659,8 @@
 
 .ea-nsui-premium-icon-wrap {
     position: relative;
-    width: 48px;
-    height: 48px;
+    width: 40px;
+    height: 40px;
     margin: 2px auto 8px;
 }
 
@@ -686,7 +686,7 @@
 
 .ea-nsui-premium-title {
     margin: 0 0 4px;
-    font-size: 15px;
+    font-size: 13px;
     font-weight: 700;
     color: #6d28d9;
 }
@@ -975,6 +975,7 @@
     font-weight: 400;
     color: var(--ea-text-muted);
     font-size: 12.5px;
+    white-space: nowrap;
 }
 
 .ea-nsui-tip {
@@ -2145,8 +2146,8 @@
 
 @media (max-height: 850px) {
     .ea-nsui-premium-icon-wrap {
-        width: 56px;
-        height: 56px;
+        width: 40px;
+        height: 40px;
         margin: 4px auto 10px;
     }
     .ea-nsui-premium-icon-circle {
@@ -2161,7 +2162,7 @@
         display: none;
     }
     .ea-nsui-premium-title {
-        font-size: 16px;
+        font-size: 13px;
         margin-bottom: 4px;
     }
     .ea-nsui-premium-desc {
@@ -2210,7 +2211,14 @@
     }
 }
 
-@media (max-width: 1200px) {
+/* Chip-rows: label always stays on one line; chips wrap to new line earlier */
+.ea-nsui-row-chips .ea-nsui-row-label {
+    flex: 0 0 auto;
+    min-width: 110px;
+    max-width: 140px;
+}
+
+@media (max-width: 1400px) {
     .ea-nsui-row-chips {
         flex-direction: column;
         align-items: flex-start;
@@ -2218,7 +2226,8 @@
     }
     .ea-nsui-row-chips .ea-nsui-row-label {
         width: 100%;
-        margin-bottom: 4px;
+        max-width: 100%;
+        margin-bottom: 2px;
     }
     .ea-nsui-row-chips .ea-nsui-row-control {
         width: 100%;
