@@ -92,7 +92,7 @@
 
             $tr.append('<td class="ea-mnui-col-check"><input type="checkbox" class="ea-mnui-row-check" data-id="' + c.id + '"></td>');
             $tr.append(
-                '<td class="ea-mnui-col-main"><a href="#" class="ea-mnui-customer-link">' + escapeHtml(c.name) + '</a></td>'
+                '<td class="ea-mnui-col-main">' + escapeHtml(c.name) + '</td>'
             );
             $tr.append('<td>' + escapeHtml(c.email) + '</td>');
             $tr.append('<td>' + escapeHtml(c.mobile) + '</td>');
@@ -448,7 +448,7 @@
             openDrawer();
         });
 
-        $(document).on('click', '.ea-mnui-customer-link, .ea-mnui-view-bookings-row', function (e) {
+        $(document).on('click', '.ea-mnui-view-bookings-row', function (e) {
             e.preventDefault();
             var id = $(this).closest('tr').data('id');
             openCustomerBookings(id);

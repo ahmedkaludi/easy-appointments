@@ -659,9 +659,12 @@
 
 .ea-nsui-premium-icon-wrap {
     position: relative;
-    width: 40px;
-    height: 40px;
+    width: 48px;
+    height: 48px;
     margin: 2px auto 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .ea-nsui-premium-icon-circle {
@@ -2146,9 +2149,12 @@
 
 @media (max-height: 850px) {
     .ea-nsui-premium-icon-wrap {
-        width: 40px;
-        height: 40px;
+        width: 56px;
+        height: 56px;
         margin: 4px auto 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
     .ea-nsui-premium-icon-circle {
         width: 56px;

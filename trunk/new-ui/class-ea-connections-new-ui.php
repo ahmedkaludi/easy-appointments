@@ -157,7 +157,9 @@ class EA_Connections_New_UI
         // datepicker styling ('jquery-style' -> css/jquery-ui.css),
         // same handle used by the New Appointments UI screen.
         wp_enqueue_style('jquery-style');
+        wp_enqueue_style('time-picker');
         wp_enqueue_script('jquery-ui-datepicker');
+        wp_enqueue_script('time-picker');
         wp_enqueue_script('moment');
 
         wp_enqueue_script(
@@ -171,7 +173,7 @@ class EA_Connections_New_UI
         wp_enqueue_script(
             'ea-new-connections-ui',
             $base_url . 'js/connections.js',
-            array('jquery', 'jquery-ui-datepicker', 'moment', 'ea-new-common-ui'),
+            array('jquery', 'jquery-ui-datepicker', 'time-picker', 'moment', 'ea-new-common-ui'),
             $js_ver,
             true
         );

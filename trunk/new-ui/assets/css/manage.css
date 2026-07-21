@@ -810,7 +810,8 @@
 }
 
 .ea-mnui-wrap .ea-mnui-field select,
-.ea-mnui-wrap .ea-mnui-field input[type="time"] {
+.ea-mnui-wrap .ea-mnui-field input[type="time"],
+.ea-mnui-wrap .ea-mnui-field .ea-mnui-time-input {
     width: 100%;
     border: 1px solid var(--ea-border);
     border-radius: 8px;
@@ -821,14 +822,16 @@
 }
 
 .ea-mnui-wrap .ea-mnui-field select:focus,
-.ea-mnui-wrap .ea-mnui-field input[type="time"]:focus {
+.ea-mnui-wrap .ea-mnui-field input[type="time"]:focus,
+.ea-mnui-wrap .ea-mnui-field .ea-mnui-time-input:focus {
     outline: none;
     border-color: var(--ea-blue);
     box-shadow: 0 0 0 3px var(--ea-blue-light);
 }
 
 .ea-mnui-wrap .ea-mnui-field.has-error select,
-.ea-mnui-wrap .ea-mnui-field.has-error input[type="time"] {
+.ea-mnui-wrap .ea-mnui-field.has-error input[type="time"],
+.ea-mnui-wrap .ea-mnui-field.has-error .ea-mnui-time-input {
     border-color: var(--ea-red);
 }
 

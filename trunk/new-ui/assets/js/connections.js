@@ -624,6 +624,21 @@
             }).datepicker('hide').trigger('blur');
         }
 
+        function initTimepickers() {
+            var $timeFrom = $('#ea-mnui-input-time_from');
+            var $timeTo = $('#ea-mnui-input-time_to');
+            if ($.fn.timepicker) {
+                var opts = {
+                    timeFormat: 'HH:mm:ss',
+                    showSecond: true,
+                    controlType: 'select',
+                    oneLine: true
+                };
+                $timeFrom.timepicker(opts);
+                $timeTo.timepicker(opts);
+            }
+        }
+
         function setDayFrom(iso) {
             $dayFrom.val(iso ? formatDate(iso) : '');
             $dayFrom.data('iso', iso);
@@ -700,6 +715,12 @@
         }
 
         $drawerForm.on('change', '#ea-mnui-input-time_from, #ea-mnui-input-time_to', timeFieldErrorCheck);
+        $drawerForm.on('blur', '#ea-mnui-input-time_from, #ea-mnui-input-time_to', function () {
+            var val = $(this).val();
+            var formatted = formatTimeTo24h(val);
+            $(this).val(formatted);
+            timeFieldErrorCheck();
+        });
 
         /**
          * ---------- Add / Edit / Delete ----------
@@ -763,20 +784,25 @@
                 fail($dayTo);
             }
 
-            var timeFrom = $('#ea-mnui-input-time_from').val();
-            var timeTo = $('#ea-mnui-input-time_to').val();
+            var $timeFromInput = $('#ea-mnui-input-time_from');
+            var $timeToInput = $('#ea-mnui-input-time_to');
+            $timeFromInput.val(formatTimeTo24h($timeFromInput.val()));
+            $timeToInput.val(formatTimeTo24h($timeToInput.val()));
+
+            var timeFrom = $timeFromInput.val();
+            var timeTo = $timeToInput.val();
 
             if (!timeFrom) {
-                fail($('#ea-mnui-input-time_from'));
+                fail($timeFromInput);
             }
 
             if (!timeTo) {
-                fail($('#ea-mnui-input-time_to'));
+                fail($timeToInput);
             }
 
             if (timeFrom && timeTo && timeTo <= timeFrom) {
-                fail($('#ea-mnui-input-time_from'));
-                fail($('#ea-mnui-input-time_to'));
+                fail($timeFromInput);
+                fail($timeToInput);
             }
 
             return ok;
@@ -789,6 +815,42 @@
             }
 
             return value.length === 5 ? value + ':00' : value;
+        }
+
+        function formatTimeTo24h(val) {
+            if (!val) {
+                return '';
+            }
+            val = val.trim();
+            var isPm = false;
+            var isAm = false;
+            if (/[ap]m/i.test(val)) {
+                isPm = /pm/i.test(val);
+                isAm = /am/i.test(val);
+                val = val.replace(/[ap]m/i, '').trim();
+            }
+
+            var parts = val.split(':');
+            var h = parseInt(parts[0], 10) || 0;
+            var m = parseInt(parts[1], 10) || 0;
+            var s = parseInt(parts[2], 10) || 0;
+
+            if (isPm && h < 12) {
+                h += 12;
+            }
+            if (isAm && h === 12) {
+                h = 0;
+            }
+
+            h = Math.min(23, Math.max(0, h));
+            m = Math.min(59, Math.max(0, m));
+            s = Math.min(59, Math.max(0, s));
+
+            var pad = function(n) {
+                return n < 10 ? '0' + n : n;
+            };
+
+            return pad(h) + ':' + pad(m) + ':' + pad(s);
         }
 
         function resetSharedFields() {
@@ -1082,6 +1144,7 @@
         populateReferenceUi();
         renderExtendBar();
         initDatepickers();
+        initTimepickers();
         loadConnections();
     });
 })(jQuery);
