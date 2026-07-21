@@ -941,3 +941,25 @@
     opacity: 1;
     cursor: default;
 }
+
+/* ---------- Toggle Filter Button ---------- */
+#ea-naui-toggle-filter {
+    padding: 0 10px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: opacity 0.15s ease, background-color 0.15s ease, color 0.15s ease;
+}
+#ea-naui-toggle-filter.is-hidden {
+    opacity: 0.55;
+}
+#ea-naui-toggle-filter.is-active {
+    opacity: 1;
+    color: var(--ea-blue);
+    background-color: var(--ea-blue-light) !important;
+    border-color: var(--ea-blue-light) !important;
+}
+#ea-naui-toggle-filter svg {
+    display: block;
+}

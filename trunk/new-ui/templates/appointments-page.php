@@ -30,6 +30,11 @@ if (!defined('WPINC')) {
                 <span class="ea-naui-version">v<?php echo esc_html(EASY_APPOINTMENTS_VERSION); ?></span>
             </div>
             <div class="ea-naui-header-actions">
+                <a href="#" id="ea-naui-toggle-filter" class="ea-naui-btn ea-naui-btn-ghost is-hidden" title="<?php esc_attr_e('Toggle Filters', 'easy-appointments'); ?>">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+                    </svg>
+                </a>
                 <a href="#" class="ea-naui-btn ea-naui-btn-ghost ea-naui-refresh">
                     <?php esc_html_e('Refresh', 'easy-appointments'); ?>
                 </a>
@@ -45,7 +50,7 @@ if (!defined('WPINC')) {
         <div class="ea-naui-body">
 
             <!-- Filters -->
-            <div class="ea-naui-filters">
+            <div class="ea-naui-filters" style="display: none;">
                 <div class="ea-naui-filter-row">
                     <div class="ea-naui-field">
                         <label for="ea-naui-period"><?php esc_html_e('Quick time filter', 'easy-appointments'); ?></label>

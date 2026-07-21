@@ -38,6 +38,12 @@
                 $('.ea-nsui-header-actions').css('visibility', 'visible');
             }
 
+            if (window.history && window.history.replaceState) {
+                window.history.replaceState(null, null, '#' + panel);
+            } else {
+                window.location.hash = panel;
+            }
+
             initRichTextEditors($panel);
             initMultiSelects($panel);
         });
@@ -465,6 +471,25 @@
                     setup: bindEditorDirtyTracking,
                 });
             });
+        }
+
+        // Restore tab from URL hash on load
+        var initialTab = window.location.hash.replace('#', '');
+        if (initialTab) {
+            var $initialNav = $app.find('.ea-nsui-nav-item[data-panel="' + initialTab + '"]');
+            if ($initialNav.length) {
+                $app.find('.ea-nsui-nav-item').removeClass('is-active');
+                $initialNav.addClass('is-active');
+
+                $app.find('.ea-nsui-panel').removeClass('is-active');
+                $app.find('.ea-nsui-panel[data-panel="' + initialTab + '"]').addClass('is-active');
+
+                if (initialTab === 'tools') {
+                    $('.ea-nsui-header-actions').css('visibility', 'hidden');
+                } else {
+                    $('.ea-nsui-header-actions').css('visibility', 'visible');
+                }
+            }
         }
 
         // Ensure only editors for the active panel exist
@@ -1635,6 +1660,27 @@
             if ($panel.hasClass('is-active')) {
                 fetchErrors();
             }
+            // ---------- Toggle Notification Status Chips visibility ----------
+            function toggleNotificationChips() {
+                var $workerCheck = $('input[data-key="send.worker.email"]');
+                var $workerChipsRow = $workerCheck.closest('.ea-nsui-row').next('.ea-nsui-row-chips');
+                if ($workerCheck.is(':checked')) {
+                    $workerChipsRow.show();
+                } else {
+                    $workerChipsRow.hide();
+                }
+
+                var $userCheck = $('input[data-key="send.user.email"]');
+                var $userChipsRow = $userCheck.closest('.ea-nsui-row').next('.ea-nsui-row-chips');
+                if ($userCheck.is(':checked')) {
+                    $userChipsRow.show();
+                } else {
+                    $userChipsRow.hide();
+                }
+            }
+
+            $(document).on('change', 'input[data-key="send.worker.email"], input[data-key="send.user.email"]', toggleNotificationChips);
+            toggleNotificationChips();
         })();
     });
 })(jQuery);

@@ -590,6 +590,33 @@
             $('#ea-naui-sort-by').val($(this).data('key')).trigger('change');
         });
 
+        // ---------- Toggle Filter Visibility and State ----------
+        var filterVisibleKey = 'ea_appointments_filter_visible';
+        var $toggleBtn = $('#ea-naui-toggle-filter');
+        var $filtersContainer = $('.ea-naui-filters');
+
+        var isFilterVisible = localStorage.getItem(filterVisibleKey);
+        if (isFilterVisible === '1') {
+            $filtersContainer.show();
+            $toggleBtn.removeClass('is-hidden').addClass('is-active');
+        } else {
+            $filtersContainer.hide();
+            $toggleBtn.removeClass('is-active').addClass('is-hidden');
+        }
+
+        $app.on('click', '#ea-naui-toggle-filter', function (e) {
+            e.preventDefault();
+            if ($filtersContainer.is(':visible')) {
+                $filtersContainer.hide();
+                $toggleBtn.removeClass('is-active').addClass('is-hidden');
+                localStorage.setItem(filterVisibleKey, '0');
+            } else {
+                $filtersContainer.show();
+                $toggleBtn.removeClass('is-hidden').addClass('is-active');
+                localStorage.setItem(filterVisibleKey, '1');
+            }
+        });
+
         $app.on('click', '.ea-naui-refresh', function (e) {
             e.preventDefault();
             var $btn = $(this);

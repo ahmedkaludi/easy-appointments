@@ -188,11 +188,11 @@ class EA_UI_Switcher
 
         $message = $mode === 'new'
             ? esc_html__("You're using the new Easy Appointments interface.", 'easy-appointments')
-            : esc_html__("You're using the classic Easy Appointments interface.", 'easy-appointments');
+            : esc_html__('The new interface is faster and easier to set up. You can switch back any time.', 'easy-appointments');
 
         $button_label = $mode === 'new'
             ? esc_html__('Switch back to the classic UI', 'easy-appointments')
-            : esc_html__('Try the new UI', 'easy-appointments');
+            : esc_html__('Try the new interface', 'easy-appointments');
         ?>
         <div class="ea-ui-switch-notice" id="ea-ui-switch-notice">
             <p>
