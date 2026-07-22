@@ -81,13 +81,19 @@ class EA_Appointments_New_UI
      * Capability required to access this screen. Kept as its own helper so
      * every entry point (menu registration + page render) always agrees.
      *
+     * The top-level Appointments menu page is registered with 'edit_posts'
+     * (see EAAdminPanel::add_menu_pages()) and the AJAX endpoints likewise
+     * accept 'edit_posts' as their minimum capability. This method must use
+     * the same default so that roles like Author (which have 'edit_posts'
+     * but NOT 'manage_options') can reach the appointments screen.
+     *
      * @return string
      */
     protected static function capability()
     {
         return apply_filters(
             'easy-appointments-user-menu-capabilities',
-            'manage_options',
+            'edit_posts',
             self::MENU_SLUG
         );
     }
