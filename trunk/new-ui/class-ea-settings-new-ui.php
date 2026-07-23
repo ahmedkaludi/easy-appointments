@@ -489,7 +489,10 @@ class EA_Settings_New_UI
                 'fieldSaveFailed'   => esc_html__('Could not save this field. Please try again.', 'easy-appointments'),
                 'fieldLoadFailed'   => esc_html__('Could not load custom fields.', 'easy-appointments'),
                 'confirmDeleteField' => esc_html__('Delete this field? This cannot be undone.', 'easy-appointments'),
+                'deleteFieldTitle'  => esc_html__('Delete Field', 'easy-appointments'),
                 'fieldDeleteFailed' => esc_html__('Could not delete this field. Please try again.', 'easy-appointments'),
+                'delete'            => esc_html__('Delete', 'easy-appointments'),
+                'cancel'            => esc_html__('Cancel', 'easy-appointments'),
                 'fieldNoTags'       => esc_html__('none yet', 'easy-appointments'),
                 // Form Style & Redirect tab
                 'redirectUrlRequired' => esc_html__('Please enter a redirect URL first.', 'easy-appointments'),
@@ -511,6 +514,13 @@ class EA_Settings_New_UI
                 'deactivating'      => esc_html__('Deactivating…', 'easy-appointments'),
                 'licenseDeactivated' => esc_html__('License deactivated.', 'easy-appointments'),
                 'licenseDeactivateFailed' => esc_html__('Could not deactivate the license. Please try again.', 'easy-appointments'),
+                // Tools tab
+                'confirmResetPluginTitle' => esc_html__('Reset Plugin Data', 'easy-appointments'),
+                'confirmResetPlugin' => esc_html__('Are you sure you want to reset the plugin data? This action cannot be undone.', 'easy-appointments'),
+                'resetPlugin'        => esc_html__('Reset Plugin', 'easy-appointments'),
+                'confirmClearLogsTitle' => esc_html__('Clear Error Logs', 'easy-appointments'),
+                'confirmClearLogs'   => esc_html__('Are you sure you want to clear all error logs?', 'easy-appointments'),
+                'clearLogs'          => esc_html__('Clear Logs', 'easy-appointments'),
             ),
         ));
     }

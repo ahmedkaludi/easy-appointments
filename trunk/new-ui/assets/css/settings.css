@@ -159,8 +159,7 @@
     border-right: 1px solid var(--ea-border);
     padding: 16px 12px;
     min-height: 640px;
-    max-height: calc(100vh - 117px);
-    overflow-y: auto;
+    height: 100%;
 }
 
 /* ---------- Right sidebar (persists across every tab) ---------- */

@@ -1072,25 +1072,29 @@
                     var $item = $(this).closest('.ea-nsui-field-item');
                     var id = $item.data('id') + '';
 
-                    // eslint-disable-next-line no-alert
-                    if (!window.confirm(eaNewSettingsUI.i18n.confirmDeleteField)) {
-                        return;
-                    }
+                    window.eaConfirm({
+                        title: eaNewSettingsUI.i18n.deleteFieldTitle || 'Delete Field',
+                        message: eaNewSettingsUI.i18n.confirmDeleteField || 'Delete this field? This cannot be undone.',
+                        confirmLabel: eaNewSettingsUI.i18n.delete || 'Delete',
+                        cancelLabel: eaNewSettingsUI.i18n.cancel || 'Cancel',
+                        isDanger: true,
+                        onConfirm: function () {
+                            $item.css('opacity', 0.5);
 
-                    $item.css('opacity', 0.5);
-
-                    $.ajax({
-                        url: fieldsUrl('&id=' + encodeURIComponent(id)),
-                        method: 'DELETE'
-                    }).done(function () {
-                        delete fields[id];
-                        order = order.filter(function (fid) {
-                            return fid !== id;
-                        });
-                        renderList();
-                    }).fail(function () {
-                        $item.css('opacity', 1);
-                        showNotice(eaNewSettingsUI.i18n.fieldDeleteFailed, 'error');
+                            $.ajax({
+                                url: fieldsUrl('&id=' + encodeURIComponent(id)),
+                                method: 'DELETE'
+                            }).done(function () {
+                                delete fields[id];
+                                order = order.filter(function (fid) {
+                                    return fid !== id;
+                                });
+                                renderList();
+                            }).fail(function () {
+                                $item.css('opacity', 1);
+                                showNotice(eaNewSettingsUI.i18n.fieldDeleteFailed, 'error');
+                            });
+                        }
                     });
                 });
 
@@ -1538,25 +1542,30 @@
 
             // Reset plugin handler
             $btnResetPlugin.on('click', function () {
-                if (!window.confirm('Are you sure you want to reset the plugin data? This action cannot be undone.')) {
-                    return;
-                }
+                window.eaConfirm({
+                    title: eaNewSettingsUI.i18n.confirmResetPluginTitle || 'Reset Plugin Data',
+                    message: eaNewSettingsUI.i18n.confirmResetPlugin || 'Are you sure you want to reset the plugin data? This action cannot be undone.',
+                    confirmLabel: eaNewSettingsUI.i18n.resetPlugin || 'Reset Plugin',
+                    cancelLabel: eaNewSettingsUI.i18n.cancel || 'Cancel',
+                    isDanger: true,
+                    onConfirm: function () {
+                        $resetStatus.text('Resetting…').css('color', 'var(--ea-text-muted)');
+                        $btnResetPlugin.prop('disabled', true);
 
-                $resetStatus.text('Resetting…').css('color', 'var(--ea-text-muted)');
-                $btnResetPlugin.prop('disabled', true);
-
-                $.ajax({
-                    url: eaNewSettingsUI.ajaxUrl + '?action=ea_reset_plugin&_wpnonce=' + eaNewSettingsUI.wpRestNonce,
-                    method: 'POST',
-                    success: function (response) {
-                        $resetStatus.text(response).css('color', 'green');
-                        setTimeout(function () {
-                            window.location.reload();
-                        }, 2000);
-                    },
-                    error: function () {
-                        $resetStatus.text('Failed to reset plugin.').css('color', '#b42318');
-                        $btnResetPlugin.prop('disabled', false);
+                        $.ajax({
+                            url: eaNewSettingsUI.ajaxUrl + '?action=ea_reset_plugin&_wpnonce=' + eaNewSettingsUI.wpRestNonce,
+                            method: 'POST',
+                            success: function (response) {
+                                $resetStatus.text(response).css('color', 'green');
+                                setTimeout(function () {
+                                    window.location.reload();
+                                }, 2000);
+                            },
+                            error: function () {
+                                $resetStatus.text('Failed to reset plugin.').css('color', '#b42318');
+                                $btnResetPlugin.prop('disabled', false);
+                            }
+                        });
                     }
                 });
             });
@@ -1633,20 +1642,25 @@
 
             // Clear logs
             $btnClearLogs.on('click', function () {
-                if (!window.confirm('Are you sure you want to clear all error logs?')) {
-                    return;
-                }
-
-                $btnClearLogs.prop('disabled', true);
-                $.ajax({
-                    url: eaNewSettingsUI.clearLogUrl + '?_wpnonce=' + eaNewSettingsUI.wpRestNonce,
-                    method: 'DELETE',
-                    success: function () {
-                        fetchErrors();
-                    },
-                    error: function () {
-                        alert('Failed to clear error logs.');
-                        $btnClearLogs.prop('disabled', false);
+                window.eaConfirm({
+                    title: eaNewSettingsUI.i18n.confirmClearLogsTitle || 'Clear Error Logs',
+                    message: eaNewSettingsUI.i18n.confirmClearLogs || 'Are you sure you want to clear all error logs?',
+                    confirmLabel: eaNewSettingsUI.i18n.clearLogs || 'Clear Logs',
+                    cancelLabel: eaNewSettingsUI.i18n.cancel || 'Cancel',
+                    isDanger: true,
+                    onConfirm: function () {
+                        $btnClearLogs.prop('disabled', true);
+                        $.ajax({
+                            url: eaNewSettingsUI.clearLogUrl + '?_wpnonce=' + eaNewSettingsUI.wpRestNonce,
+                            method: 'DELETE',
+                            success: function () {
+                                fetchErrors();
+                            },
+                            error: function () {
+                                showNotice('Failed to clear error logs.', 'error');
+                                $btnClearLogs.prop('disabled', false);
+                            }
+                        });
                     }
                 });
             });
