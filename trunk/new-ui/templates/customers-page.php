@@ -92,6 +92,8 @@ if (!defined('WPINC')) {
 
             <div class="ea-mnui-drawer-body">
 
+                <div id="ea-mnui-drawer-error" class="ea-mnui-drawer-error-msg" style="display:none;"></div>
+
                 <input type="hidden" id="ea-mnui-input-id" data-prop="id">
 
                 <!-- 1. Compact Customer Info Strip (only visible in Bookings View mode) -->

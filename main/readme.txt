@@ -5,7 +5,7 @@ Tags: appointment, appointments, Booking, calendar, reservation
 Requires at least: 5.0
 Tested up to: 7.0
 Requires PHP: 5.3
-Stable tag: 3.12.28
+Stable tag: 3.12.29
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -261,6 +261,14 @@ Terms of use and Policy : https://fullcalendar.io/license
 25. Admin panel - Report - Export page
 
 == Changelog ==
+= 3.12.29 (2026-07-24)
+* Fixed Timezone Issue in the "Created At" Field #307.
+* Fixed Am Pm making confusion in cancel booking before hour #309.
+* Fixed tags displaying as plain text on the website and also #Service_Description# tag is missing #312
+* Fixed Appointments are not showing to Author role after plugin update #306
+* Fixed No data is showing in full calendar pop up box #319
+* Added Redesign the Plugin Settings Panel with a Modern UI/UX #301
+
 = 3.12.28 (2026-07-04)
 * Fixed Security issue: missing authorization on customer listing AJAX handler allowing PII exposure. Reported by Mustafa Ahmed.
 * Fixed Security issue: missing authorization allowing bulk cancellation of appointments (CVE-2026-11992). Reported by Wordfence (armx64).

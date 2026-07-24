@@ -256,8 +256,21 @@
         clearFieldErrors();
     }
 
+    function setDrawerError(msg) {
+        var $err = $('#ea-mnui-drawer-error');
+        if ($err.length) {
+            if (msg) {
+                $err.text(msg).show();
+            } else {
+                $err.hide().text('');
+            }
+        }
+    }
+
     function clearFieldErrors() {
         $('.ea-mnui-field').removeClass('has-error');
+        $('[data-field="email"]').find('.ea-mnui-field-error').text(i18n.validEmailRequired || 'A valid email is required.');
+        setDrawerError('');
     }
 
     function setDrawerMode(mode) {
@@ -366,12 +379,19 @@
                 } else {
                     hideScreenLoader();
                     var msg = (res && res.data && res.data.message) || (i18n.genericError || 'Something went wrong.');
+                    setDrawerError(msg);
+                    if (msg.toLowerCase().indexOf('email') !== -1) {
+                        $('[data-field="email"]').addClass('has-error');
+                        $('[data-field="email"]').find('.ea-mnui-field-error').text(msg);
+                    }
                     setStatus(msg);
                 }
             })
             .fail(function () {
                 hideScreenLoader();
-                setStatus(i18n.genericError || 'Something went wrong. Please try again.');
+                var msg = i18n.genericError || 'Something went wrong. Please try again.';
+                setDrawerError(msg);
+                setStatus(msg);
             })
             .always(function () {
                 $btn.prop('disabled', false).text(i18n.save || 'Save');
