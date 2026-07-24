@@ -346,7 +346,16 @@ if ( ! defined( 'WPINC' ) ) {
                                 </span>
                             </div>
                             <div class="ea-nsui-row-control ea-nsui-import-control">
-                                <input type="file" id="ea-nsui-full-import-file" accept=".json">
+                                <div class="ea-nsui-file-upload-box" id="ea-nsui-file-upload-box">
+                                    <input type="file" id="ea-nsui-full-import-file" accept=".json" class="ea-nsui-file-hidden-input">
+                                    <button type="button" class="ea-nsui-btn ea-nsui-btn-secondary ea-nsui-file-trigger" id="ea-nsui-file-trigger">
+                                        <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                                        <span><?php esc_html_e('Choose File', 'easy-appointments'); ?></span>
+                                    </button>
+                                    <div class="ea-nsui-file-info" id="ea-nsui-file-info">
+                                        <span class="ea-nsui-file-placeholder"><?php esc_html_e('No file chosen', 'easy-appointments'); ?></span>
+                                    </div>
+                                </div>
                                 <button type="button" class="ea-nsui-btn ea-nsui-btn-primary" id="ea-nsui-full-import">
                                     <?php esc_html_e('Import Data', 'easy-appointments'); ?>
                                 </button>

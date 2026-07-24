@@ -103,7 +103,7 @@ if ( ! defined( 'WPINC' ) ) {
                                 </span>
                             </div>
                             <div class="ea-nsui-row-control">
-                                <input type="time" class="ea-nsui-input" data-key="cancel_time" value="<?php echo esc_attr($ea_get('cancel_time', '')); ?>">
+                                <input type="text" class="ea-nsui-input ea-nsui-time-input" data-key="cancel_time" value="<?php echo esc_attr($ea_get('cancel_time', '')); ?>" placeholder="00:00">
                             </div>
                         </div>
 

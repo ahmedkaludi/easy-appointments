@@ -167,9 +167,11 @@ class EA_Vacation_New_UI
             $vacation_css_ver
         );
 
-        // Date picker used to add individual vacation days one at a time.
+        // Date and time picker used for vacation dates and hours.
         wp_enqueue_style('jquery-style');
+        wp_enqueue_style('time-picker');
         wp_enqueue_script('jquery-ui-datepicker');
+        wp_enqueue_script('time-picker');
         wp_enqueue_script('moment');
 
         wp_enqueue_script(
@@ -183,7 +185,7 @@ class EA_Vacation_New_UI
         wp_enqueue_script(
             'ea-new-vacation-ui',
             $base_url . 'js/vacation.js',
-            array('jquery', 'jquery-ui-datepicker', 'moment', 'ea-new-common-ui'),
+            array('jquery', 'jquery-ui-datepicker', 'time-picker', 'moment', 'ea-new-common-ui'),
             $js_ver,
             true
         );

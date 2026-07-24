@@ -69,6 +69,17 @@
     margin-right: 4px;
     color: #6b7280;
     padding: 0;
+    line-height: 1;
+    vertical-align: middle;
+    box-sizing: border-box;
+}
+
+.ea-mnui-icon-btn svg {
+    display: block;
+    width: 14px;
+    height: 14px;
+    margin: auto;
+    flex-shrink: 0;
 }
 
 .ea-mnui-icon-btn:hover {

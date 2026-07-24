@@ -410,10 +410,13 @@ class EA_Settings_New_UI
             $css_ver
         );
 
+        wp_enqueue_style('time-picker');
+
         wp_enqueue_editor();
 
         // jquery-ui-sortable powers the drag-to-reorder list on the
         // "Form Fields" tab (same interaction as the classic Settings page).
+        wp_enqueue_script('time-picker');
         wp_enqueue_script(
             'ea-select2',
             EA_PLUGIN_URL . 'js/select2.min.js',
@@ -433,7 +436,7 @@ class EA_Settings_New_UI
         wp_enqueue_script(
             'ea-new-settings-ui',
             $base_url . 'js/settings.js',
-            array('jquery', 'jquery-ui-sortable', 'ea-select2', 'ea-new-common-ui'),
+            array('jquery', 'jquery-ui-sortable', 'time-picker', 'ea-select2', 'ea-new-common-ui'),
             $js_ver,
             true
         );
@@ -471,8 +474,11 @@ class EA_Settings_New_UI
                 'confirmReset'    => esc_html__('Discard unsaved changes and reload the last saved settings?', 'easy-appointments'),
                 'confirmLeaveUnsavedTitle' => esc_html__('Unsaved Changes', 'easy-appointments'),
                 'confirmLeaveUnsaved' => esc_html__('You have unsaved changes on this Settings page. Leave without saving?', 'easy-appointments'),
+                'confirmExportTitle' => esc_html__('Export Plugin Data', 'easy-appointments'),
                 'confirmExport'   => esc_html__('Export all Easy Appointments data?', 'easy-appointments'),
+                'exportData'      => esc_html__('Export Data', 'easy-appointments'),
                 'selectFile'      => esc_html__('Please select a JSON backup file.', 'easy-appointments'),
+                'confirmImportTitle' => esc_html__('Import Plugin Data', 'easy-appointments'),
                 'confirmImport'   => esc_html__('⚠ This will DELETE existing data and import the backup. Continue?', 'easy-appointments'),
                 'importing'       => esc_html__('Importing…', 'easy-appointments'),
                 'importData'      => esc_html__('Import Data', 'easy-appointments'),

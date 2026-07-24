@@ -137,12 +137,12 @@ if (!defined('WPINC')) {
                     <div class="ea-mnui-field-group" id="ea-mnui-time-range-wrap" style="display:none;">
                         <div class="ea-mnui-field" data-field="time_from">
                             <label for="ea-mnui-input-time_from"><?php esc_html_e('Start time', 'easy-appointments'); ?> <span class="ea-mnui-required">*</span></label>
-                            <input type="time" id="ea-mnui-input-time_from" data-prop="startTime">
+                            <input type="text" id="ea-mnui-input-time_from" class="ea-mnui-time-input" data-prop="startTime" placeholder="00:00">
                             <div class="ea-mnui-field-error"><?php esc_html_e('Start time is required.', 'easy-appointments'); ?></div>
                         </div>
                         <div class="ea-mnui-field" data-field="time_to">
                             <label for="ea-mnui-input-time_to"><?php esc_html_e('End time', 'easy-appointments'); ?> <span class="ea-mnui-required">*</span></label>
-                            <input type="time" id="ea-mnui-input-time_to" data-prop="endTime">
+                            <input type="text" id="ea-mnui-input-time_to" class="ea-mnui-time-input" data-prop="endTime" placeholder="23:59">
                             <div class="ea-mnui-field-error"><?php esc_html_e('Must be after start time!', 'easy-appointments'); ?></div>
                         </div>
                     </div>

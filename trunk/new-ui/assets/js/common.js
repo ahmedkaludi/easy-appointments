@@ -125,4 +125,14 @@
         });
     };
 
+    // Auto-select text on clicking or focusing time input fields so typing replaces text starting with first number
+    $(document).on('focus click', 'input.ea-mnui-time-input, input.ea-nsui-time-input, input[data-key="cancel_time"], #ea-mnui-input-time_from, #ea-mnui-input-time_to', function () {
+        var input = this;
+        setTimeout(function () {
+            if (typeof input.select === 'function') {
+                input.select();
+            }
+        }, 50);
+    });
+
 })(jQuery);

@@ -46,7 +46,27 @@
 
             initRichTextEditors($panel);
             initMultiSelects($panel);
+            initTimepickers();
         });
+
+        function initTimepickers() {
+            if ($.fn.timepicker) {
+                $('input[data-key="cancel_time"]').timepicker({
+                    timeFormat: 'HH:mm',
+                    showSecond: false,
+                    controlType: 'select',
+                    oneLine: true
+                });
+                $('input.ea-nsui-time-input').not('[data-key="cancel_time"]').timepicker({
+                    timeFormat: 'HH:mm:ss',
+                    showSecond: true,
+                    controlType: 'select',
+                    oneLine: true
+                });
+            }
+        }
+
+        initTimepickers();
 
         /**
          * ---------- EA Extension Manager: license activation card ----------
@@ -605,15 +625,85 @@
          * Reuses the plugin's existing ea_full_export AJAX endpoint.
          */
         $app.on('click', '#ea-nsui-full-export', function () {
-            // eslint-disable-next-line no-alert
-            if (!window.confirm(eaNewSettingsUI.i18n.confirmExport)) {
-                return;
-            }
+            window.eaConfirm({
+                title: eaNewSettingsUI.i18n.confirmExportTitle || 'Export Plugin Data',
+                message: eaNewSettingsUI.i18n.confirmExport || 'Export all Easy Appointments data?',
+                confirmLabel: eaNewSettingsUI.i18n.exportData || 'Export Data',
+                cancelLabel: eaNewSettingsUI.i18n.cancel || 'Cancel',
+                isDanger: false,
+                onConfirm: function () {
+                    window.location.href =
+                        eaNewSettingsUI.ajaxUrl +
+                        '?action=ea_full_export&_wpnonce=' +
+                        encodeURIComponent(eaNewSettingsUI.exportImportNonce);
+                }
+            });
+        });
 
-            window.location.href =
-                eaNewSettingsUI.ajaxUrl +
-                '?action=ea_full_export&_wpnonce=' +
-                encodeURIComponent(eaNewSettingsUI.exportImportNonce);
+        /**
+         * ---------- Custom File Upload Component ----------
+         */
+        function formatFileSize(bytes) {
+            if (!bytes || bytes <= 0) return '0 B';
+            if (bytes < 1024) return bytes + ' B';
+            if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
+            return (bytes / 1048576).toFixed(1) + ' MB';
+        }
+
+        function updateSelectedFileInfo() {
+            var fileInput = document.getElementById('ea-nsui-full-import-file');
+            var $info = $('#ea-nsui-file-info');
+
+            if (fileInput && fileInput.files && fileInput.files.length) {
+                var file = fileInput.files[0];
+                var parts = file.name.split('.');
+                var ext = parts.length > 1 ? parts.pop().toLowerCase() : 'FILE';
+                var safeName = $('<div>').text(file.name).html();
+                var pillHtml = '<div class="ea-nsui-file-pill">' +
+                    '<span class="ea-nsui-file-badge">' + ext + '</span>' +
+                    '<span class="ea-nsui-file-name" title="' + safeName + '">' + safeName + '</span>' +
+                    '<span class="ea-nsui-file-size">(' + formatFileSize(file.size) + ')</span>' +
+                    '<button type="button" class="ea-nsui-file-clear" id="ea-nsui-file-clear" title="Remove file">&times;</button>' +
+                    '</div>';
+                $info.html(pillHtml);
+            } else {
+                $info.html('<span class="ea-nsui-file-placeholder">No file chosen</span>');
+            }
+        }
+
+        $(document).on('change', '#ea-nsui-full-import-file', function () {
+            updateSelectedFileInfo();
+        });
+
+        $(document).on('click', '#ea-nsui-file-clear', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            var fileInput = document.getElementById('ea-nsui-full-import-file');
+            if (fileInput) {
+                fileInput.value = '';
+            }
+            updateSelectedFileInfo();
+        });
+
+        // Drag and drop support for custom file box
+        var $dropBox = $('#ea-nsui-file-upload-box');
+        $dropBox.on('dragover dragenter', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            $dropBox.addClass('is-dragover');
+        }).on('dragleave dragend drop', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            $dropBox.removeClass('is-dragover');
+        }).on('drop', function (e) {
+            var files = e.originalEvent.dataTransfer && e.originalEvent.dataTransfer.files;
+            if (files && files.length) {
+                var fileInput = document.getElementById('ea-nsui-full-import-file');
+                if (fileInput) {
+                    fileInput.files = files;
+                    updateSelectedFileInfo();
+                }
+            }
         });
 
         /**
@@ -626,41 +716,44 @@
             var $spinner = $('#ea-nsui-full-import-spinner');
 
             if (!fileInput || !fileInput.files.length) {
-                // eslint-disable-next-line no-alert
-                window.alert(eaNewSettingsUI.i18n.selectFile);
+                showNotice(eaNewSettingsUI.i18n.selectFile || 'Please select a JSON backup file.', 'error');
                 return;
             }
 
-            // eslint-disable-next-line no-alert
-            if (!window.confirm(eaNewSettingsUI.i18n.confirmImport)) {
-                return;
-            }
+            window.eaConfirm({
+                title: eaNewSettingsUI.i18n.confirmImportTitle || 'Import Plugin Data',
+                message: eaNewSettingsUI.i18n.confirmImport || '⚠ This will DELETE existing data and import the backup. Continue?',
+                confirmLabel: eaNewSettingsUI.i18n.importData || 'Import Data',
+                cancelLabel: eaNewSettingsUI.i18n.cancel || 'Cancel',
+                isDanger: true,
+                onConfirm: function () {
+                    var formData = new FormData();
+                    formData.append('action', 'ea_full_import');
+                    formData.append('_wpnonce', eaNewSettingsUI.exportImportNonce);
+                    formData.append('file', fileInput.files[0]);
 
-            var formData = new FormData();
-            formData.append('action', 'ea_full_import');
-            formData.append('_wpnonce', eaNewSettingsUI.exportImportNonce);
-            formData.append('file', fileInput.files[0]);
+                    $importBtn.prop('disabled', true).data('original-text', $importBtn.text()).text(eaNewSettingsUI.i18n.importing);
+                    $spinner.show();
 
-            $importBtn.prop('disabled', true).data('original-text', $importBtn.text()).text(eaNewSettingsUI.i18n.importing);
-            $spinner.show();
-
-            $.ajax({
-                url: eaNewSettingsUI.ajaxUrl,
-                method: 'POST',
-                data: formData,
-                processData: false,
-                contentType: false
-            }).done(function (res) {
-                // eslint-disable-next-line no-alert
-                window.alert((res && res.data) || eaNewSettingsUI.i18n.importCompleted);
-                window.location.reload();
-            }).fail(function (xhr) {
-                var message = (xhr.responseJSON && xhr.responseJSON.data) || eaNewSettingsUI.i18n.importFailed;
-                // eslint-disable-next-line no-alert
-                window.alert(message);
-            }).always(function () {
-                $importBtn.prop('disabled', false).text($importBtn.data('original-text') || eaNewSettingsUI.i18n.importData);
-                $spinner.hide();
+                    $.ajax({
+                        url: eaNewSettingsUI.ajaxUrl,
+                        method: 'POST',
+                        data: formData,
+                        processData: false,
+                        contentType: false
+                    }).done(function (res) {
+                        showNotice((res && res.data) || eaNewSettingsUI.i18n.importCompleted, 'success');
+                        setTimeout(function () {
+                            window.location.reload();
+                        }, 1500);
+                    }).fail(function (xhr) {
+                        var message = (xhr.responseJSON && xhr.responseJSON.data) || eaNewSettingsUI.i18n.importFailed;
+                        showNotice(message, 'error');
+                    }).always(function () {
+                        $importBtn.prop('disabled', false).text($importBtn.data('original-text') || eaNewSettingsUI.i18n.importData);
+                        $spinner.hide();
+                    });
+                }
             });
         });
 
