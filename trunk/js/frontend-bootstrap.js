@@ -208,7 +208,15 @@
                     booking_data.time = parentForm.find('.selected-time').data('val');
                     booking_data.price = parentForm.find('[name="service"] > option:selected').data('price');
                     if (ea_settings['is_multiple_booking_allowed'] == '1') {
-                        booking_data.price = parentForm.find('.selected-time').length * booking_data.price;
+                        var $selectedSlots = parentForm.find('.selected-time');
+                        booking_data.price = $selectedSlots.length * booking_data.price;
+                        if ($selectedSlots.length > 1) {
+                            var timesArr = [];
+                            $selectedSlots.each(function () {
+                                timesArr.push(jQuery(this).data('val'));
+                            });
+                            booking_data.time = timesArr.join(', ');
+                        }
                     }
 
                     var format = ea_settings['date_format'] + ' ' + ea_settings['time_format'];
@@ -325,54 +333,14 @@
                 return true;
             }
 
-            // =======================
-            // NEW MULTI-SLOT LOGIC
-            // =======================
-
-            var slot_step = parseInt(
-                plugin.$element.find('[name="service"] > option:selected').data('slot_step')
-            );
-
-            // If no slot selected yet — user is picking START time
-            if (plugin.multiStart == null) {
-                plugin.multiStart = $element;
-                plugin.$element.find('.time-value').removeClass('selected-time');
-                $element.addClass('selected-time');
-                return true;
-            }
-
-            // If start is selected and user selects end time
-            var startTime = moment(plugin.multiStart.data('val'), 'HH:mm');
-            var endTime = moment($element.data('val'), 'HH:mm');
-
-            if (endTime.isBefore(startTime)) {
-                alert("End time must be after start time.");
-                plugin.multiStart = null;
+            // ==========================================
+            // ARBITRARY INDIVIDUAL MULTI-SLOT SELECTION
+            // ==========================================
+            if ($element.hasClass('time-disabled')) {
                 return false;
             }
 
-            // Mark all slots between start → end
-            plugin.$element.find('.time-value').removeClass('selected-time');
-
-            var current = startTime.clone();
-            while (current <= endTime) {
-                let t = current.format('HH:mm');
-                let $slot = plugin.$element.find('.time-value[data-val="' + t + '"]');
-
-                if ($slot.length === 0 || $slot.hasClass('time-disabled')) {
-                    alert("One or more selected slots are unavailable.");
-                    plugin.multiStart = null;
-                    return false;
-                }
-
-                $slot.addClass('selected-time');
-                current.add(slot_step, 'minutes');
-            }
-
-            // Save selected range
-            plugin.multiSelectedStart = startTime.format('HH:mm');
-            plugin.multiSelectedEnd   = endTime.add(slot_step, 'minutes').format('HH:mm');
-
+            $element.toggleClass('selected-time');
             return true;
         },
 
@@ -996,9 +964,16 @@
                 check: ea_settings['check'],
                 action: 'ea_res_appointment'
             };
-            if (ea_settings['is_multiple_booking_allowed'] == '1' && plugin.multiSelectedEnd) {
-                options.start = plugin.multiSelectedStart;
-                options.end   = plugin.multiSelectedEnd;
+            if (ea_settings['is_multiple_booking_allowed'] == '1') {
+                var selectedTimes = [];
+                plugin.$element.find('.selected-time').each(function () {
+                    selectedTimes.push(jQuery(this).data('val'));
+                });
+                if (selectedTimes.length > 0) {
+                    options.start = selectedTimes.join(',');
+                } else {
+                    options.start = this.$element.find('.selected-time').first().data('val');
+                }
             } else {
                 options.start = this.$element.find('.selected-time').data('val');
             }
@@ -1297,9 +1272,16 @@
                 check: ea_settings['check'],
                 action: 'ea_res_appointment'
             };
-            if (ea_settings['is_multiple_booking_allowed'] == '1' && plugin.multiSelectedEnd) {
-                options.start = plugin.multiSelectedStart;
-                options.end   = plugin.multiSelectedEnd;
+            if (ea_settings['is_multiple_booking_allowed'] == '1') {
+                var selectedTimes = [];
+                plugin.$element.find('.selected-time').each(function () {
+                    selectedTimes.push(jQuery(this).data('val'));
+                });
+                if (selectedTimes.length > 0) {
+                    options.start = selectedTimes.join(',');
+                } else {
+                    options.start = this.$element.find('.selected-time').first().data('val');
+                }
             } else {
                 options.start = this.$element.find('.selected-time').data('val');
             }

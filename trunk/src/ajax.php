@@ -1215,10 +1215,70 @@ class EAAjax
             $data['date'], null, true, $block_time
         );
 
-        // ===========================
-        // MULTI-SLOT RANGE BOOKING
-        // ===========================
-        if ($has_range) {
+        $slots_list = array();
+        if ($multiple_allowed === 1) {
+            if (!empty($data['start']) && strpos($data['start'], ',') !== false) {
+                $slots_list = array_filter(array_map('trim', explode(',', $data['start'])));
+            } else if (!empty($_GET['slots']) && is_array($_GET['slots'])) {
+                $slots_list = array_filter(array_map('sanitize_text_field', $_GET['slots']));
+            }
+        }
+
+        // ==========================================
+        // ARBITRARY MULTI-SLOT BOOKING
+        // ==========================================
+        if ($multiple_allowed === 1 && count($slots_list) > 1) {
+            $service   = $this->models->get_row('ea_services', $data['service']);
+            $duration  = intval($service->duration);
+            $recurrence_id = 'rec_' . uniqid();
+
+            $open_map = array();
+            foreach ($open_slots as $slot) {
+                $open_map[$slot['value']] = $slot['count'];
+            }
+
+            $success_ids = array();
+            $first_response = null;
+
+            foreach ($slots_list as $slot_start) {
+                if (!isset($open_map[$slot_start]) || $open_map[$slot_start] <= 0) {
+                    continue;
+                }
+
+                $slot_end_time = strtotime($data['date'] . ' ' . $slot_start . " + {$duration} minutes");
+                $slot_end = gmdate('H:i', $slot_end_time);
+
+                $single_data = $data;
+                $single_data['start'] = $slot_start;
+                $single_data['end']   = $slot_end;
+                $single_data['end_date'] = $data['date'];
+                $single_data['price'] = $service->price;
+                $single_data['recurrence_id'] = $recurrence_id;
+                $single_data['status'] = 'reservation';
+                $single_data['ip'] = isset($_SERVER['REMOTE_ADDR']) ? sanitize_text_field(wp_unslash($_SERVER['REMOTE_ADDR'])) : '';
+                $single_data['session'] = session_id();
+                if (is_user_logged_in()) $single_data['user'] = get_current_user_id();
+
+                $resp = $this->models->replace($table, $single_data, true);
+                if ($resp && isset($resp->id)) {
+                    if (!$first_response) {
+                        $first_response = $resp;
+                    }
+                    $success_ids[] = $resp->id;
+                }
+            }
+
+            if (empty($success_ids) || !$first_response) {
+                $this->send_err_json_result('{"err":true,"message":"Selected slots are no longer available"}');
+            }
+
+            $first_response->_hash = wp_hash($first_response->id);
+            $first_response->all_ids = $success_ids;
+            $this->send_ok_json_result($first_response);
+        } else if ($has_range) {
+            // ===========================
+            // MULTI-SLOT RANGE BOOKING
+            // ===========================
 
             $service     = $this->models->get_row('ea_services', $data['service']);
             $slot_step   = isset($service->slot_step) ? intval($service->slot_step) : 30;
@@ -1259,12 +1319,10 @@ class EAAjax
             }
 
             $data['price'] = round($price, 2);
-        }
-
-        // ===========================
-        // ORIGINAL SINGLE SLOT FALLBACK
-        // ===========================
-        if (!$has_range) {
+        } else {
+            // ===========================
+            // ORIGINAL SINGLE SLOT FALLBACK
+            // ===========================
 
             $is_free = false;
             foreach ($open_slots as $slot) {

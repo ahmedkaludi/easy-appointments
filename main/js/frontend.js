@@ -214,6 +214,14 @@
         selectTimes: function ($element) {
             var plugin = this;
 
+            if (ea_settings['is_multiple_booking_allowed'] == '1') {
+                if ($element.hasClass('time-disabled')) {
+                    return false;
+                }
+                $element.toggleClass('selected-time');
+                return true;
+            }
+
             var serviceData = plugin.$element.find('[name="service"] > option:selected').data();
             var duration = serviceData.duration;
             var slot_step = serviceData.slot_step;
