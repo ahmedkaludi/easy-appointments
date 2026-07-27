@@ -133,8 +133,8 @@ class EALogic
 
                 $temp_date_time = strtotime("$day {$working_day->time_from}") + $run_time;
 
-                // is that before upper time limit
-                if (($temp_time + $diff_between_duration_and_slot_step) < $upper_time) {
+                // is that before upper time limit (slot end time must not exceed working hours end time)
+                if (($temp_time + ($serviceObj->duration * 60)) <= $upper_time) {
                     $current_time = gmdate('H:i', $temp_time);
 
                     // check if current time is greater then slot start time
@@ -251,7 +251,8 @@ class EALogic
                 $temp_time += $run_time;
                 $temp_date_time = strtotime("$day {$working_day->time_from}") + $run_time;
 
-                if (($temp_time + $diff_between_duration_and_slot_step) < $upper_time) {
+                // is that before upper time limit (slot end time must not exceed working hours end time)
+                if (($temp_time + ($serviceObj->duration * 60)) <= $upper_time) {
                     $current_time = gmdate('H:i', $temp_time);
 
                     if ($check_current_day && $is_current_day && $time_now > $temp_time) {
