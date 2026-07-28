@@ -1177,3 +1177,20 @@ ul.ui-autocomplete.ui-menu .ui-menu-item.ui-state-focus {
     text-align: center !important;
     box-sizing: border-box !important;
 }
+
+/* Disabled Submit Button State when no time slot is selected */
+.ea-submit:disabled,
+.booking-button:disabled,
+.ea-submit.is-disabled,
+.booking-button.is-disabled,
+button.ea-submit:disabled,
+button.booking-button:disabled {
+    opacity: 0.55 !important;
+    cursor: not-allowed !important;
+    pointer-events: none !important;
+    background-color: #94a3b8 !important;
+    background: #94a3b8 !important;
+    border-color: #94a3b8 !important;
+    color: #ffffff !important;
+    box-shadow: none !important;
+}

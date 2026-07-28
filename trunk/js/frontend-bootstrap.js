@@ -222,6 +222,8 @@
 
                 var result = plugin.selectTimes(jQuery(this));
 
+                plugin.updateSubmitButtonState();
+
                 plugin.triggerSlotSelectEvent();
 
                 // check if we can select that field
@@ -317,6 +319,8 @@
             }
 
             this.$element.find('.ea-cancel').on('click', jQuery.proxy( plugin.cancelApp, plugin ));
+
+            this.updateSubmitButtonState();
 
             setTimeout(function() {
                 jQuery(document).trigger('ea-init:completed');
@@ -1727,11 +1731,23 @@
             }
 
             $bar.find('.ea-submit, .ea-cancel').show();
+            plugin.updateSubmitButtonState();
         },
 
         formatDateLabel: function (dateString) {
             if (!dateString) return '';
             return moment(dateString, 'YYYY-MM-DD').format('ddd D MMMM');
+        },
+
+        updateSubmitButtonState: function () {
+            var plugin = this;
+            var hasSelected = plugin.$element.find('.selected-time').length > 0;
+            var $submitBtns = plugin.$element.find('.ea-submit, .booking-button');
+            if (hasSelected) {
+                $submitBtns.prop('disabled', false).removeClass('is-disabled');
+            } else {
+                $submitBtns.prop('disabled', true).addClass('is-disabled');
+            }
         }
     });
 
