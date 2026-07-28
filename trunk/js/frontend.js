@@ -19,8 +19,17 @@
     }
 
     jQuery.extend(Plugin.prototype, {
-        vacation: function(workerId, day) {
+        vacation: function(workerId, day, serviceId) {
+            serviceId = serviceId || null;
             var response = [true, day, ''];
+
+            if (typeof ea_service_start_data !== 'undefined') {
+                jQuery.each(ea_service_start_data, function(index, service_start_data) {
+                    if (serviceId == service_start_data.id && jQuery.inArray(day, service_start_data.booking_date_skip) !== -1) {
+                        response = [false, 'blocked vacation', 'Not Available'];
+                    }
+                });
+            }
 
             // block days from shortcode
             if (Array.isArray(ea_settings.block_days) && ea_settings.block_days.includes(day)) {
@@ -38,7 +47,7 @@
             jQuery.each(ea_vacations, function(index, vacation) {
                 // Check events
                 // Case we have workers selected
-                if (vacation.workers.length > 0) {
+                if (vacation.workers && vacation.workers.length > 0) {
                     // extract worker ids
                     var workerIds = jQuery.map(vacation.workers, function(worker) {
                         return worker.id;
@@ -52,6 +61,24 @@
 
                 if (jQuery.inArray(day, vacation.days) === -1) {
                     return true;
+                }
+
+                // Check if it's a full-day vacation
+                if (vacation.time && vacation.time.fullDay === false) {
+                    var startTime = vacation.time.startTime ? moment(vacation.time.startTime) : null;
+                    var endTime = vacation.time.endTime ? moment(vacation.time.endTime) : null;
+                    if (startTime && endTime) {
+                        // attach a flag so we can disable specific time slots later
+                        if (!window.ea_partial_vacations) window.ea_partial_vacations = [];
+                        window.ea_partial_vacations.push({
+                            day: day,
+                            start: startTime.format('HH:mm'),
+                            end: endTime.format('HH:mm'),
+                            workerId: workerId,
+                            tooltip: vacation.tooltip
+                        });
+                        return true; // don't block the whole day
+                    }
                 }
 
                 response = [false, 'blocked vacation', vacation.tooltip];
@@ -122,8 +149,9 @@
 
                     var dateString = date.getFullYear() + '-' + month + '-' + days;
                     var workerId = plugin.$element.find('[name="worker"]').val();
+                    var serviceId = plugin.$element.find('[name="service"]').val();
 
-                    return plugin.vacation(workerId, dateString);
+                    return plugin.vacation(workerId, dateString, serviceId);
                 }
             });
 
@@ -535,8 +563,30 @@
                 jQuery.each(response, function (index, element) {
                     var classAMPM = (ea_settings["time_format"] == "am-pm") ? ' am-pm' : '';
 
-                    if (element.count > 0) {
+                    var isDisabled = false;
+                    var tooltip_title = "";
+                    if (window.ea_partial_vacations && window.ea_partial_vacations.length > 0) {
+                        var selectedWorker = plugin.$element.find('[name="worker"]').val();
+                        window.ea_partial_vacations.forEach(function(vac) {
+                            if (vac.day === dateString && vac.workerId == selectedWorker) {
+                                var serviceDuration = parseInt(
+                                    plugin.$element.find('[name="service"] > option:selected').data('duration')
+                                ) || 0;
 
+                                var appointmentStart = moment(element.value, 'HH:mm');
+                                var appointmentEnd = appointmentStart.clone().add(serviceDuration, 'minutes');
+                                var start = moment(vac.start, 'HH:mm');
+                                var end = moment(vac.end, 'HH:mm');
+
+                                if (appointmentStart.isBefore(end) && appointmentEnd.isAfter(start)) {
+                                    tooltip_title = vac.tooltip || '';
+                                    isDisabled = true;
+                                }
+                            }
+                        });
+                    }
+
+                    if (element.count > 0 && !isDisabled) {
                         // show remaining slots or not
                         if (ea_settings['show_remaining_slots'] === '1') {
                             next_element.append('<a href="#" class="time-value slots' + classAMPM + '" data-val="' + element.value + '">' + element.show + ' (' + element.count + ')</a>');
@@ -544,11 +594,10 @@
                             next_element.append('<a href="#" class="time-value' + classAMPM + '" data-val="' + element.value + '">' + element.show + '</a>');
                         }
                     } else {
-
                         if (ea_settings['show_remaining_slots'] === '1') {
-                            next_element.append('<a class="time-disabled slots' + classAMPM + '">' + element.show + ' (0)</a>');
+                            next_element.append('<a class="time-disabled slots' + classAMPM + '" title="' + tooltip_title + '">' + element.show + ' (0)</a>');
                         } else {
-                            next_element.append('<a class="time-disabled' + classAMPM + '">' + element.show + '</a>');
+                            next_element.append('<a class="time-disabled' + classAMPM + '" title="' + tooltip_title + '">' + element.show + '</a>');
                         }
                     }
 
