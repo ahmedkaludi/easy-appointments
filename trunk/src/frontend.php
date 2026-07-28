@@ -121,6 +121,8 @@ class Easy_EA_Frontend
             true
         );
 
+
+
         // frontend standard script
         wp_register_script(
             'ea-google-recaptcha',
@@ -133,6 +135,7 @@ class Easy_EA_Frontend
         // init for masked input field
         wp_add_inline_script('ea-front-end', "jQuery(document).on('ea-init:completed', function () { jQuery('.masked-field').inputmask(); });", 'after');
         wp_add_inline_script('ea-front-bootstrap', "jQuery(document).on('ea-init:completed', function () { jQuery('.masked-field').inputmask(); });", 'after');
+        wp_add_inline_script('ea-front-bootstrap-new-ui', "jQuery(document).on('ea-init:completed', function () { jQuery('.masked-field').inputmask(); });", 'after');
 
         wp_register_style(
             'ea-jqueryui-style',
@@ -167,6 +170,18 @@ class Easy_EA_Frontend
             EA_PLUGIN_URL . 'css/eafront-bootstrap.css',
             array(),
             EASY_APPOINTMENTS_VERSION
+        );
+
+        $new_ui_version = file_exists(EA_PLUGIN_DIR . 'css/eafront-bootstrap-new-ui.css')
+            ? filemtime(EA_PLUGIN_DIR . 'css/eafront-bootstrap-new-ui.css')
+            : EASY_APPOINTMENTS_VERSION;
+
+        // frontend new UI dedicated style
+        wp_register_style(
+            'ea-frontend-bootstrap-new-ui',
+            EA_PLUGIN_URL . 'css/eafront-bootstrap-new-ui.css',
+            array('ea-bootstrap'),
+            $new_ui_version
         );
 
         // admin style
@@ -733,17 +748,23 @@ class Easy_EA_Frontend
         }
         $settings['MetaFields'] = $rows;
 
+        $is_new_ui = class_exists('EA_UI_Switcher') && EA_UI_Switcher::is_new_ui();
+        $settings['ea_new_ui'] = $is_new_ui ? '1' : '0';
+
         wp_enqueue_script('underscore');
         wp_enqueue_script('ea-validator');
         
-
         wp_enqueue_script('ea-bootstrap');
         wp_enqueue_script('ea-front-bootstrap');
 
         if (empty($settings['css.off'])) {
             wp_enqueue_style('ea-bootstrap');
             wp_enqueue_style('ea-admin-awesome-css');
-            wp_enqueue_style('ea-frontend-bootstrap');
+            if ($is_new_ui) {
+                wp_enqueue_style('ea-frontend-bootstrap-new-ui');
+            } else {
+                wp_enqueue_style('ea-frontend-bootstrap');
+            }
         }
 
         if (!empty($settings['captcha.site-key'])) {

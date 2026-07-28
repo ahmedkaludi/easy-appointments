@@ -869,8 +869,8 @@
             $isUnlimited.prop('checked', false);
             $dayTo.prop('disabled', false);
 
-            $('#ea-mnui-input-time_from').val('00:00:00');
-            $('#ea-mnui-input-time_to').val('23:59:59');
+            $('#ea-mnui-input-time_from').val('09:00:00');
+            $('#ea-mnui-input-time_to').val('17:00:00');
         }
 
         function openDrawer(row, bulk) {
@@ -904,8 +904,8 @@
                 $isUnlimited.prop('checked', unlimited);
                 $dayTo.prop('disabled', unlimited);
 
-                $('#ea-mnui-input-time_from').val(withSeconds(row.time_from) || '00:00:00');
-                $('#ea-mnui-input-time_to').val(withSeconds(row.time_to) || '23:59:59');
+                $('#ea-mnui-input-time_from').val(withSeconds(row.time_from) || '09:00:00');
+                $('#ea-mnui-input-time_to').val(withSeconds(row.time_to) || '17:00:00');
             } else {
                 resetSharedFields();
             }

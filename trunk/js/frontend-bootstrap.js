@@ -104,6 +104,45 @@
             plugin.settings.overview_template = _.template(jQuery(plugin.settings.overview_selector).html());
             this.$element.html(plugin.settings.main_template({settings:ea_settings}));
 
+            // ---- NEW UI ENHANCEMENTS ----
+            if (ea_settings['ea_new_ui'] === '1') {
+                plugin.$element.addClass('ea-new-ui ea-new-ui-container');
+                plugin.$element.find('.ea-bootstrap').addClass('ea-new-ui ea-new-ui-container');
+
+                var $bootstrap = plugin.$element.find('.ea-bootstrap').length ? plugin.$element.find('.ea-bootstrap') : plugin.$element;
+                if (ea_settings['width'] && ea_settings['width'] !== '400px') {
+                    $bootstrap.css('max-width', ea_settings['width']);
+                    plugin.$element.css('max-width', ea_settings['width']);
+                }
+                if (String(ea_settings['rtl']) === '1') {
+                    $bootstrap.addClass('ea-rtl').attr('dir', 'rtl');
+                    plugin.$element.addClass('ea-rtl').attr('dir', 'rtl');
+                }
+                if (String(ea_settings['layout_cols']) === '2' || plugin.$element.find('.step.final.col-md-6').length) {
+                    $bootstrap.addClass('ea-layout-cols-2');
+                    plugin.$element.addClass('ea-layout-cols-2');
+                }
+                if ($bootstrap.length && !$bootstrap.find('.ea-booking-title').length) {
+                    $bootstrap.prepend('<h2 class="ea-booking-title">Book an appointment</h2>');
+                }
+
+                plugin.newUiLayoutDropdowns();
+
+                if (!$bootstrap.find('.ea-booking-summary-bar').length) {
+                    $bootstrap.append(
+                        '<div class="ea-booking-summary-bar">' +
+                            '<span class="ea-summary-text empty">Select a date &amp; time to continue</span>' +
+                            '<div class="ea-new-ui-actions">' +
+                                '<button type="button" class="ea-btn ea-cancel" style="display:none;">Cancel</button>' +
+                                '<button type="button" class="ea-btn ea-submit booking-button" style="display:none;">Book appointment</button>' +
+                            '</div>' +
+                        '</div>'
+                    );
+                }
+
+            }
+            // ---- END NEW UI ENHANCEMENTS ----
+
             // close plugin if something is missing
             if (!this.settingsOk()) {
                 return;
@@ -220,7 +259,13 @@
                     }
 
                     var format = ea_settings['date_format'] + ' ' + ea_settings['time_format'];
-                    booking_data.date_time = moment(booking_data.date + 'T' + booking_data.time, ea_settings['defult_detafime_format']).format(format);
+                    var firstTime = (booking_data.time || '').toString().split(',')[0].trim();
+                    if (firstTime) {
+                        var formattedDate = moment(booking_data.date + 'T' + firstTime, ea_settings['defult_detafime_format']).format(ea_settings['date_format'] || 'YYYY-MM-DD');
+                        booking_data.date_time = formattedDate + ' ' + booking_data.time;
+                    } else {
+                        booking_data.date_time = booking_data.date + ' ' + booking_data.time;
+                    }
 
                     // set overview cancel_appointment
                     var overview_content = '';
@@ -245,15 +290,14 @@
 
                     // parentForm.find('.step').addClass('disabled');
                     parentForm.find('.final').removeClass('disabled');
-
-                    if (ea_settings['is_multiple_booking_allowed'] != '1') {
-                        parentForm.find('.final').find('select,input').first().focus();
-                        plugin.scrollToElement(parentForm.find('.final'));
-                    }
                     plugin.$element.find('#ea-payment-select').show();
 
                     // trigger global event when time slot is selected
                     jQuery(document).trigger('ea-timeslot:selected');
+
+                    if (ea_settings['ea_new_ui'] === '1') {
+                        plugin.updateNewUiSummaryBar();
+                    }
                 }
 
                 // only load form if that option is not turned off
@@ -592,27 +636,29 @@
             });
         },
         placeLoader: function ($element) {
-            if (++this.settings.ajaxCount !== 1) {
-                return;
+            this.settings.ajaxCount++;
+            if (!$element || !$element.length) {
+                $element = this.$element.find('.time').length ? this.$element.find('.time') : this.$element.find('.date');
             }
-
-            var width = $element.width();
-            var height = $element.height();
-            jQuery('#ea-loader').prependTo($element);
-            jQuery('#ea-loader').css({
-                'width': width,
-                'height': height
-            });
-            jQuery('#ea-loader').show();
+            if ($element && $element.length) {
+                $element.css('position', 'relative');
+            }
+            var $loader = jQuery('#ea-loader');
+            if (!$loader.length) {
+                $loader = jQuery('<div id="ea-loader"></div>').appendTo(this.$element);
+            }
+            if ($element && $element.length) {
+                $loader.prependTo($element);
+            }
+            $loader.css({
+                'width': '100%',
+                'height': '100%',
+                'display': 'flex'
+            }).show();
         },
         removeLoader: function () {
-            if (--this.settings.ajaxCount > 1) {
-                return;
-            }
-
             this.settings.ajaxCount = 0;
-
-            jQuery('#ea-loader').hide();
+            jQuery('#ea-loader').css('display', 'none').hide();
         },
         getCurrentStatus: function () {
             var options = jQuery(this.element).find('select').not('.custom-field');
@@ -696,8 +742,10 @@
                 var fromTo = ea_settings["label.from_to"] == "1";
                 var classAMPM = (ea_settings["time_format"] == "am-pm") ? ' am-pm' : '';
 
-                if (fromTo) {
+                if (fromTo && ea_settings["ea_new_ui"] !== "1") {
                     next_element.addClass('time well well-lg col-50');
+                } else {
+                    next_element.addClass('time well well-lg');
                 }
 
                 // sort response by value 11:00, 12:00, 13:00...
@@ -748,28 +796,30 @@
                         });
                     }
 
+                    var displayTime = (ea_settings['ea_new_ui'] === '1') ? element.show : selectLabel;
+
                     if (element.count > 0 && !isDisabled) {
                         if (ea_settings['show_remaining_slots'] === '1') {
                             next_element.append(
                                 '<a href="#" class="time-value slots' + classAMPM + '" data-val="' + element.value + '">' 
-                                + selectLabel + ' (' + element.count + ')</a>'
+                                + displayTime + ' (' + element.count + ')</a>'
                             );
                         } else {
                             next_element.append(
                                 '<a href="#" class="time-value' + classAMPM + '" data-val="' + element.value + '">' 
-                                + selectLabel + '</a>'
+                                + displayTime + '</a>'
                             );
                         }
                     } else {
                         if (ea_settings['show_remaining_slots'] === '1') {
                             next_element.append(
                                 '<a class="time-disabled slots' + classAMPM + '" title="' + tooltip_title + '">' 
-                                + selectLabel + ' (0)</a>'
+                                + displayTime + ' (0)</a>'
                             );
                         } else {
                             next_element.append(
                                 '<a class="time-disabled' + classAMPM + '" title="' + tooltip_title + '">' 
-                                + selectLabel + '</a>'
+                                + displayTime + '</a>'
                             );
                         }
                     }
@@ -786,6 +836,11 @@
                 var newRow = jQuery(document.createElement('tr'))
                     .addClass('time-row')
                     .append('<td colspan="' + colSpan +'" />');
+
+                if (ea_settings['ea_new_ui'] === '1') {
+                    var calDateLabel = plugin.formatDateLabel(dateString);
+                    newRow.find('td').append('<p class="ea-times-header">Available times \u2014 ' + calDateLabel + '</p>');
+                }
 
                 newRow.find('td').append(next_element);
 
@@ -990,7 +1045,13 @@
             booking_data.price = this.$element.find('[name="service"] > option:selected').data('price');
 
             var format = ea_settings['date_format'] + ' ' + ea_settings['time_format'];
-            booking_data.date_time = moment(booking_data.date + ' ' + booking_data.time, ea_settings['defult_detafime_format']).format(format);
+            var firstTime = (booking_data.time || '').toString().split(',')[0].trim();
+            if (firstTime) {
+                var formattedDate = moment(booking_data.date + 'T' + firstTime, ea_settings['defult_detafime_format']).format(ea_settings['date_format'] || 'YYYY-MM-DD');
+                booking_data.date_time = formattedDate + ' ' + booking_data.time;
+            } else {
+                booking_data.date_time = booking_data.date + ' ' + booking_data.time;
+            }
 
             var req = jQuery.get(ea_ajaxurl, options, function (response) {
                 plugin.res_app = response.id;
@@ -1103,9 +1164,15 @@
          * Comform appointment
          */
         finalComformation: function (event) {
-            event.preventDefault();
+            if (typeof event !== 'undefined') {
+                event.preventDefault();
+            }
 
             var plugin = this;
+
+            if (plugin.isSubmitting) {
+                return;
+            }
 
             var form = this.$element.find('form');
 
@@ -1113,7 +1180,10 @@
                 return;
             }
 
-            this.$element.find('.ea-submit').prop('disabled', true);
+            plugin.isSubmitting = true;
+
+            var $submitBtn = this.$element.find('.ea-submit');
+            $submitBtn.prop('disabled', true).addClass('ea-loading').html('<span class="ea-btn-spinner"></span><span>Booking...</span>');
 
             // make pre reservation
             var options = {
@@ -1134,20 +1204,22 @@
                 plugin.storeFormData(options);
 
                 // disable fields
-                plugin.$element.find('.ea-submit').hide();
-                plugin.$element.find('.ea-cancel').hide();
+                plugin.$element.find('.ea-submit, .booking-button, .ea-booking-summary-bar, .ea-cancel').hide();
                 plugin.$element.find('#paypal-button').hide();
 
-                if (ea_settings['show.display_thankyou_note'] == 1) {                    
-                    plugin.$element.find('.step').hide();
+                if (ea_settings['show.display_thankyou_note'] == 1) {
+                    plugin.$element.addClass('ea-booking-complete');
+                    var $bootstrap = plugin.$element.find('.ea-bootstrap').length ? plugin.$element.find('.ea-bootstrap') : plugin.$element;
+                    $bootstrap.addClass('ea-booking-complete');
+                    plugin.$element.find('.ea-filters-grid, .ea-filters-grid-full, .ea-booking-title, .ea-booking-summary-bar, .ea-new-ui-final-actions, .booking-button, .ea-submit').hide();
+                    plugin.$element.find('.step').not('.final').hide();
+                    plugin.$element.find('.step.final').find('h3, small, label, .ea_hide_show, .form-group, #booking-overview-header, #ea-overview-message, .ea-confirmation-subtext').hide();
+                    plugin.$element.find('h3, small, #booking-overview-header, #ea-overview-message, .ea-confirmation-subtext').not('.ea-confirmation-title').not('.ea-status-note').hide();
+                    plugin.$element.find('.step.final').children().not('#booking-overview').not('#ea-success-box').hide();
                     var table_html = plugin.$element.find('#booking-overview').find('table').html();
                     plugin.$element.find('#booking-overview').show();
                     plugin.$element.find('#booking-overview').find('table').hide();
                     plugin.$element.find('.final').show();
-                    plugin.$element.find('.ea_hide_show').hide();
-                    plugin.$element.find('.ea-confirmation-subtext').hide();
-                    plugin.$element.find('#booking-overview-header').hide();
-                    plugin.$element.find('#ea-overview-message').hide();
                     plugin.$element.find('#ea-success-box').show();
                     plugin.$element.find('#ea-overview-details').html(table_html);
     
@@ -1173,12 +1245,6 @@
                             const start = formatDateForGoogle(startDateObj);
                             const end = formatDateForGoogle(endDateObj);
         
-                            const calendarUrl = new URL("https://calendar.google.com/calendar/render");
-                            calendarUrl.searchParams.set("action", "TEMPLATE");
-                            calendarUrl.searchParams.set("text", title);
-                            calendarUrl.searchParams.set("dates", `${start}/${end}`);
-                            calendarUrl.searchParams.set("details", description);
-                            calendarUrl.searchParams.set("location", location);
                             calendarUrl.searchParams.set("trp", "false");
         
                             document.getElementById("ea-add-to-calendar").href = calendarUrl.toString();
@@ -1236,7 +1302,7 @@
                 if (response.responseJSON.message) {
                     alert(response.responseJSON.message);                    
                 }
-                this.$element.find('.ea-submit').prop('disabled', false);
+                this.$element.find('.ea-submit').prop('disabled', false).removeClass('ea-loading').html('Book appointment');
             }, plugin));
         },
 
@@ -1251,13 +1317,25 @@
 
             var plugin = this;
 
-            var form = this.$element.find('form');
-
-            if (!form.valid()) {
+            if (plugin.isSubmitting) {
                 return;
             }
 
-            this.$element.find('.ea-submit').prop('disabled', true);
+            var form = this.$element.find('form');
+
+            // If user clicked from summary bar and form is invalid, scroll to first invalid field or .final
+            if (!form.valid()) {
+                var $final = plugin.$element.find('.step.final');
+                if ($final.length) {
+                    plugin.scrollToElement($final);
+                }
+                return;
+            }
+
+            plugin.isSubmitting = true;
+
+            var $submitBtn = this.$element.find('.ea-submit');
+            $submitBtn.prop('disabled', true).addClass('ea-loading').html('<span class="ea-btn-spinner"></span><span>Booking...</span>');
 
             // make pre reservation
             var options = {
@@ -1299,12 +1377,15 @@
 
                         jQuery.get(ea_ajaxurl, options, function (response) {
                             plugin.res_app = response.id;
-
+                            plugin.isSubmitting = false;
                             plugin.finalComformation(event);
                         }, 'json')
                             .fail(jQuery.proxy(function (response) {
-                                alert(response.responseJSON.message);
-                                this.$element.find('.ea-submit').prop('disabled', false);
+                                plugin.isSubmitting = false;
+                                if (response.responseJSON && response.responseJSON.message) {
+                                    alert(response.responseJSON.message);
+                                }
+                                this.$element.find('.ea-submit').prop('disabled', false).removeClass('ea-loading').html('Book appointment');
                             }, plugin))
                             .always(jQuery.proxy(function () {
                                 plugin.removeLoader();
@@ -1320,12 +1401,15 @@
             // simple call
             jQuery.get(ea_ajaxurl, options, function (response) {
                 plugin.res_app = response.id;
-
+                plugin.isSubmitting = false;
                 plugin.finalComformation(event);
             }, 'json')
             .fail(jQuery.proxy(function (response) {
-                alert(response.responseJSON.message);
-                this.$element.find('.ea-submit').prop('disabled', false);
+                plugin.isSubmitting = false;
+                if (response.responseJSON && response.responseJSON.message) {
+                    alert(response.responseJSON.message);
+                }
+                this.$element.find('.ea-submit').prop('disabled', false).removeClass('ea-loading').html('Book appointment');
             }, plugin))
             .always(jQuery.proxy(function () {
                 plugin.removeLoader();
@@ -1481,6 +1565,173 @@
             var number = $el.parent().find('.ea-phone-number-part').val().replace(/^0+/, '');
 
             $el.parent().find('.full-value').val('+' + code + number);
+        },
+
+        newUiLayoutDropdowns: function () {
+            var plugin = this;
+            var $bootstrap = plugin.$element.find('.ea-bootstrap');
+
+            var $locationStep = $bootstrap.find('[name="location"]').closest('.step');
+            var $serviceStep  = $bootstrap.find('[name="service"]').closest('.step');
+            var $workerStep   = $bootstrap.find('[name="worker"]').closest('.step');
+
+            function buildFieldGroup($step, labelText) {
+                var $select = $step.find('select');
+                var $label  = $step.find('.ea-label');
+                var lText   = labelText || ($label.length ? $label.text().trim() : '');
+                $step.addClass('ea-new-ui-step-hidden').css({ position:'absolute', visibility:'hidden', width:0, height:0, overflow:'hidden', padding:0, margin:0 });
+                var $grp = jQuery('<div class="ea-field-group"></div>');
+                if (lText) {
+                    $grp.append('<label>' + lText + '</label>');
+                }
+                var $clone = $select.clone(true);
+                $clone.removeAttr('id');
+                $clone.addClass('ea-new-ui-select-clone');
+                $grp.append($clone);
+
+                function syncDisabled() {
+                    var isDisabled = $step.hasClass('disabled') || $select.is(':disabled');
+                    $clone.prop('disabled', isDisabled);
+                    if (isDisabled) {
+                        $grp.addClass('disabled').css({ opacity: 0.5, 'pointer-events': 'none' });
+                    } else {
+                        $grp.removeClass('disabled').css({ opacity: 1, 'pointer-events': 'auto' });
+                    }
+                }
+
+                $clone.on('change', function() {
+                    $select.val(jQuery(this).val()).trigger('change');
+                });
+                $select.on('change', function() {
+                    $clone.val(jQuery(this).val());
+                    if ($clone.find('option').length !== $select.find('option').length) {
+                        $clone.empty().append($select.find('option').clone());
+                    }
+                    syncDisabled();
+                });
+
+                if (window.MutationObserver && $select[0]) {
+                    var observer = new MutationObserver(function() {
+                        $clone.empty().append($select.find('option').clone());
+                        $clone.val($select.val());
+                        syncDisabled();
+                    });
+                    observer.observe($select[0], { childList: true, attributes: true, attributeFilter: ['disabled', 'class'] });
+                    if ($step[0]) {
+                        var stepObserver = new MutationObserver(function() {
+                            syncDisabled();
+                        });
+                        stepObserver.observe($step[0], { attributes: true, attributeFilter: ['class'] });
+                    }
+                }
+
+                syncDisabled();
+                return $grp;
+            }
+
+            if ($bootstrap.find('.ea-filters-grid').length) {
+                return;
+            }
+
+            var hasLocation = $locationStep.length && $locationStep.find('select').children('option').length > 1;
+            var hasService  = $serviceStep.length;
+            var hasWorker   = $workerStep.length;
+
+            var $grid = null;
+
+            if (hasLocation && hasService) {
+                $grid = jQuery('<div class="ea-filters-grid"></div>');
+                $grid.append(buildFieldGroup($locationStep, null));
+                $grid.append(buildFieldGroup($serviceStep, null));
+            } else if (hasService) {
+                $grid = jQuery('<div class="ea-filters-grid-full"></div>');
+                $grid.append(buildFieldGroup($serviceStep, null));
+            }
+
+            if (hasWorker) {
+                var $workerGrid = jQuery('<div class="ea-filters-grid-full"></div>');
+                $workerGrid.append(buildFieldGroup($workerStep, null));
+                var $title = $bootstrap.find('.ea-booking-title');
+                if ($grid) {
+                    if ($title.length) {
+                        $title.after($workerGrid).after($grid);
+                    } else {
+                        $bootstrap.prepend($workerGrid).prepend($grid);
+                    }
+                } else {
+                    if ($title.length) {
+                        $title.after($workerGrid);
+                    } else {
+                        $bootstrap.prepend($workerGrid);
+                    }
+                }
+            } else if ($grid) {
+                var $title3 = $bootstrap.find('.ea-booking-title');
+                if ($title3.length) {
+                    $title3.after($grid);
+                } else {
+                    $bootstrap.prepend($grid);
+                }
+            }
+        },
+
+        updateNewUiSummaryBar: function () {
+            var plugin = this;
+            var $bar = plugin.$element.find('.ea-booking-summary-bar');
+            if (!$bar.length) return;
+
+            var $selected = plugin.$element.find('.selected-time');
+            var $summaryText = $bar.find('.ea-summary-text');
+
+            if (!$selected.length) {
+                $summaryText.text('Select a date & time to continue').addClass('empty');
+                $bar.find('.ea-submit, .ea-cancel').hide();
+                return;
+            }
+
+            var dateVal = plugin.$element.find('.date').datepicker().val() || plugin.settings.currentDate || '';
+            var summaryParts = [];
+
+            if (dateVal) {
+                summaryParts.push(moment(dateVal, 'YYYY-MM-DD').format('ddd D MMM'));
+            }
+
+            if (ea_settings['is_multiple_booking_allowed'] == '1' && $selected.length > 1) {
+                var timesArr = [];
+                $selected.each(function () {
+                    timesArr.push(jQuery(this).data('val'));
+                });
+                summaryParts.push(timesArr.join(', '));
+            } else {
+                var timeVal = $selected.first().data('val') || '';
+                var duration = parseInt(plugin.$element.find('[name="service"] > option:selected').data('duration')) || 0;
+
+                if (timeVal) {
+                    if (ea_settings['label.from_to'] === '1' && duration > 0) {
+                        var endTime = moment(timeVal, 'HH:mm').add(duration, 'minutes').format('HH:mm');
+                        summaryParts.push(timeVal + ' - ' + endTime);
+                    } else {
+                        var slotText = timeVal;
+                        if (duration > 0) {
+                            slotText += ' \u00b7 ' + duration + ' min';
+                        }
+                        summaryParts.push(slotText);
+                    }
+                }
+            }
+
+            if (summaryParts.length) {
+                $summaryText.text(summaryParts.join(', ')).removeClass('empty');
+            } else {
+                $summaryText.text('Select a date & time to continue').addClass('empty');
+            }
+
+            $bar.find('.ea-submit, .ea-cancel').show();
+        },
+
+        formatDateLabel: function (dateString) {
+            if (!dateString) return '';
+            return moment(dateString, 'YYYY-MM-DD').format('ddd D MMMM');
         }
     });
 
@@ -1530,17 +1781,46 @@ jQuery(document).ready(function () {
             }
         });
 
-        jQuery('#ea_customer_search').on('select2:select', function (e) {
-            const customerId = e.params.data.id;
-            var parentForm = jQuery(this).closest('form');
-            jQuery.post(ea_ajaxurl, {
-                action: 'ea_get_customer_detail',
-                id: customerId,
-                nonce: ea_settings['check']
-            }, function (c) {
-                parentForm.find('[name="name"]').val(c.name);
-                parentForm.find('[name="email"]').val(c.email);
-                parentForm.find('[name="phone"]').val(c.mobile);
+        jQuery(document).on('select2:select', '#ea_customer_search', function (e) {
+            var customerId = e.params && e.params.data ? e.params.data.id : jQuery(this).val();
+            if (!customerId) return;
+
+            var $container = jQuery(this).closest('.ea-bootstrap, .ea-new-ui-container, form');
+            if (!$container.length) {
+                $container = jQuery('.ea-bootstrap, .ea-new-ui-container, form').first();
+            }
+
+            jQuery.ajax({
+                url: ea_ajaxurl,
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    action: 'ea_get_customer_detail',
+                    id: customerId,
+                    check: ea_settings['check'],
+                    nonce: ea_settings['check']
+                },
+                success: function (c) {
+                    if (typeof c === 'string') {
+                        try { c = JSON.parse(c); } catch (err) {}
+                    }
+                    if (!c || typeof c !== 'object') return;
+
+                    var setFieldVal = function(selectors, val) {
+                        if (val === undefined || val === null) return;
+                        selectors.forEach(function(sel) {
+                            var $field = $container.find(sel);
+                            if ($field.length) {
+                                $field.val(val).trigger('change').trigger('input');
+                            }
+                        });
+                    };
+
+                    setFieldVal(['#name', '[name="name"]', '#customer_name', '[name="customer_name"]'], c.name);
+                    setFieldVal(['#email', '[name="email"]', '#customer_email', '[name="customer_email"]'], c.email);
+                    setFieldVal(['#phone', '[name="phone"]', '#mobile', '[name="mobile"]', '#phone_number'], c.mobile || c.phone);
+                    setFieldVal(['#address', '[name="address"]'], c.address);
+                }
             });
         });
     }

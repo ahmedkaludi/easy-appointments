@@ -262,8 +262,20 @@
 							tp_inst._defaults.millisec > tp_inst._defaults.millisecMax ? tp_inst._defaults.millisecMax : tp_inst._defaults.millisec;
 			tp_inst.microsec = tp_inst._defaults.microsec < tp_inst._defaults.microsecMin ? tp_inst._defaults.microsecMin :
 							tp_inst._defaults.microsec > tp_inst._defaults.microsecMax ? tp_inst._defaults.microsecMax : tp_inst._defaults.microsec;
-			tp_inst.ampm = '';
 			tp_inst.$input = $input;
+
+			$input.off('keydown.timepicker').on('keydown.timepicker', function (e) {
+				if (e.which === 9 && !e.shiftKey) {
+					var $picker = $('#ui-datepicker-div');
+					if ($picker.is(':visible')) {
+						var $firstSelect = $picker.find('.ui-timepicker-select').first();
+						if ($firstSelect.length) {
+							e.preventDefault();
+							$firstSelect.focus();
+						}
+					}
+				}
+			});
 
 			if (tp_inst._defaults.altField) {
 				tp_inst.$altInput = $(tp_inst._defaults.altField);
@@ -1048,9 +1060,35 @@
 
 					obj.children('select').remove();
 
-					$(sel).appendTo(obj).change(function (e) {
+					$(sel).appendTo(obj).on('change keyup', function (e) {
 						tp_inst._onTimeChange();
 						tp_inst._onSelectHandler();
+					}).on('keydown', function (e) {
+						if (e.which === 13) { // Enter key
+							e.preventDefault();
+							tp_inst._onTimeChange();
+							tp_inst._onSelectHandler();
+							$.datepicker._hideDatepicker();
+						} else if (e.which === 9) { // Tab key navigation inside timepicker
+							var $selects = $('#ui-datepicker-div').find('.ui-timepicker-select, .ui-datepicker-buttonpane button:visible');
+							var idx = $selects.index(this);
+							if (e.shiftKey) {
+								if (idx > 0) {
+									e.preventDefault();
+									$selects.eq(idx - 1).focus();
+								} else if (idx === 0) {
+									e.preventDefault();
+									if (tp_inst.$input) {
+										tp_inst.$input.focus();
+									}
+								}
+							} else {
+								if (idx >= 0 && idx < $selects.length - 1) {
+									e.preventDefault();
+									$selects.eq(idx + 1).focus();
+								}
+							}
+						}
 					});
 
 					return obj;

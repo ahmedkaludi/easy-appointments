@@ -103,7 +103,9 @@ class EAAjax
         add_action('wp_ajax_ea_month_status', array($this, 'ajax_month_status'));
         add_action('wp_ajax_nopriv_ea_month_status', array($this, 'ajax_month_status'));
         add_action('wp_ajax_ea_search_customers', array($this, 'ajax_search_customers'));
+        add_action('wp_ajax_nopriv_ea_search_customers', array($this, 'ajax_search_customers'));
         add_action('wp_ajax_ea_get_customer_detail', array($this, 'ajax_customer_detail'));
+        add_action('wp_ajax_nopriv_ea_get_customer_detail', array($this, 'ajax_customer_detail'));
         add_action('wp_ajax_ea_update_customer_data', array($this, 'ea_update_customer_data'));       
 
         // end frontend
@@ -1199,12 +1201,23 @@ class EAAjax
             'user','created','price','ip','session'
         );
 
+        $app_id = 0;
+        if (!empty($_REQUEST['id'])) {
+            $app_id = intval($_REQUEST['id']);
+        } else if (!empty($_REQUEST['res_app'])) {
+            $app_id = intval($_REQUEST['res_app']);
+        }
+
         foreach ($data as $key => $rem) {
             if (!in_array($key, $dont_remove)) unset($data[$key]);
         }
 
-        unset($data['id']);
-        $data['id'] = null;
+        if ($app_id > 0) {
+            $data['id'] = $app_id;
+        } else {
+            unset($data['id']);
+            $data['id'] = null;
+        }
         unset($data['action']);
 
         $block_time = (int)$this->options->get_option_value('block.time', 0);
@@ -1212,7 +1225,7 @@ class EAAjax
         // Load open slots
         $open_slots = $this->logic->get_open_slots(
             $data['location'], $data['service'], $data['worker'],
-            $data['date'], null, true, $block_time
+            $data['date'], $app_id > 0 ? $app_id : null, true, $block_time
         );
 
         $slots_list = array();
@@ -1325,10 +1338,21 @@ class EAAjax
             // ===========================
 
             $is_free = false;
-            foreach ($open_slots as $slot) {
-                if ($slot['value'] === $data['start'] && $slot['count'] > 0) {
+            $app_id  = isset($data['id']) ? (int)$data['id'] : 0;
+
+            if ($app_id > 0) {
+                $existing = $this->models->get_row('ea_appointments', $app_id);
+                if ($existing && !empty($existing->id)) {
                     $is_free = true;
-                    break;
+                }
+            }
+
+            if (!$is_free) {
+                foreach ($open_slots as $slot) {
+                    if ($slot['value'] === $data['start'] && $slot['count'] > 0) {
+                        $is_free = true;
+                        break;
+                    }
                 }
             }
 
@@ -1396,12 +1420,22 @@ class EAAjax
 
         // Validate first slot
         $open_slots = $this->logic->get_open_slots($data['location'], $data['service'], $data['worker'], $data['date'], null, true, $block_time);
-        $is_free = false;
+        $is_free    = false;
+        $app_id     = isset($data['id']) ? (int)$data['id'] : 0;
 
-        foreach ($open_slots as $value) {
-            if ($value['value'] === $data['start'] && $value['count'] > 0) {
+        if ($app_id > 0) {
+            $existing = $this->models->get_row('ea_appointments', $app_id);
+            if ($existing && !empty($existing->id)) {
                 $is_free = true;
-                break;
+            }
+        }
+
+        if (!$is_free) {
+            foreach ($open_slots as $value) {
+                if ($value['value'] === $data['start'] && $value['count'] > 0) {
+                    $is_free = true;
+                    break;
+                }
             }
         }
 
@@ -3530,7 +3564,7 @@ class EAAjax
     public function ajax_search_customers () {
         $settings = $this->options->get_options();
 
-        if (!is_user_logged_in()) {
+        if (empty($settings['show.customer_search_front']) && !is_user_logged_in()) {
             wp_send_json([]);
         }
 
@@ -3539,31 +3573,28 @@ class EAAjax
         // phpcs:ignore WordPress.Security.NonceVerification.Recommended
         $q = isset($_GET['q']) ? sanitize_text_field(wp_unslash($_GET['q'])) : '';
 
-        // Fetch user_ids stored in comma-separated format
-        // Assume `user_id` column is a comma-separated list of user IDs like: 1,2,3
-        // We use FIND_IN_SET for matching
         $like_clause = '%' . $wpdb->esc_like($q) . '%';
-        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-        $results = $wpdb->get_results($wpdb->prepare(
-            "
-            SELECT id, name, email 
-            FROM {$wpdb->prefix}ea_customers 
-            WHERE FIND_IN_SET(%d, user_id) 
-            AND (name LIKE %s OR email LIKE %s)
-            LIMIT 20
-            ",
-            $current_user_id, $like_clause, $like_clause
-        ));
+        if (current_user_can('manage_options') || !empty($settings['show.customer_search_front'])) {
+            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+            $results = $wpdb->get_results($wpdb->prepare(
+                "SELECT id, name, email FROM {$wpdb->prefix}ea_customers WHERE (name LIKE %s OR email LIKE %s) LIMIT 20",
+                $like_clause, $like_clause
+            ));
+        } else {
+            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+            $results = $wpdb->get_results($wpdb->prepare(
+                "SELECT id, name, email FROM {$wpdb->prefix}ea_customers WHERE FIND_IN_SET(%d, user_id) AND (name LIKE %s OR email LIKE %s) LIMIT 20",
+                $current_user_id, $like_clause, $like_clause
+            ));
+        }
 
         wp_send_json($results);
     }
 
-
-    
     function ajax_customer_detail () {
         $settings = $this->options->get_options();
 
-        if (isset($settings['show.customer_search_front']) && $settings['show.customer_search_front'] == 1 && is_user_logged_in()) {
+        if (!empty($settings['show.customer_search_front']) || is_user_logged_in()) {
             $this->validate_nonce();
 
             global $wpdb;
@@ -3579,12 +3610,12 @@ class EAAjax
                 wp_send_json([], 404);
             }
 
-            if (current_user_can('manage_options')) {
+            if (current_user_can('manage_options') || !empty($settings['show.customer_search_front'])) {
                 wp_send_json($cust);
             }
 
             $allowed_user_ids = array_filter(array_map('trim', explode(',', (string) ($cust['user_id'] ?? ''))));
-            if (!in_array((string) $current_user_id, $allowed_user_ids, true)) {
+            if ($current_user_id > 0 && !in_array((string) $current_user_id, $allowed_user_ids, true)) {
                 wp_send_json([], 403);
             }
 

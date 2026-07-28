@@ -29,12 +29,24 @@ class EASlotsLogic {
     {
         $mode = $this->options->get_option_value('multiple.work', '1');
         $table_name = "{$this->wpdb->prefix}ea_appointments";
-        $static_part = "SELECT * FROM {$table_name} WHERE 
-			{$this->PLACEHOLDER} AND 
-			date <= %s AND
-			end_date >= %s AND
-			id <> %d AND 
-			status NOT IN ('abandoned','canceled')";
+        $current_session = session_id();
+
+        if (!empty($current_session)) {
+            $static_part = "SELECT * FROM {$table_name} WHERE 
+                {$this->PLACEHOLDER} AND 
+                date <= %s AND
+                end_date >= %s AND
+                id <> %d AND 
+                NOT (status = 'reservation' AND session = %s) AND
+                status NOT IN ('abandoned','canceled')";
+        } else {
+            $static_part = "SELECT * FROM {$table_name} WHERE 
+                {$this->PLACEHOLDER} AND 
+                date <= %s AND
+                end_date >= %s AND
+                id <> %d AND 
+                status NOT IN ('abandoned','canceled')";
+        }
 
         $params = array();
 
@@ -61,10 +73,12 @@ class EASlotsLogic {
                 break;
         }
 
-
         $params[] = $day;
         $params[] = $day;
         $params[] = $app_id;
+        if (!empty($current_session)) {
+            $params[] = $current_session;
+        }
         $full_query = str_replace($this->PLACEHOLDER, $dynamic_part, $static_part);
         // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
         return $this->wpdb->prepare($full_query, $params);

@@ -9,3 +9,21 @@
 .ui-timepicker-rtl dl { text-align: right; padding: 0 5px 0 0; }
 .ui-timepicker-rtl dl dt{ float: right; clear: right; }
 .ui-timepicker-rtl dl dd { margin: 0 40% 10px 10px; }
+
+.ui-timepicker-select {
+	padding: 4px 8px !important;
+	border: 1px solid #d1d5db !important;
+	border-radius: 6px !important;
+	background-color: #ffffff !important;
+	font-size: 13px !important;
+	font-weight: 500 !important;
+	outline: none !important;
+	transition: border-color 0.15s ease, box-shadow 0.15s ease !important;
+}
+
+.ui-timepicker-select:focus,
+.ui-timepicker-select:focus-visible {
+	border-color: #2563eb !important;
+	box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.25) !important;
+	background-color: #ffffff !important;
+}
