@@ -92,6 +92,9 @@
 
                     if (startTime.isValid() && endTime.isValid()) {
                         if (!window.ea_partial_vacations) window.ea_partial_vacations = [];
+                        window.ea_partial_vacations = window.ea_partial_vacations.filter(function(v) {
+                            return !(v.day === day && v.workerId == workerId);
+                        });
                         window.ea_partial_vacations.push({
                             day: day,
                             start: startTime.format('HH:mm'),
@@ -848,15 +851,14 @@
                     var isDisabled = false;
                     var tooltip_title = "";
                     if (window.ea_partial_vacations && window.ea_partial_vacations.length > 0) {
-                        var selectedWorker = plugin.$element.find('[name="worker"]').val();
+                        var selectedWorker = plugin.$element.find('[name="worker"] option:selected, .ea-filters-grid select[data-c="worker"] option:selected').filter(':selected').val() || plugin.$element.find('[name="worker"]').val();
+                        var $selectedService = plugin.$element.find('[name="service"] option:selected, .ea-filters-grid select[data-c="service"] option:selected').filter(':selected');
+                        var serviceDuration = parseInt($selectedService.data('duration')) || parseInt(plugin.$element.find('[name="service"]').find('option:selected').data('duration')) || 0;
+
                         window.ea_partial_vacations.forEach(function(vac) {
                             if (vac.day === plugin.settings.currentDate && vac.workerId == selectedWorker) {
-                                var slotTime = moment(element.value, 'HH:mm');
                                 var start = moment(vac.start, 'HH:mm');
                                 var end = moment(vac.end, 'HH:mm');
-                                var serviceDuration = parseInt(
-                                    plugin.$element.find('[name="service"] > option:selected').data('duration')
-                                ) || 0;
 
                                 // appointment start
                                 var appointmentStart = moment(element.value, 'HH:mm');
@@ -864,7 +866,7 @@
                                 // appointment end
                                 var appointmentEnd = appointmentStart.clone().add(serviceDuration, 'minutes');
 
-                                // overlap check
+                                // overlap check: appointment overlaps if appointmentStart < vac.end AND appointmentEnd > vac.start
                                 if (
                                     appointmentStart.isBefore(end) &&
                                     appointmentEnd.isAfter(start)

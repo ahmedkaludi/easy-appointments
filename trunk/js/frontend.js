@@ -92,6 +92,9 @@
 
                     if (startTime.isValid() && endTime.isValid()) {
                         if (!window.ea_partial_vacations) window.ea_partial_vacations = [];
+                        window.ea_partial_vacations = window.ea_partial_vacations.filter(function(v) {
+                            return !(v.day === day && v.workerId == workerId);
+                        });
                         window.ea_partial_vacations.push({
                             day: day,
                             start: startTime.format('HH:mm'),
@@ -651,13 +654,12 @@
                     var isDisabled = false;
                     var tooltip_title = "";
                     if (window.ea_partial_vacations && window.ea_partial_vacations.length > 0) {
-                        var selectedWorker = plugin.$element.find('[name="worker"]').val();
+                        var selectedWorker = plugin.$element.find('[name="worker"] option:selected, .ea-filters-grid select[data-c="worker"] option:selected').filter(':selected').val() || plugin.$element.find('[name="worker"]').val();
+                        var $selectedService = plugin.$element.find('[name="service"] option:selected, .ea-filters-grid select[data-c="service"] option:selected').filter(':selected');
+                        var serviceDuration = parseInt($selectedService.data('duration')) || parseInt(plugin.$element.find('[name="service"]').find('option:selected').data('duration')) || 0;
+
                         window.ea_partial_vacations.forEach(function(vac) {
                             if (vac.day === dateString && vac.workerId == selectedWorker) {
-                                var serviceDuration = parseInt(
-                                    plugin.$element.find('[name="service"] > option:selected').data('duration')
-                                ) || 0;
-
                                 var appointmentStart = moment(element.value, 'HH:mm');
                                 var appointmentEnd = appointmentStart.clone().add(serviceDuration, 'minutes');
                                 var start = moment(vac.start, 'HH:mm');
