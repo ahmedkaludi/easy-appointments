@@ -1550,42 +1550,84 @@
         /**
          * Cancel appointment
          */
-        cancelApp: function (event) {
-            event.preventDefault();
+        resetForm: function () {
             var plugin = this;
 
-            if (ea_settings['pre.reservation'] === '0') {
-                plugin.chooseStep();
-                plugin.res_app = null;
-                this.$element.find('.step:not(.final)').prevAll('.step').removeClass('disabled');
-                return false;
+            // 1. Reset standard form fields
+            var $form = plugin.$element.find('form');
+            if ($form.length && $form[0] && $form[0].reset) {
+                $form[0].reset();
             }
 
-            this.$element.find('.final').addClass('disabled');
-            this.$element.find('.step:not(.final)').prevAll('.step').removeClass('disabled');
+            // 2. Reset select filters (Location, Service, Worker)
+            plugin.$element.find('select.filter, select.custom-field, .ea-new-ui select').each(function() {
+                var $select = jQuery(this);
+                var firstVal = $select.find('option:first').val() || '';
+                $select.val(firstVal);
+            });
 
+            // 3. Clear service description
+            plugin.$element.find('#ea-service-description').empty().hide();
+
+            // 4. Clear selected time slots and empty time container
+            plugin.$element.find('.selected-time').removeClass('selected-time');
+            plugin.$element.find('.time').empty();
+            plugin.$element.find('.time-row').remove();
+
+            // 5. Reset datepicker
+            var $date = plugin.$element.find('.date');
+            if ($date.length && $date.datepicker) {
+                try {
+                    $date.datepicker('setDate', null);
+                    $date.find('.ui-datepicker-current-day').removeClass('ui-datepicker-current-day');
+                } catch (e) {}
+            }
+
+            // 6. Reset form validation errors
+            if ($form.length && $form.data('validator')) {
+                $form.data('validator').resetForm();
+            }
+
+            // 7. Clear overview box
+            plugin.$element.find('#booking-overview').empty();
+
+            // 8. Reset summary bar
+            var $bar = plugin.$element.find('.ea-booking-summary-bar');
+            if ($bar.length) {
+                $bar.find('.ea-summary-text').text('Select a date & time to continue').addClass('empty');
+                $bar.find('.ea-submit, .ea-cancel').hide();
+            }
+
+            // 9. Reset plugin state
+            plugin.res_app = null;
+            plugin.updateSubmitButtonState();
+
+            // 10. Re-init step visibility/blur
+            plugin.blurNextSteps(plugin.$element.find('.step:visible:first'), true, true);
+        },
+
+        cancelApp: function (event) {
+            if (event) event.preventDefault();
+            var plugin = this;
+
+            var currentResApp = plugin.res_app;
             var _hash = plugin.$element.find('.ea-cancel').data('_hash');
 
-            var options = {
-                id: this.res_app,
-                check: ea_settings['check'],
-                _hash: _hash,
-                action: 'ea_cancel_appointment'
-            };
+            plugin.resetForm();
 
-            options._cb = Math.floor(Math.random() * 1000000);
+            if (ea_settings['pre.reservation'] === '1' && currentResApp) {
+                var options = {
+                    id: currentResApp,
+                    check: ea_settings['check'],
+                    _hash: _hash,
+                    action: 'ea_cancel_appointment',
+                    _cb: Math.floor(Math.random() * 1000000)
+                };
 
-            jQuery.get(ea_ajaxurl, options, function (response) {
-                if (response.data) {
-                    // remove selected time
-                    plugin.$element.find('.time').find('.selected-time').removeClass('selected-time');
+                jQuery.get(ea_ajaxurl, options, function (response) {}, 'json');
+            }
 
-                    //plugin.scrollToElement(plugin.$element.find('.date'));
-                    plugin.chooseStep();
-                    plugin.res_app = null;
-
-                }
-            }, 'json');
+            return false;
         },
         chooseStep: function () {
             var plugin = this;

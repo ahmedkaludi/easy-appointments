@@ -975,44 +975,71 @@
         /**
          * Cancel appointment
          */
-        cancelApp: function (event) {
-            event.preventDefault();
-
+        resetForm: function () {
             var plugin = this;
 
-            this.$element.find('.final').addClass('disabled').prevAll('.step').removeClass('disabled');
-
-            var _hash = plugin.$element.find('.ea-cancel').data('_hash');
-
-            var options = {
-                id: this.res_app,
-                check: ea_settings['check'],
-                _hash: _hash,
-                action: 'ea_cancel_appointment'
-            };
-
-            if (ea_settings['pre.reservation'] === '0') {
-                // remove selected time
-                plugin.$element.find('.time').find('.selected-time').removeClass('selected-time');
-
-                //plugin.scrollToElement(plugin.$element.find('.date'));
-                plugin.chooseStep();
-                return;
+            var $form = plugin.$element.find('form');
+            if ($form.length && $form[0] && $form[0].reset) {
+                $form[0].reset();
             }
 
-            options._cb    = Math.floor(Math.random() * 1000000);
+            plugin.$element.find('select.filter, select.custom-field, .ea-new-ui select').each(function() {
+                var $select = jQuery(this);
+                var firstVal = $select.find('option:first').val() || '';
+                $select.val(firstVal);
+            });
 
-            jQuery.get(ea_ajaxurl, options, function (response) {
-                if (response.data) {
-                    // remove selected time
-                    plugin.$element.find('.time').find('.selected-time').removeClass('selected-time');
+            plugin.$element.find('#ea-service-description').empty().hide();
+            plugin.$element.find('.selected-time').removeClass('selected-time');
+            plugin.$element.find('.time').empty();
+            plugin.$element.find('.time-row').remove();
 
-                    //plugin.scrollToElement(plugin.$element.find('.date'));
-                    plugin.chooseStep();
-                    plugin.res_app = null;
+            var $date = plugin.$element.find('.date');
+            if ($date.length && $date.datepicker) {
+                try {
+                    $date.datepicker('setDate', null);
+                    $date.find('.ui-datepicker-current-day').removeClass('ui-datepicker-current-day');
+                } catch (e) {}
+            }
 
-                }
-            }, 'json');
+            if ($form.length && $form.data('validator')) {
+                $form.data('validator').resetForm();
+            }
+
+            plugin.$element.find('#booking-overview').empty();
+
+            var $bar = plugin.$element.find('.ea-booking-summary-bar');
+            if ($bar.length) {
+                $bar.find('.ea-summary-text').text('Select a date & time to continue').addClass('empty');
+                $bar.find('.ea-submit, .ea-cancel').hide();
+            }
+
+            plugin.res_app = null;
+            plugin.blurNextSteps(plugin.$element.find('.step:visible:first'), true);
+        },
+
+        cancelApp: function (event) {
+            if (event) event.preventDefault();
+            var plugin = this;
+
+            var currentResApp = plugin.res_app;
+            var _hash = plugin.$element.find('.ea-cancel').data('_hash');
+
+            plugin.resetForm();
+
+            if (ea_settings['pre.reservation'] === '1' && currentResApp) {
+                var options = {
+                    id: currentResApp,
+                    check: ea_settings['check'],
+                    _hash: _hash,
+                    action: 'ea_cancel_appointment',
+                    _cb: Math.floor(Math.random() * 1000000)
+                };
+
+                jQuery.get(ea_ajaxurl, options, function (response) {}, 'json');
+            }
+
+            return false;
         },
         chooseStep: function () {
             var plugin = this;
