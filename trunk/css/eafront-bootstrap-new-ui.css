@@ -277,9 +277,20 @@
 
 .ea-new-ui #ea-service-description {
     font-size: 13.5px !important;
-    color: rgba(32, 30, 29, 0.62) !important;
+    color: #334155 !important;
+    background-color: #f8fafc !important;
+    border: 1px solid #e2e8f0 !important;
+    border-left: 4px solid #2563eb !important;
+    border-radius: 8px !important;
+    padding: 10px 14px !important;
     white-space: pre-line !important;
-    margin-top: 4px !important;
+    margin-top: 10px !important;
+    margin-bottom: 14px !important;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04) !important;
+}
+
+.ea-new-ui #ea-service-description:empty {
+    display: none !important;
 }
 
 /* --------------------------------------------------------------------------
@@ -614,9 +625,10 @@ a.time-disabled {
     font-family: var(--ea-sans) !important;
     text-decoration: line-through !important;
     cursor: not-allowed !important;
-    pointer-events: none !important;
+    pointer-events: auto !important;
     box-shadow: none !important;
     opacity: 1 !important;
+    position: relative !important;
 }
 
 .ea-bootstrap.ea-bootstrap .time-disabled:hover,
@@ -624,9 +636,9 @@ a.time-disabled {
 .ea-new-ui .time-disabled:hover,
 .time-disabled:hover,
 a.time-disabled:hover {
-    background-color: #f8f8f7 !important;
-    border-color: #e2e2e0 !important;
-    color: #a1a1aa !important;
+    background-color: #fee2e2 !important;
+    border-color: #fca5a5 !important;
+    color: #991b1b !important;
     text-decoration: line-through !important;
 }
 

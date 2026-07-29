@@ -29,6 +29,12 @@ defined( 'ABSPATH' ) || exit;
                 <td class="ea-label"><%- settings['trans.service'] %></td>
                 <td class="value"><%- data.service %></td>
             </tr>
+            <% if(data.service_description && data.service_description.length > 0) { %>
+            <tr class="row-service-description">
+                <td class="ea-label"><?php echo esc_html__('Description', 'easy-appointments'); ?></td>
+                <td class="value" style="white-space: pre-line;"><%- data.service_description %></td>
+            </tr>
+            <% } %>
             <% } %>
             <% if(data.worker.indexOf('_') !== 0) { %>
             <tr class="row-worker">
@@ -61,6 +67,12 @@ defined( 'ABSPATH' ) || exit;
                 <td class="ea-label"><%- settings['trans.service'] %></td>
                 <td class="value"><%- data.service %></td>
             </tr>
+            <% if(data.service_description && data.service_description.length > 0) { %>
+            <tr class="row-service-description">
+                <td class="ea-label"><?php echo esc_html__('Description', 'easy-appointments'); ?></td>
+                <td class="value" style="white-space: pre-line;"><%- data.service_description %></td>
+            </tr>
+            <% } %>
             <% } %>
             <% if(data.worker.indexOf('_') !== 0) { %>
             <tr class="row-worker">

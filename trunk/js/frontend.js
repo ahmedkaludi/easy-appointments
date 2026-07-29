@@ -63,19 +63,41 @@
                     return true;
                 }
 
-                // Check if it's a full-day vacation
-                if (vacation.time && vacation.time.fullDay === false) {
-                    var startTime = vacation.time.startTime ? moment(vacation.time.startTime) : null;
-                    var endTime = vacation.time.endTime ? moment(vacation.time.endTime) : null;
-                    if (startTime && endTime) {
-                        // attach a flag so we can disable specific time slots later
+                // Check if it's a partial vacation
+                var isPartial = false;
+                var rawStart = null;
+                var rawEnd = null;
+
+                if (vacation.time) {
+                    if (typeof vacation.time === 'object') {
+                        if (vacation.time.fullDay === false || vacation.time.fullDay === '0' || vacation.time.fullDay === 0) {
+                            isPartial = true;
+                            rawStart = vacation.time.startTime || vacation.time.start || vacation.time.from || vacation.time.time_from;
+                            rawEnd = vacation.time.endTime || vacation.time.end || vacation.time.to || vacation.time.time_to;
+                        }
+                    }
+                } else if (vacation.fullDay === false || vacation.fullDay === 0 || vacation.fullDay === '0') {
+                    isPartial = true;
+                    rawStart = vacation.startTime || vacation.start || vacation.from || vacation.time_from;
+                    rawEnd = vacation.endTime || vacation.end || vacation.to || vacation.time_to;
+                } else if (vacation.time_from && vacation.time_to) {
+                    isPartial = true;
+                    rawStart = vacation.time_from;
+                    rawEnd = vacation.time_to;
+                }
+
+                if (isPartial && rawStart && rawEnd) {
+                    var startTime = moment(rawStart, ['HH:mm', 'H:mm', 'HH:mm:ss']);
+                    var endTime = moment(rawEnd, ['HH:mm', 'H:mm', 'HH:mm:ss']);
+
+                    if (startTime.isValid() && endTime.isValid()) {
                         if (!window.ea_partial_vacations) window.ea_partial_vacations = [];
                         window.ea_partial_vacations.push({
                             day: day,
                             start: startTime.format('HH:mm'),
                             end: endTime.format('HH:mm'),
                             workerId: workerId,
-                            tooltip: vacation.tooltip
+                            tooltip: vacation.tooltip || ''
                         });
                         return true; // don't block the whole day
                     }
@@ -148,8 +170,37 @@
                     }
 
                     var dateString = date.getFullYear() + '-' + month + '-' + days;
-                    var workerId = plugin.$element.find('[name="worker"]').val();
+                    var locationId = plugin.$element.find('[name="location"]').val();
                     var serviceId = plugin.$element.find('[name="service"]').val();
+                    var workerId = plugin.$element.find('[name="worker"]').val();
+
+                    // Filter connection working days
+                    if (typeof ea_connections !== 'undefined' && Array.isArray(ea_connections) && ea_connections.length > 0) {
+                        if (locationId && serviceId && workerId) {
+                            var dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+                            var dayName = dayNames[date.getDay()];
+                            var isWorkingDay = false;
+
+                            jQuery.each(ea_connections, function(i, conn) {
+                                if (conn.location == locationId && conn.service == serviceId && conn.worker == workerId) {
+                                    if (conn.day_from && dateString < conn.day_from) return true;
+                                    if (conn.day_to && dateString > conn.day_to) return true;
+
+                                    if (conn.day_of_week) {
+                                        var daysArr = conn.day_of_week.split(',').map(function(s) { return s.trim(); });
+                                        if (jQuery.inArray(dayName, daysArr) !== -1) {
+                                            isWorkingDay = true;
+                                            return false;
+                                        }
+                                    }
+                                }
+                            });
+
+                            if (!isWorkingDay) {
+                                return [false, 'not-working', 'Not Working'];
+                            }
+                        }
+                    }
 
                     return plugin.vacation(workerId, dateString, serviceId);
                 }
@@ -188,6 +239,7 @@
                     booking_data.date = plugin.$element.find('.date').datepicker().val();
                     booking_data.time = plugin.$element.find('.selected-time').data('val');
                     booking_data.price = plugin.$element.find('[name="service"] > option:selected').data('price');
+                    booking_data.service_description = plugin.$element.find('[name="service"] > option:selected').data('description') || '';
 
                     var format = ea_settings['date_format'] + ' ' + ea_settings['time_format'];
                     booking_data.date_time = moment(booking_data.date + ' ' + booking_data.time, ea_settings['default_datetime_format']).format(format);
@@ -375,11 +427,13 @@
          */
         getNextOptions: function (event) {
             var current = jQuery(event.target);
+            var currentCategory = current.data('c');
+            var isLocationOrService = (currentCategory === 'location' || currentCategory === 'service');
 
             var step = current.parent('.step');
 
             // blur next options
-            this.blurNextSteps(step);
+            this.blurNextSteps(step, isLocationOrService);
 
             // nothing selected
             if (current.val() === '') {
@@ -388,7 +442,7 @@
 
             var options = {};
 
-            options[current.data('c')] = current.val();
+            options[currentCategory] = current.val();
 
             var data_prev = step.prevAll('.step');
 
@@ -411,8 +465,10 @@
             var next = jQuery(nextStep).find('select,input');
 
             if (next.length === 0) {
-                this.blurNextSteps(nextStep);
-                //nextStep.removeClass('disabled');
+                this.blurNextSteps(nextStep, isLocationOrService);
+                if (currentCategory === 'worker') {
+                    this.scrollToElement(this.$element.find('.date'));
+                }
                 return;
             }
 
@@ -479,7 +535,10 @@
 
                 plugin.removeLoader();
 
-                plugin.scrollToElement(next_element.parent());
+                // Only auto-scroll when moving past worker step to calendar
+                if (options.next !== 'service' && options.next !== 'worker') {
+                    plugin.scrollToElement(next_element.parent());
+                }
             }, 'json')
             .error(function(xhr, status) {
 
@@ -495,14 +554,39 @@
             });
         },
         placeLoader: function ($element) {
-            var width = $element.width();
-            var height = $element.height();
-            jQuery('#ea-loader').prependTo($element);
-            jQuery('#ea-loader').css({
-                'width': width,
-                'height': height
-            });
-            jQuery('#ea-loader').show();
+            if (!$element || !$element.length || $element.is(':hidden')) {
+                var fieldName = ($element && $element.length) ? $element.find('select, input').data('c') : '';
+                var $visibleGrp = fieldName ? this.$element.find('.ea-new-ui-field-group[data-field="' + fieldName + '"]') : jQuery();
+                if ($visibleGrp.length) {
+                    $element = $visibleGrp;
+                } else {
+                    $element = this.$element.find('.time').length ? this.$element.find('.time') : this.$element.find('.date');
+                }
+            }
+            if ($element && $element.length) {
+                $element.css('position', 'relative');
+            }
+            var $loader = jQuery('#ea-loader');
+            if (!$loader.length) {
+                $loader = jQuery('<div id="ea-loader"></div>').appendTo(this.$element);
+            }
+            if ($element && $element.length) {
+                $loader.appendTo($element);
+            }
+            $loader.css({
+                'position': 'absolute',
+                'top': 0,
+                'left': 0,
+                'width': '100%',
+                'height': '100%',
+                'min-height': '35px',
+                'z-index': 100,
+                'display': 'flex',
+                'align-items': 'center',
+                'justify-content': 'center',
+                'background': 'rgba(255, 255, 255, 0.7)',
+                'border-radius': '8px'
+            }).show();
         },
         removeLoader: function () {
             jQuery('#ea-loader').hide();
@@ -558,10 +642,11 @@
 
                 var next_element = jQuery(calendar).parent().next('.step').children('.time');
 
-                next_element.empty();
+                var fromTo = ea_settings["label.from_to"] == "1";
 
                 jQuery.each(response, function (index, element) {
                     var classAMPM = (ea_settings["time_format"] == "am-pm") ? ' am-pm' : '';
+                    var displayTime = fromTo ? element.show + ' - ' + element.ends : element.show;
 
                     var isDisabled = false;
                     var tooltip_title = "";
@@ -586,18 +671,33 @@
                         });
                     }
 
+                    if (!tooltip_title && typeof ea_vacations !== 'undefined' && Array.isArray(ea_vacations)) {
+                        var selWorker = plugin.$element.find('[name="worker"]').val();
+                        jQuery.each(ea_vacations, function(idx, v) {
+                            if (v.days && jQuery.inArray(dateString, v.days) !== -1) {
+                                if (v.workers && v.workers.length > 0) {
+                                    var wIds = jQuery.map(v.workers, function(w) { return w.id; });
+                                    if (jQuery.inArray(selWorker, wIds) !== -1) {
+                                        tooltip_title = v.tooltip || '';
+                                        return false;
+                                    }
+                                }
+                            }
+                        });
+                    }
+
                     if (element.count > 0 && !isDisabled) {
                         // show remaining slots or not
                         if (ea_settings['show_remaining_slots'] === '1') {
-                            next_element.append('<a href="#" class="time-value slots' + classAMPM + '" data-val="' + element.value + '">' + element.show + ' (' + element.count + ')</a>');
+                            next_element.append('<a href="#" class="time-value slots' + classAMPM + '" data-val="' + element.value + '">' + displayTime + ' (' + element.count + ')</a>');
                         } else {
-                            next_element.append('<a href="#" class="time-value' + classAMPM + '" data-val="' + element.value + '">' + element.show + '</a>');
+                            next_element.append('<a href="#" class="time-value' + classAMPM + '" data-val="' + element.value + '">' + displayTime + '</a>');
                         }
                     } else {
                         if (ea_settings['show_remaining_slots'] === '1') {
-                            next_element.append('<a class="time-disabled slots' + classAMPM + '" title="' + tooltip_title + '">' + element.show + ' (0)</a>');
+                            next_element.append('<a class="time-disabled slots' + classAMPM + '" title="' + tooltip_title + '">' + displayTime + ' (0)</a>');
                         } else {
-                            next_element.append('<a class="time-disabled' + classAMPM + '" title="' + tooltip_title + '">' + element.show + '</a>');
+                            next_element.append('<a class="time-disabled' + classAMPM + '" title="' + tooltip_title + '">' + displayTime + '</a>');
                         }
                     }
 

@@ -588,10 +588,13 @@ class Easy_EA_Frontend
             }
         }
         $service_start_data = json_encode($service_start_data);
+        $data_connections = json_encode($this->models->get_connections_combinations());
         // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
         echo "<script>var ea_settings = {$data_settings};</script>";
         // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
         echo "<script>var ea_vacations = {$data_vacation};</script>";
+        // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+        echo "<script>var ea_connections = {$data_connections};</script>";
         // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
         echo "<script>var ea_service_start_data = {$service_start_data};</script>";
         // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
