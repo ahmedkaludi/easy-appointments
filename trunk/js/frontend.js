@@ -727,7 +727,14 @@
             options._cb    = Math.floor(Math.random() * 1000000);
 
             jQuery.get(ea_ajaxurl, options, function (response) {
-                plugin.$element.find('.ea-submit').hide();
+                plugin.isSubmitting = false;
+
+                // Remove loader spinner, update button text to Booked, and hide cancel button
+                jQuery('.ea-submit, .booking-button')
+                    .removeClass('ea-loading')
+                    .prop('disabled', true)
+                    .html('<span>Booked</span>');
+                jQuery('.ea-cancel').hide();
                 plugin.$element.find('.ea-cancel').hide();
                 plugin.$element.find('#paypal-button').hide();
 

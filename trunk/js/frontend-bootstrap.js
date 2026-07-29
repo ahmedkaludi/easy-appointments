@@ -1206,9 +1206,15 @@
             var req = jQuery.get(ea_ajaxurl, options, function (response) {
                 // store values from form
                 plugin.storeFormData(options);
+                plugin.isSubmitting = false;
 
-                // disable fields
-                plugin.$element.find('.ea-submit, .booking-button, .ea-booking-summary-bar, .ea-cancel').hide();
+                // Remove loader spinner, update button text to Booked, and hide cancel button
+                jQuery('.ea-submit, .booking-button')
+                    .removeClass('ea-loading')
+                    .prop('disabled', true)
+                    .html('<span>Booked</span>');
+                jQuery('.ea-cancel').hide();
+                plugin.$element.find('.ea-cancel').hide();
                 plugin.$element.find('#paypal-button').hide();
 
                 if (ea_settings['show.display_thankyou_note'] == 1) {

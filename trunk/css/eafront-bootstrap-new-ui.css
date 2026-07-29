@@ -1194,3 +1194,15 @@ button.booking-button:disabled {
     color: #ffffff !important;
     box-shadow: none !important;
 }
+
+/* Force hide submit and cancel buttons ONLY when booking is completed */
+.ea-booking-complete .ea-submit,
+.ea-booking-complete .booking-button,
+.ea-booking-complete .ea-cancel,
+.ea-booking-complete button.ea-submit,
+.ea-booking-complete button.booking-button,
+.ea-booking-complete .ea-booking-summary-bar .ea-submit,
+.ea-booking-complete .ea-booking-summary-bar .booking-button,
+.ea-booking-complete .ea-booking-summary-bar .ea-cancel {
+    display: none !important;
+}
