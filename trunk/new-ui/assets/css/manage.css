@@ -962,6 +962,12 @@
     border-color: var(--ea-border);
 }
 
+.ea-mnui-badge-scheduled {
+    background: #eff6ff;
+    color: #2563eb;
+    border-color: #bfdbfe;
+}
+
 /* ---------- Table: connection column, day badges ---------- */
 
 .ea-mnui-col-connection {

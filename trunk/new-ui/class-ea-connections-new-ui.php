@@ -233,6 +233,8 @@ class EA_Connections_New_UI
                 'inactive'              => esc_html__('Inactive', 'easy-appointments'),
                 'working'               => esc_html__('Working', 'easy-appointments'),
                 'notWorking'            => esc_html__('Not working', 'easy-appointments'),
+                'scheduled'             => esc_html__('Scheduled', 'easy-appointments'),
+                'expired'               => esc_html__('Expired', 'easy-appointments'),
                 'yes'                   => esc_html__('Yes', 'easy-appointments'),
                 'no'                    => esc_html__('No', 'easy-appointments'),
                 'activeFrom'            => esc_html__('Active from', 'easy-appointments'),

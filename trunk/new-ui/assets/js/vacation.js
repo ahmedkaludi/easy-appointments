@@ -39,17 +39,91 @@
         return w ? w.name : '';
     }
 
+    function parseTimeValue(rawVal) {
+        if (!rawVal) return '';
+        var str = $.trim(String(rawVal));
+        if (!str) return '';
+
+        // Case 1: ISO 8601 Date string e.g. "2026-07-29T21:30:07.687Z" or "2026-07-29T03:00:00"
+        if (str.indexOf('T') > -1) {
+            var mIso = moment(str);
+            if (mIso.isValid()) {
+                return mIso.format('HH:mm');
+            }
+            var matchIso = str.match(/T(\d{2}:\d{2})/);
+            if (matchIso) {
+                return matchIso[1];
+            }
+        }
+
+        // Case 2: Standard time string e.g. "03:00", "03:00:00", "3:00", "03:00 am", "15:30"
+        var mTime = moment(str, ['HH:mm:ss', 'HH:mm', 'H:mm', 'h:mm a', 'hh:mm a', 'h:mm A', 'hh:mm A']);
+        if (mTime.isValid()) {
+            return mTime.format('HH:mm');
+        }
+
+        // Case 3: Regex fallback for digits HH:mm
+        var matchReg = str.match(/(\d{1,2}):(\d{2})/);
+        if (matchReg) {
+            var h = matchReg[1].length === 1 ? '0' + matchReg[1] : matchReg[1];
+            return h + ':' + matchReg[2];
+        }
+
+        return '';
+    }
+
+    function parseVacationTime(vac) {
+        if (!vac) {
+            return { fullDay: true, startTime: '', endTime: '' };
+        }
+
+        var timeObj = vac.time || {};
+        var fullDay = true;
+
+        if (typeof timeObj.fullDay !== 'undefined') {
+            fullDay = timeObj.fullDay === true || timeObj.fullDay === '1' || timeObj.fullDay === 1 || timeObj.fullDay === 'true';
+        } else if (typeof timeObj.full_day !== 'undefined') {
+            fullDay = timeObj.full_day === true || timeObj.full_day === '1' || timeObj.full_day === 1 || timeObj.full_day === 'true';
+        } else if (typeof vac.fullDay !== 'undefined') {
+            fullDay = vac.fullDay === true || vac.fullDay === '1' || vac.fullDay === 1 || vac.fullDay === 'true';
+        } else if (typeof vac.full_day !== 'undefined') {
+            fullDay = vac.full_day === true || vac.full_day === '1' || vac.full_day === 1 || vac.full_day === 'true';
+        } else if (timeObj.startTime || timeObj.start || timeObj.from || timeObj.time_from || vac.startTime || vac.start || vac.from || vac.time_from) {
+            fullDay = false;
+        }
+
+        var rawStart = timeObj.startTime || timeObj.start || timeObj.from || timeObj.time_from || vac.startTime || vac.start || vac.from || vac.time_from || '';
+        var rawEnd = timeObj.endTime || timeObj.end || timeObj.to || timeObj.time_to || vac.endTime || vac.end || vac.to || vac.time_to || '';
+
+        var startTime = parseTimeValue(rawStart);
+        var endTime = parseTimeValue(rawEnd);
+
+        if (!fullDay && (!startTime || !endTime)) {
+            fullDay = true;
+        }
+
+        return {
+            fullDay: fullDay,
+            startTime: startTime,
+            endTime: endTime
+        };
+    }
+
     function formatDateDisplay(dateStr) {
-        var m = moment(dateStr, 'YYYY-MM-DD');
+        if (!dateStr) return '';
+        var m = moment(dateStr, ['YYYY-MM-DD', 'YYYY-MM-DDTHH:mm:ss', moment.ISO_8601]);
+        if (!m.isValid()) {
+            m = moment(dateStr);
+        }
         return m.isValid() ? m.format('MMM D, YYYY') : dateStr;
     }
 
     function formatTimeRange(vac) {
-        var time = vac.time || {};
-        if (!time || time.fullDay || (!time.startTime && !time.endTime)) {
+        var parsed = parseVacationTime(vac);
+        if (parsed.fullDay || !parsed.startTime || !parsed.endTime) {
             return i18n.fullDay || 'Full Day';
         }
-        return (time.startTime || '') + ' - ' + (time.endTime || '');
+        return parsed.startTime + ' - ' + parsed.endTime;
     }
 
     function setStatus(msg) {
@@ -303,12 +377,11 @@
         $('#ea-mnui-input-title').val(vac.title || '');
         $('#ea-mnui-input-tooltip').val(vac.tooltip || '');
 
-        var time = vac.time || {};
-        var fullDay = !time || time.fullDay || (!time.startTime && !time.endTime);
-        $('#ea-mnui-input-fullday').prop('checked', fullDay);
-        $('#ea-mnui-time-range-wrap').toggle(!fullDay);
-        $('#ea-mnui-input-time_from').val(time.startTime ? String(time.startTime).substring(0, 5) : '');
-        $('#ea-mnui-input-time_to').val(time.endTime ? String(time.endTime).substring(0, 5) : '');
+        var parsed = parseVacationTime(vac);
+        $('#ea-mnui-input-fullday').prop('checked', parsed.fullDay);
+        $('#ea-mnui-time-range-wrap').toggle(!parsed.fullDay);
+        $('#ea-mnui-input-time_from').val(parsed.startTime);
+        $('#ea-mnui-input-time_to').val(parsed.endTime);
 
         renderWorkerChips();
         renderDateChips();
@@ -368,16 +441,30 @@
             return { id: id, name: workerName(id) };
         });
 
+        var isoStart = fullDay ? null : (moment('2020-01-01 ' + startTime, 'YYYY-MM-DD HH:mm').isValid() ? moment('2020-01-01 ' + startTime, 'YYYY-MM-DD HH:mm').toISOString() : startTime);
+        var isoEnd = fullDay ? null : (moment('2020-01-01 ' + endTime, 'YYYY-MM-DD HH:mm').isValid() ? moment('2020-01-01 ' + endTime, 'YYYY-MM-DD HH:mm').toISOString() : endTime);
+
         return {
             id: editingId || genId(),
             title: title,
             tooltip: tooltip,
             workers: selectedWorkers,
             days: formDates.slice(),
+            fullDay: fullDay,
+            full_day: fullDay,
+            from: isoStart,
+            to: isoEnd,
+            time_from: isoStart,
+            time_to: isoEnd,
             time: {
                 fullDay: fullDay,
-                startTime: fullDay ? null : startTime,
-                endTime: fullDay ? null : endTime
+                full_day: fullDay,
+                startTime: isoStart,
+                endTime: isoEnd,
+                from: isoStart,
+                to: isoEnd,
+                time_from: isoStart,
+                time_to: isoEnd
             }
         };
     }

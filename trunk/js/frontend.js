@@ -88,7 +88,13 @@
 
                 if (isPartial && rawStart && rawEnd) {
                     var startTime = moment(rawStart, ['HH:mm', 'H:mm', 'HH:mm:ss']);
+                    if (!startTime.isValid()) {
+                        startTime = moment(rawStart);
+                    }
                     var endTime = moment(rawEnd, ['HH:mm', 'H:mm', 'HH:mm:ss']);
+                    if (!endTime.isValid()) {
+                        endTime = moment(rawEnd);
+                    }
 
                     if (startTime.isValid() && endTime.isValid()) {
                         if (!window.ea_partial_vacations) window.ea_partial_vacations = [];

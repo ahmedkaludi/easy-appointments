@@ -254,15 +254,19 @@
         function connectionStatus(record) {
             var today = isoDate(new Date());
 
-            if (today < record.day_from || today > record.day_to) {
-                return { badge: 'ea-mnui-badge-inactive', label: i18n.inactive };
+            if (String(record.is_working) !== '1') {
+                return { badge: 'ea-mnui-badge-not-working', label: i18n.notWorking };
             }
 
-            if (String(record.is_working) === '1') {
-                return { badge: 'ea-mnui-badge-working', label: i18n.working };
+            if (record.day_from && today < record.day_from) {
+                return { badge: 'ea-mnui-badge-scheduled', label: i18n.scheduled || 'Scheduled' };
             }
 
-            return { badge: 'ea-mnui-badge-not-working', label: i18n.notWorking };
+            if (record.day_to && today > record.day_to) {
+                return { badge: 'ea-mnui-badge-inactive', label: i18n.expired || 'Expired' };
+            }
+
+            return { badge: 'ea-mnui-badge-working', label: i18n.working };
         }
 
         function renderPagination(totalCount) {
