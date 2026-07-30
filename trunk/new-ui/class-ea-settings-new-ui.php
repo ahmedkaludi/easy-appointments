@@ -406,7 +406,7 @@ class EA_Settings_New_UI
         wp_enqueue_style(
             'ea-new-settings-ui',
             $base_url . 'css/settings.css',
-            array('ea-select2'),
+            array('ea-select2', 'time-picker'),
             $css_ver
         );
 

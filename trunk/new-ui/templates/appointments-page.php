@@ -12,7 +12,7 @@ if (!defined('WPINC')) {
     die;
 }
 ?>
-<div class="wrap ea-naui-wrap">
+<div id="ea-admin-app" class="wrap ea-naui-wrap">
     <div id="ea-naui-app" class="ea-naui">
 
         <header class="ea-naui-header">

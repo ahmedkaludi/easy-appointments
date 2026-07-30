@@ -10,7 +10,7 @@ if (!defined('WPINC')) {
 }
 ?>
 
-<div class="ea-help-wrap">
+<div id="ea-admin-app" class="ea-help-wrap">
     <div class="ea-help">
         <!-- Header -->
         <div class="ea-help-header">

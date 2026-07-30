@@ -107,10 +107,10 @@
     color: #fff;
 }
 
-.ea-help-btn-primary:hover {
+#ea-admin-app .ea-help-btn-primary:hover {
     background: var(--ea-blue-dark);
     border-color: var(--ea-blue-dark);
-    color: #fff !important;
+    color: #fff;
 }
 
 .ea-help-btn-primary:disabled {

@@ -15,7 +15,7 @@ if (!defined('WPINC')) {
     die;
 }
 ?>
-<div class="wrap ea-nsui-wrap">
+<div id="ea-admin-app" class="wrap ea-nsui-wrap">
     <div id="ea-nsui-app" class="ea-nsui">
 
         <div id="ea-nsui-notice" class="ea-nsui-notice" role="status" aria-live="polite"></div>

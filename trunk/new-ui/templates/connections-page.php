@@ -16,7 +16,7 @@ if (!defined('WPINC')) {
     die;
 }
 ?>
-<div class="wrap ea-mnui-wrap">
+<div id="ea-admin-app" class="wrap ea-mnui-wrap">
     <div id="ea-mnui-connections-app" class="ea-mnui">
 
         <header class="ea-mnui-header">

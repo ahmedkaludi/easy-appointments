@@ -754,6 +754,10 @@ class Easy_EA_Frontend
         $is_new_ui = class_exists('EA_UI_Switcher') && EA_UI_Switcher::is_new_ui();
         $settings['ea_new_ui'] = $is_new_ui ? '1' : '0';
 
+        if ($is_new_ui && (!is_array($atts) || !array_key_exists('width', $atts))) {
+            $settings['width'] = '800px';
+        }
+
         wp_enqueue_script('underscore');
         wp_enqueue_script('ea-validator');
         

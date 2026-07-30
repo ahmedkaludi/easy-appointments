@@ -149,7 +149,7 @@ class EA_Connections_New_UI
         wp_enqueue_style(
             'ea-new-manage-ui',
             $base_url . 'css/manage.css',
-            array(),
+            array('jquery-style', 'time-picker'),
             $css_ver
         );
 

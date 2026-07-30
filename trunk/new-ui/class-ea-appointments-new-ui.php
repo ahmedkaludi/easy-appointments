@@ -153,7 +153,7 @@ class EA_Appointments_New_UI
         wp_enqueue_style(
             'ea-new-appointments-ui',
             $base_url . 'css/appointments.css',
-            array(),
+            array('jquery-style', 'time-picker'),
             $css_ver
         );
 

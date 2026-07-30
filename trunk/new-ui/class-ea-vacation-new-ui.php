@@ -153,7 +153,7 @@ class EA_Vacation_New_UI
         wp_enqueue_style(
             'ea-new-manage-ui',
             $base_url . 'css/manage.css',
-            array(),
+            array('jquery-style', 'time-picker'),
             $manage_css_ver
         );
 

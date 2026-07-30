@@ -103,10 +103,10 @@
     color: #fff;
 }
 
-.ea-publish-btn-primary:hover {
+#ea-admin-app .ea-publish-btn-primary:hover {
     background: var(--ea-blue-dark);
     border-color: var(--ea-blue-dark);
-    color: #fff !important;
+    color: #fff;
 }
 
 .ea-publish-btn-ghost {

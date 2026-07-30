@@ -22,10 +22,10 @@
     display: block;
 }
 
-.ea-mnui-field.has-error input,
-.ea-mnui-field.has-error select,
-.ea-mnui-field.has-error textarea {
-    border-color: #d63638 !important;
+#ea-admin-app .ea-mnui-field.has-error input,
+#ea-admin-app .ea-mnui-field.has-error select,
+#ea-admin-app .ea-mnui-field.has-error textarea {
+    border-color: #d63638;
 }
 
 /* ---------- Table tag pills (Employees / Dates columns) ---------- */

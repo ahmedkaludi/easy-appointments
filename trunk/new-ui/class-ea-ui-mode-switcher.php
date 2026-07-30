@@ -114,8 +114,8 @@ class EA_UI_Switcher
      */
     public static function get_mode()
     {
-        $mode = get_option(self::OPTION_KEY, 'new');
-        return in_array($mode, array('new', 'old'), true) ? $mode : 'new';
+        $mode = get_option(self::OPTION_KEY, 'old');
+        return in_array($mode, array('new', 'old'), true) ? $mode : 'old';
     }
 
     public static function is_new_ui()
