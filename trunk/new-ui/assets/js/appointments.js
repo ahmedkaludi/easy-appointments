@@ -562,7 +562,11 @@
          * ---------- Filters wiring ----------
          */
         $('#ea-naui-filter-from, #ea-naui-filter-to').datepicker({
-            dateFormat: (jQuery.datepicker.regional[cfg.datepickerLocale] || {}).dateFormat
+            dateFormat: (jQuery.datepicker.regional[cfg.datepickerLocale] || {}).dateFormat,
+            minDate: 0,
+            beforeShow: function (input, inst) {
+                inst.dpDiv.addClass('ea-mnui-datepicker-popup');
+            }
         }).datepicker('hide').trigger('blur');
 
         $app.on('change', '#ea-naui-filter-locations', function () {
@@ -888,6 +892,9 @@
                     dateFormat: (jQuery.datepicker.regional[cfg.datepickerLocale] || {}).dateFormat,
                     minDate: editingId ? null : 0,
                     beforeShowDay: vacationCheck,
+                    beforeShow: function (input, inst) {
+                        inst.dpDiv.addClass('ea-mnui-datepicker-popup');
+                    },
                     onSelect: function () {
                         $(this).trigger('change');
                     }

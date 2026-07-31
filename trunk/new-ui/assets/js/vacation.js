@@ -545,6 +545,10 @@
         // Datepicker for adding individual vacation dates.
         $('#ea-mnui-input-add-date').datepicker({
             dateFormat: 'yy-mm-dd',
+            minDate: 0,
+            beforeShow: function (input, inst) {
+                inst.dpDiv.addClass('ea-mnui-datepicker-popup');
+            },
             onSelect: function (dateText) {
                 addDate(dateText);
                 $(this).val('');

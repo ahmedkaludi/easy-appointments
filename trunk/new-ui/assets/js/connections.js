@@ -598,15 +598,28 @@
         /**
          * ---------- Date range (jQuery UI datepicker) ----------
          */
+        function toggleDayToDisabled(disabled) {
+            $dayTo.prop('disabled', !!disabled);
+            if (disabled) {
+                $dayTo.datepicker('disable');
+            } else {
+                $dayTo.datepicker('enable');
+            }
+        }
+
         function initDatepickers() {
             $dayFrom.datepicker({
                 dateFormat: (jQuery.datepicker.regional[cfg.datepickerLocale] || {}).dateFormat,
+                minDate: 0,
+                beforeShow: function (input, inst) {
+                    inst.dpDiv.addClass('ea-mnui-datepicker-popup');
+                },
                 onSelect: function (dateText, inst) {
                     var fromDate = $dayFrom.datepicker('getDate');
                     var fromIso = isoDate(fromDate);
                     $dayFrom.data('iso', fromIso);
 
-                    $dayTo.datepicker('option', 'minDate', fromDate);
+                    $dayTo.datepicker('option', 'minDate', fromDate || 0);
 
                     if ($isUnlimited.is(':checked')) {
                         applyUnlimitedEndDate(fromIso);
@@ -625,6 +638,10 @@
 
             $dayTo.datepicker({
                 dateFormat: (jQuery.datepicker.regional[cfg.datepickerLocale] || {}).dateFormat,
+                minDate: 0,
+                beforeShow: function (input, inst) {
+                    inst.dpDiv.addClass('ea-mnui-datepicker-popup');
+                },
                 onSelect: function () {
                     $dayTo.data('iso', isoDate($dayTo.datepicker('getDate')));
                     maybeAutoDetectUnlimited();
@@ -650,7 +667,11 @@
         function setDayFrom(iso) {
             $dayFrom.val(iso ? formatDate(iso) : '');
             $dayFrom.data('iso', iso);
-            $dayFrom.datepicker('setDate', iso ? new Date(iso) : null);
+            var dateObj = iso ? new Date(iso) : null;
+            $dayFrom.datepicker('setDate', dateObj);
+            if (dateObj) {
+                $dayTo.datepicker('option', 'minDate', dateObj);
+            }
         }
 
         function setDayTo(iso) {
@@ -685,14 +706,14 @@
 
             var isFarFuture = diffYears(fromIso, toIso) >= 10;
             $isUnlimited.prop('checked', isFarFuture);
-            $dayTo.prop('disabled', isFarFuture);
+            toggleDayToDisabled(isFarFuture);
         }
 
         $isUnlimited.on('change', function () {
             var fromIso = getDayFromIso();
             var checked = $(this).is(':checked');
 
-            $dayTo.prop('disabled', checked);
+            toggleDayToDisabled(checked);
 
             if (!fromIso) {
                 return;
@@ -871,7 +892,7 @@
             setDayFrom(today);
             setDayTo(isoDate(addDays(today, 1)));
             $isUnlimited.prop('checked', false);
-            $dayTo.prop('disabled', false);
+            toggleDayToDisabled(false);
 
             $('#ea-mnui-input-time_from').val('09:00:00');
             $('#ea-mnui-input-time_to').val('17:00:00');
@@ -906,7 +927,7 @@
 
                 var unlimited = row.day_from && row.day_to && diffYears(row.day_from, row.day_to) >= 10;
                 $isUnlimited.prop('checked', unlimited);
-                $dayTo.prop('disabled', unlimited);
+                toggleDayToDisabled(unlimited);
 
                 $('#ea-mnui-input-time_from').val(withSeconds(row.time_from) || '09:00:00');
                 $('#ea-mnui-input-time_to').val(withSeconds(row.time_to) || '17:00:00');
