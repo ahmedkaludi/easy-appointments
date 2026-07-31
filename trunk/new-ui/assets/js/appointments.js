@@ -50,6 +50,7 @@
         var $drawerForm = $('#ea-naui-drawer-form');
         var $drawerOverlay = $('#ea-naui-drawer-overlay');
         var editingId = null; // null = creating a new appointment
+        var editingStart = null;
         var cloningFrom = null;
 
         jQuery.datepicker.setDefaults(jQuery.datepicker.regional[cfg.datepickerLocale] || {});
@@ -828,6 +829,7 @@
 
         function openDrawer(row, isClone) {
             editingId = isClone ? null : (row.id || null);
+            editingStart = isClone ? null : (row.start || null);
             cloningFrom = isClone ? row.id : null;
 
             var drawerTitle;
@@ -884,7 +886,7 @@
                 .datepicker('destroy')
                 .datepicker({
                     dateFormat: (jQuery.datepicker.regional[cfg.datepickerLocale] || {}).dateFormat,
-                    minDate: 0,
+                    minDate: editingId ? null : 0,
                     beforeShowDay: vacationCheck,
                     onSelect: function () {
                         $(this).trigger('change');
@@ -1010,6 +1012,7 @@
             $drawerOverlay.removeClass('is-open');
             $('#ea-naui-input-date').datepicker('hide').trigger('blur');
             editingId = null;
+            editingStart = null;
             cloningFrom = null;
         }
 
@@ -1024,6 +1027,9 @@
                 $time.empty().prop('disabled', true);
                 return;
             }
+
+            var targetTime = (typeof preselect === 'string' && preselect.trim() !== '') ? preselect : (editingStart || '');
+            var normTarget = (targetTime || '').toString().trim().substring(0, 5);
 
             $.get(cfg.ajaxUrl, {
                 action: 'ea_open_times',
@@ -1062,6 +1068,8 @@
                     }
                 });
 
+                var foundPreselect = false;
+
                 $.each(slots || [], function (i, slot) {
                     var slotStart = slot.value;
                     var slotEnd = slot.ends || slotStart;
@@ -1078,12 +1086,22 @@
                         return true;
                     }
 
-                    var selected = slot.value === preselect ? ' selected' : '';
+                    var normSlot = (slot.value || '').toString().trim().substring(0, 5);
+                    var selected = '';
+                    if (normTarget !== '' && normSlot === normTarget) {
+                        selected = ' selected';
+                        foundPreselect = true;
+                    }
                     var disabled = slot.count < 1 ? ' disabled' : '';
                     html += '<option value="' + escapeHtml(slot.value) + '"' + selected + disabled + '>' +
                         escapeHtml(slot.show) + (slot.ends ? ' - ' + escapeHtml(slot.ends) : '') +
                         '</option>';
                 });
+
+                if (normTarget !== '' && !foundPreselect) {
+                    var displayTime = formatTime(targetTime);
+                    html = '<option value="' + escapeHtml(normTarget) + '" selected>' + escapeHtml(displayTime) + '</option>' + html;
+                }
 
                 $time.html(html).prop('disabled', false);
             }, 'json');

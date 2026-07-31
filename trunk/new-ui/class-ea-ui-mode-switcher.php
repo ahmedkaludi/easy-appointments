@@ -114,8 +114,21 @@ class EA_UI_Switcher
      */
     public static function get_mode()
     {
-        $mode = get_option(self::OPTION_KEY, 'old');
-        return in_array($mode, array('new', 'old'), true) ? $mode : 'old';
+        $mode = get_option(self::OPTION_KEY, null);
+        if ($mode !== null && in_array($mode, array('new', 'old'), true)) {
+            return $mode;
+        }
+
+        // Option not explicitly set yet.
+        // Check if this site was upgraded from an older version (< 4.0.0) or is a fresh install.
+        $db_version = get_option('easy_app_db_version', null);
+        if ($db_version !== null && version_compare($db_version, '4.0.0', '<')) {
+            // Existing user upgrading from version < 4.0.0 -> keep classic (old) UI by default
+            return 'old';
+        }
+
+        // Fresh installation (or version >= 4.0.0 fresh) -> new UI by default
+        return 'new';
     }
 
     public static function is_new_ui()

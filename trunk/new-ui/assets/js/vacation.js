@@ -130,6 +130,14 @@
         $('#ea-mnui-status-msg').text(msg || '');
     }
 
+    function showScreenLoader() {
+        $('#ea-screen-loader').css('display', 'flex');
+    }
+
+    function hideScreenLoader() {
+        $('#ea-screen-loader').hide();
+    }
+
     // ---------------------------------------------------------------
     // Networking - the whole vacations array is GET/POSTed at once,
     // mirroring the classic React VacationsCommunicator against the
@@ -486,6 +494,7 @@
 
         var $btn = $('.ea-mnui-drawer-save');
         $btn.prop('disabled', true).text(i18n.saving || 'Saving…');
+        showScreenLoader();
 
         persist(newList)
             .done(function () {
@@ -499,6 +508,7 @@
             })
             .always(function () {
                 $btn.prop('disabled', false).text(i18n.save || 'Save');
+                hideScreenLoader();
             });
     }
 
@@ -507,6 +517,7 @@
             return ids.indexOf(String(vac.id)) === -1;
         });
 
+        showScreenLoader();
         persist(newList)
             .done(function () {
                 vacations = newList;
@@ -519,6 +530,9 @@
             })
             .fail(function () {
                 setStatus(i18n.genericError || 'Something went wrong. Please try again.');
+            })
+            .always(function () {
+                hideScreenLoader();
             });
     }
 
@@ -628,6 +642,7 @@
         $('.ea-mnui-refresh').on('click', function (e) {
             e.preventDefault();
             setStatus(i18n.loading || 'Loading vacations…');
+            showScreenLoader();
             fetchVacations()
                 .done(function (data) {
                     vacations = Array.isArray(data) ? data : [];
@@ -636,6 +651,9 @@
                 })
                 .fail(function () {
                     setStatus(i18n.genericError || 'Something went wrong. Please try again.');
+                })
+                .always(function () {
+                    hideScreenLoader();
                 });
         });
 
