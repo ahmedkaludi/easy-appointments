@@ -275,35 +275,37 @@
     }
 
     // ---------------------------------------------------------------
-    // Drawer - employee chips
+    // Drawer - employee Select2 multi-select
     // ---------------------------------------------------------------
-    function renderWorkerChips() {
-        var $wrap = $('#ea-mnui-vacation-workers');
-        $wrap.empty();
+    function populateWorkerSelect(selectedIds) {
+        selectedIds = selectedIds || [];
+        var $select = $('#ea-mnui-input-workers');
+        $select.empty();
 
         workers.forEach(function (w) {
-            var checked = formWorkerIds.indexOf(String(w.id)) > -1;
-            var $chip = $(
-                '<label class="ea-mnui-chip' + (checked ? ' is-checked' : '') + '">' +
-                    '<input type="checkbox" value="' + escapeHtml(w.id) + '"' + (checked ? ' checked' : '') + '>' +
-                    '<span>' + escapeHtml(w.name) + '</span>' +
-                '</label>'
-            );
-            $wrap.append($chip);
+            var isSelected = selectedIds.indexOf(String(w.id)) > -1;
+            var option = new Option(w.name, w.id, isSelected, isSelected);
+            $select.append(option);
         });
+
+        if ($.fn.select2) {
+            $select.trigger('change.select2');
+        }
     }
 
-    function syncWorkerChipState($checkbox) {
-        var id = String($checkbox.val());
-        var idx = formWorkerIds.indexOf(id);
-        if ($checkbox.is(':checked')) {
-            if (idx === -1) {
-                formWorkerIds.push(id);
+    function initWorkerSelect2() {
+        var $select = $('#ea-mnui-input-workers');
+        if ($.fn.select2) {
+            if ($select.hasClass('select2-hidden-accessible')) {
+                $select.select2('destroy');
             }
-        } else if (idx > -1) {
-            formWorkerIds.splice(idx, 1);
+            $select.select2({
+                placeholder: i18n.selectEmployees || 'Select employees…',
+                allowClear: true,
+                dropdownParent: $('#ea-mnui-drawer'),
+                width: '100%'
+            });
         }
-        $checkbox.closest('.ea-mnui-chip').toggleClass('is-checked', $checkbox.is(':checked'));
     }
 
     // ---------------------------------------------------------------
@@ -371,7 +373,7 @@
         $('#ea-mnui-input-time_to').val('');
         $('#ea-mnui-input-add-date').val('');
 
-        renderWorkerChips();
+        populateWorkerSelect([]);
         renderDateChips();
         clearFieldErrors();
     }
@@ -391,7 +393,7 @@
         $('#ea-mnui-input-time_from').val(parsed.startTime);
         $('#ea-mnui-input-time_to').val(parsed.endTime);
 
-        renderWorkerChips();
+        populateWorkerSelect(formWorkerIds);
         renderDateChips();
         clearFieldErrors();
     }
@@ -414,6 +416,9 @@
             $('[data-field="tooltip"]').addClass('has-error');
             valid = false;
         }
+
+        var selectedWorkerIds = $('#ea-mnui-input-workers').val() || [];
+        formWorkerIds = $.isArray(selectedWorkerIds) ? selectedWorkerIds.map(String) : [];
 
         if (!formWorkerIds.length) {
             $('[data-field="workers"]').addClass('has-error');
@@ -565,8 +570,14 @@
             renderDateChips();
         });
 
-        $(document).on('change', '#ea-mnui-vacation-workers input[type="checkbox"]', function () {
-            syncWorkerChipState($(this));
+        initWorkerSelect2();
+
+        $('#ea-mnui-input-workers').on('change', function () {
+            var vals = $(this).val() || [];
+            formWorkerIds = $.isArray(vals) ? vals.map(String) : [];
+            if (formWorkerIds.length) {
+                $('[data-field="workers"]').removeClass('has-error');
+            }
         });
 
         $('#ea-mnui-input-fullday').on('change', function () {

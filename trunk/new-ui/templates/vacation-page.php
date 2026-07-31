@@ -109,8 +109,8 @@ if (!defined('WPINC')) {
                 </div>
 
                 <div class="ea-mnui-field ea-mnui-span-full" data-field="workers">
-                    <label><?php esc_html_e('Employees', 'easy-appointments'); ?> <span class="ea-mnui-required">*</span></label>
-                    <div class="ea-mnui-chip-group ea-mnui-chip-group-scroll" id="ea-mnui-vacation-workers"></div>
+                    <label for="ea-mnui-input-workers"><?php esc_html_e('Employees', 'easy-appointments'); ?> <span class="ea-mnui-required">*</span></label>
+                    <select id="ea-mnui-input-workers" class="ea-mnui-select2" multiple="multiple" data-placeholder="<?php esc_attr_e('Select employees…', 'easy-appointments'); ?>" style="width: 100%;"></select>
                     <div class="ea-mnui-field-error"><?php esc_html_e('Select at least one employee.', 'easy-appointments'); ?></div>
                 </div>
 

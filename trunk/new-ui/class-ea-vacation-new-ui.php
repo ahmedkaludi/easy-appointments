@@ -167,9 +167,30 @@ class EA_Vacation_New_UI
             $vacation_css_ver
         );
 
+        $select2_css_file = EA_PLUGIN_DIR . 'css/select2.min.css';
+        $select2_js_file  = EA_PLUGIN_DIR . 'js/select2.min.js';
+        $select2_css_ver = file_exists($select2_css_file) ? filemtime($select2_css_file) : EASY_APPOINTMENTS_VERSION;
+        $select2_js_ver  = file_exists($select2_js_file) ? filemtime($select2_js_file) : EASY_APPOINTMENTS_VERSION;
+
+        wp_enqueue_style(
+            'ea-select2',
+            EA_PLUGIN_URL . 'css/select2.min.css',
+            array(),
+            $select2_css_ver
+        );
+
         // Date and time picker used for vacation dates and hours.
         wp_enqueue_style('jquery-style');
         wp_enqueue_style('time-picker');
+
+        wp_enqueue_script(
+            'ea-select2',
+            EA_PLUGIN_URL . 'js/select2.min.js',
+            array('jquery'),
+            $select2_js_ver,
+            true
+        );
+
         wp_enqueue_script('jquery-ui-datepicker');
         wp_enqueue_script('time-picker');
         wp_enqueue_script('moment');
@@ -185,7 +206,7 @@ class EA_Vacation_New_UI
         wp_enqueue_script(
             'ea-new-vacation-ui',
             $base_url . 'js/vacation.js',
-            array('jquery', 'jquery-ui-datepicker', 'time-picker', 'moment', 'ea-new-common-ui'),
+            array('jquery', 'jquery-ui-datepicker', 'time-picker', 'moment', 'ea-select2', 'ea-new-common-ui'),
             $js_ver,
             true
         );
