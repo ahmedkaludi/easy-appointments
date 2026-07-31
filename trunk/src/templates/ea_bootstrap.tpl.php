@@ -123,15 +123,11 @@ defined( 'ABSPATH' ) || exit;
                     <input id="<%- item.slug %>" name="<%- item.slug %>" type="hidden" value="<%- item.default_value %>" class="custom-field" />
                     <% return; } %>
                     <div class="form-group">
-                        <label for="<%- item.slug %>" class="col-sm-4 control-label"><%= item.label %> <% if (item.required == "1") { %>*<% }
-                            %></label>
+                        <label for="<%- item.slug %>" class="col-sm-4 control-label"><%= item.label %> <% if (item.required == "1") { %>*<% } %></label>
                         <div class="col-sm-8">
                             <!-- INPUT TYPE -->
                             <% if(item.type === 'INPUT') { %>
-                            <input id="<%- item.slug %>"  class="form-control custom-field" maxlength="499" type="text" name="<%- item.slug %>" placeholder="<%- item.mixed %>" value="<%- item.default_value %>"
-                            <% if (item.required == "1") { %>data-rule-required="true" data-msg-required="<%-
-                            settings['trans.field-required'] %>"<% } %> <% if (item.validation == "email") {
-                            %>data-rule-email="true" data-msg-email="<%- settings['trans.error-email'] %>"<% } %>>
+                            <input id="<%- item.slug %>"  class="form-control custom-field" maxlength="499" type="text" name="<%- item.slug %>" placeholder="<%- item.mixed %>" value="<%- item.default_value %>" <% if (item.required == "1") { %>data-rule-required="true" data-msg-required="<%- settings['trans.field-required'] %>"<% } %> <% if (item.validation == "email") { %>data-rule-email="true" data-msg-email="<%- settings['trans.error-email'] %>"<% } %>>
                             <!-- INPUT MASKED -->
                             <% } else if(item.type === 'MASKED') { %>
                             <input id="<%- item.slug %>" class="form-control custom-field masked-field" <% if (item.required == "1") { %>data-rule-required="true" data-msg-required="<%- settings['trans.field-required'] %>"<% } %> type="text" name="<%- item.slug %>" placeholder="<%- item.mixed %>" data-inputmask="'mask':'<%- item.default_value %>'" />
@@ -140,13 +136,10 @@ defined( 'ABSPATH' ) || exit;
                                 <?php require __DIR__ . '/phone.field.tpl.php';?>
                             <!-- EMAIL TYPE -->
                             <% } else if(item.type === 'EMAIL') { %>
-                            <input id="<%- item.slug %>" class="form-control custom-field" maxlength="499" type="text" name="<%- item.slug %>" placeholder="<%- item.mixed %>" value="<%- item.default_value %>"
-                            <% if (item.required == "1") { %>data-rule-required="true" data-msg-required="<%- settings['trans.field-required'] %>"<% } %> data-rule-email="true" data-msg-email="<%- settings['trans.error-email'] %>">
+                            <input id="<%- item.slug %>" class="form-control custom-field" maxlength="499" type="text" name="<%- item.slug %>" placeholder="<%- item.mixed %>" value="<%- item.default_value %>" <% if (item.required == "1") { %>data-rule-required="true" data-msg-required="<%- settings['trans.field-required'] %>"<% } %> data-rule-email="true" data-msg-email="<%- settings['trans.error-email'] %>">
                             <!-- SELECT TYPE -->
                             <% } else if(item.type === 'SELECT') { %>
-                            <select id="<%- item.slug %>" class="form-control custom-field" name="<%- item.slug %>" <% if (item.required ==
-                            "1") { %>aria-required="true" <% if (item.required == "1") { %>data-rule-required="true"<% }
-                            %> data-msg-required="<%- settings['trans.field-required'] %>"<% } %>>
+                            <select id="<%- item.slug %>" class="form-control custom-field" name="<%- item.slug %>" <% if (item.required == "1") { %>aria-required="true" <% if (item.required == "1") { %>data-rule-required="true"<% } %> data-msg-required="<%- settings['trans.field-required'] %>"<% } %>>
                             <% _.each(item.mixed.split(','),function(i,k,l) { %>
                             <% if (i == "-") { %>
                             <option value="">-</option>
@@ -156,9 +149,7 @@ defined( 'ABSPATH' ) || exit;
                             </select>
                             <!-- TEXTAREA TYPE -->
                             <% } else if(item.type === 'TEXTAREA') { %>
-                            <textarea id="<%- item.slug %>" class="form-control custom-field" rows="3" maxlength="499" style="height: auto;" placeholder="<%- item.mixed %>"
-                                      name="<%- item.slug %>" <% if (item.required == "1") { %>data-rule-required="true"
-                            data-msg-required="<%- settings['trans.field-required'] %>"<% } %>></textarea>
+                            <textarea id="<%- item.slug %>" class="form-control custom-field" rows="3" maxlength="499" style="height: auto;" placeholder="<%- item.mixed %>" name="<%- item.slug %>" <% if (item.required == "1") { %>data-rule-required="true" data-msg-required="<%- settings['trans.field-required'] %>"<% } %>></textarea>
                             <% } %>
                         </div>
                     </div>

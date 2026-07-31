@@ -94,7 +94,17 @@
         init: function () {
             var plugin = this;
 
-            this.settings.overview_template = _.template(jQuery(this.settings.overview_selector).html());
+            var overview_selector = this.settings.overview_selector;
+            this.settings.overview_template = function(data) {
+                var html = jQuery(overview_selector).html() || '<div></div>';
+                html = html.replace(/`/g, '&#96;');
+                try {
+                    return _.template(html)(data);
+                } catch(e) {
+                    console.error('EA: Template compilation error for ' + overview_selector + ':', e.message);
+                    return '<div></div>';
+                }
+            };
 
             // close plugin if something is missing
             if (!this.settingsOk()) {
@@ -188,6 +198,7 @@
                     booking_data.date = plugin.$element.find('.date').datepicker().val();
                     booking_data.time = plugin.$element.find('.selected-time').data('val');
                     booking_data.price = plugin.$element.find('[name="service"] > option:selected').data('price');
+                    booking_data.service_description = plugin.$element.find('[name="service"] > option:selected').data('description') || '';
 
                     var format = ea_settings['date_format'] + ' ' + ea_settings['time_format'];
                     booking_data.date_time = moment(booking_data.date + ' ' + booking_data.time, ea_settings['default_datetime_format']).format(format);
@@ -651,6 +662,7 @@
             booking_data.date = this.$element.find('.date').datepicker().val();
             booking_data.time = this.$element.find('.selected-time').data('val');
             booking_data.price = this.$element.find('[name="service"] > option:selected').data('price');
+            booking_data.service_description = this.$element.find('[name="service"] > option:selected').data('description') || '';
 
             var format = ea_settings['date_format'] + ' ' + ea_settings['time_format'];
             booking_data.date_time = moment(booking_data.date + 'T' + booking_data.time, ea_settings['default_datetime_format']).format(format);
@@ -969,6 +981,6 @@
 })( jQuery, window, document );
 
 
-(function($){
+jQuery(document).ready(function($){
     jQuery('.ea-standard').eaStandard();
-})( jQuery );
+});

@@ -130,9 +130,37 @@
                 moment.locale(ea_settings['datepicker'].substr(0,2));
             }
 
-            plugin.settings.main_template = _.template(jQuery(plugin.settings.main_selector).html());
+            // Sanitize template HTML: backticks break _.template()'s new Function()
+            // in modern JS engines that interpret them as template literals.
+            function safeTemplate(selector) {
+                var html = jQuery(selector).html();
+                if (!html) {
+                    return function(data) {
+                        var dynamicHtml = jQuery(selector).html();
+                        if (dynamicHtml) {
+                            dynamicHtml = dynamicHtml.replace(/`/g, '&#96;');
+                            try {
+                                return _.template(dynamicHtml)(data);
+                            } catch (e) {
+                                console.error('EA: Template compilation error for ' + selector + ':', e.message);
+                            }
+                        }
+                        return '<div></div>';
+                    };
+                }
+                // Escape backticks that would break new Function() compilation
+                html = html.replace(/`/g, '&#96;');
+                try {
+                    return _.template(html);
+                } catch (e) {
+                    console.error('EA: Template compilation error for ' + selector + ':', e.message);
+                    return _.template('<div></div>');
+                }
+            }
 
-            plugin.settings.overview_template = _.template(jQuery(plugin.settings.overview_selector).html());
+            plugin.settings.main_template = safeTemplate(plugin.settings.main_selector);
+
+            plugin.settings.overview_template = safeTemplate(plugin.settings.overview_selector);
             this.$element.html(plugin.settings.main_template({settings:ea_settings}));
 
             // ---- NEW UI ENHANCEMENTS ----
@@ -324,7 +352,7 @@
                     var format = ea_settings['date_format'] + ' ' + ea_settings['time_format'];
                     var firstTime = (booking_data.time || '').toString().split(',')[0].trim();
                     if (firstTime) {
-                        var formattedDate = moment(booking_data.date + 'T' + firstTime, ea_settings['defult_detafime_format']).format(ea_settings['date_format'] || 'YYYY-MM-DD');
+                        var formattedDate = moment(booking_data.date + 'T' + firstTime, ea_settings['default_datetime_format']).format(ea_settings['date_format'] || 'YYYY-MM-DD');
                         booking_data.date_time = formattedDate + ' ' + booking_data.time;
                     } else {
                         booking_data.date_time = booking_data.date + ' ' + booking_data.time;
@@ -1147,11 +1175,12 @@
             booking_data.date = this.$element.find('.date').datepicker().val();
             booking_data.time = this.$element.find('.selected-time').data('val');
             booking_data.price = this.$element.find('[name="service"] > option:selected').data('price');
+            booking_data.service_description = this.$element.find('[name="service"] > option:selected').data('description') || '';
 
             var format = ea_settings['date_format'] + ' ' + ea_settings['time_format'];
             var firstTime = (booking_data.time || '').toString().split(',')[0].trim();
             if (firstTime) {
-                var formattedDate = moment(booking_data.date + 'T' + firstTime, ea_settings['defult_detafime_format']).format(ea_settings['date_format'] || 'YYYY-MM-DD');
+                var formattedDate = moment(booking_data.date + 'T' + firstTime, ea_settings['default_datetime_format']).format(ea_settings['date_format'] || 'YYYY-MM-DD');
                 booking_data.date_time = formattedDate + ' ' + booking_data.time;
             } else {
                 booking_data.date_time = booking_data.date + ' ' + booking_data.time;
@@ -1922,12 +1951,9 @@
 })(jQuery, window, document);
 
 
-(function ($) {
+jQuery(document).ready(function ($) {
     jQuery('.ea-bootstrap').eaBootstrap();
-
-    
-
-})(jQuery);
+});
 jQuery(document).ready(function () {
     if (ea_settings['allow_customer_search'] == 1) {
         jQuery('#ea_customer_search').select2({

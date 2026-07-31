@@ -101,7 +101,17 @@
 
             plugin.settings.main_template = _.template(jQuery(plugin.settings.main_selector).html());
 
-            plugin.settings.overview_template = _.template(jQuery(plugin.settings.overview_selector).html());
+            var overview_selector = plugin.settings.overview_selector;
+            plugin.settings.overview_template = function(data) {
+                var html = jQuery(overview_selector).html() || '<div></div>';
+                html = html.replace(/`/g, '&#96;');
+                try {
+                    return _.template(html)(data);
+                } catch(e) {
+                    console.error('EA: Template compilation error for ' + overview_selector + ':', e.message);
+                    return '<div></div>';
+                }
+            };
             this.$element.html(plugin.settings.main_template({settings:ea_settings}));
 
             // close plugin if something is missing
@@ -207,6 +217,7 @@
                     booking_data.date = parentForm.find('.date').datepicker().val();
                     booking_data.time = parentForm.find('.selected-time').data('val');
                     booking_data.price = parentForm.find('[name="service"] > option:selected').data('price');
+                    booking_data.service_description = parentForm.find('[name="service"] > option:selected').data('description') || '';
                     if (ea_settings['is_multiple_booking_allowed'] == '1') {
                         var $selectedSlots = parentForm.find('.selected-time');
                         booking_data.price = $selectedSlots.length * booking_data.price;
@@ -220,7 +231,7 @@
                     }
 
                     var format = ea_settings['date_format'] + ' ' + ea_settings['time_format'];
-                    booking_data.date_time = moment(booking_data.date + 'T' + booking_data.time, ea_settings['defult_detafime_format']).format(format);
+                    booking_data.date_time = moment(booking_data.date + 'T' + booking_data.time, ea_settings['default_datetime_format']).format(format);
 
                     // set overview cancel_appointment
                     var overview_content = '';
@@ -988,9 +999,10 @@
             booking_data.date = this.$element.find('.date').datepicker().val();
             booking_data.time = this.$element.find('.selected-time').data('val');
             booking_data.price = this.$element.find('[name="service"] > option:selected').data('price');
+            booking_data.service_description = this.$element.find('[name="service"] > option:selected').data('description') || '';
 
             var format = ea_settings['date_format'] + ' ' + ea_settings['time_format'];
-            booking_data.date_time = moment(booking_data.date + ' ' + booking_data.time, ea_settings['defult_detafime_format']).format(format);
+            booking_data.date_time = moment(booking_data.date + ' ' + booking_data.time, ea_settings['default_datetime_format']).format(format);
 
             var req = jQuery.get(ea_ajaxurl, options, function (response) {
                 plugin.res_app = response.id;
@@ -1498,12 +1510,9 @@
 })(jQuery, window, document);
 
 
-(function ($) {
+jQuery(document).ready(function ($) {
     jQuery('.ea-bootstrap').eaBootstrap();
-
-    
-
-})(jQuery);
+});
 jQuery(document).ready(function () {
     if (ea_settings['allow_customer_search'] == 1) {
         jQuery('#ea_customer_search').select2({

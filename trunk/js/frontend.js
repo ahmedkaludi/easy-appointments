@@ -125,7 +125,33 @@
         init: function () {
             var plugin = this;
 
-            this.settings.overview_template = _.template(jQuery(this.settings.overview_selector).html());
+            // Sanitize template HTML: backticks break _.template()'s new Function()
+            function safeTemplate(selector) {
+                var html = jQuery(selector).html();
+                if (!html) {
+                    return function(data) {
+                        var dynamicHtml = jQuery(selector).html();
+                        if (dynamicHtml) {
+                            dynamicHtml = dynamicHtml.replace(/`/g, '&#96;');
+                            try {
+                                return _.template(dynamicHtml)(data);
+                            } catch (e) {
+                                console.error('EA: Template compilation error for ' + selector + ':', e.message);
+                            }
+                        }
+                        return '<div></div>';
+                    };
+                }
+                html = html.replace(/`/g, '&#96;');
+                try {
+                    return _.template(html);
+                } catch (e) {
+                    console.error('EA: Template compilation error for ' + selector + ':', e.message);
+                    return _.template('<div></div>');
+                }
+            }
+
+            this.settings.overview_template = safeTemplate(this.settings.overview_selector);
 
             // close plugin if something is missing
             if (!this.settingsOk()) {
@@ -759,6 +785,7 @@
             booking_data.date = this.$element.find('.date').datepicker().val();
             booking_data.time = this.$element.find('.selected-time').data('val');
             booking_data.price = this.$element.find('[name="service"] > option:selected').data('price');
+            booking_data.service_description = this.$element.find('[name="service"] > option:selected').data('description') || '';
 
             var format = ea_settings['date_format'] + ' ' + ea_settings['time_format'];
             booking_data.date_time = moment(booking_data.date + 'T' + booking_data.time, ea_settings['default_datetime_format']).format(format);
@@ -1111,6 +1138,6 @@
 })( jQuery, window, document );
 
 
-(function($){
+jQuery(document).ready(function($){
     jQuery('.ea-standard').eaStandard();
-})( jQuery );
+});

@@ -714,6 +714,7 @@ class Easy_EA_Frontend
         $settings['trans.booking-overview'] = __('Booking overview', 'easy-appointments');
         $settings['trans.date-time'] = __('Date & time', 'easy-appointments');
         $settings['trans.submit'] = __('Submit', 'easy-appointments');
+        $settings['trans.submit_button_text'] = $this->options->get_option_value('trans.submit_button_text', __('Submit', 'easy-appointments'));
         $settings['trans.cancel'] = __('Cancel', 'easy-appointments');
         $settings['trans.price'] = __('Price', 'easy-appointments');
         $settings['trans.iagree'] = __('I agree with terms and conditions', 'easy-appointments');

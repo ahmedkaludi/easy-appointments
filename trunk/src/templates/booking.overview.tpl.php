@@ -32,7 +32,7 @@ defined( 'ABSPATH' ) || exit;
             <% if(data.service_description && data.service_description.length > 0) { %>
             <tr class="row-service-description">
                 <td class="ea-label"><?php echo esc_html__('Description', 'easy-appointments'); ?></td>
-                <td class="value" style="white-space: pre-line;"><%- data.service_description %></td>
+                <td class="value" style="white-space: pre-line;"><%= data.service_description %></td>
             </tr>
             <% } %>
             <% } %>
@@ -45,10 +45,7 @@ defined( 'ABSPATH' ) || exit;
             <% if (settings['price.hide'] !== '1') { %>
             <tr class="row-price">
                 <td class="ea-label"><%- settings['trans.price'] %></td>
-                <td class="value"><%- settings['hide.decimal_in_price'] == '1' 
-                ? Math.round(parseFloat(data.price))
-                : 55 
-            %> <%- settings['trans.currency'] %></td>
+                <td class="value"><%- settings['hide.decimal_in_price'] == '1' ? Math.round(parseFloat(data.price)) : data.price %> <%- settings['trans.currency'] %></td>
             </tr>
             <% } %>
             <tr class="row-datetime">
@@ -70,7 +67,7 @@ defined( 'ABSPATH' ) || exit;
             <% if(data.service_description && data.service_description.length > 0) { %>
             <tr class="row-service-description">
                 <td class="ea-label"><?php echo esc_html__('Description', 'easy-appointments'); ?></td>
-                <td class="value" style="white-space: pre-line;"><%- data.service_description %></td>
+                <td class="value" style="white-space: pre-line;"><%= data.service_description %></td>
             </tr>
             <% } %>
             <% } %>
@@ -84,15 +81,9 @@ defined( 'ABSPATH' ) || exit;
             <tr class="row-price">
                 <td class="ea-label"><%- settings['trans.price'] %></td>
                 <% if (settings['currency.before'] == '1') { %>
-                <td class="value"><%- settings['trans.currency'] %><%- settings['hide.decimal_in_price'] == '1' 
-                ? Math.round(parseFloat(data.price))
-                : data.price 
-            %></td>
+                <td class="value"><%- settings['trans.currency'] %><%- settings['hide.decimal_in_price'] == '1' ? Math.round(parseFloat(data.price)) : data.price %></td>
                 <% } else { %>
-                <td class="value"><%- settings['hide.decimal_in_price'] == '1' 
-                ? Math.round(parseFloat(data.price))
-                : data.price 
-            %><%- settings['trans.currency'] %></td>
+                <td class="value"><%- settings['hide.decimal_in_price'] == '1' ? Math.round(parseFloat(data.price)) : data.price %><%- settings['trans.currency'] %></td>
                 <% } %>
             </tr>
             <% } %>
