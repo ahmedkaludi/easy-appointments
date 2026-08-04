@@ -552,7 +552,7 @@
             dateFormat: 'yy-mm-dd',
             minDate: 0,
             beforeShow: function (input, inst) {
-                inst.dpDiv.addClass('ea-mnui-datepicker-popup');
+                inst.dpDiv.addClass('ea-mnui-datepicker-popup').removeClass('ea-timepicker-only');
             },
             onSelect: function (dateText) {
                 addDate(dateText);
@@ -677,10 +677,16 @@
             var $timeTo = $('#ea-mnui-input-time_to');
             if ($.fn.timepicker) {
                 var opts = {
+                    timeOnly: true,
                     timeFormat: 'HH:mm',
                     showSecond: false,
                     controlType: 'select',
-                    oneLine: true
+                    oneLine: true,
+                    beforeShow: function() {
+                        setTimeout(function() {
+                            $('#ui-datepicker-div').addClass('ea-timepicker-only');
+                        }, 0);
+                    }
                 };
                 $timeFrom.timepicker(opts);
                 $timeTo.timepicker(opts);

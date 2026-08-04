@@ -51,17 +51,26 @@
 
         function initTimepickers() {
             if ($.fn.timepicker) {
+                var hideHeader = function() {
+                    setTimeout(function() {
+                        $('#ui-datepicker-div').addClass('ea-timepicker-only');
+                    }, 0);
+                };
                 $('input[data-key="cancel_time"]').timepicker({
+                    timeOnly: true,
                     timeFormat: 'HH:mm',
                     showSecond: false,
                     controlType: 'select',
-                    oneLine: true
+                    oneLine: true,
+                    beforeShow: hideHeader
                 });
                 $('input.ea-nsui-time-input').not('[data-key="cancel_time"]').timepicker({
+                    timeOnly: true,
                     timeFormat: 'HH:mm:ss',
                     showSecond: true,
                     controlType: 'select',
-                    oneLine: true
+                    oneLine: true,
+                    beforeShow: hideHeader
                 });
             }
         }

@@ -1201,12 +1201,8 @@ class EAAjax
             'user','created','price','ip','session'
         );
 
-        $app_id = 0;
-        if (!empty($_REQUEST['id'])) {
-            $app_id = intval($_REQUEST['id']);
-        } else if (!empty($_REQUEST['res_app'])) {
-            $app_id = intval($_REQUEST['res_app']);
-        }
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- nonce already validated
+        $app_id = !empty($_REQUEST['id']) ? intval($_REQUEST['id']) : (!empty($_REQUEST['res_app']) ? intval($_REQUEST['res_app']) : 0);
 
         foreach ($data as $key => $rem) {
             if (!in_array($key, $dont_remove)) unset($data[$key]);
@@ -1232,8 +1228,10 @@ class EAAjax
         if ($multiple_allowed === 1) {
             if (!empty($data['start']) && strpos($data['start'], ',') !== false) {
                 $slots_list = array_filter(array_map('trim', explode(',', $data['start'])));
+            // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- nonce already validated
             } else if (!empty($_GET['slots']) && is_array($_GET['slots'])) {
-                $slots_list = array_filter(array_map('sanitize_text_field', $_GET['slots']));
+                // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- nonce already validated
+                $slots_list = array_filter(array_map('sanitize_text_field', wp_unslash($_GET['slots'])));
             }
         }
 

@@ -753,12 +753,12 @@ body.wp-admin #ui-datepicker-div td,
 
 body.wp-admin #ui-datepicker-div td a,
 body.wp-admin #ui-datepicker-div td span,
-body.wp-admin #ui-datepicker-div .ui-state-default,
-body.wp-admin #ui-datepicker-div .ui-widget-content .ui-state-default,
+body.wp-admin #ui-datepicker-div .ui-state-default:not(select),
+body.wp-admin #ui-datepicker-div .ui-widget-content .ui-state-default:not(select),
 #ui-datepicker-div.ea-mnui-datepicker-popup td a,
 #ui-datepicker-div.ea-mnui-datepicker-popup td span,
-#ui-datepicker-div.ea-mnui-datepicker-popup .ui-state-default,
-#ui-datepicker-div.ea-mnui-datepicker-popup .ui-widget-content .ui-state-default {
+#ui-datepicker-div.ea-mnui-datepicker-popup .ui-state-default:not(select),
+#ui-datepicker-div.ea-mnui-datepicker-popup .ui-widget-content .ui-state-default:not(select) {
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;

@@ -12,7 +12,7 @@
 
 .ui-timepicker-select {
 	padding: 4px 8px !important;
-	border: 1px solid #d1d5db !important;
+	border: 1.5px solid #94a3b8 !important;
 	border-radius: 6px !important;
 	background-color: #ffffff !important;
 	font-size: 13px !important;
@@ -26,4 +26,9 @@
 	border-color: #2563eb !important;
 	box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.25) !important;
 	background-color: #ffffff !important;
+}
+
+body.wp-admin #ui-datepicker-div.ea-timepicker-only .ui-datepicker-header,
+#ui-datepicker-div.ea-timepicker-only .ui-datepicker-header {
+	display: none !important;
 }
