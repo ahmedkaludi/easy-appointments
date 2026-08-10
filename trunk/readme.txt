@@ -261,7 +261,7 @@ Terms of use and Policy : https://fullcalendar.io/license
 25. Admin panel - Report - Export page
 
 == Changelog ==
-= 4.0 (2026-07-24)
+= 4.0 (2026-08-10)
 * Fixed Timezone Issue in the "Created At" Field #307.
 * Fixed Am Pm making confusion in cancel booking before hour #309.
 * Fixed tags displaying as plain text on the website and also #Service_Description# tag is missing #312
