@@ -563,7 +563,6 @@
          */
         $('#ea-naui-filter-from, #ea-naui-filter-to').datepicker({
             dateFormat: (jQuery.datepicker.regional[cfg.datepickerLocale] || {}).dateFormat,
-            minDate: 0,
             beforeShow: function (input, inst) {
                 inst.dpDiv.addClass('ea-mnui-datepicker-popup');
             }
