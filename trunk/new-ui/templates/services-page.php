@@ -115,7 +115,7 @@ if (!defined('WPINC')) {
                         <?php esc_html_e('Slot Step (minutes)', 'easy-appointments'); ?> <span class="ea-mnui-required">*</span>
                         <span class="ea-mnui-tip" data-tooltip="<?php esc_attr_e('Interval in minutes between start times of available slots (e.g. 15, 30 or 60 min).', 'easy-appointments'); ?>">?</span>
                     </label>
-                    <input type="number" id="ea-mnui-input-slot_step" data-prop="slot_step" min="1" step="1" required>
+                    <select id="ea-mnui-input-slot_step" data-prop="slot_step" required></select>
                     <div class="ea-mnui-field-error"><?php esc_html_e('Valid slot step is required.', 'easy-appointments'); ?></div>
                 </div>
 

@@ -378,13 +378,82 @@
             return ok;
         }
 
+        /**
+         * Slot step options calculation (matches old UI React SlotStepField.js logic)
+         */
+        function calculateSlotStepOptions(duration) {
+            var value = parseInt(duration, 10);
+            var options = [];
+
+            if (!value || value === 0) {
+                return options;
+            }
+
+            for (var i = 1; i <= value; i++) {
+                if (value % i !== 0 || (i < 5 && value > 5) || i === 1) {
+                    continue;
+                }
+
+                options.push({
+                    value: String(i),
+                    label: i
+                });
+            }
+
+            return options.reverse();
+        }
+
+        function updateSlotStepSelect(selectedValue) {
+            var durationVal = $('#ea-mnui-input-duration').val();
+            var options = calculateSlotStepOptions(durationVal);
+            var $select = $('#ea-mnui-input-slot_step');
+
+            $select.empty();
+
+            if (!options.length) {
+                $select.prop('disabled', true);
+                return;
+            }
+
+            $select.prop('disabled', false);
+
+            var currentVal = (selectedValue !== undefined && selectedValue !== null && selectedValue !== '')
+                ? String(selectedValue)
+                : String($select.val() || '');
+
+            var found = false;
+
+            $.each(options, function (i, opt) {
+                var isSelected = (opt.value === currentVal);
+                if (isSelected) {
+                    found = true;
+                }
+                $select.append($('<option>', {
+                    value: opt.value,
+                    text: opt.label,
+                    selected: isSelected
+                }));
+            });
+
+            if (!found && options.length > 0) {
+                $select.val(options[0].value);
+            }
+        }
+
         function openDrawer(row) {
             editingId = row && row.id ? row.id : null;
 
             $('#ea-mnui-drawer-title').text(editingId ? i18n.editService : i18n.addNew);
 
             $.each(FIELDS, function (i, field) {
-                var value = row ? (row[field] || '') : '';
+                var value = row && row[field] !== undefined && row[field] !== null ? row[field] : '';
+
+                if (field === 'block_before' || field === 'block_after' || field === 'daily_limit' || field === 'advance_booking_days') {
+                    if (!row || value === '' || value === undefined || value === null) {
+                        value = 0;
+                    }
+                }
+
                 if (field === 'service_color' && !value) {
                     value = '#2563eb';
                 }
@@ -394,6 +463,10 @@
                 }
                 $('#ea-mnui-input-' + field).val(value);
             });
+
+            // Update slot step select dropdown options based on duration & set active value
+            var initialSlotStep = row ? row.slot_step : null;
+            updateSlotStepSelect(initialSlotStep);
 
             // Update color preview
             var color = row ? (row.service_color || '#2563eb') : '#2563eb';
@@ -477,6 +550,10 @@
             if (e.which === 27) {
                 closeDrawer();
             }
+        });
+
+        $drawerForm.on('input change keyup', '#ea-mnui-input-duration', function () {
+            updateSlotStepSelect();
         });
 
         $drawerForm.on('submit', function (e) {
