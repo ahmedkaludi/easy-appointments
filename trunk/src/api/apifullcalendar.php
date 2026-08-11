@@ -87,13 +87,33 @@ class EasyEAApiFullCalendar
     public function get_items_permissions_check( $request ) {
         $have_access = apply_filters( 'easy_ea_calendar_public_access', false);
 
-        if ( ! current_user_can( 'edit_posts' ) && ! current_user_can( 'manage_options' ) ) {
-            if ( ! $have_access ) {
-                return new WP_Error( 'rest_forbidden', esc_html__( 'You cannot view the category resource.', 'easy-appointments' ), array( 'status' => $this->authorization_status_code() ) );
-            }
+        // Administrators can always access all appointments.
+        if ( current_user_can( 'manage_options' ) ) {
+            return true;
         }
 
-        return true;
+        // Public access is granted via the filter (e.g. when the public shortcode
+        // is rendered on the front-end). In this context the caller is not
+        // authenticated or does not hold a privileged role, so the ownership filter
+        // inside get_items() will still restrict results to the current user's own
+        // appointments when a user is logged in.
+        if ( $have_access ) {
+            return true;
+        }
+
+        // Any other authenticated user must have at least edit_posts to reach this
+        // endpoint. Their results will be restricted to their own appointments
+        // inside get_items() unless the admin has explicitly opted them in to a
+        // broader view via the fullcalendar.my_booking_full_calendar setting.
+        if ( is_user_logged_in() && current_user_can( 'edit_posts' ) ) {
+            return true;
+        }
+
+        return new WP_Error(
+            'rest_forbidden',
+            esc_html__( 'You cannot view the category resource.', 'easy-appointments' ),
+            array( 'status' => $this->authorization_status_code() )
+        );
     }
 
     /**
@@ -190,15 +210,36 @@ class EasyEAApiFullCalendar
             $worker_map[$w->id] = $w->name;
         }
 
-        if (
-            !current_user_can('manage_options') &&
-            !empty($this->options->get_option_value('fullcalendar.my_booking_full_calendar'))
-        ) {
-            $current_user_id = get_current_user_id();
+        // Security: non-admin users must only see their own appointments.
+        //
+        // Admins (manage_options) always see all appointments.
+        //
+        // For every other authenticated caller (e.g. Contributors with edit_posts)
+        // the ownership filter is applied by default UNLESS the admin has explicitly
+        // opted into granting them a broader view via the
+        // fullcalendar.my_booking_full_calendar setting.
+        //
+        // When the endpoint is accessed via public access (easy_ea_calendar_public_access
+        // filter), unauthenticated visitors see all appointments (shortcode use-case);
+        // logged-in non-admin visitors in the same public context are also restricted
+        // to their own appointments for privacy.
+        if ( ! current_user_can( 'manage_options' ) ) {
+            $show_all = apply_filters( 'easy_ea_calendar_public_access', false )
+                        && ! is_user_logged_in();
 
-            $res = array_filter($res, function ($element) use ($current_user_id) {
-                return (int) $element->user === (int) $current_user_id;
-            });
+            // Explicitly opt-in setting: admin can grant non-admin authenticated
+            // users a full calendar view (e.g. for a staff admin panel).
+            $opted_in_full_view = ! empty(
+                $this->options->get_option_value( 'fullcalendar.my_booking_full_calendar' )
+            ) && current_user_can( 'edit_posts' );
+
+            if ( ! $show_all && ! $opted_in_full_view ) {
+                $current_user_id = get_current_user_id();
+
+                $res = array_filter( $res, function ( $element ) use ( $current_user_id ) {
+                    return (int) $element->user === (int) $current_user_id;
+                } );
+            }
         }
 
 
