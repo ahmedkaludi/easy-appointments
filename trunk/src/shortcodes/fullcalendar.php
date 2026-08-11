@@ -187,17 +187,19 @@ class EasyEAFullCalendar
         // event link
         if (!empty($this->options->get_option_value('fullcalendar.event.show'))) {
             $event_click_link =
+              "var url_sep = (wpApiSettings.root.indexOf('?') !== -1) ? '&' : '?';" .
               "element.addClass('thickbox');" .
               "element.addClass('ea-full-calendar-dialog-event');" .
-              "element.attr('href', wpApiSettings.root + 'easy-appointments/v1/appointment/' + event.id + '?hash=' + event.hash + '&eventpopup=yes&_wpnonce=' + wpApiSettings.nonce + '&width=100%&height=100%');" .
+              "element.attr('href', wpApiSettings.root + 'easy-appointments/v1/appointment/' + event.id + url_sep + 'hash=' + event.hash + '&eventpopup=yes&_wpnonce=' + wpApiSettings.nonce + '&width=100%&height=100%');" .
               "element.attr('title', '#' + event.id + ' - ' + _.escape(event.title));";
           if (!empty($this->options->get_option_value('fullcalendar.manage_appointment.show'))) {
             $event_click_link =
             "var current_user = \"" . esc_js($current_user) . "\";" .
+            "var url_sep = (wpApiSettings.root.indexOf('?') !== -1) ? '&' : '?';" .
             "if (current_user && current_user > 0 && current_user === event.user) {" .
                 "element.addClass('thickbox');" .
                 "element.addClass('ea-full-calendar-dialog-event');" .
-                "element.attr('href', wpApiSettings.root + 'easy-appointments/v1/appointment/' + event.id + '?hash=' + event.hash + '&eventpopup=yes&edit=yes&_wpnonce=' + wpApiSettings.nonce + '&width=100%&height=100%');" .
+                "element.attr('href', wpApiSettings.root + 'easy-appointments/v1/appointment/' + event.id + url_sep + 'hash=' + event.hash + '&eventpopup=yes&edit=yes&_wpnonce=' + wpApiSettings.nonce + '&width=100%&height=100%');" .
                 "element.attr('title', '#' + event.id + ' - ' + _.escape(event.title));" .
             "}";
             
@@ -207,10 +209,11 @@ class EasyEAFullCalendar
           if (!empty($this->options->get_option_value('fullcalendar.manage_appointment.show'))) {
             $event_click_link =
             "var current_user = \"" . esc_js($current_user) . "\";" .
+            "var url_sep = (wpApiSettings.root.indexOf('?') !== -1) ? '&' : '?';" .
             "if (current_user && current_user > 0 && current_user === event.user) {" .
                 "element.addClass('thickbox');" .
                 "element.addClass('ea-full-calendar-dialog-event');" .
-                "element.attr('href', wpApiSettings.root + 'easy-appointments/v1/appointment/' + event.id + '?hash=' + event.hash + '&edit=yes&_wpnonce=' + wpApiSettings.nonce + '&width=100%&height=100%');" .
+                "element.attr('href', wpApiSettings.root + 'easy-appointments/v1/appointment/' + event.id + url_sep + 'hash=' + event.hash + '&edit=yes&_wpnonce=' + wpApiSettings.nonce + '&width=100%&height=100%');" .
                 "element.attr('title', '#' + event.id + ' - ' + _.escape(event.title));" .
             "}";
             

@@ -1,0 +1,1076 @@
+/**
+ * Easy Appointments - New Appointments UI styles.
+ * Namespaced under .ea-naui to avoid any collision with existing plugin CSS.
+ * Uses the same design tokens introduced by the New Settings UI (.ea-nsui)
+ * for visual consistency across the new admin screens.
+ */
+
+.ea-naui-wrap {
+    margin: 20px 20px 20px 0;
+}
+
+.ea-naui-drawer {
+    --ea-blue: #2563eb;
+    --ea-blue-dark: #1d4ed8;
+    --ea-blue-light: #eef4ff;
+    --ea-red: #d63638;
+    --ea-border: #e5e7eb;
+    --ea-text: #111827;
+    --ea-text-muted: #6b7280;
+    --ea-bg: #f6f7fb;
+    --ea-card: #ffffff;
+    --ea-radius: 10px;
+}
+
+.ea-naui {
+    --ea-blue: #2563eb;
+    --ea-blue-light: #eef4ff;
+    --ea-blue-dark: #1d4ed8;
+    --ea-red: #d63638;
+    --ea-red-light: #fef3f2;
+    --ea-green: #027a48;
+    --ea-green-light: #ecfdf3;
+    --ea-amber: #b54708;
+    --ea-amber-light: #fffaeb;
+    --ea-text: #111827;
+    --ea-text-muted: #6b7280;
+    --ea-border: #e5e7eb;
+    --ea-bg: #f6f7fb;
+    --ea-card: #ffffff;
+    --ea-radius: 10px;
+
+    background: var(--ea-bg);
+    border: 1px solid var(--ea-border);
+    border-radius: var(--ea-radius);
+    overflow: hidden;
+    font-size: 14px;
+    color: var(--ea-text);
+    box-shadow: 0 1px 2px rgba(16, 24, 40, 0.04);
+}
+
+.ea-naui * {
+    box-sizing: border-box;
+}
+
+/* ---------- Header ---------- */
+
+.ea-naui-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    background: var(--ea-card);
+    border-bottom: 1px solid var(--ea-border);
+    padding: 16px 24px;
+}
+
+.ea-naui-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.ea-naui-brand-icon {
+    display: inline-flex;
+    color: var(--ea-blue);
+}
+
+.ea-naui-brand h1 {
+    font-size: 18px;
+    font-weight: 700;
+    margin: 0;
+    padding: 0;
+    line-height: 1;
+    color: var(--ea-text);
+}
+
+.ea-naui-version {
+    font-size: 12px;
+    color: var(--ea-text-muted);
+    background: var(--ea-bg);
+    border: 1px solid var(--ea-border);
+    border-radius: 999px;
+    padding: 2px 10px;
+}
+
+.ea-naui-header-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+/* ---------- Buttons ---------- */
+
+.ea-naui-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    border-radius: 8px;
+    padding: 8px 16px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    border: 1px solid transparent;
+    text-decoration: none;
+    transition: background 0.15s ease, border-color 0.15s ease, opacity 0.15s ease;
+}
+
+.ea-naui-btn-primary {
+    background: var(--ea-blue);
+    border-color: var(--ea-blue);
+    color: #fff;
+}
+
+.ea-naui-btn-primary:hover {
+    background: var(--ea-blue-dark);
+    color: #fff;
+}
+
+.ea-naui-btn-ghost {
+    background: #fff;
+    border-color: var(--ea-border);
+    color: var(--ea-text);
+}
+
+.ea-naui-btn-ghost:hover {
+    background: var(--ea-bg);
+    color: var(--ea-text);
+}
+
+.ea-naui-btn-danger {
+    background: var(--ea-red-light);
+    border-color: #fecdca;
+    color: var(--ea-red);
+}
+
+.ea-naui-btn-danger:hover {
+    background: #fee4e2;
+    color: var(--ea-red);
+}
+
+.ea-naui-btn[disabled] {
+    opacity: 0.6;
+    cursor: default;
+    pointer-events: none;
+}
+
+/* ---------- Body ---------- */
+
+.ea-naui-body {
+    padding: 20px 24px 28px;
+}
+
+/* ---------- Filters ---------- */
+
+.ea-naui-filters {
+    background: var(--ea-card);
+    border: 1px solid var(--ea-border);
+    border-radius: var(--ea-radius);
+    padding: 16px;
+    margin-bottom: 16px;
+}
+
+.ea-naui-filter-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    align-items: flex-end;
+}
+
+.ea-naui-filter-row + .ea-naui-filter-row {
+    margin-top: 14px;
+}
+
+.ea-naui-field {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 150px;
+}
+
+.ea-naui-field-grow {
+    flex: 1 1 220px;
+}
+
+.ea-naui-field label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--ea-text-muted);
+}
+
+.ea-naui-wrap .ea-naui-field select {
+    border: 1px solid var(--ea-border);
+    border-radius: 8px;
+    font-size: 13px;
+    color: var(--ea-text);
+    background: #fff;
+}
+
+
+.ea-naui-wrap .ea-naui-field input[type="text"],
+.ea-naui-wrap .ea-naui-field textarea {
+    border: 1px solid var(--ea-border);
+    border-radius: 8px;
+    padding: 8px 12px;
+    font-size: 13px;
+    color: var(--ea-text);
+    background: #fff;
+}
+
+.ea-naui-wrap .ea-naui-field select:focus,
+.ea-naui-wrap .ea-naui-field input:focus,
+.ea-naui-wrap .ea-naui-field textarea:focus {
+    outline: none;
+    border-color: var(--ea-blue);
+    box-shadow: 0 0 0 3px var(--ea-blue-light);
+}
+
+.ea-naui-field-row {
+    display: flex;
+    gap: 14px;
+}
+
+.ea-naui-field-row .ea-naui-field {
+    flex: 1;
+}
+
+.ea-naui-field-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: 4px 0;
+}
+
+.ea-naui-field-group label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--ea-text-muted);
+    margin-bottom: 2px;
+    display: block;
+}
+
+.ea-naui-wrap .ea-naui-field-group select,
+.ea-naui-wrap .ea-naui-field-group input,
+.ea-naui-wrap .ea-naui-field-group textarea {
+    width: 100%;
+    border: 1px solid var(--ea-border);
+    border-radius: 8px;
+    padding: 8px 12px;
+    font-size: 13px;
+}
+
+/* ---------- Toolbar ---------- */
+
+.ea-naui-toolbar {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.ea-naui-select-all-label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ea-text-muted);
+    cursor: pointer;
+    margin-left: 15px;
+}
+
+.ea-naui-toolbar-actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.ea-naui-status-msg {
+    margin-left: auto;
+    font-size: 12px;
+    color: var(--ea-text-muted);
+    font-style: italic;
+}
+
+/* ---------- Table ---------- */
+
+.ea-naui-table-wrap {
+    background: var(--ea-card);
+    border: 1px solid var(--ea-border);
+    border-radius: var(--ea-radius);
+    overflow: hidden;
+}
+
+.ea-naui-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.ea-naui-table thead th {
+    text-align: left;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--ea-text-muted);
+    background: var(--ea-bg);
+    border-bottom: 1px solid var(--ea-border);
+    padding: 12px 14px;
+}
+
+.ea-naui-table thead th a {
+    color: var(--ea-text-muted);
+    text-decoration: none;
+}
+
+.ea-naui-table thead th a:hover {
+    color: var(--ea-blue);
+}
+
+.ea-naui-table td {
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--ea-border);
+    font-size: 13px;
+    vertical-align: top;
+}
+
+.ea-naui-row:hover {
+    background: var(--ea-bg);
+}
+
+.ea-naui-row:last-child td {
+    border-bottom: none;
+}
+
+.ea-naui-col-check {
+    width: 34px;
+}
+
+.ea-naui-col-main strong {
+    display: block;
+}
+
+.ea-naui-sub {
+    font-size: 12px;
+    color: var(--ea-text-muted);
+}
+
+.ea-naui-col-actions {
+    white-space: nowrap;
+}
+
+.ea-naui-icon-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    padding: 0;
+    border-radius: 6px;
+    border: 1px solid var(--ea-border);
+    background: #fff;
+    cursor: pointer;
+    margin-right: 4px;
+    font-size: 13px;
+    line-height: 1;
+    color: var(--ea-text-muted);
+    vertical-align: middle;
+    box-sizing: border-box;
+}
+
+.ea-naui-icon-btn svg {
+    display: block;
+    width: 14px;
+    height: 14px;
+    margin: auto;
+    flex-shrink: 0;
+}
+
+.ea-naui-icon-btn:hover {
+    background: var(--ea-bg);
+    color: var(--ea-text);
+}
+
+.ea-naui-icon-btn.ea-naui-danger:hover {
+    background: var(--ea-red-light);
+    border-color: #fecdca;
+    color: var(--ea-red);
+}
+
+.ea-naui-empty {
+    padding: 40px 20px;
+    text-align: center;
+    color: var(--ea-text-muted);
+    font-size: 13px;
+}
+
+/* ---------- Status badges ---------- */
+
+.ea-naui-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 600;
+    background: var(--ea-bg);
+    color: var(--ea-text-muted);
+    border: 1px solid var(--ea-border);
+}
+
+.ea-naui-badge-confirmed {
+    background: var(--ea-green-light);
+    color: var(--ea-green);
+    border-color: #d1fadf;
+}
+
+.ea-naui-badge-pending {
+    background: var(--ea-amber-light);
+    color: var(--ea-amber);
+    border-color: #fef0c7;
+}
+
+.ea-naui-badge-canceled {
+    background: var(--ea-red-light);
+    color: var(--ea-red);
+    border-color: #fecdca;
+}
+
+/* ---------- Drawer ---------- */
+
+.ea-naui-drawer-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(17, 24, 39, 0.45);
+    z-index: 100000;
+}
+
+.ea-naui-drawer-overlay.is-open {
+    display: block;
+}
+
+.ea-naui-drawer {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    right: auto;
+    width: 960px;
+    max-width: 96vw;
+    max-height: 92vh;
+    height: auto;
+    background: #fff;
+    border-radius: var(--ea-radius, 10px);
+    box-shadow: 0 20px 60px rgba(16, 24, 40, 0.25);
+    z-index: 100001;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    opacity: 0;
+    pointer-events: none;
+    transform: translate(-50%, -50%) scale(0.96);
+    transition: opacity 0.15s ease, transform 0.15s ease;
+    font-size: 14px;
+    color: #111827;
+}
+
+#ea-naui-drawer-form {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-height: 0;
+}
+
+.ea-naui-drawer-header,
+.ea-naui-drawer-footer {
+    flex-shrink: 0;
+}
+
+.ea-naui-drawer-body {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.ea-naui-drawer * {
+    box-sizing: border-box;
+}
+
+.ea-naui-drawer.is-open {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translate(-50%, -50%) scale(1);
+}
+
+.ea-naui-drawer-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 20px;
+    flex-shrink: 0;
+    background: #f6f7fb;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.ea-naui-drawer-header h2 {
+    font-size: 16px;
+    margin: 0;
+}
+
+.ea-naui-drawer-close {
+    background: transparent;
+    border: none;
+    font-size: 22px;
+    line-height: 1;
+    cursor: pointer;
+    color: #6b7280;
+    width: 30px;
+    height: 30px;
+    border-radius: 6px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.ea-naui-drawer-close:hover {
+    background: #e5e7eb;
+    color: #111827;
+}
+
+.ea-naui-drawer-body {
+    padding: 18px 20px;
+    overflow-y: auto;
+    flex: 1 1 auto;
+    min-height: 0;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px 16px;
+    align-content: start;
+}
+
+.ea-naui-drawer-body .ea-naui-field-group,
+.ea-naui-drawer-body .ea-naui-checkbox-label {
+    grid-column: 1 / -1;
+}
+
+.ea-naui-field-group {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px 16px;
+}
+
+.ea-naui-field-span3 {
+    grid-column: 1 / -1;
+}
+
+.ea-naui-field-span2 {
+    grid-column: 1 / -1;
+}
+
+.ea-naui-drawer-body .ea-naui-field label {
+    font-size: 12px;
+    font-weight: 600;
+    color: #6b7280;
+    margin-bottom: 4px;
+    display: block;
+}
+
+.ea-naui-wrap .ea-naui-drawer-body select,
+.ea-naui-wrap .ea-naui-drawer-body input[type="text"],
+.ea-naui-wrap .ea-naui-drawer-body textarea {
+    width: 100%;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    font-size: 13px;
+}
+
+.ea-naui-checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: #374151;
+}
+
+.ea-naui-drawer-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    padding: 16px 20px;
+    flex-shrink: 0;
+    background: #fff;
+    border-top: 1px solid #e5e7eb;
+}
+
+/* ---------- jQuery UI Datepicker (Admin New UI custom skin) ---------- */
+
+body.wp-admin #ui-datepicker-div,
+#ui-datepicker-div.ea-mnui-datepicker-popup {
+    display: none;
+    position: absolute;
+    z-index: 100050 !important;
+    width: 280px !important;
+    background: #ffffff !important;
+    border: 1px solid #e2e8f0 !important;
+    border-radius: 14px !important;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.04) !important;
+    padding: 12px !important;
+    font-size: 13px !important;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif !important;
+    box-sizing: border-box !important;
+}
+
+body.wp-admin #ui-datepicker-div .ui-datepicker-header,
+#ui-datepicker-div.ea-mnui-datepicker-popup .ui-datepicker-header {
+    background: transparent !important;
+    border: none !important;
+    position: relative !important;
+    padding: 2px 0 10px !important;
+    margin: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+}
+
+body.wp-admin #ui-datepicker-div .ui-datepicker-title,
+#ui-datepicker-div.ea-mnui-datepicker-popup .ui-datepicker-title {
+    margin: 0 !important;
+    text-align: center !important;
+    font-weight: 600 !important;
+    color: #0f172a !important;
+    font-size: 14px !important;
+    line-height: 1.4 !important;
+    width: 100% !important;
+}
+
+body.wp-admin #ui-datepicker-div .ui-datepicker-prev,
+body.wp-admin #ui-datepicker-div .ui-datepicker-next,
+#ui-datepicker-div.ea-mnui-datepicker-popup .ui-datepicker-prev,
+#ui-datepicker-div.ea-mnui-datepicker-popup .ui-datepicker-next {
+    position: absolute !important;
+    top: 0 !important;
+    width: 28px !important;
+    height: 28px !important;
+    border-radius: 8px !important;
+    border: 1px solid #e2e8f0 !important;
+    cursor: pointer !important;
+    text-indent: -9999px !important;
+    background: #f8fafc !important;
+    transition: all 0.15s ease !important;
+}
+
+body.wp-admin #ui-datepicker-div .ui-datepicker-prev,
+#ui-datepicker-div.ea-mnui-datepicker-popup .ui-datepicker-prev { left: 0 !important; }
+
+body.wp-admin #ui-datepicker-div .ui-datepicker-next,
+#ui-datepicker-div.ea-mnui-datepicker-popup .ui-datepicker-next { right: 0 !important; }
+
+body.wp-admin #ui-datepicker-div .ui-datepicker-prev span,
+body.wp-admin #ui-datepicker-div .ui-datepicker-next span,
+#ui-datepicker-div.ea-mnui-datepicker-popup .ui-datepicker-prev span,
+#ui-datepicker-div.ea-mnui-datepicker-popup .ui-datepicker-next span {
+    display: none !important;
+}
+
+body.wp-admin #ui-datepicker-div .ui-datepicker-prev:before,
+body.wp-admin #ui-datepicker-div .ui-datepicker-next:before,
+#ui-datepicker-div.ea-mnui-datepicker-popup .ui-datepicker-prev:before,
+#ui-datepicker-div.ea-mnui-datepicker-popup .ui-datepicker-next:before {
+    content: "" !important;
+    position: absolute !important;
+    top: 10px !important;
+    width: 6px !important;
+    height: 6px !important;
+    border-right: 2px solid #475569 !important;
+    border-top: 2px solid #475569 !important;
+}
+
+body.wp-admin #ui-datepicker-div .ui-datepicker-prev:before,
+#ui-datepicker-div.ea-mnui-datepicker-popup .ui-datepicker-prev:before {
+    left: 11px !important;
+    transform: rotate(-135deg) !important;
+}
+
+body.wp-admin #ui-datepicker-div .ui-datepicker-next:before,
+#ui-datepicker-div.ea-mnui-datepicker-popup .ui-datepicker-next:before {
+    left: 9px !important;
+    transform: rotate(45deg) !important;
+}
+
+body.wp-admin #ui-datepicker-div .ui-datepicker-prev:hover,
+body.wp-admin #ui-datepicker-div .ui-datepicker-next:hover,
+#ui-datepicker-div.ea-mnui-datepicker-popup .ui-datepicker-prev:hover,
+#ui-datepicker-div.ea-mnui-datepicker-popup .ui-datepicker-next:hover {
+    background-color: #eff6ff !important;
+    border-color: #bfdbfe !important;
+}
+
+body.wp-admin #ui-datepicker-div .ui-datepicker-prev:hover:before,
+body.wp-admin #ui-datepicker-div .ui-datepicker-next:hover:before,
+#ui-datepicker-div.ea-mnui-datepicker-popup .ui-datepicker-prev:hover:before,
+#ui-datepicker-div.ea-mnui-datepicker-popup .ui-datepicker-next:hover:before {
+    border-color: #2563eb !important;
+}
+
+body.wp-admin #ui-datepicker-div .ui-datepicker-prev.ui-state-disabled,
+body.wp-admin #ui-datepicker-div .ui-datepicker-next.ui-state-disabled,
+#ui-datepicker-div.ea-mnui-datepicker-popup .ui-datepicker-prev.ui-state-disabled,
+#ui-datepicker-div.ea-mnui-datepicker-popup .ui-datepicker-next.ui-state-disabled {
+    opacity: 0.3 !important;
+    cursor: default !important;
+    pointer-events: none !important;
+}
+
+body.wp-admin #ui-datepicker-div table,
+#ui-datepicker-div.ea-mnui-datepicker-popup table {
+    width: 100% !important;
+    border-collapse: collapse !important;
+    margin: 4px 0 0 !important;
+}
+
+body.wp-admin #ui-datepicker-div th,
+#ui-datepicker-div.ea-mnui-datepicker-popup th {
+    text-align: center !important;
+    font-weight: 600 !important;
+    font-size: 11px !important;
+    color: #64748b !important;
+    padding: 6px 0 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+    border: none !important;
+    background: transparent !important;
+}
+
+body.wp-admin #ui-datepicker-div td,
+#ui-datepicker-div.ea-mnui-datepicker-popup td {
+    padding: 2px !important;
+    text-align: center !important;
+    border: none !important;
+    background: transparent !important;
+}
+
+body.wp-admin #ui-datepicker-div td a,
+body.wp-admin #ui-datepicker-div td span,
+body.wp-admin #ui-datepicker-div .ui-state-default:not(select),
+body.wp-admin #ui-datepicker-div .ui-widget-content .ui-state-default:not(select),
+#ui-datepicker-div.ea-mnui-datepicker-popup td a,
+#ui-datepicker-div.ea-mnui-datepicker-popup td span,
+#ui-datepicker-div.ea-mnui-datepicker-popup .ui-state-default:not(select),
+#ui-datepicker-div.ea-mnui-datepicker-popup .ui-widget-content .ui-state-default:not(select) {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 32px !important;
+    height: 32px !important;
+    margin: 0 auto !important;
+    padding: 0 !important;
+    border-radius: 8px !important;
+    text-decoration: none !important;
+    color: #334155 !important;
+    background: transparent !important;
+    border: none !important;
+    font-size: 13px !important;
+    font-weight: 500 !important;
+    box-shadow: none !important;
+    outline: none !important;
+    transition: all 0.15s ease !important;
+}
+
+body.wp-admin #ui-datepicker-div td a:hover,
+body.wp-admin #ui-datepicker-div .ui-state-hover,
+#ui-datepicker-div.ea-mnui-datepicker-popup td a:hover,
+#ui-datepicker-div.ea-mnui-datepicker-popup .ui-state-hover {
+    background: #eff6ff !important;
+    color: #2563eb !important;
+    border: none !important;
+}
+
+body.wp-admin #ui-datepicker-div td.ui-datepicker-today a,
+#ui-datepicker-div.ea-mnui-datepicker-popup td.ui-datepicker-today a {
+    font-weight: 700 !important;
+    color: #2563eb !important;
+    background: #f1f5f9 !important;
+    box-shadow: inset 0 0 0 1.5px #2563eb !important;
+    border: none !important;
+}
+
+body.wp-admin #ui-datepicker-div td .ui-state-active,
+body.wp-admin #ui-datepicker-div td.ui-datepicker-current-day a,
+body.wp-admin #ui-datepicker-div .ui-datepicker-current-day a,
+#ui-datepicker-div.ea-mnui-datepicker-popup td .ui-state-active,
+#ui-datepicker-div.ea-mnui-datepicker-popup td.ui-datepicker-current-day a,
+#ui-datepicker-div.ea-mnui-datepicker-popup .ui-datepicker-current-day a {
+    background: #2563eb !important;
+    color: #ffffff !important;
+    font-weight: 600 !important;
+    box-shadow: 0 2px 4px rgba(37, 99, 235, 0.3) !important;
+    border: none !important;
+}
+
+body.wp-admin #ui-datepicker-div .ui-state-disabled span,
+body.wp-admin #ui-datepicker-div .ui-state-disabled a,
+body.wp-admin #ui-datepicker-div td.ui-state-disabled span,
+#ui-datepicker-div.ea-mnui-datepicker-popup .ui-state-disabled span,
+#ui-datepicker-div.ea-mnui-datepicker-popup .ui-state-disabled a,
+#ui-datepicker-div.ea-mnui-datepicker-popup td.ui-state-disabled span {
+    opacity: 0.25 !important;
+    color: #94a3b8 !important;
+    background: transparent !important;
+    border: none !important;
+    cursor: not-allowed !important;
+}
+
+/* Non-working day (employee not scheduled) – greyed out, not clickable */
+body.wp-admin #ui-datepicker-div td.ea-naui-unavailable span,
+#ui-datepicker-div.ea-mnui-datepicker-popup td.ea-naui-unavailable span {
+    opacity: 0.3 !important;
+    color: #94a3b8 !important;
+    text-decoration: line-through !important;
+    background: transparent !important;
+    border: none !important;
+    cursor: not-allowed !important;
+}
+
+/* Full-day vacation – subtle red tint */
+body.wp-admin #ui-datepicker-div td.ea-naui-blocked span,
+#ui-datepicker-div.ea-mnui-datepicker-popup td.ea-naui-blocked span {
+    opacity: 0.4 !important;
+    color: #ef4444 !important;
+    background: #fef2f2 !important;
+    border: none !important;
+    cursor: not-allowed !important;
+}
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 782px) {
+    .ea-naui-body {
+        padding: 14px;
+    }
+
+    .ea-naui-table-wrap {
+        overflow-x: auto;
+    }
+
+    .ea-naui-table {
+        min-width: 900px;
+    }
+
+    .ea-naui-drawer-body {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ---------- Custom Confirm Modal ---------- */
+.ea-mnui-confirm-overlay {
+    --ea-blue: #2563eb;
+    --ea-blue-dark: #1d4ed8;
+    --ea-blue-light: #eef4ff;
+    --ea-red: #d63638;
+    --ea-red-dark: #b91c1c;
+    --ea-red-light: #fef3f2;
+    --ea-border: #e5e7eb;
+    --ea-text: #111827;
+    --ea-text-muted: #4b5563;
+    --ea-radius-lg: 12px;
+    --ea-radius-md: 8px;
+
+    display: flex;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(15, 23, 42, 0.3);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    z-index: 999999;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.ea-mnui-confirm-overlay.is-open {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+}
+
+.ea-mnui-confirm-box {
+    background: #ffffff;
+    border-radius: var(--ea-radius-lg);
+    width: 440px;
+    max-width: 90vw;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    transform: scale(0.95);
+    transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    border: 1px solid var(--ea-border);
+}
+
+.ea-mnui-confirm-overlay.is-open .ea-mnui-confirm-box {
+    transform: scale(1);
+}
+
+.ea-mnui-confirm-content {
+    display: flex;
+    padding: 24px;
+    gap: 16px;
+    align-items: flex-start;
+}
+
+.ea-mnui-confirm-icon-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.ea-mnui-confirm-icon-wrap.is-danger {
+    background: var(--ea-red-light);
+    color: var(--ea-red);
+    border: 1px solid #fee4e2;
+}
+
+.ea-mnui-confirm-icon-wrap.is-primary {
+    background: var(--ea-blue-light);
+    color: var(--ea-blue);
+    border: 1px solid #d1e9ff;
+}
+
+.ea-mnui-confirm-text {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex-grow: 1;
+}
+
+.ea-mnui-confirm-title {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--ea-text);
+    line-height: 1.3;
+}
+
+.ea-mnui-confirm-message {
+    margin: 0;
+    font-size: 14px;
+    color: var(--ea-text-muted);
+    line-height: 1.5;
+}
+
+.ea-mnui-confirm-footer {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 12px;
+    padding: 16px 24px;
+    background: #f9fafb;
+    border-top: 1px solid var(--ea-border);
+}
+
+.ea-mnui-confirm-footer .ea-mnui-btn {
+    border-radius: var(--ea-radius-md);
+    padding: 9px 18px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition: all 0.15s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1.2;
+}
+
+.ea-mnui-confirm-footer .ea-mnui-btn-ghost {
+    background: #ffffff;
+    border-color: #d0d5dd;
+    color: #344054;
+    box-shadow: 0 1px 2px rgba(16, 24, 40, 0.05);
+}
+
+.ea-mnui-confirm-footer .ea-mnui-btn-ghost:hover {
+    background: #f9fafb;
+    border-color: #d0d5dd;
+    color: #1d2939;
+}
+
+.ea-mnui-confirm-footer .ea-mnui-btn-danger {
+    background: var(--ea-red);
+    border-color: var(--ea-red);
+    color: #ffffff;
+    box-shadow: 0 1px 2px rgba(16, 24, 40, 0.05);
+}
+
+#ea-admin-app .ea-mnui-confirm-footer .ea-mnui-btn-danger:hover {
+    background: var(--ea-red-dark);
+    border-color: var(--ea-red-dark);
+    color: #ffffff;
+}
+
+.ea-mnui-confirm-footer .ea-mnui-btn-primary {
+    background: var(--ea-blue);
+    border-color: var(--ea-blue);
+    color: #ffffff;
+    box-shadow: 0 1px 2px rgba(16, 24, 40, 0.05);
+}
+
+#ea-admin-app .ea-mnui-confirm-footer .ea-mnui-btn-primary:hover {
+    background: var(--ea-blue-dark);
+    border-color: var(--ea-blue-dark);
+    color: #ffffff;
+}
+
+/* ---------- Pagination ---------- */
+.ea-naui-pagination {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 14px;
+    padding: 0 24px 24px 24px;
+}
+
+.ea-naui-pagination .ea-naui-btn[disabled] {
+    background: #eef4ff;
+    border-color: #2563eb;
+    color: #1d4ed8;
+    opacity: 1;
+    cursor: default;
+}
+
+/* ---------- Toggle Filter Button ---------- */
+#ea-naui-toggle-filter {
+    padding: 0 10px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: opacity 0.15s ease, background-color 0.15s ease, color 0.15s ease;
+}
+#ea-naui-toggle-filter.is-hidden {
+    opacity: 0.55;
+}
+#ea-admin-app #ea-naui-toggle-filter.is-active {
+    opacity: 1;
+    color: var(--ea-blue);
+    background-color: var(--ea-blue-light);
+    border-color: var(--ea-blue-light);
+}
+#ea-naui-toggle-filter svg {
+    display: block;
+}

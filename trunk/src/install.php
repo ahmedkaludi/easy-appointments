@@ -272,6 +272,11 @@ class EAInstallTools
                 $row
             );
         }
+
+        // Set default UI mode to 'new' for fresh installation
+        if (get_option('easy_ea_ui_mode') === false) {
+            add_option('easy_ea_ui_mode', 'new');
+        }
     }
 
     public function update()
@@ -283,6 +288,13 @@ class EAInstallTools
         $charset_collate = $this->wpdb->get_charset_collate();
 
         $version = get_option('easy_app_db_version', '1.0');
+
+        // For upgrades from versions prior to 4.0.0, default UI mode to 'old' (classic) if not explicitly set
+        if (version_compare($version, '4.0.0', '<')) {
+            if (get_option('easy_ea_ui_mode') === false) {
+                add_option('easy_ea_ui_mode', 'old');
+            }
+        }
 
         // if it is already latest version
         if (version_compare($version, $this->easy_app_db_version, '=')) {

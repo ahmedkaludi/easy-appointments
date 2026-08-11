@@ -1,1431 +1,5347 @@
-# Copyright (C) 2016 - 2021 Easy Appointments
-# This file is distributed under the same license as the Easy Appointments package.
-#, fuzzy
+# Copyright (C) 2026 Nikola Loncar
+# This file is distributed under the GPL v2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: EasyAppointments 2.8.0\n"
-"POT-Creation-Date: 2021-04-04 23:20+0200\n"
-"PO-Revision-Date: 2017-07-17 21:47+0100\n"
-"Last-Translator: \n"
-"Language-Team: \n"
-"Language: en_US\n"
+"Project-Id-Version: Easy Appointments 4.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/trunk\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.4.1\n"
-"X-Poedit-KeywordsList: __;_e\n"
-"X-Poedit-Basepath: ..\n"
-"X-Poedit-SearchPath-0: .\n"
-"X-Poedit-SearchPathExcluded-0: js\n"
-"X-Poedit-SearchPathExcluded-1: vendor\n"
-"X-Poedit-SearchPathExcluded-2: tests\n"
-"X-Poedit-SearchPathExcluded-3: js-react/node_modules\n"
-"X-Poedit-SearchPathExcluded-4: node_modules\n"
-"X-Poedit-SearchPathExcluded-5: js\n"
-"X-Poedit-SearchPathExcluded-6: js-react/node_modules\n"
+"POT-Creation-Date: 2026-08-10T12:32:36+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: easy-appointments\n"
 
-#: js-react/src/pages/Connections/components/ConnectionsForm/fields/DaysOfWeekField.js:9
-msgid "Monday"
-msgstr 
-
-#: js/bundle.js:1"
-
-#: js-react/src/pages/Connections/components/ConnectionsForm/fields/DaysOfWeekField.js:10
-msgid "Tuesday"
-msgstr ""
-
-#: js/bundle.js:1
-#: js-react/src/pages/Connections/components/ConnectionsForm/fields/DaysOfWeekField.js:11
-msgid "Wednesday"
-msgstr ""
-
-#: js/bundle.js:1
-#: js-react/src/pages/Connections/components/ConnectionsForm/fields/DaysOfWeekField.js:12
-msgid "Thursday"
-msgstr ""
-
-#: js/bundle.js:1
-#: js-react/src/pages/Connections/components/ConnectionsForm/fields/DaysOfWeekField.js:13
-msgid "Friday"
-msgstr ""
-
-#: js/bundle.js:1
-#: js-react/src/pages/Connections/components/ConnectionsForm/fields/DaysOfWeekField.js:14
-msgid "Saturday"
-msgstr ""
-
-#: js/bundle.js:1
-#: js-react/src/pages/Connections/components/ConnectionsForm/fields/DaysOfWeekField.js:15
-msgid "Sunday"
-msgstr ""
-
-#: js/bundle.js:1
-#: js-react/src/pages/Connections/components/ConnectionsForm/fields/DaysOfWeekField.js:32
-msgid "Days of week *"
-msgstr ""
-
-#: js/bundle.js:1
-#: js-react/src/pages/Connections/components/ConnectionsForm/fields/DaysOfWeekField.js:33
-msgid "Day..."
-msgstr ""
-
-#: js/bundle.js:1
-#: js-react/src/pages/Connections/components/ConnectionsForm/fields/EndDateField.js:47
-msgid "End date *"
-msgstr ""
-
-#: js/bundle.js:1
-#: js-react/src/pages/Connections/components/ConnectionsForm/fields/EndTimeField.js:52
-msgid "End time *"
-msgstr ""
-
-#: js/bundle.js:1
-#: js-react/src/pages/Connections/components/ConnectionsForm/fields/IsWorkingField.js:17
-#: js-react/src/pages/Connections/components/ConnectionsTable/index.js:49
-msgid "Is working"
-msgstr ""
-
-#: js/bundle.js:1
-#: js-react/src/pages/Connections/components/ConnectionsForm/fields/NumberOfSlotsField.js:16
-msgid "Number of slots *"
-msgstr ""
-
-#: js/bundle.js:1
-#: js-react/src/pages/Connections/components/ConnectionsForm/fields/StartDateField.js:23
-msgid "Start date *"
-msgstr ""
-
-#: js/bundle.js:1
-#: js-react/src/pages/Connections/components/ConnectionsForm/fields/StartTimeField.js:57
-msgid "Start time *"
-msgstr ""
-
-#: js/bundle.js:1
-#: js-react/src/pages/Connections/components/ConnectionsTable/index.js:14
-#: js-react/src/pages/Locations/components/LocationsTable/index.js:10
-#: js-react/src/pages/Services/components/ServicesTable/index.js:10
-#: js-react/src/pages/Workers/components/WorkersTable/index.js:10
-#: src/templates/appointments.tpl.php:82
-#: src/templates/mail.notification.tpl.php:10
-msgid "Id"
-msgstr ""
-
-#: js/bundle.js:1
-#: js-react/src/pages/Connections/components/ConnectionsTable/index.js:20
-msgid "Location / Service / Employee"
-msgstr ""
-
-#: js/bundle.js:1
-#: js-react/src/pages/Connections/components/ConnectionsTable/index.js:26
-msgid "Slots"
-msgstr ""
-
-#: js/bundle.js:1
-#: js-react/src/pages/Connections/components/ConnectionsTable/index.js:32
-msgid "Days of week"
-msgstr ""
-
-#: js/bundle.js:1
-#: js-react/src/pages/Connections/components/ConnectionsTable/index.js:37
-msgid "Working Hours"
-msgstr ""
-
-#: js/bundle.js:1
-#: js-react/src/pages/Connections/components/ConnectionsTable/index.js:43
-msgid "Date range"
-msgstr ""
-
-#: js/bundle.js:1
-#: js-react/src/pages/Connections/components/ConnectionsTable/index.js:55
-#: js-react/src/pages/Locations/components/LocationsTable/index.js:35
-#: js-react/src/pages/Services/components/ServicesTable/index.js:53
-#: js-react/src/pages/Vacation/components/VacationTable/index.js:32
-#: js-react/src/pages/Workers/components/WorkersTable/index.js:41
-msgid "Actions"
-msgstr ""
-
-#: js/bundle.js:1
-#: js-react/src/pages/Connections/components/ConnectionsTable/index.js:116
-#: js-react/src/pages/Locations/components/LocationsTable/index.js:59
-#: js-react/src/pages/Services/components/ServicesTable/index.js:80
-#: js-react/src/pages/Vacation/components/VacationTable/index.js:44
-#: src/templates/appointments.tpl.php:144
-msgid "Edit"
-msgstr ""
-
-#: js/bundle.js:1
-#: js-react/src/pages/Connections/components/ConnectionsTable/index.js:122
-#: js-react/src/pages/Locations/components/LocationsTable/index.js:65
-#: js-react/src/pages/Services/components/ServicesTable/index.js:86
-#: js-react/src/pages/Vacation/components/VacationTable/index.js:50
-#: src/templates/appointments.tpl.php:145
-msgid "Delete"
-msgstr ""
-
-#: js/bundle.js:1
-#: js-react/src/pages/Connections/components/ConnectionsTable/index.js:128
-#: src/templates/appointments.tpl.php:146
-msgid "Clone"
-msgstr ""
-
-#: js/bundle.js:1
-#: js-react/src/pages/Connections/index.js:106
-#: js-react/src/pages/Connections/index.js:111
-msgid "Add connection"
-msgstr ""
-
-#: js/bundle.js:1
-#: js-react/src/pages/Connections/index.js:106
-#: js-react/src/pages/Connections/index.js:111
-msgid "Connections"
-msgstr ""
-
-#: js/bundle.js:1
-#: js-react/src/pages/Connections/index.js:110
-msgid "Edit connection"
-msgstr ""
-
-#: js/bundle.js:1
-#: js-react/src/pages/Locations/components/LocationsForm/fields/AddressField.js:9
-msgid "Address *"
-msgstr ""
-
-#: js/bundle.js:1
-#: js-react/src/pages/Locations/components/LocationsForm/fields/LocationField.js:9
-msgid "Location *"
-msgstr ""
-
-#: js/bundle.js:1
-#: js-react/src/pages/Locations/components/LocationsTable/index.js:23
-#: js-react/src/pages/Locations/components/LocationsTable/index.js:44
-msgid "Address"
-msgstr ""
-
-#: js/bundle.js:1
-#: js-react/src/pages/Locations/components/LocationsTable/index.js:29
-#: js-react/src/pages/Locations/components/LocationsTable/index.js:45
-#: src/templates/admin.tpl.php:348 src/templates/appointments.tpl.php:11
-#: src/templates/appointments.tpl.php:98 src/templates/appointments.tpl.php:157
-#: src/templates/mail.notification.tpl.php:18 src/templates/report.tpl.php:35
-msgid "Location"
-msgstr ""
-
-#: js/bundle.js:1
-#: js-react/src/pages/Locations/index.js:94
-#: js-react/src/pages/Locations/index.js:99
-msgid "Add location"
-msgstr ""
-
-#: js/bundle.js:1
-#: js-react/src/pages/Locations/index.js:94
-#: js-react/src/pages/Locations/index.js:99
+#. Plugin Name of the plugin
+#: main.php
+#: new-ui/templates/settings-page.php:34
+#: new-ui/templates/settings-page.php:241
 msgid "Easy Appointments"
 msgstr ""
 
-#: js/bundle.js:1
-#: js-react/src/pages/Locations/index.js:98
-msgid "Edit location"
-msgstr ""
-
-#: js/bundle.js:1
-#: js-react/src/pages/Locations/index.js:98
-msgid "Locations"
-msgstr ""
-
-#: js/bundle.js:1
-#: js-react/src/pages/Services/components/ServicesForm/fields/MinutesField.js:17
-msgid "minutes"
-msgstr ""
-
-#: js/bundle.js:1
-#: js-react/src/pages/Services/components/ServicesForm/fields/PriceField.js:13
-msgid "Price *"
-msgstr ""
-
-#: js/bundle.js:1
-#: js-react/src/pages/Services/components/ServicesForm/index.js:15
-#: js-react/src/pages/Services/components/ServicesTable/index.js:23
-msgid "Duration *"
-msgstr ""
-
-#: js/bundle.js:1
-#: js-react/src/pages/Services/components/ServicesForm/index.js:19
-#: js-react/src/pages/Services/components/ServicesTable/index.js:29
-msgid "Slot step *"
-msgstr ""
-
-#: js/bundle.js:1
-#: js-react/src/pages/Services/components/ServicesForm/index.js:23
-#: js-react/src/pages/Services/components/ServicesTable/index.js:35
-msgid "Block before *"
-msgstr ""
-
-#: js/bundle.js:1
-#: js-react/src/pages/Services/components/ServicesForm/index.js:27
-#: js-react/src/pages/Services/components/ServicesTable/index.js:41
-msgid "Block after *"
-msgstr ""
-
-#: js/bundle.js:1
-#: js-react/src/pages/Services/components/ServicesTable/index.js:47
-#: js-react/src/pages/Services/components/ServicesTable/index.js:66
-#: src/frontend.php:231 src/frontend.php:526
-#: src/templates/appointments.tpl.php:102
-#: src/templates/appointments.tpl.php:232
-#: src/templates/mail.notification.tpl.php:46
-msgid "Price"
-msgstr ""
-
-#: js/bundle.js:1
-#: js-react/src/pages/Services/components/ServicesTable/index.js:62
-msgid "Duration"
-msgstr ""
-
-#: js/bundle.js:1
-#: js-react/src/pages/Services/components/ServicesTable/index.js:63
-msgid "Slot step"
-msgstr ""
-
-#: js/bundle.js:1
-#: js-react/src/pages/Services/components/ServicesTable/index.js:64
-msgid "Block before"
-msgstr ""
-
-#: js/bundle.js:1
-#: js-react/src/pages/Services/components/ServicesTable/index.js:65
-msgid "Block after"
-msgstr ""
-
-#: js/bundle.js:1
-#: js-react/src/pages/Services/components/ServicesTable/index.js:101
-msgid "* value in minutes"
-msgstr ""
-
-#: js/bundle.js:1
-#: js-react/src/pages/Services/index.js:94
-msgid "Add service"
-msgstr ""
-
-#: js/bundle.js:1
-#: js-react/src/pages/Services/index.js:98
-msgid "Edit services"
-msgstr ""
-
-#: js/bundle.js:1
-#: js-react/src/pages/Services/index.js:99
-msgid "Add services"
-msgstr ""
-
-#: js/bundle.js:1
-#: js-react/src/pages/Services/index.js:104 src/admin.php:354 src/admin.php:355
-msgid "Services"
-msgstr ""
-
-#: js/bundle.js:1
-#: js-react/src/pages/Tools/components/ErrorLog/index.js:10
-msgid "Mail error"
-msgstr ""
-
-#: js/bundle.js:1
-#: js-react/src/pages/Tools/components/ErrorLog/index.js:35
-msgid "Details"
-msgstr ""
-
-#: js/bundle.js:1
-#: js-react/src/pages/Tools/components/TestMail/index.js:35
-msgid "Email address"
-msgstr ""
-
-#: js/bundle.js:1
-#: js-react/src/pages/Tools/index.js:42
-msgid "Test email"
-msgstr ""
-
-#: js/bundle.js:1
-#: js-react/src/pages/Tools/index.js:50
-msgid ""
-"Test if the mail service is working fine on this site by generating a test "
-"email that will be sent to provided address."
-msgstr ""
-
-#: js/bundle.js:1
-#: js-react/src/pages/Tools/index.js:61
-msgid "Error log"
-msgstr ""
-
-#: js/bundle.js:1
-#: js-react/src/pages/Tools/index.js:65
-msgid "Clear log"
-msgstr ""
-
-#: js/bundle.js:1
-#: js-react/src/pages/Vacation/components/VacationForm/fields/TooltipField.js:9
-msgid "Tooltip *"
-msgstr ""
-
-#: js/bundle.js:1
-#: js-react/src/pages/Vacation/components/VacationForm/fields/WorkersField.js:39
-msgid "Workers *"
-msgstr ""
-
-#: js/bundle.js:1
-#: js-react/src/pages/Vacation/components/VacationForm/fields/WorkersField.js:40
-msgid "Worker..."
-msgstr ""
-
-#: js/bundle.js:1
-#: js-react/src/pages/Vacation/components/VacationTable/index.js:16
-msgid "Tooltip"
-msgstr ""
-
-#: js/bundle.js:1
-#: js-react/src/pages/Vacation/components/VacationTable/index.js:22
-msgid "Workers"
-msgstr ""
-
-#: js/bundle.js:1
-#: js-react/src/pages/Vacation/components/VacationTable/index.js:27
-msgid "Dates"
-msgstr ""
-
-#: js/bundle.js:1
-#: js-react/src/pages/Vacation/index.js:90
-#: js-react/src/pages/Vacation/index.js:95
-msgid "Add vacation"
-msgstr ""
-
-#: js/bundle.js:1
-#: js-react/src/pages/Vacation/index.js:94
-msgid "Edit vacation"
-msgstr ""
-
-#: js/bundle.js:1
-#: js-react/src/pages/Vacation/index.js:100
-msgid "Vacations"
-msgstr ""
-
-#: js/bundle.js:1
-#: js-react/src/pages/Workers/components/WorkersForm/fields/DescriptionField.js:9
-msgid "Description *"
-msgstr ""
-
-#: js/bundle.js:1
-#: js-react/src/pages/Workers/components/WorkersForm/fields/EmailField.js:9
-msgid "Email *"
-msgstr ""
-
-#: js/bundle.js:1
-#: js-react/src/pages/Workers/components/WorkersForm/fields/PhoneField.js:9
-msgid "Phone *"
-msgstr ""
-
-#: js/bundle.js:1
-#: js-react/src/pages/Workers/components/WorkersTable/index.js:23
-#: js-react/src/pages/Workers/components/WorkersTable/index.js:50
-#: src/install.php:807 src/templates/appointments.tpl.php:100
-msgid "Description"
-msgstr ""
-
-#: js/bundle.js:1
-#: js-react/src/pages/Workers/components/WorkersTable/index.js:29
-#: js-react/src/pages/Workers/components/WorkersTable/index.js:51
-#: src/frontend.php:517 src/metafields.php:30 src/templates/admin.tpl.php:436
-msgid "Email"
-msgstr ""
-
-#: js/bundle.js:1
-#: js-react/src/pages/Workers/components/WorkersTable/index.js:35
-#: js-react/src/pages/Workers/components/WorkersTable/index.js:52
-#: src/frontend.php:519 src/install.php:806 src/metafields.php:29
-#: src/templates/admin.tpl.php:435
-msgid "Phone"
-msgstr ""
-
-#: js/bundle.js:1
-#: js-react/src/pages/Workers/index.js:94
-#: js-react/src/pages/Workers/index.js:99
-msgid "Add employee"
-msgstr ""
-
-#: js/bundle.js:1
-#: js-react/src/pages/Workers/index.js:98
-msgid "Edit employee"
-msgstr ""
-
-#: js/bundle.js:1
-#: js-react/src/pages/Workers/index.js:104 src/admin.php:364 src/admin.php:365
-msgid "Employees"
-msgstr ""
-
-#: src/admin.php:334 src/admin.php:335 src/templates/appointments.tpl.php:6
-msgid "Appointments"
-msgstr ""
-
-#: src/admin.php:344 src/admin.php:345
-msgid "Locations"
-msgstr ""
-
-#: src/admin.php:374 src/admin.php:375
-msgid "Connections"
-msgstr ""
-
-#: src/admin.php:384 src/admin.php:385
-msgid "Settings"
-msgstr ""
-
-#: src/admin.php:394 src/admin.php:395
-msgid "Tools"
-msgstr ""
-
-#: src/admin.php:404 src/admin.php:405
-msgid "Vacation"
-msgstr ""
-
-#: src/admin.php:414
-msgid "Overview"
-msgstr ""
-
-#: src/admin.php:415
-msgid "Reports"
-msgstr ""
-
-#: src/ajax.php:263
-msgid "Slot is taken"
-msgstr ""
-
-#: src/ajax.php:294
-msgid "Something went wrong! Please try again."
-msgstr ""
-
-#: src/ajax.php:762
-msgid "Invalid email address!"
-msgstr ""
-
-#: src/ajax.php:766
-msgid "Only admin user can test mail!"
-msgstr ""
-
-#: src/ajax.php:789
-msgid "Request completed, please check email."
-msgstr ""
-
-#: src/ajax.php:1203
-msgid "Invalid captcha!"
-msgstr ""
-
-#: src/api/apifullcalendar.php:304 src/mail.php:471
-msgid "Cancel appointment"
-msgstr ""
-
-#: src/api/apifullcalendar.php:305 src/mail.php:472
-msgid "Confirm appointment"
-msgstr ""
-
-#: src/api/gdpr.php:46
-msgid "Data deleted"
-msgstr ""
-
-#: src/api/logactions.php:56
-msgid "Log records deleted"
-msgstr ""
-
-#: src/api/logactions.php:67
-msgid "Log file removed"
-msgstr ""
-
-#: src/frontend.php:229 src/frontend.php:510
-msgid "Please select another day"
-msgstr ""
-
-#: src/frontend.php:230 src/frontend.php:523
-#: src/templates/appointments.tpl.php:83 src/templates/appointments.tpl.php:101
-msgid "Date & time"
-msgstr ""
-
-#: src/frontend.php:238 src/frontend.php:531
-msgid "Form validation code expired. Please refresh page in order to continue."
-msgstr ""
-
-#: src/frontend.php:239 src/frontend.php:532
-msgid "Internal error. Please try again later."
-msgstr ""
-
-#: src/frontend.php:240 src/frontend.php:533
-msgid "Unable to make ajax request. Please try again later."
-msgstr ""
-
-#: src/frontend.php:331 src/frontend.php:511
-msgid "Personal information"
-msgstr ""
-
-#: src/frontend.php:332 src/frontend.php:516
-msgid "Fields with * are required"
-msgstr ""
-
-#: src/frontend.php:336 src/frontend.php:522
-msgid "Booking overview"
-msgstr ""
-
-#: src/frontend.php:341 src/frontend.php:527
-msgid "I agree with terms and conditions"
-msgstr ""
-
-#: src/frontend.php:344 src/frontend.php:528
-msgid "You must agree with terms and conditions"
-msgstr ""
-
-#: src/frontend.php:364 src/frontend.php:524
-msgid "Submit"
-msgstr ""
+#. Plugin URI of the plugin
+#. Author URI of the plugin
+#: main.php
+msgid "https://easy-appointments.com/"
+msgstr ""
+
+#. Description of the plugin
+#: main.php
+msgid "Simple and easy to use management system for Appointments and Bookings"
+msgstr ""
+
+#. Author of the plugin
+#: main.php
+msgid "Nikola Loncar"
+msgstr ""
+
+#: ea-blocks/ea-blocks.php:310
+#: ea-blocks/ea-blocks.php:321
+msgid "Shortcode not allowed."
+msgstr ""
+
+#: new-ui/class-ea-appointments-new-ui.php:222
+#: new-ui/templates/appointments-page.php:45
+#: new-ui/templates/appointments-page.php:194
+#: src/templates/appointments.tpl.php:86
+msgid "Add New Appointment"
+msgstr ""
+
+#. translators: %s: appointment ID
+#: new-ui/class-ea-appointments-new-ui.php:224
+#, php-format
+msgid "Edit Appointment #%s"
+msgstr ""
+
+#: new-ui/class-ea-appointments-new-ui.php:225
+#: new-ui/class-ea-connections-new-ui.php:211
+#: new-ui/class-ea-customers-new-ui.php:214
+#: new-ui/class-ea-locations-new-ui.php:176
+#: new-ui/class-ea-services-new-ui.php:176
+#: new-ui/class-ea-vacation-new-ui.php:241
+#: new-ui/class-ea-workers-new-ui.php:177
+#: new-ui/templates/tabs/tab-form-fields.php:82
+#: src/templates/appointments.tpl.php:180
+msgid "Edit"
+msgstr ""
+
+#: new-ui/class-ea-appointments-new-ui.php:226
+#: new-ui/class-ea-connections-new-ui.php:212
+#: src/templates/appointments.tpl.php:182
+msgid "Clone"
+msgstr ""
+
+#: new-ui/class-ea-appointments-new-ui.php:227
+#: new-ui/class-ea-connections-new-ui.php:213
+#: new-ui/class-ea-customers-new-ui.php:216
+#: new-ui/class-ea-locations-new-ui.php:177
+#: new-ui/class-ea-services-new-ui.php:177
+#: new-ui/class-ea-settings-new-ui.php:500
+#: new-ui/class-ea-vacation-new-ui.php:242
+#: new-ui/class-ea-workers-new-ui.php:178
+#: new-ui/templates/tabs/tab-form-fields.php:85
+#: src/templates/appointments.tpl.php:181
+msgid "Delete"
+msgstr ""
+
+#: new-ui/class-ea-appointments-new-ui.php:228
+#: new-ui/class-ea-connections-new-ui.php:214
+#: new-ui/class-ea-customers-new-ui.php:217
+#: new-ui/class-ea-locations-new-ui.php:178
+#: new-ui/class-ea-services-new-ui.php:178
+#: new-ui/class-ea-vacation-new-ui.php:243
+#: new-ui/class-ea-workers-new-ui.php:179
+#: new-ui/templates/appointments-page.php:242
+#: new-ui/templates/connections-page.php:242
+#: new-ui/templates/customers-page.php:175
+#: new-ui/templates/locations-page.php:114
+#: new-ui/templates/services-page.php:199
+#: new-ui/templates/vacation-page.php:154
+#: new-ui/templates/workers-page.php:120
+#: src/templates/admin.tpl.php:66
+#: src/templates/appointments.tpl.php:287
+#: src/templates/customers.tpl.php:251
+#: src/templates/customers.tpl.php:439
+msgid "Save"
+msgstr ""
+
+#: new-ui/class-ea-appointments-new-ui.php:229
+#: new-ui/class-ea-connections-new-ui.php:215
+#: new-ui/class-ea-customers-new-ui.php:218
+#: new-ui/class-ea-locations-new-ui.php:179
+#: new-ui/class-ea-services-new-ui.php:179
+#: new-ui/class-ea-settings-new-ui.php:469
+#: new-ui/class-ea-settings-new-ui.php:493
+#: new-ui/class-ea-vacation-new-ui.php:244
+#: new-ui/class-ea-workers-new-ui.php:180
+msgid "Saving…"
+msgstr ""
+
+#: new-ui/class-ea-appointments-new-ui.php:230
+msgid "Refreshing…"
+msgstr ""
 
-#: src/frontend.php:365 src/frontend.php:525
-#: src/templates/appointments.tpl.php:244
+#: new-ui/class-ea-appointments-new-ui.php:231
+#: new-ui/class-ea-connections-new-ui.php:216
+#: new-ui/class-ea-customers-new-ui.php:219
+#: new-ui/class-ea-locations-new-ui.php:180
+#: new-ui/class-ea-services-new-ui.php:180
+#: new-ui/class-ea-settings-new-ui.php:470
+#: new-ui/class-ea-settings-new-ui.php:501
+#: new-ui/class-ea-vacation-new-ui.php:245
+#: new-ui/class-ea-workers-new-ui.php:181
+#: new-ui/templates/appointments-page.php:241
+#: new-ui/templates/connections-page.php:241
+#: new-ui/templates/customers-page.php:174
+#: new-ui/templates/locations-page.php:113
+#: new-ui/templates/services-page.php:198
+#: new-ui/templates/vacation-page.php:153
+#: new-ui/templates/workers-page.php:119
+#: src/api/apifullcalendar.php:498
+#: src/frontend.php:382
+#: src/frontend.php:718
+#: src/templates/appointments.tpl.php:288
+#: src/templates/customers.tpl.php:438
 msgid "Cancel"
 msgstr ""
 
-#: src/frontend.php:410 src/frontend.php:417 src/frontend.php:422
-#: src/frontend.php:438 src/frontend.php:512
-msgid "This field is required."
+#: new-ui/class-ea-appointments-new-ui.php:232
+#: new-ui/class-ea-customers-new-ui.php:221
+msgid "Loading appointments…"
 msgstr ""
 
-#: src/frontend.php:411 src/frontend.php:418 src/frontend.php:513
-msgid "Please enter a valid email address"
+#: new-ui/class-ea-appointments-new-ui.php:233
+#: new-ui/templates/appointments-page.php:182
+msgid "No appointments found for the selected filters."
 msgstr ""
 
-#: src/frontend.php:514
-msgid "Please enter at least 3 characters."
+#: new-ui/class-ea-appointments-new-ui.php:234
+msgid "Are you sure you want to delete this appointment?"
 msgstr ""
 
-#: src/frontend.php:515
-msgid "Please enter at least 3 digits."
+#: new-ui/class-ea-appointments-new-ui.php:235
+msgid "Are you sure you want to delete the selected appointments?"
 msgstr ""
 
-#: src/frontend.php:518 src/install.php:805
-msgid "Name"
+#: new-ui/class-ea-appointments-new-ui.php:236
+msgid "Are you sure you want to cancel all upcoming appointments?"
 msgstr ""
 
-#: src/frontend.php:520
-msgid "Comment"
+#: new-ui/class-ea-appointments-new-ui.php:237
+msgid "Are you sure you want to cancel all selected appointments?"
 msgstr ""
 
-#: src/frontend.php:521
-msgid "Please check your appointment details below and confirm:"
+#: new-ui/class-ea-appointments-new-ui.php:238
+#: src/templates/appointments.tpl.php:377
+msgid "Please select at least one appointment to cancel."
 msgstr ""
 
-#: src/frontend.php:529
-msgid "You can't select this time slot!'"
+#: new-ui/class-ea-appointments-new-ui.php:239
+#: src/templates/appointments.tpl.php:414
+msgid "Please select at least one appointment to delete."
 msgstr ""
 
-#: src/frontend.php:456
-msgid "Your appointment has been submitted and is currently pending approval. You will be notified once it is confirmed."
+#: new-ui/class-ea-appointments-new-ui.php:240
+msgid "Appointments cancelled successfully."
 msgstr ""
 
-#: src/frontend.php:463
-msgid "Your appointment has been confirmed. Thank you!"
+#: new-ui/class-ea-appointments-new-ui.php:241
+msgid "Appointments deleted successfully."
 msgstr ""
 
-#: src/frontend.php:470
-msgid "Your appointment has been reserved. You will be notified once it is confirmed."
+#: new-ui/class-ea-appointments-new-ui.php:242
+msgid "Appointment saved successfully."
 msgstr ""
 
-#: src/frontend.php:476
-msgid "Your appointment has been successfully submitted. You will receive an update shortly."
+#: new-ui/class-ea-appointments-new-ui.php:243
+#: src/ajax.php:2990
+msgid "You cannot book an appointment in the past."
 msgstr ""
 
-#: src/install.php:804
-msgid "EMail"
+#: new-ui/class-ea-appointments-new-ui.php:244
+#: new-ui/class-ea-connections-new-ui.php:225
+#: new-ui/class-ea-customers-new-ui.php:231
+#: new-ui/class-ea-locations-new-ui.php:187
+#: new-ui/class-ea-services-new-ui.php:188
+#: new-ui/class-ea-vacation-new-ui.php:253
+#: new-ui/class-ea-workers-new-ui.php:189
+msgid "Something went wrong. Please try again."
 msgstr ""
 
-#: src/logic.php:256
-msgid ""
-"Daily limit of booking request has been reached. Please contact us by email!"
+#: new-ui/class-ea-appointments-new-ui.php:245
+#: src/templates/appointments.tpl.php:70
+msgid "Select period"
 msgstr ""
 
-#: src/logic.php:370
-msgid "pending"
+#: new-ui/class-ea-appointments-new-ui.php:246
+#: new-ui/templates/appointments-page.php:59
+#: src/templates/appointments.tpl.php:71
+msgid "Today"
 msgstr ""
 
-#: src/logic.php:371
-msgid "reservation"
+#: new-ui/class-ea-appointments-new-ui.php:247
+#: new-ui/templates/appointments-page.php:60
+#: src/templates/appointments.tpl.php:72
+msgid "Tomorrow"
 msgstr ""
 
-#: src/logic.php:372
-msgid "abandoned"
+#: new-ui/class-ea-appointments-new-ui.php:248
+#: new-ui/templates/appointments-page.php:61
+#: src/templates/appointments.tpl.php:73
+msgid "Next 7 days"
 msgstr ""
 
-#: src/logic.php:373
+#: new-ui/class-ea-appointments-new-ui.php:249
+#: new-ui/templates/appointments-page.php:62
+#: src/templates/appointments.tpl.php:74
+msgid "Next 30 days"
+msgstr ""
+
+#: new-ui/class-ea-appointments-new-ui.php:250
+#: new-ui/templates/appointments-page.php:63
+#: src/templates/appointments.tpl.php:75
+msgid "This week"
+msgstr ""
+
+#: new-ui/class-ea-appointments-new-ui.php:251
+#: new-ui/templates/appointments-page.php:64
+#: src/templates/appointments.tpl.php:76
+msgid "This month"
+msgstr ""
+
+#: new-ui/class-ea-appointments-new-ui.php:331
+#: src/admin.php:960
+#: src/logic.php:536
 msgid "cancelled"
 msgstr ""
 
-#: src/logic.php:374
+#: new-ui/class-ea-appointments-new-ui.php:332
+#: src/admin.php:961
+#: src/logic.php:537
 msgid "confirmed"
 msgstr ""
 
-#: src/mail.php:174
+#: new-ui/class-ea-appointments-new-ui.php:362
+#: new-ui/class-ea-connections-new-ui.php:309
+#: new-ui/class-ea-customers-new-ui.php:249
+#: new-ui/class-ea-help-support-new-ui.php:162
+#: new-ui/class-ea-locations-new-ui.php:198
+#: new-ui/class-ea-publish-new-ui.php:153
+#: new-ui/class-ea-services-new-ui.php:209
+#: new-ui/class-ea-settings-new-ui.php:546
+#: new-ui/class-ea-vacation-new-ui.php:327
+#: new-ui/class-ea-workers-new-ui.php:210
+msgid "You do not have sufficient permissions to access this page."
+msgstr ""
+
+#: new-ui/class-ea-connections-new-ui.php:105
+#: new-ui/class-ea-connections-new-ui.php:106
+#: new-ui/templates/connections-page.php:32
+#: src/admin.php:776
+#: src/admin.php:777
+msgid "Connections"
+msgstr ""
+
+#: new-ui/class-ea-connections-new-ui.php:208
+#: new-ui/templates/connections-page.php:40
+#: new-ui/templates/connections-page.php:107
+msgid "Add connection"
+msgstr ""
+
+#: new-ui/class-ea-connections-new-ui.php:209
+#: new-ui/templates/connections-page.php:37
+msgid "Add connections in bulk"
+msgstr ""
+
+#: new-ui/class-ea-connections-new-ui.php:210
+msgid "Edit connection"
+msgstr ""
+
+#: new-ui/class-ea-connections-new-ui.php:217
+msgid "Loading connections…"
+msgstr ""
+
+#: new-ui/class-ea-connections-new-ui.php:218
+msgid "Are you sure you want to delete this connection?"
+msgstr ""
+
+#. translators: %d: number of connections
+#: new-ui/class-ea-connections-new-ui.php:220
+#, php-format
+msgid "Delete %d connection(s)?"
+msgstr ""
+
+#: new-ui/class-ea-connections-new-ui.php:221
+msgid "Connection(s) deleted successfully."
+msgstr ""
+
+#: new-ui/class-ea-connections-new-ui.php:222
+msgid "Connection saved successfully."
+msgstr ""
+
+#. translators: %d: number of connections
+#: new-ui/class-ea-connections-new-ui.php:224
+#, php-format
+msgid "%d connection(s) created successfully."
+msgstr ""
+
+#: new-ui/class-ea-connections-new-ui.php:226
+#: new-ui/templates/connections-page.php:95
+msgid "No connections found."
+msgstr ""
+
+#: new-ui/class-ea-connections-new-ui.php:227
+msgid "Please select at least one location, service and employee."
+msgstr ""
+
+#. translators: %s: previous year, e.g. 2025
+#: new-ui/class-ea-connections-new-ui.php:229
+#, php-format
+msgid "Extend connections in bulk that are ending at December 31, %s for one more year"
+msgstr ""
+
+#: new-ui/class-ea-connections-new-ui.php:230
+msgid "Extend all connections ending December 31 last year by one more year?"
+msgstr ""
+
+#: new-ui/class-ea-connections-new-ui.php:231
+msgid "Extending…"
+msgstr ""
+
+#: new-ui/class-ea-connections-new-ui.php:232
+#: new-ui/templates/connections-page.php:51
+msgid "Extend"
+msgstr ""
+
+#: new-ui/class-ea-connections-new-ui.php:233
+msgid "Inactive"
+msgstr ""
+
+#: new-ui/class-ea-connections-new-ui.php:234
+msgid "Working"
+msgstr ""
+
+#: new-ui/class-ea-connections-new-ui.php:235
+msgid "Not working"
+msgstr ""
+
+#: new-ui/class-ea-connections-new-ui.php:236
+msgid "Scheduled"
+msgstr ""
+
+#: new-ui/class-ea-connections-new-ui.php:237
+msgid "Expired"
+msgstr ""
+
+#: new-ui/class-ea-connections-new-ui.php:238
+#: new-ui/templates/connections-page.php:167
+msgid "Yes"
+msgstr ""
+
+#: new-ui/class-ea-connections-new-ui.php:239
+#: new-ui/templates/connections-page.php:168
+msgid "No"
+msgstr ""
+
+#: new-ui/class-ea-connections-new-ui.php:240
+msgid "Active from"
+msgstr ""
+
+#: new-ui/class-ea-connections-new-ui.php:241
+msgid "to"
+msgstr ""
+
+#: new-ui/class-ea-connections-new-ui.php:242
+msgid "Starts at"
+msgstr ""
+
+#: new-ui/class-ea-connections-new-ui.php:243
+msgid "Ends at"
+msgstr ""
+
+#: new-ui/class-ea-connections-new-ui.php:244
+msgid "End time must be after start time."
+msgstr ""
+
+#: new-ui/class-ea-connections-new-ui.php:245
+#: src/frontend.php:432
+#: src/frontend.php:439
+#: src/frontend.php:444
+#: src/frontend.php:460
+#: src/frontend.php:704
+msgid "This field is required."
+msgstr ""
+
+#: new-ui/class-ea-connections-new-ui.php:246
+#: new-ui/templates/connections-page.php:184
+msgid "Custom week number must be 3 or more."
+msgstr ""
+
+#: new-ui/class-ea-customers-new-ui.php:106
+#: new-ui/class-ea-customers-new-ui.php:107
+#: new-ui/templates/customers-page.php:26
+#: src/admin.php:796
+#: src/admin.php:797
+msgid "Customers"
+msgstr ""
+
+#: new-ui/class-ea-customers-new-ui.php:208
+#: new-ui/templates/customers-page.php:31
+#: new-ui/templates/customers-page.php:89
+msgid "Add Customer"
+msgstr ""
+
+#: new-ui/class-ea-customers-new-ui.php:209
+#: src/templates/customers.tpl.php:212
+msgid "Customer Detail"
+msgstr ""
+
+#: new-ui/class-ea-customers-new-ui.php:210
+msgid "Customer Bookings"
+msgstr ""
+
+#: new-ui/class-ea-customers-new-ui.php:211
+msgid "View Bookings"
+msgstr ""
+
+#: new-ui/class-ea-customers-new-ui.php:212
+msgid "Edit Customer"
+msgstr ""
+
+#: new-ui/class-ea-customers-new-ui.php:213
+#: new-ui/class-ea-ui-mode-switcher.php:226
+#: new-ui/templates/appointments-page.php:195
+#: new-ui/templates/connections-page.php:108
+#: new-ui/templates/customers-page.php:90
+#: new-ui/templates/locations-page.php:89
+#: new-ui/templates/services-page.php:97
+#: new-ui/templates/vacation-page.php:94
+#: new-ui/templates/workers-page.php:90
+msgid "Close"
+msgstr ""
+
+#: new-ui/class-ea-customers-new-ui.php:215
+msgid "View"
+msgstr ""
+
+#: new-ui/class-ea-customers-new-ui.php:220
+msgid "Loading customers…"
+msgstr ""
+
+#: new-ui/class-ea-customers-new-ui.php:222
+#: new-ui/templates/customers-page.php:76
+msgid "No results."
+msgstr ""
+
+#: new-ui/class-ea-customers-new-ui.php:223
+msgid "No appointments found."
+msgstr ""
+
+#: new-ui/class-ea-customers-new-ui.php:224
+msgid "Are you sure you want to delete this customer?"
+msgstr ""
+
+#: new-ui/class-ea-customers-new-ui.php:225
+msgid "This will delete ALL customers. Are you sure?"
+msgstr ""
+
+#. translators: %d: number of customers
+#: new-ui/class-ea-customers-new-ui.php:227
+#, php-format
+msgid "Are you sure you want to delete %d selected customers?"
+msgstr ""
+
+#: new-ui/class-ea-customers-new-ui.php:228
+msgid "Customer deleted successfully."
+msgstr ""
+
+#: new-ui/class-ea-customers-new-ui.php:229
+msgid "All customers deleted."
+msgstr ""
+
+#: new-ui/class-ea-customers-new-ui.php:230
+msgid "Customer saved successfully."
+msgstr ""
+
+#: new-ui/class-ea-customers-new-ui.php:232
+#: new-ui/templates/customers-page.php:124
+#: new-ui/templates/locations-page.php:96
+#: new-ui/templates/services-page.php:104
+#: new-ui/templates/workers-page.php:97
+msgid "Name is required."
+msgstr ""
+
+#: new-ui/class-ea-customers-new-ui.php:233
+#: new-ui/templates/customers-page.php:130
+msgid "A valid email is required."
+msgstr ""
+
+#: new-ui/class-ea-customers-new-ui.php:234
+#: new-ui/templates/customers-page.php:136
+msgid "Mobile is required."
+msgstr ""
+
+#: new-ui/class-ea-customers-new-ui.php:235
+#: new-ui/templates/customers-page.php:151
+#: src/admin.php:284
+#: src/templates/customers.tpl.php:260
+msgid "Upcoming"
+msgstr ""
+
+#: new-ui/class-ea-customers-new-ui.php:236
+#: new-ui/templates/customers-page.php:152
+#: src/admin.php:285
+#: src/templates/customers.tpl.php:261
+msgid "Past"
+msgstr ""
+
+#: new-ui/class-ea-customers-new-ui.php:237
+#: new-ui/templates/appointments-page.php:129
+#: src/templates/appointments.tpl.php:46
+#: src/templates/customers.tpl.php:138
+msgid "Search"
+msgstr ""
+
+#: new-ui/class-ea-customers-new-ui.php:238
+#: src/templates/customers.tpl.php:152
+msgid "Delete All Customers"
+msgstr ""
+
+#: new-ui/class-ea-help-support-new-ui.php:73
+#: new-ui/class-ea-help-support-new-ui.php:74
+#: new-ui/templates/help-support-page.php:25
+#: src/admin.php:857
+#: src/admin.php:858
+msgid "Help & Support"
+msgstr ""
+
+#: new-ui/class-ea-help-support-new-ui.php:137
+#: new-ui/templates/help-support-page.php:96
+#: src/templates/help-and-support.tpl.php:228
+msgid "Sending..."
+msgstr ""
+
+#: new-ui/class-ea-help-support-new-ui.php:138
+#: new-ui/templates/help-support-page.php:92
+#: src/templates/help-and-support.tpl.php:227
+msgid "Send Support Request"
+msgstr ""
+
+#: new-ui/class-ea-help-support-new-ui.php:139
+msgid "Message sent successfully. We will get back to you shortly."
+msgstr ""
+
+#: new-ui/class-ea-help-support-new-ui.php:140
+msgid "Message not sent. Please try after some time."
+msgstr ""
+
+#: new-ui/class-ea-help-support-new-ui.php:141
+msgid "Please enter your message."
+msgstr ""
+
+#: new-ui/class-ea-help-support-new-ui.php:142
+msgid "Please enter your email address."
+msgstr ""
+
+#: new-ui/class-ea-help-support-new-ui.php:143
+#: new-ui/class-ea-workers-new-ui.php:196
+msgid "Please enter a valid email address."
+msgstr ""
+
+#: new-ui/class-ea-help-support-new-ui.php:144
+msgid "Please select your customer type."
+msgstr ""
+
+#: new-ui/class-ea-help-support-new-ui.php:145
+msgid "Please fill in all required fields."
+msgstr ""
+
+#: new-ui/class-ea-help-support-new-ui.php:177
+#: src/ajax.php:3337
+#: src/ajax.php:3348
+#: src/ajax.php:3519
+msgid "Unauthorized."
+msgstr ""
+
+#: new-ui/class-ea-help-support-new-ui.php:187
+msgid "Please provide valid message and email."
+msgstr ""
+
+#: new-ui/class-ea-help-support-new-ui.php:199
+msgid "Query from Easy Appointments plugin support"
+msgstr ""
+
+#: new-ui/class-ea-help-support-new-ui.php:201
+msgid "Customer Type: "
+msgstr ""
+
+#: new-ui/class-ea-help-support-new-ui.php:204
+msgid "Easy Appointments Query"
+msgstr ""
+
+#: new-ui/class-ea-help-support-new-ui.php:215
+msgid "Message sent successfully."
+msgstr ""
+
+#: new-ui/class-ea-help-support-new-ui.php:219
+msgid "Failed to send message. Please try again."
+msgstr ""
+
+#: new-ui/class-ea-locations-new-ui.php:93
+#: new-ui/class-ea-locations-new-ui.php:94
+#: new-ui/templates/connections-page.php:140
+#: new-ui/templates/locations-page.php:26
+#: src/admin.php:746
+#: src/admin.php:747
+msgid "Locations"
+msgstr ""
+
+#: new-ui/class-ea-locations-new-ui.php:174
+#: new-ui/templates/locations-page.php:31
+#: new-ui/templates/locations-page.php:88
+msgid "Add location"
+msgstr ""
+
+#: new-ui/class-ea-locations-new-ui.php:175
+msgid "Edit location"
+msgstr ""
+
+#: new-ui/class-ea-locations-new-ui.php:181
+msgid "Loading locations…"
+msgstr ""
+
+#: new-ui/class-ea-locations-new-ui.php:182
+msgid "Are you sure you want to delete this?"
+msgstr ""
+
+#. translators: %d: number of locations
+#: new-ui/class-ea-locations-new-ui.php:184
+#, php-format
+msgid "Delete %d locations?"
+msgstr ""
+
+#: new-ui/class-ea-locations-new-ui.php:185
+msgid "Location(s) deleted successfully."
+msgstr ""
+
+#: new-ui/class-ea-locations-new-ui.php:186
+msgid "Location saved successfully."
+msgstr ""
+
+#: new-ui/class-ea-publish-new-ui.php:72
+#: new-ui/class-ea-publish-new-ui.php:73
+#: src/admin.php:786
+#: src/admin.php:787
+msgid "Publish"
+msgstr ""
+
+#: new-ui/class-ea-publish-new-ui.php:135
+#: new-ui/templates/publish-page.php:55
+#: new-ui/templates/publish-page.php:122
+#: new-ui/templates/publish-page.php:132
+#: new-ui/templates/publish-page.php:147
+#: new-ui/templates/publish-page.php:279
+#: new-ui/templates/publish-page.php:289
+#: new-ui/templates/publish-page.php:299
+#: new-ui/templates/publish-page.php:314
+#: new-ui/templates/publish-page.php:380
+#: new-ui/templates/publish-page.php:435
+msgid "Copy to clipboard"
+msgstr ""
+
+#: new-ui/class-ea-publish-new-ui.php:136
+msgid "Copied!"
+msgstr ""
+
+#: new-ui/class-ea-services-new-ui.php:93
+#: new-ui/class-ea-services-new-ui.php:94
+#: new-ui/templates/connections-page.php:146
+#: new-ui/templates/services-page.php:29
+#: src/admin.php:756
+#: src/admin.php:757
+msgid "Services"
+msgstr ""
+
+#: new-ui/class-ea-services-new-ui.php:174
+#: new-ui/templates/services-page.php:34
+#: new-ui/templates/services-page.php:96
+msgid "Add service"
+msgstr ""
+
+#: new-ui/class-ea-services-new-ui.php:175
+msgid "Edit service"
+msgstr ""
+
+#: new-ui/class-ea-services-new-ui.php:181
+msgid "Loading services…"
+msgstr ""
+
+#. translators: %s: service name
+#. translators: %s: vacation title
+#. translators: %s: employee name
+#: new-ui/class-ea-services-new-ui.php:183
+#: new-ui/class-ea-vacation-new-ui.php:248
+#: new-ui/class-ea-workers-new-ui.php:184
+#, php-format
+msgid "Are you sure you want to delete \"%s\"?"
+msgstr ""
+
+#. translators: %d: number of services
+#: new-ui/class-ea-services-new-ui.php:185
+#, php-format
+msgid "Delete %d services?"
+msgstr ""
+
+#: new-ui/class-ea-services-new-ui.php:186
+msgid "Service(s) deleted successfully."
+msgstr ""
+
+#: new-ui/class-ea-services-new-ui.php:187
+msgid "Service saved successfully."
+msgstr ""
+
+#: new-ui/class-ea-services-new-ui.php:189
+msgid "Select Color"
+msgstr ""
+
+#: new-ui/class-ea-services-new-ui.php:190
+msgid "minutes"
+msgstr ""
+
+#: new-ui/class-ea-services-new-ui.php:191
+#: new-ui/templates/services-page.php:70
+msgid "Duration"
+msgstr ""
+
+#: new-ui/class-ea-services-new-ui.php:192
+#: new-ui/templates/services-page.php:71
+msgid "Slot Step"
+msgstr ""
+
+#: new-ui/class-ea-services-new-ui.php:193
+#: new-ui/templates/services-page.php:72
+msgid "Block Before"
+msgstr ""
+
+#: new-ui/class-ea-services-new-ui.php:194
+#: new-ui/templates/services-page.php:73
+msgid "Block After"
+msgstr ""
+
+#: new-ui/class-ea-services-new-ui.php:195
+#: new-ui/templates/services-page.php:74
+#: new-ui/templates/services-page.php:133
+msgid "Daily Limit"
+msgstr ""
+
+#: new-ui/class-ea-services-new-ui.php:196
+#: new-ui/templates/appointments-page.php:173
+#: new-ui/templates/appointments-page.php:228
+#: new-ui/templates/services-page.php:75
+#: new-ui/templates/services-page.php:145
+#: new-ui/templates/tabs/tab-calendar.php:30
+#: src/frontend.php:254
+#: src/frontend.php:719
+#: src/templates/admin.tpl.php:884
+#: src/templates/appointments.tpl.php:135
+#: src/templates/appointments.tpl.php:269
+#: src/templates/mail.notification.tpl.convert.php:50
+#: src/templates/mail.notification.tpl.php:50
+msgid "Price"
+msgstr ""
+
+#: new-ui/class-ea-services-new-ui.php:197
+#: new-ui/templates/services-page.php:76
+#: new-ui/templates/services-page.php:152
+msgid "Color"
+msgstr ""
+
+#: new-ui/class-ea-services-new-ui.php:198
+#: new-ui/templates/appointments-page.php:170
+#: new-ui/templates/publish-page.php:71
+#: new-ui/templates/publish-page.php:163
+#: new-ui/templates/services-page.php:175
+#: new-ui/templates/workers-page.php:67
+#: new-ui/templates/workers-page.php:101
+#: src/ajax.php:2638
+#: src/install.php:590
+#: src/templates/appointments.tpl.php:133
+#: src/templates/booking.overview.tpl.php:34
+#: src/templates/booking.overview.tpl.php:69
+#: src/templates/publish.tpl.php:63
+#: src/templates/publish.tpl.php:105
+msgid "Description"
+msgstr ""
+
+#: new-ui/class-ea-settings-new-ui.php:265
+#: new-ui/class-ea-settings-new-ui.php:314
+#: new-ui/class-ea-settings-new-ui.php:597
+#: new-ui/class-ea-ui-mode-switcher.php:169
+msgid "You do not have permission to do this."
+msgstr ""
+
+#: new-ui/class-ea-settings-new-ui.php:271
+msgid "EA Extension Manager is not active."
+msgstr ""
+
+#: new-ui/class-ea-settings-new-ui.php:279
+#: new-ui/class-ea-settings-new-ui.php:513
+msgid "Please enter a license key."
+msgstr ""
+
+#: new-ui/class-ea-settings-new-ui.php:285
+msgid "Invalid license key. Please check the key and try again."
+msgstr ""
+
+#: new-ui/class-ea-settings-new-ui.php:299
+#: new-ui/class-ea-settings-new-ui.php:516
+msgid "License activated. Pro features unlocked."
+msgstr ""
+
+#: new-ui/class-ea-settings-new-ui.php:321
+#: new-ui/class-ea-settings-new-ui.php:521
+msgid "License deactivated."
+msgstr ""
+
+#: new-ui/class-ea-settings-new-ui.php:348
+#: new-ui/class-ea-settings-new-ui.php:349
+#: src/admin.php:807
+#: src/admin.php:808
+msgid "Settings"
+msgstr ""
+
+#: new-ui/class-ea-settings-new-ui.php:471
+#: new-ui/templates/settings-page.php:42
+msgid "Save Changes"
+msgstr ""
+
+#: new-ui/class-ea-settings-new-ui.php:472
+#: new-ui/class-ea-settings-new-ui.php:710
+msgid "Settings saved successfully."
+msgstr ""
+
+#: new-ui/class-ea-settings-new-ui.php:473
+msgid "Something went wrong while saving. Please try again."
+msgstr ""
+
+#: new-ui/class-ea-settings-new-ui.php:474
+msgid "Discard unsaved changes and reload the last saved settings?"
+msgstr ""
+
+#: new-ui/class-ea-settings-new-ui.php:475
+msgid "Unsaved Changes"
+msgstr ""
+
+#: new-ui/class-ea-settings-new-ui.php:476
+msgid "You have unsaved changes on this Settings page. Leave without saving?"
+msgstr ""
+
+#: new-ui/class-ea-settings-new-ui.php:477
+#: new-ui/templates/tabs/tab-general.php:325
+#: src/templates/admin.tpl.php:300
+msgid "Export Plugin Data"
+msgstr ""
+
+#: new-ui/class-ea-settings-new-ui.php:478
+msgid "Export all Easy Appointments data?"
+msgstr ""
+
+#: new-ui/class-ea-settings-new-ui.php:479
+msgid "Export Data"
+msgstr ""
+
+#: new-ui/class-ea-settings-new-ui.php:480
+msgid "Please select a JSON backup file."
+msgstr ""
+
+#: new-ui/class-ea-settings-new-ui.php:481
+#: new-ui/templates/tabs/tab-general.php:344
+#: src/templates/admin.tpl.php:300
+msgid "Import Plugin Data"
+msgstr ""
+
+#: new-ui/class-ea-settings-new-ui.php:482
+msgid "⚠ This will DELETE existing data and import the backup. Continue?"
+msgstr ""
+
+#: new-ui/class-ea-settings-new-ui.php:483
+msgid "Importing…"
+msgstr ""
+
+#: new-ui/class-ea-settings-new-ui.php:484
+#: new-ui/templates/tabs/tab-general.php:360
+#: src/templates/admin.tpl.php:300
+#: src/templates/admin.tpl.php:1823
+msgid "Import Data"
+msgstr ""
+
+#: new-ui/class-ea-settings-new-ui.php:485
+msgid "Import completed successfully."
+msgstr ""
+
+#: new-ui/class-ea-settings-new-ui.php:486
+msgid "Import failed."
+msgstr ""
+
+#: new-ui/class-ea-settings-new-ui.php:487
+msgid "Replace this template with the default admin template? Unsaved changes in this tab will be lost."
+msgstr ""
+
+#: new-ui/class-ea-settings-new-ui.php:488
+msgid "Could not load the default template."
+msgstr ""
+
+#: new-ui/class-ea-settings-new-ui.php:490
+msgid "Please enter a field name first."
+msgstr ""
+
+#: new-ui/class-ea-settings-new-ui.php:491
+msgid "Field added."
+msgstr ""
+
+#: new-ui/class-ea-settings-new-ui.php:492
+msgid "Could not add the field. Please try again."
+msgstr ""
+
+#: new-ui/class-ea-settings-new-ui.php:494
+msgid "Saved."
+msgstr ""
+
+#: new-ui/class-ea-settings-new-ui.php:495
+msgid "Could not save this field. Please try again."
+msgstr ""
+
+#: new-ui/class-ea-settings-new-ui.php:496
+msgid "Could not load custom fields."
+msgstr ""
+
+#: new-ui/class-ea-settings-new-ui.php:497
+msgid "Delete this field? This cannot be undone."
+msgstr ""
+
+#: new-ui/class-ea-settings-new-ui.php:498
+msgid "Delete Field"
+msgstr ""
+
+#: new-ui/class-ea-settings-new-ui.php:499
+msgid "Could not delete this field. Please try again."
+msgstr ""
+
+#: new-ui/class-ea-settings-new-ui.php:502
+#: new-ui/templates/tabs/tab-form-fields.php:68
+msgid "none yet"
+msgstr ""
+
+#: new-ui/class-ea-settings-new-ui.php:504
+msgid "Please enter a redirect URL first."
+msgstr ""
+
+#: new-ui/class-ea-settings-new-ui.php:505
+msgid "Could not load the services list."
+msgstr ""
+
+#: new-ui/class-ea-settings-new-ui.php:506
+msgid "service removed"
+msgstr ""
+
+#: new-ui/class-ea-settings-new-ui.php:507
+msgid "Please select a service first."
+msgstr ""
+
+#: new-ui/class-ea-settings-new-ui.php:508
+#: new-ui/templates/tabs/tab-form-style.php:303
+msgid "No redirects configured. Add one above."
+msgstr ""
+
+#: new-ui/class-ea-settings-new-ui.php:509
+#: new-ui/templates/tabs/tab-form-style.php:79
+msgid "Removed service"
+msgstr ""
+
+#: new-ui/class-ea-settings-new-ui.php:510
+#: new-ui/templates/tabs/tab-form-style.php:310
+#: new-ui/templates/tabs/tab-form-style.php:390
+#: src/templates/admin.tpl.php:1667
+msgid "Remove"
+msgstr ""
+
+#: new-ui/class-ea-settings-new-ui.php:511
+#: new-ui/templates/tabs/tab-general.php:258
+msgid "Select user roles…"
+msgstr ""
+
+#: new-ui/class-ea-settings-new-ui.php:514
+msgid "Activating…"
+msgstr ""
+
+#: new-ui/class-ea-settings-new-ui.php:515
+#: new-ui/templates/settings-page.php:321
+msgid "Activate License"
+msgstr ""
+
+#: new-ui/class-ea-settings-new-ui.php:517
+msgid "Could not activate the license. Please try again."
+msgstr ""
+
+#: new-ui/class-ea-settings-new-ui.php:518
+msgid "Deactivate your Pro license?"
+msgstr ""
+
+#: new-ui/class-ea-settings-new-ui.php:519
+#: new-ui/templates/settings-page.php:294
+msgid "Manage License"
+msgstr ""
+
+#: new-ui/class-ea-settings-new-ui.php:520
+msgid "Deactivating…"
+msgstr ""
+
+#: new-ui/class-ea-settings-new-ui.php:522
+msgid "Could not deactivate the license. Please try again."
+msgstr ""
+
+#: new-ui/class-ea-settings-new-ui.php:524
+msgid "Reset Plugin Data"
+msgstr ""
+
+#: new-ui/class-ea-settings-new-ui.php:525
+msgid "Are you sure you want to reset the plugin data? This action cannot be undone."
+msgstr ""
+
+#: new-ui/class-ea-settings-new-ui.php:526
+#: new-ui/templates/tabs/tab-tools.php:53
+msgid "Reset Plugin"
+msgstr ""
+
+#: new-ui/class-ea-settings-new-ui.php:527
+msgid "Clear Error Logs"
+msgstr ""
+
+#: new-ui/class-ea-settings-new-ui.php:528
+msgid "Are you sure you want to clear all error logs?"
+msgstr ""
+
+#: new-ui/class-ea-settings-new-ui.php:529
+msgid "Clear Logs"
+msgstr ""
+
+#: new-ui/class-ea-settings-new-ui.php:603
+msgid "No settings were submitted."
+msgstr ""
+
+#: new-ui/class-ea-settings-new-ui.php:613
+msgid "Invalid settings payload."
+msgstr ""
+
+#: new-ui/class-ea-ui-mode-switcher.php:175
+msgid "Invalid target UI mode."
+msgstr ""
+
+#: new-ui/class-ea-ui-mode-switcher.php:212
+msgid "You're using the new Easy Appointments interface."
+msgstr ""
+
+#: new-ui/class-ea-ui-mode-switcher.php:213
+msgid "The new interface is faster and easier to set up. You can switch back any time."
+msgstr ""
+
+#: new-ui/class-ea-ui-mode-switcher.php:216
+msgid "Switch back to the classic UI"
+msgstr ""
+
+#: new-ui/class-ea-ui-mode-switcher.php:217
+msgid "Try the new interface"
+msgstr ""
+
+#: new-ui/class-ea-vacation-new-ui.php:105
+#: new-ui/class-ea-vacation-new-ui.php:106
+#: new-ui/templates/vacation-page.php:32
+#: src/admin.php:827
+#: src/admin.php:828
+msgid "Vacation"
+msgstr ""
+
+#: new-ui/class-ea-vacation-new-ui.php:239
+#: new-ui/templates/vacation-page.php:37
+#: new-ui/templates/vacation-page.php:93
+msgid "Add vacation"
+msgstr ""
+
+#: new-ui/class-ea-vacation-new-ui.php:240
+msgid "Edit vacation"
+msgstr ""
+
+#: new-ui/class-ea-vacation-new-ui.php:246
+msgid "Loading vacations…"
+msgstr ""
+
+#. translators: %d: number of vacations
+#: new-ui/class-ea-vacation-new-ui.php:250
+#, php-format
+msgid "Delete %d vacations?"
+msgstr ""
+
+#: new-ui/class-ea-vacation-new-ui.php:251
+msgid "Vacation(s) deleted successfully."
+msgstr ""
+
+#: new-ui/class-ea-vacation-new-ui.php:252
+msgid "Vacation saved successfully."
+msgstr ""
+
+#: new-ui/class-ea-vacation-new-ui.php:254
+#: new-ui/templates/vacation-page.php:82
+msgid "No vacations found."
+msgstr ""
+
+#: new-ui/class-ea-vacation-new-ui.php:255
+msgid "Full Day"
+msgstr ""
+
+#: new-ui/class-ea-vacation-new-ui.php:256
+#: new-ui/templates/vacation-page.php:102
+msgid "Title is required."
+msgstr ""
+
+#: new-ui/class-ea-vacation-new-ui.php:257
+#: new-ui/templates/vacation-page.php:108
+msgid "Tooltip is required."
+msgstr ""
+
+#: new-ui/class-ea-vacation-new-ui.php:258
+#: new-ui/templates/connections-page.php:154
+#: new-ui/templates/vacation-page.php:114
+msgid "Select at least one employee."
+msgstr ""
+
+#: new-ui/class-ea-vacation-new-ui.php:259
+#: new-ui/templates/vacation-page.php:127
+msgid "Select at least one date."
+msgstr ""
+
+#: new-ui/class-ea-vacation-new-ui.php:260
+msgid "Please select both Start Time and End Time for a partial-day vacation."
+msgstr ""
+
+#: new-ui/class-ea-vacation-new-ui.php:261
+msgid "End Time must be after Start Time."
+msgstr ""
+
+#: new-ui/class-ea-vacation-new-ui.php:262
+#: new-ui/templates/vacation-page.php:123
+msgid "Add date"
+msgstr ""
+
+#: new-ui/class-ea-vacation-new-ui.php:263
+msgid "That date has already been added."
+msgstr ""
+
+#: new-ui/class-ea-vacation-new-ui.php:264
+#: new-ui/class-ea-workers-new-ui.php:94
+#: new-ui/class-ea-workers-new-ui.php:95
+#: new-ui/templates/connections-page.php:152
+#: new-ui/templates/vacation-page.php:73
+#: new-ui/templates/vacation-page.php:112
+#: new-ui/templates/workers-page.php:26
+#: src/admin.php:766
+#: src/admin.php:767
+msgid "Employees"
+msgstr ""
+
+#: new-ui/class-ea-workers-new-ui.php:175
+#: new-ui/templates/workers-page.php:31
+#: new-ui/templates/workers-page.php:89
+msgid "Add employee"
+msgstr ""
+
+#: new-ui/class-ea-workers-new-ui.php:176
+msgid "Edit employee"
+msgstr ""
+
+#: new-ui/class-ea-workers-new-ui.php:182
+msgid "Loading employees…"
+msgstr ""
+
+#. translators: %d: number of employees
+#: new-ui/class-ea-workers-new-ui.php:186
+#, php-format
+msgid "Delete %d employees?"
+msgstr ""
+
+#: new-ui/class-ea-workers-new-ui.php:187
+msgid "Employee(s) deleted successfully."
+msgstr ""
+
+#: new-ui/class-ea-workers-new-ui.php:188
+msgid "Employee saved successfully."
+msgstr ""
+
+#: new-ui/class-ea-workers-new-ui.php:190
+msgid "Link Google Calendar"
+msgstr ""
+
+#. translators: %s: employee name
+#: new-ui/class-ea-workers-new-ui.php:192
+#, php-format
+msgid "Google Calendar connected for \"%s\". Click to disconnect."
+msgstr ""
+
+#. translators: %s: employee name
+#: new-ui/class-ea-workers-new-ui.php:194
+#, php-format
+msgid "Disconnect Google Calendar for \"%s\"?"
+msgstr ""
+
+#: new-ui/class-ea-workers-new-ui.php:195
+msgid "Google Calendar disconnected."
+msgstr ""
+
+#: new-ui/class-ea-workers-new-ui.php:197
+msgid "This email address is already in use by another employee."
+msgstr ""
+
+#: new-ui/class-ea-workers-new-ui.php:198
+msgid "Email is required."
+msgstr ""
+
+#: new-ui/class-ea-workers-new-ui.php:199
+msgid "Phone number is required."
+msgstr ""
+
+#: new-ui/templates/appointments-page.php:29
+#: src/admin.php:730
+#: src/admin.php:731
+#: src/templates/appointments.tpl.php:13
+msgid "Appointments"
+msgstr ""
+
+#: new-ui/templates/appointments-page.php:33
+msgid "Toggle Filters"
+msgstr ""
+
+#: new-ui/templates/appointments-page.php:39
+#: src/templates/appointments.tpl.php:90
+#: src/templates/report.tpl.php:66
+msgid "Refresh"
+msgstr ""
+
+#: new-ui/templates/appointments-page.php:42
+#: src/templates/appointments.tpl.php:106
+msgid "Export Excel"
+msgstr ""
+
+#: new-ui/templates/appointments-page.php:56
+#: src/templates/appointments.tpl.php:68
+msgid "Quick time filter"
+msgstr ""
+
+#: new-ui/templates/appointments-page.php:58
+msgid "All Upcoming"
+msgstr ""
+
+#: new-ui/templates/appointments-page.php:68
+#: new-ui/templates/tabs/tab-form-style.php:176
+#: src/templates/appointments.tpl.php:64
+#: src/templates/report.tpl.php:98
+msgid "From"
+msgstr ""
+
+#: new-ui/templates/appointments-page.php:72
+#: src/templates/appointments.tpl.php:66
+#: src/templates/report.tpl.php:102
+msgid "To"
+msgstr ""
+
+#: new-ui/templates/appointments-page.php:76
+#: new-ui/templates/appointments-page.php:165
+#: new-ui/templates/appointments-page.php:200
+#: new-ui/templates/appointments-page.php:201
+#: new-ui/templates/connections-page.php:115
+#: new-ui/templates/customers-page.php:162
+#: new-ui/templates/locations-page.php:68
+#: new-ui/templates/locations-page.php:106
+#: new-ui/templates/tabs/tab-calendar.php:27
+#: new-ui/templates/tabs/tab-form-style.php:343
+#: new-ui/templates/tabs/tab-general.php:45
+#: src/admin.php:296
+#: src/templates/admin.tpl.php:82
+#: src/templates/admin.tpl.php:862
+#: src/templates/appointments.tpl.php:18
+#: src/templates/appointments.tpl.php:131
+#: src/templates/appointments.tpl.php:193
+#: src/templates/customers.tpl.php:273
+#: src/templates/mail.notification.tpl.convert.php:22
+#: src/templates/mail.notification.tpl.php:22
+#: src/templates/report.tpl.php:39
+msgid "Location"
+msgstr ""
+
+#: new-ui/templates/appointments-page.php:85
+#: new-ui/templates/appointments-page.php:166
+#: new-ui/templates/appointments-page.php:204
+#: new-ui/templates/appointments-page.php:205
+#: new-ui/templates/connections-page.php:123
+#: new-ui/templates/customers-page.php:163
+#: new-ui/templates/tabs/tab-calendar.php:28
+#: new-ui/templates/tabs/tab-form-style.php:280
+#: new-ui/templates/tabs/tab-form-style.php:342
+#: new-ui/templates/tabs/tab-form-style.php:360
+#: new-ui/templates/tabs/tab-general.php:46
+#: src/admin.php:295
+#: src/templates/admin.tpl.php:83
+#: src/templates/admin.tpl.php:870
+#: src/templates/admin.tpl.php:1194
+#: src/templates/admin.tpl.php:1237
+#: src/templates/appointments.tpl.php:27
+#: src/templates/appointments.tpl.php:131
+#: src/templates/appointments.tpl.php:203
+#: src/templates/customers.tpl.php:274
+#: src/templates/mail.notification.tpl.convert.php:26
+#: src/templates/mail.notification.tpl.php:26
+#: src/templates/report.tpl.php:48
+msgid "Service"
+msgstr ""
+
+#: new-ui/templates/appointments-page.php:94
+#: new-ui/templates/appointments-page.php:167
+#: new-ui/templates/appointments-page.php:208
+#: new-ui/templates/appointments-page.php:209
+#: new-ui/templates/tabs/tab-calendar.php:29
+#: new-ui/templates/tabs/tab-form-style.php:341
+#: new-ui/templates/tabs/tab-general.php:43
+#: src/templates/admin.tpl.php:80
+#: src/templates/admin.tpl.php:878
+#: src/templates/appointments.tpl.php:36
+#: src/templates/appointments.tpl.php:131
+#: src/templates/appointments.tpl.php:213
+#: src/templates/mail.notification.tpl.convert.php:30
+#: src/templates/mail.notification.tpl.php:30
+#: src/templates/report.tpl.php:57
+msgid "Worker"
+msgstr ""
+
+#: new-ui/templates/appointments-page.php:105
+#: new-ui/templates/appointments-page.php:173
+#: new-ui/templates/appointments-page.php:224
+#: new-ui/templates/settings-page.php:285
+#: src/admin.php:298
+#: src/shortcodes/fullcalendar.php:347
+#: src/templates/appointments.tpl.php:54
+#: src/templates/appointments.tpl.php:135
+#: src/templates/mail.notification.tpl.convert.php:18
+#: src/templates/mail.notification.tpl.php:18
+msgid "Status"
+msgstr ""
+
+#: new-ui/templates/appointments-page.php:114
+#: src/templates/appointments.tpl.php:109
+msgid "Sort By"
+msgstr ""
+
+#: new-ui/templates/appointments-page.php:116
+#: new-ui/templates/connections-page.php:82
+#: new-ui/templates/locations-page.php:65
+#: new-ui/templates/services-page.php:68
+#: new-ui/templates/workers-page.php:65
+#: src/templates/appointments.tpl.php:111
+#: src/templates/mail.notification.tpl.convert.php:14
+#: src/templates/mail.notification.tpl.php:14
+msgid "Id"
+msgstr ""
+
+#: new-ui/templates/appointments-page.php:117
+#: new-ui/templates/appointments-page.php:171
+#: src/frontend.php:253
+#: src/frontend.php:715
+#: src/templates/appointments.tpl.php:112
+#: src/templates/appointments.tpl.php:134
+msgid "Date & time"
+msgstr ""
+
+#: new-ui/templates/appointments-page.php:118
+#: new-ui/templates/appointments-page.php:174
+#: src/templates/appointments.tpl.php:113
+#: src/templates/appointments.tpl.php:135
+#: src/templates/mail.notification.tpl.convert.php:46
+#: src/templates/mail.notification.tpl.php:46
+msgid "Created"
+msgstr ""
+
+#: new-ui/templates/appointments-page.php:122
+#: src/templates/appointments.tpl.php:115
+msgid "Order by"
+msgstr ""
+
+#: new-ui/templates/appointments-page.php:124
+msgid "Asc"
+msgstr ""
+
+#: new-ui/templates/appointments-page.php:125
+msgid "Desc"
+msgstr ""
+
+#: new-ui/templates/appointments-page.php:130
+msgid "Search appointments…"
+msgstr ""
+
+#: new-ui/templates/appointments-page.php:139
+#: new-ui/templates/connections-page.php:59
+#: new-ui/templates/customers-page.php:42
+#: new-ui/templates/locations-page.php:42
+#: new-ui/templates/services-page.php:45
+#: new-ui/templates/vacation-page.php:48
+#: new-ui/templates/workers-page.php:42
+#: src/templates/appointments.tpl.php:129
+msgid "Select All"
+msgstr ""
+
+#: new-ui/templates/appointments-page.php:146
+#: src/templates/appointments.tpl.php:94
+msgid "Cancel All"
+msgstr ""
+
+#: new-ui/templates/appointments-page.php:149
+msgid "Cancel Selected"
+msgstr ""
+
+#: new-ui/templates/appointments-page.php:152
+#: new-ui/templates/connections-page.php:66
+#: new-ui/templates/customers-page.php:49
+#: new-ui/templates/locations-page.php:49
+#: new-ui/templates/services-page.php:52
+#: new-ui/templates/vacation-page.php:55
+#: new-ui/templates/workers-page.php:49
+#: src/templates/appointments.tpl.php:102
+msgid "Delete Selected"
+msgstr ""
+
+#: new-ui/templates/appointments-page.php:169
+#: src/templates/appointments.tpl.php:132
+msgid "Customer"
+msgstr ""
+
+#: new-ui/templates/appointments-page.php:176
+#: src/templates/appointments.tpl.php:136
+#: src/templates/customers.tpl.php:165
+msgid "Action"
+msgstr ""
+
+#: new-ui/templates/appointments-page.php:215
+#: new-ui/templates/customers-page.php:159
+#: src/admin.php:293
+#: src/templates/appointments.tpl.php:252
+#: src/templates/customers.tpl.php:270
+#: src/templates/mail.notification.tpl.convert.php:34
+#: src/templates/mail.notification.tpl.php:34
+msgid "Date"
+msgstr ""
+
+#: new-ui/templates/appointments-page.php:219
+#: src/admin.php:294
+#: src/templates/appointments.tpl.php:254
+msgid "Time"
+msgstr ""
+
+#: new-ui/templates/appointments-page.php:235
+msgid "Send email notification"
+msgstr ""
+
+#: new-ui/templates/appointments-page.php:256
+msgid "Loading Appointments..."
+msgstr ""
+
+#: new-ui/templates/connections-page.php:72
+msgid "Search by location, service or employee"
+msgstr ""
+
+#: new-ui/templates/connections-page.php:83
+msgid "Location / Service / Employee"
+msgstr ""
+
+#: new-ui/templates/connections-page.php:84
+msgid "Slots"
+msgstr ""
+
+#: new-ui/templates/connections-page.php:85
+#: new-ui/templates/connections-page.php:188
+msgid "Days of week"
+msgstr ""
+
+#: new-ui/templates/connections-page.php:86
+msgid "Working Hours"
+msgstr ""
+
+#: new-ui/templates/connections-page.php:87
+#: new-ui/templates/connections-page.php:202
+msgid "Date range"
+msgstr ""
+
+#: new-ui/templates/connections-page.php:88
+#: new-ui/templates/connections-page.php:165
+msgid "Is working"
+msgstr ""
+
+#: new-ui/templates/connections-page.php:89
+#: new-ui/templates/customers-page.php:68
+#: new-ui/templates/locations-page.php:69
+#: new-ui/templates/services-page.php:77
+#: new-ui/templates/vacation-page.php:76
+#: new-ui/templates/workers-page.php:70
+msgid "Actions"
+msgstr ""
+
+#: new-ui/templates/connections-page.php:117
+msgid "-- Select location --"
+msgstr ""
+
+#: new-ui/templates/connections-page.php:119
+#: new-ui/templates/locations-page.php:108
+msgid "Location is required."
+msgstr ""
+
+#: new-ui/templates/connections-page.php:125
+msgid "-- Select service --"
+msgstr ""
+
+#: new-ui/templates/connections-page.php:127
+msgid "Service is required."
+msgstr ""
+
+#: new-ui/templates/connections-page.php:131
+#: new-ui/templates/customers-page.php:164
+#: src/admin.php:297
+#: src/templates/customers.tpl.php:275
+msgid "Employee"
+msgstr ""
+
+#: new-ui/templates/connections-page.php:133
+msgid "-- Select employee --"
+msgstr ""
+
+#: new-ui/templates/connections-page.php:135
+msgid "Employee is required."
+msgstr ""
+
+#: new-ui/templates/connections-page.php:142
+msgid "Select at least one location."
+msgstr ""
+
+#: new-ui/templates/connections-page.php:148
+msgid "Select at least one service."
+msgstr ""
+
+#: new-ui/templates/connections-page.php:159
+msgid "Number of slots"
+msgstr ""
+
+#: new-ui/templates/connections-page.php:161
+msgid "Valid number of slots is required."
+msgstr ""
+
+#: new-ui/templates/connections-page.php:173
+msgid "Repeat"
+msgstr ""
+
+#: new-ui/templates/connections-page.php:175
+msgid "Weekly"
+msgstr ""
+
+#: new-ui/templates/connections-page.php:176
+msgid "Every Second Week"
+msgstr ""
+
+#: new-ui/templates/connections-page.php:177
+msgid "Custom Week"
+msgstr ""
+
+#: new-ui/templates/connections-page.php:182
+msgid "Custom Week Number (≥ 3)"
+msgstr ""
+
+#: new-ui/templates/connections-page.php:183
+msgid "Enter custom week number"
+msgstr ""
+
+#: new-ui/templates/connections-page.php:190
+msgid "Monday"
+msgstr ""
+
+#: new-ui/templates/connections-page.php:191
+msgid "Tuesday"
+msgstr ""
+
+#: new-ui/templates/connections-page.php:192
+msgid "Wednesday"
+msgstr ""
+
+#: new-ui/templates/connections-page.php:193
+msgid "Thursday"
+msgstr ""
+
+#: new-ui/templates/connections-page.php:194
+msgid "Friday"
+msgstr ""
+
+#: new-ui/templates/connections-page.php:195
+msgid "Saturday"
+msgstr ""
+
+#: new-ui/templates/connections-page.php:196
+msgid "Sunday"
+msgstr ""
+
+#: new-ui/templates/connections-page.php:198
+msgid "Select at least one day of week."
+msgstr ""
+
+#: new-ui/templates/connections-page.php:203
+msgid "Define the date range when this connection is active."
+msgstr ""
+
+#: new-ui/templates/connections-page.php:206
+msgid "Start date"
+msgstr ""
+
+#: new-ui/templates/connections-page.php:208
+msgid "Start date is required."
+msgstr ""
+
+#: new-ui/templates/connections-page.php:211
+msgid "End date"
+msgstr ""
+
+#: new-ui/templates/connections-page.php:213
+msgid "End date is required."
+msgstr ""
+
+#: new-ui/templates/connections-page.php:218
+msgid "Infinite End Date"
+msgstr ""
+
+#: new-ui/templates/connections-page.php:223
+msgid "Time range"
+msgstr ""
+
+#: new-ui/templates/connections-page.php:224
+msgid "Define working hours by selecting start and end time."
+msgstr ""
+
+#: new-ui/templates/connections-page.php:227
+#: new-ui/templates/vacation-page.php:139
+msgid "Start time"
+msgstr ""
+
+#: new-ui/templates/connections-page.php:229
+#: new-ui/templates/vacation-page.php:141
+msgid "Start time is required."
+msgstr ""
+
+#: new-ui/templates/connections-page.php:232
+#: new-ui/templates/vacation-page.php:144
+msgid "End time"
+msgstr ""
+
+#: new-ui/templates/connections-page.php:234
+#: new-ui/templates/vacation-page.php:146
+msgid "Must be after start time!"
+msgstr ""
+
+#: new-ui/templates/connections-page.php:256
+msgid "Loading Connections..."
+msgstr ""
+
+#: new-ui/templates/customers-page.php:55
+msgid "Search by name, email or mobile"
+msgstr ""
+
+#: new-ui/templates/customers-page.php:65
+#: new-ui/templates/customers-page.php:102
+#: new-ui/templates/customers-page.php:122
+#: new-ui/templates/locations-page.php:66
+#: new-ui/templates/locations-page.php:94
+#: new-ui/templates/publish-page.php:70
+#: new-ui/templates/publish-page.php:162
+#: new-ui/templates/services-page.php:69
+#: new-ui/templates/services-page.php:102
+#: new-ui/templates/tabs/tab-calendar.php:26
+#: new-ui/templates/workers-page.php:66
+#: new-ui/templates/workers-page.php:95
+#: src/ajax.php:2636
+#: src/frontend.php:710
+#: src/install.php:588
+#: src/templates/admin.tpl.php:854
+#: src/templates/customers.tpl.php:162
+#: src/templates/publish.tpl.php:62
+#: src/templates/publish.tpl.php:68
+#: src/templates/publish.tpl.php:104
+msgid "Name"
+msgstr ""
+
+#: new-ui/templates/customers-page.php:66
+#: new-ui/templates/customers-page.php:106
+#: new-ui/templates/customers-page.php:128
+#: new-ui/templates/tabs/tab-form-fields.php:45
+#: new-ui/templates/workers-page.php:68
+#: new-ui/templates/workers-page.php:106
+#: src/frontend.php:709
+#: src/metafields.php:30
+#: src/templates/admin.tpl.php:1045
+#: src/templates/customers.tpl.php:163
+#: src/templates/help-and-support.tpl.php:190
+msgid "Email"
+msgstr ""
+
+#: new-ui/templates/customers-page.php:67
+#: new-ui/templates/customers-page.php:110
+#: src/templates/customers.tpl.php:164
+msgid "Mobile"
+msgstr ""
+
+#: new-ui/templates/customers-page.php:72
+msgid "Loading…"
+msgstr ""
+
+#: new-ui/templates/customers-page.php:114
+#: new-ui/templates/customers-page.php:143
+#: new-ui/templates/customers-page.php:144
+#: new-ui/templates/locations-page.php:67
+#: new-ui/templates/locations-page.php:100
+msgid "Address"
+msgstr ""
+
+#: new-ui/templates/customers-page.php:134
+msgid "Mobile no."
+msgstr ""
+
+#: new-ui/templates/customers-page.php:158
+#: src/templates/customers.tpl.php:269
+msgid "#"
+msgstr ""
+
+#: new-ui/templates/customers-page.php:160
+#: src/templates/customers.tpl.php:271
+#: src/templates/mail.notification.tpl.convert.php:38
+#: src/templates/mail.notification.tpl.php:38
+msgid "Start"
+msgstr ""
+
+#: new-ui/templates/customers-page.php:161
+#: src/templates/customers.tpl.php:272
+#: src/templates/mail.notification.tpl.convert.php:42
+#: src/templates/mail.notification.tpl.php:42
+msgid "End"
+msgstr ""
+
+#: new-ui/templates/customers-page.php:240
+msgid "Loading Customers..."
+msgstr ""
+
+#: new-ui/templates/help-support-page.php:30
+#: new-ui/templates/publish-page.php:34
+#: new-ui/templates/tabs/tab-integrations.php:71
+#: new-ui/templates/tabs/tab-integrations.php:142
+#: src/templates/help-and-support.tpl.php:173
+msgid "Documentation"
+msgstr ""
+
+#: new-ui/templates/help-support-page.php:33
+msgid "Contact Us"
+msgstr ""
+
+#: new-ui/templates/help-support-page.php:46
+#: src/templates/help-and-support.tpl.php:162
+#: src/templates/help-and-support.tpl.php:182
+msgid "Technical Support"
+msgstr ""
+
+#: new-ui/templates/help-support-page.php:47
+msgid "We are dedicated to providing technical support & help to our users. Use the form below to send your questions."
+msgstr ""
+
+#: new-ui/templates/help-support-page.php:54
+#: new-ui/templates/tabs/tab-tools.php:25
+msgid "Email Address"
+msgstr ""
+
+#: new-ui/templates/help-support-page.php:55
+msgid "Enter your contact email for support updates."
+msgstr ""
+
+#: new-ui/templates/help-support-page.php:58
+msgid "e.g. name@domain.com"
+msgstr ""
+
+#: new-ui/templates/help-support-page.php:65
+msgid "Customer Tier"
+msgstr ""
+
+#: new-ui/templates/help-support-page.php:66
+msgid "Select your tier based on purchase status."
+msgstr ""
+
+#: new-ui/templates/help-support-page.php:70
+#: src/templates/help-and-support.tpl.php:216
+msgid "Select Customer Type"
+msgstr ""
+
+#: new-ui/templates/help-support-page.php:71
+msgid "Paid (Response within 24 hrs)"
+msgstr ""
+
+#: new-ui/templates/help-support-page.php:72
+msgid "Free (Avg Response within 48-72 hrs)"
+msgstr ""
+
+#: new-ui/templates/help-support-page.php:80
+msgid "Your Query"
+msgstr ""
+
+#: new-ui/templates/help-support-page.php:81
+msgid "Detailed description of your issue or request."
+msgstr ""
+
+#: new-ui/templates/help-support-page.php:84
+msgid "Write your query here. Be as descriptive as possible..."
+msgstr ""
+
+#: new-ui/templates/help-support-page.php:108
+msgid "Quick Resources"
+msgstr ""
+
+#: new-ui/templates/help-support-page.php:109
+msgid "Find answers quickly with these helpful resources."
+msgstr ""
+
+#: new-ui/templates/help-support-page.php:119
+msgid "Installation Guide"
+msgstr ""
+
+#: new-ui/templates/help-support-page.php:120
+msgid "Get started with Easy Appointments"
+msgstr ""
+
+#: new-ui/templates/help-support-page.php:130
+msgid "Shortcodes"
+msgstr ""
+
+#: new-ui/templates/help-support-page.php:131
+msgid "Learn about all shortcodes"
+msgstr ""
+
+#: new-ui/templates/help-support-page.php:142
+msgid "FAQ"
+msgstr ""
+
+#: new-ui/templates/help-support-page.php:143
+msgid "Frequently asked questions"
+msgstr ""
+
+#: new-ui/templates/help-support-page.php:153
+msgid "Developer Docs"
+msgstr ""
+
+#: new-ui/templates/help-support-page.php:154
+msgid "Hooks, filters & more"
+msgstr ""
+
+#: new-ui/templates/help-support-page.php:164
+#: src/templates/help-and-support.tpl.php:409
+msgid "Vision & Mission"
+msgstr ""
+
+#: new-ui/templates/help-support-page.php:165
+msgid "We strive to provide the best Appointment management in the world."
+msgstr ""
+
+#: new-ui/templates/help-support-page.php:169
+msgid "Ahmed Kaludi"
+msgstr ""
+
+#: new-ui/templates/help-support-page.php:170
+#: src/templates/help-and-support.tpl.php:416
+msgid "Lead Dev"
+msgstr ""
+
+#: new-ui/templates/help-support-page.php:173
+msgid "Mohammed Kaludi"
+msgstr ""
+
+#: new-ui/templates/help-support-page.php:174
+#: new-ui/templates/help-support-page.php:178
+#: src/templates/help-and-support.tpl.php:422
+#: src/templates/help-and-support.tpl.php:428
+msgid "Developer"
+msgstr ""
+
+#: new-ui/templates/help-support-page.php:177
+msgid "Sanjeev"
+msgstr ""
+
+#: new-ui/templates/help-support-page.php:182
+msgid "Delivering a good user experience means a lot to us, so we try our best to reply to every question."
+msgstr ""
+
+#: new-ui/templates/help-support-page.php:192
+msgid "Get Priority Support"
+msgstr ""
+
+#: new-ui/templates/help-support-page.php:193
+msgid "Upgrade to PRO for faster, priority support and advanced features."
+msgstr ""
+
+#: new-ui/templates/help-support-page.php:195
+#: new-ui/templates/settings-page.php:413
+msgid "Upgrade Now"
+msgstr ""
+
+#: new-ui/templates/locations-page.php:55
+msgid "Search by name, address or location"
+msgstr ""
+
+#: new-ui/templates/locations-page.php:75
+msgid "No locations found."
+msgstr ""
+
+#: new-ui/templates/locations-page.php:102
+msgid "Address is required."
+msgstr ""
+
+#: new-ui/templates/locations-page.php:127
+msgid "Loading Locations..."
+msgstr ""
+
+#: new-ui/templates/publish-page.php:29
+msgid "Publish & Shortcodes"
+msgstr ""
+
+#: new-ui/templates/publish-page.php:37
+#: src/templates/publish.tpl.php:49
+msgid "Need Help?"
+msgstr ""
+
+#: new-ui/templates/publish-page.php:47
+msgid "Shortcode Usage Guide"
+msgstr ""
+
+#: new-ui/templates/publish-page.php:48
+#: src/templates/publish.tpl.php:53
+msgid "To insert the front-end plugin on a page or post, use the following shortcodes."
+msgstr ""
+
+#: new-ui/templates/publish-page.php:54
+#: src/templates/publish.tpl.php:55
+msgid "Standard Form"
+msgstr ""
+
+#: new-ui/templates/publish-page.php:60
+#: new-ui/templates/publish-page.php:127
+#: new-ui/templates/publish-page.php:137
+#: new-ui/templates/publish-page.php:152
+#: new-ui/templates/publish-page.php:284
+#: new-ui/templates/publish-page.php:294
+#: new-ui/templates/publish-page.php:304
+#: new-ui/templates/publish-page.php:319
+#: new-ui/templates/publish-page.php:451
+#: new-ui/templates/publish-page.php:461
+#: new-ui/templates/publish-page.php:471
+msgid "Copy"
+msgstr ""
+
+#: new-ui/templates/publish-page.php:65
+#: new-ui/templates/publish-page.php:157
+#: src/templates/publish.tpl.php:58
+msgid "Options:"
+msgstr ""
+
+#: new-ui/templates/publish-page.php:72
+#: new-ui/templates/publish-page.php:164
+msgid "Default"
+msgstr ""
+
+#: new-ui/templates/publish-page.php:78
+#: new-ui/templates/publish-page.php:190
+msgid "Disable scroll"
+msgstr ""
+
+#: new-ui/templates/publish-page.php:83
+#: new-ui/templates/publish-page.php:195
+msgid "Save form content"
+msgstr ""
+
+#: new-ui/templates/publish-page.php:88
+#: new-ui/templates/publish-page.php:205
+msgid "Start of week (0=Sunday, 1=Monday, etc.)"
+msgstr ""
+
+#: new-ui/templates/publish-page.php:93
+#: new-ui/templates/publish-page.php:215
+msgid "Default selected date (YYYY-MM-DD)"
+msgstr ""
+
+#: new-ui/templates/publish-page.php:98
+#: new-ui/templates/publish-page.php:220
+msgid "Minimum selectable date (YYYY-MM-DD)"
+msgstr ""
+
+#: new-ui/templates/publish-page.php:103
+#: new-ui/templates/publish-page.php:225
+msgid "Maximum selectable date (YYYY-MM-DD)"
+msgstr ""
+
+#: new-ui/templates/publish-page.php:108
+#: new-ui/templates/publish-page.php:230
+msgid "Display remaining slots"
+msgstr ""
+
+#: new-ui/templates/publish-page.php:113
+#: new-ui/templates/publish-page.php:235
+msgid "Show week numbers in the calendar"
+msgstr ""
+
+#: new-ui/templates/publish-page.php:120
+#: new-ui/templates/publish-page.php:277
+msgid "Examples:"
+msgstr ""
+
+#: new-ui/templates/publish-page.php:146
+#: src/templates/publish.tpl.php:97
+msgid "Bootstrap Version – Responsive Layout"
+msgstr ""
+
+#: new-ui/templates/publish-page.php:170
+msgid "Predefined location (ID number)"
+msgstr ""
+
+#: new-ui/templates/publish-page.php:175
+msgid "Predefined service (ID number, comma-separated for multiple)"
+msgstr ""
+
+#: new-ui/templates/publish-page.php:180
+msgid "Predefined worker (ID number)"
+msgstr ""
+
+#: new-ui/templates/publish-page.php:185
+msgid "Set width (e.g., \"800px\")"
+msgstr ""
+
+#: new-ui/templates/publish-page.php:200
+msgid "Column layout (1 or 2)"
+msgstr ""
+
+#: new-ui/templates/publish-page.php:210
+msgid "Right-to-left label positioning (0 or 1)"
+msgstr ""
+
+#: new-ui/templates/publish-page.php:240
+msgid "Auto select calendar"
+msgstr ""
+
+#: new-ui/templates/publish-page.php:245
+msgid "Auto select time slot"
+msgstr ""
+
+#: new-ui/templates/publish-page.php:250
+msgid "Block specific dates (comma-separated YYYY-MM-DD)"
+msgstr ""
+
+#: new-ui/templates/publish-page.php:255
+msgid "Tooltip text for blocked days"
+msgstr ""
+
+#: new-ui/templates/publish-page.php:260
+msgid "Select placeholder text"
+msgstr ""
+
+#: new-ui/templates/publish-page.php:265
+msgid "Auto select option"
+msgstr ""
+
+#: new-ui/templates/publish-page.php:270
+msgid "Field order (e.g., \"service_first\")"
+msgstr ""
+
+#: new-ui/templates/publish-page.php:313
+#: src/templates/publish.tpl.php:147
+msgid "FullCalendar View"
+msgstr ""
+
+#: new-ui/templates/publish-page.php:325
+msgid "The FullCalendar view displays appointments in a monthly/weekly calendar layout."
+msgstr ""
+
+#: new-ui/templates/publish-page.php:332
+msgid "Gutenberg Block Usage Guide"
+msgstr ""
+
+#: new-ui/templates/publish-page.php:346
+#: src/templates/publish.tpl.php:152
+#: src/templates/publish.tpl.php:155
+#: src/templates/publish.tpl.php:166
+msgid "Booking Appointments Block"
+msgstr ""
+
+#: new-ui/templates/publish-page.php:349
+#: new-ui/templates/publish-page.php:404
+#: new-ui/templates/tabs/tab-user-access.php:28
+#: src/templates/publish.tpl.php:148
+#: src/templates/publish.tpl.php:153
+#: src/templates/publish.tpl.php:164
+msgid "Note:"
+msgstr ""
+
+#: new-ui/templates/publish-page.php:350
+msgid "Embed a full appointment booking form directly into your page or post using this block. It allows visitors to book services based on selected location, service, and worker."
+msgstr ""
+
+#: new-ui/templates/publish-page.php:354
+#: new-ui/templates/publish-page.php:409
+msgid "How to Use:"
+msgstr ""
+
+#: new-ui/templates/publish-page.php:357
+#: new-ui/templates/publish-page.php:412
+#: src/templates/publish.tpl.php:157
+#: src/templates/publish.tpl.php:168
+msgid "Go to"
+msgstr ""
+
+#: new-ui/templates/publish-page.php:358
+#: new-ui/templates/publish-page.php:413
+#: src/templates/publish.tpl.php:157
+#: src/templates/publish.tpl.php:168
+msgid "Pages"
+msgstr ""
+
+#: new-ui/templates/publish-page.php:359
+#: new-ui/templates/publish-page.php:414
+#: src/templates/publish.tpl.php:157
+#: src/templates/publish.tpl.php:168
+msgid "Add New (or edit an existing page)"
+msgstr ""
+
+#: new-ui/templates/publish-page.php:362
+#: new-ui/templates/publish-page.php:417
+#: src/templates/publish.tpl.php:158
+#: src/templates/publish.tpl.php:169
+msgid "Click the"
+msgstr ""
+
+#: new-ui/templates/publish-page.php:364
+#: new-ui/templates/publish-page.php:419
+#: src/templates/publish.tpl.php:158
+#: src/templates/publish.tpl.php:169
+msgid "to add a block and search for"
+msgstr ""
+
+#: new-ui/templates/publish-page.php:365
+#: src/templates/publish.tpl.php:158
+msgid "\"Booking Appointments\""
+msgstr ""
+
+#: new-ui/templates/publish-page.php:368
+#: new-ui/templates/publish-page.php:423
+#: src/templates/publish.tpl.php:159
+#: src/templates/publish.tpl.php:170
+msgid "Select the block labeled"
+msgstr ""
+
+#: new-ui/templates/publish-page.php:369
+#: src/templates/publish.tpl.php:159
+msgid "Booking Appointments"
+msgstr ""
+
+#: new-ui/templates/publish-page.php:370
+#: new-ui/templates/publish-page.php:425
+#: src/templates/publish.tpl.php:159
+#: src/templates/publish.tpl.php:170
+msgid "with the EA logo"
+msgstr ""
+
+#: new-ui/templates/publish-page.php:373
+#: new-ui/templates/publish-page.php:428
+#: src/templates/publish.tpl.php:160
+#: src/templates/publish.tpl.php:171
+msgid "Publish or update your page"
+msgstr ""
+
+#: new-ui/templates/publish-page.php:378
+#: new-ui/templates/publish-page.php:433
+msgid "Equivalent shortcode:"
+msgstr ""
+
+#: new-ui/templates/publish-page.php:401
+#: src/templates/publish.tpl.php:163
+msgid "EA Full Calendar Block"
+msgstr ""
+
+#: new-ui/templates/publish-page.php:405
+#: src/templates/publish.tpl.php:164
+msgid "Shows a full calendar view of all scheduled appointments for a specific location, service, and worker."
+msgstr ""
+
+#: new-ui/templates/publish-page.php:420
+#: src/templates/publish.tpl.php:169
+msgid "\"Full View Calendar\""
+msgstr ""
+
+#: new-ui/templates/publish-page.php:424
+#: src/templates/publish.tpl.php:170
+msgid "\"EA Full Calendar\""
+msgstr ""
+
+#: new-ui/templates/publish-page.php:446
+msgid "Quick Reference Summary"
+msgstr ""
+
+#: new-ui/templates/publish-page.php:449
+msgid "Standard Form:"
+msgstr ""
+
+#: new-ui/templates/publish-page.php:459
+msgid "Bootstrap Form:"
+msgstr ""
+
+#: new-ui/templates/publish-page.php:469
+msgid "Full Calendar:"
+msgstr ""
+
+#: new-ui/templates/publish-page.php:492
+#: src/templates/publish.tpl.php:177
+msgid "Still not working as expected?"
+msgstr ""
+
+#: new-ui/templates/publish-page.php:493
+msgid "We're actively improving Easy Appointments. If something isn't working or a feature is missing, let us know — your feedback helps us fix it faster!"
+msgstr ""
+
+#: new-ui/templates/publish-page.php:495
+#: src/templates/publish.tpl.php:183
+msgid "Report or Suggest"
+msgstr ""
+
+#: new-ui/templates/services-page.php:58
+msgid "Search by name, duration, price or color"
+msgstr ""
+
+#: new-ui/templates/services-page.php:83
+msgid "No services found."
+msgstr ""
+
+#: new-ui/templates/services-page.php:108
+msgid "Duration (minutes)"
+msgstr ""
+
+#: new-ui/templates/services-page.php:110
+msgid "Valid duration is required."
+msgstr ""
+
+#: new-ui/templates/services-page.php:115
+msgid "Slot Step (minutes)"
+msgstr ""
+
+#: new-ui/templates/services-page.php:116
+msgid "Interval in minutes between start times of available slots (e.g. 15, 30 or 60 min)."
+msgstr ""
+
+#: new-ui/templates/services-page.php:119
+msgid "Valid slot step is required."
+msgstr ""
+
+#: new-ui/templates/services-page.php:123
+msgid "Block Before (minutes)"
+msgstr ""
+
+#: new-ui/templates/services-page.php:128
+msgid "Block After (minutes)"
+msgstr ""
+
+#: new-ui/templates/services-page.php:135
+msgid "Set to 0 for unlimited bookings per day."
+msgstr ""
+
+#: new-ui/templates/services-page.php:139
+msgid "Advance Booking Days"
+msgstr ""
+
+#: new-ui/templates/services-page.php:141
+msgid "Set how many days in advance bookings become available. Set to 0 to disable this check."
+msgstr ""
+
+#: new-ui/templates/services-page.php:147
+msgid "Valid price is required."
+msgstr ""
+
+#: new-ui/templates/services-page.php:212
+msgid "Loading Services..."
+msgstr ""
+
+#: new-ui/templates/settings-page.php:39
+#: new-ui/templates/tabs/tab-tools.php:69
+msgid "Reset"
+msgstr ""
+
+#: new-ui/templates/settings-page.php:57
+#: src/templates/admin.tpl.php:23
+msgid "General"
+msgstr ""
+
+#: new-ui/templates/settings-page.php:58
+msgid "Basic settings & preferences"
+msgstr ""
+
+#: new-ui/templates/settings-page.php:67
+#: src/templates/admin.tpl.php:386
+msgid "Notifications"
+msgstr ""
+
+#: new-ui/templates/settings-page.php:68
+msgid "Email & SMS settings"
+msgstr ""
+
+#: new-ui/templates/settings-page.php:77
+#: new-ui/templates/tabs/tab-calendar.php:42
+#: new-ui/templates/tabs/tab-form-style.php:340
+msgid "Calendar"
+msgstr ""
+
+#: new-ui/templates/settings-page.php:78
+msgid "Display & calendar settings"
+msgstr ""
+
+#: new-ui/templates/settings-page.php:87
+msgid "Date and Time"
+msgstr ""
+
+#: new-ui/templates/settings-page.php:88
+msgid "Time formats & booking rules"
+msgstr ""
+
+#: new-ui/templates/settings-page.php:97
+#: src/templates/admin.tpl.php:35
+msgid "Labels"
+msgstr ""
+
+#: new-ui/templates/settings-page.php:98
+msgid "Custom labels & text"
+msgstr ""
+
+#: new-ui/templates/settings-page.php:107
+#: new-ui/templates/tabs/tab-form-style.php:96
+#: src/templates/admin.tpl.php:50
+msgid "Form Style & Redirect"
+msgstr ""
+
+#: new-ui/templates/settings-page.php:108
+msgid "Booking form look & redirects"
+msgstr ""
+
+#: new-ui/templates/settings-page.php:117
+msgid "User Access"
+msgstr ""
+
+#: new-ui/templates/settings-page.php:118
+msgid "Access control & permissions"
+msgstr ""
+
+#: new-ui/templates/settings-page.php:127
+msgid "Form Fields"
+msgstr ""
+
+#: new-ui/templates/settings-page.php:128
+msgid "Custom form fields"
+msgstr ""
+
+#: new-ui/templates/settings-page.php:137
+#: new-ui/templates/tabs/tab-integrations.php:21
+msgid "Integrations"
+msgstr ""
+
+#: new-ui/templates/settings-page.php:138
+msgid "Google, reCAPTCHA & more"
+msgstr ""
+
+#: new-ui/templates/settings-page.php:147
+#: new-ui/templates/tabs/tab-payments.php:26
+msgid "Payments"
+msgstr ""
+
+#: new-ui/templates/settings-page.php:148
+msgid "Payment & currency"
+msgstr ""
+
+#: new-ui/templates/settings-page.php:157
+#: new-ui/templates/tabs/tab-advanced.php:15
+msgid "Advanced"
+msgstr ""
+
+#: new-ui/templates/settings-page.php:158
+msgid "Developer & system"
+msgstr ""
+
+#: new-ui/templates/settings-page.php:167
+#: src/admin.php:817
+#: src/admin.php:818
+msgid "Tools"
+msgstr ""
+
+#: new-ui/templates/settings-page.php:168
+msgid "System tools & database logs"
+msgstr ""
+
+#: new-ui/templates/settings-page.php:242
+#: new-ui/templates/settings-page.php:256
+msgid "Pro"
+msgstr ""
+
+#: new-ui/templates/settings-page.php:255
+msgid "You're using Easy Appointments"
+msgstr ""
+
+#: new-ui/templates/settings-page.php:258
+msgid "Thank you for upgrading! You now have access to premium features and priority support."
+msgstr ""
+
+#: new-ui/templates/settings-page.php:261
+msgid "Advanced Booking Rules"
+msgstr ""
+
+#: new-ui/templates/settings-page.php:262
+msgid "Recurring Appointments"
+msgstr ""
+
+#: new-ui/templates/settings-page.php:263
+msgid "SMS Notifications"
+msgstr ""
+
+#: new-ui/templates/settings-page.php:264
+msgid "Google Calendar Sync"
+msgstr ""
+
+#: new-ui/templates/settings-page.php:265
+msgid "Customizable Email Templates"
+msgstr ""
+
+#: new-ui/templates/settings-page.php:266
+#: new-ui/templates/settings-page.php:302
+msgid "Priority Support"
+msgstr ""
+
+#: new-ui/templates/settings-page.php:267
+msgid "And much more..."
+msgstr ""
+
+#: new-ui/templates/settings-page.php:271
+msgid "License Key"
+msgstr ""
+
+#: new-ui/templates/settings-page.php:279
+msgid "Show license key"
+msgstr ""
+
+#: new-ui/templates/settings-page.php:286
+msgid "Active"
+msgstr ""
+
+#: new-ui/templates/settings-page.php:289
+msgid "Expires on"
+msgstr ""
+
+#: new-ui/templates/settings-page.php:303
+msgid "Get faster help from our expert team."
+msgstr ""
+
+#: new-ui/templates/settings-page.php:305
+msgid "Contact Support"
+msgstr ""
+
+#: new-ui/templates/settings-page.php:317
+msgid "Activate Your License"
+msgstr ""
+
+#: new-ui/templates/settings-page.php:318
+msgid "EA Extension Manager detected. Enter your license key to unlock Pro features."
+msgstr ""
+
+#: new-ui/templates/settings-page.php:319
+msgid "Enter license key"
+msgstr ""
+
+#: new-ui/templates/settings-page.php:340
+msgid "Upgrade to Premium"
+msgstr ""
+
+#: new-ui/templates/settings-page.php:341
+msgid "Unlock powerful features and take your booking system to the next level."
+msgstr ""
+
+#: new-ui/templates/settings-page.php:348
+msgid "Google Cal"
+msgstr ""
+
+#: new-ui/templates/settings-page.php:354
+msgid "iCalendar"
+msgstr ""
+
+#: new-ui/templates/settings-page.php:360
+msgid "Messages"
+msgstr ""
+
+#: new-ui/templates/settings-page.php:366
+msgid "PayPal"
+msgstr ""
+
+#: new-ui/templates/settings-page.php:372
+msgid "Stripe"
+msgstr ""
+
+#: new-ui/templates/settings-page.php:378
+msgid "Razorpay"
+msgstr ""
+
+#: new-ui/templates/settings-page.php:384
+msgid "WooCommerce"
+msgstr ""
+
+#: new-ui/templates/settings-page.php:390
+msgid "Outlook"
+msgstr ""
+
+#: new-ui/templates/settings-page.php:396
+msgid "Booking"
+msgstr ""
+
+#: new-ui/templates/settings-page.php:402
+msgid "WhatsApp"
+msgstr ""
+
+#: new-ui/templates/settings-page.php:408
+msgid "AI"
+msgstr ""
+
+#: new-ui/templates/settings-page.php:417
+msgid "30-Day Money Back Guarantee"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-advanced.php:16
+msgid "System and developer configuration."
+msgstr ""
+
+#: new-ui/templates/tabs/tab-advanced.php:20
+#: src/templates/admin.tpl.php:61
+msgid "Webhooks"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-advanced.php:21
+#: src/templates/admin.tpl.php:1417
+msgid "Add multiple webhook endpoints and assign events for each endpoint."
+msgstr ""
+
+#: new-ui/templates/tabs/tab-advanced.php:27
+#: src/templates/admin.tpl.php:1429
+msgid "Add Webhook"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-advanced.php:42
+msgid "Interface Settings"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-advanced.php:43
+msgid "Manage your administration interface version."
+msgstr ""
+
+#: new-ui/templates/tabs/tab-advanced.php:49
+#: new-ui/templates/tabs/tab-advanced.php:54
+msgid "Switch to Classic UI"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-advanced.php:50
+msgid "Switch back to the legacy administration screens. You can return to the new interface at any time."
+msgstr ""
+
+#: new-ui/templates/tabs/tab-calendar.php:43
+msgid "Settings for the FullCalendar shortcode."
+msgstr ""
+
+#: new-ui/templates/tabs/tab-calendar.php:51
+#: src/templates/admin.tpl.php:765
+msgid "Allow public access to FullCalendar shortcode"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-calendar.php:52
+#: src/templates/admin.tpl.php:767
+msgid "By default only logged in users can see data in FullCalendar. Mark this option if you want to allow public access for all."
+msgstr ""
+
+#: new-ui/templates/tabs/tab-calendar.php:66
+#: src/templates/admin.tpl.php:778
+msgid "Display My Bookings menu appointments based on the logged-in user"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-calendar.php:67
+#: new-ui/templates/tabs/tab-calendar.php:82
+msgid "Allow only logged in users to see their bookings in FullCalendar."
+msgstr ""
+
+#: new-ui/templates/tabs/tab-calendar.php:81
+#: src/templates/admin.tpl.php:791
+msgid "Display appointments in the full calendar based on the logged-in user"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-calendar.php:96
+msgid "Manage appointment in popup"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-calendar.php:97
+msgid "Popup dialog to modify appointment details. Works only for logged in users."
+msgstr ""
+
+#: new-ui/templates/tabs/tab-calendar.php:111
+#: src/templates/admin.tpl.php:817
+msgid "Show event content in popup"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-calendar.php:112
+#: src/templates/admin.tpl.php:819
+msgid "Popup dialog for event content."
+msgstr ""
+
+#: new-ui/templates/tabs/tab-calendar.php:133
+#: src/templates/admin.tpl.php:830
+msgid "Event title display fields"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-calendar.php:134
+msgid "Select what should be shown inside the calendar event block."
+msgstr ""
+
+#: new-ui/templates/tabs/tab-calendar.php:160
+#: src/templates/admin.tpl.php:896
+msgid "Event content in popup"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-calendar.php:161
+msgid "Event content shown when an event is clicked."
+msgstr ""
+
+#. translators: %s: link to documentation
+#: new-ui/templates/tabs/tab-calendar.php:170
+#, php-format
+msgid "Example: (%s)"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-calendar.php:171
+#: src/templates/admin.tpl.php:901
+msgid "Full documentation"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-calendar.php:178
+msgid "To see all available options, use:"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-date-time.php:23
+msgid "Date and Time Settings"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-date-time.php:24
+msgid "Configure time format, calendar localization, and booking rules."
+msgstr ""
+
+#: new-ui/templates/tabs/tab-date-time.php:37
+#: src/templates/admin.tpl.php:975
+msgid "Time format"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-date-time.php:38
+msgid "Notice: Date/time formatting for email notifications is configured in Settings > General."
+msgstr ""
+
+#: new-ui/templates/tabs/tab-date-time.php:57
+#: src/templates/admin.tpl.php:991
+msgid "Calendar localization"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-date-time.php:58
+msgid "Select the language for the calendar datepicker interface."
+msgstr ""
+
+#: new-ui/templates/tabs/tab-date-time.php:83
+msgid "Block Time Before Appointment"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-date-time.php:84
+msgid "Time slot will be blocked before scheduled appointment time (in minutes)."
+msgstr ""
+
+#: new-ui/templates/tabs/tab-date-time.php:89
+msgid "Enter time in minutes"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-date-time.php:101
+msgid "Cancel Booking Before Hour"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-date-time.php:102
+#: src/templates/admin.tpl.php:1018
+msgid "Users are allowed to cancel their appointments only up to hours before the scheduled time."
+msgstr ""
+
+#: new-ui/templates/tabs/tab-form-fields.php:28
+#: src/templates/admin.tpl.php:41
+msgid "Custom Form Fields"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-form-fields.php:29
+msgid "Create the extra fields your booking form needs and drag to reorder them. Changes here save instantly."
+msgstr ""
+
+#: new-ui/templates/tabs/tab-form-fields.php:34
+msgid "Field name"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-form-fields.php:35
+msgid "e.g. Company Name"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-form-fields.php:38
+msgid "Field type"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-form-fields.php:40
+#: src/metafields.php:26
+#: src/templates/admin.tpl.php:1040
+msgid "Input"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-form-fields.php:41
+#: src/templates/admin.tpl.php:1041
+msgid "Masked Input"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-form-fields.php:42
+#: src/metafields.php:27
+#: src/templates/admin.tpl.php:1042
+msgid "Select"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-form-fields.php:43
+#: src/templates/admin.tpl.php:1043
+msgid "Textarea"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-form-fields.php:44
+#: new-ui/templates/workers-page.php:69
+#: new-ui/templates/workers-page.php:112
+#: src/ajax.php:2637
+#: src/frontend.php:711
+#: src/install.php:589
+#: src/metafields.php:29
+#: src/templates/admin.tpl.php:1044
+msgid "Phone"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-form-fields.php:49
+msgid "Add Field"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-form-fields.php:56
+msgid "Loading fields…"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-form-fields.php:60
+msgid "No custom fields yet. Add your first field above."
+msgstr ""
+
+#: new-ui/templates/tabs/tab-form-fields.php:67
+msgid "Available tags for notification templates:"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-form-fields.php:76
+msgid "Drag to reorder"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-form-fields.php:97
+msgid "Slug"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-form-fields.php:99
+msgid "Use this in redirect URLs / notification templates, e.g. {{slug}}"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-form-fields.php:102
+#: src/templates/admin.tpl.php:1322
+msgid "Label"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-form-fields.php:106
+msgid "Placeholder"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-form-fields.php:110
+#: new-ui/templates/tabs/tab-form-fields.php:114
+msgid "Default value"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-form-fields.php:115
+msgid "e.g. +1"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-form-fields.php:118
+msgid "Mask"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-form-fields.php:120
+msgid "9: numeric · a: alphabetical · *: alphanumeric"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-form-fields.php:123
+msgid "Options"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-form-fields.php:126
+msgid "Add an option…"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-form-fields.php:127
+#: new-ui/templates/tabs/tab-form-style.php:294
+#: new-ui/templates/tabs/tab-form-style.php:374
+#: src/templates/admin.tpl.php:1048
+msgid "Add"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-form-fields.php:135
+msgid "Required"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-form-fields.php:138
+msgid "Visibility"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-form-fields.php:140
+msgid "Visible"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-form-fields.php:141
+msgid "Hidden (not rendered)"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-form-fields.php:142
+msgid "Hidden field (rendered but not shown)"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-form-fields.php:147
+msgid "Save Field"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-form-style.php:97
+msgid "Customize the appearance and behavior of your booking form."
+msgstr ""
+
+#: new-ui/templates/tabs/tab-form-style.php:107
+msgid "Custom CSS"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-form-style.php:108
+msgid "Add custom CSS styles that will be applied to both standard and bootstrap widgets."
+msgstr ""
+
+#: new-ui/templates/tabs/tab-form-style.php:112
+msgid "/* Add your custom CSS here */"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-form-style.php:120
+msgid "Turn off CSS files"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-form-style.php:121
+msgid "Disable all plugin CSS files. Useful if your theme already styles the form."
+msgstr ""
+
+#: new-ui/templates/tabs/tab-form-style.php:138
+msgid "Form Label Style"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-form-style.php:139
+msgid "Choose whether labels appear above or inline with form fields."
+msgstr ""
+
+#: new-ui/templates/tabs/tab-form-style.php:145
+msgid "Inline labels"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-form-style.php:146
+msgid "Inline"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-form-style.php:150
+msgid "Labels above"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-form-style.php:151
+msgid "Above"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-form-style.php:163
+msgid "Time Slot Label Style"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-form-style.php:164
+msgid "Show 'From' or 'From - To' on time slot labels."
+msgstr ""
+
+#: new-ui/templates/tabs/tab-form-style.php:170
+msgid "From - To labels"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-form-style.php:171
+msgid "From - To"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-form-style.php:175
+msgid "From labels"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-form-style.php:188
+msgid "\"I Agree\" Field"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-form-style.php:189
+msgid "Require users to confirm an 'I agree' checkbox before submitting."
+msgstr ""
+
+#: new-ui/templates/tabs/tab-form-style.php:206
+#: src/templates/admin.tpl.php:1293
+msgid "Display Thank You Note"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-form-style.php:207
+msgid "Show a confirmation screen with appointment summary and action buttons after booking."
+msgstr ""
+
+#: new-ui/templates/tabs/tab-form-style.php:220
+#: src/templates/admin.tpl.php:1268
+msgid "Heading"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-form-style.php:221
+msgid "Thank You!"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-form-style.php:226
+msgid "Pending Message"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-form-style.php:227
+msgid "Your booking is pending approval."
+msgstr ""
+
+#: new-ui/templates/tabs/tab-form-style.php:230
+msgid "Confirmed Message"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-form-style.php:231
+msgid "Your booking is confirmed!"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-form-style.php:234
+msgid "Reservation Message"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-form-style.php:235
+msgid "Your booking is reserved."
+msgstr ""
+
+#: new-ui/templates/tabs/tab-form-style.php:239
+msgid "Action Buttons:"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-form-style.php:240
+msgid "\"Book New Appointment\" and \"Add to Google Calendar\" buttons are shown on the thank you screen."
+msgstr ""
+
+#: new-ui/templates/tabs/tab-form-style.php:248
+msgid "Redirect Settings"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-form-style.php:249
+msgid "Configure where users are redirected after booking or canceling an appointment."
+msgstr ""
+
+#: new-ui/templates/tabs/tab-form-style.php:257
+#: src/templates/admin.tpl.php:1178
+msgid "Go to page"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-form-style.php:258
+msgid "(you can use dynamic values like {{name}} from form fields)"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-form-style.php:259
+msgid "Redirect to this URL after booking. Leave blank to stay on the same page. Check the Form Fields tab for available {{slug}} values."
+msgstr ""
+
+#: new-ui/templates/tabs/tab-form-style.php:264
+msgid "Example: https://example.com/?customer_name={{name}}"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-form-style.php:272
+msgid "Advance Redirect per Service"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-form-style.php:273
+msgid "Set different redirect URLs based on the selected service. Takes priority over Go to page."
+msgstr ""
+
+#: new-ui/templates/tabs/tab-form-style.php:282
+#: new-ui/templates/tabs/tab-form-style.php:362
+msgid "Select Service"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-form-style.php:289
+msgid "Redirect URL"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-form-style.php:324
+msgid "Cancel Redirect"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-form-style.php:325
+msgid "Configure where users go after canceling an appointment."
+msgstr ""
+
+#: new-ui/templates/tabs/tab-form-style.php:333
+#: src/templates/admin.tpl.php:1213
+msgid "After cancel go to"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-form-style.php:334
+msgid "Which step to scroll to after canceling an appointment."
+msgstr ""
+
+#: new-ui/templates/tabs/tab-form-style.php:352
+msgid "Advance Cancel Redirect per Service"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-form-style.php:353
+msgid "Set different cancel redirect URLs based on the selected service."
+msgstr ""
+
+#: new-ui/templates/tabs/tab-form-style.php:369
+msgid "Cancel Redirect URL"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-form-style.php:383
+msgid "No cancel redirects configured. Add one above."
+msgstr ""
+
+#: new-ui/templates/tabs/tab-general.php:23
+msgid "General Settings"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-general.php:24
+msgid "Configure the basic settings and preferences for your booking system."
+msgstr ""
+
+#: new-ui/templates/tabs/tab-general.php:37
+msgid "Busy slots are calculated by"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-general.php:38
+#: src/templates/admin.tpl.php:77
+msgid "IMPORTANT! This is used to calculate busy slots based on settings that are set here."
+msgstr ""
+
+#: new-ui/templates/tabs/tab-general.php:44
+#: src/templates/admin.tpl.php:81
+msgid "Exclusive by Worker"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-general.php:47
+#: src/templates/admin.tpl.php:84
+msgid "Worker, Location and Service"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-general.php:62
+#: src/templates/admin.tpl.php:90
+msgid "Compatibility mode"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-general.php:63
+msgid "If you can't EDIT or DELETE connection or any other settings, you should mark this option. NOTE: After saving this option you must refresh the page!"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-general.php:82
+#: src/templates/admin.tpl.php:103
+msgid "Allow Multi Slot Selection"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-general.php:83
+msgid "If you want to allow multiple slots to be selected for a booking, mark this option. NOTE: After saving this option you must refresh the page!"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-general.php:102
+#: src/templates/admin.tpl.php:116
+msgid "Max number of appointments"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-general.php:103
+msgid "Number of appointments that one visitor can make a reservation for before a limit alert is shown. Appointments are counted per day."
+msgstr ""
+
+#: new-ui/templates/tabs/tab-general.php:108
+msgid "Maximum appointments allowed per booking"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-general.php:120
+#: src/templates/admin.tpl.php:126
+msgid "Max number of appointments for logged in user"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-general.php:121
+msgid "Number of appointments that one logged in user can make a reservation for before a limit alert is shown."
+msgstr ""
+
+#: new-ui/templates/tabs/tab-general.php:126
+#: src/templates/admin.tpl.php:133
+msgid "Keep 0 for no restriction"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-general.php:138
+#: src/templates/admin.tpl.php:137
+msgid "Auto reservation"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-general.php:139
+msgid "Make a reservation the moment a user selects a date and time!"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-general.php:158
+#: src/templates/admin.tpl.php:149
+msgid "Turn nonce off"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-general.php:159
+msgid "If you have issues with a validation code that expires on the form, you can turn off the nonce - at your own risk."
+msgstr ""
+
+#: new-ui/templates/tabs/tab-general.php:178
+#: src/templates/admin.tpl.php:161
+msgid "Default status"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-general.php:179
+msgid "Default status of an appointment made by a visitor."
+msgstr ""
+
+#: new-ui/templates/tabs/tab-general.php:184
+#: new-ui/templates/tabs/tab-notifications.php:28
+#: new-ui/templates/tabs/tab-notifications.php:69
+#: new-ui/templates/tabs/tab-notifications.php:198
+#: new-ui/templates/tabs/tab-notifications.php:239
+#: new-ui/templates/tabs/tab-notifications.php:302
+#: new-ui/templates/tabs/tab-notifications.php:341
+#: src/templates/admin.tpl.php:396
+#: src/templates/admin.tpl.php:411
+#: src/templates/admin.tpl.php:581
+#: src/templates/admin.tpl.php:619
+#: src/templates/admin.tpl.php:694
+#: src/templates/admin.tpl.php:726
+#: src/templates/admin.tpl.php:1274
+msgid "Pending"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-general.php:185
+#: new-ui/templates/tabs/tab-notifications.php:31
+#: new-ui/templates/tabs/tab-notifications.php:72
+#: new-ui/templates/tabs/tab-notifications.php:213
+#: new-ui/templates/tabs/tab-notifications.php:254
+#: new-ui/templates/tabs/tab-notifications.php:310
+#: new-ui/templates/tabs/tab-notifications.php:349
+#: src/templates/admin.tpl.php:402
+#: src/templates/admin.tpl.php:421
+#: src/templates/admin.tpl.php:596
+#: src/templates/admin.tpl.php:634
+#: src/templates/admin.tpl.php:701
+#: src/templates/admin.tpl.php:733
+#: src/templates/admin.tpl.php:1280
+msgid "Confirmed"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-general.php:186
+#: new-ui/templates/tabs/tab-notifications.php:29
+#: new-ui/templates/tabs/tab-notifications.php:70
+#: new-ui/templates/tabs/tab-notifications.php:203
+#: new-ui/templates/tabs/tab-notifications.php:244
+#: new-ui/templates/tabs/tab-notifications.php:326
+#: new-ui/templates/tabs/tab-notifications.php:365
+#: src/templates/admin.tpl.php:398
+#: src/templates/admin.tpl.php:416
+#: src/templates/admin.tpl.php:586
+#: src/templates/admin.tpl.php:624
+#: src/templates/admin.tpl.php:715
+#: src/templates/admin.tpl.php:747
+#: src/templates/admin.tpl.php:1286
+msgid "Reservation"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-general.php:199
+msgid "Compress shortcode output"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-general.php:200
+msgid "removes new lines from templates"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-general.php:201
+msgid "WordPress can add an automatic paragraph HTML element for each line break. This option prevents WP from doing that on the EA shortcode."
+msgstr ""
+
+#: new-ui/templates/tabs/tab-general.php:220
+#: src/templates/admin.tpl.php:197
+msgid "Customer Search"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-general.php:221
+msgid "This will allow searching for a customer in the front end from a dropdown."
+msgstr ""
+
+#: new-ui/templates/tabs/tab-general.php:253
+#: src/templates/admin.tpl.php:212
+msgid "Customer Search Roles"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-general.php:254
+msgid "Show customer search only for the selected user roles."
+msgstr ""
+
+#: new-ui/templates/tabs/tab-general.php:276
+#: src/templates/admin.tpl.php:257
+msgid "Password Protected Only"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-general.php:277
+msgid "Display customer search only on password-protected pages."
+msgstr ""
+
+#: new-ui/templates/tabs/tab-general.php:296
+#: src/templates/admin.tpl.php:279
+msgid "Remove Data on Uninstall?"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-general.php:297
+msgid "Check this box if you would like to completely remove all plugin data when the plugin is deleted."
+msgstr ""
+
+#: new-ui/templates/tabs/tab-general.php:311
+msgid "Backup & Data"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-general.php:312
+msgid "Export a full backup of your Easy Appointments data, or restore from a previous export."
+msgstr ""
+
+#: new-ui/templates/tabs/tab-general.php:326
+msgid "Export all Easy Appointments data including services, staff, appointments, customers and settings."
+msgstr ""
+
+#: new-ui/templates/tabs/tab-general.php:331
+#: src/templates/admin.tpl.php:300
+msgid "Export All Data"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-general.php:345
+msgid "Warning: import will overwrite ALL existing Easy Appointments data."
+msgstr ""
+
+#: new-ui/templates/tabs/tab-general.php:353
+msgid "Choose File"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-general.php:356
+msgid "No file chosen"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-integrations.php:22
+msgid "Configure Google reCAPTCHA settings to protect your booking form."
+msgstr ""
+
+#: new-ui/templates/tabs/tab-integrations.php:30
+#: src/templates/admin.tpl.php:44
+msgid "Google reCAPTCHA v2"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-integrations.php:31
+msgid "Protect your booking form using Google reCAPTCHA v2."
+msgstr ""
+
+#: new-ui/templates/tabs/tab-integrations.php:37
+#: new-ui/templates/tabs/tab-integrations.php:108
+msgid "Site Key"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-integrations.php:38
+msgid "Enter your Google reCAPTCHA v2 Site Key."
+msgstr ""
+
+#: new-ui/templates/tabs/tab-integrations.php:54
+#: new-ui/templates/tabs/tab-integrations.php:125
+msgid "Secret Key"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-integrations.php:55
+msgid "Enter your Google reCAPTCHA v2 Secret Key."
+msgstr ""
+
+#: new-ui/templates/tabs/tab-integrations.php:80
+#: new-ui/templates/tabs/tab-integrations.php:152
+msgid "Open Google reCAPTCHA Console"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-integrations.php:85
+#: new-ui/templates/tabs/tab-integrations.php:161
+msgid "Leave both fields empty to disable reCAPTCHA."
+msgstr ""
+
+#: new-ui/templates/tabs/tab-integrations.php:89
+#: new-ui/templates/tabs/tab-integrations.php:165
+msgid "Auto Reservation must be disabled when using reCAPTCHA."
+msgstr ""
+
+#: new-ui/templates/tabs/tab-integrations.php:98
+#: src/templates/admin.tpl.php:47
+msgid "Google reCAPTCHA v3"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-integrations.php:99
+msgid "Invisible score-based spam protection."
+msgstr ""
+
+#: new-ui/templates/tabs/tab-integrations.php:109
+msgid "Enter your Google reCAPTCHA v3 Site Key."
+msgstr ""
+
+#: new-ui/templates/tabs/tab-integrations.php:126
+msgid "Enter your Google reCAPTCHA v3 Secret Key."
+msgstr ""
+
+#: new-ui/templates/tabs/tab-integrations.php:157
+msgid "Requests with a score lower than 0.5 are treated as bots and rejected."
+msgstr ""
+
+#: new-ui/templates/tabs/tab-labels.php:21
+msgid "Custom Labels"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-labels.php:22
+msgid "Customize labels and text displayed in the booking form and frontend."
+msgstr ""
+
+#: new-ui/templates/tabs/tab-labels.php:35
+#: src/templates/admin.tpl.php:913
+msgid "Service Label"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-labels.php:51
+#: src/templates/admin.tpl.php:918
+msgid "Service Dropdown Default Option"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-labels.php:67
+#: src/templates/admin.tpl.php:923
+msgid "Location Label"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-labels.php:83
+#: src/templates/admin.tpl.php:928
+msgid "Location Dropdown Default Option"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-labels.php:99
+#: src/templates/admin.tpl.php:933
+msgid "Worker Label"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-labels.php:115
+#: src/templates/admin.tpl.php:938
+msgid "Worker Dropdown Default Option"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-labels.php:131
+msgid "Done Message"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-labels.php:132
+msgid "Message that user receives after completing appointment"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-labels.php:148
+#: src/templates/admin.tpl.php:954
+msgid "Submit Button Text"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-labels.php:149
+#: src/templates/admin.tpl.php:956
+msgid "Text will display on submit button in frontend booking form"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-labels.php:165
+#: src/templates/admin.tpl.php:963
+msgid "Search Customer"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-notifications.php:22
+msgid "Notifications Settings"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-notifications.php:23
+msgid "Configure email templates, delivery options, and notification behavior."
+msgstr ""
+
+#: new-ui/templates/tabs/tab-notifications.php:30
+#: new-ui/templates/tabs/tab-notifications.php:71
+#: new-ui/templates/tabs/tab-notifications.php:208
+#: new-ui/templates/tabs/tab-notifications.php:249
+#: new-ui/templates/tabs/tab-notifications.php:318
+#: new-ui/templates/tabs/tab-notifications.php:357
+#: src/templates/admin.tpl.php:400
+#: src/templates/admin.tpl.php:426
+#: src/templates/admin.tpl.php:591
+#: src/templates/admin.tpl.php:629
+#: src/templates/admin.tpl.php:708
+#: src/templates/admin.tpl.php:740
+msgid "Cancelled"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-notifications.php:49
+#: src/templates/admin.tpl.php:503
+msgid "Available tags"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-notifications.php:63
+msgid "Admin email templates"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-notifications.php:64
+msgid "Email templates sent to administrators for each appointment status."
+msgstr ""
+
+#: new-ui/templates/tabs/tab-notifications.php:78
+#: new-ui/templates/tabs/tab-notifications.php:85
+#: new-ui/templates/tabs/tab-notifications.php:92
+#: new-ui/templates/tabs/tab-notifications.php:99
+msgid "Leave a status blank to fall back to the Pending admin template."
+msgstr ""
+
+#: new-ui/templates/tabs/tab-notifications.php:79
+#: new-ui/templates/tabs/tab-notifications.php:86
+#: new-ui/templates/tabs/tab-notifications.php:93
+#: new-ui/templates/tabs/tab-notifications.php:100
+#: src/templates/admin.tpl.php:502
+msgid "Load default admin template"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-notifications.php:106
+msgid "Notification delivery"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-notifications.php:107
+msgid "Enable which notifications should be sent and where they should go."
+msgstr ""
+
+#: new-ui/templates/tabs/tab-notifications.php:113
+#: src/templates/admin.tpl.php:509
+msgid "Send email notification on edit"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-notifications.php:125
+#: src/templates/admin.tpl.php:521
+msgid "Two step action links in email"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-notifications.php:137
+#: src/templates/admin.tpl.php:533
+msgid "Pending notification emails"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-notifications.php:146
+#: src/templates/admin.tpl.php:642
+msgid "Send from"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-notifications.php:155
+msgid "Admin reply-to address"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-notifications.php:164
+msgid "Visitor reply-to address"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-notifications.php:173
+msgid "Worker / User notification delivery"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-notifications.php:174
+msgid "Select whether workers and users receive emails for each appointment status."
+msgstr ""
+
+#: new-ui/templates/tabs/tab-notifications.php:180
+#: src/templates/admin.tpl.php:569
+msgid "Send email to worker"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-notifications.php:191
+#: new-ui/templates/tabs/tab-notifications.php:232
+msgid "Notify for status"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-notifications.php:221
+#: src/templates/admin.tpl.php:609
+msgid "Send email to user"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-notifications.php:262
+msgid "Email subjects"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-notifications.php:263
+msgid "Configure email subject lines for notifications."
+msgstr ""
+
+#: new-ui/templates/tabs/tab-notifications.php:269
+#: src/templates/admin.tpl.php:652
+msgid "Admin notification subject"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-notifications.php:277
+#: src/templates/admin.tpl.php:662
+msgid "Visitor notification subject"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-notifications.php:285
+#: src/templates/admin.tpl.php:673
+msgid "Enable different subjects per status"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-notifications.php:297
+msgid "Admin subjects"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-notifications.php:336
+msgid "Visitor subjects"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-payments.php:27
+msgid "Currency and price display settings for the booking form."
+msgstr ""
+
+#: new-ui/templates/tabs/tab-payments.php:31
+#: src/templates/admin.tpl.php:56
+msgid "Money Format"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-payments.php:32
+msgid "Controls how prices are shown throughout the booking form."
+msgstr ""
+
+#: new-ui/templates/tabs/tab-payments.php:45
+#: src/templates/admin.tpl.php:1367
+msgid "Currency"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-payments.php:61
+#: src/templates/admin.tpl.php:1372
+msgid "Currency before price"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-payments.php:62
+msgid "Show the currency symbol before the amount, e.g. $10 instead of 10$."
+msgstr ""
+
+#: new-ui/templates/tabs/tab-payments.php:81
+#: src/templates/admin.tpl.php:1380
+msgid "Hide decimal in price"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-payments.php:100
+#: src/templates/admin.tpl.php:1388
+msgid "Hide price in service select"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-payments.php:119
+#: src/templates/admin.tpl.php:1397
+msgid "Hide price"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-payments.php:120
+msgid "Hide price in the whole customer-facing booking form."
+msgstr ""
+
+#: new-ui/templates/tabs/tab-placeholder.php:46
+msgid "This section is on its way. It will follow the exact same design and save mechanism as General Settings."
+msgstr ""
+
+#: new-ui/templates/tabs/tab-placeholder.php:47
+msgid "Manage this via the classic Settings page for now →"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-tools.php:17
+msgid "Test Email"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-tools.php:18
+msgid "Test if the mail service is working fine on this site by generating a test email that will be sent to the provided address."
+msgstr ""
+
+#: new-ui/templates/tabs/tab-tools.php:40
+msgid "Send a test email"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-tools.php:43
+msgid "Send a test email (native)"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-tools.php:54
+msgid "This will erase all plugin settings, data, and custom entries created by the plugin. After reset, the plugin will be restored to its default installation state."
+msgstr ""
+
+#: new-ui/templates/tabs/tab-tools.php:61
+msgid "Reset Action"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-tools.php:66
+msgid "Warning: This action is permanent and cannot be undone."
+msgstr ""
+
+#: new-ui/templates/tabs/tab-tools.php:79
+msgid "Error Log"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-tools.php:80
+msgid "Recent logs and service errors recorded by the plugin."
+msgstr ""
+
+#: new-ui/templates/tabs/tab-tools.php:83
+msgid "Clear log"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-tools.php:89
+msgid "Loading logs..."
+msgstr ""
+
+#: new-ui/templates/tabs/tab-tools.php:98
+msgid "Error Details"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-user-access.php:21
+msgid "User Access Control"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-user-access.php:22
+msgid "Configure which user capabilities are required to access each admin page."
+msgstr ""
+
+#: new-ui/templates/tabs/tab-user-access.php:29
+msgid "Please use these options carefully as they allow you to change which capability is needed to access Easy Appointments admin pages. Leave empty to use default settings (manage_options)."
+msgstr ""
+
+#: new-ui/templates/tabs/tab-user-access.php:40
+#: src/templates/admin.tpl.php:319
+msgid "Locations Page"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-user-access.php:41
+#: new-ui/templates/tabs/tab-user-access.php:58
+#: new-ui/templates/tabs/tab-user-access.php:75
+#: new-ui/templates/tabs/tab-user-access.php:92
+#: new-ui/templates/tabs/tab-user-access.php:109
+#: src/templates/admin.tpl.php:321
+#: src/templates/admin.tpl.php:331
+#: src/templates/admin.tpl.php:341
+#: src/templates/admin.tpl.php:351
+#: src/templates/admin.tpl.php:361
+msgid "Default capability: manage_options."
+msgstr ""
+
+#: new-ui/templates/tabs/tab-user-access.php:57
+#: src/templates/admin.tpl.php:329
+msgid "Services Page"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-user-access.php:74
+#: src/templates/admin.tpl.php:339
+msgid "Workers Page"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-user-access.php:91
+#: src/templates/admin.tpl.php:349
+msgid "Connections Page"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-user-access.php:108
+#: src/templates/admin.tpl.php:359
+msgid "Reports Page"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-user-access.php:120
+msgid "Current User Capabilities"
+msgstr ""
+
+#: new-ui/templates/tabs/tab-user-access.php:127
+msgid "Logged in user has:"
+msgstr ""
+
+#: new-ui/templates/vacation-page.php:61
+msgid "Search by title, tooltip or employee"
+msgstr ""
+
+#: new-ui/templates/vacation-page.php:71
+#: new-ui/templates/vacation-page.php:100
+msgid "Title"
+msgstr ""
+
+#: new-ui/templates/vacation-page.php:72
+#: new-ui/templates/vacation-page.php:106
+msgid "Tooltip"
+msgstr ""
+
+#: new-ui/templates/vacation-page.php:74
+#: new-ui/templates/vacation-page.php:118
+msgid "Dates"
+msgstr ""
+
+#: new-ui/templates/vacation-page.php:75
+#: new-ui/templates/vacation-page.php:131
+msgid "Vacation Time"
+msgstr ""
+
+#: new-ui/templates/vacation-page.php:113
+msgid "Select employees…"
+msgstr ""
+
+#: new-ui/templates/vacation-page.php:121
+msgid "Pick a date to add…"
+msgstr ""
+
+#: new-ui/templates/vacation-page.php:134
+msgid "Full Day Vacation"
+msgstr ""
+
+#: new-ui/templates/vacation-page.php:167
+msgid "Loading Vacations..."
+msgstr ""
+
+#: new-ui/templates/workers-page.php:55
+msgid "Search by name, email, phone or description"
+msgstr ""
+
+#: new-ui/templates/workers-page.php:76
+msgid "No employees found."
+msgstr ""
+
+#: new-ui/templates/workers-page.php:133
+msgid "Loading Employees..."
+msgstr ""
+
+#: src/admin.php:153
+#: src/admin.php:154
+#: src/admin.php:280
+msgid "My Bookings"
+msgstr ""
+
+#: src/admin.php:170
+msgid "User not found."
+msgstr ""
+
+#: src/admin.php:305
+msgid "No bookings found."
+msgstr ""
+
+#: src/admin.php:360
+msgid "Missing ID."
+msgstr ""
+
+#: src/admin.php:837
+#: src/admin.php:838
+#: src/admin.php:993
+#: src/admin.php:994
+msgid "Reports"
+msgstr ""
+
+#: src/admin.php:847
+#: src/admin.php:848
+#: src/admin.php:1003
+#: src/admin.php:1004
+msgid "Reports (Legacy)"
+msgstr ""
+
+#: src/admin.php:867
+#: src/admin.php:868
+msgid "Premium Extensions"
+msgstr ""
+
+#: src/admin.php:1483
+msgid "Easy Appointments Newsletter"
+msgstr ""
+
+#: src/admin.php:1486
+msgid "Learn more about easy appointments and get latest updates about plugin"
+msgstr ""
+
+#: src/admin.php:1493
+msgid "Enter your email"
+msgstr ""
+
+#: src/admin.php:1495
+msgid "Subscribe"
+msgstr ""
+
+#: src/admin.php:1497
+msgid "No thanks"
+msgstr ""
+
+#: src/admin.php:1499
+msgid "we'll share our <code>root</code> password before we share your email with anyone else."
+msgstr ""
+
+#: src/admin.php:1533
+#: src/admin.php:1552
+msgid "Submitted "
+msgstr ""
+
+#: src/admin.php:1535
+msgid "No response from API"
+msgstr ""
+
+#: src/admin.php:1539
+#: src/admin.php:1554
+msgid "Unauthorized Request"
+msgstr ""
+
+#: src/ajax.php:213
+#: src/ajax.php:892
+#: src/ajax.php:964
+#: src/ajax.php:1026
+#: src/ajax.php:1935
+#: src/ajax.php:3449
+#: src/ajax.php:3475
+#: src/ajax.php:3645
+msgid "Unauthorized"
+msgstr ""
+
+#: src/ajax.php:225
+#: src/ajax.php:3629
+msgid "Invalid nonce"
+msgstr ""
+
+#: src/ajax.php:619
+#: src/ajax.php:629
+msgid "No file uploaded"
+msgstr ""
+
+#: src/ajax.php:626
+msgid "File exceeds upload_max_filesize"
+msgstr ""
+
+#: src/ajax.php:627
+msgid "File exceeds MAX_FILE_SIZE"
+msgstr ""
+
+#: src/ajax.php:628
+msgid "File partially uploaded"
+msgstr ""
+
+#: src/ajax.php:630
+msgid "Missing temp folder"
+msgstr ""
+
+#: src/ajax.php:631
+msgid "Failed to write file"
+msgstr ""
+
+#: src/ajax.php:632
+msgid "Upload stopped by extension"
+msgstr ""
+
+#: src/ajax.php:637
+msgid "Unknown upload error"
+msgstr ""
+
+#: src/ajax.php:645
+msgid "Invalid uploaded file."
+msgstr ""
+
+#: src/ajax.php:716
+#: src/ajax.php:778
+#: src/ajax.php:840
+#: src/ajax.php:908
+msgid "No valid IDs provided."
+msgstr ""
+
+#: src/ajax.php:732
+#: src/ajax.php:794
+#: src/ajax.php:856
+#: src/ajax.php:924
+msgid "Invalid IDs."
+msgstr ""
+
+#: src/ajax.php:751
+#: src/ajax.php:813
+#: src/ajax.php:875
+#: src/ajax.php:947
+msgid "Delete failed."
+msgstr ""
+
+#: src/ajax.php:972
+#: src/ajax.php:1939
+msgid "Security check failed."
+msgstr ""
+
+#: src/ajax.php:990
+#: src/ajax.php:1945
+msgid "No appointments selected."
+msgstr ""
+
+#: src/ajax.php:1044
+msgid "No upcoming appointments found."
+msgstr ""
+
+#: src/ajax.php:1443
+msgid "Slot is taken"
+msgstr ""
+
+#: src/ajax.php:1562
+msgid "Could not create any appointments."
+msgstr ""
+
+#: src/ajax.php:2446
+msgid "Invalid email address!"
+msgstr ""
+
+#: src/ajax.php:2450
+#: src/ajax.php:2482
+msgid "Only admin user can test mail!"
+msgstr ""
+
+#: src/ajax.php:2473
+msgid "Request completed, please check email."
+msgstr ""
+
+#: src/ajax.php:2516
+msgid "Plugin data reset successfully."
+msgstr ""
+
+#: src/ajax.php:2635
+#: src/install.php:587
+msgid "EMail"
+msgstr ""
+
+#: src/ajax.php:3224
+msgid "Captcha verification failed."
+msgstr ""
+
+#: src/ajax.php:3254
+msgid "Invalid captcha!"
+msgstr ""
+
+#: src/ajax.php:3425
+msgid "A customer with this email already exists for your account."
+msgstr ""
+
+#: src/ajax.php:3442
+msgid "Failed to update customer."
+msgstr ""
+
+#: src/ajax.php:3457
+msgid "Invalid customer ID."
+msgstr ""
+
+#: src/ajax.php:3469
+msgid "Failed to delete customer."
+msgstr ""
+
+#: src/ajax.php:3496
+msgid "Customer with this email already exists."
+msgstr ""
+
+#: src/ajax.php:3512
+msgid "Failed to insert customer."
+msgstr ""
+
+#: src/ajax.php:3547
+msgid "Customer not found"
+msgstr ""
+
+#: src/ajax.php:3636
+msgid "Invalid appointment"
+msgstr ""
+
+#: src/ajax.php:3641
+msgid "Appointment not found"
+msgstr ""
+
+#: src/api/apifullcalendar.php:92
+msgid "You cannot view the category resource."
+msgstr ""
+
+#: src/api/apifullcalendar.php:108
+msgid "You cannot update the category resource."
+msgstr ""
+
+#: src/api/apifullcalendar.php:308
+msgid "Nonce"
+msgstr ""
+
+#: src/api/apifullcalendar.php:314
+msgid "To show service with own color"
+msgstr ""
+
+#: src/api/apifullcalendar.php:319
+msgid "Location id that will be used for getting free / taken slots"
+msgstr ""
+
+#: src/api/apifullcalendar.php:325
+msgid "Service id that will be used for getting free / taken slots"
+msgstr ""
+
+#: src/api/apifullcalendar.php:331
+msgid "Should remove cancelled events in calendar view."
+msgstr ""
+
+#: src/api/apifullcalendar.php:337
+msgid "Worker id that will be used for getting free / taken slots"
+msgstr ""
+
+#: src/api/apifullcalendar.php:349
+msgid "Field that will be used as title"
+msgstr ""
+
+#: src/api/apifullcalendar.php:355
+msgid "Start filter from"
+msgstr ""
+
+#: src/api/apifullcalendar.php:369
+msgid "End filter from"
+msgstr ""
+
+#: src/api/apifullcalendar.php:421
+#: src/mail.php:589
+msgid "Cancel appointment"
+msgstr ""
+
+#: src/api/apifullcalendar.php:422
+#: src/mail.php:590
+msgid "Confirm appointment"
+msgstr ""
+
+#: src/api/apifullcalendar.php:448
+msgid "Personal Information"
+msgstr ""
+
+#: src/api/apifullcalendar.php:484
+msgid "Appointment Summary"
+msgstr ""
+
+#: src/api/apifullcalendar.php:485
+msgid "Location:"
+msgstr ""
+
+#: src/api/apifullcalendar.php:486
+msgid "Service:"
+msgstr ""
+
+#: src/api/apifullcalendar.php:487
+msgid "Worker:"
+msgstr ""
+
+#: src/api/apifullcalendar.php:488
+msgid "Price:"
+msgstr ""
+
+#: src/api/apifullcalendar.php:489
+msgid "Date and Time:"
+msgstr ""
+
+#: src/api/apifullcalendar.php:495
+#: src/frontend.php:716
+#: src/frontend.php:717
+msgid "Submit"
+msgstr ""
+
+#: src/api/apifullcalendar.php:521
+msgid "Appointments id"
+msgstr ""
+
+#: src/api/apifullcalendar.php:527
+msgid "Appointments hash"
+msgstr ""
+
+#: src/api/gdpr.php:70
+msgid "Data deleted"
+msgstr ""
+
+#: src/api/logactions.php:67
+msgid "Log records deleted"
+msgstr ""
+
+#: src/api/logactions.php:79
+msgid "Connection extended"
+msgstr ""
+
+#: src/api/logactions.php:95
+msgid "Log file removed"
+msgstr ""
+
+#: src/frontend.php:252
+#: src/frontend.php:702
+msgid "Please select another day"
+msgstr ""
+
+#: src/frontend.php:261
+#: src/frontend.php:724
+msgid "Form validation code expired. Please refresh page in order to continue."
+msgstr ""
+
+#: src/frontend.php:262
+#: src/frontend.php:725
+msgid "Internal error. Please try again later."
+msgstr ""
+
+#: src/frontend.php:263
+#: src/frontend.php:726
+msgid "Unable to make ajax request. Please try again later."
+msgstr ""
+
+#: src/frontend.php:330
+#: src/frontend.php:703
+msgid "Personal information"
+msgstr ""
+
+#: src/frontend.php:331
+#: src/frontend.php:708
+msgid "Fields with * are required"
+msgstr ""
+
+#: src/frontend.php:338
+#: src/frontend.php:714
+msgid "Booking overview"
+msgstr ""
+
+#: src/frontend.php:345
+#: src/frontend.php:720
+msgid "I agree with terms and conditions"
+msgstr ""
+
+#: src/frontend.php:348
+#: src/frontend.php:721
+msgid "You must agree with terms and conditions"
+msgstr ""
+
+#: src/frontend.php:433
+#: src/frontend.php:440
+#: src/frontend.php:705
+msgid "Please enter a valid email address"
+msgstr ""
+
+#: src/frontend.php:706
+msgid "Please enter at least 3 characters."
+msgstr ""
+
+#: src/frontend.php:707
+msgid "Please enter at least 3 digits."
+msgstr ""
+
+#: src/frontend.php:712
+msgid "Comment"
+msgstr ""
+
+#: src/frontend.php:713
+msgid "Please check your appointment details below and confirm:"
+msgstr ""
+
+#: src/frontend.php:722
+msgid "You can't select this time slot!'"
+msgstr ""
+
+#: src/logic.php:374
+#: src/logic.php:424
+msgid "Daily limit of booking request has been reached. Please contact us by email!"
+msgstr ""
+
+#: src/logic.php:533
+msgid "pending"
+msgstr ""
+
+#: src/logic.php:534
+msgid "reservation"
+msgstr ""
+
+#: src/logic.php:535
+msgid "abandoned"
+msgstr ""
+
+#: src/mail.php:170
 msgid "No appointment."
 msgstr ""
 
-#: src/mail.php:180
+#: src/mail.php:177
 msgid "Invalid token."
 msgstr ""
 
 #: src/mail.php:199
-msgid "Appointment is already confirmed!"
+msgid "Appointment can’t be confirmed because it is in the past."
 msgstr ""
 
 #: src/mail.php:204
-msgid "Appointment can't be confirmed!"
+msgid "Appointment is already confirmed!"
 msgstr ""
 
-#: src/mail.php:222
-msgid "Appointment has been confirmed."
+#: src/mail.php:212
+msgid "Appointment already confirmed!"
 msgstr ""
 
 #: src/mail.php:230
+msgid "Appointment has been confirmed."
+msgstr ""
+
+#: src/mail.php:239
 msgid "Appointment is already cancelled!"
 msgstr ""
 
-#: src/mail.php:235
+#: src/mail.php:244
 msgid "Appointment can't be cancelled!"
 msgstr ""
 
-#: src/mail.php:253
+#: src/mail.php:262
+msgid "Cancellation is not allowed within the specified time before the appointment."
+msgstr ""
+
+#: src/mail.php:272
 msgid "Appointment can't be cancelled"
 msgstr ""
 
-#: src/mail.php:274
+#: src/mail.php:306
 msgid "Appointment has been cancelled"
 msgstr ""
 
-#: src/mail.php:289
+#: src/mail.php:321
 msgid "Appointment link action"
 msgstr ""
 
-#: src/metafields.php:26 src/templates/admin.tpl.php:431
-msgid "Input"
+#: src/mail.php:912
+msgid "Here are your scheduled repeat appointments"
 msgstr ""
 
-#: src/metafields.php:27 src/templates/admin.tpl.php:433
-msgid "Select"
+#: src/mail.php:919
+msgid "Thank you for using our service!"
 msgstr ""
 
 #: src/metafields.php:28
 msgid "Text"
 msgstr ""
 
-#: src/shortcodes/fullcalendar.php:267 src/templates/appointments.tpl.php:42
-#: src/templates/appointments.tpl.php:102
-#: src/templates/mail.notification.tpl.php:14
-msgid "Status"
-msgstr ""
-
-#: src/templates/admin.tpl.php:19
-msgid "General"
-msgstr ""
-
-#: src/templates/admin.tpl.php:22
+#: src/templates/admin.tpl.php:26
 msgid "Mail Notifications"
 msgstr ""
 
-#: src/templates/admin.tpl.php:25
+#: src/templates/admin.tpl.php:29
 msgid "FullCalendar Shortcode"
 msgstr ""
 
-#: src/templates/admin.tpl.php:28
-msgid "Labels"
+#: src/templates/admin.tpl.php:32
+msgid "User access"
 msgstr ""
 
-#: src/templates/admin.tpl.php:31
+#: src/templates/admin.tpl.php:38
 msgid "Date & Time"
 msgstr ""
 
-#: src/templates/admin.tpl.php:34
-msgid "Custom Form Fields"
-msgstr ""
-
-#: src/templates/admin.tpl.php:37
-msgid "Google reCAPTCHA v2"
-msgstr ""
-
-#: src/templates/admin.tpl.php:40
-msgid "Google reCAPTCHA v3"
-msgstr ""
-
-#: src/templates/admin.tpl.php:43
-msgid "Form Style & Redirect"
-msgstr ""
-
-#: src/templates/admin.tpl.php:46
+#: src/templates/admin.tpl.php:53
 msgid "GDPR"
 msgstr ""
 
-#: src/templates/admin.tpl.php:49
-msgid "Money Format"
+#: src/templates/admin.tpl.php:75
+msgid "Busy slots are calculated by same"
 msgstr ""
 
-#: src/templates/admin.tpl.php:53 src/templates/appointments.tpl.php:243
-msgid "Save"
+#: src/templates/admin.tpl.php:80
+msgid "Use case example: Employee can only provide single service at the time."
 msgstr ""
 
-#: src/templates/admin.tpl.php:62
-msgid "Multiple work"
+#: src/templates/admin.tpl.php:81
+msgid "Use case example: Employee can only provide single service at the time and other services and locations are blocked during service one is provided."
 msgstr ""
 
-#: src/templates/admin.tpl.php:64
-msgid ""
-"Mark this option if you want to calculate free worker slots only by current "
-"service and location. If it's not marked system will check if worker is "
-"working on any location and service at current time."
+#: src/templates/admin.tpl.php:82
+msgid "Use case example: Multiple employees share same location as resource."
 msgstr ""
 
-#: src/templates/admin.tpl.php:74
-msgid "Compatibility mode"
+#: src/templates/admin.tpl.php:83
+msgid "Use case example: Service as a shared resource between employees."
 msgstr ""
 
-#: src/templates/admin.tpl.php:76
-msgid ""
-"If you can't EDIT or DELETE conecntion or any other settings, you should "
-"mark this option. NOTE: After saving this options you must refresh page!"
+#: src/templates/admin.tpl.php:84
+msgid "Use case example: Worker can provide different service at different locations at the same time."
 msgstr ""
 
-#: src/templates/admin.tpl.php:87
-msgid "Max number of appointments"
+#: src/templates/admin.tpl.php:92
+msgid "If you can't EDIT or DELETE conecntion or any other settings, you should mark this option. NOTE: After saving this options you must refresh page!"
 msgstr ""
 
-#: src/templates/admin.tpl.php:89
-msgid ""
-"Number of appointments that one visitor can make reservation before limit "
-"alert is shown. Appointments are counted during one day."
+#: src/templates/admin.tpl.php:105
+msgid "If you want allow multiple slot to select for booking, you should mark this option. NOTE: After saving this options you must refresh page!"
 msgstr ""
 
-#: src/templates/admin.tpl.php:97
-msgid "Auto reservation"
-msgstr ""
-
-#: src/templates/admin.tpl.php:99
-msgid "Make reservation at moment user select date and time!"
-msgstr ""
-
-#: src/templates/admin.tpl.php:109
-msgid "Turn nonce off"
-msgstr ""
-
-#: src/templates/admin.tpl.php:111
-msgid ""
-"if you have issues with validation code that is expired in form you can turn "
-"off nonce but you are doing that on your own risk."
-msgstr ""
-
-#: src/templates/admin.tpl.php:121
-msgid "Default status"
-msgstr ""
-
-#: src/templates/admin.tpl.php:123
-msgid "Default status of Appointment made by visitor."
+#: src/templates/admin.tpl.php:118
+#: src/templates/admin.tpl.php:128
+msgid "Number of appointments that one visitor can make reservation before limit alert is shown. Appointments are counted during one day."
 msgstr ""
 
 #: src/templates/admin.tpl.php:139
-msgid ""
-"Reservation status is short term, if you don't change it within 5 minutes it "
-"will be set to cancelled"
+msgid "Make reservation at moment user select date and time!"
 msgstr ""
 
-#: src/templates/admin.tpl.php:143
+#: src/templates/admin.tpl.php:151
+msgid "if you have issues with validation code that is expired in form you can turn off nonce but you are doing that on your own risk."
+msgstr ""
+
+#: src/templates/admin.tpl.php:163
+msgid "Default status of Appointment made by visitor."
+msgstr ""
+
+#: src/templates/admin.tpl.php:179
+msgid "Reservation status is short term, if you don't change it within 5 minutes it will be set to cancelled"
+msgstr ""
+
+#: src/templates/admin.tpl.php:183
 msgid "Compress shortcode output (removes new lines from templates)."
 msgstr ""
 
-#: src/templates/admin.tpl.php:145
-msgid ""
-"WordPress can add auto paragraph html element for each line break. This "
-"option prevents WP from doing that on EA shortcode."
+#: src/templates/admin.tpl.php:185
+msgid "WordPress can add auto paragraph html element for each line break. This option prevents WP from doing that on EA shortcode."
 msgstr ""
 
-#: src/templates/admin.tpl.php:162
-msgid "Notifications"
+#: src/templates/admin.tpl.php:199
+msgid "This will allow to search customer in front from dropdown"
 msgstr ""
 
-#: src/templates/admin.tpl.php:164
-msgid ""
-"You can use this tags inside email content. Just place for example #id# "
-"inside mail template and that value will be replaced with value."
+#: src/templates/admin.tpl.php:215
+msgid "Show customer search only for selected user roles"
 msgstr ""
 
-#: src/templates/admin.tpl.php:172
-msgid "Pending"
+#: src/templates/admin.tpl.php:260
+msgid "Display customer search only on password-protected pages"
 msgstr ""
 
-#: src/templates/admin.tpl.php:174
-msgid "Reservation"
-msgstr ""
-
-#: src/templates/admin.tpl.php:176
-msgid "Cancelled"
-msgstr ""
-
-#: src/templates/admin.tpl.php:178
-msgid "Confirmed"
-msgstr ""
-
-#: src/templates/admin.tpl.php:180
-msgid "Admin"
-msgstr ""
-
-#: src/templates/admin.tpl.php:213
-msgid "Available tags"
-msgstr ""
-
-#: src/templates/admin.tpl.php:217
-msgid "Two step action links in email"
-msgstr ""
-
-#: src/templates/admin.tpl.php:219
-msgid ""
-"Sometimes Mail servers can open links from email for inspection. That will "
-"trigger actions such as #link_confirm#, #link_cancel#. Mark this option if "
-"you want to have additional prompt for user action via links."
-msgstr ""
-
-#: src/templates/admin.tpl.php:229
-msgid "Pending notification emails"
-msgstr ""
-
-#: src/templates/admin.tpl.php:231
-msgid ""
-"Enter email adress that will receive new reservation notification. Separate "
-"multiple emails with , (comma)"
-msgstr ""
-
-#: src/templates/admin.tpl.php:239
-msgid "Admin notification subject"
-msgstr ""
-
-#: src/templates/admin.tpl.php:241 src/templates/admin.tpl.php:251
-msgid "You can use any tag that is available as in custom email notifications."
-msgstr ""
-
-#: src/templates/admin.tpl.php:249
-msgid "Visitor notification subject"
-msgstr ""
-
-#: src/templates/admin.tpl.php:259
-msgid "Send email to worker"
-msgstr ""
-
-#: src/templates/admin.tpl.php:261
-msgid ""
-"Mark this option if you want to employee receive admin email after filing "
-"the form."
-msgstr ""
-
-#: src/templates/admin.tpl.php:272
-msgid "Send email to user"
-msgstr ""
-
-#: src/templates/admin.tpl.php:274
-msgid ""
-"Mark this option if you want to user receive email after filing the form."
-msgstr ""
-
-#: src/templates/admin.tpl.php:284
-msgid "Send from"
-msgstr ""
-
-#: src/templates/admin.tpl.php:286
-msgid ""
-"Send from email adress (Example: Name &lt;name@domain.com&gt;). Leave blank "
-"to use default address."
+#: src/templates/admin.tpl.php:282
+msgid "Check this box if you would like to completely remove all of its data when the plugin is deleted."
 msgstr ""
 
 #: src/templates/admin.tpl.php:300
-msgid "Allow public access to FullCalendar shortcode"
+msgid "Export or import all Easy Appointments data including services, staff, appointments, customers and settings."
 msgstr ""
 
-#: src/templates/admin.tpl.php:302
-msgid ""
-"By default only logged in users can see data in FullCalendar. Mark this "
-"option if you want to allow public access for all."
-msgstr ""
-
-#: src/templates/admin.tpl.php:313
-msgid "Show event content in popup"
+#: src/templates/admin.tpl.php:300
+msgid "⚠ Import will overwrite ALL existing Easy Appointments data."
 msgstr ""
 
 #: src/templates/admin.tpl.php:315
-msgid "Popup dialog for event content."
+msgid "Note: Please use those options carefully because this will allow you to change which capability is needed to access EasyAppointments admin pages. Leave empty to use only default settings"
 msgstr ""
 
-#: src/templates/admin.tpl.php:326
-msgid "Event content in popup"
+#: src/templates/admin.tpl.php:369
+msgid "Current logged in user have:"
 msgstr ""
 
-#: src/templates/admin.tpl.php:328
-msgid "Event content when clicked on event"
+#: src/templates/admin.tpl.php:388
+msgid "You can use this tags inside email content. Just place for example #id# inside mail template and that value will be replaced with value."
 msgstr ""
 
-#: src/templates/admin.tpl.php:331 src/templates/admin.tpl.php:803
-msgid "Example"
+#: src/templates/admin.tpl.php:404
+msgid "Admin"
 msgstr ""
 
-#: src/templates/admin.tpl.php:331
-msgid "Full documentation"
+#: src/templates/admin.tpl.php:511
+msgid "Send email notification when an appointment is edited. you can also change this in appointments edit screen."
 msgstr ""
 
-#: src/templates/admin.tpl.php:333
-msgid "To get all available options use"
+#: src/templates/admin.tpl.php:523
+msgid "Sometimes Mail servers can open links from email for inspection. That will trigger actions such as #link_confirm#, #link_cancel#. Mark this option if you want to have additional prompt for user action via links."
 msgstr ""
 
-#: src/templates/admin.tpl.php:343 src/templates/admin.tpl.php:581
-#: src/templates/admin.tpl.php:625 src/templates/appointments.tpl.php:20
-#: src/templates/appointments.tpl.php:98 src/templates/appointments.tpl.php:167
-#: src/templates/mail.notification.tpl.php:22 src/templates/report.tpl.php:44
-msgid "Service"
+#: src/templates/admin.tpl.php:535
+msgid "Enter email adress that will receive new reservation notification. Separate multiple emails with , (comma)"
 msgstr ""
 
-#: src/templates/admin.tpl.php:353 src/templates/appointments.tpl.php:29
-#: src/templates/appointments.tpl.php:98 src/templates/appointments.tpl.php:177
-#: src/templates/mail.notification.tpl.php:26 src/templates/report.tpl.php:53
-msgid "Worker"
-msgstr ""
-
-#: src/templates/admin.tpl.php:359
-msgid "Done message"
-msgstr ""
-
-#: src/templates/admin.tpl.php:361
-msgid "Message that user receive after completing appointment"
-msgstr ""
-
-#: src/templates/admin.tpl.php:375
-msgid "Time format"
-msgstr ""
-
-#: src/templates/admin.tpl.php:377
-msgid ""
-"Notice : date/time formating for email notification are done by Settings > "
-"General."
-msgstr ""
-
-#: src/templates/admin.tpl.php:391
-msgid "Calendar localization"
-msgstr ""
-
-#: src/templates/admin.tpl.php:407
-msgid "Block time"
-msgstr ""
-
-#: src/templates/admin.tpl.php:409
-msgid ""
-"(in minutes). Prevent visitor from making an appointment if there are less "
-"minutes than this."
-msgstr ""
-
-#: src/templates/admin.tpl.php:432
-msgid "Masked Input"
-msgstr ""
-
-#: src/templates/admin.tpl.php:434
-msgid "Textarea"
-msgstr ""
-
-#: src/templates/admin.tpl.php:439
-msgid "Add"
-msgstr ""
-
-#: src/templates/admin.tpl.php:445
-msgid ""
-"* To use using the email notification for user there must be field named "
-"\"email\" or \"e-mail\" or field with type \"email\""
-msgstr ""
-
-#: src/templates/admin.tpl.php:454 src/templates/admin.tpl.php:479
-msgid "Site key"
-msgstr ""
-
-#: src/templates/admin.tpl.php:460 src/templates/admin.tpl.php:485
-msgid "* Google reCAPTCHA key can be generated via"
-msgstr ""
-
-#: src/templates/admin.tpl.php:464 src/templates/admin.tpl.php:489
-msgid "Secret key"
-msgstr ""
-
-#: src/templates/admin.tpl.php:470 src/templates/admin.tpl.php:495
-msgid ""
-"* If you want to use Captcha you must have auto reservation option turned "
-"off. If you don't want to use Captcha just leave fields empty."
-msgstr ""
-
-#: src/templates/admin.tpl.php:498
-msgid ""
-"* Only request with recaptcha score 0.5 or greater will be processed. Others "
-"will be rejected as bot calls."
-msgstr ""
-
-#: src/templates/admin.tpl.php:508
-msgid "Custom style"
-msgstr ""
-
-#: src/templates/admin.tpl.php:510
-msgid ""
-"Place here custom css styles. This will be included in both standard and "
-"bootstrap widget."
-msgstr ""
-
-#: src/templates/admin.tpl.php:515
-msgid "Turn off css files"
-msgstr ""
-
-#: src/templates/admin.tpl.php:524
-msgid "Form label style"
-msgstr ""
-
-#: src/templates/admin.tpl.php:526
-msgid ""
-"Show labels above or inline with fields option on [ea_bootstrap] shortcode."
-msgstr ""
-
-#: src/templates/admin.tpl.php:538
-msgid "Select label style"
-msgstr ""
-
-#: src/templates/admin.tpl.php:540
-msgid "Show From or From-To label on time slot in [ea_bootstrap] shortcode."
+#: src/templates/admin.tpl.php:544
+msgid "Admin Reply-To Address"
 msgstr ""
 
 #: src/templates/admin.tpl.php:552
-msgid "I agree field"
+msgid "Visitor Reply-To Address"
 msgstr ""
 
-#: src/templates/admin.tpl.php:554
-msgid ""
-"I agree option at the end of form. If this is marked user must confirm \"I "
-"agree\" checkbox."
+#: src/templates/admin.tpl.php:572
+msgid "Mark this option if you want to employee receive admin email after filing the form."
 msgstr ""
 
-#: src/templates/admin.tpl.php:565
-msgid "Go to page"
+#: src/templates/admin.tpl.php:611
+msgid "Mark this option if you want to user receive email after filing the form."
 msgstr ""
 
-#: src/templates/admin.tpl.php:567
-msgid ""
-"After a visitor creates an appointment on the front-end form. Leave blank to "
-"turn off redirect."
+#: src/templates/admin.tpl.php:644
+msgid "Send from email adress (Example: Name &lt;name@domain.com&gt;). Leave blank to use default address."
 msgstr ""
 
-#: src/templates/admin.tpl.php:575
-msgid "Advance Go to"
-msgstr ""
-
-#: src/templates/admin.tpl.php:577
-msgid "Add custom redirect based on service."
-msgstr ""
-
-#: src/templates/admin.tpl.php:590 src/templates/admin.tpl.php:634
-msgid "Redirect to"
-msgstr ""
-
-#: src/templates/admin.tpl.php:593 src/templates/admin.tpl.php:637
-msgid "Add advance redirect"
-msgstr ""
-
-#: src/templates/admin.tpl.php:601
-msgid "After cancel go to"
-msgstr ""
-
-#: src/templates/admin.tpl.php:619
-msgid "Advance Go to on Cancel"
-msgstr ""
-
-#: src/templates/admin.tpl.php:621
-msgid "Add custom cancels redirect based on service."
-msgstr ""
-
-#: src/templates/admin.tpl.php:651
-msgid "Turn on checkbox"
-msgstr ""
-
-#: src/templates/admin.tpl.php:653
-msgid "GDPR section checkbox."
-msgstr ""
-
+#: src/templates/admin.tpl.php:654
 #: src/templates/admin.tpl.php:664
-msgid "Label"
+msgid "You can use any tag that is available as in custom email notifications."
 msgstr ""
 
-#: src/templates/admin.tpl.php:666
-msgid "Label next to checkbox."
-msgstr ""
-
-#: src/templates/admin.tpl.php:673
-msgid "Page with GDPR content"
-msgstr ""
-
-#: src/templates/admin.tpl.php:675
-msgid "Link to page with GDPR content."
-msgstr ""
-
-#: src/templates/admin.tpl.php:682
-msgid "Error message"
-msgstr ""
-
-#: src/templates/admin.tpl.php:684
-msgid "Message if user don't mark the GDPR checkbox."
+#: src/templates/admin.tpl.php:676
+msgid "Allows setting different email subjects for Pending, Confirmed, Cancelled and Reservation statuses."
 msgstr ""
 
 #: src/templates/admin.tpl.php:691
-msgid "Clear customer data older then 6 months"
+msgid "Admin Subjects"
 msgstr ""
 
-#: src/templates/admin.tpl.php:693
-msgid ""
-"This action will remove custom form field values older then 6 months. After "
-"that appointments older then 6 months will not hold any customer related "
-"data."
+#: src/templates/admin.tpl.php:723
+msgid "Visitor Subjects"
 msgstr ""
 
-#: src/templates/admin.tpl.php:699
-msgid "Auto remove data via Cron that runs once a day"
+#: src/templates/admin.tpl.php:780
+#: src/templates/admin.tpl.php:793
+msgid "Allow only logged in users can see there booking in FullCalendar."
 msgstr ""
 
-#: src/templates/admin.tpl.php:699
-msgid "Remove data now"
+#: src/templates/admin.tpl.php:804
+msgid "Manage appointmennt in popup"
 msgstr ""
 
-#: src/templates/admin.tpl.php:709
-msgid "Currency"
+#: src/templates/admin.tpl.php:806
+msgid "Popup dialog for modify appointment details, It works only for logged in users."
 msgstr ""
 
-#: src/templates/admin.tpl.php:714
-msgid "Currency before price"
+#: src/templates/admin.tpl.php:832
+msgid "Select what should be shown inside calendar event block."
 msgstr ""
 
-#: src/templates/admin.tpl.php:722
-msgid "Hide price in service select"
+#: src/templates/admin.tpl.php:898
+msgid "Event content when clicked on event"
 msgstr ""
 
-#: src/templates/admin.tpl.php:731
-msgid "Hide price"
+#: src/templates/admin.tpl.php:901
+#: src/templates/admin.tpl.php:1506
+msgid "Example"
 msgstr ""
 
-#: src/templates/admin.tpl.php:733
-msgid "Hide price in whole customers form."
+#: src/templates/admin.tpl.php:903
+msgid "To get all available options use"
 msgstr ""
 
-#: src/templates/admin.tpl.php:801
-msgid "Mask options"
+#: src/templates/admin.tpl.php:944
+msgid "Done message"
 msgstr ""
 
-#: src/templates/appointments.tpl.php:51 src/templates/report.tpl.php:91
-msgid "From"
+#: src/templates/admin.tpl.php:946
+msgid "Message that user receive after completing appointment"
 msgstr ""
 
-#: src/templates/appointments.tpl.php:53 src/templates/report.tpl.php:95
-msgid "To"
+#: src/templates/admin.tpl.php:977
+msgid "Notice : date/time formating for email notification are done by Settings > General."
 msgstr ""
 
-#: src/templates/appointments.tpl.php:55
-msgid "Quick time filter"
+#: src/templates/admin.tpl.php:1007
+msgid "Block time"
 msgstr ""
 
-#: src/templates/appointments.tpl.php:57
-msgid "Select period"
+#: src/templates/admin.tpl.php:1009
+msgid "(in minutes). Prevent visitor from making an appointment if there are less minutes than this."
 msgstr ""
 
-#: src/templates/appointments.tpl.php:58
-msgid "Today"
+#: src/templates/admin.tpl.php:1016
+msgid "Cancel Booking Before hour"
 msgstr ""
 
-#: src/templates/appointments.tpl.php:59
-msgid "Tomorrow"
+#: src/templates/admin.tpl.php:1030
+msgid "Create all fields that you need. Custom order them by drag and drop."
 msgstr ""
 
-#: src/templates/appointments.tpl.php:60
-msgid "Next 7 days"
+#: src/templates/admin.tpl.php:1055
+msgid "* To use using the email notification for user there must be field named \"email\" or \"e-mail\" or field with type \"email\""
 msgstr ""
 
-#: src/templates/appointments.tpl.php:61
-msgid "Next 30 days"
+#: src/templates/admin.tpl.php:1064
+#: src/templates/admin.tpl.php:1089
+msgid "Site key"
 msgstr ""
 
-#: src/templates/appointments.tpl.php:62
-msgid "This week"
+#: src/templates/admin.tpl.php:1070
+#: src/templates/admin.tpl.php:1095
+msgid "* Google reCAPTCHA key can be generated via"
 msgstr ""
 
-#: src/templates/appointments.tpl.php:63
-msgid "This month"
+#: src/templates/admin.tpl.php:1074
+#: src/templates/admin.tpl.php:1099
+msgid "Secret key"
 msgstr ""
 
-#: src/templates/appointments.tpl.php:73
-msgid "Add New Appointment"
+#: src/templates/admin.tpl.php:1080
+#: src/templates/admin.tpl.php:1105
+msgid "* If you want to use Captcha you must have auto reservation option turned off. If you don't want to use Captcha just leave fields empty."
 msgstr ""
 
-#: src/templates/appointments.tpl.php:77 src/templates/report.tpl.php:62
-msgid "Refresh"
+#: src/templates/admin.tpl.php:1108
+msgid "* Only request with recaptcha score 0.5 or greater will be processed. Others will be rejected as bot calls."
 msgstr ""
 
-#: src/templates/appointments.tpl.php:80
-msgid "Sort By"
+#: src/templates/admin.tpl.php:1118
+msgid "Custom style"
 msgstr ""
 
-#: src/templates/appointments.tpl.php:84 src/templates/appointments.tpl.php:102
-#: src/templates/mail.notification.tpl.php:42
-msgid "Created"
+#: src/templates/admin.tpl.php:1120
+msgid "Place here custom css styles. This will be included in both standard and bootstrap widget."
 msgstr ""
 
-#: src/templates/appointments.tpl.php:86
-msgid "Order by"
+#: src/templates/admin.tpl.php:1125
+msgid "Turn off css files"
 msgstr ""
 
-#: src/templates/appointments.tpl.php:99
-msgid "Customer"
+#: src/templates/admin.tpl.php:1134
+msgid "Form label style"
 msgstr ""
 
-#: src/templates/appointments.tpl.php:103
-msgid "Action"
+#: src/templates/admin.tpl.php:1136
+msgid "Show labels above or inline with fields option on [ea_bootstrap] shortcode."
 msgstr ""
 
-#: src/templates/appointments.tpl.php:216
-#: src/templates/mail.notification.tpl.php:30
-msgid "Date"
+#: src/templates/admin.tpl.php:1148
+msgid "Select label style"
 msgstr ""
 
-#: src/templates/appointments.tpl.php:218
-msgid "Time"
+#: src/templates/admin.tpl.php:1150
+msgid "Show From or From-To label on time slot in [ea_bootstrap] shortcode."
 msgstr ""
 
-#: src/templates/appointments.tpl.php:239
-msgid "Send email notification :"
+#: src/templates/admin.tpl.php:1162
+msgid "I agree field"
 msgstr ""
 
-#: src/templates/mail.cancel.tpl.php:2
-msgid "Do you want to Cancel appointment?"
+#: src/templates/admin.tpl.php:1164
+msgid "I agree option at the end of form. If this is marked user must confirm \"I agree\" checkbox."
 msgstr ""
 
-#: src/templates/mail.cancel.tpl.php:5
-msgid "Yes, I want to Cancel appointment."
+#: src/templates/admin.tpl.php:1174
+msgid "Note: you can use dynamic form values for redirect params. Redirect example: https://example.com/customer_name={{name}}. This will put value from custom form field with slug `name` to that redirect value. Please check custom form fields for slug names of the fields and just put them in {{}} where you need that param."
 msgstr ""
 
-#: src/templates/mail.confirm.tpl.php:2
-msgid "Do you want to Confirm appointment?"
+#: src/templates/admin.tpl.php:1180
+msgid "After a visitor creates an appointment on the front-end form. Leave blank to turn off redirect."
 msgstr ""
 
-#: src/templates/mail.confirm.tpl.php:5
-msgid "Yes, I want to Confirm appointment."
+#: src/templates/admin.tpl.php:1188
+msgid "Advance Go to"
 msgstr ""
 
-#: src/templates/mail.notification.tpl.php:34
-msgid "Start"
+#: src/templates/admin.tpl.php:1190
+msgid "Add custom redirect based on service."
 msgstr ""
 
-#: src/templates/mail.notification.tpl.php:38
-msgid "End"
+#: src/templates/admin.tpl.php:1203
+#: src/templates/admin.tpl.php:1246
+msgid "Redirect to"
 msgstr ""
 
-#: src/templates/report.tpl.php:7
-msgid "Time table"
+#: src/templates/admin.tpl.php:1206
+#: src/templates/admin.tpl.php:1249
+msgid "Add advance redirect"
 msgstr ""
 
-#: src/templates/report.tpl.php:8
-msgid "Have Calendar overview of all bookings and free slots. "
+#: src/templates/admin.tpl.php:1231
+msgid "Advance Go to on Cancel"
 msgstr ""
 
-#: src/templates/report.tpl.php:12
-msgid "Money"
+#: src/templates/admin.tpl.php:1233
+msgid "Add custom cancels redirect based on service."
 msgstr ""
 
-#: src/templates/report.tpl.php:17
-msgid "Export"
+#: src/templates/admin.tpl.php:1258
+msgid "Display Thank You Note & Status messages"
 msgstr ""
 
-#: src/templates/report.tpl.php:18
-msgid "Export data in Excel CSV format for selected time period."
+#: src/templates/admin.tpl.php:1293
+msgid "Action Buttons"
 msgstr ""
 
-#: src/templates/report.tpl.php:22
-msgid "Back to Reports"
-msgstr ""
-
-#: src/templates/report.tpl.php:76
-msgid "Fields"
-msgstr ""
-
-#: src/templates/report.tpl.php:78
-msgid "Click to customize columns for export"
-msgstr ""
-
-#: src/templates/report.tpl.php:81
-msgid "Place fields separate by , for example: id,name,email"
-msgstr ""
-
-#: src/templates/report.tpl.php:83
-msgid "Save settings"
-msgstr ""
-
-#: src/templates/report.tpl.php:98
-msgid "Export data to CSV, can be imported to MS Excel, OpenOffice Calc... "
-msgstr ""
-
-#: src/templates/report.tpl.php:99
-msgid "Export data"
-msgstr ""
-
-#: src/templates/admin.tpl.php:751
-msgid "Allows the user to return and book another appointment"
-msgstr ""
-
-#: src/templates/admin.tpl.php:751
-msgid "Book New Appointment"
-msgstr ""
-
-#: src/templates/admin.tpl.php:752
-msgid "Add to Google Calendar"
-msgstr ""
-
-#: src/templates/admin.tpl.php:752
-msgid "Its add the appointment directly to their Google Calendar for easy reminders"
-msgstr ""
-
-#: src/templates/admin.tpl.php:750
-msgid "Display Thank You Note"
-msgstr ""
-
-#: src/templates/admin.tpl.php:750
+#: src/templates/admin.tpl.php:1294
 msgid "This screen is displayed immediately after a user successfully books an appointment using the booking form, Its featured Appointment summary and Action buttons"
 msgstr ""
 
-#: src/admin.php:497 src/admin.php:498
-msgid "Customers"
-msgstr ""
-
-#: src/templates/customers.tpl.php:128
-msgid "Customer List"
-msgstr ""
-
-#: src/templates/customers.tpl.php:312
-msgid "No results"
-msgstr ""
-
-#: src/templates/customers.tpl.php:134
-msgid "Search"
-msgstr ""
-
-#: src/admin.php:488 src/admin.php:489
-msgid "Publish"
-msgstr ""
-
-#: src/templates/customers.tpl.php:146
-msgid "Add New Customer"
-msgstr ""
-
-#: src/templates/booking.overview.tpl.php:116
+#: src/templates/admin.tpl.php:1296
+#: src/templates/booking.overview.tpl.php:123
 msgid "Book New Appointment"
 msgstr ""
 
-#: src/templates/booking.overview.tpl.php:100
+#: src/templates/admin.tpl.php:1296
+msgid "Allows the user to return and book another appointment"
+msgstr ""
+
+#: src/templates/admin.tpl.php:1297
+#: src/templates/booking.overview.tpl.php:130
+msgid "Add to Google Calendar"
+msgstr ""
+
+#: src/templates/admin.tpl.php:1297
+msgid "Its add the appointment directly to their Google Calendar for easy reminders"
+msgstr ""
+
+#: src/templates/admin.tpl.php:1309
+msgid "Turn on checkbox"
+msgstr ""
+
+#: src/templates/admin.tpl.php:1311
+msgid "GDPR section checkbox."
+msgstr ""
+
+#: src/templates/admin.tpl.php:1324
+msgid "Label next to checkbox."
+msgstr ""
+
+#: src/templates/admin.tpl.php:1331
+msgid "Page with GDPR content"
+msgstr ""
+
+#: src/templates/admin.tpl.php:1333
+msgid "Link to page with GDPR content."
+msgstr ""
+
+#: src/templates/admin.tpl.php:1340
+msgid "Error message"
+msgstr ""
+
+#: src/templates/admin.tpl.php:1342
+msgid "Message if user don't mark the GDPR checkbox."
+msgstr ""
+
+#: src/templates/admin.tpl.php:1349
+msgid "Clear customer data older then 6 months"
+msgstr ""
+
+#: src/templates/admin.tpl.php:1351
+msgid "This action will remove custom form field values older then 6 months. After that appointments older then 6 months will not hold any customer related data."
+msgstr ""
+
+#: src/templates/admin.tpl.php:1357
+msgid "Auto remove data via Cron that runs once a day"
+msgstr ""
+
+#: src/templates/admin.tpl.php:1357
+msgid "Remove data now"
+msgstr ""
+
+#: src/templates/admin.tpl.php:1399
+msgid "Hide price in whole customers form."
+msgstr ""
+
+#: src/templates/admin.tpl.php:1504
+msgid "Mask options"
+msgstr ""
+
+#: src/templates/admin.tpl.php:1571
+msgid "Endpoint URL"
+msgstr ""
+
+#: src/templates/admin.tpl.php:1585
+msgid "Webhook Events"
+msgstr ""
+
+#: src/templates/admin.tpl.php:1602
+msgid "Appointment created"
+msgstr ""
+
+#: src/templates/admin.tpl.php:1611
+msgid "Appointment updated"
+msgstr ""
+
+#: src/templates/admin.tpl.php:1620
+msgid "Appointment status changed"
+msgstr ""
+
+#: src/templates/admin.tpl.php:1629
+msgid "Appointment confirmed"
+msgstr ""
+
+#: src/templates/admin.tpl.php:1638
+msgid "Appointment pending"
+msgstr ""
+
+#: src/templates/admin.tpl.php:1647
+msgid "Appointment reserved"
+msgstr ""
+
+#: src/templates/admin.tpl.php:1656
+msgid "Appointment cancelled"
+msgstr ""
+
+#: src/templates/appointments.tpl.php:98
+msgid "Cancel All Selected"
+msgstr ""
+
+#: src/templates/appointments.tpl.php:117
+msgid "asc"
+msgstr ""
+
+#: src/templates/appointments.tpl.php:118
+msgid "desc"
+msgstr ""
+
+#: src/templates/appointments.tpl.php:276
+msgid "Send email notification :"
+msgstr ""
+
+#: src/templates/appointments.tpl.php:396
+msgid "Appointments canceled successfully."
+msgstr ""
+
+#: src/templates/appointments.tpl.php:401
+#: src/templates/appointments.tpl.php:434
+msgid "An error occurred."
+msgstr ""
+
+#: src/templates/appointments.tpl.php:417
+msgid "Are you sure you want to delete selected appointments?"
+msgstr ""
+
+#: src/templates/booking.overview.tpl.php:107
 msgid "Thank You for Booking!"
 msgstr ""
 
-#: src/templates/booking.overview.tpl.php:123
-msgid "Add to Google Calendar"
+#: src/templates/customers.tpl.php:132
+msgid "Customer List"
+msgstr ""
+
+#: src/templates/customers.tpl.php:150
+msgid "Add New Customer"
+msgstr ""
+
+#: src/templates/customers.tpl.php:161
+msgid "ID"
+msgstr ""
+
+#: src/templates/customers.tpl.php:170
+msgid "Loading..."
+msgstr ""
+
+#: src/templates/customers.tpl.php:225
+msgid "Name:"
+msgstr ""
+
+#: src/templates/customers.tpl.php:231
+msgid "Email:"
+msgstr ""
+
+#: src/templates/customers.tpl.php:237
+msgid "Mobile:"
+msgstr ""
+
+#: src/templates/customers.tpl.php:243
+msgid "Address:"
+msgstr ""
+
+#: src/templates/help-and-support.tpl.php:166
+#: src/templates/help-and-support.tpl.php:238
+msgid "How to Use"
+msgstr ""
+
+#: src/templates/help-and-support.tpl.php:170
+#: src/templates/help-and-support.tpl.php:325
+msgid "Shortcode"
+msgstr ""
+
+#: src/templates/help-and-support.tpl.php:177
+#: src/templates/help-and-support.tpl.php:333
+msgid "Hooks (for Developers)"
+msgstr ""
+
+#: src/templates/help-and-support.tpl.php:183
+msgid "We are dedicated to provide Technical support & Help to our users. Use the below form for sending your questions."
+msgstr ""
+
+#: src/templates/help-and-support.tpl.php:184
+msgid "You can also contact us from "
+msgstr ""
+
+#: src/templates/help-and-support.tpl.php:194
+msgid "Enter your Email"
+msgstr ""
+
+#: src/templates/help-and-support.tpl.php:199
+msgid "Query"
+msgstr ""
+
+#: src/templates/help-and-support.tpl.php:204
+msgid "Write your query"
+msgstr ""
+
+#: src/templates/help-and-support.tpl.php:213
+msgid "Type"
+msgstr ""
+
+#: src/templates/help-and-support.tpl.php:217
+msgid "Paid"
+msgstr ""
+
+#: src/templates/help-and-support.tpl.php:217
+msgid "(Response within 24 hrs)"
+msgstr ""
+
+#: src/templates/help-and-support.tpl.php:220
+msgid "Free"
+msgstr ""
+
+#: src/templates/help-and-support.tpl.php:220
+msgid "( Avg Response within 48-72 hrs)"
+msgstr ""
+
+#: src/templates/help-and-support.tpl.php:232
+msgid "Message sent successfully, Please wait we will get back to you shortly"
+msgstr ""
+
+#: src/templates/help-and-support.tpl.php:233
+msgid "Message not sent. Please try after some time"
+msgstr ""
+
+#: src/templates/help-and-support.tpl.php:239
+msgid "You can check how to use `Easy Table of Contents`, follow the basic details below."
+msgstr ""
+
+#: src/templates/help-and-support.tpl.php:240
+msgid "1. AUTOMATICALLY"
+msgstr ""
+
+#: src/templates/help-and-support.tpl.php:242
+msgid "Go to the tab Settings &gt; General section, check Auto Insert"
+msgstr ""
+
+#: src/templates/help-and-support.tpl.php:244
+msgid "Select the post types which will have the table of contents automatically inserted."
+msgstr ""
+
+#: src/templates/help-and-support.tpl.php:245
+msgid "NOTE: The table of contents will only be automatically inserted on post types for which it has been enabled."
+msgstr ""
+
+#: src/templates/help-and-support.tpl.php:246
+msgid "After Auto Insert, the Position option for choosing where you want to display the `Easy Table of Contents`."
+msgstr ""
+
+#: src/templates/help-and-support.tpl.php:248
+msgid "2. MANUALLY"
+msgstr ""
+
+#: src/templates/help-and-support.tpl.php:249
+msgid "There are two ways for manual adding & display `Easy Table of Contents`:"
+msgstr ""
+
+#: src/templates/help-and-support.tpl.php:252
+msgid "Using shortcode, you can copy shortcode and paste the shortcode on editor of any post type."
+msgstr ""
+
+#: src/templates/help-and-support.tpl.php:254
+msgid "Using Insert table of contents option on editor of any post type."
+msgstr ""
+
+#: src/templates/help-and-support.tpl.php:257
+msgid "You have to choose post types on tab General &gt; Enable Support section then `Easy Table of Contents` editor options would be shown to choose settings for particular post type."
+msgstr ""
+
+#: src/templates/help-and-support.tpl.php:259
+msgid "3. DESIGN CUSTOMIZATION"
+msgstr ""
+
+#: src/templates/help-and-support.tpl.php:262
+msgid "Go to tab Settings &gt; Appearance for design customization."
+msgstr ""
+
+#: src/templates/help-and-support.tpl.php:264
+msgid "You can change width of `Easy Table of Contents` from select Fixed or Relative sizes or you select custom width then it will be showing custom width option for enter manually width."
+msgstr ""
+
+#: src/templates/help-and-support.tpl.php:266
+msgid "You can also choose Alignment of `Easy Table of Contents`."
+msgstr ""
+
+#: src/templates/help-and-support.tpl.php:268
+msgid "You can also set Font Option of `Easy Table of Contents` according to your needs."
+msgstr ""
+
+#: src/templates/help-and-support.tpl.php:270
+msgid "You can also choose Theme color of `Easy Table of Contents` on Theme Options section according to your choice."
+msgstr ""
+
+#: src/templates/help-and-support.tpl.php:272
+msgid "You can also choose Custom Theme colors of `Easy Table of Contents`. according to your requirements"
+msgstr ""
+
+#: src/templates/help-and-support.tpl.php:275
+msgid "4. STICKY TABLE"
+msgstr ""
+
+#: src/templates/help-and-support.tpl.php:278
+msgid "Go to Sticky TOC tab to show Table of contents as sticky on your site."
+msgstr ""
+
+#: src/templates/help-and-support.tpl.php:280
+msgid "Select the post types on which sticky table of contents has been to be enabled."
+msgstr ""
+
+#: src/templates/help-and-support.tpl.php:282
+msgid "You can also decide whether to have sticky table of contents enabled on Homepage."
+msgstr ""
+
+#: src/templates/help-and-support.tpl.php:284
+msgid "You can also decide whether to have sticky table of contents enabled on Category|Tag."
+msgstr ""
+
+#: src/templates/help-and-support.tpl.php:286
+msgid "You can also decide whether to have sticky table of contents enabled on Product Category."
+msgstr ""
+
+#: src/templates/help-and-support.tpl.php:288
+msgid "You can also decide whether to have sticky table of contents enabled on Custom Taxonomy."
+msgstr ""
+
+#: src/templates/help-and-support.tpl.php:290
+msgid "You can also decide on which device you want to show sticky table of contents Mobile or Laptop."
+msgstr ""
+
+#: src/templates/help-and-support.tpl.php:292
+msgid "You can also decide the position of sticky table of contents on left or right."
+msgstr ""
+
+#: src/templates/help-and-support.tpl.php:294
+msgid "You can also choose Alignment of Sticky `Easy Table of Contents`."
+msgstr ""
+
+#: src/templates/help-and-support.tpl.php:296
+msgid "You can also decide whether the sticky toc should be opened by default on load."
+msgstr ""
+
+#: src/templates/help-and-support.tpl.php:298
+msgid "You can change width of Sticky `Easy Table of Contents` from select Fixed or Relative sizes or you select custom width then it will be showing custom width option for enter manually width."
+msgstr ""
+
+#: src/templates/help-and-support.tpl.php:300
+msgid "You can change height of Sticky `Easy Table of Contents` from select Fixed or Relative sizes or you select custom height then it will be showing custom height option for enter manually height."
+msgstr ""
+
+#: src/templates/help-and-support.tpl.php:302
+msgid "You can change Button Text of Sticky `Easy Table of Contents`."
+msgstr ""
+
+#: src/templates/help-and-support.tpl.php:304
+msgid "You can also choose Click TOC Close on Mobile of Sticky `Easy Table of Contents`."
+msgstr ""
+
+#: src/templates/help-and-support.tpl.php:306
+msgid "You can also choose Click TOC Close on desktop of Sticky `Easy Table of Contents`."
+msgstr ""
+
+#: src/templates/help-and-support.tpl.php:308
+msgid "You can also change title of Sticky `Easy Table of Contents`. (PRO)"
+msgstr ""
+
+#: src/templates/help-and-support.tpl.php:310
+msgid "You can also highlight headings while scrolling of Sticky `Easy Table of Contents`. (PRO)"
+msgstr ""
+
+#: src/templates/help-and-support.tpl.php:312
+msgid "You can also change background of highlight headings of Sticky `Easy Table of Contents`. (PRO)"
+msgstr ""
+
+#: src/templates/help-and-support.tpl.php:314
+msgid "You can also change title of highlight headings of Sticky `Easy Table of Contents`. (PRO)"
+msgstr ""
+
+#: src/templates/help-and-support.tpl.php:316
+msgid "You can also choose Theme color of Sticky `Easy Table of Contents` on Theme Options section according to your choice. (PRO)"
+msgstr ""
+
+#: src/templates/help-and-support.tpl.php:318
+msgid "You can also choose Custom Theme colors of Sticky `Easy Table of Contents` according to your requirements. (PRO)"
+msgstr ""
+
+#: src/templates/help-and-support.tpl.php:321
+msgid "5. MORE DOCUMENTATION:"
+msgstr ""
+
+#: src/templates/help-and-support.tpl.php:322
+msgid "You can visit this link "
+msgstr ""
+
+#: src/templates/help-and-support.tpl.php:322
+msgid "More Documentation"
+msgstr ""
+
+#: src/templates/help-and-support.tpl.php:322
+msgid " for more documentation of `Easy Table of Contents`"
+msgstr ""
+
+#: src/templates/help-and-support.tpl.php:326
+msgid "Use the following shortcode within your content to have the table of contents display where you wish to:"
+msgstr ""
+
+#: src/templates/help-and-support.tpl.php:334
+msgid "This plugin has been designed for easiest way & best features for the users & also as well as for the developers, any developer follow the below advanced instructions:"
+msgstr ""
+
+#: src/templates/help-and-support.tpl.php:336
+msgid "Hooks"
+msgstr ""
+
+#: src/templates/help-and-support.tpl.php:337
+msgid "Developer can use these below hooks for customization of this plugin:"
+msgstr ""
+
+#: src/templates/help-and-support.tpl.php:339
+msgid "Actions:"
+msgstr ""
+
+#: src/templates/help-and-support.tpl.php:341
+msgid "ez_toc_before"
+msgstr ""
+
+#: src/templates/help-and-support.tpl.php:343
+msgid "ez_toc_after"
+msgstr ""
+
+#: src/templates/help-and-support.tpl.php:346
+msgid "ez_toc_sticky_toggle_before"
+msgstr ""
+
+#: src/templates/help-and-support.tpl.php:349
+msgid "ez_toc_sticky_toggle_after"
+msgstr ""
+
+#: src/templates/help-and-support.tpl.php:352
+msgid "ez_toc_before_widget_container"
+msgstr ""
+
+#: src/templates/help-and-support.tpl.php:354
+msgid "ez_toc_before_widget"
+msgstr ""
+
+#: src/templates/help-and-support.tpl.php:357
+msgid "ez_toc_after_widget_container"
+msgstr ""
+
+#: src/templates/help-and-support.tpl.php:359
+msgid "ez_toc_after_widget"
+msgstr ""
+
+#: src/templates/help-and-support.tpl.php:362
+msgid "ez_toc_title"
+msgstr ""
+
+#: src/templates/help-and-support.tpl.php:365
+msgid "ez_toc_sticky_title"
+msgstr ""
+
+#: src/templates/help-and-support.tpl.php:368
+msgid "ez_toc_container_class"
+msgstr ""
+
+#: src/templates/help-and-support.tpl.php:371
+msgid "ez_toc_widget_sticky_container_class"
+msgstr ""
+
+#: src/templates/help-and-support.tpl.php:374
+msgid "ez_toc_url_anchor_target"
+msgstr ""
+
+#: src/templates/help-and-support.tpl.php:377
+msgid "ez_toc_sticky_enable_support"
+msgstr ""
+
+#: src/templates/help-and-support.tpl.php:380
+msgid "ez_toc_sticky_post_types"
+msgstr ""
+
+#: src/templates/help-and-support.tpl.php:383
+msgid "ez_toc_modify_icon"
+msgstr ""
+
+#: src/templates/help-and-support.tpl.php:386
+msgid "ez_toc_label_below_html"
+msgstr ""
+
+#: src/templates/help-and-support.tpl.php:389
+msgid "ezappoint_wordpress_final_output"
+msgstr ""
+
+#: src/templates/help-and-support.tpl.php:394
+msgid "Example: adding a span tag before the `Easy Table of Contents`"
+msgstr ""
+
+#: src/templates/help-and-support.tpl.php:396
+msgid "Get this following code and paste into your theme\\'s function.php file:"
+msgstr ""
+
+#: src/templates/help-and-support.tpl.php:410
+msgid "We strive to provide the best Appointment in the world."
+msgstr ""
+
+#: src/templates/help-and-support.tpl.php:431
+msgid "Delivering a good user experience means a lot to us, so we try our best to reply each and every question."
+msgstr ""
+
+#: src/templates/help-and-support.tpl.php:432
+msgid "Support the innovation & development by upgrading to PRO "
+msgstr ""
+
+#: src/templates/help-and-support.tpl.php:432
+msgid "I Want To Upgrade!"
+msgstr ""
+
+#: src/templates/mail.cancel.tpl.php:6
+msgid "Do you want to Cancel appointment?"
+msgstr ""
+
+#: src/templates/mail.cancel.tpl.php:9
+msgid "Yes, I want to Cancel appointment."
+msgstr ""
+
+#: src/templates/mail.confirm.tpl.php:6
+msgid "Do you want to Confirm appointment?"
+msgstr ""
+
+#: src/templates/mail.confirm.tpl.php:9
+msgid "Yes, I want to Confirm appointment."
+msgstr ""
+
+#: src/templates/mail.notification.tpl.php:54
+msgid "IP"
+msgstr ""
+
+#: src/templates/publish.tpl.php:41
+msgid "Shortcode Uses Guide"
+msgstr ""
+
+#: src/templates/publish.tpl.php:45
+msgid "Learn More"
+msgstr ""
+
+#: src/templates/publish.tpl.php:69
+#: src/templates/publish.tpl.php:115
+msgid "Disable scroll {true, false}, default: \"false\""
+msgstr ""
+
+#: src/templates/publish.tpl.php:72
+msgid "default_date"
+msgstr ""
+
+#: src/templates/publish.tpl.php:73
+msgid "Set a default selected date (YYYY-MM-DD). Example: 2017-12-31"
+msgstr ""
+
+#: src/templates/publish.tpl.php:76
+msgid "min_date"
+msgstr ""
+
+#: src/templates/publish.tpl.php:77
+msgid "Minimum selectable date. Example: 2018-12-31"
+msgstr ""
+
+#: src/templates/publish.tpl.php:80
+msgid "max_date"
+msgstr ""
+
+#: src/templates/publish.tpl.php:81
+msgid "Maximum selectable date. Example: 2018-12-31"
+msgstr ""
+
+#: src/templates/publish.tpl.php:84
+msgid "show_remaining_slots"
+msgstr ""
+
+#: src/templates/publish.tpl.php:85
+msgid "Display remaining slots {\"0\", \"1\"}, default: \"0\""
+msgstr ""
+
+#: src/templates/publish.tpl.php:89
+msgid "Show week numbers in the calendar {\"0\", \"1\"}, default: \"0\""
+msgstr ""
+
+#: src/templates/publish.tpl.php:94
+#: src/templates/publish.tpl.php:144
+msgid "Example:"
+msgstr ""
+
+#: src/templates/publish.tpl.php:100
+msgid "Additional Options:"
+msgstr ""
+
+#: src/templates/publish.tpl.php:110
+msgid "width"
+msgstr ""
+
+#: src/templates/publish.tpl.php:111
+msgid "Set width (e.g., \"800px\"), default: \"400px\""
+msgstr ""
+
+#: src/templates/publish.tpl.php:114
+msgid "scroll_off"
+msgstr ""
+
+#: src/templates/publish.tpl.php:118
+msgid "layout_cols"
+msgstr ""
+
+#: src/templates/publish.tpl.php:119
+msgid "Column layout {1,2}, default: 1"
+msgstr ""
+
+#: src/templates/publish.tpl.php:122
+msgid "location"
+msgstr ""
+
+#: src/templates/publish.tpl.php:123
+msgid "Predefined location (ID number), default: null"
+msgstr ""
+
+#: src/templates/publish.tpl.php:126
+msgid "service"
+msgstr ""
+
+#: src/templates/publish.tpl.php:127
+msgid "Predefined service (ID number), default: null"
+msgstr ""
+
+#: src/templates/publish.tpl.php:130
+msgid "worker"
+msgstr ""
+
+#: src/templates/publish.tpl.php:131
+msgid "Predefined worker (ID number), default: null"
+msgstr ""
+
+#: src/templates/publish.tpl.php:134
+msgid "rtl"
+msgstr ""
+
+#: src/templates/publish.tpl.php:135
+msgid "Right-to-left label positioning {0,1}, default: 0"
+msgstr ""
+
+#: src/templates/publish.tpl.php:138
+msgid "block_days"
+msgstr ""
+
+#: src/templates/publish.tpl.php:139
+msgid "Block specific dates (YYYY-MM-DD format)"
+msgstr ""
+
+#: src/templates/publish.tpl.php:148
+msgid "This feature is under development, and documentation may change."
+msgstr ""
+
+#: src/templates/publish.tpl.php:151
+msgid "Gutenberg Block Uses Guide"
+msgstr ""
+
+#: src/templates/publish.tpl.php:153
+msgid "Embed a full appointment booking form directly into your page or post using this block. It allows visitors to book services based on selected location, service, and worker.."
+msgstr ""
+
+#: src/templates/publish.tpl.php:180
+msgid "We’re actively improving Easy Appointments. If something isn’t working or a feature is missing, let us know — your feedback helps us fix it faster!"
+msgstr ""
+
+#: src/templates/report.tpl.php:11
+msgid "Time table"
+msgstr ""
+
+#: src/templates/report.tpl.php:12
+msgid "Have Calendar overview of all bookings and free slots. "
+msgstr ""
+
+#: src/templates/report.tpl.php:16
+msgid "Money"
+msgstr ""
+
+#: src/templates/report.tpl.php:21
+msgid "Export"
+msgstr ""
+
+#: src/templates/report.tpl.php:22
+msgid "Export data in Excel CSV format for selected time period."
+msgstr ""
+
+#: src/templates/report.tpl.php:26
+msgid "Back to Reports"
+msgstr ""
+
+#: src/templates/report.tpl.php:80
+msgid "Fields"
+msgstr ""
+
+#: src/templates/report.tpl.php:82
+msgid "Click to customize columns for export"
+msgstr ""
+
+#: src/templates/report.tpl.php:87
+msgid "Place fields separate by , for example: id,name,email"
+msgstr ""
+
+#: src/templates/report.tpl.php:89
+msgid "Save settings"
+msgstr ""
+
+#: src/templates/report.tpl.php:105
+msgid "Export data to CSV, can be imported to MS Excel, OpenOffice Calc... "
+msgstr ""
+
+#: src/templates/report.tpl.php:106
+msgid "Export data"
 msgstr ""

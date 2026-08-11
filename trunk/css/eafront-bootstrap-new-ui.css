@@ -1,0 +1,1232 @@
+/**
+ * Easy Appointments – New UI Frontend Booking Styles
+ * Clean, High-Performance Design System matching https://easyappoint.testing1234.xyz/
+ *
+ * @package EasyAppointments
+ */
+
+@import url('https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400;1,8..60,600&display=swap');
+
+/* --------------------------------------------------------------------------
+   Tokens & Base Scope
+   -------------------------------------------------------------------------- */
+.ea-new-ui,
+.ea-bootstrap.ea-new-ui {
+    --ea-accent: #2563eb;
+    --ea-accent-hover: #1d4ed8;
+    --ea-accent-ink: #1d4ed8;
+    --ea-accent-deep: #1e40af;
+    --ea-accent-tint: #eff6ff;
+    --ea-text: #201e1d;
+    --ea-paper: #ffffff;
+    --ea-surface: #f8f8f7;
+    --ea-serif: "Source Serif 4", Georgia, "Times New Roman", serif;
+    --ea-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+
+    box-sizing: border-box;
+    font-family: var(--ea-serif);
+}
+
+/* --------------------------------------------------------------------------
+   Root Card Wrapper (Supports Shortcode width & layout_cols="2")
+   -------------------------------------------------------------------------- */
+.ea-bootstrap.ea-new-ui,
+.ea-bootstrap-wrapper.ea-new-ui {
+    background: #ffffff;
+    border-radius: 14px;
+    box-shadow: 0 18px 44px rgba(32, 30, 29, 0.10), 0 2px 6px rgba(32, 30, 29, 0.05);
+    padding: 32px 36px 28px 36px;
+    width: 100%;
+    margin: 0 auto;
+    box-sizing: border-box;
+    white-space: normal;
+    border: 1px solid rgba(32, 30, 29, 0.10);
+}
+
+/* Default max-widths if no custom width inline style is specified */
+.ea-bootstrap.ea-new-ui:not([style*="max-width"]),
+.ea-bootstrap-wrapper.ea-new-ui:not([style*="max-width"]) {
+    max-width: 800px;
+}
+
+.ea-bootstrap.ea-new-ui.ea-layout-cols-2:not([style*="max-width"]),
+.ea-bootstrap-wrapper.ea-new-ui.ea-layout-cols-2:not([style*="max-width"]) {
+    max-width: 960px;
+}
+
+/* RTL Support */
+.ea-bootstrap.ea-new-ui.ea-rtl,
+.ea-bootstrap.ea-new-ui[dir="rtl"] {
+    direction: rtl;
+    text-align: right;
+}
+
+.ea-bootstrap.ea-new-ui.ea-rtl .ea-field-group select,
+.ea-bootstrap.ea-new-ui[dir="rtl"] .ea-field-group select {
+    background-position: left 14px center;
+    padding: 10px 14px 10px 36px;
+}
+
+/* Prevent double borders and double padding on nested inner template wrappers */
+.ea-new-ui .ea-bootstrap,
+.ea-bootstrap.ea-new-ui .ea-bootstrap.ea-new-ui,
+.ea-new-ui-container .ea-new-ui-container,
+.ea-bootstrap .ea-new-ui-container,
+.ea-new-ui .ea-new-ui-container {
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    padding: 0;
+    margin: 0 auto;
+    max-width: 100%;
+    border-radius: 0;
+}
+
+/* Hide legacy .block overlays, legacy action button group, extra final actions, and Repeat Appointment */
+.ea-new-ui .block,
+.ea-new-ui .ea-actions-group,
+.ea-bootstrap.ea-new-ui .ea-actions-group,
+.ea-new-ui .ea-new-ui-final-actions,
+.ea-new-ui #repeat_booking,
+.ea-new-ui label[for="repeat_booking"],
+.ea-new-ui #recurrence-summary,
+.ea-new-ui .form-group:has(#repeat_booking) {
+    display: none !important;
+}
+
+/* --------------------------------------------------------------------------
+   2-COLUMN SHORTCODE LAYOUT (layout_cols="2")
+   -------------------------------------------------------------------------- */
+.ea-new-ui.ea-layout-cols-2 form.form-horizontal,
+.ea-bootstrap.ea-new-ui.ea-layout-cols-2 form.form-horizontal,
+.ea-layout-cols-2 form.form-horizontal {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 32px;
+    align-items: flex-start;
+    width: 100%;
+}
+
+/* Left Column (Dropdown Filters, Calendar, Time Slots) */
+.ea-new-ui.ea-layout-cols-2 form.form-horizontal > div.col-md-6:first-child,
+.ea-bootstrap.ea-new-ui.ea-layout-cols-2 form.form-horizontal > div.col-md-6:first-child,
+.ea-layout-cols-2 form.form-horizontal > div.col-md-6:first-child {
+    flex: 1 1 calc(50% - 16px);
+    width: calc(50% - 16px);
+    min-width: 280px;
+    padding: 0;
+    margin: 0;
+    float: none;
+    display: block;
+    box-sizing: border-box;
+}
+
+/* Right Column (Customer Personal Info & Booking Overview) */
+.ea-new-ui.ea-layout-cols-2 .step.final,
+.ea-new-ui.ea-layout-cols-2 .step.final.col-md-6,
+.ea-bootstrap.ea-new-ui.ea-layout-cols-2 .step.final,
+.ea-bootstrap.ea-new-ui.ea-layout-cols-2 .step.final.col-md-6,
+.ea-layout-cols-2 .step.final {
+    flex: 1 1 calc(50% - 16px);
+    width: calc(50% - 16px);
+    min-width: 280px;
+    margin: 0;
+    padding: 0 0 0 28px;
+    border-top: none;
+    border-left: 1px solid rgba(32, 30, 29, 0.10);
+    float: none;
+    display: block;
+    box-sizing: border-box;
+}
+
+/* RTL Support for 2-Column Layout */
+.ea-new-ui.ea-layout-cols-2.ea-rtl .step.final,
+.ea-new-ui.ea-layout-cols-2.ea-rtl .step.final.col-md-6,
+.ea-bootstrap.ea-new-ui.ea-layout-cols-2.ea-rtl .step.final.col-md-6 {
+    border-left: none;
+    border-right: 1px solid rgba(32, 30, 29, 0.10);
+    padding: 0 28px 0 0;
+}
+
+/* Adjust Time Slots Grid inside 2-Column Mode to 3 Columns */
+.ea-new-ui.ea-layout-cols-2 .time.well,
+.ea-bootstrap.ea-new-ui.ea-layout-cols-2 .time.well,
+.ea-layout-cols-2 .time.well {
+    grid-template-columns: repeat(3, 1fr);
+}
+
+/* --------------------------------------------------------------------------
+   STEP BLUR & DISABLE FUNCTIONALITY (CALENDAR & PERSONAL INFO STEP-BY-STEP)
+   -------------------------------------------------------------------------- */
+.ea-new-ui .step.disabled {
+    opacity: 0.45;
+    pointer-events: none;
+    filter: grayscale(0.5);
+    user-select: none;
+    transition: opacity 0.25s ease, filter 0.25s ease;
+}
+
+.ea-new-ui .step:not(.disabled) {
+    opacity: 1;
+    pointer-events: auto;
+    filter: none;
+    transition: opacity 0.25s ease, filter 0.25s ease;
+}
+
+/* Disabled Field Groups (Sequential Dropdown Step Unlocking) */
+.ea-new-ui .ea-field-group.disabled {
+    opacity: 0.5;
+    pointer-events: none;
+    cursor: not-allowed;
+}
+
+.ea-new-ui .ea-field-group.disabled select,
+.ea-new-ui .ea-field-group.disabled .form-control {
+    background-color: #f3f4f6;
+    color: #9ca3af;
+    cursor: not-allowed;
+    border-color: #e5e7eb;
+}
+
+/* --------------------------------------------------------------------------
+   Page Heading ("Book an appointment")
+   -------------------------------------------------------------------------- */
+.ea-new-ui .ea-booking-title {
+    font-family: var(--ea-serif);
+    font-size: 1.55rem;
+    font-weight: 600;
+    color: #201e1d;
+    margin: 0 0 22px 0;
+    letter-spacing: -0.018em;
+    line-height: 1.25;
+    width: 100%;
+}
+
+/* --------------------------------------------------------------------------
+   Filters Grid (Location + Service side-by-side, Worker full row)
+   -------------------------------------------------------------------------- */
+.ea-new-ui .ea-filters-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 12px;
+    margin-bottom: 14px;
+}
+
+.ea-new-ui .ea-filters-grid-full {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.ea-new-ui .ea-new-ui-step-hidden {
+    position: absolute;
+    visibility: hidden;
+    width: 0;
+    height: 0;
+    overflow: hidden;
+    padding: 0;
+    margin: 0;
+    pointer-events: none;
+}
+
+.ea-new-ui .ea-field-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.ea-new-ui .ea-field-group label,
+.ea-new-ui .ea-label,
+.ea-new-ui .ea-field-label {
+    font-family: var(--ea-sans);
+    font-size: 13px;
+    font-weight: 500;
+    color: rgba(32, 30, 29, 0.62);
+    letter-spacing: 0.01em;
+    text-transform: none;
+    margin: 0;
+    display: block;
+    text-align: left;
+}
+
+.ea-new-ui .ea-field-group select,
+.ea-new-ui .ea-field-group .form-control {
+    width: 100%;
+    padding: 10px 36px 10px 14px;
+    border: 1px solid rgba(32, 30, 29, 0.14);
+    border-radius: 8px;
+    font-size: 14.5px;
+    font-family: var(--ea-sans);
+    font-weight: 400;
+    color: #201e1d;
+    background-color: #ffffff;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23201e1d' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    cursor: pointer;
+    transition: border-color 0.12s ease, box-shadow 0.12s ease;
+    height: auto;
+    box-shadow: none;
+}
+
+.ea-new-ui .ea-field-group select:focus {
+    outline: none;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+
+.ea-new-ui #ea-service-description {
+    font-size: 13.5px;
+    color: #334155;
+    background-color: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-left: 4px solid #2563eb;
+    border-radius: 8px;
+    padding: 10px 14px;
+    white-space: pre-line;
+    margin-top: 10px;
+    margin-bottom: 14px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.ea-new-ui #ea-service-description:empty {
+    display: none;
+}
+
+/* --------------------------------------------------------------------------
+   Calendar Section & Overrides
+   -------------------------------------------------------------------------- */
+.ea-new-ui .ea-calendar-section,
+.ea-new-ui .step.calendar {
+    margin-top: 14px;
+    margin-bottom: 0;
+}
+
+.ea-new-ui .ui-datepicker {
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+    display: block;
+}
+
+.ea-new-ui .ui-datepicker .ui-datepicker-header {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 6px 0 14px 0;
+    background: transparent;
+    border: none;
+    position: relative;
+}
+
+.ea-new-ui .ui-datepicker .ui-datepicker-title {
+    font-family: var(--ea-serif);
+    font-size: 14px;
+    font-weight: 500;
+    color: rgba(32, 30, 29, 0.62);
+    margin: 0;
+    text-align: left;
+}
+
+.ea-new-ui .ui-datepicker .ui-datepicker-prev,
+.ea-new-ui .ui-datepicker .ui-datepicker-next {
+    position: absolute;
+    top: 4px;
+    cursor: pointer;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    transition: background 0.12s;
+    margin: 0;
+    color: #201e1d;
+    border: none;
+    background: transparent;
+    text-decoration: none;
+}
+
+.ea-new-ui .ui-datepicker .ui-datepicker-prev {
+    right: 32px;
+    left: auto;
+}
+
+.ea-new-ui .ui-datepicker .ui-datepicker-next {
+    right: 0;
+}
+
+.ea-new-ui .ui-datepicker .ui-datepicker-prev span,
+.ea-new-ui .ui-datepicker .ui-datepicker-next span {
+    display: none;
+}
+
+.ea-new-ui .ui-datepicker .ui-datepicker-prev:before {
+    content: "‹";
+    font-size: 1.5rem;
+    line-height: 1;
+}
+
+.ea-new-ui .ui-datepicker .ui-datepicker-next:before {
+    content: "›";
+    font-size: 1.5rem;
+    line-height: 1;
+}
+
+.ea-new-ui .ui-datepicker .ui-datepicker-prev:hover,
+.ea-new-ui .ui-datepicker .ui-datepicker-next:hover {
+    background: rgba(32, 30, 29, 0.05);
+}
+
+.ea-new-ui .ui-datepicker table {
+    width: 100%;
+    border-collapse: collapse;
+    border: none;
+    margin: 0;
+}
+
+.ea-new-ui .ui-datepicker th {
+    font-family: var(--ea-serif);
+    font-size: 12px;
+    font-weight: 500;
+    color: rgba(32, 30, 29, 0.45);
+    text-align: center;
+    padding: 4px 0 10px 0;
+    border: none;
+    text-transform: uppercase;
+    background: transparent;
+}
+
+/* Clear legacy cell backgrounds */
+.ea-new-ui .date .free,
+.ea-new-ui .date .busy,
+.ea-new-ui .date .no-slots,
+.ea-new-ui .ui-datepicker table td,
+.ea-new-ui .ui-datepicker table td a,
+.ea-new-ui .ui-datepicker table td span,
+.ea-new-ui .ui-datepicker .ui-state-default,
+.ea-new-ui .ui-datepicker .ui-widget-content .ui-state-default {
+    background: transparent;
+    background-color: transparent;
+    border: none;
+    box-shadow: none;
+    outline: none;
+}
+
+.ea-new-ui .ui-datepicker td {
+    padding: 2px;
+    text-align: center;
+}
+
+.ea-new-ui .ui-datepicker td a,
+.ea-new-ui .ui-datepicker td span {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 34px;
+    margin: 0 auto;
+    border-radius: 8px;
+    font-family: var(--ea-serif);
+    font-size: 13px;
+    color: #201e1d;
+    text-decoration: none;
+    transition: background 0.12s ease, color 0.12s ease;
+    cursor: pointer;
+    padding: 10px;
+}
+
+.ea-new-ui .ui-datepicker td:hover a {
+    background: rgba(32, 30, 29, 0.05);
+    color: #201e1d;
+}
+
+.ea-new-ui .ui-datepicker td.ui-datepicker-current-day a,
+.ea-new-ui .ui-datepicker .ui-datepicker-current-day a {
+    background-color: #2563eb;
+    color: #ffffff;
+    font-weight: 600;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.26);
+    padding: 10px;
+}
+
+.ea-new-ui .ui-datepicker .ui-state-disabled span,
+.ea-new-ui .ui-datepicker .ui-state-disabled a {
+    color: rgba(32, 30, 29, 0.30);
+    font-weight: 400;
+    cursor: default;
+    padding: 10px;
+}
+
+/* --------------------------------------------------------------------------
+   TIME SLOTS GRID SECTION
+   -------------------------------------------------------------------------- */
+.ea-new-ui .ea-times-section {
+    margin-top: 22px;
+}
+
+.ea-new-ui .ea-times-header {
+    font-family: var(--ea-sans);
+    font-size: 13px;
+    font-weight: 500;
+    color: rgba(32, 30, 29, 0.62);
+    margin: 20px 0 12px 0;
+    letter-spacing: 0.01em;
+    text-align: left;
+}
+
+.ea-new-ui .time-row td {
+    padding: 14px 0 4px 0;
+}
+
+/* Fluid Responsive CSS Grid for Time Slots (auto-adapts cleanly to any container max-width like 400px) */
+.time.well,
+.time.well.col-50,
+.time.well-lg,
+.ea-bootstrap .time.well,
+.ea-new-ui .time.well {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(122px, 1fr));
+    gap: 8px;
+    width: 100%;
+    max-width: 100%;
+    margin: 16px 0;
+    padding: 0;
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    float: none;
+    clear: both;
+    flex-flow: unset;
+    box-sizing: border-box;
+}
+
+/* Base Layout for All Time Slot Cards */
+.time-value,
+.time-disabled,
+.ea-bootstrap .time-value,
+.ea-bootstrap .time-disabled,
+.ea-new-ui .time-value,
+.ea-new-ui .time-disabled,
+a.time-value,
+a.time-disabled {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    height: 44px;
+    min-height: 44px;
+    max-height: 44px;
+    padding: 0 6px;
+    margin: 0;
+    box-sizing: border-box;
+    white-space: nowrap;
+    word-break: keep-all;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: -0.25px;
+    line-height: 1;
+    font-family: var(--ea-sans);
+    flex: none;
+    float: none;
+    transition: background 0.12s ease, border-color 0.12s ease, color 0.12s ease, box-shadow 0.12s ease;
+}
+
+/* --------------------------------------------------------------------------
+   STRICT AVAILABLE TIME SLOTS DESIGN (White card, crisp border, no grey hover)
+   -------------------------------------------------------------------------- */
+/* Unhovered Available Slots (Clean White Card with Grey Border) */
+.ea-bootstrap .time-value:not(.time-disabled):not(.selected-time),
+.ea-new-ui .time-value:not(.time-disabled):not(.selected-time),
+.ea-bootstrap.ea-new-ui .time-value:not(.time-disabled):not(.selected-time),
+.time-row .time-value:not(.time-disabled):not(.selected-time),
+.time.well .time-value:not(.time-disabled):not(.selected-time),
+.time.well-lg .time-value:not(.time-disabled):not(.selected-time),
+a.time-value:not(.time-disabled):not(.selected-time) {
+    background: #ffffff;
+    background-color: #ffffff;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    color: #111827;
+    font-weight: 600;
+    text-decoration: none;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    outline: none;
+    opacity: 1;
+}
+
+/* Hovering OVER A SINGLE SPECIFIC AVAILABLE SLOT -> Soft Blue Fill & Accent Border */
+.ea-bootstrap .time-value:not(.time-disabled):not(.selected-time):hover,
+.ea-new-ui .time-value:not(.time-disabled):not(.selected-time):hover,
+.ea-bootstrap.ea-new-ui .time-value:not(.time-disabled):not(.selected-time):hover,
+.time-row .time-value:not(.time-disabled):not(.selected-time):hover,
+.time.well .time-value:not(.time-disabled):not(.selected-time):hover,
+.time.well-lg .time-value:not(.time-disabled):not(.selected-time):hover,
+a.time-value:not(.time-disabled):not(.selected-time):hover,
+a.time-value:not(.time-disabled):not(.selected-time):focus {
+    background: #eff6ff;
+    background-color: #eff6ff;
+    border-color: #2563eb;
+    color: #1d4ed8;
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.16);
+    text-decoration: none;
+    outline: none;
+}
+
+/* Force unhovered available slots to STAY white even if container/row/parent is hovered */
+.time-row:hover .time-value:not(:hover):not(.time-disabled):not(.selected-time),
+.time.well:hover .time-value:not(:hover):not(.time-disabled):not(.selected-time),
+.time.well-lg:hover .time-value:not(:hover):not(.time-disabled):not(.selected-time),
+.ea-bootstrap:hover .time-value:not(:hover):not(.time-disabled):not(.selected-time),
+.ea-new-ui:hover .time-value:not(:hover):not(.time-disabled):not(.selected-time) {
+    background: #ffffff;
+    background-color: #ffffff;
+    border: 1px solid #d1d5db;
+    border-color: #d1d5db;
+    color: #111827;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+/* STATE 2: Active Selected Slot */
+.ea-bootstrap.ea-bootstrap .time-value.selected-time,
+.ea-bootstrap.ea-bootstrap .selected-time,
+.ea-bootstrap .time-value.selected-time,
+.ea-new-ui .time-value.selected-time,
+.ea-bootstrap .selected-time,
+.ea-new-ui .selected-time,
+.time-value.selected-time,
+a.time-value.selected-time,
+.selected-time {
+    background-color: #2563eb;
+    background-image: none;
+    border: 1px solid #2563eb;
+    border-color: #2563eb;
+    color: #ffffff;
+    font-weight: 700;
+    box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35);
+    text-decoration: none;
+}
+
+/* STATE 3: Disabled / Booked Slot */
+.ea-bootstrap.ea-bootstrap .time-disabled,
+.ea-bootstrap .time-disabled,
+.ea-new-ui .time-disabled,
+.time-disabled,
+a.time-disabled {
+    background-color: #f8f8f7;
+    background-image: none;
+    border: 1px solid #e2e2e0;
+    border-radius: 8px;
+    color: #a1a1aa;
+    font-weight: 400;
+    font-size: 14px;
+    font-family: var(--ea-sans);
+    text-decoration: line-through;
+    cursor: not-allowed;
+    pointer-events: auto;
+    box-shadow: none;
+    opacity: 1;
+    position: relative;
+}
+
+.ea-bootstrap.ea-bootstrap .time-disabled:hover,
+.ea-bootstrap .time-disabled:hover,
+.ea-new-ui .time-disabled:hover,
+.time-disabled:hover,
+a.time-disabled:hover {
+    background-color: #fee2e2;
+    border-color: #fca5a5;
+    color: #991b1b;
+    text-decoration: line-through;
+}
+
+/* --------------------------------------------------------------------------
+   Bottom Summary Bar & Actions
+   -------------------------------------------------------------------------- */
+.ea-new-ui .ea-booking-summary-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    padding-top: 16px;
+    margin-top: 20px;
+    border-top: 1px solid rgba(32, 30, 29, 0.08);
+    gap: 14px;
+    width: 100%;
+}
+
+.ea-new-ui .ea-summary-text {
+    font-family: var(--ea-serif);
+    font-size: 13.5px;
+    font-weight: 500;
+    color: rgba(32, 30, 29, 0.62);
+    flex: 1;
+    min-width: 0;
+}
+
+.ea-new-ui .ea-summary-text.empty {
+    color: rgba(32, 30, 29, 0.45);
+    font-style: italic;
+}
+
+.ea-new-ui .ea-new-ui-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.ea-new-ui .ea-submit,
+.ea-new-ui .booking-button {
+    font-family: var(--ea-serif);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: #2563eb;
+    color: #ffffff;
+    border: 1px solid #2563eb;
+    border-radius: 8px;
+    padding: 10px 18px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.12s ease, border-color 0.12s ease, box-shadow 0.12s ease;
+    white-space: nowrap;
+    box-shadow: 0 6px 16px rgba(37, 99, 235, 0.26);
+}
+
+.ea-new-ui .ea-submit:hover:not(:disabled),
+.ea-new-ui .booking-button:hover:not(:disabled) {
+    background: #1d4ed8;
+    border-color: #1d4ed8;
+    box-shadow: 0 6px 16px rgba(37, 99, 235, 0.35);
+}
+
+.ea-new-ui .ea-cancel {
+    font-family: var(--ea-serif);
+    background: #ffffff;
+    color: #201e1d;
+    border: 1px solid rgba(32, 30, 29, 0.14);
+    border-radius: 8px;
+    padding: 9px 16px;
+    font-size: 13.5px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: border-color 0.12s, background 0.12s;
+    margin-left: 0;
+}
+
+.ea-new-ui .ea-cancel:hover {
+    border-color: rgba(32, 30, 29, 0.30);
+    background: #f8f8f7;
+}
+
+/* --------------------------------------------------------------------------
+   SENIOR ENGINEER PERSONAL INFORMATION & SEARCH CUSTOMER DESIGN
+   -------------------------------------------------------------------------- */
+.ea-new-ui .step.final {
+    background: #ffffff;
+    border-top: 1px solid rgba(32, 30, 29, 0.08);
+    padding: 24px 0 0 0;
+    margin-top: 20px;
+}
+
+.ea-new-ui .step.final h3,
+.ea-new-ui #booking-overview-header {
+    font-family: var(--ea-serif);
+    font-size: 1.35rem;
+    font-weight: 600;
+    color: #201e1d;
+    margin: 16px 0 2px 0;
+    letter-spacing: -0.015em;
+}
+
+.ea-new-ui .step.final small {
+    font-size: 12.5px;
+    color: rgba(32, 30, 29, 0.48);
+    display: block;
+    margin-bottom: 16px;
+}
+
+/* 2-Column Grid Layout for Form Fields in Single-Column & 2-Column Mode */
+.ea-new-ui .step.final .ea_hide_show {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px 16px;
+    margin-top: 12px;
+}
+
+/* Full Width Spanning Elements (Headings, Small, Textarea, Overview, Search Customer) */
+.ea-new-ui .step.final .ea_hide_show > h3,
+.ea-new-ui .step.final .ea_hide_show > small,
+.ea-new-ui .step.final .ea_hide_show > div.block,
+.ea-new-ui .step.final .ea_hide_show > div:has(textarea),
+.ea-new-ui .step.final .ea_hide_show > div:has(#booking-overview),
+.ea-new-ui .step.final .ea_hide_show > div:has(#ea_customer_search),
+.ea-new-ui .step.final .ea_hide_show > .form-group:last-child {
+    grid-column: 1 / -1;
+}
+
+/* Individual Form Field Group Container */
+.ea-new-ui .step.final .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin: 0;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.ea-new-ui .step.final .form-group label {
+    font-family: var(--ea-sans);
+    font-size: 13px;
+    font-weight: 500;
+    color: rgba(32, 30, 29, 0.62);
+    margin: 0;
+    display: block;
+    float: none;
+    width: 100%;
+    text-align: left;
+    letter-spacing: 0.01em;
+}
+
+.ea-new-ui .step.final .col-sm-8,
+.ea-new-ui .step.final .col-sm-4 {
+    width: 100%;
+    padding: 0;
+    float: none;
+}
+
+.ea-new-ui .step.final .form-control {
+    width: 100%;
+    height: 42px;
+    padding: 8px 14px;
+    border: 1px solid rgba(32, 30, 29, 0.14);
+    border-radius: 8px;
+    font-size: 14.5px;
+    font-family: var(--ea-sans);
+    color: #201e1d;
+    background-color: #ffffff;
+    transition: border-color 0.12s ease, box-shadow 0.12s ease;
+    box-shadow: none;
+    box-sizing: border-box;
+}
+
+/* Search Customer Input & Select2 Container Styling */
+.ea-new-ui #ea_customer_search,
+.ea-new-ui select#ea_customer_search,
+.ea-new-ui .form-control#ea_customer_search,
+.ea-new-ui .select2-container,
+.ea-new-ui .select2-container--default {
+    width: 100%;
+    display: block;
+}
+
+.ea-new-ui #ea_customer_search,
+.ea-new-ui select#ea_customer_search,
+.ea-new-ui .form-control#ea_customer_search,
+.ea-new-ui .select2-container .select2-selection--single,
+.ea-new-ui .select2-container--default .select2-selection--single {
+    height: 42px;
+    padding: 8px 14px;
+    border: 1px solid rgba(32, 30, 29, 0.14);
+    border-radius: 8px;
+    font-size: 14.5px;
+    font-family: var(--ea-sans);
+    font-weight: 400;
+    color: #201e1d;
+    background-color: #ffffff;
+    background-image: none;
+    transition: border-color 0.12s ease, box-shadow 0.12s ease;
+    box-shadow: none;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+}
+
+/* Select2 Rendered Text inside Search Customer */
+.ea-new-ui .select2-container--default .select2-selection--single .select2-selection__rendered {
+    color: #201e1d;
+    font-family: var(--ea-sans);
+    font-size: 14.5px;
+    line-height: 24px;
+    padding-left: 0;
+    padding-right: 20px;
+}
+
+.ea-new-ui .select2-container--default .select2-selection--single .select2-selection__placeholder {
+    color: #9ca3af;
+}
+
+/* Select2 Arrow styling */
+.ea-new-ui .select2-container--default .select2-selection--single .select2-selection__arrow {
+    height: 40px;
+    top: 1px;
+    right: 10px;
+    width: 20px;
+}
+
+.ea-new-ui .select2-container--default .select2-selection--single .select2-selection__arrow b {
+    border-color: #6b7280 transparent transparent transparent;
+    border-width: 5px 4px 0 4px;
+}
+
+/* Select2 Focus & Active Ring */
+.ea-new-ui #ea_customer_search:focus,
+.ea-new-ui select#ea_customer_search:focus,
+.ea-new-ui .select2-container--default.select2-container--open .select2-selection--single,
+.ea-new-ui .select2-container--default.select2-container--focus .select2-selection--single {
+    outline: none;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+
+/* Select2 & Autocomplete Dropdown Popup Styling */
+.select2-dropdown.ea-new-ui-select2-dropdown,
+.select2-container--default .select2-dropdown,
+ul.ui-autocomplete.ui-menu {
+    background: #ffffff;
+    border: 1px solid rgba(32, 30, 29, 0.12);
+    border-radius: 10px;
+    box-shadow: 0 12px 30px rgba(32, 30, 29, 0.12);
+    padding: 6px;
+    z-index: 99999;
+    font-family: var(--ea-sans);
+    max-height: 240px;
+    overflow-y: auto;
+}
+
+.select2-container--default .select2-results__option,
+ul.ui-autocomplete.ui-menu .ui-menu-item {
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 14px;
+    color: #201e1d;
+    cursor: pointer;
+    transition: background 0.1s ease;
+}
+
+.select2-container--default .select2-results__option--highlighted[aria-selected],
+.select2-container--default .select2-results__option[aria-selected="true"],
+ul.ui-autocomplete.ui-menu .ui-menu-item:hover,
+ul.ui-autocomplete.ui-menu .ui-menu-item.ui-state-focus {
+    background: #eff6ff;
+    color: #2563eb;
+    border: none;
+    font-weight: 500;
+}
+
+/* Phone Field Container alignment inside grid */
+.ea-new-ui .step.final .phone-field-group,
+.ea-new-ui .step.final .ea-phone-number-container {
+    display: flex;
+    gap: 6px;
+    width: 100%;
+}
+
+/* Textarea / Comment Field spans full grid width */
+.ea-new-ui .step.final textarea.form-control {
+    height: auto;
+    min-height: 80px;
+    padding: 10px 14px;
+    resize: vertical;
+    grid-column: 1 / -1;
+}
+
+.ea-new-ui .step.final .form-control:focus {
+    outline: none;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+
+/* Prevent Date & time label from wrapping */
+.ea-new-ui #booking-overview td,
+.ea-new-ui #booking-overview .ea-label {
+    white-space: nowrap;
+    width: auto;
+    padding-right: 24px;
+}
+
+.ea-new-ui #booking-overview {
+    background: #f8f8f7;
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin: 14px 0 20px 0;
+    border: 1px solid rgba(32, 30, 29, 0.08);
+    grid-column: 1 / -1;
+}
+
+.ea-new-ui #booking-overview table {
+    width: 100%;
+    border-collapse: collapse;
+    border: none;
+}
+
+.ea-new-ui #booking-overview td {
+    padding: 6px 0;
+    border: none;
+    font-size: 14px;
+}
+
+.ea-new-ui #booking-overview .ea-label {
+    font-family: var(--ea-sans);
+    color: rgba(32, 30, 29, 0.62);
+    font-weight: 500;
+}
+
+.ea-new-ui #booking-overview .value {
+    color: #201e1d;
+    font-weight: 600;
+    text-align: right;
+}
+
+/* --------------------------------------------------------------------------
+   Responsive Design & Stacking
+   -------------------------------------------------------------------------- */
+@media (max-width: 840px) {
+    .ea-new-ui.ea-layout-cols-2 form.form-horizontal,
+    .ea-bootstrap.ea-new-ui.ea-layout-cols-2 form.form-horizontal,
+    .ea-layout-cols-2 form.form-horizontal {
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .ea-new-ui.ea-layout-cols-2 form.form-horizontal > div.col-md-6:first-child,
+    .ea-new-ui.ea-layout-cols-2 .step.final,
+    .ea-bootstrap.ea-new-ui.ea-layout-cols-2 form.form-horizontal > div.col-md-6:first-child,
+    .ea-bootstrap.ea-new-ui.ea-layout-cols-2 .step.final.col-md-6,
+    .ea-layout-cols-2 .step.final {
+        flex: 1 1 100%;
+        width: 100%;
+        min-width: 100%;
+        padding-left: 0;
+        padding-right: 0;
+        border-left: none;
+        border-right: none;
+        border-top: 1px solid rgba(32, 30, 29, 0.10);
+        padding-top: 20px;
+    }
+
+    .ea-new-ui.ea-layout-cols-2 .time.well,
+    .ea-bootstrap.ea-new-ui.ea-layout-cols-2 .time.well,
+    .ea-layout-cols-2 .time.well {
+        grid-template-columns: repeat(auto-fill, minmax(122px, 1fr));
+    }
+}
+
+@media (max-width: 540px) {
+    .ea-bootstrap.ea-new-ui {
+        padding: 24px 16px 16px 16px;
+    }
+
+    .ea-new-ui .ea-filters-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .ea-new-ui .step.final .ea_hide_show {
+        grid-template-columns: 1fr;
+    }
+
+    .time.well,
+    .time.well.col-50,
+    .ea-new-ui .time.well {
+        grid-template-columns: repeat(auto-fill, minmax(118px, 1fr));
+        gap: 6px;
+    }
+}
+
+@media (max-width: 380px) {
+    .time.well,
+    .time.well.col-50,
+    .ea-new-ui .time.well {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 6px;
+    }
+}
+
+/* --------------------------------------------------------------------------
+   CALENDAR DATE SELECTION LOADER (#ea-loader)
+   -------------------------------------------------------------------------- */
+#ea-loader[style*="display: none"],
+#ea-loader[style*="display:none"] {
+    display: none;
+}
+
+#ea-loader,
+.ea-new-ui #ea-loader {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    min-height: 120px;
+    background-color: rgba(255, 255, 255, 0.88);
+    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(3px);
+    border-radius: 12px;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    box-sizing: border-box;
+}
+
+#ea-loader[style*="display: block"],
+#ea-loader[style*="display: flex"],
+#ea-loader[style*="display: inline"] {
+    display: flex;
+}
+
+#ea-loader::after,
+.ea-new-ui #ea-loader::after {
+    content: "";
+    display: block;
+    width: 36px;
+    height: 36px;
+    border: 3px solid rgba(37, 99, 235, 0.18);
+    border-top-color: #2563eb;
+    border-radius: 50%;
+    animation: eaSpinner 0.75s linear infinite;
+}
+
+@keyframes eaSpinner {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* --------------------------------------------------------------------------
+   BOOKING COMPLETE / THANK YOU SCREEN DESIGN (.ea-booking-complete)
+   -------------------------------------------------------------------------- */
+.ea-new-ui.ea-booking-complete,
+.ea-bootstrap.ea-new-ui.ea-booking-complete,
+.ea-bootstrap-wrapper.ea-booking-complete {
+    max-width: 640px;
+    margin: 0 auto;
+}
+
+/* Button Loading Spinner State */
+.ea-submit.ea-loading,
+.booking-button.ea-loading {
+    pointer-events: none;
+    opacity: 0.85;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    cursor: not-allowed;
+}
+
+.ea-submit .ea-btn-spinner,
+.booking-button .ea-btn-spinner {
+    display: inline-block;
+    width: 15px;
+    height: 15px;
+    border: 2px solid rgba(255, 255, 255, 0.35);
+    border-top-color: #ffffff;
+    border-radius: 50%;
+    animation: eaBtnSpinner 0.7s linear infinite;
+}
+
+@keyframes eaBtnSpinner {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Hide all filters, headers, steps, inputs, summary bar, and action buttons when booking is done */
+.ea-booking-complete .ea-booking-title,
+.ea-booking-complete .ea-filters-grid,
+.ea-booking-complete .ea-filters-grid-full,
+.ea-booking-complete .step:not(.final),
+.ea-booking-complete .ea_hide_show,
+.ea-booking-complete .ea-booking-summary-bar,
+.ea-booking-complete .ea-new-ui-final-actions,
+.ea-booking-complete h3:not(.ea-confirmation-title),
+.ea-booking-complete small:not(.ea-status-note),
+.ea-booking-complete label,
+.ea-booking-complete .step.final h3:not(.ea-confirmation-title),
+.ea-booking-complete .step.final small:not(.ea-status-note),
+.ea-booking-complete .step.final label,
+.ea-booking-complete .step.final .form-group,
+.ea-booking-complete #booking-overview-header,
+.ea-booking-complete #ea-overview-message,
+.ea-booking-complete .ea-confirmation-subtext {
+    display: none;
+}
+
+/* Expand the final step (Thank You container) to 100% full width with no side borders */
+.ea-booking-complete form.form-horizontal {
+    display: block;
+    width: 100%;
+}
+
+.ea-booking-complete .step.final,
+.ea-booking-complete .step.final.col-md-6 {
+    width: 100%;
+    max-width: 100%;
+    flex: 1 1 100%;
+    margin: 0;
+    padding: 0;
+    border: none;
+    float: none;
+    display: block;
+}
+
+.ea-booking-complete #booking-overview {
+    width: 100%;
+    box-sizing: border-box;
+    margin: 0;
+    background: transparent;
+    border: none;
+    padding: 0;
+}
+
+.ea-booking-complete #ea-success-box {
+    width: 100%;
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 28px 24px;
+    box-shadow: 0 4px 20px rgba(32, 30, 29, 0.06);
+    border: 1px solid rgba(32, 30, 29, 0.08);
+    text-align: center;
+    box-sizing: border-box;
+}
+
+/* Disabled Submit Button State when no time slot is selected */
+.ea-submit:disabled,
+.booking-button:disabled,
+.ea-submit.is-disabled,
+.booking-button.is-disabled,
+button.ea-submit:disabled,
+button.booking-button:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+    pointer-events: none;
+    background-color: #94a3b8;
+    background: #94a3b8;
+    border-color: #94a3b8;
+    color: #ffffff;
+    box-shadow: none;
+}
+
+/* Force hide submit and cancel buttons ONLY when booking is completed */
+.ea-booking-complete .ea-submit,
+.ea-booking-complete .booking-button,
+.ea-booking-complete .ea-cancel,
+.ea-booking-complete button.ea-submit,
+.ea-booking-complete button.booking-button,
+.ea-booking-complete .ea-booking-summary-bar .ea-submit,
+.ea-booking-complete .ea-booking-summary-bar .booking-button,
+.ea-booking-complete .ea-booking-summary-bar .ea-cancel {
+    display: none;
+}

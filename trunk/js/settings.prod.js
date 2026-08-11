@@ -61,7 +61,12 @@
             return datetime;
         }
 
-        return formatDate(parts[0]) + ' ' + formatTime(parts[1]);
+        newdate =  formatDate(parts[0]) + ' ' + formatTime(parts[1]);
+
+        var m = moment.utc(newdate);
+        // Convert to browser local time
+        m = m.local();
+        return m.format('YYYY-MM-DD HH:mm');
     }
 
     _.mixin({

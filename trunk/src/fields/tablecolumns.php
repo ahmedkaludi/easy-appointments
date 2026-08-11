@@ -160,6 +160,7 @@ class EATableColumns
             'datepicker',
             'default_date',
             'default_datetime_format',
+            'ea_new_ui',
             'form.label.above',
             'gdpr.label',
             'gdpr.link',

@@ -567,7 +567,7 @@ class EADBModels
         $table_fields = $this->wpdb->prefix . 'ea_fields';
 
         /* phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare */
-        $query = $this->wpdb->prepare("SELECT a.*, s.name AS service_name, s.duration AS service_duration, s.price AS service_price, w.name AS worker_name, w.email AS worker_email, w.phone AS worker_phone, w.description AS worker_description, l.name AS location_name, l.address AS location_address, l.location AS location_location FROM {$table_app} a JOIN {$table_services} s ON (a.service = s.id) JOIN {$table_locations} l ON (a.location = l.id) JOIN {$table_workers} w ON (a.worker = w.id) WHERE a.id = %d", $id);
+        $query = $this->wpdb->prepare("SELECT a.*, s.name AS service_name, s.duration AS service_duration, s.description AS service_description, s.price AS service_price, w.name AS worker_name, w.email AS worker_email, w.phone AS worker_phone, w.description AS worker_description, l.name AS location_name, l.address AS location_address, l.location AS location_location FROM {$table_app} a JOIN {$table_services} s ON (a.service = s.id) JOIN {$table_locations} l ON (a.location = l.id) JOIN {$table_workers} w ON (a.worker = w.id) WHERE a.id = %d", $id);
 
         // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.PreparedSQL.NotPrepared, 
         $results = $this->wpdb->get_results($query, ARRAY_A);
@@ -735,7 +735,11 @@ class EADBModels
     {
         $connections = $this->wpdb->prefix . 'ea_connections';
 
-        $query = "SELECT location, service, worker FROM $connections WHERE is_working=1";
+        // Select the full scheduling fields so the admin UI can disable
+        // non-working calendar days (day_of_week / day_from / day_to).
+        // The cascade-select logic only reads location / service / worker,
+        // so extra columns are harmlessly ignored there.
+        $query = "SELECT location, service, worker, day_of_week, day_from, day_to FROM $connections WHERE is_working=1";
         // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.PreparedSQL.NotPrepared
         return $this->wpdb->get_results($query);
     }

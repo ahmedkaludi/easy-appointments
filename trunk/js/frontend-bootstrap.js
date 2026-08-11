@@ -63,19 +63,50 @@
                     return true;
                 }
 
-                //  Check if it's a full-day vacation
-                if (vacation.time && vacation.time.fullDay === false) {
-                    var startTime = vacation.time.startTime ? moment(vacation.time.startTime) : null;
-                    var endTime = vacation.time.endTime ? moment(vacation.time.endTime) : null;
-                    if (startTime && endTime) {
-                        // attach a flag so we can disable specific time slots later
+                // Check if it's a partial vacation
+                var isPartial = false;
+                var rawStart = null;
+                var rawEnd = null;
+
+                if (vacation.time) {
+                    if (typeof vacation.time === 'object') {
+                        if (vacation.time.fullDay === false || vacation.time.fullDay === '0' || vacation.time.fullDay === 0) {
+                            isPartial = true;
+                            rawStart = vacation.time.startTime || vacation.time.start || vacation.time.from || vacation.time.time_from;
+                            rawEnd = vacation.time.endTime || vacation.time.end || vacation.time.to || vacation.time.time_to;
+                        }
+                    }
+                } else if (vacation.fullDay === false || vacation.fullDay === 0 || vacation.fullDay === '0') {
+                    isPartial = true;
+                    rawStart = vacation.startTime || vacation.start || vacation.from || vacation.time_from;
+                    rawEnd = vacation.endTime || vacation.end || vacation.to || vacation.time_to;
+                } else if (vacation.time_from && vacation.time_to) {
+                    isPartial = true;
+                    rawStart = vacation.time_from;
+                    rawEnd = vacation.time_to;
+                }
+
+                if (isPartial && rawStart && rawEnd) {
+                    var startTime = moment(rawStart, ['HH:mm', 'H:mm', 'HH:mm:ss']);
+                    if (!startTime.isValid()) {
+                        startTime = moment(rawStart);
+                    }
+                    var endTime = moment(rawEnd, ['HH:mm', 'H:mm', 'HH:mm:ss']);
+                    if (!endTime.isValid()) {
+                        endTime = moment(rawEnd);
+                    }
+
+                    if (startTime.isValid() && endTime.isValid()) {
                         if (!window.ea_partial_vacations) window.ea_partial_vacations = [];
+                        window.ea_partial_vacations = window.ea_partial_vacations.filter(function(v) {
+                            return !(v.day === day && v.workerId == workerId);
+                        });
                         window.ea_partial_vacations.push({
                             day: day,
                             start: startTime.format('HH:mm'),
                             end: endTime.format('HH:mm'),
                             workerId: workerId,
-                            tooltip: vacation.tooltip
+                            tooltip: vacation.tooltip || ''
                         });
                         return true; // don't block the whole day
                     }
@@ -99,10 +130,77 @@
                 moment.locale(ea_settings['datepicker'].substr(0,2));
             }
 
-            plugin.settings.main_template = _.template(jQuery(plugin.settings.main_selector).html());
+            // Sanitize template HTML: backticks break _.template()'s new Function()
+            // in modern JS engines that interpret them as template literals.
+            function safeTemplate(selector) {
+                var html = jQuery(selector).html();
+                if (!html) {
+                    return function(data) {
+                        var dynamicHtml = jQuery(selector).html();
+                        if (dynamicHtml) {
+                            dynamicHtml = dynamicHtml.replace(/`/g, '&#96;');
+                            try {
+                                return _.template(dynamicHtml)(data);
+                            } catch (e) {
+                                console.error('EA: Template compilation error for ' + selector + ':', e.message);
+                            }
+                        }
+                        return '<div></div>';
+                    };
+                }
+                // Escape backticks that would break new Function() compilation
+                html = html.replace(/`/g, '&#96;');
+                try {
+                    return _.template(html);
+                } catch (e) {
+                    console.error('EA: Template compilation error for ' + selector + ':', e.message);
+                    return _.template('<div></div>');
+                }
+            }
 
-            plugin.settings.overview_template = _.template(jQuery(plugin.settings.overview_selector).html());
+            plugin.settings.main_template = safeTemplate(plugin.settings.main_selector);
+
+            plugin.settings.overview_template = safeTemplate(plugin.settings.overview_selector);
             this.$element.html(plugin.settings.main_template({settings:ea_settings}));
+
+            // ---- NEW UI ENHANCEMENTS ----
+            if (ea_settings['ea_new_ui'] === '1') {
+                plugin.$element.addClass('ea-new-ui ea-new-ui-container');
+                plugin.$element.find('.ea-bootstrap').addClass('ea-new-ui ea-new-ui-container');
+
+                var $bootstrap = plugin.$element.find('.ea-bootstrap').length ? plugin.$element.find('.ea-bootstrap') : plugin.$element;
+                if (ea_settings['width'] && ea_settings['width'] !== '400px') {
+                    $bootstrap.css('max-width', ea_settings['width']);
+                    plugin.$element.css('max-width', ea_settings['width']);
+                }
+                if (String(ea_settings['rtl']) === '1') {
+                    $bootstrap.addClass('ea-rtl').attr('dir', 'rtl');
+                    plugin.$element.addClass('ea-rtl').attr('dir', 'rtl');
+                }
+                if (String(ea_settings['layout_cols']) === '2' || plugin.$element.find('.step.final.col-md-6').length) {
+                    $bootstrap.addClass('ea-layout-cols-2');
+                    plugin.$element.addClass('ea-layout-cols-2');
+                }
+                if ($bootstrap.length && !$bootstrap.find('.ea-booking-title').length) {
+                    $bootstrap.prepend('<h2 class="ea-booking-title">Book an appointment</h2>');
+                }
+
+                plugin.newUiLayoutDropdowns();
+
+                if (!$bootstrap.find('.ea-booking-summary-bar').length) {
+                    $bootstrap.append(
+                        '<div class="ea-booking-summary-bar">' +
+                            '<span class="ea-summary-text empty">Select a date &amp; time to continue</span>' +
+                            '<div class="ea-new-ui-actions">' +
+                                '<button type="button" class="ea-btn ea-cancel" style="display:none;">Cancel</button>' +
+                                '<button type="button" class="ea-btn ea-submit booking-button" style="display:none;">Book appointment</button>' +
+                            '</div>' +
+                        '</div>'
+                    );
+                }
+
+            }
+            // ---- END NEW UI ENHANCEMENTS ----
 
             // close plugin if something is missing
             if (!this.settingsOk()) {
@@ -165,10 +263,39 @@
                     }
 
                     var dateString = date.getFullYear() + '-' + month + '-' + days;
-                    var workerId = plugin.$element.find('[name="worker"]').val();
+                    var locationId = plugin.$element.find('[name="location"]').val();
                     var serviceId = plugin.$element.find('[name="service"]').val();
+                    var workerId = plugin.$element.find('[name="worker"]').val();
 
-                    return plugin.vacation(workerId, dateString,serviceId);
+                    // Filter connection working days
+                    if (typeof ea_connections !== 'undefined' && Array.isArray(ea_connections) && ea_connections.length > 0) {
+                        if (locationId && serviceId && workerId) {
+                            var dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+                            var dayName = dayNames[date.getDay()];
+                            var isWorkingDay = false;
+
+                            jQuery.each(ea_connections, function(i, conn) {
+                                if (conn.location == locationId && conn.service == serviceId && conn.worker == workerId) {
+                                    if (conn.day_from && dateString < conn.day_from) return true;
+                                    if (conn.day_to && dateString > conn.day_to) return true;
+
+                                    if (conn.day_of_week) {
+                                        var daysArr = conn.day_of_week.split(',').map(function(s) { return s.trim(); });
+                                        if (jQuery.inArray(dayName, daysArr) !== -1) {
+                                            isWorkingDay = true;
+                                            return false;
+                                        }
+                                    }
+                                }
+                            });
+
+                            if (!isWorkingDay) {
+                                return [false, 'not-working', 'Not Working'];
+                            }
+                        }
+                    }
+
+                    return plugin.vacation(workerId, dateString, serviceId);
                 }
             });
 
@@ -182,6 +309,8 @@
                 var parentForm = jQuery(this).closest('form');
 
                 var result = plugin.selectTimes(jQuery(this));
+
+                plugin.updateSubmitButtonState();
 
                 plugin.triggerSlotSelectEvent();
 
@@ -207,12 +336,27 @@
                     booking_data.date = parentForm.find('.date').datepicker().val();
                     booking_data.time = parentForm.find('.selected-time').data('val');
                     booking_data.price = parentForm.find('[name="service"] > option:selected').data('price');
+                    booking_data.service_description = parentForm.find('[name="service"] > option:selected').data('description') || '';
                     if (ea_settings['is_multiple_booking_allowed'] == '1') {
-                        booking_data.price = parentForm.find('.selected-time').length * booking_data.price;
+                        var $selectedSlots = parentForm.find('.selected-time');
+                        booking_data.price = $selectedSlots.length * booking_data.price;
+                        if ($selectedSlots.length > 1) {
+                            var timesArr = [];
+                            $selectedSlots.each(function () {
+                                timesArr.push(jQuery(this).data('val'));
+                            });
+                            booking_data.time = timesArr.join(', ');
+                        }
                     }
 
                     var format = ea_settings['date_format'] + ' ' + ea_settings['time_format'];
-                    booking_data.date_time = moment(booking_data.date + 'T' + booking_data.time, ea_settings['defult_detafime_format']).format(format);
+                    var firstTime = (booking_data.time || '').toString().split(',')[0].trim();
+                    if (firstTime) {
+                        var formattedDate = moment(booking_data.date + 'T' + firstTime, ea_settings['default_datetime_format']).format(ea_settings['date_format'] || 'YYYY-MM-DD');
+                        booking_data.date_time = formattedDate + ' ' + booking_data.time;
+                    } else {
+                        booking_data.date_time = booking_data.date + ' ' + booking_data.time;
+                    }
 
                     // set overview cancel_appointment
                     var overview_content = '';
@@ -237,15 +381,14 @@
 
                     // parentForm.find('.step').addClass('disabled');
                     parentForm.find('.final').removeClass('disabled');
-
-                    if (ea_settings['is_multiple_booking_allowed'] != '1') {
-                        parentForm.find('.final').find('select,input').first().focus();
-                        plugin.scrollToElement(parentForm.find('.final'));
-                    }
                     plugin.$element.find('#ea-payment-select').show();
 
                     // trigger global event when time slot is selected
                     jQuery(document).trigger('ea-timeslot:selected');
+
+                    if (ea_settings['ea_new_ui'] === '1') {
+                        plugin.updateNewUiSummaryBar();
+                    }
                 }
 
                 // only load form if that option is not turned off
@@ -265,6 +408,8 @@
             }
 
             this.$element.find('.ea-cancel').on('click', jQuery.proxy( plugin.cancelApp, plugin ));
+
+            this.updateSubmitButtonState();
 
             setTimeout(function() {
                 jQuery(document).trigger('ea-init:completed');
@@ -325,54 +470,14 @@
                 return true;
             }
 
-            // =======================
-            // NEW MULTI-SLOT LOGIC
-            // =======================
-
-            var slot_step = parseInt(
-                plugin.$element.find('[name="service"] > option:selected').data('slot_step')
-            );
-
-            // If no slot selected yet — user is picking START time
-            if (plugin.multiStart == null) {
-                plugin.multiStart = $element;
-                plugin.$element.find('.time-value').removeClass('selected-time');
-                $element.addClass('selected-time');
-                return true;
-            }
-
-            // If start is selected and user selects end time
-            var startTime = moment(plugin.multiStart.data('val'), 'HH:mm');
-            var endTime = moment($element.data('val'), 'HH:mm');
-
-            if (endTime.isBefore(startTime)) {
-                alert("End time must be after start time.");
-                plugin.multiStart = null;
+            // ==========================================
+            // ARBITRARY INDIVIDUAL MULTI-SLOT SELECTION
+            // ==========================================
+            if ($element.hasClass('time-disabled')) {
                 return false;
             }
 
-            // Mark all slots between start → end
-            plugin.$element.find('.time-value').removeClass('selected-time');
-
-            var current = startTime.clone();
-            while (current <= endTime) {
-                let t = current.format('HH:mm');
-                let $slot = plugin.$element.find('.time-value[data-val="' + t + '"]');
-
-                if ($slot.length === 0 || $slot.hasClass('time-disabled')) {
-                    alert("One or more selected slots are unavailable.");
-                    plugin.multiStart = null;
-                    return false;
-                }
-
-                $slot.addClass('selected-time');
-                current.add(slot_step, 'minutes');
-            }
-
-            // Save selected range
-            plugin.multiSelectedStart = startTime.format('HH:mm');
-            plugin.multiSelectedEnd   = endTime.add(slot_step, 'minutes').format('HH:mm');
-
+            $element.toggleClass('selected-time');
             return true;
         },
 
@@ -466,8 +571,10 @@
          */
         getNextOptions: function (event) {
             var current = jQuery(event.target);
+            var currentCategory = current.data('c');
+            var isLocationOrService = (currentCategory === 'location' || currentCategory === 'service');
 
-            if (current.data('c') === 'service') {
+            if (currentCategory === 'service') {
                 var desc = current.find('option:selected').data('description') || '';
                 if (desc) {
                     jQuery('#ea-service-description').html(desc).show();
@@ -478,8 +585,8 @@
 
             var step = current.closest('.step');
 
-            // blur next options
-            this.blurNextSteps(step);
+            // blur next options (dontScroll = true if location or service)
+            this.blurNextSteps(step, isLocationOrService);
 
             // nothing selected
             if (current.val() === '') {
@@ -488,7 +595,7 @@
 
             var options = {};
 
-            options[current.data('c')] = current.val();
+            options[currentCategory] = current.val();
 
             var data_prev = step.prevAll('.step');
 
@@ -510,8 +617,10 @@
             var next = jQuery(nextStep).find('select,input');
 
             if (next.length === 0) {
-                this.blurNextSteps(nextStep);
-                //nextStep.removeClass('disabled');
+                this.blurNextSteps(nextStep, isLocationOrService);
+                if (currentCategory === 'worker') {
+                    this.scrollToElement(this.$element.find('.date'));
+                }
                 return;
             }
 
@@ -535,16 +644,19 @@
                 next_element.empty();
                 var default_option_value = '-';
                 if (options.next == 'service') {
+                    jQuery('#ea-service-description').hide();
                     default_option_value = ea_settings['trans.service_option'];
                 }
                 if (options.next == 'location') {
+                    jQuery('#ea-service-description').hide();
                     default_option_value = ea_settings['trans.location_option'];
                 }
                 if (options.next == 'worker') {
+                    jQuery('#ea-service-description').hide();
                     default_option_value = ea_settings['trans.worker_option'];
                     var selectedService = plugin.$element.find('[name="service"] option:selected');
                     var desc = selectedService.data('description') || '';
-                    jQuery('#ea-service-description').text(desc).toggle(!!desc);
+                    jQuery('#ea-service-description').html(desc).toggle(!!desc);
                 }
                 plugin.$element.find('[id="repeat_booking"]').parents('.form-group').hide();
                 // default
@@ -590,7 +702,10 @@
 
                 plugin.removeLoader();
 
-                plugin.scrollToElement(next_element.parent());
+                // Only auto-scroll when moving past worker step to calendar
+                if (options.next !== 'service' && options.next !== 'worker') {
+                    plugin.scrollToElement(next_element.parent());
+                }
 
                 // if there is only one option auto select it
                 if (ea_settings['auto_select_option'] === '1' && option_count === 1) {
@@ -621,27 +736,46 @@
             });
         },
         placeLoader: function ($element) {
-            if (++this.settings.ajaxCount !== 1) {
-                return;
+            this.settings.ajaxCount++;
+            if (!$element || !$element.length || $element.is(':hidden') || $element.hasClass('ea-new-ui-step-hidden') || $element.parents('.ea-new-ui-step-hidden').length) {
+                var fieldName = ($element && $element.length) ? $element.find('select, input').data('c') : '';
+                var $visibleGrp = fieldName ? this.$element.find('.ea-new-ui-field-group[data-field="' + fieldName + '"]') : jQuery();
+                if ($visibleGrp.length) {
+                    $element = $visibleGrp;
+                } else if (this.$element.find('.ea-filters-grid').length) {
+                    $element = this.$element.find('.ea-filters-grid');
+                } else {
+                    $element = this.$element.find('.time').length ? this.$element.find('.time') : this.$element.find('.date');
+                }
             }
-
-            var width = $element.width();
-            var height = $element.height();
-            jQuery('#ea-loader').prependTo($element);
-            jQuery('#ea-loader').css({
-                'width': width,
-                'height': height
-            });
-            jQuery('#ea-loader').show();
+            if ($element && $element.length) {
+                $element.css('position', 'relative');
+            }
+            var $loader = jQuery('#ea-loader');
+            if (!$loader.length) {
+                $loader = jQuery('<div id="ea-loader"></div>').appendTo(this.$element);
+            }
+            if ($element && $element.length) {
+                $loader.appendTo($element);
+            }
+            $loader.css({
+                'position': 'absolute',
+                'top': 0,
+                'left': 0,
+                'width': '100%',
+                'height': '100%',
+                'min-height': '40px',
+                'z-index': 100,
+                'display': 'flex',
+                'align-items': 'center',
+                'justify-content': 'center',
+                'background': 'rgba(255, 255, 255, 0.7)',
+                'border-radius': '8px'
+            }).show();
         },
         removeLoader: function () {
-            if (--this.settings.ajaxCount > 1) {
-                return;
-            }
-
             this.settings.ajaxCount = 0;
-
-            jQuery('#ea-loader').hide();
+            jQuery('#ea-loader').css('display', 'none').hide();
         },
         getCurrentStatus: function () {
             var options = jQuery(this.element).find('select').not('.custom-field');
@@ -725,8 +859,10 @@
                 var fromTo = ea_settings["label.from_to"] == "1";
                 var classAMPM = (ea_settings["time_format"] == "am-pm") ? ' am-pm' : '';
 
-                if (fromTo) {
+                if (fromTo && ea_settings["ea_new_ui"] !== "1") {
                     next_element.addClass('time well well-lg col-50');
+                } else {
+                    next_element.addClass('time well well-lg');
                 }
 
                 // sort response by value 11:00, 12:00, 13:00...
@@ -749,15 +885,14 @@
                     var isDisabled = false;
                     var tooltip_title = "";
                     if (window.ea_partial_vacations && window.ea_partial_vacations.length > 0) {
-                        var selectedWorker = plugin.$element.find('[name="worker"]').val();
+                        var selectedWorker = plugin.$element.find('[name="worker"] option:selected, .ea-filters-grid select[data-c="worker"] option:selected').filter(':selected').val() || plugin.$element.find('[name="worker"]').val();
+                        var $selectedService = plugin.$element.find('[name="service"] option:selected, .ea-filters-grid select[data-c="service"] option:selected').filter(':selected');
+                        var serviceDuration = parseInt($selectedService.data('duration')) || parseInt(plugin.$element.find('[name="service"]').find('option:selected').data('duration')) || 0;
+
                         window.ea_partial_vacations.forEach(function(vac) {
                             if (vac.day === plugin.settings.currentDate && vac.workerId == selectedWorker) {
-                                var slotTime = moment(element.value, 'HH:mm');
                                 var start = moment(vac.start, 'HH:mm');
                                 var end = moment(vac.end, 'HH:mm');
-                                var serviceDuration = parseInt(
-                                    plugin.$element.find('[name="service"] > option:selected').data('duration')
-                                ) || 0;
 
                                 // appointment start
                                 var appointmentStart = moment(element.value, 'HH:mm');
@@ -765,7 +900,7 @@
                                 // appointment end
                                 var appointmentEnd = appointmentStart.clone().add(serviceDuration, 'minutes');
 
-                                // overlap check
+                                // overlap check: appointment overlaps if appointmentStart < vac.end AND appointmentEnd > vac.start
                                 if (
                                     appointmentStart.isBefore(end) &&
                                     appointmentEnd.isAfter(start)
@@ -777,28 +912,46 @@
                         });
                     }
 
+                    if (!tooltip_title && typeof ea_vacations !== 'undefined' && Array.isArray(ea_vacations)) {
+                        var selWorker = plugin.$element.find('[name="worker"]').val();
+                        var curDateVal = dateString || plugin.settings.currentDate;
+                        jQuery.each(ea_vacations, function(idx, v) {
+                            if (v.days && jQuery.inArray(curDateVal, v.days) !== -1) {
+                                if (v.workers && v.workers.length > 0) {
+                                    var wIds = jQuery.map(v.workers, function(w) { return w.id; });
+                                    if (jQuery.inArray(selWorker, wIds) !== -1) {
+                                        tooltip_title = v.tooltip || '';
+                                        return false;
+                                    }
+                                }
+                            }
+                        });
+                    }
+
+                    var displayTime = selectLabel;
+
                     if (element.count > 0 && !isDisabled) {
                         if (ea_settings['show_remaining_slots'] === '1') {
                             next_element.append(
                                 '<a href="#" class="time-value slots' + classAMPM + '" data-val="' + element.value + '">' 
-                                + selectLabel + ' (' + element.count + ')</a>'
+                                + displayTime + ' (' + element.count + ')</a>'
                             );
                         } else {
                             next_element.append(
                                 '<a href="#" class="time-value' + classAMPM + '" data-val="' + element.value + '">' 
-                                + selectLabel + '</a>'
+                                + displayTime + '</a>'
                             );
                         }
                     } else {
                         if (ea_settings['show_remaining_slots'] === '1') {
                             next_element.append(
                                 '<a class="time-disabled slots' + classAMPM + '" title="' + tooltip_title + '">' 
-                                + selectLabel + ' (0)</a>'
+                                + displayTime + ' (0)</a>'
                             );
                         } else {
                             next_element.append(
                                 '<a class="time-disabled' + classAMPM + '" title="' + tooltip_title + '">' 
-                                + selectLabel + '</a>'
+                                + displayTime + '</a>'
                             );
                         }
                     }
@@ -815,6 +968,11 @@
                 var newRow = jQuery(document.createElement('tr'))
                     .addClass('time-row')
                     .append('<td colspan="' + colSpan +'" />');
+
+                if (ea_settings['ea_new_ui'] === '1') {
+                    var calDateLabel = plugin.formatDateLabel(dateString);
+                    newRow.find('td').append('<p class="ea-times-header">Available times \u2014 ' + calDateLabel + '</p>');
+                }
 
                 newRow.find('td').append(next_element);
 
@@ -993,9 +1151,16 @@
                 check: ea_settings['check'],
                 action: 'ea_res_appointment'
             };
-            if (ea_settings['is_multiple_booking_allowed'] == '1' && plugin.multiSelectedEnd) {
-                options.start = plugin.multiSelectedStart;
-                options.end   = plugin.multiSelectedEnd;
+            if (ea_settings['is_multiple_booking_allowed'] == '1') {
+                var selectedTimes = [];
+                plugin.$element.find('.selected-time').each(function () {
+                    selectedTimes.push(jQuery(this).data('val'));
+                });
+                if (selectedTimes.length > 0) {
+                    options.start = selectedTimes.join(',');
+                } else {
+                    options.start = this.$element.find('.selected-time').first().data('val');
+                }
             } else {
                 options.start = this.$element.find('.selected-time').data('val');
             }
@@ -1010,9 +1175,16 @@
             booking_data.date = this.$element.find('.date').datepicker().val();
             booking_data.time = this.$element.find('.selected-time').data('val');
             booking_data.price = this.$element.find('[name="service"] > option:selected').data('price');
+            booking_data.service_description = this.$element.find('[name="service"] > option:selected').data('description') || '';
 
             var format = ea_settings['date_format'] + ' ' + ea_settings['time_format'];
-            booking_data.date_time = moment(booking_data.date + ' ' + booking_data.time, ea_settings['defult_detafime_format']).format(format);
+            var firstTime = (booking_data.time || '').toString().split(',')[0].trim();
+            if (firstTime) {
+                var formattedDate = moment(booking_data.date + 'T' + firstTime, ea_settings['default_datetime_format']).format(ea_settings['date_format'] || 'YYYY-MM-DD');
+                booking_data.date_time = formattedDate + ' ' + booking_data.time;
+            } else {
+                booking_data.date_time = booking_data.date + ' ' + booking_data.time;
+            }
 
             var req = jQuery.get(ea_ajaxurl, options, function (response) {
                 plugin.res_app = response.id;
@@ -1125,9 +1297,15 @@
          * Comform appointment
          */
         finalComformation: function (event) {
-            event.preventDefault();
+            if (typeof event !== 'undefined') {
+                event.preventDefault();
+            }
 
             var plugin = this;
+
+            if (plugin.isSubmitting) {
+                return;
+            }
 
             var form = this.$element.find('form');
 
@@ -1135,7 +1313,10 @@
                 return;
             }
 
-            this.$element.find('.ea-submit').prop('disabled', true);
+            plugin.isSubmitting = true;
+
+            var $submitBtn = this.$element.find('.ea-submit');
+            $submitBtn.prop('disabled', true).addClass('ea-loading').html('<span class="ea-btn-spinner"></span><span>Booking...</span>');
 
             // make pre reservation
             var options = {
@@ -1154,22 +1335,30 @@
             var req = jQuery.get(ea_ajaxurl, options, function (response) {
                 // store values from form
                 plugin.storeFormData(options);
+                plugin.isSubmitting = false;
 
-                // disable fields
-                plugin.$element.find('.ea-submit').hide();
+                // Remove loader spinner, update button text to Booked, and hide cancel button
+                jQuery('.ea-submit, .booking-button')
+                    .removeClass('ea-loading')
+                    .prop('disabled', true)
+                    .html('<span>Booked</span>');
+                jQuery('.ea-cancel').hide();
                 plugin.$element.find('.ea-cancel').hide();
                 plugin.$element.find('#paypal-button').hide();
 
-                if (ea_settings['show.display_thankyou_note'] == 1) {                    
-                    plugin.$element.find('.step').hide();
+                if (ea_settings['show.display_thankyou_note'] == 1) {
+                    plugin.$element.addClass('ea-booking-complete');
+                    var $bootstrap = plugin.$element.find('.ea-bootstrap').length ? plugin.$element.find('.ea-bootstrap') : plugin.$element;
+                    $bootstrap.addClass('ea-booking-complete');
+                    plugin.$element.find('.ea-filters-grid, .ea-filters-grid-full, .ea-booking-title, .ea-booking-summary-bar, .ea-new-ui-final-actions, .booking-button, .ea-submit').hide();
+                    plugin.$element.find('.step').not('.final').hide();
+                    plugin.$element.find('.step.final').find('h3, small, label, .ea_hide_show, .form-group, #booking-overview-header, #ea-overview-message, .ea-confirmation-subtext').hide();
+                    plugin.$element.find('h3, small, #booking-overview-header, #ea-overview-message, .ea-confirmation-subtext').not('.ea-confirmation-title').not('.ea-status-note').hide();
+                    plugin.$element.find('.step.final').children().not('#booking-overview').not('#ea-success-box').hide();
                     var table_html = plugin.$element.find('#booking-overview').find('table').html();
                     plugin.$element.find('#booking-overview').show();
                     plugin.$element.find('#booking-overview').find('table').hide();
                     plugin.$element.find('.final').show();
-                    plugin.$element.find('.ea_hide_show').hide();
-                    plugin.$element.find('.ea-confirmation-subtext').hide();
-                    plugin.$element.find('#booking-overview-header').hide();
-                    plugin.$element.find('#ea-overview-message').hide();
                     plugin.$element.find('#ea-success-box').show();
                     plugin.$element.find('#ea-overview-details').html(table_html);
     
@@ -1195,12 +1384,6 @@
                             const start = formatDateForGoogle(startDateObj);
                             const end = formatDateForGoogle(endDateObj);
         
-                            const calendarUrl = new URL("https://calendar.google.com/calendar/render");
-                            calendarUrl.searchParams.set("action", "TEMPLATE");
-                            calendarUrl.searchParams.set("text", title);
-                            calendarUrl.searchParams.set("dates", `${start}/${end}`);
-                            calendarUrl.searchParams.set("details", description);
-                            calendarUrl.searchParams.set("location", location);
                             calendarUrl.searchParams.set("trp", "false");
         
                             document.getElementById("ea-add-to-calendar").href = calendarUrl.toString();
@@ -1258,7 +1441,7 @@
                 if (response.responseJSON.message) {
                     alert(response.responseJSON.message);                    
                 }
-                this.$element.find('.ea-submit').prop('disabled', false);
+                this.$element.find('.ea-submit').prop('disabled', false).removeClass('ea-loading').html('Book appointment');
             }, plugin));
         },
 
@@ -1273,13 +1456,25 @@
 
             var plugin = this;
 
-            var form = this.$element.find('form');
-
-            if (!form.valid()) {
+            if (plugin.isSubmitting) {
                 return;
             }
 
-            this.$element.find('.ea-submit').prop('disabled', true);
+            var form = this.$element.find('form');
+
+            // If user clicked from summary bar and form is invalid, scroll to first invalid field or .final
+            if (!form.valid()) {
+                var $final = plugin.$element.find('.step.final');
+                if ($final.length) {
+                    plugin.scrollToElement($final);
+                }
+                return;
+            }
+
+            plugin.isSubmitting = true;
+
+            var $submitBtn = this.$element.find('.ea-submit');
+            $submitBtn.prop('disabled', true).addClass('ea-loading').html('<span class="ea-btn-spinner"></span><span>Booking...</span>');
 
             // make pre reservation
             var options = {
@@ -1294,9 +1489,16 @@
                 check: ea_settings['check'],
                 action: 'ea_res_appointment'
             };
-            if (ea_settings['is_multiple_booking_allowed'] == '1' && plugin.multiSelectedEnd) {
-                options.start = plugin.multiSelectedStart;
-                options.end   = plugin.multiSelectedEnd;
+            if (ea_settings['is_multiple_booking_allowed'] == '1') {
+                var selectedTimes = [];
+                plugin.$element.find('.selected-time').each(function () {
+                    selectedTimes.push(jQuery(this).data('val'));
+                });
+                if (selectedTimes.length > 0) {
+                    options.start = selectedTimes.join(',');
+                } else {
+                    options.start = this.$element.find('.selected-time').first().data('val');
+                }
             } else {
                 options.start = this.$element.find('.selected-time').data('val');
             }
@@ -1314,12 +1516,15 @@
 
                         jQuery.get(ea_ajaxurl, options, function (response) {
                             plugin.res_app = response.id;
-
+                            plugin.isSubmitting = false;
                             plugin.finalComformation(event);
                         }, 'json')
                             .fail(jQuery.proxy(function (response) {
-                                alert(response.responseJSON.message);
-                                this.$element.find('.ea-submit').prop('disabled', false);
+                                plugin.isSubmitting = false;
+                                if (response.responseJSON && response.responseJSON.message) {
+                                    alert(response.responseJSON.message);
+                                }
+                                this.$element.find('.ea-submit').prop('disabled', false).removeClass('ea-loading').html('Book appointment');
                             }, plugin))
                             .always(jQuery.proxy(function () {
                                 plugin.removeLoader();
@@ -1335,12 +1540,15 @@
             // simple call
             jQuery.get(ea_ajaxurl, options, function (response) {
                 plugin.res_app = response.id;
-
+                plugin.isSubmitting = false;
                 plugin.finalComformation(event);
             }, 'json')
             .fail(jQuery.proxy(function (response) {
-                alert(response.responseJSON.message);
-                this.$element.find('.ea-submit').prop('disabled', false);
+                plugin.isSubmitting = false;
+                if (response.responseJSON && response.responseJSON.message) {
+                    alert(response.responseJSON.message);
+                }
+                this.$element.find('.ea-submit').prop('disabled', false).removeClass('ea-loading').html('Book appointment');
             }, plugin))
             .always(jQuery.proxy(function () {
                 plugin.removeLoader();
@@ -1379,42 +1587,84 @@
         /**
          * Cancel appointment
          */
-        cancelApp: function (event) {
-            event.preventDefault();
+        resetForm: function () {
             var plugin = this;
 
-            if (ea_settings['pre.reservation'] === '0') {
-                plugin.chooseStep();
-                plugin.res_app = null;
-                this.$element.find('.step:not(.final)').prevAll('.step').removeClass('disabled');
-                return false;
+            // 1. Reset standard form fields
+            var $form = plugin.$element.find('form');
+            if ($form.length && $form[0] && $form[0].reset) {
+                $form[0].reset();
             }
 
-            this.$element.find('.final').addClass('disabled');
-            this.$element.find('.step:not(.final)').prevAll('.step').removeClass('disabled');
+            // 2. Reset select filters (Location, Service, Worker)
+            plugin.$element.find('select.filter, select.custom-field, .ea-new-ui select').each(function() {
+                var $select = jQuery(this);
+                var firstVal = $select.find('option:first').val() || '';
+                $select.val(firstVal);
+            });
 
+            // 3. Clear service description
+            plugin.$element.find('#ea-service-description').empty().hide();
+
+            // 4. Clear selected time slots and empty time container
+            plugin.$element.find('.selected-time').removeClass('selected-time');
+            plugin.$element.find('.time').empty();
+            plugin.$element.find('.time-row').remove();
+
+            // 5. Reset datepicker
+            var $date = plugin.$element.find('.date');
+            if ($date.length && $date.datepicker) {
+                try {
+                    $date.datepicker('setDate', null);
+                    $date.find('.ui-datepicker-current-day').removeClass('ui-datepicker-current-day');
+                } catch (e) {}
+            }
+
+            // 6. Reset form validation errors
+            if ($form.length && $form.data('validator')) {
+                $form.data('validator').resetForm();
+            }
+
+            // 7. Clear overview box
+            plugin.$element.find('#booking-overview').empty();
+
+            // 8. Reset summary bar
+            var $bar = plugin.$element.find('.ea-booking-summary-bar');
+            if ($bar.length) {
+                $bar.find('.ea-summary-text').text('Select a date & time to continue').addClass('empty');
+                $bar.find('.ea-submit, .ea-cancel').hide();
+            }
+
+            // 9. Reset plugin state
+            plugin.res_app = null;
+            plugin.updateSubmitButtonState();
+
+            // 10. Re-init step visibility/blur
+            plugin.blurNextSteps(plugin.$element.find('.step:visible:first'), true, true);
+        },
+
+        cancelApp: function (event) {
+            if (event) event.preventDefault();
+            var plugin = this;
+
+            var currentResApp = plugin.res_app;
             var _hash = plugin.$element.find('.ea-cancel').data('_hash');
 
-            var options = {
-                id: this.res_app,
-                check: ea_settings['check'],
-                _hash: _hash,
-                action: 'ea_cancel_appointment'
-            };
+            plugin.resetForm();
 
-            options._cb = Math.floor(Math.random() * 1000000);
+            if (ea_settings['pre.reservation'] === '1' && currentResApp) {
+                var options = {
+                    id: currentResApp,
+                    check: ea_settings['check'],
+                    _hash: _hash,
+                    action: 'ea_cancel_appointment',
+                    _cb: Math.floor(Math.random() * 1000000)
+                };
 
-            jQuery.get(ea_ajaxurl, options, function (response) {
-                if (response.data) {
-                    // remove selected time
-                    plugin.$element.find('.time').find('.selected-time').removeClass('selected-time');
+                jQuery.get(ea_ajaxurl, options, function (response) {}, 'json');
+            }
 
-                    //plugin.scrollToElement(plugin.$element.find('.date'));
-                    plugin.chooseStep();
-                    plugin.res_app = null;
-
-                }
-            }, 'json');
+            return false;
         },
         chooseStep: function () {
             var plugin = this;
@@ -1496,6 +1746,194 @@
             var number = $el.parent().find('.ea-phone-number-part').val().replace(/^0+/, '');
 
             $el.parent().find('.full-value').val('+' + code + number);
+        },
+
+        newUiLayoutDropdowns: function () {
+            var plugin = this;
+            var $bootstrap = plugin.$element.find('.ea-bootstrap');
+
+            var $locationStep = $bootstrap.find('[name="location"]').closest('.step');
+            var $serviceStep  = $bootstrap.find('[name="service"]').closest('.step');
+            var $workerStep   = $bootstrap.find('[name="worker"]').closest('.step');
+
+            function buildFieldGroup($step, labelText) {
+                var $select = $step.find('select');
+                var $label  = $step.find('.ea-label');
+                var lText   = labelText || ($label.length ? $label.text().trim() : '');
+                $step.addClass('ea-new-ui-step-hidden').css({ position:'absolute', visibility:'hidden', width:0, height:0, overflow:'hidden', padding:0, margin:0 });
+                var $grp = jQuery('<div class="ea-field-group"></div>');
+                if (lText) {
+                    $grp.append('<label>' + lText + '</label>');
+                }
+                var $clone = $select.clone(true);
+                $clone.removeAttr('id');
+                $clone.addClass('ea-new-ui-select-clone');
+                $grp.append($clone);
+
+                function syncDisabled() {
+                    var isDisabled = $step.hasClass('disabled') || $select.is(':disabled');
+                    $clone.prop('disabled', isDisabled);
+                    if (isDisabled) {
+                        $grp.addClass('disabled').css({ opacity: 0.5, 'pointer-events': 'none' });
+                    } else {
+                        $grp.removeClass('disabled').css({ opacity: 1, 'pointer-events': 'auto' });
+                    }
+                }
+
+                $clone.on('change', function() {
+                    $select.val(jQuery(this).val()).trigger('change');
+                });
+                $select.on('change', function() {
+                    $clone.val(jQuery(this).val());
+                    if ($clone.find('option').length !== $select.find('option').length) {
+                        $clone.empty().append($select.find('option').clone());
+                    }
+                    syncDisabled();
+                });
+
+                if (window.MutationObserver && $select[0]) {
+                    var observer = new MutationObserver(function() {
+                        $clone.empty().append($select.find('option').clone());
+                        $clone.val($select.val());
+                        syncDisabled();
+                    });
+                    observer.observe($select[0], { childList: true, attributes: true, attributeFilter: ['disabled', 'class'] });
+                    if ($step[0]) {
+                        var stepObserver = new MutationObserver(function() {
+                            syncDisabled();
+                        });
+                        stepObserver.observe($step[0], { attributes: true, attributeFilter: ['class'] });
+                    }
+                }
+
+                syncDisabled();
+                return $grp;
+            }
+
+            if ($bootstrap.find('.ea-filters-grid').length) {
+                return;
+            }
+
+            var hasLocation = $locationStep.length && $locationStep.find('select').children('option').length > 1;
+            var hasService  = $serviceStep.length;
+            var hasWorker   = $workerStep.length;
+
+            var $grid = null;
+
+            if (hasLocation && hasService) {
+                $grid = jQuery('<div class="ea-filters-grid"></div>');
+                $grid.append(buildFieldGroup($locationStep, null));
+                $grid.append(buildFieldGroup($serviceStep, null));
+            } else if (hasService) {
+                $grid = jQuery('<div class="ea-filters-grid-full"></div>');
+                $grid.append(buildFieldGroup($serviceStep, null));
+            }
+
+            if (hasWorker) {
+                var $workerGrid = jQuery('<div class="ea-filters-grid-full"></div>');
+                $workerGrid.append(buildFieldGroup($workerStep, null));
+                var $title = $bootstrap.find('.ea-booking-title');
+                if ($grid) {
+                    if ($title.length) {
+                        $title.after($workerGrid).after($grid);
+                    } else {
+                        $bootstrap.prepend($workerGrid).prepend($grid);
+                    }
+                } else {
+                    if ($title.length) {
+                        $title.after($workerGrid);
+                    } else {
+                        $bootstrap.prepend($workerGrid);
+                    }
+                }
+            } else if ($grid) {
+                var $title3 = $bootstrap.find('.ea-booking-title');
+                if ($title3.length) {
+                    $title3.after($grid);
+                } else {
+                    $bootstrap.prepend($grid);
+                }
+            }
+
+            var $descBox = plugin.$element.find('#ea-service-description');
+            if ($descBox.length) {
+                if ($workerGrid && $workerGrid.length) {
+                    $workerGrid.after($descBox);
+                } else if ($grid && $grid.length) {
+                    $grid.after($descBox);
+                }
+            }
+        },
+
+        updateNewUiSummaryBar: function () {
+            var plugin = this;
+            var $bar = plugin.$element.find('.ea-booking-summary-bar');
+            if (!$bar.length) return;
+
+            var $selected = plugin.$element.find('.selected-time');
+            var $summaryText = $bar.find('.ea-summary-text');
+
+            if (!$selected.length) {
+                $summaryText.text('Select a date & time to continue').addClass('empty');
+                $bar.find('.ea-submit, .ea-cancel').hide();
+                return;
+            }
+
+            var dateVal = plugin.$element.find('.date').datepicker().val() || plugin.settings.currentDate || '';
+            var summaryParts = [];
+
+            if (dateVal) {
+                summaryParts.push(moment(dateVal, 'YYYY-MM-DD').format('ddd D MMM'));
+            }
+
+            if (ea_settings['is_multiple_booking_allowed'] == '1' && $selected.length > 1) {
+                var timesArr = [];
+                $selected.each(function () {
+                    timesArr.push(jQuery(this).data('val'));
+                });
+                summaryParts.push(timesArr.join(', '));
+            } else {
+                var timeVal = $selected.first().data('val') || '';
+                var duration = parseInt(plugin.$element.find('[name="service"] > option:selected').data('duration')) || 0;
+
+                if (timeVal) {
+                    if (ea_settings['label.from_to'] === '1' && duration > 0) {
+                        var endTime = moment(timeVal, 'HH:mm').add(duration, 'minutes').format('HH:mm');
+                        summaryParts.push(timeVal + ' - ' + endTime);
+                    } else {
+                        var slotText = timeVal;
+                        if (duration > 0) {
+                            slotText += ' \u00b7 ' + duration + ' min';
+                        }
+                        summaryParts.push(slotText);
+                    }
+                }
+            }
+
+            if (summaryParts.length) {
+                $summaryText.text(summaryParts.join(', ')).removeClass('empty');
+            } else {
+                $summaryText.text('Select a date & time to continue').addClass('empty');
+            }
+
+            $bar.find('.ea-submit, .ea-cancel').show();
+            plugin.updateSubmitButtonState();
+        },
+
+        formatDateLabel: function (dateString) {
+            if (!dateString) return '';
+            return moment(dateString, 'YYYY-MM-DD').format('ddd D MMMM');
+        },
+
+        updateSubmitButtonState: function () {
+            var plugin = this;
+            var hasSelected = plugin.$element.find('.selected-time').length > 0;
+            var $submitBtns = plugin.$element.find('.ea-submit, .booking-button');
+            if (hasSelected) {
+                $submitBtns.prop('disabled', false).removeClass('is-disabled');
+            } else {
+                $submitBtns.prop('disabled', true).addClass('is-disabled');
+            }
         }
     });
 
@@ -1513,12 +1951,9 @@
 })(jQuery, window, document);
 
 
-(function ($) {
+jQuery(document).ready(function ($) {
     jQuery('.ea-bootstrap').eaBootstrap();
-
-    
-
-})(jQuery);
+});
 jQuery(document).ready(function () {
     if (ea_settings['allow_customer_search'] == 1) {
         jQuery('#ea_customer_search').select2({
@@ -1545,17 +1980,46 @@ jQuery(document).ready(function () {
             }
         });
 
-        jQuery('#ea_customer_search').on('select2:select', function (e) {
-            const customerId = e.params.data.id;
-            var parentForm = jQuery(this).closest('form');
-            jQuery.post(ea_ajaxurl, {
-                action: 'ea_get_customer_detail',
-                id: customerId,
-                nonce: ea_settings['check']
-            }, function (c) {
-                parentForm.find('[name="name"]').val(c.name);
-                parentForm.find('[name="email"]').val(c.email);
-                parentForm.find('[name="phone"]').val(c.mobile);
+        jQuery(document).on('select2:select', '#ea_customer_search', function (e) {
+            var customerId = e.params && e.params.data ? e.params.data.id : jQuery(this).val();
+            if (!customerId) return;
+
+            var $container = jQuery(this).closest('.ea-bootstrap, .ea-new-ui-container, form');
+            if (!$container.length) {
+                $container = jQuery('.ea-bootstrap, .ea-new-ui-container, form').first();
+            }
+
+            jQuery.ajax({
+                url: ea_ajaxurl,
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    action: 'ea_get_customer_detail',
+                    id: customerId,
+                    check: ea_settings['check'],
+                    nonce: ea_settings['check']
+                },
+                success: function (c) {
+                    if (typeof c === 'string') {
+                        try { c = JSON.parse(c); } catch (err) {}
+                    }
+                    if (!c || typeof c !== 'object') return;
+
+                    var setFieldVal = function(selectors, val) {
+                        if (val === undefined || val === null) return;
+                        selectors.forEach(function(sel) {
+                            var $field = $container.find(sel);
+                            if ($field.length) {
+                                $field.val(val).trigger('change').trigger('input');
+                            }
+                        });
+                    };
+
+                    setFieldVal(['#name', '[name="name"]', '#customer_name', '[name="customer_name"]'], c.name);
+                    setFieldVal(['#email', '[name="email"]', '#customer_email', '[name="customer_email"]'], c.email);
+                    setFieldVal(['#phone', '[name="phone"]', '#mobile', '[name="mobile"]', '#phone_number'], c.mobile || c.phone);
+                    setFieldVal(['#address', '[name="address"]'], c.address);
+                }
             });
         });
     }

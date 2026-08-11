@@ -702,6 +702,13 @@ class EAAdminPanel
      */
     public function add_menu_pages()
     {
+        // IMPORTANT: the new-ui/*.php classes (EA_Appointments_New_UI etc.)
+        // all attach their own submenus to this same top-level slug via
+        // add_submenu_page(self::PARENT_SLUG, ...), so the top-level menu
+        // itself must always be registered, in both UI modes - only the
+        // classic-only submenus below get skipped in "new" UI mode.
+        $new_ui = class_exists('EA_UI_Switcher') && EA_UI_Switcher::is_new_ui();
+
         // top_level_menu
         add_menu_page(
             'Appointments',
@@ -710,10 +717,14 @@ class EAAdminPanel
             'easy_app_top_level',
             null,
             'dashicons-calendar-alt',
-            '10.842015'
+            '26'
         );
 
-        // Rename first
+        // Rename first / landing page. Always routes through
+        // top_level_appointments() - that method itself checks the UI
+        // mode and delegates to EA_Appointments_New_UI::render_page()
+        // when new UI mode is active, so this single entry point can't
+        // get out of sync with the mode.
         $page_app_suffix = add_submenu_page(
             'easy_app_top_level',
             __('Appointments', 'easy-appointments'),
@@ -722,6 +733,12 @@ class EAAdminPanel
             'easy_app_top_level',
             array($this, 'top_level_appointments')
         );
+
+        if ($new_ui) {
+            // Register Reports submenus at priority 20 so they load in the correct sequence.
+            add_action('admin_menu', array($this, 'add_reports_menu_new_ui'), 20);
+            return;
+        }
 
         // locations page
         $page_location_suffix = add_submenu_page(
@@ -815,23 +832,23 @@ class EAAdminPanel
         );
 
         // Overview - report
-        $page_report_suffix = add_submenu_page(
-            'easy_app_top_level',
-            __('Reports *OLD*', 'easy-appointments'),
-            __('Reports *OLD*', 'easy-appointments'),
-            $this->user_capability_callback('manage_options', 'easy_app_reports'),
-            'easy_app_reports',
-            array($this, 'reports_page')
-        );
-
-        // Overview - report
         $page_new_report_suffix = add_submenu_page(
             'easy_app_top_level',
-            __('Reports *NEW*', 'easy-appointments'),
-            __('Reports *NEW*', 'easy-appointments'),
+            __('Reports', 'easy-appointments'),
+            __('Reports', 'easy-appointments'),
             $this->user_capability_callback('manage_options', 'easy_app_new_reports'),
             'easy_app_new_reports',
             array($this, 'new_reports_page')
+        );
+
+        // Overview - report
+        $page_report_suffix = add_submenu_page(
+            'easy_app_top_level',
+            __('Reports (Legacy)', 'easy-appointments'),
+            __('Reports (Legacy)', 'easy-appointments'),
+            $this->user_capability_callback('manage_options', 'easy_app_reports'),
+            'easy_app_reports',
+            array($this, 'reports_page')
         );
 
         // Overview - report
@@ -897,6 +914,17 @@ class EAAdminPanel
      */
     public function top_level_appointments()
     {
+        // This is the plugin's main-menu landing page. Delegate straight
+        // to the New UI's Appointments screen when new UI mode is active,
+        // so the landing page always matches the currently selected mode.
+        if (
+            class_exists('EA_UI_Switcher')
+            && EA_UI_Switcher::is_new_ui()
+            && class_exists('EA_Appointments_New_UI')
+        ) {
+            EA_Appointments_New_UI::render_page();
+            return;
+        }
 
         // check if APS tags are on
         if ($this->is_asp_tags_are_on()) {
@@ -940,16 +968,46 @@ class EAAdminPanel
         wp_localize_script('ea-appointments', 'ea_connections', $this->models->get_connections_combinations());
 
         $screen = get_current_screen();
-        $screen->add_help_tab(array(
-            'id'    => 'easyapp_settings_help'
-        , 'title'   => 'Appointments manager'
-        , 'content' => '<p>Use filter for date to reduce output results for appointments. You can filter by <b>location</b>, <b>service</b>, <b>worker</b>, <b>status</b> and <b>date</b>.</p>'
-        ));
+        if ($screen) {
+            $screen->add_help_tab(array(
+                'id'    => 'easyapp_settings_help'
+            , 'title'   => 'Appointments manager'
+            , 'content' => '<p>Use filter for date to reduce output results for appointments. You can filter by <b>location</b>, <b>service</b>, <b>worker</b>, <b>status</b> and <b>date</b>.</p>'
+            ));
 
-        $screen->set_help_sidebar('<a href="https://easy-appointments.com/documentation/">More info!</a>');
+            $screen->set_help_sidebar('<a href="https://easy-appointments.com/documentation/">More info!</a>');
+        }
 
         require_once EA_SRC_DIR . 'templates/appointments.tpl.php';
         require_once EA_SRC_DIR . 'templates/inlinedata.sorted.tpl.php';
+    }
+
+    /**
+     * Register Reports submenus for the New UI to keep reports menu in both UIs
+     */
+    public function add_reports_menu_new_ui()
+    {
+        // new reports page
+        add_submenu_page(
+            'easy_app_top_level',
+            __('Reports', 'easy-appointments'),
+            __('Reports', 'easy-appointments'),
+            $this->user_capability_callback('manage_options', 'easy_app_new_reports'),
+            'easy_app_new_reports',
+            array($this, 'new_reports_page')
+        );
+
+        // reports page
+        $page_report_suffix = add_submenu_page(
+            'easy_app_top_level',
+            __('Reports (Legacy)', 'easy-appointments'),
+            __('Reports (Legacy)', 'easy-appointments'),
+            $this->user_capability_callback('manage_options', 'easy_app_reports'),
+            'easy_app_reports',
+            array($this, 'reports_page')
+        );
+
+        add_action('load-' . $page_report_suffix, array($this, 'add_report_js'));
     }
 
     /**

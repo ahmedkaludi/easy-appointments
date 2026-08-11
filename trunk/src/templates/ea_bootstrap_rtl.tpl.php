@@ -139,7 +139,7 @@ defined( 'ABSPATH' ) || exit;
             <% } %>
 
             <div class="form-group">
-                <div class="col-sm-offset-4 col-sm-8 ea-actions-group" style="display: inline-flex;">
+                <div class="col-sm-offset-4 col-sm-8 ea-actions-group">
                     <?php 
                     // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
                     echo apply_filters('easy_ea_checkout_button', '<button class="ea-btn ea-submit btn btn-primary"><%- settings[\'trans.submit_button_text\'] %></button>');?>

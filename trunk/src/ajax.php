@@ -103,7 +103,9 @@ class EAAjax
         add_action('wp_ajax_ea_month_status', array($this, 'ajax_month_status'));
         add_action('wp_ajax_nopriv_ea_month_status', array($this, 'ajax_month_status'));
         add_action('wp_ajax_ea_search_customers', array($this, 'ajax_search_customers'));
+        add_action('wp_ajax_nopriv_ea_search_customers', array($this, 'ajax_search_customers'));
         add_action('wp_ajax_ea_get_customer_detail', array($this, 'ajax_customer_detail'));
+        add_action('wp_ajax_nopriv_ea_get_customer_detail', array($this, 'ajax_customer_detail'));
         add_action('wp_ajax_ea_update_customer_data', array($this, 'ea_update_customer_data'));       
 
         // end frontend
@@ -261,6 +263,10 @@ class EAAjax
 
         
         if (!empty($appointments)) {
+            $field_map = [];
+            $ids = array_map( function( $app ) {
+                return $app->id;
+            }, $appointments );
 
             // Load all field values for filtering
             $ids = array_map( 'absint', $ids );
@@ -966,7 +972,7 @@ class EAAjax
             wp_send_json_error( [ 'message' => esc_html__( 'Security check failed.', 'easy-appointments' ) ], 403 );
         }
 
-        $this->validate_access_rights( 'appointments' );
+        $this->validate_access_rights( 'appointments', 'edit_posts' );
 
         $cancel_to = isset( $_POST['cancel_to'] )
             ? sanitize_text_field( wp_unslash( $_POST['cancel_to'] ) )
@@ -1020,7 +1026,7 @@ class EAAjax
             wp_send_json_error( [ 'message' => esc_html__( 'Unauthorized', 'easy-appointments' ) ], 401 );
         }
 
-        $this->validate_access_rights( 'appointments' );
+        $this->validate_access_rights( 'appointments', 'edit_posts' );
         global $wpdb;
         $current_time = current_time('H:i:s');
         $current_date = current_time('Y-m-d');
@@ -1195,12 +1201,19 @@ class EAAjax
             'user','created','price','ip','session'
         );
 
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- nonce already validated
+        $app_id = !empty($_REQUEST['id']) ? intval($_REQUEST['id']) : (!empty($_REQUEST['res_app']) ? intval($_REQUEST['res_app']) : 0);
+
         foreach ($data as $key => $rem) {
             if (!in_array($key, $dont_remove)) unset($data[$key]);
         }
 
-        unset($data['id']);
-        $data['id'] = null;
+        if ($app_id > 0) {
+            $data['id'] = $app_id;
+        } else {
+            unset($data['id']);
+            $data['id'] = null;
+        }
         unset($data['action']);
 
         $block_time = (int)$this->options->get_option_value('block.time', 0);
@@ -1208,13 +1221,75 @@ class EAAjax
         // Load open slots
         $open_slots = $this->logic->get_open_slots(
             $data['location'], $data['service'], $data['worker'],
-            $data['date'], null, true, $block_time
+            $data['date'], $app_id > 0 ? $app_id : null, true, $block_time
         );
 
-        // ===========================
-        // MULTI-SLOT RANGE BOOKING
-        // ===========================
-        if ($has_range) {
+        $slots_list = array();
+        if ($multiple_allowed === 1) {
+            if (!empty($data['start']) && strpos($data['start'], ',') !== false) {
+                $slots_list = array_filter(array_map('trim', explode(',', $data['start'])));
+            // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- nonce already validated
+            } else if (!empty($_GET['slots']) && is_array($_GET['slots'])) {
+                // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- nonce already validated
+                $slots_list = array_filter(array_map('sanitize_text_field', wp_unslash($_GET['slots'])));
+            }
+        }
+
+        // ==========================================
+        // ARBITRARY MULTI-SLOT BOOKING
+        // ==========================================
+        if ($multiple_allowed === 1 && count($slots_list) > 1) {
+            $service   = $this->models->get_row('ea_services', $data['service']);
+            $duration  = intval($service->duration);
+            $recurrence_id = 'rec_' . uniqid();
+
+            $open_map = array();
+            foreach ($open_slots as $slot) {
+                $open_map[$slot['value']] = $slot['count'];
+            }
+
+            $success_ids = array();
+            $first_response = null;
+
+            foreach ($slots_list as $slot_start) {
+                if (!isset($open_map[$slot_start]) || $open_map[$slot_start] <= 0) {
+                    continue;
+                }
+
+                $slot_end_time = strtotime($data['date'] . ' ' . $slot_start . " + {$duration} minutes");
+                $slot_end = gmdate('H:i', $slot_end_time);
+
+                $single_data = $data;
+                $single_data['start'] = $slot_start;
+                $single_data['end']   = $slot_end;
+                $single_data['end_date'] = $data['date'];
+                $single_data['price'] = $service->price;
+                $single_data['recurrence_id'] = $recurrence_id;
+                $single_data['status'] = 'reservation';
+                $single_data['ip'] = isset($_SERVER['REMOTE_ADDR']) ? sanitize_text_field(wp_unslash($_SERVER['REMOTE_ADDR'])) : '';
+                $single_data['session'] = session_id();
+                if (is_user_logged_in()) $single_data['user'] = get_current_user_id();
+
+                $resp = $this->models->replace($table, $single_data, true);
+                if ($resp && isset($resp->id)) {
+                    if (!$first_response) {
+                        $first_response = $resp;
+                    }
+                    $success_ids[] = $resp->id;
+                }
+            }
+
+            if (empty($success_ids) || !$first_response) {
+                $this->send_err_json_result('{"err":true,"message":"Selected slots are no longer available"}');
+            }
+
+            $first_response->_hash = wp_hash($first_response->id);
+            $first_response->all_ids = $success_ids;
+            $this->send_ok_json_result($first_response);
+        } else if ($has_range) {
+            // ===========================
+            // MULTI-SLOT RANGE BOOKING
+            // ===========================
 
             $service     = $this->models->get_row('ea_services', $data['service']);
             $slot_step   = isset($service->slot_step) ? intval($service->slot_step) : 30;
@@ -1255,18 +1330,27 @@ class EAAjax
             }
 
             $data['price'] = round($price, 2);
-        }
-
-        // ===========================
-        // ORIGINAL SINGLE SLOT FALLBACK
-        // ===========================
-        if (!$has_range) {
+        } else {
+            // ===========================
+            // ORIGINAL SINGLE SLOT FALLBACK
+            // ===========================
 
             $is_free = false;
-            foreach ($open_slots as $slot) {
-                if ($slot['value'] === $data['start'] && $slot['count'] > 0) {
+            $app_id  = isset($data['id']) ? (int)$data['id'] : 0;
+
+            if ($app_id > 0) {
+                $existing = $this->models->get_row('ea_appointments', $app_id);
+                if ($existing && !empty($existing->id)) {
                     $is_free = true;
-                    break;
+                }
+            }
+
+            if (!$is_free) {
+                foreach ($open_slots as $slot) {
+                    if ($slot['value'] === $data['start'] && $slot['count'] > 0) {
+                        $is_free = true;
+                        break;
+                    }
                 }
             }
 
@@ -1334,12 +1418,22 @@ class EAAjax
 
         // Validate first slot
         $open_slots = $this->logic->get_open_slots($data['location'], $data['service'], $data['worker'], $data['date'], null, true, $block_time);
-        $is_free = false;
+        $is_free    = false;
+        $app_id     = isset($data['id']) ? (int)$data['id'] : 0;
 
-        foreach ($open_slots as $value) {
-            if ($value['value'] === $data['start'] && $value['count'] > 0) {
+        if ($app_id > 0) {
+            $existing = $this->models->get_row('ea_appointments', $app_id);
+            if ($existing && !empty($existing->id)) {
                 $is_free = true;
-                break;
+            }
+        }
+
+        if (!$is_free) {
+            foreach ($open_slots as $value) {
+                if ($value['value'] === $data['start'] && $value['count'] > 0) {
+                    $is_free = true;
+                    break;
+                }
             }
         }
 
@@ -1798,11 +1892,8 @@ class EAAjax
 
     public function ajax_appointments()
     {
-        if ( ! current_user_can( 'manage_options' ) ) {
-            wp_send_json_error( esc_html__( 'Unauthorized', 'easy-appointments' ), 403 );
-        }
-
         $this->validate_admin_nonce();
+        $this->validate_access_rights( 'appointments', 'edit_posts' );
 
         $data = $this->parse_input_data();
 
@@ -1817,11 +1908,8 @@ class EAAjax
 
     public function ajax_appointment()
     {
-        if ( ! current_user_can( 'manage_options' ) ) {
-            wp_send_json_error( esc_html__( 'Unauthorized', 'easy-appointments' ), 403 );
-        }
-
         $this->validate_admin_nonce();
+        $this->validate_access_rights( 'appointments', 'edit_posts' );
 
         $response = $this->parse_appointment(false);
 
@@ -1851,9 +1939,7 @@ class EAAjax
             wp_send_json_error(array('message' => esc_html__('Security check failed.', 'easy-appointments')));
         }
 
-        if ( ! current_user_can( 'manage_options' ) ) {
-            wp_send_json_error(array('message' => esc_html__('Unauthorized', 'easy-appointments')), 403);
-        }
+        $this->validate_access_rights( 'appointments', 'edit_posts' );
         
         if (!isset($_POST['appointments']) || !is_array($_POST['appointments'])) {
             wp_send_json_error(array('message' => esc_html__('No appointments selected.', 'easy-appointments') ));
@@ -1923,21 +2009,88 @@ class EAAjax
      */
     public function ajax_services()
     {
+        // phpcs:disable WordPress.Security.NonceVerification.Recommended, WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.DB.PreparedSQL.NotPrepared
+
         $this->validate_admin_nonce();
 
         $this->validate_access_rights('services');
 
         $this->parse_input_data();
 
-        $response = array();
+        global $wpdb;
+        $table = $wpdb->prefix . 'ea_services';
 
-        $orderPart = $this->models->get_order_by_part('ea_services');
+        $is_paginated = isset($_GET['paged']) || isset($_POST['paged']);
 
-        if ($this->type === 'GET') {
-            $response = $this->models->get_all_rows('ea_services', array(), $orderPart);
+        if ($is_paginated) {
+            $paged = isset($_GET['paged']) ? max(1, absint($_GET['paged'])) : 1;
+            if (isset($_POST['paged'])) {
+                $paged = max(1, absint($_POST['paged']));
+            }
+            $per_page = 10;
+            $offset = ($paged - 1) * $per_page;
+
+            $search = isset($_GET['search']) ? sanitize_text_field(wp_unslash($_GET['search'])) : '';
+            if (isset($_POST['search'])) {
+                $search = sanitize_text_field(wp_unslash($_POST['search']));
+            }
+
+            $search_sql = '';
+            $params = array();
+
+            if (!empty($search)) {
+                $search_sql = "WHERE name LIKE %s OR description LIKE %s";
+                $like = '%' . $wpdb->esc_like($search) . '%';
+                $params = array($like, $like);
+            }
+
+            $total_sql = "SELECT COUNT(*) FROM $table " . ($search_sql ? $search_sql : '');
+            if (!empty($params)) {
+                // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, PluginCheck.Security.DirectDB.UnescapedDBParameter -- Querying custom table with secure prepared parameters.
+                $total_records = $wpdb->get_var($wpdb->prepare($total_sql, ...$params));
+            } else {
+                // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- Querying custom table with static safe query.
+                $total_records = $wpdb->get_var($total_sql);
+            }
+
+            $sortBy = isset($_GET['sortBy']) ? sanitize_text_field($_GET['sortBy']) : 'id';
+            if (isset($_POST['sortBy'])) {
+                $sortBy = sanitize_text_field($_POST['sortBy']);
+            }
+            $sortDir = isset($_GET['sortDir']) && strtoupper($_GET['sortDir']) === 'ASC' ? 'ASC' : 'DESC';
+            if (isset($_POST['sortDir'])) {
+                $sortDir = strtoupper($_POST['sortDir']) === 'ASC' ? 'ASC' : 'DESC';
+            }
+
+            $allowed_columns = array('id', 'name', 'duration', 'slot_step', 'block_before', 'block_after', 'daily_limit', 'price', 'advance_booking_days', 'description');
+            if (!in_array($sortBy, $allowed_columns)) {
+                $sortBy = 'id';
+            }
+
+            $query_sql = "SELECT * FROM $table " . ($search_sql ? $search_sql : '') . " ORDER BY $sortBy $sortDir LIMIT %d OFFSET %d";
+            $query_params = array_merge($params, array($per_page, $offset));
+
+            // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, PluginCheck.Security.DirectDB.UnescapedDBParameter -- Fetching paginated results from custom table.
+            $data = $wpdb->get_results($wpdb->prepare($query_sql, ...$query_params));
+
+            $response = array(
+                'data' => $data,
+                'total_pages' => ceil($total_records / $per_page),
+                'paged' => $paged,
+                'total_records' => intval($total_records)
+            );
+        } else {
+            $response = array();
+            $orderPart = $this->models->get_order_by_part('ea_services');
+            if ($this->type === 'GET') {
+                $response = $this->models->get_all_rows('ea_services', array(), $orderPart);
+            }
         }
 
+        header("Content-Type: application/json");
         die(json_encode($response));
+
+        // phpcs:enable
     }
 
     /**
@@ -1945,23 +2098,88 @@ class EAAjax
      */
     public function ajax_locations()
     {
+        // phpcs:disable WordPress.Security.NonceVerification.Recommended, WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.DB.PreparedSQL.NotPrepared
+
         $this->validate_admin_nonce();
 
         $this->validate_access_rights('locations');
 
         $this->parse_input_data();
 
-        $response = array();
+        global $wpdb;
+        $table = $wpdb->prefix . 'ea_locations';
 
-        $orderPart = $this->models->get_order_by_part('ea_locations');
+        $is_paginated = isset($_GET['paged']) || isset($_POST['paged']);
 
-        if ($this->type === 'GET') {
-            $response = $this->models->get_all_rows('ea_locations', array(), $orderPart);
+        if ($is_paginated) {
+            $paged = isset($_GET['paged']) ? max(1, absint($_GET['paged'])) : 1;
+            if (isset($_POST['paged'])) {
+                $paged = max(1, absint($_POST['paged']));
+            }
+            $per_page = 10;
+            $offset = ($paged - 1) * $per_page;
+
+            $search = isset($_GET['search']) ? sanitize_text_field(wp_unslash($_GET['search'])) : '';
+            if (isset($_POST['search'])) {
+                $search = sanitize_text_field(wp_unslash($_POST['search']));
+            }
+
+            $search_sql = '';
+            $params = array();
+
+            if (!empty($search)) {
+                $search_sql = "WHERE name LIKE %s OR address LIKE %s OR location LIKE %s";
+                $like = '%' . $wpdb->esc_like($search) . '%';
+                $params = array($like, $like, $like);
+            }
+
+            $total_sql = "SELECT COUNT(*) FROM $table " . ($search_sql ? $search_sql : '');
+            if (!empty($params)) {
+                // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, PluginCheck.Security.DirectDB.UnescapedDBParameter -- Querying custom table with secure prepared parameters.
+                $total_records = $wpdb->get_var($wpdb->prepare($total_sql, ...$params));
+            } else {
+                // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- Querying custom table with static safe query.
+                $total_records = $wpdb->get_var($total_sql);
+            }
+
+            $sortBy = isset($_GET['sortBy']) ? sanitize_text_field($_GET['sortBy']) : 'id';
+            if (isset($_POST['sortBy'])) {
+                $sortBy = sanitize_text_field($_POST['sortBy']);
+            }
+            $sortDir = isset($_GET['sortDir']) && strtoupper($_GET['sortDir']) === 'ASC' ? 'ASC' : 'DESC';
+            if (isset($_POST['sortDir'])) {
+                $sortDir = strtoupper($_POST['sortDir']) === 'ASC' ? 'ASC' : 'DESC';
+            }
+
+            $allowed_columns = array('id', 'name', 'address', 'location', 'description');
+            if (!in_array($sortBy, $allowed_columns)) {
+                $sortBy = 'id';
+            }
+
+            $query_sql = "SELECT * FROM $table " . ($search_sql ? $search_sql : '') . " ORDER BY $sortBy $sortDir LIMIT %d OFFSET %d";
+            $query_params = array_merge($params, array($per_page, $offset));
+
+            // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, PluginCheck.Security.DirectDB.UnescapedDBParameter -- Fetching paginated results from custom table.
+            $data = $wpdb->get_results($wpdb->prepare($query_sql, ...$query_params));
+
+            $response = array(
+                'data' => $data,
+                'total_pages' => ceil($total_records / $per_page),
+                'paged' => $paged,
+                'total_records' => intval($total_records)
+            );
+        } else {
+            $response = array();
+            $orderPart = $this->models->get_order_by_part('ea_locations');
+            if ($this->type === 'GET') {
+                $response = $this->models->get_all_rows('ea_locations', array(), $orderPart);
+            }
         }
 
         header("Content-Type: application/json");
-
         die(json_encode($response));
+
+        // phpcs:enable
     }
 
     /**
@@ -1981,23 +2199,89 @@ class EAAjax
      */
     public function ajax_workers()
     {
+        // phpcs:disable WordPress.Security.NonceVerification.Recommended, WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.DB.PreparedSQL.NotPrepared
+
         $this->validate_admin_nonce();
 
         $this->validate_access_rights('workers');
 
         $this->parse_input_data();
 
-        $response = array();
+        global $wpdb;
+        $table = $wpdb->prefix . 'ea_staff';
 
-        $orderPart = $this->models->get_order_by_part('ea_workers');
+        $is_paginated = isset($_GET['paged']) || isset($_POST['paged']);
 
-        if ($this->type === 'GET') {
-            $response = $this->models->get_all_rows('ea_staff', array(), $orderPart);
+        if ($is_paginated) {
+            $paged = isset($_GET['paged']) ? max(1, absint($_GET['paged'])) : 1;
+            if (isset($_POST['paged'])) {
+                $paged = max(1, absint($_POST['paged']));
+            }
+            $per_page = 10;
+            $offset = ($paged - 1) * $per_page;
+
+            $search = isset($_GET['search']) ? sanitize_text_field(wp_unslash($_GET['search'])) : '';
+            if (isset($_POST['search'])) {
+                $search = sanitize_text_field(wp_unslash($_POST['search']));
+            }
+
+            $search_sql = '';
+            $params = array();
+
+            if (!empty($search)) {
+                $search_sql = "WHERE name LIKE %s OR email LIKE %s OR phone LIKE %s OR description LIKE %s";
+                $like = '%' . $wpdb->esc_like($search) . '%';
+                $params = array($like, $like, $like, $like);
+            }
+
+            $total_sql = "SELECT COUNT(*) FROM $table " . ($search_sql ? $search_sql : '');
+            if (!empty($params)) {
+                // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, PluginCheck.Security.DirectDB.UnescapedDBParameter -- Querying custom table with secure prepared parameters.
+                $total_records = $wpdb->get_var($wpdb->prepare($total_sql, ...$params));
+            } else {
+                // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- Querying custom table with static safe query.
+                $total_records = $wpdb->get_var($total_sql);
+            }
+
+            $sortBy = isset($_GET['sortBy']) ? sanitize_text_field($_GET['sortBy']) : 'id';
+            if (isset($_POST['sortBy'])) {
+                $sortBy = sanitize_text_field($_POST['sortBy']);
+            }
+            $sortDir = isset($_GET['sortDir']) && strtoupper($_GET['sortDir']) === 'ASC' ? 'ASC' : 'DESC';
+            if (isset($_POST['sortDir'])) {
+                $sortDir = strtoupper($_POST['sortDir']) === 'ASC' ? 'ASC' : 'DESC';
+            }
+
+            $allowed_columns = array('id', 'name', 'email', 'phone', 'description');
+            if (!in_array($sortBy, $allowed_columns)) {
+                $sortBy = 'id';
+            }
+
+            $query_sql = "SELECT * FROM $table " . ($search_sql ? $search_sql : '') . " ORDER BY $sortBy $sortDir LIMIT %d OFFSET %d";
+            $query_params = array_merge($params, array($per_page, $offset));
+
+            // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, PluginCheck.Security.DirectDB.UnescapedDBParameter -- Fetching paginated results from custom table.
+            $data = $wpdb->get_results($wpdb->prepare($query_sql, ...$query_params));
+
+            $response = array(
+                'data' => $data,
+                'total_pages' => ceil($total_records / $per_page),
+                'paged' => $paged,
+                'total_records' => intval($total_records)
+            );
+        } else {
+            $response = array();
+            $orderPart = $this->models->get_order_by_part('ea_workers');
+            if ($this->type === 'GET') {
+                $response = $this->models->get_all_rows('ea_staff', array(), $orderPart);
+            }
         }
 
         header("Content-Type: application/json");
 
         die(json_encode($response));
+
+        // phpcs:enable
     }
 
     public function ajax_is_pro_exist()
@@ -2831,9 +3115,9 @@ class EAAjax
         die($message);
     }
 
-    private function validate_access_rights($resource)
+    private function validate_access_rights($resource, $default_capability = 'manage_options')
     {
-        $capability = apply_filters('easy-appointments-user-ajax-capabilities', 'manage_options', $resource);
+        $capability = apply_filters('easy-appointments-user-ajax-capabilities', $default_capability, $resource);
 
         if (!current_user_can( $capability ) && !current_user_can('manage_options')) {
             header('HTTP/1.1 403 Forbidden');
@@ -3278,7 +3562,7 @@ class EAAjax
     public function ajax_search_customers () {
         $settings = $this->options->get_options();
 
-        if (!is_user_logged_in()) {
+        if (empty($settings['show.customer_search_front']) && !is_user_logged_in()) {
             wp_send_json([]);
         }
 
@@ -3287,31 +3571,28 @@ class EAAjax
         // phpcs:ignore WordPress.Security.NonceVerification.Recommended
         $q = isset($_GET['q']) ? sanitize_text_field(wp_unslash($_GET['q'])) : '';
 
-        // Fetch user_ids stored in comma-separated format
-        // Assume `user_id` column is a comma-separated list of user IDs like: 1,2,3
-        // We use FIND_IN_SET for matching
         $like_clause = '%' . $wpdb->esc_like($q) . '%';
-        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-        $results = $wpdb->get_results($wpdb->prepare(
-            "
-            SELECT id, name, email 
-            FROM {$wpdb->prefix}ea_customers 
-            WHERE FIND_IN_SET(%d, user_id) 
-            AND (name LIKE %s OR email LIKE %s)
-            LIMIT 20
-            ",
-            $current_user_id, $like_clause, $like_clause
-        ));
+        if (current_user_can('manage_options') || !empty($settings['show.customer_search_front'])) {
+            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+            $results = $wpdb->get_results($wpdb->prepare(
+                "SELECT id, name, email FROM {$wpdb->prefix}ea_customers WHERE (name LIKE %s OR email LIKE %s) LIMIT 20",
+                $like_clause, $like_clause
+            ));
+        } else {
+            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+            $results = $wpdb->get_results($wpdb->prepare(
+                "SELECT id, name, email FROM {$wpdb->prefix}ea_customers WHERE FIND_IN_SET(%d, user_id) AND (name LIKE %s OR email LIKE %s) LIMIT 20",
+                $current_user_id, $like_clause, $like_clause
+            ));
+        }
 
         wp_send_json($results);
     }
 
-
-    
     function ajax_customer_detail () {
         $settings = $this->options->get_options();
 
-        if (isset($settings['show.customer_search_front']) && $settings['show.customer_search_front'] == 1 && is_user_logged_in()) {
+        if (!empty($settings['show.customer_search_front']) || is_user_logged_in()) {
             $this->validate_nonce();
 
             global $wpdb;
@@ -3327,12 +3608,12 @@ class EAAjax
                 wp_send_json([], 404);
             }
 
-            if (current_user_can('manage_options')) {
+            if (current_user_can('manage_options') || !empty($settings['show.customer_search_front'])) {
                 wp_send_json($cust);
             }
 
             $allowed_user_ids = array_filter(array_map('trim', explode(',', (string) ($cust['user_id'] ?? ''))));
-            if (!in_array((string) $current_user_id, $allowed_user_ids, true)) {
+            if ($current_user_id > 0 && !in_array((string) $current_user_id, $allowed_user_ids, true)) {
                 wp_send_json([], 403);
             }
 

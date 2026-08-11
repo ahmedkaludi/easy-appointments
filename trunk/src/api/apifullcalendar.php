@@ -209,6 +209,7 @@ class EasyEAApiFullCalendar
                     'status' => $element->status,
                     'id'     => $element->id,
                     'user'   => $element->user,
+                    'hash'   => $this->calculate_hash($element->id),
                 );
     
                 if ($service_color) {
