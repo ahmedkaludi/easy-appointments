@@ -37,7 +37,7 @@
         var sortBy = 'id';
         var orderBy = 'DESC';
         var currentPage = 1;
-        var perPage = 10;
+        var perPage = parseInt(window.localStorage.getItem('ea-naui-per-page') || 10, 10);
 
         var $tableBody = $('#ea-naui-rows');
         var $emptyState = $('#ea-naui-empty');
@@ -457,11 +457,13 @@
             if (!appointments.length) {
                 $emptyState.show();
                 $('#ea-naui-pagination').empty();
+                $('.ea-naui-pagination-container').hide();
                 checkBulkButtons();
                 return;
             }
 
             $emptyState.hide();
+            $('.ea-naui-pagination-container').css('display', 'flex');
 
             var startIndex = (currentPage - 1) * perPage;
             var endIndex = startIndex + perPage;
@@ -1175,6 +1177,13 @@
             }
         });
 
+        $app.on('change', '#ea-naui-per-page-select', function () {
+            perPage = parseInt($(this).val(), 10);
+            window.localStorage.setItem('ea-naui-per-page', perPage);
+            currentPage = 1;
+            renderRows();
+        });
+
         $('#ea-naui-drawer-close, .ea-naui-drawer-cancel').on('click', function (e) {
             e.preventDefault();
             closeDrawer();
@@ -1290,6 +1299,8 @@
         var savedPeriod = window.localStorage.getItem('ea-naui-period') || 'all_upcoming';
         $('#ea-naui-period').val(savedPeriod);
         applyQuickPeriod(savedPeriod);
+
+        $('#ea-naui-per-page-select').val(perPage);
 
         loadAppointments();
 

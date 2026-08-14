@@ -1037,12 +1037,22 @@ body.wp-admin #ui-datepicker-div td.ea-naui-blocked span,
 }
 
 /* ---------- Pagination ---------- */
+.ea-naui-pagination-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 14px;
+    padding: 0 24px 24px 24px;
+}
+
 .ea-naui-pagination {
     display: flex;
     flex-wrap: wrap;
     gap: 6px;
-    margin-top: 14px;
-    padding: 0 24px 24px 24px;
+    padding: 0;
+    margin-top: 0;
 }
 
 .ea-naui-pagination .ea-naui-btn[disabled] {
@@ -1051,6 +1061,30 @@ body.wp-admin #ui-datepicker-div td.ea-naui-blocked span,
     color: #1d4ed8;
     opacity: 1;
     cursor: default;
+}
+
+.ea-naui-per-page {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: var(--ea-text-muted);
+}
+
+.ea-naui-per-page select {
+    padding: 4px 8px;
+    border: 1px solid var(--ea-border);
+    border-radius: 6px;
+    font-size: 13px;
+    color: var(--ea-text);
+    background: #fff;
+    cursor: pointer;
+    outline: none;
+}
+
+.ea-naui-per-page select:focus {
+    border-color: var(--ea-blue);
+    box-shadow: 0 0 0 3px var(--ea-blue-light);
 }
 
 /* ---------- Toggle Filter Button ---------- */

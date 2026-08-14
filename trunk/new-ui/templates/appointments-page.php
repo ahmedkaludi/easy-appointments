@@ -182,7 +182,18 @@ if (!defined('WPINC')) {
                     <?php esc_html_e('No appointments found for the selected filters.', 'easy-appointments'); ?>
                 </div>
             </div>
-            <div id="ea-naui-pagination" class="ea-naui-pagination"></div>
+            <div class="ea-naui-pagination-container">
+                <div id="ea-naui-pagination" class="ea-naui-pagination"></div>
+                <div class="ea-naui-per-page">
+                    <label for="ea-naui-per-page-select"><?php esc_html_e('Per page:', 'easy-appointments'); ?></label>
+                    <select id="ea-naui-per-page-select">
+                        <option value="10">10</option>
+                        <option value="25">25</option>
+                        <option value="50">50</option>
+                        <option value="100">100</option>
+                    </select>
+                </div>
+            </div>
         </div>
     </div>
 
