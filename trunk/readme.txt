@@ -5,7 +5,7 @@ Tags: appointment, appointments, Booking, calendar, reservation
 Requires at least: 5.0
 Tested up to: 7.0
 Requires PHP: 5.3
-Stable tag: 4.0
+Stable tag: 4.0.1
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -261,6 +261,11 @@ Terms of use and Policy : https://fullcalendar.io/license
 25. Admin panel - Report - Export page
 
 == Changelog ==
+= 4.0.1 (2026-08-14)
+* Fixed Security issues to appointment-management handlers. Reported by Shikhali Jamalzade.
+* Fixed Security issue: missing authorization allowing Contributor-level read/modify/delete of appointments. Reported by Youssef massoudi.
+* Added an option to increase appointment list number #324
+
 = 4.0 (2026-08-10)
 * Fixed Timezone Issue in the "Created At" Field #307.
 * Fixed Am Pm making confusion in cancel booking before hour #309.

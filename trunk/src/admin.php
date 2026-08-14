@@ -713,7 +713,7 @@ class EAAdminPanel
         add_menu_page(
             'Appointments',
             'Appointments',
-            'manage_options',
+            $this->user_capability_callback('manage_options', 'easy_app_top_level'),
             'easy_app_top_level',
             null,
             'dashicons-calendar-alt',

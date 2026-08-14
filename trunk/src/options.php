@@ -52,6 +52,21 @@ class EAOptions
             $page = 'reports';
         }
 
+        // Strip _new suffix from new UI slugs
+        if (substr($page, -4) === '_new') {
+            $page = substr($page, 0, -4);
+        }
+
+        // Map customers to customer
+        if ($page === 'customers') {
+            $page = 'customer';
+        }
+
+        // Map help_support to help_suppport
+        if ($page === 'help_support') {
+            $page = 'help_suppport';
+        }
+
         $option_name = "user.access.{$page}";
 
         $options_value = $this->get_option_value($option_name, '');
