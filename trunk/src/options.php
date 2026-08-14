@@ -179,6 +179,7 @@ class EAOptions
             'fullcalendar.event.template'   => '',
             'shortcode.compress'            => '1',
             'label.from_to'                 => '0',
+            'user.access.appointments'      => '',
             'user.access.services'          => '',
             'user.access.workers'           => '',
             'user.access.locations'         => '',

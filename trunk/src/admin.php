@@ -713,7 +713,7 @@ class EAAdminPanel
         add_menu_page(
             'Appointments',
             'Appointments',
-            'edit_posts',
+            'manage_options',
             'easy_app_top_level',
             null,
             'dashicons-calendar-alt',
@@ -729,7 +729,7 @@ class EAAdminPanel
             'easy_app_top_level',
             __('Appointments', 'easy-appointments'),
             __('Appointments', 'easy-appointments'),
-            $this->user_capability_callback('edit_posts', 'easy_app_top_level'),
+            $this->user_capability_callback('manage_options', 'easy_app_top_level'),
             'easy_app_top_level',
             array($this, 'top_level_appointments')
         );

@@ -138,6 +138,7 @@ class EA_Settings_New_UI
         'fullcalendar.event.title_fields',
         'fullcalendar.event.template',
         // User Access settings
+        'user.access.appointments',
         'user.access.locations',
         'user.access.services',
         'user.access.workers',

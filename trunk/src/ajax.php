@@ -972,7 +972,7 @@ class EAAjax
             wp_send_json_error( [ 'message' => esc_html__( 'Security check failed.', 'easy-appointments' ) ], 403 );
         }
 
-        $this->validate_access_rights( 'appointments', 'edit_posts' );
+        $this->validate_access_rights( 'appointments', 'manage_options' );
 
         $cancel_to = isset( $_POST['cancel_to'] )
             ? sanitize_text_field( wp_unslash( $_POST['cancel_to'] ) )
@@ -1026,7 +1026,7 @@ class EAAjax
             wp_send_json_error( [ 'message' => esc_html__( 'Unauthorized', 'easy-appointments' ) ], 401 );
         }
 
-        $this->validate_access_rights( 'appointments', 'edit_posts' );
+        $this->validate_access_rights( 'appointments', 'manage_options' );
         global $wpdb;
         $current_time = current_time('H:i:s');
         $current_date = current_time('Y-m-d');
@@ -1876,6 +1876,7 @@ class EAAjax
     public function ajax_open_times()
     {
         $this->validate_admin_nonce();
+        $this->validate_access_rights( 'appointments', 'manage_options' );
 
         $data = $this->parse_input_data();
 
@@ -1893,7 +1894,7 @@ class EAAjax
     public function ajax_appointments()
     {
         $this->validate_admin_nonce();
-        $this->validate_access_rights( 'appointments', 'edit_posts' );
+        $this->validate_access_rights( 'appointments', 'manage_options' );
 
         $data = $this->parse_input_data();
 
@@ -1909,7 +1910,7 @@ class EAAjax
     public function ajax_appointment()
     {
         $this->validate_admin_nonce();
-        $this->validate_access_rights( 'appointments', 'edit_posts' );
+        $this->validate_access_rights( 'appointments', 'manage_options' );
 
         $response = $this->parse_appointment(false);
 
@@ -1939,7 +1940,7 @@ class EAAjax
             wp_send_json_error(array('message' => esc_html__('Security check failed.', 'easy-appointments')));
         }
 
-        $this->validate_access_rights( 'appointments', 'edit_posts' );
+        $this->validate_access_rights( 'appointments', 'manage_options' );
         
         if (!isset($_POST['appointments']) || !is_array($_POST['appointments'])) {
             wp_send_json_error(array('message' => esc_html__('No appointments selected.', 'easy-appointments') ));
@@ -1971,6 +1972,7 @@ class EAAjax
     public function ajax_update_order()
     {
         $this->validate_admin_nonce();
+        $this->validate_access_rights( 'services', 'manage_options' );
         $raw_data = file_get_contents('php://input');
         $data = json_decode($raw_data, true);
         if (isset($data['sequence_data']) && !empty($data['sequence_data'])) {
@@ -2619,6 +2621,7 @@ class EAAjax
             'fullcalendar.event.template'   => '',
             'shortcode.compress'            => '1',
             'label.from_to'                 => '0',
+            'user.access.appointments'      => '',
             'user.access.services'          => '',
             'user.access.workers'           => '',
             'user.access.locations'         => '',
@@ -3157,6 +3160,7 @@ class EAAjax
     {
 
         $this->validate_admin_nonce();
+        $this->validate_access_rights( 'settings', 'manage_options' );
         // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotValidated
         $raw_fields = $_POST['fields'];
 
