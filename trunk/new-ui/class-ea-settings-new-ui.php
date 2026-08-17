@@ -182,6 +182,11 @@ class EA_Settings_New_UI
         'price.hide.service',
         'price.hide',
         'webhook.endpoints',
+        'gdpr.on',
+        'gdpr.label',
+        'gdpr.link',
+        'gdpr.message',
+        'gdpr.auto_remove',
     );
 
     /**
