@@ -29,11 +29,13 @@ defined( 'ABSPATH' ) || exit;
                 <td class="ea-label"><%- settings['trans.service'] %></td>
                 <td class="value"><%- data.service %></td>
             </tr>
-            <% if(data.service_description && data.service_description.length > 0) { %>
-            <tr class="row-service-description">
-                <td class="ea-label"><?php echo esc_html__('Description', 'easy-appointments'); ?></td>
-                <td class="value" style="white-space: pre-line;"><%= data.service_description %></td>
-            </tr>
+            <% if(data.service_description) { %>
+                <% if(data.service_description.length > 0) { %>
+                <tr class="row-service-description">
+                    <td class="ea-label"><%- settings['trans.description'] || 'Description' %></td>
+                    <td class="value" style="white-space: pre-line;"><%= data.service_description %></td>
+                </tr>
+                <% } %>
             <% } %>
             <% } %>
             <% if(data.worker.indexOf('_') !== 0) { %>
@@ -64,11 +66,13 @@ defined( 'ABSPATH' ) || exit;
                 <td class="ea-label"><%- settings['trans.service'] %></td>
                 <td class="value"><%- data.service %></td>
             </tr>
-            <% if(data.service_description && data.service_description.length > 0) { %>
-            <tr class="row-service-description">
-                <td class="ea-label"><?php echo esc_html__('Description', 'easy-appointments'); ?></td>
-                <td class="value" style="white-space: pre-line;"><%= data.service_description %></td>
-            </tr>
+            <% if(data.service_description) { %>
+                <% if(data.service_description.length > 0) { %>
+                <tr class="row-service-description">
+                    <td class="ea-label"><%- settings['trans.description'] || 'Description' %></td>
+                    <td class="value" style="white-space: pre-line;"><%= data.service_description %></td>
+                </tr>
+                <% } %>
             <% } %>
             <% } %>
             <% if(data.worker.indexOf('_') !== 0) { %>
@@ -104,7 +108,7 @@ defined( 'ABSPATH' ) || exit;
     
     <div id="ea-success-box" style="display:none; min-width:400px; min-height:340px; margin: 20px auto; padding: 20px; border-radius: 10px; text-align: center; font-family: Arial, sans-serif; box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);" class="ea-confirmation-card">
         <h3 style="color: #2b6924; margin-top: 0;" class="ea-confirmation-title">
-            <%- settings['trans.confirmation-title'] || "<?php esc_html_e('Thank You for Booking!', 'easy-appointments'); ?>" %>
+            <%- settings['trans.confirmation-title'] || 'Thank You for Booking!' %>
         </h3>
         <div style="margin: 10px 0 20px;">
             <p style="font-size: 14px; color: #555; margin-top: 8px; word-wrap: break-word; white-space: normal; max-width: 100%;" class="ea-status-note">
@@ -120,14 +124,14 @@ defined( 'ABSPATH' ) || exit;
                 onclick="window.location.reload();" 
                 style="padding: 5px 10px; background-color: #333cb7; color: white; text-decoration: none; border-radius: 5px; margin-right: 5px;" 
                 class="ea-button-book-again">
-                <%- settings['trans.book-again'] || "<?php esc_html_e('Book New Appointment', 'easy-appointments'); ?>" %>                
+                <%- settings['trans.book-again'] || 'Book New Appointment' %>                
             </a>
             <a 
                 id="ea-add-to-calendar" 
                 href="#" 
                 target="_blank" 
                 style="background-color: #34A853; color: #fff; padding: 5px 10px; border-radius: 6px; text-decoration: none;">                
-                <?php esc_html_e('Add to Google Calendar', 'easy-appointments'); ?>
+                <%- settings['trans.add-to-calendar'] || 'Add to Google Calendar' %>
             </a>
         </div>
     </div>

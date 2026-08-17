@@ -130,30 +130,45 @@
                 moment.locale(ea_settings['datepicker'].substr(0,2));
             }
 
-            // Sanitize template HTML: backticks break _.template()'s new Function()
-            // in modern JS engines that interpret them as template literals.
+            // Sanitize template HTML before passing to _.template / new Function().
+            // Strips characters that silently break JS compilation even after backtick-escaping.
+            function sanitizeTemplateHtml(html) {
+                if (!html) return html;
+                // 1. Escape backticks (template literals break new Function in modern engines)
+                html = html.replace(/`/g, '&#96;');
+                // 2. Decode HTML entities for ampersands that might break JavaScript operators (e.g. && becoming &#038;&#038;)
+                html = html.replace(/&#038;/g, '&').replace(/&#38;/g, '&').replace(/&amp;/g, '&');
+                // 3. Remove zero-width / non-printable Unicode chars that corrupt JS source
+                //    (zero-width space U+200B, zero-width non-joiner U+200C, zero-width joiner U+200D,
+                //     left-to-right mark U+200E, right-to-left mark U+200F, BOM U+FEFF, etc.)
+                html = html.replace(/[\u200B-\u200F\uFEFF\u00AD]/g, '');
+                return html;
+            }
+
             function safeTemplate(selector) {
                 var html = jQuery(selector).html();
                 if (!html) {
                     return function(data) {
-                        var dynamicHtml = jQuery(selector).html();
+                        var dynamicHtml = sanitizeTemplateHtml(jQuery(selector).html());
                         if (dynamicHtml) {
-                            dynamicHtml = dynamicHtml.replace(/`/g, '&#96;');
                             try {
                                 return _.template(dynamicHtml)(data);
                             } catch (e) {
                                 console.error('EA: Template compilation error for ' + selector + ':', e.message);
+                                if (e.source) console.error('EA: Generated source:\n', e.source);
                             }
                         }
                         return '<div></div>';
                     };
                 }
-                // Escape backticks that would break new Function() compilation
-                html = html.replace(/`/g, '&#96;');
+                html = sanitizeTemplateHtml(html);
                 try {
                     return _.template(html);
                 } catch (e) {
                     console.error('EA: Template compilation error for ' + selector + ':', e.message);
+                    if (e.source) {
+                        console.error('EA: Generated source:\n', e.source);
+                    }
                     return _.template('<div></div>');
                 }
             }
@@ -1089,7 +1104,7 @@
                         alert(ea_settings['trans.internal-error']);
                     }
 
-                    plugin.removeLoader();
+                    self.removeLoader();
                 });
             }
         },
