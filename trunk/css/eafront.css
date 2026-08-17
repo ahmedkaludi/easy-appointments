@@ -145,6 +145,8 @@
 	margin-left: 110px;
 }
 
+body .ea-standard label.error,
+.ea-standard label.error,
 label.error {
 	width: 100% !important;
 	color: red;

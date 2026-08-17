@@ -232,6 +232,7 @@
 	font-weight: bold;
 }
 
+body .ea-bootstrap label.error,
 .ea-bootstrap label.error {
 	width: 100% !important;
 	color: red;

@@ -801,6 +801,10 @@ a.time-disabled:hover {
     letter-spacing: 0.01em;
 }
 
+.ea-new-ui .step.final .form-group label.error {
+    color: red;
+}
+
 .ea-new-ui .step.final .col-sm-8,
 .ea-new-ui .step.final .col-sm-4 {
     width: 100%;
