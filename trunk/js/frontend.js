@@ -676,6 +676,7 @@
                 var response = response_m.calendar_slots;
 
                 var next_element = jQuery(calendar).parent().next('.step').children('.time');
+                next_element.empty();
 
                 var fromTo = ea_settings["label.from_to"] == "1";
 
