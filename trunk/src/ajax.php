@@ -1160,7 +1160,10 @@ class EAAjax
 
 
         $slots = $this->logic->get_open_slots($location, $service, $worker, $date, null, true, $block_time);
-        
+
+        // Filter slots against vacation data
+        $slots = $this->filter_slots_by_vacation($slots, $worker, $date, $service);
+
         global $wpdb;
         $day_of_week = gmdate('l', strtotime($date));
         $time_now = current_time('timestamp', false);
@@ -1182,10 +1185,155 @@ class EAAjax
         $this->send_ok_json_result($result);
     }
 
+    /**
+     * Check if a given time slot overlaps with any vacation for the specified worker on the given date.
+     *
+     * @param string $worker_id  The worker ID.
+     * @param string $date       The date in Y-m-d format.
+     * @param string $slot_start The slot start time in H:i format.
+     * @param string $slot_end   The slot end time in H:i format.
+     * @return bool True if the slot is blocked by a vacation.
+     */
+    private function is_slot_in_vacation($worker_id, $date, $slot_start, $slot_end)
+    {
+        $vacations_json = $this->options->get_option_value('vacations', '[]');
+        $vacations = json_decode($vacations_json, true);
+
+        if (!is_array($vacations) || empty($vacations)) {
+            return false;
+        }
+
+        foreach ($vacations as $vacation) {
+            // Check if worker is targeted by this vacation
+            if (!empty($vacation['workers']) && is_array($vacation['workers'])) {
+                $worker_found = false;
+                foreach ($vacation['workers'] as $w) {
+                    if (strval($w['id']) === strval($worker_id)) {
+                        $worker_found = true;
+                        break;
+                    }
+                }
+                if (!$worker_found) {
+                    continue;
+                }
+            }
+
+            // Check if date is in vacation days
+            if (empty($vacation['days']) || !in_array($date, $vacation['days'], true)) {
+                continue;
+            }
+
+            // Determine if full day or partial vacation
+            $is_full_day = true;
+            $vac_start = null;
+            $vac_end = null;
+
+            if (!empty($vacation['time']) && is_array($vacation['time'])) {
+                $time = $vacation['time'];
+                if (isset($time['fullDay'])) {
+                    $is_full_day = ($time['fullDay'] === true || $time['fullDay'] === '1' || $time['fullDay'] === 1 || $time['fullDay'] === 'true');
+                }
+                if (!$is_full_day) {
+                    $raw_start = isset($time['startTime']) ? $time['startTime'] : (isset($time['from']) ? $time['from'] : '');
+                    $raw_end = isset($time['endTime']) ? $time['endTime'] : (isset($time['to']) ? $time['to'] : '');
+                    if ($raw_start && $raw_end) {
+                        $vac_start = (strpos($raw_start, 'T') !== false) ? wp_date('H:i', strtotime($raw_start)) : gmdate('H:i', strtotime($raw_start));
+                        $vac_end   = (strpos($raw_end, 'T') !== false)   ? wp_date('H:i', strtotime($raw_end))   : gmdate('H:i', strtotime($raw_end));
+                    }
+                }
+            } elseif (isset($vacation['fullDay'])) {
+                $is_full_day = ($vacation['fullDay'] === true || $vacation['fullDay'] === '1' || $vacation['fullDay'] === 1 || $vacation['fullDay'] === 'true');
+                if (!$is_full_day) {
+                    $raw_start = isset($vacation['time_from']) ? $vacation['time_from'] : (isset($vacation['from']) ? $vacation['from'] : '');
+                    $raw_end = isset($vacation['time_to']) ? $vacation['time_to'] : (isset($vacation['to']) ? $vacation['to'] : '');
+                    if ($raw_start && $raw_end) {
+                        $vac_start = (strpos($raw_start, 'T') !== false) ? wp_date('H:i', strtotime($raw_start)) : gmdate('H:i', strtotime($raw_start));
+                        $vac_end   = (strpos($raw_end, 'T') !== false)   ? wp_date('H:i', strtotime($raw_end))   : gmdate('H:i', strtotime($raw_end));
+                    }
+                }
+            }
+
+            if ($is_full_day) {
+                // Full day vacation blocks all slots
+                return true;
+            }
+
+            // Partial vacation: check time overlap
+            if ($vac_start !== null && $vac_end !== null) {
+                // Slot overlaps vacation if slot_start < vac_end AND slot_end > vac_start
+                if ($slot_start < $vac_end && $slot_end > $vac_start) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Filter time slots against vacation data. Zeroes out the count for slots
+     * that fall within a worker's vacation period so frontend shows them as unavailable.
+     *
+     * @param array  $slots   Array of slot arrays with 'value', 'count', etc.
+     * @param string $worker  The worker ID.
+     * @param string $date    The date in Y-m-d format.
+     * @param string $service The service ID (used for duration lookup).
+     * @return array Filtered slots.
+     */
+    private function filter_slots_by_vacation($slots, $worker, $date, $service)
+    {
+        if (empty($slots) || empty($worker) || empty($date)) {
+            return $slots;
+        }
+
+        $service_row = $this->models->get_row('ea_services', $service);
+        $duration = $service_row ? intval($service_row->duration) : 0;
+
+        $filtered = array();
+        foreach ($slots as $slot) {
+            $slot_start = $slot['value']; // e.g. '10:00'
+            if ($duration > 0) {
+                $slot_end = gmdate('H:i', strtotime($date . ' ' . $slot_start . " + {$duration} minutes"));
+            } else {
+                $slot_end = $slot_start;
+            }
+
+            if ($this->is_slot_in_vacation($worker, $date, $slot_start, $slot_end)) {
+                $slot['count'] = 0;
+            }
+
+            $filtered[] = $slot;
+        }
+
+        return $filtered;
+    }
+
     public function ajax_res_appointment()
     {
         $this->validate_nonce();
         $this->validate_captcha();
+
+        // Server-side vacation check: block booking during vacation
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- nonce already validated
+        $res_worker  = isset($_GET['worker'])  ? sanitize_text_field(wp_unslash($_GET['worker']))  : '';
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- nonce already validated
+        $res_date    = isset($_GET['date'])    ? sanitize_text_field(wp_unslash($_GET['date']))    : '';
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- nonce already validated
+        $res_start   = isset($_GET['start'])   ? sanitize_text_field(wp_unslash($_GET['start']))   : '';
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- nonce already validated
+        $res_service = isset($_GET['service']) ? sanitize_text_field(wp_unslash($_GET['service'])) : '';
+
+        if ($res_worker && $res_date && $res_start && $res_service) {
+            $svc_row = $this->models->get_row('ea_services', $res_service);
+            $dur = $svc_row ? intval($svc_row->duration) : 0;
+            $s_end = $dur > 0
+                ? gmdate('H:i', strtotime($res_date . ' ' . $res_start . " + {$dur} minutes"))
+                : $res_start;
+
+            if ($this->is_slot_in_vacation($res_worker, $res_date, $res_start, $s_end)) {
+                $this->send_err_json_result('{"err":true,"message":"This time slot is not available because the employee is on vacation."}');
+            }
+        }
 
         $table = 'ea_appointments';
         // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- nonce already validated

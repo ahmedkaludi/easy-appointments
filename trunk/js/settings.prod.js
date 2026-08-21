@@ -905,7 +905,7 @@
                         return worker.id;
                     });
                     // selected worker is not in vacation list exit
-                    if (jQuery.inArray(workerId, workerIds) === -1) {
+                    if (jQuery.inArray(String(workerId), jQuery.map(workerIds, String)) === -1) {
                         return true;
                     }
 

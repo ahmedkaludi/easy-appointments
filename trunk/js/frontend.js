@@ -53,7 +53,7 @@
                         return worker.id;
                     });
                     // selected worker is not in vacation list exit
-                    if (jQuery.inArray(workerId, workerIds) === -1) {
+                    if (jQuery.inArray(String(workerId), jQuery.map(workerIds, String)) === -1) {
                         return true;
                     }
 
@@ -467,6 +467,11 @@
 
             var step = current.parent('.step');
 
+            var $date = this.$element.find('.date');
+            if ($date.hasClass('hasDatepicker')) {
+                $date.datepicker('refresh');
+            }
+
             // blur next options
             this.blurNextSteps(step, isLocationOrService);
 
@@ -573,6 +578,11 @@
                 // Only auto-scroll when moving past worker step to calendar
                 if (options.next !== 'service' && options.next !== 'worker') {
                     plugin.scrollToElement(next_element.parent());
+                }
+
+                var $date = plugin.$element.find('.date');
+                if ($date.hasClass('hasDatepicker')) {
+                    $date.datepicker('refresh');
                 }
             }, 'json')
             .error(function(xhr, status) {
@@ -712,7 +722,7 @@
                             if (v.days && jQuery.inArray(dateString, v.days) !== -1) {
                                 if (v.workers && v.workers.length > 0) {
                                     var wIds = jQuery.map(v.workers, function(w) { return w.id; });
-                                    if (jQuery.inArray(selWorker, wIds) !== -1) {
+                                    if (jQuery.inArray(String(selWorker), jQuery.map(wIds, String)) !== -1) {
                                         tooltip_title = v.tooltip || '';
                                         return false;
                                     }
