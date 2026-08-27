@@ -200,6 +200,7 @@
                 connections = $.isArray(response) ? response : [];
                 currentPage = 1;
                 render();
+                renderExtendBar();
                 showNotice('');
                 hideScreenLoader();
             }).fail(function () {
@@ -493,41 +494,232 @@
         /**
          * ---------- Extend connections ----------
          */
+        /**
+         * ---------- Extend connections ----------
+         */
+        function getExpiredConnections() {
+            var today = isoDate(new Date());
+
+            return $.grep(connections, function (record) {
+                if (!byId(locations, record.location) || !byId(services, record.service) || !byId(workers, record.worker)) {
+                    return false;
+                }
+
+                if (record.day_to) {
+                    var isFarFuture = diffYears(record.day_from, record.day_to) >= 10;
+                    if (!isFarFuture && today > record.day_to) {
+                        return true;
+                    }
+                }
+                return false;
+            });
+        }
+
         function renderExtendBar() {
             if (!cfg.extendUrl) {
                 $('.ea-mnui-extend-bar').hide();
                 return;
             }
 
-            var previousYear = new Date().getFullYear() - 1;
-            $('#ea-mnui-extend-info').text(i18n.extendInfo.replace('%s', previousYear));
+            var expired = getExpiredConnections();
+            var count = expired.length;
+
+            if (count === 0) {
+                $('.ea-mnui-extend-bar').hide();
+            } else if (count === 1) {
+                $('.ea-mnui-extend-bar').show();
+                $('#ea-mnui-extend-info').html('<strong>1 connection has expired</strong> and requires an end date extension to remain active.');
+                $('.ea-mnui-extend-connections').removeClass('ea-mnui-btn-disabled').prop('disabled', false).css('opacity', '1');
+            } else {
+                $('.ea-mnui-extend-bar').show();
+                $('#ea-mnui-extend-info').html('<strong>' + count + ' connections have expired</strong> and require an end date extension to remain active.');
+                $('.ea-mnui-extend-connections').removeClass('ea-mnui-btn-disabled').prop('disabled', false).css('opacity', '1');
+            }
         }
+
+        /**
+         * ---------- Extend Connections Modal Popup ----------
+         */
+        var $extendModal = $('#ea-mnui-extend-modal');
+        var $extendOverlay = $('#ea-mnui-extend-modal-overlay');
+        var $extendSelectAll = $('#ea-mnui-extend-select-all');
+        var $extendRows = $('#ea-mnui-extend-rows');
+        var $extendEmpty = $('#ea-mnui-extend-empty');
+        var $extendSelectedCount = $('#ea-mnui-extend-selected-count');
+
+        function openExtendModal() {
+            var expiredList = getExpiredConnections();
+            $extendRows.empty();
+
+            var nextYear = new Date().getFullYear() + 1;
+            var defaultDateIso = nextYear + '-12-31';
+
+            if (!expiredList.length) {
+                $extendEmpty.show();
+                $extendSelectedCount.text('');
+            } else {
+                $extendEmpty.hide();
+                $.each(expiredList, function (i, row) {
+                    var loc = byId(locations, row.location);
+                    var ser = byId(services, row.service);
+                    var wrk = byId(workers, row.worker);
+
+                    var $tr = $(
+                        '<tr data-id="' + escapeHtml(row.id) + '">' +
+                            '<td class="ea-mnui-col-check">' +
+                                '<input type="checkbox" class="ea-mnui-extend-row-check" data-id="' + escapeHtml(row.id) + '" checked>' +
+                            '</td>' +
+                            '<td>' + escapeHtml(row.id) + '</td>' +
+                            '<td>' +
+                                '<div class="ea-mnui-connection-lines">' +
+                                    '<span class="ea-mnui-connection-location">' + escapeHtml(loc ? loc.name : '') + '</span>' +
+                                    '<span class="ea-mnui-connection-sub">' + escapeHtml(ser ? ser.name : '') + ' / ' + escapeHtml(wrk ? wrk.name : '') + '</span>' +
+                                '</div>' +
+                            '</td>' +
+                            '<td><span class="ea-mnui-badge ea-mnui-badge-inactive">' + escapeHtml(formatDate(row.day_to)) + '</span></td>' +
+                            '<td>' +
+                                '<input type="text" class="ea-mnui-date-input ea-mnui-row-date-input" data-id="' + escapeHtml(row.id) + '" autocomplete="off" readonly>' +
+                            '</td>' +
+                            '<td style="text-align: center;">' +
+                                '<label style="cursor: pointer; font-size: 13px; display: inline-flex; align-items: center; gap: 4px;">' +
+                                    '<input type="checkbox" class="ea-mnui-row-infinite-check" data-id="' + escapeHtml(row.id) + '">' +
+                                    '<span style="font-size: 15px; font-weight: bold; color: #2563eb;">∞</span>' +
+                                '</label>' +
+                            '</td>' +
+                        '</tr>'
+                    );
+
+                    $extendRows.append($tr);
+
+                    var $rowDateInput = $tr.find('.ea-mnui-row-date-input');
+                    $rowDateInput.val(formatDate(defaultDateIso)).data('iso', defaultDateIso);
+
+                    $rowDateInput.datepicker({
+                        dateFormat: (jQuery.datepicker.regional[cfg.datepickerLocale] || {}).dateFormat || 'yy-mm-dd',
+                        minDate: 0,
+                        beforeShow: function (input, inst) {
+                            inst.dpDiv.addClass('ea-mnui-datepicker-popup').removeClass('ea-timepicker-only');
+                        },
+                        onSelect: function (dateText, inst) {
+                            var dateObj = $rowDateInput.datepicker('getDate');
+                            if (dateObj) {
+                                $rowDateInput.data('iso', isoDate(dateObj));
+                            }
+                        }
+                    });
+                    $rowDateInput.datepicker('setDate', new Date(defaultDateIso));
+                });
+            }
+
+            $extendSelectAll.prop('checked', expiredList.length > 0);
+            updateExtendSelectedCount();
+
+            $extendOverlay.addClass('is-open');
+            $extendModal.addClass('is-open');
+        }
+
+        function closeExtendModal() {
+            $extendOverlay.removeClass('is-open');
+            $extendModal.removeClass('is-open');
+        }
+
+        function updateExtendSelectedCount() {
+            var total = $('.ea-mnui-extend-row-check').length;
+            var checked = $('.ea-mnui-extend-row-check:checked').length;
+            $extendSelectedCount.text(checked + ' of ' + total + ' selected');
+            $extendSelectAll.prop('checked', total > 0 && checked === total);
+        }
+
+        // Toggle per-row Infinite checkbox
+        $(document).on('change', '.ea-mnui-row-infinite-check', function () {
+            var $check = $(this);
+            var $row = $check.closest('tr');
+            var $rowDateInput = $row.find('.ea-mnui-row-date-input');
+
+            if ($check.is(':checked')) {
+                var todayIso = isoDate(new Date());
+                var infiniteIso = isoDate(addYears(todayIso, 50));
+                $rowDateInput.data('previous-iso', $rowDateInput.data('iso') || isoDate(new Date()));
+                $rowDateInput.val('∞ (Infinite)').data('iso', infiniteIso).prop('disabled', true).css('opacity', '0.5');
+            } else {
+                var restoredIso = $rowDateInput.data('previous-iso') || isoDate(new Date());
+                $rowDateInput.prop('disabled', false).css('opacity', '1');
+                $rowDateInput.val(formatDate(restoredIso)).data('iso', restoredIso);
+                $rowDateInput.datepicker('setDate', new Date(restoredIso));
+            }
+        });
 
         $app.on('click', '.ea-mnui-extend-connections', function (e) {
             e.preventDefault();
+            if (!cfg.extendUrl || $(this).hasClass('ea-mnui-btn-disabled')) {
+                return;
+            }
+            openExtendModal();
+        });
 
-            if (!cfg.extendUrl) {
+        $('#ea-mnui-extend-modal-close, .ea-mnui-extend-modal-cancel, #ea-mnui-extend-modal-overlay').on('click', function (e) {
+            e.preventDefault();
+            closeExtendModal();
+        });
+
+        $extendSelectAll.on('change', function () {
+            $('.ea-mnui-extend-row-check').prop('checked', $(this).prop('checked'));
+            updateExtendSelectedCount();
+        });
+
+        $(document).on('change', '.ea-mnui-extend-row-check', function () {
+            updateExtendSelectedCount();
+        });
+
+        $('#ea-mnui-extend-form').on('submit', function (e) {
+            e.preventDefault();
+
+            var selectedConnections = [];
+            $('.ea-mnui-extend-row-check:checked').each(function () {
+                var $row = $(this).closest('tr');
+                var id = $(this).data('id');
+                var $dateInput = $row.find('.ea-mnui-row-date-input');
+                var targetIso = $dateInput.data('iso');
+
+                if (!targetIso) {
+                    var dateObj = $dateInput.datepicker('getDate');
+                    targetIso = dateObj ? isoDate(dateObj) : $dateInput.val();
+                }
+
+                selectedConnections.push({
+                    id: id,
+                    day_to: targetIso
+                });
+            });
+
+            if (!selectedConnections.length) {
+                window.alert('Please select at least one connection to extend.');
                 return;
             }
 
-            if (!window.confirm(i18n.extendConfirm)) {
-                return;
-            }
-
-            var $btn = $(this);
-            $btn.addClass('ea-mnui-btn-disabled').prop('disabled', true).text(i18n.extending);
+            var $btn = $('.ea-mnui-extend-modal-submit');
+            $btn.prop('disabled', true).text(i18n.extending || 'Extending...');
             showScreenLoader();
 
             var url = cfg.extendUrl + (cfg.extendUrl.indexOf('?') === -1 ? '?' : '&') + '_wpnonce=' + encodeURIComponent(cfg.restNonce);
 
-            $.post(url).done(function (response) {
-                window.alert(typeof response === 'string' ? response : (response && response.message) || i18n.savedSuccess);
+            $.ajax({
+                url: url,
+                method: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    connections: selectedConnections
+                })
+            }).done(function (response) {
+                closeExtendModal();
+                var msg = (typeof response === 'string' ? response : (response && response.message)) || ('Successfully extended ' + selectedConnections.length + ' connection(s)');
+                showNotice(msg);
                 loadConnections();
             }).fail(function () {
                 showNotice(i18n.genericError);
                 hideScreenLoader();
             }).always(function () {
-                $btn.removeClass('ea-mnui-btn-disabled').prop('disabled', false).text(i18n.extend);
+                $btn.prop('disabled', false).text('Extend Selected Connections');
             });
         });
 

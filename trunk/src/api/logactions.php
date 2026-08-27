@@ -67,16 +67,59 @@ class EasyEALogActions {
         return __('Log records deleted', 'easy-appointments');
     }
 
-    public function extend_connections() {
+    public function extend_connections(WP_REST_Request $request = null) {
         $table_app = $this->db_models->get_wpdb()->prefix . 'ea_connections';
-        $current_year = gmdate('Y');
-        $previous_year = gmdate("Y",strtotime("-1 year"));
-        $query = "UPDATE {$table_app} SET day_to='{$current_year}-12-31' WHERE day_to = '{$previous_year}-12-31'";
+        $params = $request ? $request->get_json_params() : null;
+        if (empty($params) && $request) {
+            $params = $request->get_params();
+        }
 
+        $items = isset($params['connections']) && is_array($params['connections']) ? $params['connections'] : (isset($params['items']) && is_array($params['items']) ? $params['items'] : array());
 
-        $this->db_models->get_wpdb()->query($query);
+        if (!empty($items)) {
+            $count = 0;
+            foreach ($items as $item) {
+                if (isset($item['id']) && isset($item['day_to'])) {
+                    $id = intval($item['id']);
+                    $day_to = sanitize_text_field($item['day_to']);
+                    $query = $this->db_models->get_wpdb()->prepare(
+                        "UPDATE {$table_app} SET day_to = %s WHERE id = %d",
+                        $day_to,
+                        $id
+                    );
+                    $this->db_models->get_wpdb()->query($query);
+                    $count++;
+                }
+            }
+            return sprintf(__('Extended %d connection(s) successfully', 'easy-appointments'), $count);
+        }
 
-        return __('Connection extended', 'easy-appointments');
+        $ids = isset($params['ids']) && is_array($params['ids']) ? array_map('intval', $params['ids']) : array();
+        $day_to = isset($params['day_to']) ? sanitize_text_field($params['day_to']) : '';
+
+        if (empty($day_to)) {
+            $current_year = gmdate('Y');
+            $day_to = "{$current_year}-12-31";
+        }
+
+        if (!empty($ids)) {
+            $ids_imploded = implode(',', $ids);
+            $query = $this->db_models->get_wpdb()->prepare(
+                "UPDATE {$table_app} SET day_to = %s WHERE id IN ({$ids_imploded})",
+                $day_to
+            );
+            $this->db_models->get_wpdb()->query($query);
+            return sprintf(__('Extended %d connection(s) to %s', 'easy-appointments'), count($ids), $day_to);
+        } else {
+            $previous_year = gmdate("Y", strtotime("-1 year"));
+            $query = $this->db_models->get_wpdb()->prepare(
+                "UPDATE {$table_app} SET day_to = %s WHERE day_to = %s OR day_to < CURDATE()",
+                $day_to,
+                "{$previous_year}-12-31"
+            );
+            $this->db_models->get_wpdb()->query($query);
+            return __('Connection extended', 'easy-appointments');
+        }
     }
 
     public static function clear_error_url()
