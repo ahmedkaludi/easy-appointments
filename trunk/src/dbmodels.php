@@ -413,8 +413,9 @@ class EADBModels
 
             $values[] = $value;
         }
+        $current_date = current_time('Y-m-d');
         // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
-        $query = $this->wpdb->prepare("SELECT DISTINCT {$options['next']} FROM $table_name WHERE 1=1$vars", $values );
+        $query = $this->wpdb->prepare("SELECT DISTINCT {$options['next']} FROM $table_name WHERE is_working=1 AND (day_to IS NULL OR day_to = '' OR day_to = '0000-00-00' OR day_to >= %s)$vars", array_merge(array($current_date), $values) );
         // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.PreparedSQL.NotPrepared, 
         $next_rows_raw = $this->wpdb->get_results($query, ARRAY_N);
 
@@ -490,8 +491,9 @@ class EADBModels
             $values[] = $value;
         }
 
+        $current_date = current_time('Y-m-d');
         // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
-        $query = $this->wpdb->prepare( "SELECT DISTINCT {$options['next']} FROM $table_name WHERE 1=1$vars", $values );
+        $query = $this->wpdb->prepare( "SELECT DISTINCT {$options['next']} FROM $table_name WHERE is_working=1 AND (day_to IS NULL OR day_to = '' OR day_to = '0000-00-00' OR day_to >= %s)$vars", array_merge(array($current_date), $values) );
 
         // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.PreparedSQL.NotPrepared
         $next_rows_raw = $this->wpdb->get_results($query, ARRAY_N);
@@ -610,12 +612,13 @@ class EADBModels
     {
         $table = $this->wpdb->prefix . $table_name;
         $connections = $this->wpdb->prefix . 'ea_connections';
+        $current_date = current_time('Y-m-d');
 
         $query = '';
 
         switch ($table_name) {
             case 'ea_locations':
-                $query  = "SELECT DISTINCT l.* FROM {$table} l INNER JOIN $connections c ON (l.id = c.location) WHERE c.is_working=1";
+                $query  = "SELECT DISTINCT l.* FROM {$table} l INNER JOIN $connections c ON (l.id = c.location) WHERE c.is_working=1 AND (c.day_to IS NULL OR c.day_to = '' OR c.day_to = '0000-00-00' OR c.day_to >= '{$current_date}')";
 
                 if (!empty($service_id)) {
 
@@ -649,7 +652,7 @@ class EADBModels
                 $query  = "SELECT DISTINCT s.* 
                         FROM {$table} s 
                         INNER JOIN $connections c ON (s.id = c.service) 
-                        WHERE c.is_working=1";
+                        WHERE c.is_working=1 AND (c.day_to IS NULL OR c.day_to = '' OR c.day_to = '0000-00-00' OR c.day_to >= '{$current_date}')";
 
                 if (!empty($location_id) && is_numeric($location_id)) {
                     $query .= ' AND c.location=' . intval($location_id);
@@ -685,7 +688,7 @@ class EADBModels
 
                 break;
             case 'ea_staff':
-                $query  = "SELECT DISTINCT w.* FROM {$table} w INNER JOIN $connections c ON (w.id = c.worker) WHERE c.is_working=1";
+                $query  = "SELECT DISTINCT w.* FROM {$table} w INNER JOIN $connections c ON (w.id = c.worker) WHERE c.is_working=1 AND (c.day_to IS NULL OR c.day_to = '' OR c.day_to = '0000-00-00' OR c.day_to >= '{$current_date}')";
 
                 if (!empty($location_id) && is_numeric($location_id)) {
                     $query .= ' AND c.location=' . $location_id;
@@ -734,12 +737,13 @@ class EADBModels
     public function get_connections_combinations()
     {
         $connections = $this->wpdb->prefix . 'ea_connections';
+        $current_date = current_time('Y-m-d');
 
         // Select the full scheduling fields so the admin UI can disable
         // non-working calendar days (day_of_week / day_from / day_to).
         // The cascade-select logic only reads location / service / worker,
         // so extra columns are harmlessly ignored there.
-        $query = "SELECT location, service, worker, day_of_week, day_from, day_to FROM $connections WHERE is_working=1";
+        $query = "SELECT location, service, worker, day_of_week, day_from, day_to FROM $connections WHERE is_working=1 AND (day_to IS NULL OR day_to = '' OR day_to = '0000-00-00' OR day_to >= '{$current_date}')";
         // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.PreparedSQL.NotPrepared
         return $this->wpdb->get_results($query);
     }

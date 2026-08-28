@@ -503,29 +503,128 @@
          * @returns {boolean}
          */
         settingsOk: function () {
+            var plugin = this;
             var selectOptions = this.$element.find('select').not('.custom-field');
-            var errors = jQuery('<div style="border: 1px solid gray; padding: 20px;">');
+            var missingItems = [];
             var valid = true;
 
             selectOptions.each(function(index, element) {
                 var $el = jQuery(element);
                 var options = $el.children('option');
 
-                // <option value="">-</option>
                 if (options.length === 1 && options.attr('value') == '') {
-                    jQuery(document.createElement('p'))
-                        .html('You need to define at least one <strong>' + $el.attr('name') + '</strong>.')
-                        .appendTo(errors);
-
+                    var fieldName = $el.attr('name') || 'field';
+                    var capitalized = fieldName.charAt(0).toUpperCase() + fieldName.slice(1);
+                    if (missingItems.indexOf(capitalized) === -1) {
+                        missingItems.push(capitalized);
+                    }
                     valid = false;
                 }
             });
 
             if (!valid) {
-                errors.prepend('<h4>East Appointments - Settings validation:</h4>');
-                errors.append('<p>There should be at least one Connection.</p>');
+                var missingListHtml = missingItems.map(function(item) {
+                    return '<li style="margin-bottom: 6px; display: flex; align-items: center; gap: 8px;">' +
+                           '<span style="color: #ef4444; font-weight: 700;">•</span> ' +
+                           '<span>Define at least one active <strong>' + item + '</strong> and connection</span>' +
+                           '</li>';
+                }).join('');
 
-                this.$element.html(errors);
+                var cardHtml = 
+                    '<div class="ea-booking-alert-card" style="' +
+                        'background: #ffffff; ' +
+                        'border: 1px solid #fee2e2; ' +
+                        'border-left: 5px solid #ef4444; ' +
+                        'border-radius: 12px; ' +
+                        'padding: 24px 28px; ' +
+                        'margin: 20px 0; ' +
+                        'box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.02); ' +
+                        'font-family: -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif;' +
+                    '">' +
+                        '<div style="display: flex; align-items: flex-start; gap: 16px;">' +
+                            '<div style="' +
+                                'background: #fef2f2; ' +
+                                'color: #ef4444; ' +
+                                'width: 44px; ' +
+                                'height: 44px; ' +
+                                'border-radius: 10px; ' +
+                                'display: flex; ' +
+                                'align-items: center; ' +
+                                'justify-content: center; ' +
+                                'flex-shrink: 0;' +
+                            '">' +
+                                '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
+                                    '<circle cx="12" cy="12" r="10"></circle>' +
+                                    '<line x1="12" y1="8" x2="12" y2="12"></line>' +
+                                    '<line x1="12" y1="16" x2="12.01" y2="16"></line>' +
+                                '</svg>' +
+                            '</div>' +
+                            '<div style="flex: 1;">' +
+                                '<h3 style="margin: 0 0 6px 0; font-size: 17px; font-weight: 700; color: #0f172a; letter-spacing: -0.01em;">' +
+                                    'Easy Appointments - Setup Required' +
+                                '</h3>' +
+                                '<p style="margin: 0 0 14px 0; font-size: 14px; color: #475569; line-height: 1.5;">' +
+                                    'Online booking is currently unavailable because active connections or required settings are missing or expired.' +
+                                '</p>' +
+                                '<ul style="margin: 0 0 18px 0; padding: 0; list-style: none; font-size: 13.5px; color: #334155;">' +
+                                    missingListHtml +
+                                '</ul>' +
+                                '<div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">' +
+                                    '<button type="button" class="ea-notify-admin-btn" style="' +
+                                        'background: #2563eb; ' +
+                                        'color: #ffffff; ' +
+                                        'border: none; ' +
+                                        'border-radius: 8px; ' +
+                                        'padding: 10px 18px; ' +
+                                        'font-size: 13.5px; ' +
+                                        'font-weight: 600; ' +
+                                        'cursor: pointer; ' +
+                                        'display: inline-flex; ' +
+                                        'align-items: center; ' +
+                                        'gap: 8px; ' +
+                                        'transition: all 0.2s ease; ' +
+                                        'box-shadow: 0 2px 4px rgba(37, 99, 235, 0.2);' +
+                                    '">' +
+                                        '<svg width="16" height="16" viewBox="0 0 24 24" style="fill: #ffffff !important; stroke: none !important; width: 16px !important; height: 16px !important; flex-shrink: 0;" aria-hidden="true" focusable="false"><path fill="#ffffff" d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>' +
+                                        'Notify Administrator' +
+                                    '</button>' +
+                                    '<span class="ea-notify-status" style="font-size: 13px; font-weight: 500; display: none;"></span>' +
+                                '</div>' +
+                            '</div>' +
+                        '</div>' +
+                    '</div>';
+
+                this.$element.html(cardHtml);
+
+                this.$element.find('.ea-notify-admin-btn').on('click', function(e) {
+                    e.preventDefault();
+                    var $btn = jQuery(this);
+                    var $status = plugin.$element.find('.ea-notify-status');
+
+                    $btn.prop('disabled', true).css('opacity', '0.7').html(
+                        '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="animation: spin 1s linear infinite;"><circle cx="12" cy="12" r="10" stroke-opacity="0.25"></circle><path d="M12 2a10 10 0 0 1 10 10"></path></svg> Sending Notification...'
+                    );
+
+                    jQuery.post(ea_ajaxurl, {
+                        action: 'ea_notify_admin_booking_issue',
+                        _wpnonce: ea_settings['check']
+                    }, function(res) {
+                        if (res && res.success) {
+                            $btn.hide();
+                            $status.css({'color': '#16a34a', 'display': 'inline-block'}).html(
+                                '<span style="display: inline-flex; align-items: center; gap: 6px;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg> Notification Sent! Administrator has been emailed.</span>'
+                            );
+                        } else {
+                            $btn.prop('disabled', false).css('opacity', '1').text('Notify Administrator');
+                            $status.css({'color': '#dc2626', 'display': 'inline-block'}).text(
+                                (res && res.data && res.data.message) ? res.data.message : 'Error sending email. Please try again.'
+                            );
+                        }
+                    }).fail(function() {
+                        $btn.prop('disabled', false).css('opacity', '1').text('Notify Administrator');
+                        $status.css({'color': '#dc2626', 'display': 'inline-block'}).text('Server error. Please try again later.');
+                    });
+                });
             }
 
             return valid;
