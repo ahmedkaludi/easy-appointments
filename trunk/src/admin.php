@@ -715,7 +715,7 @@ class EAAdminPanel
             'Appointments',
             $this->user_capability_callback('manage_options', 'easy_app_top_level'),
             'easy_app_top_level',
-            null,
+            array($this, 'top_level_appointments'),
             'dashicons-calendar-alt',
             '26'
         );
@@ -1043,6 +1043,11 @@ class EAAdminPanel
      */
     public function top_settings_menu()
     {
+        if (class_exists('EA_UI_Switcher') && EA_UI_Switcher::is_new_ui() && class_exists('EA_Settings_New_UI')) {
+            EA_Settings_New_UI::render_page();
+            return;
+        }
+
         // check if APS tags are on
         if ($this->is_asp_tags_are_on()) {
             require_once EA_SRC_DIR . 'templates/asp_tag_message.tpl.php';
