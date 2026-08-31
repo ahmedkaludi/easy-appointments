@@ -70,6 +70,17 @@ class EA_Connections_New_UI
     {
         add_action('admin_menu', array(__CLASS__, 'register_menu'), 20);
         add_action('admin_enqueue_scripts', array(__CLASS__, 'enqueue_assets'));
+
+        // Expiration Alert AJAX actions for New UI
+        add_action('wp_ajax_ea_save_connection_expire_settings', array(__CLASS__, 'ajax_save_connection_expire_settings'));
+        add_action('wp_ajax_ea_trigger_connection_expire_check', array(__CLASS__, 'ajax_trigger_connection_expire_check'));
+
+        // WP-Cron event hook for daily expiration check
+        add_action('easy_ea_daily_connection_expire_check', array(__CLASS__, 'check_and_notify_expiring_connections'));
+
+        if (!wp_next_scheduled('easy_ea_daily_connection_expire_check')) {
+            wp_schedule_event(time(), 'daily', 'easy_ea_daily_connection_expire_check');
+        }
     }
 
     /**
@@ -310,6 +321,238 @@ class EA_Connections_New_UI
         }
 
         require EA_PLUGIN_DIR . 'new-ui/templates/connections-page.php';
+    }
+
+    /**
+     * AJAX endpoint: Save Connection Expiration alert settings.
+     */
+    public static function ajax_save_connection_expire_settings()
+    {
+        if (!current_user_can(self::capability())) {
+            wp_send_json_error(array('message' => esc_html__('Permission denied.', 'easy-appointments')));
+        }
+
+        check_ajax_referer(self::REST_NONCE_ACTION, '_wpnonce');
+
+        $enabled     = isset($_POST['enabled']) && ($_POST['enabled'] === '1' || $_POST['enabled'] === 1 || $_POST['enabled'] === 'true') ? '1' : '0';
+        $days_before = isset($_POST['days_before']) ? intval($_POST['days_before']) : 7;
+        if ($days_before < 1) {
+            $days_before = 7;
+        }
+
+        update_option('ea_connection_expire_mail_enabled', $enabled);
+        update_option('ea_connection_expire_days_before', $days_before);
+
+        if (class_exists('EADBModels')) {
+            global $easy_ea_app;
+            if ($easy_ea_app instanceof EasyAppointment) {
+                try {
+                    $options = $easy_ea_app->get_container()['options'];
+                    $options->save_option('connection_expire.mail_enabled', $enabled);
+                    $options->save_option('connection_expire.days_before', $days_before);
+                } catch (Exception $e) {
+                    // Ignore container error
+                }
+            }
+        }
+
+        wp_send_json_success(array('message' => esc_html__('Connection expiration alert settings saved successfully.', 'easy-appointments')));
+    }
+
+    /**
+     * AJAX endpoint: Trigger manual connection expiration check and email dispatch.
+     */
+    public static function ajax_trigger_connection_expire_check()
+    {
+        if (!current_user_can(self::capability())) {
+            wp_send_json_error(array('message' => esc_html__('Permission denied.', 'easy-appointments')));
+        }
+
+        check_ajax_referer(self::REST_NONCE_ACTION, '_wpnonce');
+
+        $res = self::check_and_notify_expiring_connections(true);
+
+        if (!empty($res['success'])) {
+            wp_send_json_success($res);
+        } else {
+            wp_send_json_error($res);
+        }
+    }
+
+    /**
+     * Check for connections that are expired or expiring within $days_before days,
+     * and send an email alert to the site administrator.
+     *
+     * @param bool $force_send If true, bypasses daily sent throttling cache.
+     * @return array Result payload.
+     */
+    public static function check_and_notify_expiring_connections($force_send = false)
+    {
+        global $wpdb;
+
+        // 1. Feature enabled check
+        $enabled = get_option('ea_connection_expire_mail_enabled', '1');
+        if (class_exists('EADBModels')) {
+            global $easy_ea_app;
+            if ($easy_ea_app instanceof EasyAppointment) {
+                try {
+                    $opt_val = $easy_ea_app->get_container()['options']->get_option_value('connection_expire.mail_enabled', '1');
+                    if ($opt_val !== null) {
+                        $enabled = $opt_val;
+                    }
+                } catch (Exception $e) {
+                    // fallback
+                }
+            }
+        }
+
+        if ($enabled !== '1' && $enabled !== 1 && $enabled !== true) {
+            return array(
+                'success' => false,
+                'message' => esc_html__('Connection expiration email alerts are currently disabled.', 'easy-appointments'),
+            );
+        }
+
+        $today = current_time('Y-m-d');
+        $last_sent = get_transient('easy_ea_connection_expire_mail_sent_date');
+        if (!$force_send && $last_sent === $today) {
+            return array(
+                'success' => true,
+                'message' => esc_html__('Expiration notification email already sent today.', 'easy-appointments'),
+            );
+        }
+
+        // 2. Days before threshold
+        $days_before = intval(get_option('ea_connection_expire_days_before', 7));
+        if (class_exists('EADBModels')) {
+            global $easy_ea_app;
+            if ($easy_ea_app instanceof EasyAppointment) {
+                try {
+                    $opt_days = $easy_ea_app->get_container()['options']->get_option_value('connection_expire.days_before', '7');
+                    if (!empty($opt_days)) {
+                        $days_before = intval($opt_days);
+                    }
+                } catch (Exception $e) {
+                    // fallback
+                }
+            }
+        }
+        if ($days_before < 1) {
+            $days_before = 7;
+        }
+
+        $threshold_date = date('Y-m-d', strtotime("+$days_before days", strtotime($today)));
+
+        // 3. Query active connections ending on or before $threshold_date
+        $connections_table = $wpdb->prefix . 'ea_connections';
+        $locations_table   = $wpdb->prefix . 'ea_locations';
+        $services_table    = $wpdb->prefix . 'ea_services';
+        $staff_table       = $wpdb->prefix . 'ea_staff';
+
+        // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+        $query = $wpdb->prepare(
+            "SELECT c.id, c.day_from, c.day_to, c.is_working,
+                    l.name AS location_name,
+                    s.name AS service_name,
+                    w.name AS worker_name
+             FROM {$connections_table} c
+             LEFT JOIN {$locations_table} l ON (c.location = l.id)
+             LEFT JOIN {$services_table} s ON (c.service = s.id)
+             LEFT JOIN {$staff_table} w ON (c.worker = w.id)
+             WHERE c.is_working = 1
+               AND c.day_to IS NOT NULL
+               AND c.day_to != ''
+               AND c.day_to != '0000-00-00'
+               AND c.day_to <= %s
+             ORDER BY c.day_to ASC",
+            $threshold_date
+        );
+
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+        $results = $wpdb->get_results($query, ARRAY_A);
+
+        if (empty($results)) {
+            return array(
+                'success' => true,
+                'count'   => 0,
+                'message' => esc_html__('No connections are expired or expiring within the specified days.', 'easy-appointments'),
+            );
+        }
+
+        // 4. Send Email Alert
+        $admin_email = get_option('admin_email');
+        if (empty($admin_email) || !is_email($admin_email)) {
+            return array(
+                'success' => false,
+                'message' => esc_html__('Administrator email address is invalid or missing.', 'easy-appointments'),
+            );
+        }
+
+        $site_name = wp_specialchars_decode(get_bloginfo('name'), ENT_QUOTES);
+        $site_url  = home_url();
+        $count     = count($results);
+
+        $subject = sprintf(
+            /* translators: 1: Site name, 2: Count of connections */
+            __('[%1$s] Alert: %2$d Connection(s) Expiring / Expired', 'easy-appointments'),
+            $site_name,
+            $count
+        );
+
+        $body  = sprintf(__("Hello Administrator,\n\n", 'easy-appointments'));
+        $body .= sprintf(
+            /* translators: 1: Connection count, 2: Site URL, 3: Days before */
+            __("The following %1\$d connection(s) on your website (%2\$s) are expired or expiring within the next %3\$d day(s):\n\n", 'easy-appointments'),
+            $count,
+            $site_url,
+            $days_before
+        );
+
+        foreach ($results as $row) {
+            $conn_id  = $row['id'];
+            $loc_name = !empty($row['location_name']) ? $row['location_name'] : __('All Locations', 'easy-appointments');
+            $svc_name = !empty($row['service_name']) ? $row['service_name'] : __('All Services', 'easy-appointments');
+            $wrk_name = !empty($row['worker_name']) ? $row['worker_name'] : __('All Staff', 'easy-appointments');
+            $day_to   = $row['day_to'];
+
+            if ($day_to < $today) {
+                $status_str = sprintf(__('EXPIRED on %s', 'easy-appointments'), $day_to);
+            } else {
+                $days_left  = floor((strtotime($day_to) - strtotime($today)) / 86400);
+                $status_str = sprintf(__('Expiring in %d day(s) on %s', 'easy-appointments'), $days_left, $day_to);
+            }
+
+            $body .= sprintf(
+                "• Connection #%d [%s | %s | %s] - %s\n",
+                $conn_id,
+                $loc_name,
+                $svc_name,
+                $wrk_name,
+                $status_str
+            );
+        }
+
+        $manage_url = admin_url('admin.php?page=easy_app_connections_new');
+        $body .= sprintf(__("\nPlease log in to your dashboard to manage or extend these connections:\n%s\n\n---\nEasy Appointments", 'easy-appointments'), $manage_url);
+
+        $headers = array('Content-Type: text/plain; charset=UTF-8');
+
+        $sent = wp_mail($admin_email, $subject, $body, $headers);
+
+        if ($sent) {
+            set_transient('easy_ea_connection_expire_mail_sent_date', $today, DAY_IN_SECONDS);
+
+            return array(
+                'success' => true,
+                'count'   => $count,
+                'message' => sprintf(__('Alert email sent to administrator (%1$s) for %2$d connection(s).', 'easy-appointments'), $admin_email, $count),
+            );
+        }
+
+        return array(
+            'success' => false,
+            'message' => esc_html__('Failed to send connection expiration alert email.', 'easy-appointments'),
+        );
     }
 }
 

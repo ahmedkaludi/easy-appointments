@@ -1824,6 +1824,19 @@
 
             $(document).on('change', 'input[data-key="send.worker.email"], input[data-key="send.user.email"]', toggleNotificationChips);
             toggleNotificationChips();
+
+            function toggleConnectionExpireDays() {
+                var $expireCheck = $('input[data-key="connection_expire.mail_enabled"]');
+                var $daysRow = $('.ea-nsui-row-connection-expire-days');
+                if ($expireCheck.is(':checked')) {
+                    $daysRow.show();
+                } else {
+                    $daysRow.hide();
+                }
+            }
+
+            $(document).on('change', 'input[data-key="connection_expire.mail_enabled"]', toggleConnectionExpireDays);
+            toggleConnectionExpireDays();
         })();
     });
 })(jQuery);

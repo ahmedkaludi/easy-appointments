@@ -407,12 +407,34 @@
             });
 
             if (!valid) {
-                var missingListHtml = missingItems.map(function(item) {
-                    return '<li style="margin-bottom: 6px; display: flex; align-items: center; gap: 8px;">' +
-                           '<span style="color: #ef4444; font-weight: 700;">•</span> ' +
-                           '<span>Define at least one active <strong>' + item + '</strong> and connection</span>' +
-                           '</li>';
-                }).join('');
+                var isNoConnections = (typeof ea_settings !== 'undefined' && ea_settings.connection_status === 'none');
+                var isExpired = !isNoConnections;
+
+                var cardTitle = 'Easy Appointments - Setup Required';
+                var cardDesc = 'Online booking is currently unavailable because active connections or required settings are missing or expired.';
+
+                if (isExpired) {
+                    cardTitle = 'Oops! All Connections Have Expired';
+                    cardDesc = 'Online booking is currently unavailable because connection end dates have passed.';
+                } else if (isNoConnections) {
+                    cardTitle = 'Online Booking Unavailable';
+                    cardDesc = 'Online booking is currently unavailable at this time.';
+                }
+
+                var missingListHtml = '';
+                if (!isExpired && !isNoConnections) {
+                    missingListHtml = missingItems.map(function(item) {
+                        return '<li style="margin-bottom: 6px; display: flex; align-items: center; gap: 8px;">' +
+                               '<span style="color: #ef4444; font-weight: 700;">•</span> ' +
+                               '<span>Define at least one active <strong>' + item + '</strong> and connection</span>' +
+                               '</li>';
+                    }).join('');
+                }
+
+                var listContainerHtml = missingListHtml ? 
+                    '<ul style="margin: 0 0 18px 0; padding: 0; list-style: none; font-size: 13.5px; color: #334155;">' +
+                        missingListHtml +
+                    '</ul>' : '';
 
                 var cardHtml = 
                     '<div class="ea-booking-alert-card" style="' +
@@ -445,14 +467,12 @@
                             '</div>' +
                             '<div style="flex: 1;">' +
                                 '<h3 style="margin: 0 0 6px 0; font-size: 17px; font-weight: 700; color: #0f172a; letter-spacing: -0.01em;">' +
-                                    'Easy Appointments - Setup Required' +
+                                    cardTitle +
                                 '</h3>' +
                                 '<p style="margin: 0 0 14px 0; font-size: 14px; color: #475569; line-height: 1.5;">' +
-                                    'Online booking is currently unavailable because active connections or required settings are missing or expired.' +
+                                    cardDesc +
                                 '</p>' +
-                                '<ul style="margin: 0 0 18px 0; padding: 0; list-style: none; font-size: 13.5px; color: #334155;">' +
-                                    missingListHtml +
-                                '</ul>' +
+                                listContainerHtml +
                                 '<div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">' +
                                     '<button type="button" class="ea-notify-admin-btn" style="' +
                                         'background: #2563eb; ' +
@@ -469,7 +489,6 @@
                                         'transition: all 0.2s ease; ' +
                                         'box-shadow: 0 2px 4px rgba(37, 99, 235, 0.2);' +
                                     '">' +
-                                        '<svg width="16" height="16" viewBox="0 0 24 24" style="fill: #ffffff !important; stroke: none !important; width: 16px !important; height: 16px !important; flex-shrink: 0;" aria-hidden="true" focusable="false"><path fill="#ffffff" d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>' +
                                         'Notify Administrator' +
                                     '</button>' +
                                     '<span class="ea-notify-status" style="font-size: 13px; font-weight: 500; display: none;"></span>' +
