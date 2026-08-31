@@ -1495,44 +1495,51 @@
                     $bootstrap.addClass('ea-booking-complete');
                     plugin.$element.find('.ea-filters-grid, .ea-filters-grid-full, .ea-booking-title, .ea-booking-summary-bar, .ea-new-ui-final-actions, .booking-button, .ea-submit').hide();
                     plugin.$element.find('.step').not('.final').hide();
-                    plugin.$element.find('.step.final').find('h3, small, label, .ea_hide_show, .form-group, #booking-overview-header, #ea-overview-message, .ea-confirmation-subtext').hide();
-                    plugin.$element.find('h3, small, #booking-overview-header, #ea-overview-message, .ea-confirmation-subtext').not('.ea-confirmation-title').not('.ea-status-note').hide();
+                    plugin.$element.find('.step.final').find('small, label, .ea_hide_show, .form-group, #booking-overview-header, #ea-overview-message, .ea-confirmation-subtext').hide();
+                    plugin.$element.find('small, #booking-overview-header, #ea-overview-message, .ea-confirmation-subtext').not('.ea-confirmation-title').not('.ea-status-note').hide();
                     plugin.$element.find('.step.final').children().not('#booking-overview').not('#ea-success-box').hide();
                     var table_html = plugin.$element.find('#booking-overview').find('table').html();
                     plugin.$element.find('#booking-overview').show();
                     plugin.$element.find('#booking-overview').find('table').hide();
                     plugin.$element.find('.final').show();
                     plugin.$element.find('#ea-success-box').show();
-                    plugin.$element.find('#ea-overview-details').html(table_html);
+                    plugin.$element.find('#ea-success-box .ea-confirmation-title, #ea-success-box .ea-status-note').show().css({'display':'block','visibility':'visible'});
+                    plugin.$element.find('#ea-overview-details').html('<table class="ea-overview-table" style="width:100% !important; table-layout:fixed !important; border-collapse:collapse !important;">' + table_html + '</table>');
     
                     const meta = document.getElementById('ea-meta-data');
                     if (meta) {
-                        const rawDateTime = meta.dataset.dateTime;
-                        const service = meta.dataset.service;
-                        const worker = meta.dataset.worker;
-                        const location = meta.dataset.location;
-                        const price = document.getElementById('ea-total-amount')?.dataset.price || '';
-                        const currency = meta.dataset.currency;
+                        const rawDateTime = meta.dataset.dateTime || '';
+                        const service = meta.dataset.service || '';
+                        const worker = meta.dataset.worker || '';
+                        const location = meta.dataset.location || '';
+                        const priceElem = document.getElementById('ea-total-amount');
+                        const price = priceElem ? (priceElem.dataset.price || '') : '';
+                        const currency = meta.dataset.currency || '';
                         const title = `${service} with ${worker}`;
                         const description = `Service: ${service}\nWorker: ${worker}\nPrice: ${price}${currency}`;
                         const startDateObj = new Date(rawDateTime);
-                        if (isNaN(startDateObj.getTime())) {
-                            console.error('Invalid date:', rawDateTime);
-                        }else{
+                        if (!isNaN(startDateObj.getTime())) {
                             const endDateObj = new Date(startDateObj.getTime() + 60 * 60 * 1000); // +1 hour
-        
+
                             const formatDateForGoogle = (dateObj) =>
                                 dateObj.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
-        
+
                             const start = formatDateForGoogle(startDateObj);
                             const end = formatDateForGoogle(endDateObj);
-        
-                            calendarUrl.searchParams.set("trp", "false");
-        
-                            document.getElementById("ea-add-to-calendar").href = calendarUrl.toString();
 
+                            const calendarUrl = new URL("https://calendar.google.com/calendar/render");
+                            calendarUrl.searchParams.set("action", "TEMPLATE");
+                            calendarUrl.searchParams.set("text", title);
+                            calendarUrl.searchParams.set("dates", `${start}/${end}`);
+                            calendarUrl.searchParams.set("details", description);
+                            calendarUrl.searchParams.set("location", location);
+                            calendarUrl.searchParams.set("trp", "false");
+
+                            const calBtn = document.getElementById("ea-add-to-calendar");
+                            if (calBtn) {
+                                calBtn.href = calendarUrl.toString();
+                            }
                         }
-    
                     }
                     plugin.$element.find('.ea-status-note').text(ea_settings['default_status_message']);
                     window.scrollTo({ top: 0, behavior: 'smooth' });

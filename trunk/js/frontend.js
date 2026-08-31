@@ -1013,22 +1013,22 @@
                     plugin.$element.find('#booking-overview-header').hide();
                     plugin.$element.find('#ea-overview-message').hide();
                     plugin.$element.find('#ea-success-box').show();
-                    plugin.$element.find('#ea-overview-details').html(table_html);
+                    plugin.$element.find('#ea-success-box .ea-confirmation-title, #ea-success-box .ea-status-note').show().css({'display':'block','visibility':'visible'});
+                    plugin.$element.find('#ea-overview-details').html('<table class="ea-overview-table" style="width:100% !important; table-layout:fixed !important; border-collapse:collapse !important;">' + table_html + '</table>');
     
                     const meta = document.getElementById('ea-meta-data');
                     if (meta) {
-                        const rawDateTime = meta.dataset.dateTime;
-                        const service = meta.dataset.service;
-                        const worker = meta.dataset.worker;
-                        const location = meta.dataset.location;
-                        const price = document.getElementById('ea-total-amount')?.dataset.price || '';
-                        const currency = meta.dataset.currency;
+                        const rawDateTime = meta.dataset.dateTime || '';
+                        const service = meta.dataset.service || '';
+                        const worker = meta.dataset.worker || '';
+                        const location = meta.dataset.location || '';
+                        const priceElem = document.getElementById('ea-total-amount');
+                        const price = priceElem ? (priceElem.dataset.price || '') : '';
+                        const currency = meta.dataset.currency || '';
                         const title = `${service} with ${worker}`;
                         const description = `Service: ${service}\nWorker: ${worker}\nPrice: ${price}${currency}`;
                         const startDateObj = new Date(rawDateTime);
-                        if (isNaN(startDateObj.getTime())) {
-                            console.error('Invalid date:', rawDateTime);
-                        }else{
+                        if (!isNaN(startDateObj.getTime())) {
                             const endDateObj = new Date(startDateObj.getTime() + 60 * 60 * 1000); // +1 hour
         
                             const formatDateForGoogle = (dateObj) =>
@@ -1045,9 +1045,11 @@
                             calendarUrl.searchParams.set("location", location);
                             calendarUrl.searchParams.set("trp", "false");
         
-                            document.getElementById("ea-add-to-calendar").href = calendarUrl.toString();
+                            const calBtn = document.getElementById("ea-add-to-calendar");
+                            if (calBtn) {
+                                calBtn.href = calendarUrl.toString();
+                            }
                         }
-    
                     }
                     
                     plugin.$element.find('.ea-status-note').text(ea_settings['default_status_message']);
