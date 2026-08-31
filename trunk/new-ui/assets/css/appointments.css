@@ -399,6 +399,38 @@
     color: var(--ea-red);
 }
 
+.ea-naui-icon-btn.ea-naui-confirm {
+    color: #16a34a;
+    border-color: #e2e8f0;
+}
+
+.ea-naui-icon-btn.ea-naui-confirm:hover:not(:disabled) {
+    background: #f0fdf4;
+    border-color: #bbf7d0;
+    color: #15803d;
+}
+
+.ea-naui-icon-btn.ea-naui-confirm:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+}
+
+.ea-naui-icon-btn.ea-naui-cancel-app {
+    color: #dc2626;
+    border-color: #e2e8f0;
+}
+
+.ea-naui-icon-btn.ea-naui-cancel-app:hover:not(:disabled) {
+    background: #fef2f2;
+    border-color: #fecaca;
+    color: #b91c1c;
+}
+
+.ea-naui-icon-btn.ea-naui-cancel-app:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+}
+
 .ea-naui-empty {
     padding: 40px 20px;
     text-align: center;

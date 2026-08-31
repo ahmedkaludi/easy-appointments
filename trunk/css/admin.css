@@ -89,13 +89,13 @@ select.field {
 	vertical-align: middle;
 }
 
-.ea-row .btn-edit, .ea-row .btn-del, .ea-row .btn-clone {
+.ea-row .btn-edit, .ea-row .btn-del, .ea-row .btn-clone, .ea-row .btn-status-confirm, .ea-row .btn-status-cancel {
 	display: none;
 }
 
-.ea-row:hover .btn-edit, .ea-row:hover .btn-del, .ea-row:hover .btn-clone,
-.ea-row:focus .btn-edit, .ea-row:focus .btn-del, .ea-row:focus .btn-clone,
-.ea-row:focus-within .btn-edit, .ea-row:focus-within .btn-del, .ea-row:focus-within .btn-clone {
+.ea-row:hover .btn-edit, .ea-row:hover .btn-del, .ea-row:hover .btn-clone, .ea-row:hover .btn-status-confirm, .ea-row:hover .btn-status-cancel,
+.ea-row:focus .btn-edit, .ea-row:focus .btn-del, .ea-row:focus .btn-clone, .ea-row:focus .btn-status-confirm, .ea-row:focus .btn-status-cancel,
+.ea-row:focus-within .btn-edit, .ea-row:focus-within .btn-del, .ea-row:focus-within .btn-clone, .ea-row:focus-within .btn-status-confirm, .ea-row:focus-within .btn-status-cancel {
 	display: inline-block;
 	cursor: pointer;
 }
@@ -140,14 +140,49 @@ select.time-start option:disabled {
 
 .action-center {
 	text-align: center;
+	white-space: nowrap;
 }
 
-.action-center button {
-	margin-top: 1px !important;
-	margin-bottom: 1px !important;
-	margin-left: 10px;
-	margin-right: 10px;
-	width: 70%
+.action-center button,
+.action-center button.button {
+	display: inline-flex !important;
+	align-items: center !important;
+	justify-content: center !important;
+	width: 28px !important;
+	height: 28px !important;
+	min-width: 28px !important;
+	max-width: 28px !important;
+	min-height: 28px !important;
+	max-height: 28px !important;
+	line-height: 1 !important;
+	padding: 0 !important;
+	margin: 1px 2px !important;
+	border-radius: 6px !important;
+	box-shadow: none !important;
+	vertical-align: middle !important;
+	background: #ffffff !important;
+	border: 1px solid #cbd5e1 !important;
+	color: #475569 !important;
+	box-sizing: border-box !important;
+}
+
+.action-center button svg {
+	display: block !important;
+	width: 14px !important;
+	height: 14px !important;
+	margin: auto !important;
+	flex-shrink: 0 !important;
+}
+
+.action-center button:hover:not(:disabled) {
+	background: #f1f5f9 !important;
+	border-color: #94a3b8 !important;
+	color: #0f172a !important;
+}
+
+.action-center button:disabled {
+	opacity: 0.35 !important;
+	cursor: not-allowed !important;
 }
 
 /*   EDITING ROW    */

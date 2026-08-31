@@ -497,6 +497,20 @@
 
             var statusLabel = statuses[row.status] || row.status || '';
 
+            var isConfirmed = row.status === 'confirmed';
+            var isCanceled = row.status === 'canceled';
+
+            var confirmTitle = isConfirmed ? 'Already Confirmed' : 'Confirm Appointment';
+            var cancelTitle = isCanceled ? 'Already Canceled' : 'Cancel Appointment';
+
+            var confirmBtnHtml = '<button type="button" class="ea-naui-icon-btn ea-naui-confirm' + (isConfirmed ? ' is-active' : '') + '" title="' + escapeHtml(confirmTitle) + '" data-id="' + escapeHtml(row.id) + '"' + (isConfirmed ? ' disabled' : '') + '>' +
+                '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>' +
+            '</button>';
+
+            var cancelBtnHtml = '<button type="button" class="ea-naui-icon-btn ea-naui-cancel-app' + (isCanceled ? ' is-active' : '') + '" title="' + escapeHtml(cancelTitle) + '" data-id="' + escapeHtml(row.id) + '"' + (isCanceled ? ' disabled' : '') + '>' +
+                '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>' +
+            '</button>';
+
             var $row = $(
                 '<tr class="ea-naui-row" data-id="' + escapeHtml(row.id) + '">' +
                     '<td class="ea-naui-col-check">' +
@@ -522,6 +536,8 @@
                         '<span class="ea-naui-sub">' + escapeHtml(formatDateTime(row.created, true)) + '</span>' +
                     '</td>' +
                     '<td class="ea-naui-col-actions">' +
+                        confirmBtnHtml +
+                        cancelBtnHtml +
                         '<button type="button" class="ea-naui-icon-btn ea-naui-edit" title="' + escapeHtml(i18n.edit) + '">' +
                             '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>' +
                         '</button>' +
@@ -765,6 +781,71 @@
                 }
             });
         });
+
+        /**
+         * ---------- Quick Action Confirm & Cancel Status ----------
+         */
+        $app.on('click', '.ea-naui-confirm', function (e) {
+            e.preventDefault();
+            var id = $(this).data('id');
+            window.eaConfirm({
+                title: 'Confirm Appointment',
+                message: 'Are you sure you want to mark appointment #' + id + ' as confirmed?',
+                confirmLabel: 'Confirm',
+                cancelLabel: i18n.cancel || 'Cancel',
+                isDanger: false,
+                onConfirm: function () {
+                    changeAppointmentStatus(id, 'confirmed');
+                }
+            });
+        });
+
+        $app.on('click', '.ea-naui-cancel-app', function (e) {
+            e.preventDefault();
+            var id = $(this).data('id');
+            window.eaConfirm({
+                title: 'Cancel Appointment',
+                message: 'Are you sure you want to cancel appointment #' + id + '?',
+                confirmLabel: 'Cancel Appointment',
+                cancelLabel: i18n.cancel || 'Cancel',
+                isDanger: true,
+                onConfirm: function () {
+                    changeAppointmentStatus(id, 'canceled');
+                }
+            });
+        });
+
+        function changeAppointmentStatus(id, newStatus) {
+            showNotice(i18n.saving || 'Updating status…', true);
+            showScreenLoader();
+
+            $.ajax({
+                url: cfg.ajaxUrl,
+                method: 'POST',
+                dataType: 'json',
+                data: {
+                    action: 'ea_change_appointment_status',
+                    id: id,
+                    status: newStatus,
+                    _wpnonce: cfg.nonce
+                }
+            }).done(function (res) {
+                hideScreenLoader();
+                if (res && res.success) {
+                    showNotice(res.data && res.data.message ? res.data.message : 'Status updated successfully!');
+                    var app = findById(appointments, id);
+                    if (app) {
+                        app.status = newStatus;
+                    }
+                    renderRows();
+                } else {
+                    showNotice(res && res.data && res.data.message ? res.data.message : 'Failed to update status.');
+                }
+            }).fail(function () {
+                hideScreenLoader();
+                showNotice('Failed to update status.');
+            });
+        }
 
         /**
          * ---------- Add / Edit / Clone drawer ----------

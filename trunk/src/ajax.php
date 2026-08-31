@@ -134,6 +134,7 @@ class EAAjax
 
             // Appointment
             add_action('wp_ajax_ea_appointment', array($this, 'ajax_appointment'));
+            add_action('wp_ajax_ea_change_appointment_status', array($this, 'ajax_change_appointment_status'));
 
             // Services
             add_action('wp_ajax_ea_services', array($this, 'ajax_services'));
@@ -2127,6 +2128,73 @@ class EAAjax
         }
 
         $this->send_ok_json_result($response);
+    }
+
+    public function ajax_change_appointment_status()
+    {
+        if ( ! is_user_logged_in() ) {
+            wp_send_json_error( array( 'message' => esc_html__( 'Unauthorized', 'easy-appointments' ) ), 401 );
+        }
+
+        $this->validate_access_rights( 'appointments', 'manage_options' );
+
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+        $app_id = isset( $_REQUEST['id'] ) ? intval( $_REQUEST['id'] ) : 0;
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+        $new_status = isset( $_REQUEST['status'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['status'] ) ) : '';
+
+        if ( $app_id <= 0 || empty( $new_status ) ) {
+            wp_send_json_error( array( 'message' => esc_html__( 'Invalid appointment or status.', 'easy-appointments' ) ), 400 );
+        }
+
+        $allowed_statuses = array( 'pending', 'confirmed', 'canceled', 'reservation' );
+        if ( ! in_array( $new_status, $allowed_statuses, true ) ) {
+            wp_send_json_error( array( 'message' => esc_html__( 'Invalid status value.', 'easy-appointments' ) ), 400 );
+        }
+
+        $appointment = $this->models->get_row( 'ea_appointments', $app_id, ARRAY_A );
+
+        if ( ! $appointment ) {
+            wp_send_json_error( array( 'message' => esc_html__( 'Appointment not found.', 'easy-appointments' ) ), 404 );
+        }
+
+        $old_status = isset( $appointment['status'] ) ? $appointment['status'] : '';
+
+        if ( $old_status === $new_status ) {
+            wp_send_json_success( array(
+                'message'     => sprintf( esc_html__( 'Appointment #%d is already %s.', 'easy-appointments' ), $app_id, $new_status ),
+                'appointment' => $appointment,
+            ) );
+        }
+
+        // Update appointment status
+        $appointment['status'] = $new_status;
+
+        $table = 'ea_appointments';
+        $response = $this->models->replace( $table, $appointment, true );
+
+        if ( false === $response ) {
+            wp_send_json_error( array( 'message' => esc_html__( 'Failed to update appointment status.', 'easy-appointments' ) ), 500 );
+        }
+
+        // Trigger existing events/hooks
+        do_action( 'easy_ea_edit_app', $app_id );
+        do_action( 'easy_ea_status_changed', $app_id, $new_status, $old_status, $appointment );
+
+        if ( 'canceled' === $new_status ) {
+            do_action( 'easy_ea_cancel_app', $app_id, $appointment );
+        }
+
+        // Send email notifications to user and admin/staff
+        $this->mail->send_user_email_notification_action( $app_id );
+        $this->mail->send_admin_email_notification_action( $app_id );
+
+        $updated_row = $this->models->get_row( 'ea_appointments', $app_id, ARRAY_A );
+
+        wp_send_json_success( array(
+            'message'     => sprintf( esc_html__( 'Appointment #%d status updated to %s.', 'easy-appointments' ), $app_id, $new_status ),
+            'appointment' => $updated_row,
+        ) );
     }
 
     public function delete_selected_appointment()
