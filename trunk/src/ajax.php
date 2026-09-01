@@ -1260,6 +1260,62 @@ class EAAjax
     }
 
     /**
+     * Parse a vacation raw time value into H:i format (handling plain HH:mm and UTC ISO strings).
+     *
+     * @param mixed $raw_time
+     * @return string H:i format or empty string
+     */
+    private function parse_vacation_time_to_hi($raw_time)
+    {
+        if (empty($raw_time)) {
+            return '';
+        }
+
+        $raw_time = trim(strval($raw_time));
+
+        // If simple time format without 'T' e.g. "07:00" or "07:00:00"
+        if (strpos($raw_time, 'T') === false) {
+            if (preg_match('/^(\d{1,2}):(\d{2})/', $raw_time, $m)) {
+                return sprintf('%02d:%02d', intval($m[1]), intval($m[2]));
+            }
+            return gmdate('H:i', strtotime($raw_time));
+        }
+
+        // If local ISO format without timezone offset (e.g. "2020-01-01T07:00:00")
+        if (preg_match('/T(\d{2}:\d{2})/', $raw_time, $m) && !preg_match('/[Z\+\-]\d*$/i', $raw_time) && strpos($raw_time, 'Z') === false) {
+            return $m[1];
+        }
+
+        // If ISO string with UTC 'Z' or offset (e.g. "2020-01-01T01:30:00.000Z")
+        $ts = strtotime($raw_time);
+        if ($ts === false) {
+            if (preg_match('/T(\d{2}:\d{2})/', $raw_time, $m)) {
+                return $m[1];
+            }
+            return '';
+        }
+
+        // Convert UTC ISO timestamp back to site timezone
+        $tz_string = function_exists('wp_timezone_string') ? wp_timezone_string() : get_option('timezone_string');
+        if (empty($tz_string)) {
+            $offset = (float) get_option('gmt_offset', 0);
+            $hours = (int) $offset;
+            $minutes = (int) round(abs($offset - $hours) * 60);
+            $sign = $offset >= 0 ? '+' : '-';
+            $tz_string = sprintf('%s%02d:%02d', $sign, abs($hours), $minutes);
+        }
+
+        try {
+            $dt = new DateTime('@' . $ts);
+            $dt->setTimezone(new DateTimeZone($tz_string));
+            return $dt->format('H:i');
+        } catch (Exception $e) {
+            $gmt_offset = (float) get_option('gmt_offset', 0);
+            return gmdate('H:i', $ts + (int) ($gmt_offset * 3600));
+        }
+    }
+
+    /**
      * Check if a given time slot overlaps with any vacation for the specified worker on the given date.
      *
      * @param string $worker_id  The worker ID.
@@ -1311,8 +1367,8 @@ class EAAjax
                     $raw_start = isset($time['startTime']) ? $time['startTime'] : (isset($time['from']) ? $time['from'] : '');
                     $raw_end = isset($time['endTime']) ? $time['endTime'] : (isset($time['to']) ? $time['to'] : '');
                     if ($raw_start && $raw_end) {
-                        $vac_start = gmdate('H:i', strtotime($raw_start));
-                        $vac_end   = gmdate('H:i', strtotime($raw_end));
+                        $vac_start = $this->parse_vacation_time_to_hi($raw_start);
+                        $vac_end   = $this->parse_vacation_time_to_hi($raw_end);
                     }
                 }
             } elseif (isset($vacation['fullDay'])) {
@@ -1321,8 +1377,8 @@ class EAAjax
                     $raw_start = isset($vacation['time_from']) ? $vacation['time_from'] : (isset($vacation['from']) ? $vacation['from'] : '');
                     $raw_end = isset($vacation['time_to']) ? $vacation['time_to'] : (isset($vacation['to']) ? $vacation['to'] : '');
                     if ($raw_start && $raw_end) {
-                        $vac_start = gmdate('H:i', strtotime($raw_start));
-                        $vac_end   = gmdate('H:i', strtotime($raw_end));
+                        $vac_start = $this->parse_vacation_time_to_hi($raw_start);
+                        $vac_end   = $this->parse_vacation_time_to_hi($raw_end);
                     }
                 }
             }

@@ -44,25 +44,20 @@
         var str = $.trim(String(rawVal));
         if (!str) return '';
 
-        // Case 1: ISO 8601 Date string e.g. "2026-07-29T21:30:07.687Z" or "2026-07-29T03:00:00"
-        if (str.indexOf('T') > -1) {
+        // ISO 8601 Date/time string e.g. "2020-01-01T07:00:00" or "2020-01-01T01:30:00.000Z"
+        if (str.indexOf('T') > -1 || str.indexOf(' ') > -1) {
             var mIso = moment(str);
             if (mIso.isValid()) {
                 return mIso.format('HH:mm');
             }
-            var matchIso = str.match(/T(\d{2}:\d{2})/);
-            if (matchIso) {
-                return matchIso[1];
-            }
         }
 
-        // Case 2: Standard time string e.g. "03:00", "03:00:00", "3:00", "03:00 am", "15:30"
-        var mTime = moment(str, ['HH:mm:ss', 'HH:mm', 'H:mm', 'h:mm a', 'hh:mm a', 'h:mm A', 'hh:mm A']);
+        // Standard time string e.g. "07:00", "07:00:00", "7:00", "07:00 am", "15:30"
+        var mTime = moment('2020-01-01 ' + str, ['YYYY-MM-DD HH:mm:ss', 'YYYY-MM-DD HH:mm', 'YYYY-MM-DD H:mm', 'YYYY-MM-DD h:mm a', 'YYYY-MM-DD hh:mm a', 'YYYY-MM-DD h:mm A', 'YYYY-MM-DD hh:mm A']);
         if (mTime.isValid()) {
             return mTime.format('HH:mm');
         }
 
-        // Case 3: Regex fallback for digits HH:mm
         var matchReg = str.match(/(\d{1,2}):(\d{2})/);
         if (matchReg) {
             var h = matchReg[1].length === 1 ? '0' + matchReg[1] : matchReg[1];
@@ -454,8 +449,19 @@
             return { id: id, name: workerName(id) };
         });
 
-        var isoStart = fullDay ? null : (moment('2020-01-01 ' + startTime, 'YYYY-MM-DD HH:mm').isValid() ? moment('2020-01-01 ' + startTime, 'YYYY-MM-DD HH:mm').toISOString() : startTime);
-        var isoEnd = fullDay ? null : (moment('2020-01-01 ' + endTime, 'YYYY-MM-DD HH:mm').isValid() ? moment('2020-01-01 ' + endTime, 'YYYY-MM-DD HH:mm').toISOString() : endTime);
+        var formatLocalIso = function (timeStr) {
+            if (!timeStr) return null;
+            var str = $.trim(String(timeStr));
+            var m = str.match(/^(\d{1,2}):(\d{2})/);
+            if (m) {
+                var hh = m[1].length === 1 ? '0' + m[1] : m[1];
+                return '2020-01-01T' + hh + ':' + m[2] + ':00';
+            }
+            return str;
+        };
+
+        var valStart = fullDay ? null : formatLocalIso(startTime);
+        var valEnd   = fullDay ? null : formatLocalIso(endTime);
 
         return {
             id: editingId || genId(),
@@ -465,19 +471,19 @@
             days: formDates.slice(),
             fullDay: fullDay,
             full_day: fullDay,
-            from: isoStart,
-            to: isoEnd,
-            time_from: isoStart,
-            time_to: isoEnd,
+            from: valStart,
+            to: valEnd,
+            time_from: valStart,
+            time_to: valEnd,
             time: {
                 fullDay: fullDay,
                 full_day: fullDay,
-                startTime: isoStart,
-                endTime: isoEnd,
-                from: isoStart,
-                to: isoEnd,
-                time_from: isoStart,
-                time_to: isoEnd
+                startTime: valStart,
+                endTime: valEnd,
+                from: valStart,
+                to: valEnd,
+                time_from: valStart,
+                time_to: valEnd
             }
         };
     }
