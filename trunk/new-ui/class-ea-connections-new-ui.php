@@ -441,15 +441,15 @@ class EA_Connections_New_UI
             $days_before = 7;
         }
 
-        $threshold_date = date('Y-m-d', strtotime("+$days_before days", strtotime($today)));
+        $threshold_date = gmdate('Y-m-d', strtotime("+$days_before days", strtotime($today)));
 
         // 3. Query active connections ending on or before $threshold_date
-        $connections_table = $wpdb->prefix . 'ea_connections';
-        $locations_table   = $wpdb->prefix . 'ea_locations';
-        $services_table    = $wpdb->prefix . 'ea_services';
-        $staff_table       = $wpdb->prefix . 'ea_staff';
+        $connections_table = esc_sql($wpdb->prefix . 'ea_connections');
+        $locations_table   = esc_sql($wpdb->prefix . 'ea_locations');
+        $services_table    = esc_sql($wpdb->prefix . 'ea_services');
+        $staff_table       = esc_sql($wpdb->prefix . 'ea_staff');
 
-        // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+        // phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
         $query = $wpdb->prepare(
             "SELECT c.id, c.day_from, c.day_to, c.is_working,
                     l.name AS location_name,
@@ -467,8 +467,9 @@ class EA_Connections_New_UI
              ORDER BY c.day_to ASC",
             $threshold_date
         );
+        // phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 
-        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared -- $query is prepared above.
         $results = $wpdb->get_results($query, ARRAY_A);
 
         if (empty($results)) {
@@ -516,10 +517,12 @@ class EA_Connections_New_UI
             $day_to   = $row['day_to'];
 
             if ($day_to < $today) {
+                /* translators: %s: Expiration date */
                 $status_str = sprintf(__('EXPIRED on %s', 'easy-appointments'), $day_to);
             } else {
                 $days_left  = floor((strtotime($day_to) - strtotime($today)) / 86400);
-                $status_str = sprintf(__('Expiring in %d day(s) on %s', 'easy-appointments'), $days_left, $day_to);
+                /* translators: 1: Days remaining, 2: Expiration date */
+                $status_str = sprintf(__('Expiring in %1$d day(s) on %2$s', 'easy-appointments'), $days_left, $day_to);
             }
 
             $body .= sprintf(
@@ -533,6 +536,7 @@ class EA_Connections_New_UI
         }
 
         $manage_url = admin_url('admin.php?page=easy_app_connections_new');
+        /* translators: %s: Management URL */
         $body .= sprintf(__("\nPlease log in to your dashboard to manage or extend these connections:\n%s\n\n---\nEasy Appointments", 'easy-appointments'), $manage_url);
 
         $headers = array('Content-Type: text/plain; charset=UTF-8');
@@ -545,6 +549,7 @@ class EA_Connections_New_UI
             return array(
                 'success' => true,
                 'count'   => $count,
+                /* translators: 1: Admin email, 2: Connection count */
                 'message' => sprintf(__('Alert email sent to administrator (%1$s) for %2$d connection(s).', 'easy-appointments'), $admin_email, $count),
             );
         }

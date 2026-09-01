@@ -91,6 +91,7 @@ class EasyEALogActions {
                     $count++;
                 }
             }
+            /* translators: %d: Connection count */
             return sprintf(__('Extended %d connection(s) successfully', 'easy-appointments'), $count);
         }
 
@@ -109,7 +110,8 @@ class EasyEALogActions {
                 $day_to
             );
             $this->db_models->get_wpdb()->query($query);
-            return sprintf(__('Extended %d connection(s) to %s', 'easy-appointments'), count($ids), $day_to);
+            /* translators: 1: Connection count, 2: Expiration date */
+            return sprintf(__('Extended %1$d connection(s) to %2$s', 'easy-appointments'), count($ids), $day_to);
         } else {
             $previous_year = gmdate("Y", strtotime("-1 year"));
             $query = $this->db_models->get_wpdb()->prepare(

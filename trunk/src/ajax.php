@@ -1311,8 +1311,8 @@ class EAAjax
                     $raw_start = isset($time['startTime']) ? $time['startTime'] : (isset($time['from']) ? $time['from'] : '');
                     $raw_end = isset($time['endTime']) ? $time['endTime'] : (isset($time['to']) ? $time['to'] : '');
                     if ($raw_start && $raw_end) {
-                        $vac_start = (strpos($raw_start, 'T') !== false) ? wp_date('H:i', strtotime($raw_start)) : gmdate('H:i', strtotime($raw_start));
-                        $vac_end   = (strpos($raw_end, 'T') !== false)   ? wp_date('H:i', strtotime($raw_end))   : gmdate('H:i', strtotime($raw_end));
+                        $vac_start = gmdate('H:i', strtotime($raw_start));
+                        $vac_end   = gmdate('H:i', strtotime($raw_end));
                     }
                 }
             } elseif (isset($vacation['fullDay'])) {
@@ -1321,8 +1321,8 @@ class EAAjax
                     $raw_start = isset($vacation['time_from']) ? $vacation['time_from'] : (isset($vacation['from']) ? $vacation['from'] : '');
                     $raw_end = isset($vacation['time_to']) ? $vacation['time_to'] : (isset($vacation['to']) ? $vacation['to'] : '');
                     if ($raw_start && $raw_end) {
-                        $vac_start = (strpos($raw_start, 'T') !== false) ? wp_date('H:i', strtotime($raw_start)) : gmdate('H:i', strtotime($raw_start));
-                        $vac_end   = (strpos($raw_end, 'T') !== false)   ? wp_date('H:i', strtotime($raw_end))   : gmdate('H:i', strtotime($raw_end));
+                        $vac_start = gmdate('H:i', strtotime($raw_start));
+                        $vac_end   = gmdate('H:i', strtotime($raw_end));
                     }
                 }
             }
@@ -2184,7 +2184,8 @@ class EAAjax
 
         if ( $old_status === $new_status ) {
             wp_send_json_success( array(
-                'message'     => sprintf( esc_html__( 'Appointment #%d is already %s.', 'easy-appointments' ), $app_id, $new_status ),
+                /* translators: 1: Appointment ID, 2: Appointment status */
+                'message'     => sprintf( esc_html__( 'Appointment #%1$d is already %2$s.', 'easy-appointments' ), $app_id, $new_status ),
                 'appointment' => $appointment,
             ) );
         }
@@ -2214,7 +2215,8 @@ class EAAjax
         $updated_row = $this->models->get_row( 'ea_appointments', $app_id, ARRAY_A );
 
         wp_send_json_success( array(
-            'message'     => sprintf( esc_html__( 'Appointment #%d status updated to %s.', 'easy-appointments' ), $app_id, $new_status ),
+            /* translators: 1: Appointment ID, 2: Appointment status */
+            'message'     => sprintf( esc_html__( 'Appointment #%1$d status updated to %2$s.', 'easy-appointments' ), $app_id, $new_status ),
             'appointment' => $updated_row,
         ) );
     }

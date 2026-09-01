@@ -1049,12 +1049,18 @@ class Easy_EA_Frontend
     public function get_connection_status()
     {
         global $wpdb;
-        $conn_table  = $wpdb->prefix . 'ea_connections';
+        $conn_table  = esc_sql($wpdb->prefix . 'ea_connections');
         $curr_date   = current_time('Y-m-d');
-        // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+        // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
         $total_conns = (int) $wpdb->get_var("SELECT COUNT(*) FROM {$conn_table}");
-        // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-        $active_conns = (int) $wpdb->get_var("SELECT COUNT(*) FROM {$conn_table} WHERE is_working=1 AND (day_to IS NULL OR day_to = '' OR day_to = '0000-00-00' OR day_to >= '{$curr_date}')");
+        // phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+        $active_conns = (int) $wpdb->get_var(
+            $wpdb->prepare(
+                "SELECT COUNT(*) FROM {$conn_table} WHERE is_working=1 AND (day_to IS NULL OR day_to = '' OR day_to = '0000-00-00' OR day_to >= %s)",
+                $curr_date
+            )
+        );
+        // phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 
         if ($total_conns === 0) {
             return 'none';
