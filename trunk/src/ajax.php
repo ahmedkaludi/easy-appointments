@@ -433,9 +433,11 @@ class EAAjax
                 'location',
                 'service',
                 'worker',
+                'date',
                 'start',
                 'end',
-                'status'
+                'status',
+                'created',
             ];
 
             foreach ($meta_fields as $field) {
@@ -469,6 +471,9 @@ class EAAjax
                 case 'worker':
                     $csv_headers[] = 'Worker';
                     break;
+                case 'date':
+                    $csv_headers[] = 'Date';
+                    break;
                 case 'start':
                     $csv_headers[] = 'Start';
                     break;
@@ -477,6 +482,13 @@ class EAAjax
                     break;
                 case 'status':
                     $csv_headers[] = 'Status';
+                    break;
+                case 'created':
+                case 'created_at':
+                case 'created_date':
+                case 'booking_date':
+                case 'booking_created':
+                    $csv_headers[] = 'Created At';
                     break;
                 default:
                     if (isset($meta_fields_by_slug[$column])) {
@@ -505,6 +517,9 @@ class EAAjax
                     case 'worker':
                         $csv_row[] = $workers[$row->worker] ?? $row->worker;
                         break;
+                    case 'date':
+                        $csv_row[] = $row->date ?? '';
+                        break;
                     case 'start':
                         $csv_row[] = $row->start;
                         break;
@@ -513,6 +528,13 @@ class EAAjax
                         break;
                     case 'status':
                         $csv_row[] = $row->status;
+                        break;
+                    case 'created':
+                    case 'created_at':
+                    case 'created_date':
+                    case 'booking_date':
+                    case 'booking_created':
+                        $csv_row[] = $row->created ?? '';
                         break;
                     default:
                         if (isset($meta_fields_by_slug[$column])) {
