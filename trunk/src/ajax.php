@@ -599,8 +599,12 @@ class EAAjax
 
 
     public function ea_ajax_full_export() {
-        // print_r($_REQUEST);die;
         if (isset( $_REQUEST['_wpnonce'] ) && current_user_can('manage_options') && (wp_verify_nonce( sanitize_text_field( wp_unslash( $_REQUEST['_wpnonce'] ) ), 'ea_ajax_check_nonce' ) )){
+
+            if (function_exists('wp_raise_memory_limit')) {
+                wp_raise_memory_limit('admin');
+            }
+            @set_time_limit(300);
 
             global $wpdb;
 
@@ -618,12 +622,21 @@ class EAAjax
                 $export['tables'][$table] = $wpdb->get_results( "SELECT * FROM {$full}", ARRAY_A );
             }
 
-            header('Content-Type: application/json');
+            while (ob_get_level()) {
+                ob_end_clean();
+            }
+
+            header('Content-Type: application/json; charset=utf-8');
             header('Content-Disposition: attachment; filename=easy-appointments-backup-' . gmdate('Ymd-His') . '.json');
             header('Pragma: no-cache');
             header('Expires: 0');
 
-            echo wp_json_encode($export);
+            $encoded = wp_json_encode($export, JSON_UNESCAPED_UNICODE);
+            if (false === $encoded) {
+                $encoded = json_encode($export, JSON_PARTIAL_OUTPUT_ON_ERROR | JSON_UNESCAPED_UNICODE);
+            }
+
+            echo $encoded;
             exit;
         } else {
             wp_send_json_error('Unauthorized');
@@ -637,6 +650,11 @@ class EAAjax
         }
 
         $this->validate_access_rights( 'tools' );
+
+        if (function_exists('wp_raise_memory_limit')) {
+            wp_raise_memory_limit('admin');
+        }
+        @set_time_limit(300);
 
         if (
             ! isset( $_FILES['file'] ) ||
@@ -672,10 +690,27 @@ class EAAjax
         }
 
         $json = file_get_contents( $tmp_name );
-        $data = json_decode( $json, true );
+        if ( empty( $json ) ) {
+            wp_send_json_error( esc_html__( 'Uploaded file is empty.', 'easy-appointments' ) );
+        }
 
-        if (empty($data['tables'])) {
-            wp_send_json_error('Invalid backup file');
+        // Strip UTF-8 BOM if present
+        $json = preg_replace( '/^\xEF\xBB\xBF/', '', $json );
+
+        $data = json_decode( $json, true );
+        if ( null === $data && function_exists( 'mb_convert_encoding' ) ) {
+            // Attempt conversion to UTF-8 if raw decode failed
+            $json_clean = mb_convert_encoding( $json, 'UTF-8', 'UTF-8' );
+            $data = json_decode( $json_clean, true );
+        }
+
+        if ( null === $data ) {
+            $json_err = json_last_error_msg();
+            wp_send_json_error( sprintf( esc_html__( 'Invalid backup file: JSON parse error (%s)', 'easy-appointments' ), $json_err ) );
+        }
+
+        if ( empty( $data['tables'] ) || ! is_array( $data['tables'] ) ) {
+            wp_send_json_error( esc_html__( 'Invalid backup file: Missing or invalid tables structure.', 'easy-appointments' ) );
         }
 
         global $wpdb;
@@ -720,7 +755,7 @@ class EAAjax
             // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
             $wpdb->query('SET FOREIGN_KEY_CHECKS=1');
 
-            wp_send_json_error('Import failed');
+            wp_send_json_error('Import failed: ' . $e->getMessage());
         }
     }
 

@@ -1056,7 +1056,7 @@ class Easy_EA_Frontend
         // phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
         $active_conns = (int) $wpdb->get_var(
             $wpdb->prepare(
-                "SELECT COUNT(*) FROM {$conn_table} WHERE is_working=1 AND (day_to IS NULL OR day_to = '' OR day_to = '0000-00-00' OR day_to >= %s)",
+                "SELECT COUNT(*) FROM {$conn_table} WHERE is_working=1 AND (day_to IS NULL OR CAST(day_to AS CHAR) = '' OR CAST(day_to AS CHAR) = '0000-00-00' OR day_to >= %s)",
                 $curr_date
             )
         );

@@ -461,8 +461,8 @@ class EA_Connections_New_UI
              LEFT JOIN {$staff_table} w ON (c.worker = w.id)
              WHERE c.is_working = 1
                AND c.day_to IS NOT NULL
-               AND c.day_to != ''
-               AND c.day_to != '0000-00-00'
+               AND CAST(c.day_to AS CHAR) != ''
+               AND CAST(c.day_to AS CHAR) != '0000-00-00'
                AND c.day_to <= %s
              ORDER BY c.day_to ASC",
             $threshold_date

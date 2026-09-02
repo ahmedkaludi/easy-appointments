@@ -102,7 +102,10 @@ class EAAjax
 
         add_action('wp_ajax_ea_month_status', array($this, 'ajax_month_status'));
         add_action('wp_ajax_nopriv_ea_month_status', array($this, 'ajax_month_status'));
+        add_action('wp_ajax_ea_search_customers', array($this, 'ajax_search_customers'));
+        add_action('wp_ajax_nopriv_ea_search_customers', array($this, 'ajax_search_customers'));
         add_action('wp_ajax_ea_get_customer_detail', array($this, 'ajax_customer_detail'));
+        add_action('wp_ajax_nopriv_ea_get_customer_detail', array($this, 'ajax_customer_detail'));
         add_action('wp_ajax_ea_update_customer_data', array($this, 'ea_update_customer_data'));
 
         add_action('wp_ajax_ea_notify_admin_booking_issue', array($this, 'ajax_notify_admin_booking_issue'));
@@ -131,6 +134,7 @@ class EAAjax
 
             // Appointment
             add_action('wp_ajax_ea_appointment', array($this, 'ajax_appointment'));
+            add_action('wp_ajax_ea_change_appointment_status', array($this, 'ajax_change_appointment_status'));
 
             // Services
             add_action('wp_ajax_ea_services', array($this, 'ajax_services'));
@@ -595,8 +599,12 @@ class EAAjax
 
 
     public function ea_ajax_full_export() {
-        // print_r($_REQUEST);die;
         if (isset( $_REQUEST['_wpnonce'] ) && current_user_can('manage_options') && (wp_verify_nonce( sanitize_text_field( wp_unslash( $_REQUEST['_wpnonce'] ) ), 'ea_ajax_check_nonce' ) )){
+
+            if (function_exists('wp_raise_memory_limit')) {
+                wp_raise_memory_limit('admin');
+            }
+            @set_time_limit(300);
 
             global $wpdb;
 
@@ -614,12 +622,21 @@ class EAAjax
                 $export['tables'][$table] = $wpdb->get_results( "SELECT * FROM {$full}", ARRAY_A );
             }
 
-            header('Content-Type: application/json');
+            while (ob_get_level()) {
+                ob_end_clean();
+            }
+
+            header('Content-Type: application/json; charset=utf-8');
             header('Content-Disposition: attachment; filename=easy-appointments-backup-' . gmdate('Ymd-His') . '.json');
             header('Pragma: no-cache');
             header('Expires: 0');
 
-            echo wp_json_encode($export);
+            $encoded = wp_json_encode($export, JSON_UNESCAPED_UNICODE);
+            if (false === $encoded) {
+                $encoded = json_encode($export, JSON_PARTIAL_OUTPUT_ON_ERROR | JSON_UNESCAPED_UNICODE);
+            }
+
+            echo $encoded;
             exit;
         } else {
             wp_send_json_error('Unauthorized');
@@ -633,6 +650,11 @@ class EAAjax
         }
 
         $this->validate_access_rights( 'tools' );
+
+        if (function_exists('wp_raise_memory_limit')) {
+            wp_raise_memory_limit('admin');
+        }
+        @set_time_limit(300);
 
         if (
             ! isset( $_FILES['file'] ) ||
@@ -668,10 +690,27 @@ class EAAjax
         }
 
         $json = file_get_contents( $tmp_name );
-        $data = json_decode( $json, true );
+        if ( empty( $json ) ) {
+            wp_send_json_error( esc_html__( 'Uploaded file is empty.', 'easy-appointments' ) );
+        }
 
-        if (empty($data['tables'])) {
-            wp_send_json_error('Invalid backup file');
+        // Strip UTF-8 BOM if present
+        $json = preg_replace( '/^\xEF\xBB\xBF/', '', $json );
+
+        $data = json_decode( $json, true );
+        if ( null === $data && function_exists( 'mb_convert_encoding' ) ) {
+            // Attempt conversion to UTF-8 if raw decode failed
+            $json_clean = mb_convert_encoding( $json, 'UTF-8', 'UTF-8' );
+            $data = json_decode( $json_clean, true );
+        }
+
+        if ( null === $data ) {
+            $json_err = json_last_error_msg();
+            wp_send_json_error( sprintf( esc_html__( 'Invalid backup file: JSON parse error (%s)', 'easy-appointments' ), $json_err ) );
+        }
+
+        if ( empty( $data['tables'] ) || ! is_array( $data['tables'] ) ) {
+            wp_send_json_error( esc_html__( 'Invalid backup file: Missing or invalid tables structure.', 'easy-appointments' ) );
         }
 
         global $wpdb;
@@ -716,7 +755,7 @@ class EAAjax
             // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
             $wpdb->query('SET FOREIGN_KEY_CHECKS=1');
 
-            wp_send_json_error('Import failed');
+            wp_send_json_error('Import failed: ' . $e->getMessage());
         }
     }
 
@@ -994,7 +1033,7 @@ class EAAjax
             wp_send_json_error( [ 'message' => esc_html__( 'Security check failed.', 'easy-appointments' ) ], 403 );
         }
 
-        $this->validate_access_rights( 'appointments', 'edit_posts' );
+        $this->validate_access_rights( 'appointments', 'manage_options' );
 
         $cancel_to = isset( $_POST['cancel_to'] )
             ? sanitize_text_field( wp_unslash( $_POST['cancel_to'] ) )
@@ -1048,7 +1087,7 @@ class EAAjax
             wp_send_json_error( [ 'message' => esc_html__( 'Unauthorized', 'easy-appointments' ) ], 401 );
         }
 
-        $this->validate_access_rights( 'appointments', 'edit_posts' );
+        $this->validate_access_rights( 'appointments', 'manage_options' );
         global $wpdb;
         $current_time = current_time('H:i:s');
         $current_date = current_time('Y-m-d');
@@ -1182,7 +1221,10 @@ class EAAjax
 
 
         $slots = $this->logic->get_open_slots($location, $service, $worker, $date, null, true, $block_time);
-        
+
+        // Filter slots against vacation data
+        $slots = $this->filter_slots_by_vacation($slots, $worker, $date, $service);
+
         global $wpdb;
         $day_of_week = gmdate('l', strtotime($date));
         $time_now = current_time('timestamp', false);
@@ -1252,10 +1294,211 @@ class EAAjax
         }
     }
 
+    /**
+     * Parse a vacation raw time value into H:i format (handling plain HH:mm and UTC ISO strings).
+     *
+     * @param mixed $raw_time
+     * @return string H:i format or empty string
+     */
+    private function parse_vacation_time_to_hi($raw_time)
+    {
+        if (empty($raw_time)) {
+            return '';
+        }
+
+        $raw_time = trim(strval($raw_time));
+
+        // If simple time format without 'T' e.g. "07:00" or "07:00:00"
+        if (strpos($raw_time, 'T') === false) {
+            if (preg_match('/^(\d{1,2}):(\d{2})/', $raw_time, $m)) {
+                return sprintf('%02d:%02d', intval($m[1]), intval($m[2]));
+            }
+            return gmdate('H:i', strtotime($raw_time));
+        }
+
+        // If local ISO format without timezone offset (e.g. "2020-01-01T07:00:00")
+        if (preg_match('/T(\d{2}:\d{2})/', $raw_time, $m) && !preg_match('/[Z\+\-]\d*$/i', $raw_time) && strpos($raw_time, 'Z') === false) {
+            return $m[1];
+        }
+
+        // If ISO string with UTC 'Z' or offset (e.g. "2020-01-01T01:30:00.000Z")
+        $ts = strtotime($raw_time);
+        if ($ts === false) {
+            if (preg_match('/T(\d{2}:\d{2})/', $raw_time, $m)) {
+                return $m[1];
+            }
+            return '';
+        }
+
+        // Convert UTC ISO timestamp back to site timezone
+        $tz_string = function_exists('wp_timezone_string') ? wp_timezone_string() : get_option('timezone_string');
+        if (empty($tz_string)) {
+            $offset = (float) get_option('gmt_offset', 0);
+            $hours = (int) $offset;
+            $minutes = (int) round(abs($offset - $hours) * 60);
+            $sign = $offset >= 0 ? '+' : '-';
+            $tz_string = sprintf('%s%02d:%02d', $sign, abs($hours), $minutes);
+        }
+
+        try {
+            $dt = new DateTime('@' . $ts);
+            $dt->setTimezone(new DateTimeZone($tz_string));
+            return $dt->format('H:i');
+        } catch (Exception $e) {
+            $gmt_offset = (float) get_option('gmt_offset', 0);
+            return gmdate('H:i', $ts + (int) ($gmt_offset * 3600));
+        }
+    }
+
+    /**
+     * Check if a given time slot overlaps with any vacation for the specified worker on the given date.
+     *
+     * @param string $worker_id  The worker ID.
+     * @param string $date       The date in Y-m-d format.
+     * @param string $slot_start The slot start time in H:i format.
+     * @param string $slot_end   The slot end time in H:i format.
+     * @return bool True if the slot is blocked by a vacation.
+     */
+    private function is_slot_in_vacation($worker_id, $date, $slot_start, $slot_end)
+    {
+        $vacations_json = $this->options->get_option_value('vacations', '[]');
+        $vacations = json_decode($vacations_json, true);
+
+        if (!is_array($vacations) || empty($vacations)) {
+            return false;
+        }
+
+        foreach ($vacations as $vacation) {
+            // Check if worker is targeted by this vacation
+            if (!empty($vacation['workers']) && is_array($vacation['workers'])) {
+                $worker_found = false;
+                foreach ($vacation['workers'] as $w) {
+                    if (strval($w['id']) === strval($worker_id)) {
+                        $worker_found = true;
+                        break;
+                    }
+                }
+                if (!$worker_found) {
+                    continue;
+                }
+            }
+
+            // Check if date is in vacation days
+            if (empty($vacation['days']) || !in_array($date, $vacation['days'], true)) {
+                continue;
+            }
+
+            // Determine if full day or partial vacation
+            $is_full_day = true;
+            $vac_start = null;
+            $vac_end = null;
+
+            if (!empty($vacation['time']) && is_array($vacation['time'])) {
+                $time = $vacation['time'];
+                if (isset($time['fullDay'])) {
+                    $is_full_day = ($time['fullDay'] === true || $time['fullDay'] === '1' || $time['fullDay'] === 1 || $time['fullDay'] === 'true');
+                }
+                if (!$is_full_day) {
+                    $raw_start = isset($time['startTime']) ? $time['startTime'] : (isset($time['from']) ? $time['from'] : '');
+                    $raw_end = isset($time['endTime']) ? $time['endTime'] : (isset($time['to']) ? $time['to'] : '');
+                    if ($raw_start && $raw_end) {
+                        $vac_start = $this->parse_vacation_time_to_hi($raw_start);
+                        $vac_end   = $this->parse_vacation_time_to_hi($raw_end);
+                    }
+                }
+            } elseif (isset($vacation['fullDay'])) {
+                $is_full_day = ($vacation['fullDay'] === true || $vacation['fullDay'] === '1' || $vacation['fullDay'] === 1 || $vacation['fullDay'] === 'true');
+                if (!$is_full_day) {
+                    $raw_start = isset($vacation['time_from']) ? $vacation['time_from'] : (isset($vacation['from']) ? $vacation['from'] : '');
+                    $raw_end = isset($vacation['time_to']) ? $vacation['time_to'] : (isset($vacation['to']) ? $vacation['to'] : '');
+                    if ($raw_start && $raw_end) {
+                        $vac_start = $this->parse_vacation_time_to_hi($raw_start);
+                        $vac_end   = $this->parse_vacation_time_to_hi($raw_end);
+                    }
+                }
+            }
+
+            if ($is_full_day) {
+                // Full day vacation blocks all slots
+                return true;
+            }
+
+            // Partial vacation: check time overlap
+            if ($vac_start !== null && $vac_end !== null) {
+                // Slot overlaps vacation if slot_start < vac_end AND slot_end > vac_start
+                if ($slot_start < $vac_end && $slot_end > $vac_start) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Filter time slots against vacation data. Zeroes out the count for slots
+     * that fall within a worker's vacation period so frontend shows them as unavailable.
+     *
+     * @param array  $slots   Array of slot arrays with 'value', 'count', etc.
+     * @param string $worker  The worker ID.
+     * @param string $date    The date in Y-m-d format.
+     * @param string $service The service ID (used for duration lookup).
+     * @return array Filtered slots.
+     */
+    private function filter_slots_by_vacation($slots, $worker, $date, $service)
+    {
+        if (empty($slots) || empty($worker) || empty($date)) {
+            return $slots;
+        }
+
+        $service_row = $this->models->get_row('ea_services', $service);
+        $duration = $service_row ? intval($service_row->duration) : 0;
+
+        $filtered = array();
+        foreach ($slots as $slot) {
+            $slot_start = $slot['value']; // e.g. '10:00'
+            if ($duration > 0) {
+                $slot_end = gmdate('H:i', strtotime($date . ' ' . $slot_start . " + {$duration} minutes"));
+            } else {
+                $slot_end = $slot_start;
+            }
+
+            if ($this->is_slot_in_vacation($worker, $date, $slot_start, $slot_end)) {
+                $slot['count'] = 0;
+            }
+
+            $filtered[] = $slot;
+        }
+
+        return $filtered;
+    }
+
     public function ajax_res_appointment()
     {
         $this->validate_nonce();
         $this->validate_captcha();
+
+        // Server-side vacation check: block booking during vacation
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- nonce already validated
+        $res_worker  = isset($_GET['worker'])  ? sanitize_text_field(wp_unslash($_GET['worker']))  : '';
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- nonce already validated
+        $res_date    = isset($_GET['date'])    ? sanitize_text_field(wp_unslash($_GET['date']))    : '';
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- nonce already validated
+        $res_start   = isset($_GET['start'])   ? sanitize_text_field(wp_unslash($_GET['start']))   : '';
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- nonce already validated
+        $res_service = isset($_GET['service']) ? sanitize_text_field(wp_unslash($_GET['service'])) : '';
+
+        if ($res_worker && $res_date && $res_start && $res_service) {
+            $svc_row = $this->models->get_row('ea_services', $res_service);
+            $dur = $svc_row ? intval($svc_row->duration) : 0;
+            $s_end = $dur > 0
+                ? gmdate('H:i', strtotime($res_date . ' ' . $res_start . " + {$dur} minutes"))
+                : $res_start;
+
+            if ($this->is_slot_in_vacation($res_worker, $res_date, $res_start, $s_end)) {
+                $this->send_err_json_result('{"err":true,"message":"This time slot is not available because the employee is on vacation."}');
+            }
+        }
 
         $table = 'ea_appointments';
         // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- nonce already validated
@@ -1271,12 +1514,19 @@ class EAAjax
             'user','created','price','ip','session'
         );
 
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- nonce already validated
+        $app_id = !empty($_REQUEST['id']) ? intval($_REQUEST['id']) : (!empty($_REQUEST['res_app']) ? intval($_REQUEST['res_app']) : 0);
+
         foreach ($data as $key => $rem) {
             if (!in_array($key, $dont_remove)) unset($data[$key]);
         }
 
-        unset($data['id']);
-        $data['id'] = null;
+        if ($app_id > 0) {
+            $data['id'] = $app_id;
+        } else {
+            unset($data['id']);
+            $data['id'] = null;
+        }
         unset($data['action']);
 
         $block_time = (int)$this->options->get_option_value('block.time', 0);
@@ -1284,15 +1534,17 @@ class EAAjax
         // Load open slots
         $open_slots = $this->logic->get_open_slots(
             $data['location'], $data['service'], $data['worker'],
-            $data['date'], null, true, $block_time
+            $data['date'], $app_id > 0 ? $app_id : null, true, $block_time
         );
 
         $slots_list = array();
         if ($multiple_allowed === 1) {
             if (!empty($data['start']) && strpos($data['start'], ',') !== false) {
                 $slots_list = array_filter(array_map('trim', explode(',', $data['start'])));
+            // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- nonce already validated
             } else if (!empty($_GET['slots']) && is_array($_GET['slots'])) {
-                $slots_list = array_filter(array_map('sanitize_text_field', $_GET['slots']));
+                // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- nonce already validated
+                $slots_list = array_filter(array_map('sanitize_text_field', wp_unslash($_GET['slots'])));
             }
         }
 
@@ -1397,10 +1649,21 @@ class EAAjax
             // ===========================
 
             $is_free = false;
-            foreach ($open_slots as $slot) {
-                if ($slot['value'] === $data['start'] && $slot['count'] > 0) {
+            $app_id  = isset($data['id']) ? (int)$data['id'] : 0;
+
+            if ($app_id > 0) {
+                $existing = $this->models->get_row('ea_appointments', $app_id);
+                if ($existing && !empty($existing->id)) {
                     $is_free = true;
-                    break;
+                }
+            }
+
+            if (!$is_free) {
+                foreach ($open_slots as $slot) {
+                    if ($slot['value'] === $data['start'] && $slot['count'] > 0) {
+                        $is_free = true;
+                        break;
+                    }
                 }
             }
 
@@ -1468,12 +1731,22 @@ class EAAjax
 
         // Validate first slot
         $open_slots = $this->logic->get_open_slots($data['location'], $data['service'], $data['worker'], $data['date'], null, true, $block_time);
-        $is_free = false;
+        $is_free    = false;
+        $app_id     = isset($data['id']) ? (int)$data['id'] : 0;
 
-        foreach ($open_slots as $value) {
-            if ($value['value'] === $data['start'] && $value['count'] > 0) {
+        if ($app_id > 0) {
+            $existing = $this->models->get_row('ea_appointments', $app_id);
+            if ($existing && !empty($existing->id)) {
                 $is_free = true;
-                break;
+            }
+        }
+
+        if (!$is_free) {
+            foreach ($open_slots as $value) {
+                if ($value['value'] === $data['start'] && $value['count'] > 0) {
+                    $is_free = true;
+                    break;
+                }
             }
         }
 
@@ -1916,6 +2189,7 @@ class EAAjax
     public function ajax_open_times()
     {
         $this->validate_admin_nonce();
+        $this->validate_access_rights( 'appointments', 'manage_options' );
 
         $data = $this->parse_input_data();
 
@@ -1933,7 +2207,7 @@ class EAAjax
     public function ajax_appointments()
     {
         $this->validate_admin_nonce();
-        $this->validate_access_rights( 'appointments', 'edit_posts' );
+        $this->validate_access_rights( 'appointments', 'manage_options' );
 
         $data = $this->parse_input_data();
 
@@ -1949,7 +2223,7 @@ class EAAjax
     public function ajax_appointment()
     {
         $this->validate_admin_nonce();
-        $this->validate_access_rights( 'appointments', 'edit_posts' );
+        $this->validate_access_rights( 'appointments', 'manage_options' );
 
         $response = $this->parse_appointment(false);
 
@@ -1969,6 +2243,75 @@ class EAAjax
         $this->send_ok_json_result($response);
     }
 
+    public function ajax_change_appointment_status()
+    {
+        if ( ! is_user_logged_in() ) {
+            wp_send_json_error( array( 'message' => esc_html__( 'Unauthorized', 'easy-appointments' ) ), 401 );
+        }
+
+        $this->validate_access_rights( 'appointments', 'manage_options' );
+
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+        $app_id = isset( $_REQUEST['id'] ) ? intval( $_REQUEST['id'] ) : 0;
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+        $new_status = isset( $_REQUEST['status'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['status'] ) ) : '';
+
+        if ( $app_id <= 0 || empty( $new_status ) ) {
+            wp_send_json_error( array( 'message' => esc_html__( 'Invalid appointment or status.', 'easy-appointments' ) ), 400 );
+        }
+
+        $allowed_statuses = array( 'pending', 'confirmed', 'canceled', 'reservation' );
+        if ( ! in_array( $new_status, $allowed_statuses, true ) ) {
+            wp_send_json_error( array( 'message' => esc_html__( 'Invalid status value.', 'easy-appointments' ) ), 400 );
+        }
+
+        $appointment = $this->models->get_row( 'ea_appointments', $app_id, ARRAY_A );
+
+        if ( ! $appointment ) {
+            wp_send_json_error( array( 'message' => esc_html__( 'Appointment not found.', 'easy-appointments' ) ), 404 );
+        }
+
+        $old_status = isset( $appointment['status'] ) ? $appointment['status'] : '';
+
+        if ( $old_status === $new_status ) {
+            wp_send_json_success( array(
+                /* translators: 1: Appointment ID, 2: Appointment status */
+                'message'     => sprintf( esc_html__( 'Appointment #%1$d is already %2$s.', 'easy-appointments' ), $app_id, $new_status ),
+                'appointment' => $appointment,
+            ) );
+        }
+
+        // Update appointment status
+        $appointment['status'] = $new_status;
+
+        $table = 'ea_appointments';
+        $response = $this->models->replace( $table, $appointment, true );
+
+        if ( false === $response ) {
+            wp_send_json_error( array( 'message' => esc_html__( 'Failed to update appointment status.', 'easy-appointments' ) ), 500 );
+        }
+
+        // Trigger existing events/hooks
+        do_action( 'easy_ea_edit_app', $app_id );
+        do_action( 'easy_ea_status_changed', $app_id, $new_status, $old_status, $appointment );
+
+        if ( 'canceled' === $new_status ) {
+            do_action( 'easy_ea_cancel_app', $app_id, $appointment );
+        }
+
+        // Send email notifications to user and admin/staff
+        $this->mail->send_user_email_notification_action( $app_id );
+        $this->mail->send_admin_email_notification_action( $app_id );
+
+        $updated_row = $this->models->get_row( 'ea_appointments', $app_id, ARRAY_A );
+
+        wp_send_json_success( array(
+            /* translators: 1: Appointment ID, 2: Appointment status */
+            'message'     => sprintf( esc_html__( 'Appointment #%1$d status updated to %2$s.', 'easy-appointments' ), $app_id, $new_status ),
+            'appointment' => $updated_row,
+        ) );
+    }
+
     public function delete_selected_appointment()
     {
         if ( ! is_user_logged_in() ) {
@@ -1979,7 +2322,7 @@ class EAAjax
             wp_send_json_error(array('message' => esc_html__('Security check failed.', 'easy-appointments')));
         }
 
-        $this->validate_access_rights( 'appointments', 'edit_posts' );
+        $this->validate_access_rights( 'appointments', 'manage_options' );
         
         if (!isset($_POST['appointments']) || !is_array($_POST['appointments'])) {
             wp_send_json_error(array('message' => esc_html__('No appointments selected.', 'easy-appointments') ));
@@ -2011,6 +2354,7 @@ class EAAjax
     public function ajax_update_order()
     {
         $this->validate_admin_nonce();
+        $this->validate_access_rights( 'services', 'manage_options' );
         $raw_data = file_get_contents('php://input');
         $data = json_decode($raw_data, true);
         if (isset($data['sequence_data']) && !empty($data['sequence_data'])) {
@@ -2659,6 +3003,7 @@ class EAAjax
             'fullcalendar.event.template'   => '',
             'shortcode.compress'            => '1',
             'label.from_to'                 => '0',
+            'user.access.appointments'      => '',
             'user.access.services'          => '',
             'user.access.workers'           => '',
             'user.access.locations'         => '',
@@ -3197,6 +3542,7 @@ class EAAjax
     {
 
         $this->validate_admin_nonce();
+        $this->validate_access_rights( 'settings', 'manage_options' );
         // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotValidated
         $raw_fields = $_POST['fields'];
 
@@ -3602,66 +3948,80 @@ class EAAjax
     public function ajax_search_customers () {
         $settings = $this->options->get_options();
 
-        if (!is_user_logged_in()) {
-            wp_send_json([]);
+        // Require login — unauthenticated users have no customer records to search
+        if ( ! is_user_logged_in() ) {
+            wp_send_json( [] );
+            return;
         }
+
+        // Nonce verification
+        check_ajax_referer( 'ea-bootstrap-form', 'check' );
 
         global $wpdb;
         $current_user_id = get_current_user_id();
-        // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-        $q = isset($_GET['q']) ? sanitize_text_field(wp_unslash($_GET['q'])) : '';
+        $q = isset( $_GET['q'] ) ? sanitize_text_field( wp_unslash( $_GET['q'] ) ) : '';
 
-        // Fetch user_ids stored in comma-separated format
-        // Assume `user_id` column is a comma-separated list of user IDs like: 1,2,3
-        // We use FIND_IN_SET for matching
-        $like_clause = '%' . $wpdb->esc_like($q) . '%';
-        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-        $results = $wpdb->get_results($wpdb->prepare(
-            "
-            SELECT id, name, email 
-            FROM {$wpdb->prefix}ea_customers 
-            WHERE FIND_IN_SET(%d, user_id) 
-            AND (name LIKE %s OR email LIKE %s)
-            LIMIT 20
-            ",
-            $current_user_id, $like_clause, $like_clause
-        ));
+        $like_clause = '%' . $wpdb->esc_like( $q ) . '%';
 
-        wp_send_json($results);
+        if ( current_user_can( 'manage_options' ) ) {
+            // Admins can search all customers
+            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+            $results = $wpdb->get_results( $wpdb->prepare(
+                "SELECT id, name, email FROM {$wpdb->prefix}ea_customers WHERE (name LIKE %s OR email LIKE %s) LIMIT 20",
+                $like_clause, $like_clause
+            ) );
+        } elseif ( ! empty( $settings['show.customer_search_front'] ) ) {
+            // Non-admin logged-in users: only their own records, even with front search enabled
+            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+            $results = $wpdb->get_results( $wpdb->prepare(
+                "SELECT id, name, email FROM {$wpdb->prefix}ea_customers WHERE FIND_IN_SET(%d, user_id) AND (name LIKE %s OR email LIKE %s) LIMIT 20",
+                $current_user_id, $like_clause, $like_clause
+            ) );
+        } else {
+            $results = [];
+        }
+
+        wp_send_json( $results );
     }
 
-
-    
     function ajax_customer_detail () {
         $settings = $this->options->get_options();
 
-        if (isset($settings['show.customer_search_front']) && $settings['show.customer_search_front'] == 1 && is_user_logged_in()) {
-            $this->validate_nonce();
-
-            global $wpdb;
-            $current_user_id = get_current_user_id();
-            // phpcs:ignore WordPress.Security.NonceVerification.Missing
-            $id = isset($_POST['id']) ? absint($_POST['id']) : 0;
-            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-            $cust = $wpdb->get_row($wpdb->prepare(
-                "SELECT id, name, email, mobile, address, user_id FROM {$wpdb->prefix}ea_customers WHERE id = %d", $id
-            ), ARRAY_A);
-
-            if (empty($cust)) {
-                wp_send_json([], 404);
-            }
-
-            if (current_user_can('manage_options')) {
-                wp_send_json($cust);
-            }
-
-            $allowed_user_ids = array_filter(array_map('trim', explode(',', (string) ($cust['user_id'] ?? ''))));
-            if (!in_array((string) $current_user_id, $allowed_user_ids, true)) {
-                wp_send_json([], 403);
-            }
-
-            wp_send_json($cust);
+        // Require login — unauthenticated users cannot retrieve customer details
+        if ( ! is_user_logged_in() ) {
+            wp_send_json( [], 403 );
+            return;
         }
+
+        $this->validate_nonce();
+
+        global $wpdb;
+        $current_user_id = get_current_user_id();
+        $id = isset( $_POST['id'] ) ? absint( $_POST['id'] ) : 0; // phpcs:ignore WordPress.Security.NonceVerification.Missing
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+        $cust = $wpdb->get_row( $wpdb->prepare(
+            "SELECT id, name, email, mobile, address, user_id FROM {$wpdb->prefix}ea_customers WHERE id = %d", $id
+        ), ARRAY_A );
+
+        if ( empty( $cust ) ) {
+            wp_send_json( [], 404 );
+            return;
+        }
+
+        // Admins can view any customer record
+        if ( current_user_can( 'manage_options' ) ) {
+            wp_send_json( $cust );
+            return;
+        }
+
+        // All other users: enforce ownership check — show.customer_search_front does NOT bypass this
+        $allowed_user_ids = array_filter( array_map( 'trim', explode( ',', (string) ( $cust['user_id'] ?? '' ) ) ) );
+        if ( $current_user_id <= 0 || ! in_array( (string) $current_user_id, $allowed_user_ids, true ) ) {
+            wp_send_json( [], 403 );
+            return;
+        }
+
+        wp_send_json( $cust );
     }
 
     public function ea_update_customer_data() {
