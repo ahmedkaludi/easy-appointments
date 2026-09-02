@@ -399,6 +399,38 @@
     color: var(--ea-red);
 }
 
+.ea-naui-icon-btn.ea-naui-confirm {
+    color: #16a34a;
+    border-color: #e2e8f0;
+}
+
+.ea-naui-icon-btn.ea-naui-confirm:hover:not(:disabled) {
+    background: #f0fdf4;
+    border-color: #bbf7d0;
+    color: #15803d;
+}
+
+.ea-naui-icon-btn.ea-naui-confirm:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+}
+
+.ea-naui-icon-btn.ea-naui-cancel-app {
+    color: #dc2626;
+    border-color: #e2e8f0;
+}
+
+.ea-naui-icon-btn.ea-naui-cancel-app:hover:not(:disabled) {
+    background: #fef2f2;
+    border-color: #fecaca;
+    color: #b91c1c;
+}
+
+.ea-naui-icon-btn.ea-naui-cancel-app:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+}
+
 .ea-naui-empty {
     padding: 40px 20px;
     text-align: center;
@@ -1037,12 +1069,22 @@ body.wp-admin #ui-datepicker-div td.ea-naui-blocked span,
 }
 
 /* ---------- Pagination ---------- */
+.ea-naui-pagination-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 14px;
+    padding: 0 24px 24px 24px;
+}
+
 .ea-naui-pagination {
     display: flex;
     flex-wrap: wrap;
     gap: 6px;
-    margin-top: 14px;
-    padding: 0 24px 24px 24px;
+    padding: 0;
+    margin-top: 0;
 }
 
 .ea-naui-pagination .ea-naui-btn[disabled] {
@@ -1051,6 +1093,30 @@ body.wp-admin #ui-datepicker-div td.ea-naui-blocked span,
     color: #1d4ed8;
     opacity: 1;
     cursor: default;
+}
+
+.ea-naui-per-page {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: var(--ea-text-muted);
+}
+
+.ea-naui-per-page select {
+    padding: 4px 8px;
+    border: 1px solid var(--ea-border);
+    border-radius: 6px;
+    font-size: 13px;
+    color: var(--ea-text);
+    background: #fff;
+    cursor: pointer;
+    outline: none;
+}
+
+.ea-naui-per-page select:focus {
+    border-color: var(--ea-blue);
+    box-shadow: 0 0 0 3px var(--ea-blue-light);
 }
 
 /* ---------- Toggle Filter Button ---------- */
@@ -1073,4 +1139,23 @@ body.wp-admin #ui-datepicker-div td.ea-naui-blocked span,
 }
 #ea-naui-toggle-filter svg {
     display: block;
+}
+
+/* Custom Down Arrow for Dropdowns */
+#ea-admin-app select:not([multiple]),
+.ea-naui-wrap select:not([multiple]),
+.ea-mnui-wrap select:not([multiple]),
+.ea-nsui-wrap select:not([multiple]),
+.ea-csui-wrap select:not([multiple]),
+.ea-help-wrap select:not([multiple]),
+.ea-naui-drawer select:not([multiple]),
+.ea-mnui-drawer select:not([multiple]) {
+    -webkit-appearance: none !important;
+    -moz-appearance: none !important;
+    appearance: none !important;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E") !important;
+    background-repeat: no-repeat !important;
+    background-position: right 10px center !important;
+    background-size: 14px 14px !important;
+    padding-right: 30px !important;
 }

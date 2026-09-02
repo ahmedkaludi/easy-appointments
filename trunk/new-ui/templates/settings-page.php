@@ -129,6 +129,16 @@ if (!defined('WPINC')) {
                         </span>
                     </button>
 
+                    <button type="button" class="ea-nsui-nav-item" data-panel="gdpr">
+                        <span class="ea-nsui-nav-icon">
+                            <svg viewBox="0 0 24 24" fill="none"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        </span>
+                        <span class="ea-nsui-nav-text">
+                            <strong><?php esc_html_e('GDPR', 'easy-appointments'); ?></strong>
+                            <small><?php esc_html_e('Data protection & privacy', 'easy-appointments'); ?></small>
+                        </span>
+                    </button>
+
                     <button type="button" class="ea-nsui-nav-item" data-panel="integrations">
                         <span class="ea-nsui-nav-icon">
                             <svg viewBox="0 0 24 24" fill="none"><circle cx="6" cy="7" r="2.4" stroke="currentColor" stroke-width="1.8"/><circle cx="18" cy="7" r="2.4" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="18" r="2.4" stroke="currentColor" stroke-width="1.8"/><path d="M8 8.3L11 16M16 8.3L13 16" stroke="currentColor" stroke-width="1.8"/></svg>
@@ -197,6 +207,7 @@ if (!defined('WPINC')) {
                     'form-style',
                     'user-access',
                     'form-fields',
+                    'gdpr',
                     'integrations',
                     'payments',
                     'advanced',

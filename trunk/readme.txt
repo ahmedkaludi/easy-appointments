@@ -3,9 +3,9 @@ Contributors: easyappointments
 Donate link: https://easy-appointments.com/
 Tags: appointment, appointments, Booking, calendar, reservation
 Requires at least: 5.0
-Tested up to: 7.0
+Tested up to: 7.1
 Requires PHP: 5.3
-Stable tag: 4.0
+Stable tag: 4.0.2
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -261,6 +261,24 @@ Terms of use and Policy : https://fullcalendar.io/license
 25. Admin panel - Report - Export page
 
 == Changelog ==
+= 4.0.2 (2026-09-01)
+* Fixed version 4.0.1 causing issue with shortcode [ea_standard] #329
+* Fixed Vacation availability is not working as expected with latest version 4.0 #326
+* Fixed Reset the form and add proper, thank you message - #321
+* Fixed Some improvements in Connection management popup #334
+* Fixed some missing points in NEW UI. #328
+* Fixed Redirects to wrong url when role is editor #337
+* Added Expired connections should not be displayed in the Booking Calendar dropdown. #332
+* Added Allow user to extend each connection by choosing end date and infinity option #333
+* Added quick action buttons for Approval and Cancellation for the appointment in appointment page #336
+* Added Appointment Export Does Not Include the Booking/Created Time #335
+* Test with WordPress 7.1
+
+= 4.0.2 (2026-08-14)
+* Fixed Security issues to appointment-management handlers. Reported by Shikhali Jamalzade.
+* Fixed Security issue: missing authorization allowing Contributor-level read/modify/delete of appointments. Reported by Youssef massoudi.
+* Added an option to increase appointment list number #324
+
 = 4.0 (2026-08-10)
 * Fixed Timezone Issue in the "Created At" Field #307.
 * Fixed Am Pm making confusion in cancel booking before hour #309.

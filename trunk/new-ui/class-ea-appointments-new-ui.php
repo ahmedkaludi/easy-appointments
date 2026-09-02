@@ -93,7 +93,7 @@ class EA_Appointments_New_UI
     {
         return apply_filters(
             'easy-appointments-user-menu-capabilities',
-            'edit_posts',
+            'manage_options',
             self::MENU_SLUG
         );
     }

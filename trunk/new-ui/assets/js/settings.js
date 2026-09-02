@@ -1767,6 +1767,33 @@
                 });
             });
 
+            // GDPR Delete Data
+            $app.on('click', '.btn-gdpr-delete-data', function () {
+                var $btn = $(this);
+                window.eaConfirm({
+                    title: 'Remove customer data',
+                    message: 'This will delete custom form field values and customer-related data from appointments older than 6 months. This action is irreversible. Are you sure you want to continue?',
+                    confirmLabel: 'Remove data now',
+                    cancelLabel: 'Cancel',
+                    isDanger: true,
+                    onConfirm: function () {
+                        $btn.prop('disabled', true);
+                        $.ajax({
+                            url: eaNewSettingsUI.wpRestUrl + 'easy-appointments/v1/gdpr?_wpnonce=' + eaNewSettingsUI.wpRestNonce,
+                            method: 'DELETE',
+                            success: function (res) {
+                                showNotice(res || 'Data deleted successfully.', 'success');
+                                $btn.prop('disabled', false);
+                            },
+                            error: function () {
+                                showNotice('Failed to delete data.', 'error');
+                                $btn.prop('disabled', false);
+                            }
+                        });
+                    }
+                });
+            });
+
             // Load errors on Tools tab click or page load
             $app.on('click', '.ea-nsui-nav-item[data-panel="tools"]', function () {
                 fetchErrors();
@@ -1797,6 +1824,19 @@
 
             $(document).on('change', 'input[data-key="send.worker.email"], input[data-key="send.user.email"]', toggleNotificationChips);
             toggleNotificationChips();
+
+            function toggleConnectionExpireDays() {
+                var $expireCheck = $('input[data-key="connection_expire.mail_enabled"]');
+                var $daysRow = $('.ea-nsui-row-connection-expire-days');
+                if ($expireCheck.is(':checked')) {
+                    $daysRow.show();
+                } else {
+                    $daysRow.hide();
+                }
+            }
+
+            $(document).on('change', 'input[data-key="connection_expire.mail_enabled"]', toggleConnectionExpireDays);
+            toggleConnectionExpireDays();
         })();
     });
 })(jQuery);

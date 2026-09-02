@@ -20,6 +20,25 @@ class EA_UI_Switcher
         add_action('admin_post_ea_switch_ui_mode', array($this, 'handle_switch'));
         add_action('admin_notices', array($this, 'render_switch_notice'));
         add_action('admin_head', array($this, 'render_switch_styles'));
+        add_action('admin_head', array($this, 'suppress_external_admin_notices'), 1);
+    }
+
+    /**
+     * Suppress third-party plugin notices (e.g., Polylang, WooCommerce, WP updates)
+     * from cluttering Easy Appointments admin screens.
+     */
+    public function suppress_external_admin_notices()
+    {
+        if (!current_user_can('manage_options') || !$this->is_on_plugin_screen()) {
+            return;
+        }
+
+        remove_all_actions('admin_notices');
+        remove_all_actions('all_admin_notices');
+        remove_all_actions('user_admin_notices');
+        remove_all_actions('network_admin_notices');
+
+        add_action('admin_notices', array($this, 'render_switch_notice'));
     }
 
     /**
@@ -37,6 +56,20 @@ class EA_UI_Switcher
         }
         ?>
         <style>
+            /* Hide third-party WordPress admin notices & update nags on Easy Appointments screens */
+            #wpbody-content > .notice:not(#ea-ui-switch-notice),
+            #wpbody-content > .updated:not(#ea-ui-switch-notice),
+            #wpbody-content > .error:not(#ea-ui-switch-notice),
+            #wpbody-content > .update-nag,
+            .ea-mnui-wrap ~ .notice:not(#ea-ui-switch-notice),
+            .ea-mnui-wrap ~ .updated:not(#ea-ui-switch-notice),
+            .ea-mnui-wrap ~ .error:not(#ea-ui-switch-notice),
+            .ea-mnui-wrap .notice:not(#ea-ui-switch-notice),
+            .ea-mnui-wrap .updated:not(#ea-ui-switch-notice),
+            .ea-mnui-wrap .error:not(#ea-ui-switch-notice) {
+                display: none !important;
+            }
+
             .ea-ui-switch-notice {
                 display: flex !important;
                 align-items: center !important;

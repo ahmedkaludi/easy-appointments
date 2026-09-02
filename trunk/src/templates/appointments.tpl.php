@@ -177,9 +177,21 @@ defined( 'ABSPATH' ) || exit;
 		<strong><%- _.formatDateTime(row.created) %></strong>
 	</td>
 	<td class="action-center">
-		<button class="button btn-edit"><?php esc_html_e('Edit', 'easy-appointments');?></button>
-		<button class="button btn-del"><?php esc_html_e('Delete', 'easy-appointments');?></button>
-		<button class="button btn-clone"><?php esc_html_e('Clone', 'easy-appointments');?></button>
+		<button class="button btn-edit" title="<?php esc_attr_e('Edit', 'easy-appointments');?>">
+			<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle; display:inline-block;"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+		</button>
+		<button class="button btn-del" title="<?php esc_attr_e('Delete', 'easy-appointments');?>">
+			<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="#dc2626" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle; display:inline-block;"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
+		</button>
+		<button class="button btn-clone" title="<?php esc_attr_e('Clone', 'easy-appointments');?>">
+			<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle; display:inline-block;"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+		</button>
+		<button class="button btn-status-confirm" data-id="<%- row.id %>" title="<?php esc_attr_e('Confirm Appointment', 'easy-appointments');?>" <% if (row.status === 'confirmed') { %>disabled<% } %>>
+			<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="#16a34a" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle; display:inline-block;"><polyline points="20 6 9 17 4 12"></polyline></svg>
+		</button>
+		<button class="button btn-status-cancel" data-id="<%- row.id %>" title="<?php esc_attr_e('Cancel Appointment', 'easy-appointments');?>" <% if (row.status === 'canceled') { %>disabled<% } %>>
+			<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="#dc2626" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle; display:inline-block;"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>
+		</button>
 	</td>
 </script>
 

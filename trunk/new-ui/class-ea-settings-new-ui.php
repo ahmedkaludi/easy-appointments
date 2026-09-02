@@ -95,6 +95,8 @@ class EA_Settings_New_UI
         'customer_search_password_only',
         'delete_data_on_uninstall',
         'mail.send_email_notification',
+        'connection_expire.mail_enabled',
+        'connection_expire.days_before',
         'mail.action.two_step',
         'pending.email',
         'admin_reply_to_address',
@@ -138,6 +140,7 @@ class EA_Settings_New_UI
         'fullcalendar.event.title_fields',
         'fullcalendar.event.template',
         // User Access settings
+        'user.access.appointments',
         'user.access.locations',
         'user.access.services',
         'user.access.workers',
@@ -181,6 +184,11 @@ class EA_Settings_New_UI
         'price.hide.service',
         'price.hide',
         'webhook.endpoints',
+        'gdpr.on',
+        'gdpr.label',
+        'gdpr.link',
+        'gdpr.message',
+        'gdpr.auto_remove',
     );
 
     /**

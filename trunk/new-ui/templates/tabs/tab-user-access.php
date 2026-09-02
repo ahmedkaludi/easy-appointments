@@ -31,6 +31,23 @@ if ( ! defined( 'WPINC' ) ) {
 
                         <?php
                         /**
+                         * Row: Appointments Page
+                         */
+                        ?>
+                        <div class="ea-nsui-row">
+                            <div class="ea-nsui-row-label">
+                                <span class="ea-nsui-row-title">
+                                    <?php esc_html_e('Appointments Page', 'easy-appointments'); ?>
+                                    <span class="ea-nsui-tip" data-tooltip="<?php esc_attr_e('Default capability: manage_options.', 'easy-appointments'); ?>">?</span>
+                                </span>
+                            </div>
+                            <div class="ea-nsui-row-control">
+                                <input type="text" class="ea-nsui-input" data-key="user.access.appointments" value="<?php echo esc_attr($ea_get('user.access.appointments', '')); ?>">
+                            </div>
+                        </div>
+
+                        <?php
+                        /**
                          * Row: Locations Page
                          */
                         ?>

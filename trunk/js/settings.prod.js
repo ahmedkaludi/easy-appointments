@@ -682,6 +682,8 @@
         edit_mode : false,
 
         events: {
+            "click .btn-status-confirm" : "confirmStatus",
+            "click .btn-status-cancel"  : "cancelStatus",
             "click .btn-edit"   : "edit",
             "click .btn-clone"  : "clone",
             "dblclick"          : "edit",
@@ -721,6 +723,69 @@
             this.serviceChanged();
 
             return this;
+        },
+
+        confirmStatus: function(e) {
+            if (e) e.preventDefault();
+            var id = this.model.get('id');
+            var msg = 'Are you sure you want to mark appointment #' + id + ' as confirmed?';
+            if (typeof window.eaConfirm === 'function') {
+                var self = this;
+                window.eaConfirm({
+                    title: 'Confirm Appointment',
+                    message: msg,
+                    confirmLabel: 'Confirm',
+                    cancelLabel: 'Cancel',
+                    isDanger: false,
+                    onConfirm: function() {
+                        self.updateStatus('confirmed');
+                    }
+                });
+            } else if (confirm(msg)) {
+                this.updateStatus('confirmed');
+            }
+        },
+
+        cancelStatus: function(e) {
+            if (e) e.preventDefault();
+            var id = this.model.get('id');
+            var msg = 'Are you sure you want to cancel appointment #' + id + '?';
+            if (typeof window.eaConfirm === 'function') {
+                var self = this;
+                window.eaConfirm({
+                    title: 'Cancel Appointment',
+                    message: msg,
+                    confirmLabel: 'Cancel Appointment',
+                    cancelLabel: 'Cancel',
+                    isDanger: true,
+                    onConfirm: function() {
+                        self.updateStatus('canceled');
+                    }
+                });
+            } else if (confirm(msg)) {
+                this.updateStatus('canceled');
+            }
+        },
+
+        updateStatus: function(newStatus) {
+            var self = this;
+            var id = this.model.get('id');
+            jQuery.ajax({
+                url: ajaxurl,
+                type: 'POST',
+                data: {
+                    action: 'ea_change_appointment_status',
+                    id: id,
+                    status: newStatus,
+                    _wpnonce: (window.wpApiSettings && window.wpApiSettings.nonce) ? window.wpApiSettings.nonce : (typeof eaData !== 'undefined' ? eaData.nonce : '')
+                },
+                success: function(res) {
+                    if (res && res.success) {
+                        self.model.set('status', newStatus);
+                        self.render();
+                    }
+                }
+            });
         },
 
         /**
@@ -905,7 +970,7 @@
                         return worker.id;
                     });
                     // selected worker is not in vacation list exit
-                    if (jQuery.inArray(workerId, workerIds) === -1) {
+                    if (jQuery.inArray(String(workerId), jQuery.map(workerIds, String)) === -1) {
                         return true;
                     }
 

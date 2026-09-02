@@ -243,6 +243,55 @@ if (!defined('WPINC')) {
             </div>
         </form>
     </div>
+
+    <!-- Extend Connections Modal Popup -->
+    <div id="ea-mnui-extend-modal-overlay" class="ea-mnui-drawer-overlay"></div>
+    <div id="ea-mnui-extend-modal" class="ea-mnui-drawer ea-mnui-drawer-wide" tabindex="-1" style="max-width: 1000px;">
+        <form id="ea-mnui-extend-form" novalidate>
+            <div class="ea-mnui-drawer-header">
+                <h2 id="ea-mnui-extend-modal-title"><?php esc_html_e('Extend Expired Connections', 'easy-appointments'); ?></h2>
+                <button type="button" id="ea-mnui-extend-modal-close" class="ea-mnui-drawer-close" aria-label="<?php esc_attr_e('Close', 'easy-appointments'); ?>">&times;</button>
+            </div>
+
+            <div class="ea-mnui-drawer-body">
+                <p class="ea-mnui-field-hint" style="margin-bottom: 16px; color: #475569; font-size: 13.5px;">
+                    <?php esc_html_e('Select the connections you want to extend. You can set individual end dates or toggle Infinite end date for each connection row.', 'easy-appointments'); ?>
+                </p>
+
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
+                    <label class="ea-mnui-select-all-label">
+                        <input type="checkbox" id="ea-mnui-extend-select-all" checked>
+                        <strong><?php esc_html_e('Select All Expired Connections', 'easy-appointments'); ?></strong>
+                    </label>
+                    <span id="ea-mnui-extend-selected-count" class="ea-mnui-field-hint" style="font-weight: 600;"></span>
+                </div>
+
+                <div class="ea-mnui-table-wrap" style="max-height: 380px; overflow-y: auto; border: 1px solid var(--ea-border); border-radius: 10px;">
+                    <table class="ea-mnui-table">
+                        <thead>
+                            <tr>
+                                <th class="ea-mnui-col-check" style="width: 40px;"></th>
+                                <th style="width: 50px;"><?php esc_html_e('Id', 'easy-appointments'); ?></th>
+                                <th><?php esc_html_e('Location / Service / Employee', 'easy-appointments'); ?></th>
+                                <th><?php esc_html_e('Current End Date', 'easy-appointments'); ?></th>
+                                <th style="min-width: 170px;"><?php esc_html_e('New End Date', 'easy-appointments'); ?></th>
+                                <th style="width: 110px; text-align: center;"><?php esc_html_e('Infinite', 'easy-appointments'); ?></th>
+                            </tr>
+                        </thead>
+                        <tbody id="ea-mnui-extend-rows"></tbody>
+                    </table>
+                    <div id="ea-mnui-extend-empty" class="ea-mnui-empty" style="display:none; padding: 24px; text-align: center;">
+                        <?php esc_html_e('No expired connections found.', 'easy-appointments'); ?>
+                    </div>
+                </div>
+            </div>
+
+            <div class="ea-mnui-drawer-footer">
+                <button type="button" class="ea-mnui-btn ea-mnui-btn-ghost ea-mnui-extend-modal-cancel"><?php esc_html_e('Cancel', 'easy-appointments'); ?></button>
+                <button type="submit" class="ea-mnui-btn ea-mnui-btn-primary ea-mnui-extend-modal-submit"><?php esc_html_e('Extend Selected Connections', 'easy-appointments'); ?></button>
+            </div>
+        </form>
+    </div>
 </div>
 
 <!-- Screen Loader -->

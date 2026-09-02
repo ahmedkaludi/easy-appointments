@@ -801,6 +801,10 @@ a.time-disabled:hover {
     letter-spacing: 0.01em;
 }
 
+.ea-new-ui .step.final .form-group label.error {
+    color: red;
+}
+
 .ea-new-ui .step.final .col-sm-8,
 .ea-new-ui .step.final .col-sm-4 {
     width: 100%;
@@ -1229,4 +1233,83 @@ button.booking-button:disabled {
 .ea-booking-complete .ea-booking-summary-bar .booking-button,
 .ea-booking-complete .ea-booking-summary-bar .ea-cancel {
     display: none;
+}
+
+/* Overview Details Table Formatting */
+#ea-overview-details {
+    width: 100% !important;
+    box-sizing: border-box !important;
+    background: #f8fafc !important;
+    border: 1px solid #e2e8f0 !important;
+    border-radius: 12px !important;
+    padding: 16px 20px !important;
+    margin: 0 auto 20px !important;
+}
+
+#ea-overview-details table,
+#ea-overview-details .ea-overview-table {
+    width: 100% !important;
+    max-width: 100% !important;
+    display: table !important;
+    table-layout: fixed !important;
+    border-collapse: collapse !important;
+    border: none !important;
+    margin: 0 !important;
+    background: transparent !important;
+}
+
+#ea-overview-details tr,
+#ea-overview-details td,
+#ea-overview-details th {
+    border: none !important;
+    border-top: none !important;
+    border-left: none !important;
+    border-right: none !important;
+    border-bottom: 1px solid #e2e8f0 !important;
+    box-shadow: none !important;
+}
+
+#ea-overview-details tr:last-child td {
+    border-bottom: none !important;
+}
+
+#ea-overview-details td {
+    padding: 12px 4px !important;
+    vertical-align: top !important;
+    font-size: 14px !important;
+    background: transparent !important;
+}
+
+#ea-overview-details td.ea-label {
+    color: #64748b !important;
+    font-weight: 600 !important;
+    width: 35% !important;
+    text-align: left !important;
+}
+
+#ea-overview-details td.value,
+#ea-overview-details td.value * {
+    color: #0f172a !important;
+    font-weight: 600 !important;
+    width: 65% !important;
+    text-align: right !important;
+}
+
+#ea-overview-details td.value ol,
+#ea-overview-details td.value ul {
+    margin: 0 !important;
+    padding: 0 !important;
+    list-style-position: inside !important;
+    text-align: right !important;
+    display: block !important;
+    width: 100% !important;
+}
+
+#ea-overview-details td.value li {
+    text-align: right !important;
+    border: none !important;
+}
+
+#ea-overview-details td.value li:empty {
+    display: none !important;
 }

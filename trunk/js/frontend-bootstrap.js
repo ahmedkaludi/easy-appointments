@@ -53,7 +53,7 @@
                         return worker.id;
                     });
                     // selected worker is not in vacation list exit
-                    if (jQuery.inArray(workerId, workerIds) === -1) {
+                    if (jQuery.inArray(String(workerId), jQuery.map(workerIds, String)) === -1) {
                         return true;
                     }
 
@@ -130,30 +130,45 @@
                 moment.locale(ea_settings['datepicker'].substr(0,2));
             }
 
-            // Sanitize template HTML: backticks break _.template()'s new Function()
-            // in modern JS engines that interpret them as template literals.
+            // Sanitize template HTML before passing to _.template / new Function().
+            // Strips characters that silently break JS compilation even after backtick-escaping.
+            function sanitizeTemplateHtml(html) {
+                if (!html) return html;
+                // 1. Escape backticks (template literals break new Function in modern engines)
+                html = html.replace(/`/g, '&#96;');
+                // 2. Decode HTML entities for ampersands that might break JavaScript operators (e.g. && becoming &#038;&#038;)
+                html = html.replace(/&#038;/g, '&').replace(/&#38;/g, '&').replace(/&amp;/g, '&');
+                // 3. Remove zero-width / non-printable Unicode chars that corrupt JS source
+                //    (zero-width space U+200B, zero-width non-joiner U+200C, zero-width joiner U+200D,
+                //     left-to-right mark U+200E, right-to-left mark U+200F, BOM U+FEFF, etc.)
+                html = html.replace(/[\u200B-\u200F\uFEFF\u00AD]/g, '');
+                return html;
+            }
+
             function safeTemplate(selector) {
                 var html = jQuery(selector).html();
                 if (!html) {
                     return function(data) {
-                        var dynamicHtml = jQuery(selector).html();
+                        var dynamicHtml = sanitizeTemplateHtml(jQuery(selector).html());
                         if (dynamicHtml) {
-                            dynamicHtml = dynamicHtml.replace(/`/g, '&#96;');
                             try {
                                 return _.template(dynamicHtml)(data);
                             } catch (e) {
                                 console.error('EA: Template compilation error for ' + selector + ':', e.message);
+                                if (e.source) console.error('EA: Generated source:\n', e.source);
                             }
                         }
                         return '<div></div>';
                     };
                 }
-                // Escape backticks that would break new Function() compilation
-                html = html.replace(/`/g, '&#96;');
+                html = sanitizeTemplateHtml(html);
                 try {
                     return _.template(html);
                 } catch (e) {
                     console.error('EA: Template compilation error for ' + selector + ':', e.message);
+                    if (e.source) {
+                        console.error('EA: Generated source:\n', e.source);
+                    }
                     return _.template('<div></div>');
                 }
             }
@@ -488,29 +503,147 @@
          * @returns {boolean}
          */
         settingsOk: function () {
+            var plugin = this;
             var selectOptions = this.$element.find('select').not('.custom-field');
-            var errors = jQuery('<div style="border: 1px solid gray; padding: 20px;">');
+            var missingItems = [];
             var valid = true;
 
             selectOptions.each(function(index, element) {
                 var $el = jQuery(element);
                 var options = $el.children('option');
 
-                // <option value="">-</option>
                 if (options.length === 1 && options.attr('value') == '') {
-                    jQuery(document.createElement('p'))
-                        .html('You need to define at least one <strong>' + $el.attr('name') + '</strong>.')
-                        .appendTo(errors);
-
+                    var fieldName = $el.attr('name') || 'field';
+                    var capitalized = fieldName.charAt(0).toUpperCase() + fieldName.slice(1);
+                    if (missingItems.indexOf(capitalized) === -1) {
+                        missingItems.push(capitalized);
+                    }
                     valid = false;
                 }
             });
 
             if (!valid) {
-                errors.prepend('<h4>East Appointments - Settings validation:</h4>');
-                errors.append('<p>There should be at least one Connection.</p>');
+                var isNoConnections = (typeof ea_settings !== 'undefined' && ea_settings.connection_status === 'none');
+                var isExpired = !isNoConnections;
 
-                this.$element.html(errors);
+                var cardTitle = 'Easy Appointments - Setup Required';
+                var cardDesc = 'Online booking is currently unavailable because active connections or required settings are missing or expired.';
+
+                if (isExpired) {
+                    cardTitle = 'Oops! All Connections Have Expired';
+                    cardDesc = 'Online booking is currently unavailable because connection end dates have passed.';
+                } else if (isNoConnections) {
+                    cardTitle = 'Online Booking Unavailable';
+                    cardDesc = 'Online booking is currently unavailable at this time.';
+                }
+
+                var missingListHtml = '';
+                if (!isExpired && !isNoConnections) {
+                    missingListHtml = missingItems.map(function(item) {
+                        return '<li style="margin-bottom: 6px; display: flex; align-items: center; gap: 8px;">' +
+                               '<span style="color: #ef4444; font-weight: 700;">•</span> ' +
+                               '<span>Define at least one active <strong>' + item + '</strong> and connection</span>' +
+                               '</li>';
+                    }).join('');
+                }
+
+                var listContainerHtml = missingListHtml ? 
+                    '<ul style="margin: 0 0 18px 0; padding: 0; list-style: none; font-size: 13.5px; color: #334155;">' +
+                        missingListHtml +
+                    '</ul>' : '';
+
+                var cardHtml = 
+                    '<div class="ea-booking-alert-card" style="' +
+                        'background: #ffffff; ' +
+                        'border: 1px solid #fee2e2; ' +
+                        'border-left: 5px solid #ef4444; ' +
+                        'border-radius: 12px; ' +
+                        'padding: 24px 28px; ' +
+                        'margin: 20px 0; ' +
+                        'box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.02); ' +
+                        'font-family: -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif;' +
+                    '">' +
+                        '<div style="display: flex; align-items: flex-start; gap: 16px;">' +
+                            '<div style="' +
+                                'background: #fef2f2; ' +
+                                'color: #ef4444; ' +
+                                'width: 44px; ' +
+                                'height: 44px; ' +
+                                'border-radius: 10px; ' +
+                                'display: flex; ' +
+                                'align-items: center; ' +
+                                'justify-content: center; ' +
+                                'flex-shrink: 0;' +
+                            '">' +
+                                '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
+                                    '<circle cx="12" cy="12" r="10"></circle>' +
+                                    '<line x1="12" y1="8" x2="12" y2="12"></line>' +
+                                    '<line x1="12" y1="16" x2="12.01" y2="16"></line>' +
+                                '</svg>' +
+                            '</div>' +
+                            '<div style="flex: 1;">' +
+                                '<h3 style="margin: 0 0 6px 0; font-size: 17px; font-weight: 700; color: #0f172a; letter-spacing: -0.01em;">' +
+                                    cardTitle +
+                                '</h3>' +
+                                '<p style="margin: 0 0 14px 0; font-size: 14px; color: #475569; line-height: 1.5;">' +
+                                    cardDesc +
+                                '</p>' +
+                                listContainerHtml +
+                                '<div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">' +
+                                    '<button type="button" class="ea-notify-admin-btn" style="' +
+                                        'background: #2563eb; ' +
+                                        'color: #ffffff; ' +
+                                        'border: none; ' +
+                                        'border-radius: 8px; ' +
+                                        'padding: 10px 18px; ' +
+                                        'font-size: 13.5px; ' +
+                                        'font-weight: 600; ' +
+                                        'cursor: pointer; ' +
+                                        'display: inline-flex; ' +
+                                        'align-items: center; ' +
+                                        'gap: 8px; ' +
+                                        'transition: all 0.2s ease; ' +
+                                        'box-shadow: 0 2px 4px rgba(37, 99, 235, 0.2);' +
+                                    '">' +
+                                        'Notify Administrator' +
+                                    '</button>' +
+                                    '<span class="ea-notify-status" style="font-size: 13px; font-weight: 500; display: none;"></span>' +
+                                '</div>' +
+                            '</div>' +
+                        '</div>' +
+                    '</div>';
+
+                this.$element.html(cardHtml);
+
+                this.$element.find('.ea-notify-admin-btn').on('click', function(e) {
+                    e.preventDefault();
+                    var $btn = jQuery(this);
+                    var $status = plugin.$element.find('.ea-notify-status');
+
+                    $btn.prop('disabled', true).css('opacity', '0.7').html(
+                        '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="animation: spin 1s linear infinite;"><circle cx="12" cy="12" r="10" stroke-opacity="0.25"></circle><path d="M12 2a10 10 0 0 1 10 10"></path></svg> Sending Notification...'
+                    );
+
+                    jQuery.post(ea_ajaxurl, {
+                        action: 'ea_notify_admin_booking_issue',
+                        _wpnonce: ea_settings['check']
+                    }, function(res) {
+                        if (res && res.success) {
+                            $btn.hide();
+                            $status.css({'color': '#16a34a', 'display': 'inline-block'}).html(
+                                '<span style="display: inline-flex; align-items: center; gap: 6px;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg> Notification Sent! Administrator has been emailed.</span>'
+                            );
+                        } else {
+                            $btn.prop('disabled', false).css('opacity', '1').text('Notify Administrator');
+                            $status.css({'color': '#dc2626', 'display': 'inline-block'}).text(
+                                (res && res.data && res.data.message) ? res.data.message : 'Error sending email. Please try again.'
+                            );
+                        }
+                    }).fail(function() {
+                        $btn.prop('disabled', false).css('opacity', '1').text('Notify Administrator');
+                        $status.css({'color': '#dc2626', 'display': 'inline-block'}).text('Server error. Please try again later.');
+                    });
+                });
             }
 
             return valid;
@@ -584,6 +717,11 @@
             }
 
             var step = current.closest('.step');
+
+            var $date = this.$element.find('.date');
+            if ($date.hasClass('hasDatepicker')) {
+                $date.datepicker('refresh');
+            }
 
             // blur next options (dontScroll = true if location or service)
             this.blurNextSteps(step, isLocationOrService);
@@ -714,6 +852,11 @@
                         .last()
                         .prop('selected', true)
                         .trigger('change');
+                }
+
+                var $date = plugin.$element.find('.date');
+                if ($date.hasClass('hasDatepicker')) {
+                    $date.datepicker('refresh');
                 }
             }, 'json');
 
@@ -919,7 +1062,7 @@
                             if (v.days && jQuery.inArray(curDateVal, v.days) !== -1) {
                                 if (v.workers && v.workers.length > 0) {
                                     var wIds = jQuery.map(v.workers, function(w) { return w.id; });
-                                    if (jQuery.inArray(selWorker, wIds) !== -1) {
+                                    if (jQuery.inArray(String(selWorker), jQuery.map(wIds, String)) !== -1) {
                                         tooltip_title = v.tooltip || '';
                                         return false;
                                     }
@@ -1089,7 +1232,7 @@
                         alert(ea_settings['trans.internal-error']);
                     }
 
-                    plugin.removeLoader();
+                    self.removeLoader();
                 });
             }
         },
@@ -1352,44 +1495,51 @@
                     $bootstrap.addClass('ea-booking-complete');
                     plugin.$element.find('.ea-filters-grid, .ea-filters-grid-full, .ea-booking-title, .ea-booking-summary-bar, .ea-new-ui-final-actions, .booking-button, .ea-submit').hide();
                     plugin.$element.find('.step').not('.final').hide();
-                    plugin.$element.find('.step.final').find('h3, small, label, .ea_hide_show, .form-group, #booking-overview-header, #ea-overview-message, .ea-confirmation-subtext').hide();
-                    plugin.$element.find('h3, small, #booking-overview-header, #ea-overview-message, .ea-confirmation-subtext').not('.ea-confirmation-title').not('.ea-status-note').hide();
+                    plugin.$element.find('.step.final').find('small, label, .ea_hide_show, .form-group, #booking-overview-header, #ea-overview-message, .ea-confirmation-subtext').hide();
+                    plugin.$element.find('small, #booking-overview-header, #ea-overview-message, .ea-confirmation-subtext').not('.ea-confirmation-title').not('.ea-status-note').hide();
                     plugin.$element.find('.step.final').children().not('#booking-overview').not('#ea-success-box').hide();
                     var table_html = plugin.$element.find('#booking-overview').find('table').html();
                     plugin.$element.find('#booking-overview').show();
                     plugin.$element.find('#booking-overview').find('table').hide();
                     plugin.$element.find('.final').show();
                     plugin.$element.find('#ea-success-box').show();
-                    plugin.$element.find('#ea-overview-details').html(table_html);
+                    plugin.$element.find('#ea-success-box .ea-confirmation-title, #ea-success-box .ea-status-note').show().css({'display':'block','visibility':'visible'});
+                    plugin.$element.find('#ea-overview-details').html('<table class="ea-overview-table" style="width:100% !important; table-layout:fixed !important; border-collapse:collapse !important;">' + table_html + '</table>');
     
                     const meta = document.getElementById('ea-meta-data');
                     if (meta) {
-                        const rawDateTime = meta.dataset.dateTime;
-                        const service = meta.dataset.service;
-                        const worker = meta.dataset.worker;
-                        const location = meta.dataset.location;
-                        const price = document.getElementById('ea-total-amount')?.dataset.price || '';
-                        const currency = meta.dataset.currency;
+                        const rawDateTime = meta.dataset.dateTime || '';
+                        const service = meta.dataset.service || '';
+                        const worker = meta.dataset.worker || '';
+                        const location = meta.dataset.location || '';
+                        const priceElem = document.getElementById('ea-total-amount');
+                        const price = priceElem ? (priceElem.dataset.price || '') : '';
+                        const currency = meta.dataset.currency || '';
                         const title = `${service} with ${worker}`;
                         const description = `Service: ${service}\nWorker: ${worker}\nPrice: ${price}${currency}`;
                         const startDateObj = new Date(rawDateTime);
-                        if (isNaN(startDateObj.getTime())) {
-                            console.error('Invalid date:', rawDateTime);
-                        }else{
+                        if (!isNaN(startDateObj.getTime())) {
                             const endDateObj = new Date(startDateObj.getTime() + 60 * 60 * 1000); // +1 hour
-        
+
                             const formatDateForGoogle = (dateObj) =>
                                 dateObj.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
-        
+
                             const start = formatDateForGoogle(startDateObj);
                             const end = formatDateForGoogle(endDateObj);
-        
-                            calendarUrl.searchParams.set("trp", "false");
-        
-                            document.getElementById("ea-add-to-calendar").href = calendarUrl.toString();
 
+                            const calendarUrl = new URL("https://calendar.google.com/calendar/render");
+                            calendarUrl.searchParams.set("action", "TEMPLATE");
+                            calendarUrl.searchParams.set("text", title);
+                            calendarUrl.searchParams.set("dates", `${start}/${end}`);
+                            calendarUrl.searchParams.set("details", description);
+                            calendarUrl.searchParams.set("location", location);
+                            calendarUrl.searchParams.set("trp", "false");
+
+                            const calBtn = document.getElementById("ea-add-to-calendar");
+                            if (calBtn) {
+                                calBtn.href = calendarUrl.toString();
+                            }
                         }
-    
                     }
                     plugin.$element.find('.ea-status-note').text(ea_settings['default_status_message']);
                     window.scrollTo({ top: 0, behavior: 'smooth' });

@@ -102,9 +102,11 @@ class EAAjax
 
         add_action('wp_ajax_ea_month_status', array($this, 'ajax_month_status'));
         add_action('wp_ajax_nopriv_ea_month_status', array($this, 'ajax_month_status'));
-        add_action('wp_ajax_ea_search_customers', array($this, 'ajax_search_customers'));
         add_action('wp_ajax_ea_get_customer_detail', array($this, 'ajax_customer_detail'));
-        add_action('wp_ajax_ea_update_customer_data', array($this, 'ea_update_customer_data'));       
+        add_action('wp_ajax_ea_update_customer_data', array($this, 'ea_update_customer_data'));
+
+        add_action('wp_ajax_ea_notify_admin_booking_issue', array($this, 'ajax_notify_admin_booking_issue'));
+        add_action('wp_ajax_nopriv_ea_notify_admin_booking_issue', array($this, 'ajax_notify_admin_booking_issue'));
 
         // end frontend
         add_action('easy_ea_new_app', array($this, 'add_customer_data'), 1000);
@@ -427,9 +429,11 @@ class EAAjax
                 'location',
                 'service',
                 'worker',
+                'date',
                 'start',
                 'end',
-                'status'
+                'status',
+                'created',
             ];
 
             foreach ($meta_fields as $field) {
@@ -463,6 +467,9 @@ class EAAjax
                 case 'worker':
                     $csv_headers[] = 'Worker';
                     break;
+                case 'date':
+                    $csv_headers[] = 'Date';
+                    break;
                 case 'start':
                     $csv_headers[] = 'Start';
                     break;
@@ -471,6 +478,13 @@ class EAAjax
                     break;
                 case 'status':
                     $csv_headers[] = 'Status';
+                    break;
+                case 'created':
+                case 'created_at':
+                case 'created_date':
+                case 'booking_date':
+                case 'booking_created':
+                    $csv_headers[] = 'Created At';
                     break;
                 default:
                     if (isset($meta_fields_by_slug[$column])) {
@@ -499,6 +513,9 @@ class EAAjax
                     case 'worker':
                         $csv_row[] = $workers[$row->worker] ?? $row->worker;
                         break;
+                    case 'date':
+                        $csv_row[] = $row->date ?? '';
+                        break;
                     case 'start':
                         $csv_row[] = $row->start;
                         break;
@@ -507,6 +524,13 @@ class EAAjax
                         break;
                     case 'status':
                         $csv_row[] = $row->status;
+                        break;
+                    case 'created':
+                    case 'created_at':
+                    case 'created_date':
+                    case 'booking_date':
+                    case 'booking_created':
+                        $csv_row[] = $row->created ?? '';
                         break;
                     default:
                         if (isset($meta_fields_by_slug[$column])) {
@@ -1178,6 +1202,54 @@ class EAAjax
        
 
         $this->send_ok_json_result($result);
+    }
+
+    public function ajax_notify_admin_booking_issue()
+    {
+        $this->validate_nonce();
+
+        $admin_email = get_option('admin_email');
+        if (empty($admin_email) || !is_email($admin_email)) {
+            $this->send_error_json_result(array('message' => __('Administrator email is not properly configured.', 'easy-appointments')));
+            return;
+        }
+
+        $site_name = wp_specialchars_decode(get_bloginfo('name'), ENT_QUOTES);
+        $site_url  = home_url();
+        $subject   = sprintf(
+            /* translators: %s: Site name */
+            __('[%s] Alert: Booking Form Setup Required', 'easy-appointments'),
+            $site_name
+        );
+
+        $message  = sprintf(__("Hello Administrator,\n\n", 'easy-appointments'));
+        $message .= sprintf(
+            /* translators: %s: Site URL */
+            __("A visitor tried to access the online booking form on your website (%s), but the booking form cannot display because active connections or required settings are missing or expired.\n\n", 'easy-appointments'),
+            $site_url
+        );
+        $message .= sprintf(__("Please log in to your WordPress dashboard and check your Easy Appointments Locations, Services, Staff, and Connections settings to ensure active connections exist.\n\n", 'easy-appointments'));
+        $message .= sprintf(
+            /* translators: 1: Site URL, 2: Current timestamp */
+            __("Website: %1\$s\nTime: %2\$s\n\n---\nEasy Appointments", 'easy-appointments'),
+            $site_url,
+            current_time('Y-m-d H:i:s')
+        );
+
+        $headers = array('Content-Type: text/plain; charset=UTF-8');
+
+        // Allow filters on subject and message per WP guidelines
+        $subject = apply_filters('easy_ea_notify_admin_booking_issue_subject', $subject, $site_name);
+        $message = apply_filters('easy_ea_notify_admin_booking_issue_message', $message, $site_url);
+
+        $sent = wp_mail($admin_email, $subject, $message, $headers);
+
+        if ($sent) {
+            do_action('easy_ea_admin_notified_booking_issue', $admin_email, $site_url);
+            $this->send_ok_json_result(array('message' => __('Administrator notified successfully.', 'easy-appointments')));
+        } else {
+            $this->send_error_json_result(array('message' => __('Failed to send email notification to administrator.', 'easy-appointments')));
+        }
     }
 
     public function ajax_res_appointment()

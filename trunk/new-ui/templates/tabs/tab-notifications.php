@@ -103,6 +103,35 @@ if ( ! defined( 'WPINC' ) ) {
                     </div>
 
                     <div class="ea-nsui-panel-head ea-nsui-panel-head-sub">
+                        <h3><?php esc_html_e('Connection Expiration Email Alerts', 'easy-appointments'); ?></h3>
+                        <p><?php esc_html_e('Configure automated email notifications for expiring and expired connections.', 'easy-appointments'); ?></p>
+                    </div>
+
+                    <div class="ea-nsui-card">
+                        <div class="ea-nsui-row">
+                            <div class="ea-nsui-row-label">
+                                <span class="ea-nsui-row-title"><?php esc_html_e('Enable connection expiration email alerts', 'easy-appointments'); ?></span>
+                            </div>
+                            <div class="ea-nsui-row-control">
+                                <label class="ea-nsui-switch">
+                                    <input type="checkbox" data-key="connection_expire.mail_enabled" value="1" <?php checked($ea_get('connection_expire.mail_enabled', '1'), '1'); ?>>
+                                    <span class="ea-nsui-switch-track"><span class="ea-nsui-switch-thumb"></span></span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="ea-nsui-row ea-nsui-row-last ea-nsui-row-connection-expire-days" style="<?php echo ($ea_get('connection_expire.mail_enabled', '1') === '1' || $ea_get('connection_expire.mail_enabled', '1') === 1) ? '' : 'display: none;'; ?>">
+                            <div class="ea-nsui-row-label">
+                                <span class="ea-nsui-row-title"><?php esc_html_e('Alert before (Days)', 'easy-appointments'); ?></span>
+                                <small style="color: #64748b; display: block; margin-top: 3px; font-weight: 400;"><?php esc_html_e('Number of days before connection end date to send the email alert to administrator.', 'easy-appointments'); ?></small>
+                            </div>
+                            <div class="ea-nsui-row-control">
+                                <input type="number" min="1" max="60" class="ea-nsui-input" data-key="connection_expire.days_before" value="<?php echo esc_attr($ea_get('connection_expire.days_before', '7')); ?>" style="max-width: 120px;">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="ea-nsui-panel-head ea-nsui-panel-head-sub">
                         <h3><?php esc_html_e('Notification delivery', 'easy-appointments'); ?></h3>
                         <p><?php esc_html_e('Enable which notifications should be sent and where they should go.', 'easy-appointments'); ?></p>
                     </div>

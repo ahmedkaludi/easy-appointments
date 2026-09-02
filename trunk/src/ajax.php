@@ -106,7 +106,10 @@ class EAAjax
         add_action('wp_ajax_nopriv_ea_search_customers', array($this, 'ajax_search_customers'));
         add_action('wp_ajax_ea_get_customer_detail', array($this, 'ajax_customer_detail'));
         add_action('wp_ajax_nopriv_ea_get_customer_detail', array($this, 'ajax_customer_detail'));
-        add_action('wp_ajax_ea_update_customer_data', array($this, 'ea_update_customer_data'));       
+        add_action('wp_ajax_ea_update_customer_data', array($this, 'ea_update_customer_data'));
+
+        add_action('wp_ajax_ea_notify_admin_booking_issue', array($this, 'ajax_notify_admin_booking_issue'));
+        add_action('wp_ajax_nopriv_ea_notify_admin_booking_issue', array($this, 'ajax_notify_admin_booking_issue'));
 
         // end frontend
         add_action('easy_ea_new_app', array($this, 'add_customer_data'), 1000);
@@ -131,6 +134,7 @@ class EAAjax
 
             // Appointment
             add_action('wp_ajax_ea_appointment', array($this, 'ajax_appointment'));
+            add_action('wp_ajax_ea_change_appointment_status', array($this, 'ajax_change_appointment_status'));
 
             // Services
             add_action('wp_ajax_ea_services', array($this, 'ajax_services'));
@@ -429,9 +433,11 @@ class EAAjax
                 'location',
                 'service',
                 'worker',
+                'date',
                 'start',
                 'end',
-                'status'
+                'status',
+                'created',
             ];
 
             foreach ($meta_fields as $field) {
@@ -465,6 +471,9 @@ class EAAjax
                 case 'worker':
                     $csv_headers[] = 'Worker';
                     break;
+                case 'date':
+                    $csv_headers[] = 'Date';
+                    break;
                 case 'start':
                     $csv_headers[] = 'Start';
                     break;
@@ -473,6 +482,13 @@ class EAAjax
                     break;
                 case 'status':
                     $csv_headers[] = 'Status';
+                    break;
+                case 'created':
+                case 'created_at':
+                case 'created_date':
+                case 'booking_date':
+                case 'booking_created':
+                    $csv_headers[] = 'Created At';
                     break;
                 default:
                     if (isset($meta_fields_by_slug[$column])) {
@@ -501,6 +517,9 @@ class EAAjax
                     case 'worker':
                         $csv_row[] = $workers[$row->worker] ?? $row->worker;
                         break;
+                    case 'date':
+                        $csv_row[] = $row->date ?? '';
+                        break;
                     case 'start':
                         $csv_row[] = $row->start;
                         break;
@@ -509,6 +528,13 @@ class EAAjax
                         break;
                     case 'status':
                         $csv_row[] = $row->status;
+                        break;
+                    case 'created':
+                    case 'created_at':
+                    case 'created_date':
+                    case 'booking_date':
+                    case 'booking_created':
+                        $csv_row[] = $row->created ?? '';
                         break;
                     default:
                         if (isset($meta_fields_by_slug[$column])) {
@@ -972,7 +998,7 @@ class EAAjax
             wp_send_json_error( [ 'message' => esc_html__( 'Security check failed.', 'easy-appointments' ) ], 403 );
         }
 
-        $this->validate_access_rights( 'appointments', 'edit_posts' );
+        $this->validate_access_rights( 'appointments', 'manage_options' );
 
         $cancel_to = isset( $_POST['cancel_to'] )
             ? sanitize_text_field( wp_unslash( $_POST['cancel_to'] ) )
@@ -1026,7 +1052,7 @@ class EAAjax
             wp_send_json_error( [ 'message' => esc_html__( 'Unauthorized', 'easy-appointments' ) ], 401 );
         }
 
-        $this->validate_access_rights( 'appointments', 'edit_posts' );
+        $this->validate_access_rights( 'appointments', 'manage_options' );
         global $wpdb;
         $current_time = current_time('H:i:s');
         $current_date = current_time('Y-m-d');
@@ -1160,7 +1186,10 @@ class EAAjax
 
 
         $slots = $this->logic->get_open_slots($location, $service, $worker, $date, null, true, $block_time);
-        
+
+        // Filter slots against vacation data
+        $slots = $this->filter_slots_by_vacation($slots, $worker, $date, $service);
+
         global $wpdb;
         $day_of_week = gmdate('l', strtotime($date));
         $time_now = current_time('timestamp', false);
@@ -1182,10 +1211,259 @@ class EAAjax
         $this->send_ok_json_result($result);
     }
 
+    public function ajax_notify_admin_booking_issue()
+    {
+        $this->validate_nonce();
+
+        $admin_email = get_option('admin_email');
+        if (empty($admin_email) || !is_email($admin_email)) {
+            $this->send_error_json_result(array('message' => __('Administrator email is not properly configured.', 'easy-appointments')));
+            return;
+        }
+
+        $site_name = wp_specialchars_decode(get_bloginfo('name'), ENT_QUOTES);
+        $site_url  = home_url();
+        $subject   = sprintf(
+            /* translators: %s: Site name */
+            __('[%s] Alert: Booking Form Setup Required', 'easy-appointments'),
+            $site_name
+        );
+
+        $message  = sprintf(__("Hello Administrator,\n\n", 'easy-appointments'));
+        $message .= sprintf(
+            /* translators: %s: Site URL */
+            __("A visitor tried to access the online booking form on your website (%s), but the booking form cannot display because active connections or required settings are missing or expired.\n\n", 'easy-appointments'),
+            $site_url
+        );
+        $message .= sprintf(__("Please log in to your WordPress dashboard and check your Easy Appointments Locations, Services, Staff, and Connections settings to ensure active connections exist.\n\n", 'easy-appointments'));
+        $message .= sprintf(
+            /* translators: 1: Site URL, 2: Current timestamp */
+            __("Website: %1\$s\nTime: %2\$s\n\n---\nEasy Appointments", 'easy-appointments'),
+            $site_url,
+            current_time('Y-m-d H:i:s')
+        );
+
+        $headers = array('Content-Type: text/plain; charset=UTF-8');
+
+        // Allow filters on subject and message per WP guidelines
+        $subject = apply_filters('easy_ea_notify_admin_booking_issue_subject', $subject, $site_name);
+        $message = apply_filters('easy_ea_notify_admin_booking_issue_message', $message, $site_url);
+
+        $sent = wp_mail($admin_email, $subject, $message, $headers);
+
+        if ($sent) {
+            do_action('easy_ea_admin_notified_booking_issue', $admin_email, $site_url);
+            $this->send_ok_json_result(array('message' => __('Administrator notified successfully.', 'easy-appointments')));
+        } else {
+            $this->send_error_json_result(array('message' => __('Failed to send email notification to administrator.', 'easy-appointments')));
+        }
+    }
+
+    /**
+     * Parse a vacation raw time value into H:i format (handling plain HH:mm and UTC ISO strings).
+     *
+     * @param mixed $raw_time
+     * @return string H:i format or empty string
+     */
+    private function parse_vacation_time_to_hi($raw_time)
+    {
+        if (empty($raw_time)) {
+            return '';
+        }
+
+        $raw_time = trim(strval($raw_time));
+
+        // If simple time format without 'T' e.g. "07:00" or "07:00:00"
+        if (strpos($raw_time, 'T') === false) {
+            if (preg_match('/^(\d{1,2}):(\d{2})/', $raw_time, $m)) {
+                return sprintf('%02d:%02d', intval($m[1]), intval($m[2]));
+            }
+            return gmdate('H:i', strtotime($raw_time));
+        }
+
+        // If local ISO format without timezone offset (e.g. "2020-01-01T07:00:00")
+        if (preg_match('/T(\d{2}:\d{2})/', $raw_time, $m) && !preg_match('/[Z\+\-]\d*$/i', $raw_time) && strpos($raw_time, 'Z') === false) {
+            return $m[1];
+        }
+
+        // If ISO string with UTC 'Z' or offset (e.g. "2020-01-01T01:30:00.000Z")
+        $ts = strtotime($raw_time);
+        if ($ts === false) {
+            if (preg_match('/T(\d{2}:\d{2})/', $raw_time, $m)) {
+                return $m[1];
+            }
+            return '';
+        }
+
+        // Convert UTC ISO timestamp back to site timezone
+        $tz_string = function_exists('wp_timezone_string') ? wp_timezone_string() : get_option('timezone_string');
+        if (empty($tz_string)) {
+            $offset = (float) get_option('gmt_offset', 0);
+            $hours = (int) $offset;
+            $minutes = (int) round(abs($offset - $hours) * 60);
+            $sign = $offset >= 0 ? '+' : '-';
+            $tz_string = sprintf('%s%02d:%02d', $sign, abs($hours), $minutes);
+        }
+
+        try {
+            $dt = new DateTime('@' . $ts);
+            $dt->setTimezone(new DateTimeZone($tz_string));
+            return $dt->format('H:i');
+        } catch (Exception $e) {
+            $gmt_offset = (float) get_option('gmt_offset', 0);
+            return gmdate('H:i', $ts + (int) ($gmt_offset * 3600));
+        }
+    }
+
+    /**
+     * Check if a given time slot overlaps with any vacation for the specified worker on the given date.
+     *
+     * @param string $worker_id  The worker ID.
+     * @param string $date       The date in Y-m-d format.
+     * @param string $slot_start The slot start time in H:i format.
+     * @param string $slot_end   The slot end time in H:i format.
+     * @return bool True if the slot is blocked by a vacation.
+     */
+    private function is_slot_in_vacation($worker_id, $date, $slot_start, $slot_end)
+    {
+        $vacations_json = $this->options->get_option_value('vacations', '[]');
+        $vacations = json_decode($vacations_json, true);
+
+        if (!is_array($vacations) || empty($vacations)) {
+            return false;
+        }
+
+        foreach ($vacations as $vacation) {
+            // Check if worker is targeted by this vacation
+            if (!empty($vacation['workers']) && is_array($vacation['workers'])) {
+                $worker_found = false;
+                foreach ($vacation['workers'] as $w) {
+                    if (strval($w['id']) === strval($worker_id)) {
+                        $worker_found = true;
+                        break;
+                    }
+                }
+                if (!$worker_found) {
+                    continue;
+                }
+            }
+
+            // Check if date is in vacation days
+            if (empty($vacation['days']) || !in_array($date, $vacation['days'], true)) {
+                continue;
+            }
+
+            // Determine if full day or partial vacation
+            $is_full_day = true;
+            $vac_start = null;
+            $vac_end = null;
+
+            if (!empty($vacation['time']) && is_array($vacation['time'])) {
+                $time = $vacation['time'];
+                if (isset($time['fullDay'])) {
+                    $is_full_day = ($time['fullDay'] === true || $time['fullDay'] === '1' || $time['fullDay'] === 1 || $time['fullDay'] === 'true');
+                }
+                if (!$is_full_day) {
+                    $raw_start = isset($time['startTime']) ? $time['startTime'] : (isset($time['from']) ? $time['from'] : '');
+                    $raw_end = isset($time['endTime']) ? $time['endTime'] : (isset($time['to']) ? $time['to'] : '');
+                    if ($raw_start && $raw_end) {
+                        $vac_start = $this->parse_vacation_time_to_hi($raw_start);
+                        $vac_end   = $this->parse_vacation_time_to_hi($raw_end);
+                    }
+                }
+            } elseif (isset($vacation['fullDay'])) {
+                $is_full_day = ($vacation['fullDay'] === true || $vacation['fullDay'] === '1' || $vacation['fullDay'] === 1 || $vacation['fullDay'] === 'true');
+                if (!$is_full_day) {
+                    $raw_start = isset($vacation['time_from']) ? $vacation['time_from'] : (isset($vacation['from']) ? $vacation['from'] : '');
+                    $raw_end = isset($vacation['time_to']) ? $vacation['time_to'] : (isset($vacation['to']) ? $vacation['to'] : '');
+                    if ($raw_start && $raw_end) {
+                        $vac_start = $this->parse_vacation_time_to_hi($raw_start);
+                        $vac_end   = $this->parse_vacation_time_to_hi($raw_end);
+                    }
+                }
+            }
+
+            if ($is_full_day) {
+                // Full day vacation blocks all slots
+                return true;
+            }
+
+            // Partial vacation: check time overlap
+            if ($vac_start !== null && $vac_end !== null) {
+                // Slot overlaps vacation if slot_start < vac_end AND slot_end > vac_start
+                if ($slot_start < $vac_end && $slot_end > $vac_start) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Filter time slots against vacation data. Zeroes out the count for slots
+     * that fall within a worker's vacation period so frontend shows them as unavailable.
+     *
+     * @param array  $slots   Array of slot arrays with 'value', 'count', etc.
+     * @param string $worker  The worker ID.
+     * @param string $date    The date in Y-m-d format.
+     * @param string $service The service ID (used for duration lookup).
+     * @return array Filtered slots.
+     */
+    private function filter_slots_by_vacation($slots, $worker, $date, $service)
+    {
+        if (empty($slots) || empty($worker) || empty($date)) {
+            return $slots;
+        }
+
+        $service_row = $this->models->get_row('ea_services', $service);
+        $duration = $service_row ? intval($service_row->duration) : 0;
+
+        $filtered = array();
+        foreach ($slots as $slot) {
+            $slot_start = $slot['value']; // e.g. '10:00'
+            if ($duration > 0) {
+                $slot_end = gmdate('H:i', strtotime($date . ' ' . $slot_start . " + {$duration} minutes"));
+            } else {
+                $slot_end = $slot_start;
+            }
+
+            if ($this->is_slot_in_vacation($worker, $date, $slot_start, $slot_end)) {
+                $slot['count'] = 0;
+            }
+
+            $filtered[] = $slot;
+        }
+
+        return $filtered;
+    }
+
     public function ajax_res_appointment()
     {
         $this->validate_nonce();
         $this->validate_captcha();
+
+        // Server-side vacation check: block booking during vacation
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- nonce already validated
+        $res_worker  = isset($_GET['worker'])  ? sanitize_text_field(wp_unslash($_GET['worker']))  : '';
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- nonce already validated
+        $res_date    = isset($_GET['date'])    ? sanitize_text_field(wp_unslash($_GET['date']))    : '';
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- nonce already validated
+        $res_start   = isset($_GET['start'])   ? sanitize_text_field(wp_unslash($_GET['start']))   : '';
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- nonce already validated
+        $res_service = isset($_GET['service']) ? sanitize_text_field(wp_unslash($_GET['service'])) : '';
+
+        if ($res_worker && $res_date && $res_start && $res_service) {
+            $svc_row = $this->models->get_row('ea_services', $res_service);
+            $dur = $svc_row ? intval($svc_row->duration) : 0;
+            $s_end = $dur > 0
+                ? gmdate('H:i', strtotime($res_date . ' ' . $res_start . " + {$dur} minutes"))
+                : $res_start;
+
+            if ($this->is_slot_in_vacation($res_worker, $res_date, $res_start, $s_end)) {
+                $this->send_err_json_result('{"err":true,"message":"This time slot is not available because the employee is on vacation."}');
+            }
+        }
 
         $table = 'ea_appointments';
         // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- nonce already validated
@@ -1876,6 +2154,7 @@ class EAAjax
     public function ajax_open_times()
     {
         $this->validate_admin_nonce();
+        $this->validate_access_rights( 'appointments', 'manage_options' );
 
         $data = $this->parse_input_data();
 
@@ -1893,7 +2172,7 @@ class EAAjax
     public function ajax_appointments()
     {
         $this->validate_admin_nonce();
-        $this->validate_access_rights( 'appointments', 'edit_posts' );
+        $this->validate_access_rights( 'appointments', 'manage_options' );
 
         $data = $this->parse_input_data();
 
@@ -1909,7 +2188,7 @@ class EAAjax
     public function ajax_appointment()
     {
         $this->validate_admin_nonce();
-        $this->validate_access_rights( 'appointments', 'edit_posts' );
+        $this->validate_access_rights( 'appointments', 'manage_options' );
 
         $response = $this->parse_appointment(false);
 
@@ -1929,6 +2208,75 @@ class EAAjax
         $this->send_ok_json_result($response);
     }
 
+    public function ajax_change_appointment_status()
+    {
+        if ( ! is_user_logged_in() ) {
+            wp_send_json_error( array( 'message' => esc_html__( 'Unauthorized', 'easy-appointments' ) ), 401 );
+        }
+
+        $this->validate_access_rights( 'appointments', 'manage_options' );
+
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+        $app_id = isset( $_REQUEST['id'] ) ? intval( $_REQUEST['id'] ) : 0;
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+        $new_status = isset( $_REQUEST['status'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['status'] ) ) : '';
+
+        if ( $app_id <= 0 || empty( $new_status ) ) {
+            wp_send_json_error( array( 'message' => esc_html__( 'Invalid appointment or status.', 'easy-appointments' ) ), 400 );
+        }
+
+        $allowed_statuses = array( 'pending', 'confirmed', 'canceled', 'reservation' );
+        if ( ! in_array( $new_status, $allowed_statuses, true ) ) {
+            wp_send_json_error( array( 'message' => esc_html__( 'Invalid status value.', 'easy-appointments' ) ), 400 );
+        }
+
+        $appointment = $this->models->get_row( 'ea_appointments', $app_id, ARRAY_A );
+
+        if ( ! $appointment ) {
+            wp_send_json_error( array( 'message' => esc_html__( 'Appointment not found.', 'easy-appointments' ) ), 404 );
+        }
+
+        $old_status = isset( $appointment['status'] ) ? $appointment['status'] : '';
+
+        if ( $old_status === $new_status ) {
+            wp_send_json_success( array(
+                /* translators: 1: Appointment ID, 2: Appointment status */
+                'message'     => sprintf( esc_html__( 'Appointment #%1$d is already %2$s.', 'easy-appointments' ), $app_id, $new_status ),
+                'appointment' => $appointment,
+            ) );
+        }
+
+        // Update appointment status
+        $appointment['status'] = $new_status;
+
+        $table = 'ea_appointments';
+        $response = $this->models->replace( $table, $appointment, true );
+
+        if ( false === $response ) {
+            wp_send_json_error( array( 'message' => esc_html__( 'Failed to update appointment status.', 'easy-appointments' ) ), 500 );
+        }
+
+        // Trigger existing events/hooks
+        do_action( 'easy_ea_edit_app', $app_id );
+        do_action( 'easy_ea_status_changed', $app_id, $new_status, $old_status, $appointment );
+
+        if ( 'canceled' === $new_status ) {
+            do_action( 'easy_ea_cancel_app', $app_id, $appointment );
+        }
+
+        // Send email notifications to user and admin/staff
+        $this->mail->send_user_email_notification_action( $app_id );
+        $this->mail->send_admin_email_notification_action( $app_id );
+
+        $updated_row = $this->models->get_row( 'ea_appointments', $app_id, ARRAY_A );
+
+        wp_send_json_success( array(
+            /* translators: 1: Appointment ID, 2: Appointment status */
+            'message'     => sprintf( esc_html__( 'Appointment #%1$d status updated to %2$s.', 'easy-appointments' ), $app_id, $new_status ),
+            'appointment' => $updated_row,
+        ) );
+    }
+
     public function delete_selected_appointment()
     {
         if ( ! is_user_logged_in() ) {
@@ -1939,7 +2287,7 @@ class EAAjax
             wp_send_json_error(array('message' => esc_html__('Security check failed.', 'easy-appointments')));
         }
 
-        $this->validate_access_rights( 'appointments', 'edit_posts' );
+        $this->validate_access_rights( 'appointments', 'manage_options' );
         
         if (!isset($_POST['appointments']) || !is_array($_POST['appointments'])) {
             wp_send_json_error(array('message' => esc_html__('No appointments selected.', 'easy-appointments') ));
@@ -1971,6 +2319,7 @@ class EAAjax
     public function ajax_update_order()
     {
         $this->validate_admin_nonce();
+        $this->validate_access_rights( 'services', 'manage_options' );
         $raw_data = file_get_contents('php://input');
         $data = json_decode($raw_data, true);
         if (isset($data['sequence_data']) && !empty($data['sequence_data'])) {
@@ -2619,6 +2968,7 @@ class EAAjax
             'fullcalendar.event.template'   => '',
             'shortcode.compress'            => '1',
             'label.from_to'                 => '0',
+            'user.access.appointments'      => '',
             'user.access.services'          => '',
             'user.access.workers'           => '',
             'user.access.locations'         => '',
@@ -3157,6 +3507,7 @@ class EAAjax
     {
 
         $this->validate_admin_nonce();
+        $this->validate_access_rights( 'settings', 'manage_options' );
         // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotValidated
         $raw_fields = $_POST['fields'];
 

@@ -257,6 +257,7 @@ class Easy_EA_Frontend
         $settings['time_format'] = $this->datetime->convert_to_moment_format(get_option('time_format', 'H:i'));
         $settings['date_format'] = $this->datetime->convert_to_moment_format(get_option('date_format', 'F j, Y'));
         $settings['default_datetime_format'] = $this->datetime->convert_to_moment_format($this->datetime->default_format());
+        $settings['connection_status'] = $this->get_connection_status();
 
         $settings['trans.nonce-expired'] = __('Form validation code expired. Please refresh page in order to continue.', 'easy-appointments');
         $settings['trans.internal-error'] = __('Internal error. Please try again later.', 'easy-appointments');
@@ -729,6 +730,7 @@ class Easy_EA_Frontend
         $settings['time_format'] = $this->datetime->convert_to_moment_format(get_option('time_format', 'H:i'));
         $settings['date_format'] = $this->datetime->convert_to_moment_format(get_option('date_format', 'F j, Y'));
         $settings['default_datetime_format'] = $this->datetime->convert_to_moment_format($this->datetime->default_format());
+        $settings['connection_status'] = $this->get_connection_status();
         $settings['field_order'] = $code_params['order'];
 
         // CUSTOM CSS
@@ -1038,6 +1040,34 @@ class Easy_EA_Frontend
 
             }
         }
+    }
+
+    /**
+     * Determine connection status for frontend warning messages
+     * @return string 'none'|'expired'|'ok'
+     */
+    public function get_connection_status()
+    {
+        global $wpdb;
+        $conn_table  = esc_sql($wpdb->prefix . 'ea_connections');
+        $curr_date   = current_time('Y-m-d');
+        // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+        $total_conns = (int) $wpdb->get_var("SELECT COUNT(*) FROM {$conn_table}");
+        // phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+        $active_conns = (int) $wpdb->get_var(
+            $wpdb->prepare(
+                "SELECT COUNT(*) FROM {$conn_table} WHERE is_working=1 AND (day_to IS NULL OR day_to = '' OR day_to = '0000-00-00' OR day_to >= %s)",
+                $curr_date
+            )
+        );
+        // phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+
+        if ($total_conns === 0) {
+            return 'none';
+        } elseif ($active_conns === 0) {
+            return 'expired';
+        }
+        return 'ok';
     }
 }
 
