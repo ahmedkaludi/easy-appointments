@@ -5,7 +5,7 @@ Tags: appointment, appointments, Booking, calendar, reservation
 Requires at least: 5.0
 Tested up to: 7.1
 Requires PHP: 5.3
-Stable tag: 4.0.2
+Stable tag: 4.0.2.1
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -261,6 +261,10 @@ Terms of use and Policy : https://fullcalendar.io/license
 25. Admin panel - Report - Export page
 
 == Changelog ==
+= 4.0.2.1 (2026-09-02)
+* Fixed Getting Opps message on booking page after new update 4.0.2 #340
+* Fixed Security issues on customer search front. Reported by Arnaud BERNARD-BRUNEL.
+
 = 4.0.2 (2026-09-01)
 * Fixed version 4.0.1 causing issue with shortcode [ea_standard] #329
 * Fixed Vacation availability is not working as expected with latest version 4.0 #326
