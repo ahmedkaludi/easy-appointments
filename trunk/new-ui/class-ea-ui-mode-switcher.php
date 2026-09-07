@@ -17,6 +17,7 @@ class EA_UI_Switcher
 
     public function init()
     {
+        add_action('admin_init', array($this, 'handle_cross_ui_redirect'));
         add_action('admin_post_ea_switch_ui_mode', array($this, 'handle_switch'));
         add_action('admin_notices', array($this, 'render_switch_notice'));
         add_action('admin_head', array($this, 'render_switch_styles'));
@@ -217,6 +218,74 @@ class EA_UI_Switcher
         // the new or classic Appointments screen depending on the mode.
         wp_safe_redirect(admin_url('admin.php?page=easy_app_top_level'));
         exit;
+    }
+
+    /**
+     * Redirect requests between old and new UI page slugs when a user
+     * accesses a URL belonging to the inactive UI mode (e.g. from an email link or bookmark).
+     */
+    public function handle_cross_ui_redirect()
+    {
+        if (!current_user_can('manage_options')) {
+            return;
+        }
+
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+        $page = isset($_GET['page']) ? sanitize_text_field(wp_unslash($_GET['page'])) : '';
+        if ('' === $page || 0 !== strpos($page, 'easy_app_')) {
+            return;
+        }
+
+        $is_new = self::is_new_ui();
+
+        // Mapping from New UI slugs to Classic UI slugs
+        $new_to_old = array(
+            'easy_app_appointments_new' => 'easy_app_top_level',
+            'easy_app_locations_new'    => 'easy_app_locations',
+            'easy_app_services_new'     => 'easy_app_services',
+            'easy_app_workers_new'      => 'easy_app_workers',
+            'easy_app_connections_new'  => 'easy_app_connections',
+            'easy_app_publish_new'      => 'easy_app_publish',
+            'easy_app_customers_new'    => 'easy_app_customer',
+            'easy_app_settings_new'     => 'easy_app_settings',
+            'easy_app_vacation_new'     => 'easy_app_tools',
+            'easy_app_help_support_new' => 'easy_app_help_support',
+        );
+
+        // Mapping from Classic UI slugs to New UI slugs
+        $old_to_new = array(
+            'easy_app_locations'    => 'easy_app_locations_new',
+            'easy_app_services'     => 'easy_app_services_new',
+            'easy_app_workers'      => 'easy_app_workers_new',
+            'easy_app_connections'  => 'easy_app_connections_new',
+            'easy_app_publish'      => 'easy_app_publish_new',
+            'easy_app_customer'     => 'easy_app_customers_new',
+            'easy_app_settings'     => 'easy_app_settings_new',
+            'easy_app_tools'        => 'easy_app_vacation_new',
+            'easy_app_help_support' => 'easy_app_help_support_new',
+        );
+
+        if (!$is_new && isset($new_to_old[$page])) {
+            $target_slug = $new_to_old[$page];
+            // Preserve other query parameters
+            // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+            $query_args = $_GET;
+            unset($query_args['page']);
+            $target_url = add_query_arg(array_merge(array('page' => $target_slug), $query_args), admin_url('admin.php'));
+            wp_safe_redirect($target_url);
+            exit;
+        }
+
+        if ($is_new && isset($old_to_new[$page])) {
+            $target_slug = $old_to_new[$page];
+            // Preserve other query parameters
+            // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+            $query_args = $_GET;
+            unset($query_args['page']);
+            $target_url = add_query_arg(array_merge(array('page' => $target_slug), $query_args), admin_url('admin.php'));
+            wp_safe_redirect($target_url);
+            exit;
+        }
     }
 
     /**

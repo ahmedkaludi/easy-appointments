@@ -535,7 +535,8 @@ class EA_Connections_New_UI
             );
         }
 
-        $manage_url = admin_url('admin.php?page=easy_app_connections_new');
+        $page_slug  = (class_exists('EA_UI_Switcher') && EA_UI_Switcher::is_new_ui()) ? 'easy_app_connections_new' : 'easy_app_connections';
+        $manage_url = admin_url('admin.php?page=' . $page_slug);
         /* translators: %s: Management URL */
         $body .= sprintf(__("\nPlease log in to your dashboard to manage or extend these connections:\n%s\n\n---\nEasy Appointments", 'easy-appointments'), $manage_url);
 
