@@ -686,12 +686,21 @@
             e.preventDefault();
 
             var cancelTo = $(this).data('target');
-            var ids = selectedIds();
+            var ids = [];
 
-            if (cancelTo !== 'all' && ids.length === 0) {
+            if (cancelTo === 'all') {
+                ids = appointments.map(function (a) {
+                    return a.id;
+                });
+            } else {
+                ids = selectedIds();
+            }
+
+            if (ids.length === 0) {
+                var emptyMsg = cancelTo === 'all' ? 'No appointments to cancel.' : i18n.selectOneToCancel;
                 window.eaConfirm({
                     title: 'Cancel Appointments',
-                    message: i18n.selectOneToCancel,
+                    message: emptyMsg,
                     confirmLabel: 'OK',
                     cancelLabel: '',
                     isDanger: false

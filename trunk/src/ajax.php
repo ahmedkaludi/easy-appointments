@@ -1039,47 +1039,51 @@ class EAAjax
             ? sanitize_text_field( wp_unslash( $_POST['cancel_to'] ) )
             : '';
 
-        if ( 'all' === $cancel_to ) {
-            $this->cancel_upcoming_all();
-        }
-
         $appointments = isset( $_POST['appointments'] ) && is_array( $_POST['appointments'] )
             ? array_map( 'absint', wp_unslash( $_POST['appointments'] ) )
             : [];
+
+        if ( 'all' === $cancel_to && empty( $appointments ) ) {
+            $this->cancel_upcoming_all();
+        }
 
         if ( empty( $appointments ) ) {
             wp_send_json_error( [ 'message' => esc_html__( 'No appointments selected.', 'easy-appointments' ) ] );
         }
 
+        $table = 'ea_appointments';
         $response = false;
-        $appointments = isset($_POST['appointments']) ? array_map('absint', wp_unslash($_POST['appointments'])) : [];
-        $current_datetime = current_time('mysql');
-        foreach ($appointments as $appointment_id) {
-            $appointment = $this->models->get_row('ea_appointments', $appointment_id, ARRAY_A);
-    
-            if ($appointment) {
-                if (strtotime($appointment['date']) > strtotime($current_datetime)) {
-                    $data = [
-                        'status' => 'canceled',
-                        'id' => $appointment_id
-                    ];
-                    foreach ($appointment as $key => $value) {
-                        if (!array_key_exists($key, $data)) {
-                            $data[$key] = $value;
-                        }
-                    }
-                    $table = 'ea_appointments';
-                    $response = $this->models->replace($table, $data, true);
+
+        foreach ( $appointments as $appointment_id ) {
+            $appointment = $this->models->get_row( $table, $appointment_id, ARRAY_A );
+
+            if ( $appointment ) {
+                $old_status = isset( $appointment['status'] ) ? $appointment['status'] : '';
+                if ( 'canceled' === $old_status ) {
+                    $response = true;
+                    continue;
+                }
+
+                $appointment['status'] = 'canceled';
+                $updated = $this->models->replace( $table, $appointment, true );
+
+                if ( false !== $updated ) {
+                    $response = true;
+                    do_action( 'easy_ea_edit_app', $appointment_id );
+                    do_action( 'easy_ea_status_changed', $appointment_id, 'canceled', $old_status, $appointment );
+                    do_action( 'easy_ea_cancel_app', $appointment_id, $appointment );
                 }
             }
         }
-        if ($response === false) {
-            $this->send_err_json_result('{"err":true}');
+
+        if ( false === $response ) {
+            $this->send_err_json_result( '{"err":true}' );
         }
-        $response = new stdClass;
-        $response->data = true;
-    
-        $this->send_ok_json_result($response);
+
+        $response_obj = new stdClass();
+        $response_obj->data = true;
+
+        $this->send_ok_json_result( $response_obj );
     }
 
     public function cancel_upcoming_all() {
@@ -1089,40 +1093,38 @@ class EAAjax
 
         $this->validate_access_rights( 'appointments', 'manage_options' );
         global $wpdb;
-        $current_time = current_time('H:i:s');
-        $current_date = current_time('Y-m-d');
+        $current_time = current_time( 'H:i:s' );
+        $current_date = current_time( 'Y-m-d' );
         $table_name = $wpdb->prefix . 'ea_appointments';
         $query = "
             SELECT * 
             FROM {$table_name}
-            WHERE (date > %s) 
-            OR (date = %s AND start > %s)";
+            WHERE status != %s
+            AND ((date > %s) 
+            OR (date = %s AND start > %s))";
         // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-        $appointments = $wpdb->get_results($wpdb->prepare($query, $current_date, $current_date, $current_time), ARRAY_A);
-        
-        
-        if (!$appointments) {
-            wp_send_json_error(array('message' => esc_html__('No upcoming appointments found.', 'easy-appointments')));
+        $appointments = $wpdb->get_results( $wpdb->prepare( $query, 'canceled', $current_date, $current_date, $current_time ), ARRAY_A );
+
+        if ( empty( $appointments ) ) {
+            wp_send_json_error( array( 'message' => esc_html__( 'No upcoming appointments found.', 'easy-appointments' ) ) );
         }
-        
-        
-        foreach ($appointments as $appointment) {
+
+        $table = 'ea_appointments';
+        foreach ( $appointments as $appointment ) {
             $appointment_id = $appointment['id'];
-            $update_query = "
-                UPDATE {$table_name}
-                SET status = %s
-                WHERE id = %d
-            ";
-            // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-            $response = $wpdb->query($wpdb->prepare($update_query, 'canceled', $appointment_id));
+            $old_status = isset( $appointment['status'] ) ? $appointment['status'] : '';
+            $appointment['status'] = 'canceled';
+            $this->models->replace( $table, $appointment, true );
+
+            do_action( 'easy_ea_edit_app', $appointment_id );
+            do_action( 'easy_ea_status_changed', $appointment_id, 'canceled', $old_status, $appointment );
+            do_action( 'easy_ea_cancel_app', $appointment_id, $appointment );
         }
-        if ($response === false) {
-            $this->send_err_json_result('{"err":true}');
-        }
-        $response = new stdClass;
-        $response->data = true;
-        
-        $this->send_ok_json_result($response);
+
+        $response_obj = new stdClass();
+        $response_obj->data = true;
+
+        $this->send_ok_json_result( $response_obj );
     }
 
     public function ea_send_query_message(){   

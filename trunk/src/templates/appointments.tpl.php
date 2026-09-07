@@ -379,20 +379,31 @@ jQuery(document).ready(function($) {
     $('.ea-cancel-all-selected').on('click', function(e) {
         e.preventDefault();
 
-        var cancel_to =  $(this).attr('data');
+        var cancel_to = $(this).attr('data');
         var selectedAppointments = [];
-        $('.ea-appointment-checkbox:checked').each(function() {
-            selectedAppointments.push($(this).data('id'));
-        });
 
-        if (selectedAppointments.length === 0 && cancel_to != 'all') {
-            alert('<?php esc_html_e("Please select at least one appointment to cancel.", "easy-appointments"); ?>');
+        if (cancel_to === 'all') {
+            $('.ea-appointment-checkbox').each(function() {
+                selectedAppointments.push($(this).data('id'));
+            });
+        } else {
+            $('.ea-appointment-checkbox:checked').each(function() {
+                selectedAppointments.push($(this).data('id'));
+            });
+        }
+
+        if (selectedAppointments.length === 0) {
+            var alertMsg = cancel_to === 'all'
+                ? '<?php esc_html_e("No appointments to cancel.", "easy-appointments"); ?>'
+                : '<?php esc_html_e("Please select at least one appointment to cancel.", "easy-appointments"); ?>';
+            alert(alertMsg);
             return;
         }
-		var popup_message = 'Are you sure you want to cancel all appointments?';
-		if (cancel_to != 'all') {
-			var popup_message = 'Are you sure you want to cancel all selected appointments?';
-		}
+
+        var popup_message = '<?php esc_html_e("Are you sure you want to cancel all appointments?", "easy-appointments"); ?>';
+        if (cancel_to != 'all') {
+            popup_message = '<?php esc_html_e("Are you sure you want to cancel all selected appointments?", "easy-appointments"); ?>';
+        }
         if (confirm(popup_message)) {
             $.ajax({
                 url: ajaxurl,
@@ -401,12 +412,14 @@ jQuery(document).ready(function($) {
                     action: 'cancel_selected_appointments',
                     appointments: selectedAppointments,
                     cancel_to: cancel_to,
-					appointments_nonce: appointments_nonce
+                    appointments_nonce: appointments_nonce
                 },
                 success: function(response) {
-                    if (response.data) {
+                    if (response && response.data) {
                         alert('<?php esc_html_e("Appointments canceled successfully.", "easy-appointments"); ?>');
                         location.reload(); // Reload the page to reflect changes
+                    } else {
+                        alert('<?php esc_html_e("An error occurred.", "easy-appointments"); ?>');
                     }
                 },
                 error: function() {
