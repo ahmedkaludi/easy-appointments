@@ -960,30 +960,33 @@ class EAAjax
         $body = file_get_contents( 'php://input' );
         $data = json_decode( $body, true );
 
-        if (
-            ! isset( $data['ids'] ) ||
-            ! is_array( $data['ids'] ) ||
-            empty( $data['ids'] )
-        ) {
-            wp_send_json_error(
-                esc_html__(
-                    'No valid IDs provided.',
-                    'easy-appointments'
-                )
-            );
+        $ids = array();
+
+        if ( ! empty( $data ) ) {
+            array_walk_recursive( $data, function( $val ) use ( &$ids ) {
+                $int_val = absint( $val );
+                if ( $int_val > 0 ) {
+                    $ids[] = $int_val;
+                }
+            } );
+            $ids = array_values( array_unique( $ids ) );
         }
 
-        $ids = array_filter(
-            array_map(
-                'absint',
-                $data['ids']
-            )
-        );
+        if ( empty( $ids ) && ! empty( $_REQUEST['ids'] ) ) {
+            $req_ids = is_array( $_REQUEST['ids'] ) ? $_REQUEST['ids'] : explode( ',', sanitize_text_field( wp_unslash( $_REQUEST['ids'] ) ) );
+            array_walk_recursive( $req_ids, function( $val ) use ( &$ids ) {
+                $int_val = absint( $val );
+                if ( $int_val > 0 ) {
+                    $ids[] = $int_val;
+                }
+            } );
+            $ids = array_values( array_unique( $ids ) );
+        }
 
         if ( empty( $ids ) ) {
             wp_send_json_error(
                 esc_html__(
-                    'Invalid IDs.',
+                    'No valid IDs provided.',
                     'easy-appointments'
                 )
             );
@@ -3315,7 +3318,15 @@ class EAAjax
                 break;
             case 'DELETE':
                 // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-                $data = $_GET;
+                if ( empty( $data['id'] ) ) {
+                    if ( isset( $_REQUEST['id'] ) ) {
+                        $data['id'] = absint( wp_unslash( $_REQUEST['id'] ) );
+                    } elseif ( isset( $_GET['id'] ) ) {
+                        $data['id'] = absint( wp_unslash( $_GET['id'] ) );
+                    } elseif ( isset( $_POST['id'] ) ) {
+                        $data['id'] = absint( wp_unslash( $_POST['id'] ) );
+                    }
+                }
                 $response = $this->models->delete($table, $data, true);
                 break;
         }
