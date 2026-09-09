@@ -175,6 +175,7 @@ if (!defined('WPINC')) {
                         <option value="0"><?php esc_html_e('Weekly', 'easy-appointments'); ?></option>
                         <option value="2"><?php esc_html_e('Every Second Week', 'easy-appointments'); ?></option>
                         <option value="custom"><?php esc_html_e('Custom Week', 'easy-appointments'); ?></option>
+                        <option value="-1"><?php esc_html_e('Tomorrow Only', 'easy-appointments'); ?></option>
                     </select>
                 </div>
 

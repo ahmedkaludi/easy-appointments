@@ -255,6 +255,7 @@ class EA_Connections_New_UI
                 'timeOrderError'        => esc_html__('End time must be after start time.', 'easy-appointments'),
                 'requiredField'         => esc_html__('This field is required.', 'easy-appointments'),
                 'customWeekError'       => esc_html__('Custom week number must be 3 or more.', 'easy-appointments'),
+                'tomorrowOnlyNote'      => esc_html__('Customers can only book appointments for tomorrow\'s date.', 'easy-appointments'),
             ),
         );
     }

@@ -215,11 +215,28 @@
                             var dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
                             var dayName = dayNames[date.getDay()];
                             var isWorkingDay = false;
+                            var hasTomorrowOnly = false;
+
+                            // Calculate tomorrow's date string
+                            var now = new Date();
+                            var tomorrow = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
+                            var tomorrowStr = tomorrow.getFullYear() + '-' +
+                                (tomorrow.getMonth() + 1 < 10 ? '0' : '') + (tomorrow.getMonth() + 1) + '-' +
+                                (tomorrow.getDate() < 10 ? '0' : '') + tomorrow.getDate();
 
                             jQuery.each(ea_connections, function(i, conn) {
                                 if (conn.location == locationId && conn.service == serviceId && conn.worker == workerId) {
                                     if (conn.day_from && dateString < conn.day_from) return true;
                                     if (conn.day_to && dateString > conn.day_to) return true;
+
+                                    // "Tomorrow Only" connection: only allow tomorrow's date
+                                    if (parseInt(conn.repeat_week, 10) === -1) {
+                                        hasTomorrowOnly = true;
+                                        if (dateString === tomorrowStr) {
+                                            isWorkingDay = true;
+                                        }
+                                        return false;
+                                    }
 
                                     if (conn.day_of_week) {
                                         var daysArr = conn.day_of_week.split(',').map(function(s) { return s.trim(); });
@@ -230,6 +247,10 @@
                                     }
                                 }
                             });
+
+                            if (hasTomorrowOnly && !isWorkingDay) {
+                                return [false, 'tomorrow-only', 'Only tomorrow is available for booking'];
+                            }
 
                             if (!isWorkingDay) {
                                 return [false, 'not-working', 'Not Working'];

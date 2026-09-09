@@ -743,7 +743,7 @@ class EADBModels
         // non-working calendar days (day_of_week / day_from / day_to).
         // The cascade-select logic only reads location / service / worker,
         // so extra columns are harmlessly ignored there.
-        $query = "SELECT location, service, worker, day_of_week, day_from, day_to FROM $connections WHERE is_working=1 AND (day_to IS NULL OR CAST(day_to AS CHAR) = '' OR CAST(day_to AS CHAR) = '0000-00-00' OR day_to >= '{$current_date}')";
+        $query = "SELECT location, service, worker, day_of_week, day_from, day_to, repeat_week FROM $connections WHERE is_working=1 AND (day_to IS NULL OR CAST(day_to AS CHAR) = '' OR CAST(day_to AS CHAR) = '0000-00-00' OR day_to >= '{$current_date}')";
         // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.PreparedSQL.NotPrepared
         return $this->wpdb->get_results($query);
     }

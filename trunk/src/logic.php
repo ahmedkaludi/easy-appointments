@@ -110,6 +110,15 @@ class EALogic
          * Example on Appointment 08:00 - 20:00 today
          */
         foreach ($open_days as $working_day) {
+            // "Tomorrow Only" mode: only return slots for tomorrow's date.
+            $repeat_week = (int)$working_day->repeat_week;
+            if ($repeat_week === -1) {
+                $tomorrow = gmdate('Y-m-d', strtotime('+1 day', current_time('timestamp', false)));
+                if ($day !== $tomorrow) {
+                    continue;
+                }
+            }
+
             // upper time 20:00;
             $upper_time = strtotime($working_day->time_to);
 
@@ -217,6 +226,15 @@ class EALogic
             }
 
             $repeat_week = (int)$working_day->repeat_week;
+
+            // "Tomorrow Only" mode: only return slots for tomorrow's date.
+            if ($repeat_week === -1) {
+                $tomorrow = gmdate('Y-m-d', strtotime('+1 day', current_time('timestamp', false)));
+                if ($day !== $tomorrow) {
+                    continue;
+                }
+            }
+
             $day_from = !empty($working_day->day_from) ? $working_day->day_from : $day;
             $current_date = new DateTime($day);
             if ($repeat_week > 1) {
