@@ -424,7 +424,7 @@
             }
 
             window.eaConfirm({
-                title: 'Delete Connections',
+                title: (i18n.deleteConnections || 'Delete Connections'),
                 message: i18n.confirmDeleteSelected.replace('%d', ids.length),
                 confirmLabel: i18n.delete || 'Delete',
                 cancelLabel: i18n.cancel || 'Cancel',
@@ -528,11 +528,11 @@
                 $('.ea-mnui-extend-bar').hide();
             } else if (count === 1) {
                 $('.ea-mnui-extend-bar').show();
-                $('#ea-mnui-extend-info').html('<strong>1 connection has expired</strong> and requires an end date extension to remain active.');
+                $('#ea-mnui-extend-info').html('<strong>' + (i18n.oneConnExpired || '1 connection has expired') + '</strong>' + (i18n.andRequiresEndDateExt || ' and requires an end date extension to remain active.'));
                 $('.ea-mnui-extend-connections').removeClass('ea-mnui-btn-disabled').prop('disabled', false).css('opacity', '1');
             } else {
                 $('.ea-mnui-extend-bar').show();
-                $('#ea-mnui-extend-info').html('<strong>' + count + ' connections have expired</strong> and require an end date extension to remain active.');
+                $('#ea-mnui-extend-info').html('<strong>' + count + (i18n.connsHaveExpired || ' connections have expired') + '</strong>' + (i18n.andRequireEndDateExt || ' and require an end date extension to remain active.'));
                 $('.ea-mnui-extend-connections').removeClass('ea-mnui-btn-disabled').prop('disabled', false).css('opacity', '1');
             }
         }
@@ -626,7 +626,7 @@
         function updateExtendSelectedCount() {
             var total = $('.ea-mnui-extend-row-check').length;
             var checked = $('.ea-mnui-extend-row-check:checked').length;
-            $extendSelectedCount.text(checked + ' of ' + total + ' selected');
+            $extendSelectedCount.text(checked + (i18n.of || ' of ') + total + (i18n.selected || ' selected'));
             $extendSelectAll.prop('checked', total > 0 && checked === total);
         }
 
@@ -640,7 +640,7 @@
                 var todayIso = isoDate(new Date());
                 var infiniteIso = isoDate(addYears(todayIso, 50));
                 $rowDateInput.data('previous-iso', $rowDateInput.data('iso') || isoDate(new Date()));
-                $rowDateInput.val('∞ (Infinite)').data('iso', infiniteIso).prop('disabled', true).css('opacity', '0.5');
+                $rowDateInput.val(i18n.infinite || '∞ (Infinite)').data('iso', infiniteIso).prop('disabled', true).css('opacity', '0.5');
             } else {
                 var restoredIso = $rowDateInput.data('previous-iso') || isoDate(new Date());
                 $rowDateInput.prop('disabled', false).css('opacity', '1');
@@ -693,7 +693,7 @@
             });
 
             if (!selectedConnections.length) {
-                window.alert('Please select at least one connection to extend.');
+                window.alert(i18n.pleaseSelectOneConnToExt || 'Please select at least one connection to extend.');
                 return;
             }
 
@@ -712,14 +712,14 @@
                 })
             }).done(function (response) {
                 closeExtendModal();
-                var msg = (typeof response === 'string' ? response : (response && response.message)) || ('Successfully extended ' + selectedConnections.length + ' connection(s)');
+                var msg = (typeof response === 'string' ? response : (response && response.message)) || ((i18n.successExtended || 'Successfully extended ') + selectedConnections.length + (i18n.connectionS || ' connection(s)'));
                 showNotice(msg);
                 loadConnections();
             }).fail(function () {
                 showNotice(i18n.genericError);
                 hideScreenLoader();
             }).always(function () {
-                $btn.prop('disabled', false).text('Extend Selected Connections');
+                $btn.prop('disabled', false).text(i18n.extendSelConns || 'Extend Selected Connections');
             });
         });
 
@@ -1266,7 +1266,7 @@
             }
 
             window.eaConfirm({
-                title: 'Delete Connection',
+                title: (i18n.deleteConnection || 'Delete Connection'),
                 message: i18n.confirmDelete,
                 confirmLabel: i18n.delete || 'Delete',
                 cancelLabel: i18n.cancel || 'Cancel',

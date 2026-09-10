@@ -483,7 +483,7 @@
         $(document).on('click', '.ea-mnui-delete-row', function () {
             var id = $(this).closest('tr').data('id');
             window.eaConfirm({
-                title: 'Delete Customer',
+                title: (i18n.deleteCustomer || 'Delete Customer'),
                 message: i18n.confirmDelete || 'Are you sure you want to delete this customer?',
                 confirmLabel: i18n.delete || 'Delete',
                 cancelLabel: i18n.cancel || 'Cancel',
@@ -533,7 +533,7 @@
             if (!ids.length) return;
 
             window.eaConfirm({
-                title: 'Delete Customers',
+                title: (i18n.deleteCustomers || 'Delete Customers'),
                 message: (i18n.confirmDeleteSelected || 'Are you sure you want to delete %d selected customers?').replace('%d', ids.length),
                 confirmLabel: i18n.delete || 'Delete',
                 cancelLabel: i18n.cancel || 'Cancel',

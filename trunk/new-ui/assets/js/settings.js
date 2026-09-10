@@ -672,11 +672,11 @@
                     '<span class="ea-nsui-file-badge">' + ext + '</span>' +
                     '<span class="ea-nsui-file-name" title="' + safeName + '">' + safeName + '</span>' +
                     '<span class="ea-nsui-file-size">(' + formatFileSize(file.size) + ')</span>' +
-                    '<button type="button" class="ea-nsui-file-clear" id="ea-nsui-file-clear" title="Remove file">&times;</button>' +
+                    '<button type="button" class="ea-nsui-file-clear" id="ea-nsui-file-clear" title="' + (i18n.removeFile || 'Remove file') + '">&times;</button>' +
                     '</div>';
                 $info.html(pillHtml);
             } else {
-                $info.html('<span class="ea-nsui-file-placeholder">No file chosen</span>');
+                $info.html('<span class="ea-nsui-file-placeholder">' + (i18n.noFileChosen || 'No file chosen') + '</span>');
             }
         }
 
@@ -1463,7 +1463,7 @@
                             'padding': '0'
                         }).append(
                             $('<div>').addClass('ea-nsui-row-label').append(
-                                $('<span>').addClass('ea-nsui-row-title').text('Endpoint URL')
+                                $('<span>').addClass('ea-nsui-row-title').text(i18n.endpointUrl || 'Endpoint URL')
                             ),
                             $('<div>').addClass('ea-nsui-row-control').append(
                                 $('<input>').attr({
@@ -1509,7 +1509,7 @@
                             'padding': '0'
                         }).append(
                             $('<div>').addClass('ea-nsui-row-label').append(
-                                $('<span>').addClass('ea-nsui-row-title').text('Webhook Events')
+                                $('<span>').addClass('ea-nsui-row-title').text(i18n.webhookEvents || 'Webhook Events')
                             ),
                             $('<div>').addClass('ea-nsui-row-control').append($checkboxGrid)
                         );
@@ -1525,7 +1525,7 @@
                             'display': 'block',
                             'font-size': '13px',
                             'padding': '6px 12px'
-                        }).text('Remove Webhook');
+                        }).text(i18n.removeWebhook || 'Remove Webhook');
 
                         $li.append($urlRow, $eventsRow, $removeBtn);
                         $list.append($li);
@@ -1605,11 +1605,11 @@
             function sendTestMail(native) {
                 var address = $.trim($emailInput.val());
                 if (!address) {
-                    $emailStatus.text('Please enter an email address first.').css('color', '#b42318');
+                    $emailStatus.text(i18n.enterEmail || 'Please enter an email address first.').css('color', '#b42318');
                     return;
                 }
                 
-                $emailStatus.text('Sending…').css('color', 'var(--ea-text-muted)');
+                $emailStatus.text(i18n.sending || 'Sending…').css('color', 'var(--ea-text-muted)');
                 $btnTestMail.prop('disabled', true);
                 $btnTestMailNative.prop('disabled', true);
 
@@ -1625,7 +1625,7 @@
                         $emailInput.val('');
                     },
                     error: function () {
-                        $emailStatus.text('Failed to send test email.').css('color', '#b42318');
+                        $emailStatus.text(i18n.testEmailFailed || 'Failed to send test email.').css('color', '#b42318');
                     },
                     complete: function () {
                         $btnTestMail.prop('disabled', false);
@@ -1651,7 +1651,7 @@
                     cancelLabel: eaNewSettingsUI.i18n.cancel || 'Cancel',
                     isDanger: true,
                     onConfirm: function () {
-                        $resetStatus.text('Resetting…').css('color', 'var(--ea-text-muted)');
+                        $resetStatus.text(i18n.resetting || 'Resetting…').css('color', 'var(--ea-text-muted)');
                         $btnResetPlugin.prop('disabled', true);
 
                         $.ajax({
@@ -1664,7 +1664,7 @@
                                 }, 2000);
                             },
                             error: function () {
-                                $resetStatus.text('Failed to reset plugin.').css('color', '#b42318');
+                                $resetStatus.text(i18n.resetFailed || 'Failed to reset plugin.').css('color', '#b42318');
                                 $btnResetPlugin.prop('disabled', false);
                             }
                         });
@@ -1681,7 +1681,7 @@
                         renderErrors(errors);
                     },
                     error: function () {
-                        $errorsContainer.html('<p style="color: #b42318;">Failed to load error logs.</p>');
+                        $errorsContainer.html('<p style="color: #b42318;">' + (i18n.loadErrorLogsFailed || 'Failed to load error logs.') + '</p>');
                     }
                 });
             }
@@ -1689,7 +1689,7 @@
             // Render errors
             function renderErrors(errors) {
                 if (!errors || !errors.length) {
-                    $errorsContainer.html('<p style="font-size: 13px; color: var(--ea-text-muted); margin: 0;">No errors logged.</p>');
+                    $errorsContainer.html('<p style="font-size: 13px; color: var(--ea-text-muted); margin: 0;">' + (i18n.noErrorsLogged || 'No errors logged.') + '</p>');
                     $btnClearLogs.hide();
                     return;
                 }
@@ -1698,9 +1698,9 @@
 
                 var html = '<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px;">';
                 $.each(errors, function (i, err) {
-                    var label = 'Error';
+                    var label = i18n.errorLbl || 'Error';
                     if (err.error_type === 'MAIL') {
-                        label = 'Mail error';
+                        label = i18n.mailErrorLbl || 'Mail error';
                     }
                     
                     var errText = '';
@@ -1716,7 +1716,7 @@
                     html += '    <strong style="color: #b42318; font-size: 13px; display: block; margin-bottom: 4px;">' + label + '</strong>';
                     html += '    <span style="font-size: 12.5px; color: #b42318; display: block; word-break: break-all;">' + errText + '</span>';
                     html += '  </div>';
-                    html += '  <button type="button" class="ea-nsui-btn ea-nsui-btn-ghost ea-nsui-btn-details" data-details="' + encodeURIComponent(err.errors_data || '') + '" style="margin-top: 12px; font-size: 11px; padding: 4px 8px; align-self: flex-start; border-color: #fda29b; color: #b42318; background: #fff;">Details</button>';
+                    html += '  <button type="button" class="ea-nsui-btn ea-nsui-btn-ghost ea-nsui-btn-details" data-details="' + encodeURIComponent(err.errors_data || '') + '" style="margin-top: 12px; font-size: 11px; padding: 4px 8px; align-self: flex-start; border-color: #fda29b; color: #b42318; background: #fff;">' + (i18n.detailsLbl || 'Details') + '</button>';
                     html += '</div>';
                 });
                 html += '</div>';
@@ -1759,7 +1759,7 @@
                                 fetchErrors();
                             },
                             error: function () {
-                                showNotice('Failed to clear error logs.', 'error');
+                                showNotice(i18n.clearErrorLogsFailed || 'Failed to clear error logs.', 'error');
                                 $btnClearLogs.prop('disabled', false);
                             }
                         });
@@ -1771,10 +1771,10 @@
             $app.on('click', '.btn-gdpr-delete-data', function () {
                 var $btn = $(this);
                 window.eaConfirm({
-                    title: 'Remove customer data',
-                    message: 'This will delete custom form field values and customer-related data from appointments older than 6 months. This action is irreversible. Are you sure you want to continue?',
-                    confirmLabel: 'Remove data now',
-                    cancelLabel: 'Cancel',
+                    title: i18n.removeCustData || 'Remove customer data',
+                    message: i18n.gdprMessage || 'This will delete custom form field values and customer-related data from appointments older than 6 months. This action is irreversible. Are you sure you want to continue?',
+                    confirmLabel: i18n.removeDataNow || 'Remove data now',
+                    cancelLabel: i18n.cancel || 'Cancel',
                     isDanger: true,
                     onConfirm: function () {
                         $btn.prop('disabled', true);
@@ -1782,11 +1782,11 @@
                             url: eaNewSettingsUI.wpRestUrl + 'easy-appointments/v1/gdpr?_wpnonce=' + eaNewSettingsUI.wpRestNonce,
                             method: 'DELETE',
                             success: function (res) {
-                                showNotice(res || 'Data deleted successfully.', 'success');
+                                showNotice(res || (i18n.dataDeletedSuccess || 'Data deleted successfully.'), 'success');
                                 $btn.prop('disabled', false);
                             },
                             error: function () {
-                                showNotice('Failed to delete data.', 'error');
+                                showNotice(i18n.dataDeleteFailed || 'Failed to delete data.', 'error');
                                 $btn.prop('disabled', false);
                             }
                         });

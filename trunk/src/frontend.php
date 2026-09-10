@@ -263,6 +263,34 @@ class Easy_EA_Frontend
         $settings['trans.internal-error'] = __('Internal error. Please try again later.', 'easy-appointments');
         $settings['trans.ajax-call-not-available'] = __('Unable to make ajax request. Please try again later.', 'easy-appointments');
 
+        // New UI translatable strings
+        $settings['trans.book-an-appointment'] = __('Book an appointment', 'easy-appointments');
+        $settings['trans.select-date-time'] = __('Select a date & time to continue', 'easy-appointments');
+        $settings['trans.book-appointment'] = __('Book appointment', 'easy-appointments');
+        $settings['trans.booking-in-progress'] = __('Booking...', 'easy-appointments');
+        $settings['trans.booked'] = __('Booked', 'easy-appointments');
+        $settings['trans.available-times'] = __('Available times', 'easy-appointments');
+        $settings['trans.not-available'] = __('Not Available', 'easy-appointments');
+        $settings['trans.not-working'] = __('Not Working', 'easy-appointments');
+        $settings['trans.tomorrow-only'] = __('Only tomorrow is available for booking', 'easy-appointments');
+        $settings['trans.setup-required-title'] = __('Easy Appointments - Setup Required', 'easy-appointments');
+        $settings['trans.setup-required-desc'] = __('Online booking is currently unavailable because active connections or required settings are missing or expired.', 'easy-appointments');
+        $settings['trans.connections-expired-title'] = __('Oops! All Connections Have Expired', 'easy-appointments');
+        $settings['trans.connections-expired-desc'] = __('Online booking is currently unavailable because connection end dates have passed.', 'easy-appointments');
+        $settings['trans.booking-unavailable-title'] = __('Online Booking Unavailable', 'easy-appointments');
+        $settings['trans.booking-unavailable-desc'] = __('Online booking is currently unavailable at this time.', 'easy-appointments');
+        $settings['trans.define-active'] = __('Define at least one active', 'easy-appointments');
+        $settings['trans.and-connection'] = __('and connection', 'easy-appointments');
+        $settings['trans.notify-administrator'] = __('Notify Administrator', 'easy-appointments');
+        $settings['trans.sending-notification'] = __('Sending Notification...', 'easy-appointments');
+        $settings['trans.notification-sent'] = __('Notification Sent! Administrator has been emailed.', 'easy-appointments');
+        $settings['trans.error-sending-email'] = __('Error sending email. Please try again.', 'easy-appointments');
+        $settings['trans.server-error'] = __('Server error. Please try again later.', 'easy-appointments');
+        $settings['trans.end-date-error'] = __('End date cannot be earlier than start date.', 'easy-appointments');
+        $settings['trans.weeks'] = __('week(s)', 'easy-appointments');
+        $settings['trans.never'] = __('Never', 'easy-appointments');
+        $settings['trans.min'] = __('min', 'easy-appointments');
+
         $customCss = $settings['custom.css'];
         $customCss = wp_strip_all_tags($customCss);
         $customCss = str_replace(array('<?php', '?>', "\t"), array('', '', ''), $customCss);
@@ -544,7 +572,7 @@ class Easy_EA_Frontend
 
         $clean_settings['allow_customer_search'] = $allow_customer_search ? 1 : 0;
 
-        $data_settings = json_encode($clean_settings);
+
         $data_vacation = $this->options->get_option_value('vacations', '[]');
 
         // make sure it is just array structure
@@ -588,18 +616,30 @@ class Easy_EA_Frontend
                 $service_start_data[] = array('id' => $service->id, 'booking_date_skip' => $booking_date_skip);
             }
         }
-        $service_start_data = json_encode($service_start_data);
-        $data_connections = json_encode($this->models->get_connections_combinations());
-        // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-        echo "<script>var ea_settings = {$data_settings};</script>";
-        // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-        echo "<script>var ea_vacations = {$data_vacation};</script>";
-        // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-        echo "<script>var ea_connections = {$data_connections};</script>";
-        // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-        echo "<script>var ea_service_start_data = {$service_start_data};</script>";
-        // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-        echo "<style>{$customCss}</style>";
+        // Use JSON_HEX_TAG to prevent </script> breakout XSS attacks.
+        // JSON_HEX_AMP encodes & to prevent entity-based bypasses.
+        $json_flags = JSON_HEX_TAG | JSON_HEX_AMP;
+
+        $data_settings = wp_json_encode($clean_settings, $json_flags);
+
+        $service_start_data = wp_json_encode($service_start_data, $json_flags);
+        $data_connections = wp_json_encode($this->models->get_connections_combinations(), $json_flags);
+
+        // Re-encode vacation data through safe encoder instead of trusting raw DB string.
+        $vacation_decoded = json_decode($data_vacation, true);
+        if (!is_array($vacation_decoded)) {
+            $vacation_decoded = array();
+        }
+        $data_vacation = wp_json_encode($vacation_decoded, $json_flags);
+
+        echo "<script>var ea_settings = " . $data_settings . ";</script>";
+        echo "<script>var ea_vacations = " . $data_vacation . ";</script>";
+        echo "<script>var ea_connections = " . $data_connections . ";</script>";
+        echo "<script>var ea_service_start_data = " . $service_start_data . ";</script>";
+
+        // Sanitize CSS: strip any </style> breakout attempts.
+        $safeCss = str_ireplace('</style', '<\\/style', $customCss);
+        echo "<style>" . $safeCss . "</style>";
     }
 
     /**
@@ -725,6 +765,34 @@ class Easy_EA_Frontend
         $settings['trans.nonce-expired'] = __('Form validation code expired. Please refresh page in order to continue.', 'easy-appointments');
         $settings['trans.internal-error'] = __('Internal error. Please try again later.', 'easy-appointments');
         $settings['trans.ajax-call-not-available'] = __('Unable to make ajax request. Please try again later.', 'easy-appointments');
+
+        // New UI translatable strings
+        $settings['trans.book-an-appointment'] = __('Book an appointment', 'easy-appointments');
+        $settings['trans.select-date-time'] = __('Select a date & time to continue', 'easy-appointments');
+        $settings['trans.book-appointment'] = __('Book appointment', 'easy-appointments');
+        $settings['trans.booking-in-progress'] = __('Booking...', 'easy-appointments');
+        $settings['trans.booked'] = __('Booked', 'easy-appointments');
+        $settings['trans.available-times'] = __('Available times', 'easy-appointments');
+        $settings['trans.not-available'] = __('Not Available', 'easy-appointments');
+        $settings['trans.not-working'] = __('Not Working', 'easy-appointments');
+        $settings['trans.tomorrow-only'] = __('Only tomorrow is available for booking', 'easy-appointments');
+        $settings['trans.setup-required-title'] = __('Easy Appointments - Setup Required', 'easy-appointments');
+        $settings['trans.setup-required-desc'] = __('Online booking is currently unavailable because active connections or required settings are missing or expired.', 'easy-appointments');
+        $settings['trans.connections-expired-title'] = __('Oops! All Connections Have Expired', 'easy-appointments');
+        $settings['trans.connections-expired-desc'] = __('Online booking is currently unavailable because connection end dates have passed.', 'easy-appointments');
+        $settings['trans.booking-unavailable-title'] = __('Online Booking Unavailable', 'easy-appointments');
+        $settings['trans.booking-unavailable-desc'] = __('Online booking is currently unavailable at this time.', 'easy-appointments');
+        $settings['trans.define-active'] = __('Define at least one active', 'easy-appointments');
+        $settings['trans.and-connection'] = __('and connection', 'easy-appointments');
+        $settings['trans.notify-administrator'] = __('Notify Administrator', 'easy-appointments');
+        $settings['trans.sending-notification'] = __('Sending Notification...', 'easy-appointments');
+        $settings['trans.notification-sent'] = __('Notification Sent! Administrator has been emailed.', 'easy-appointments');
+        $settings['trans.error-sending-email'] = __('Error sending email. Please try again.', 'easy-appointments');
+        $settings['trans.server-error'] = __('Server error. Please try again later.', 'easy-appointments');
+        $settings['trans.end-date-error'] = __('End date cannot be earlier than start date.', 'easy-appointments');
+        $settings['trans.weeks'] = __('week(s)', 'easy-appointments');
+        $settings['trans.never'] = __('Never', 'easy-appointments');
+        $settings['trans.min'] = __('min', 'easy-appointments');
 
         // datetime format
         $settings['time_format'] = $this->datetime->convert_to_moment_format(get_option('time_format', 'H:i'));

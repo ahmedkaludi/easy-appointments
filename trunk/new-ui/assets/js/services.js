@@ -267,7 +267,7 @@
             }
 
             window.eaConfirm({
-                title: 'Delete Services',
+                title: (i18n.deleteServices || 'Delete Services'),
                 message: i18n.confirmDeleteSelected.replace('%d', ids.length),
                 confirmLabel: i18n.delete || 'Delete',
                 cancelLabel: i18n.cancel || 'Cancel',
@@ -509,7 +509,7 @@
             }
 
             window.eaConfirm({
-                title: 'Delete Service',
+                title: (i18n.deleteService || 'Delete Service'),
                 message: i18n.confirmDelete.replace('%s', row.name || ''),
                 confirmLabel: i18n.delete || 'Delete',
                 cancelLabel: i18n.cancel || 'Cancel',

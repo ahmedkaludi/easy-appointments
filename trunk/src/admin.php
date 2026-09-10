@@ -937,7 +937,16 @@ class EAAdminPanel
 
         $settings['date_format'] = $this->datetime->convert_to_moment_format(get_option('date_format', 'F j, Y'));
 
-        
+        $settings['trans.loading-table'] = __('Loading table...', 'easy-appointments');
+        $settings['trans.error-refresh'] = __('Error, try refresh again.', 'easy-appointments');
+        $settings['trans.confirm-appointment-title'] = __('Confirm Appointment', 'easy-appointments');
+        $settings['trans.confirm-appointment-msg'] = __('Are you sure you want to mark appointment #%s as confirmed?', 'easy-appointments');
+        $settings['trans.confirm'] = __('Confirm', 'easy-appointments');
+        $settings['trans.cancel-appointment-title'] = __('Cancel Appointment', 'easy-appointments');
+        $settings['trans.cancel-appointment-msg'] = __('Are you sure you want to cancel appointment #%s?', 'easy-appointments');
+        $settings['trans.cancel-appointment'] = __('Cancel Appointment', 'easy-appointments');
+        $settings['trans.cancel'] = __('Cancel', 'easy-appointments');
+        $settings['trans.are-you-sure'] = __('Are you sure?', 'easy-appointments');
 
         wp_localize_script('ea-appointments', 'ea_settings', $settings);
         wp_localize_script('ea-appointments', 'ea_vacations', json_decode($data_vacation));
@@ -1022,6 +1031,7 @@ class EAAdminPanel
         }
 
         $settings = $this->options->get_options();
+        $settings['trans.settings-saved'] = __('Settings saved', 'easy-appointments');
         wp_localize_script('ea-report', 'ea_settings', $settings);
 
         $screen = get_current_screen();
@@ -1056,6 +1066,12 @@ class EAAdminPanel
 
         $settings = $this->options->get_options();
         $settings['rest_url'] = get_rest_url();
+        $settings['trans.settings-saved'] = __('Settings saved!', 'easy-appointments');
+        $settings['trans.error-occurred'] = __('There has been some error. Please try later.', 'easy-appointments');
+        $settings['trans.error-generic'] = __('There has been some error.', 'easy-appointments');
+        $settings['trans.error-delete'] = __('Error on delete!', 'easy-appointments');
+        $settings['trans.removed'] = __('REMOVED', 'easy-appointments');
+        $settings['trans.are-you-sure'] = __('Are you sure?', 'easy-appointments');
         wp_localize_script('ea-settings', 'ea_settings', $settings);
 
         $screen = get_current_screen();

@@ -697,11 +697,11 @@
             }
 
             if (ids.length === 0) {
-                var emptyMsg = cancelTo === 'all' ? 'No appointments to cancel.' : i18n.selectOneToCancel;
+                var emptyMsg = cancelTo === 'all' ? (i18n.noApptsCancel || 'No appointments to cancel.') : i18n.selectOneToCancel;
                 window.eaConfirm({
-                    title: 'Cancel Appointments',
+                    title: (i18n.cancelAppointments || 'Cancel Appointments'),
                     message: emptyMsg,
-                    confirmLabel: 'OK',
+                    confirmLabel: (i18n.ok || 'OK'),
                     cancelLabel: '',
                     isDanger: false
                 });
@@ -711,9 +711,9 @@
             var message = cancelTo === 'all' ? i18n.confirmCancelAll : i18n.confirmCancelSelected;
 
             window.eaConfirm({
-                title: 'Cancel Appointments',
+                title: (i18n.cancelAppointments || 'Cancel Appointments'),
                 message: message,
-                confirmLabel: 'OK',
+                confirmLabel: (i18n.ok || 'OK'),
                 cancelLabel: i18n.cancel || 'Cancel',
                 isDanger: true,
                 onConfirm: function () {
@@ -754,9 +754,9 @@
 
             if (ids.length === 0) {
                 window.eaConfirm({
-                    title: 'Delete Appointments',
+                    title: (i18n.deleteAppointments || 'Delete Appointments'),
                     message: i18n.selectOneToDelete,
-                    confirmLabel: 'OK',
+                    confirmLabel: (i18n.ok || 'OK'),
                     cancelLabel: '',
                     isDanger: false
                 });
@@ -764,7 +764,7 @@
             }
 
             window.eaConfirm({
-                title: 'Delete Appointments',
+                title: (i18n.deleteAppointments || 'Delete Appointments'),
                 message: i18n.confirmDeleteSelected,
                 confirmLabel: i18n.delete || 'Delete',
                 cancelLabel: i18n.cancel || 'Cancel',
@@ -798,9 +798,9 @@
             e.preventDefault();
             var id = $(this).data('id');
             window.eaConfirm({
-                title: 'Confirm Appointment',
-                message: 'Are you sure you want to mark appointment #' + id + ' as confirmed?',
-                confirmLabel: 'Confirm',
+                title: (i18n.confirmAppointment || 'Confirm Appointment'),
+                message: (i18n.areYouSureConfirmAppt || 'Are you sure you want to mark appointment #') + id + (i18n.asConfirmed || ' as confirmed?'),
+                confirmLabel: (i18n.confirmBtn || 'Confirm'),
                 cancelLabel: i18n.cancel || 'Cancel',
                 isDanger: false,
                 onConfirm: function () {
@@ -813,9 +813,9 @@
             e.preventDefault();
             var id = $(this).data('id');
             window.eaConfirm({
-                title: 'Cancel Appointment',
-                message: 'Are you sure you want to cancel appointment #' + id + '?',
-                confirmLabel: 'Cancel Appointment',
+                title: (i18n.cancelAppointment || 'Cancel Appointment'),
+                message: (i18n.areYouSureCancelAppt || 'Are you sure you want to cancel appointment #') + id + (i18n.questionMark || '?'),
+                confirmLabel: (i18n.cancelAppointmentBtn || 'Cancel Appointment'),
                 cancelLabel: i18n.cancel || 'Cancel',
                 isDanger: true,
                 onConfirm: function () {
@@ -1238,7 +1238,7 @@
             var row = $(this).closest('tr').data('row');
 
             window.eaConfirm({
-                title: 'Delete Appointment',
+                title: (i18n.deleteAppointment || 'Delete Appointment'),
                 message: i18n.confirmDelete,
                 confirmLabel: i18n.delete || 'Delete',
                 cancelLabel: i18n.cancel || 'Cancel',

@@ -251,6 +251,8 @@ class EA_Vacation_New_UI
                 'deletedSuccess'        => esc_html__('Vacation(s) deleted successfully.', 'easy-appointments'),
                 'savedSuccess'          => esc_html__('Vacation saved successfully.', 'easy-appointments'),
                 'genericError'          => esc_html__('Something went wrong. Please try again.', 'easy-appointments'),
+                'deleteVacation'        => esc_html__('Delete Vacation', 'easy-appointments'),
+                'deleteVacations'       => esc_html__('Delete Vacations', 'easy-appointments'),
                 'noResults'             => esc_html__('No vacations found.', 'easy-appointments'),
                 'fullDay'               => esc_html__('Full Day', 'easy-appointments'),
                 'titleRequired'         => esc_html__('Title is required.', 'easy-appointments'),

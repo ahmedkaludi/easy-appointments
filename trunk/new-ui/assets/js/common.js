@@ -29,10 +29,10 @@
      */
     window.eaConfirm = function (options) {
         var defaults = {
-            title: 'Confirm Action',
-            message: 'Are you sure you want to proceed?',
-            confirmLabel: 'Confirm',
-            cancelLabel: 'Cancel',
+            title: (window.eaCommonI18n && window.eaCommonI18n.confirmAction) || 'Confirm Action',
+            message: (window.eaCommonI18n && window.eaCommonI18n.areYouSureProceed) || 'Are you sure you want to proceed?',
+            confirmLabel: (window.eaCommonI18n && window.eaCommonI18n.confirm) || 'Confirm',
+            cancelLabel: (window.eaCommonI18n && window.eaCommonI18n.cancel) || 'Cancel',
             isDanger: true,
             onConfirm: function () {},
             onCancel: function () {}

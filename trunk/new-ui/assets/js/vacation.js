@@ -614,7 +614,7 @@
             var msg = i18n.confirmDelete ? sprintf(i18n.confirmDelete, title) : 'Delete this vacation?';
 
             window.eaConfirm({
-                title: 'Delete Vacation',
+                title: (i18n.deleteVacation || 'Delete Vacation'),
                 message: msg,
                 confirmLabel: i18n.delete || 'Delete',
                 cancelLabel: i18n.cancel || 'Cancel',
@@ -637,7 +637,7 @@
 
             var msg = i18n.confirmDeleteSelected ? sprintf(i18n.confirmDeleteSelected, ids.length) : 'Delete selected vacations?';
             window.eaConfirm({
-                title: 'Delete Vacations',
+                title: (i18n.deleteVacations || 'Delete Vacations'),
                 message: msg,
                 confirmLabel: i18n.delete || 'Delete',
                 cancelLabel: i18n.cancel || 'Cancel',

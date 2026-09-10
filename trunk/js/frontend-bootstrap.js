@@ -27,7 +27,7 @@
             var response = [true, day, ''];
             jQuery.each(ea_service_start_data, function(index, service_start_data) {
                 if (serviceId == service_start_data.id && jQuery.inArray(day, service_start_data.booking_date_skip) !== -1) {
-                    response = [false, 'blocked vacation', 'Not Avaiable'];
+                    response = [false, 'blocked vacation', (ea_settings['trans.not-available'] || 'Not Available')];
                 }
             });
 
@@ -197,7 +197,7 @@
                     plugin.$element.addClass('ea-layout-cols-2');
                 }
                 if ($bootstrap.length && !$bootstrap.find('.ea-booking-title').length) {
-                    $bootstrap.prepend('<h2 class="ea-booking-title">Book an appointment</h2>');
+                    $bootstrap.prepend('<h2 class="ea-booking-title">' + (ea_settings['trans.book-appointment'] || 'Book an appointment') + '</h2>');
                 }
 
                 plugin.newUiLayoutDropdowns();
@@ -205,10 +205,10 @@
                 if (!$bootstrap.find('.ea-booking-summary-bar').length) {
                     $bootstrap.append(
                         '<div class="ea-booking-summary-bar">' +
-                            '<span class="ea-summary-text empty">Select a date &amp; time to continue</span>' +
+                            '<span class="ea-summary-text empty">' + (ea_settings['trans.select-date-time'] || 'Select a date &amp; time to continue') + '</span>' +
                             '<div class="ea-new-ui-actions">' +
-                                '<button type="button" class="ea-btn ea-cancel" style="display:none;">Cancel</button>' +
-                                '<button type="button" class="ea-btn ea-submit booking-button" style="display:none;">Book appointment</button>' +
+                                '<button type="button" class="ea-btn ea-cancel" style="display:none;">' + (ea_settings['trans.cancel'] || 'Cancel') + '</button>' +
+                                '<button type="button" class="ea-btn ea-submit booking-button" style="display:none;">' + (ea_settings['trans.book-appointment'] || 'Book appointment') + '</button>' +
                             '</div>' +
                         '</div>'
                     );
@@ -322,11 +322,11 @@
                             });
 
                             if (hasTomorrowOnly && !isWorkingDay) {
-                                return [false, 'tomorrow-only', 'Only tomorrow is available for booking'];
+                                return [false, 'tomorrow-only', (ea_settings['trans.tomorrow-only'] || 'Only tomorrow is available for booking')];
                             }
 
                             if (!isWorkingDay) {
-                                return [false, 'not-working', 'Not Working'];
+                                return [false, 'not-working', (ea_settings['trans.not-working'] || 'Not Working')];
                             }
                         }
                     }
@@ -355,7 +355,7 @@
                     if (ea_settings['trans.slot-not-selectable'] !== undefined) {
                         alert(ea_settings['trans.slot-not-selectable']);                        
                     }else{
-                        alert('Not enough time please choose an earlier slot');
+                        alert(ea_settings['trans.slot-not-selectable'] || 'Not enough time please choose an earlier slot');
                     }
                     return;
                 }
@@ -547,15 +547,15 @@
                 var isNoConnections = (typeof ea_settings !== 'undefined' && ea_settings.connection_status === 'none');
                 var isExpired = !isNoConnections;
 
-                var cardTitle = 'Easy Appointments - Setup Required';
-                var cardDesc = 'Online booking is currently unavailable because active connections or required settings are missing or expired.';
+                var cardTitle = (ea_settings['trans.setup-required-title'] || 'Easy Appointments - Setup Required');
+                var cardDesc = (ea_settings['trans.setup-required-desc'] || 'Online booking is currently unavailable because active connections or required settings are missing or expired.');
 
                 if (isExpired) {
-                    cardTitle = 'Oops! All Connections Have Expired';
-                    cardDesc = 'Online booking is currently unavailable because connection end dates have passed.';
+                    cardTitle = (ea_settings['trans.connections-expired-title'] || 'Oops! All Connections Have Expired');
+                    cardDesc = (ea_settings['trans.connections-expired-desc'] || 'Online booking is currently unavailable because connection end dates have passed.');
                 } else if (isNoConnections) {
-                    cardTitle = 'Online Booking Unavailable';
-                    cardDesc = 'Online booking is currently unavailable at this time.';
+                    cardTitle = (ea_settings['trans.booking-unavailable-title'] || 'Online Booking Unavailable');
+                    cardDesc = (ea_settings['trans.booking-unavailable-desc'] || 'Online booking is currently unavailable at this time.');
                 }
 
                 var missingListHtml = '';
@@ -563,7 +563,7 @@
                     missingListHtml = missingItems.map(function(item) {
                         return '<li style="margin-bottom: 6px; display: flex; align-items: center; gap: 8px;">' +
                                '<span style="color: #ef4444; font-weight: 700;">•</span> ' +
-                               '<span>Define at least one active <strong>' + item + '</strong> and connection</span>' +
+                               '<span>' + (ea_settings['trans.define-active'] || 'Define at least one active ') + '<strong>' + item + '</strong>' + (ea_settings['trans.and-connection'] || ' and connection') + '</span>' +
                                '</li>';
                     }).join('');
                 }
@@ -626,7 +626,7 @@
                                         'transition: all 0.2s ease; ' +
                                         'box-shadow: 0 2px 4px rgba(37, 99, 235, 0.2);' +
                                     '">' +
-                                        'Notify Administrator' +
+                                        (ea_settings['trans.notify-administrator'] || 'Notify Administrator') +
                                     '</button>' +
                                     '<span class="ea-notify-status" style="font-size: 13px; font-weight: 500; display: none;"></span>' +
                                 '</div>' +
@@ -642,7 +642,7 @@
                     var $status = plugin.$element.find('.ea-notify-status');
 
                     $btn.prop('disabled', true).css('opacity', '0.7').html(
-                        '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="animation: spin 1s linear infinite;"><circle cx="12" cy="12" r="10" stroke-opacity="0.25"></circle><path d="M12 2a10 10 0 0 1 10 10"></path></svg> Sending Notification...'
+                        '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="animation: spin 1s linear infinite;"><circle cx="12" cy="12" r="10" stroke-opacity="0.25"></circle><path d="M12 2a10 10 0 0 1 10 10"></path></svg> ' + (ea_settings['trans.sending-notification'] || 'Sending Notification...')
                     );
 
                     jQuery.post(ea_ajaxurl, {
@@ -652,17 +652,17 @@
                         if (res && res.success) {
                             $btn.hide();
                             $status.css({'color': '#16a34a', 'display': 'inline-block'}).html(
-                                '<span style="display: inline-flex; align-items: center; gap: 6px;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg> Notification Sent! Administrator has been emailed.</span>'
+                                '<span style="display: inline-flex; align-items: center; gap: 6px;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg> ' + (ea_settings['trans.notification-sent'] || 'Notification Sent! Administrator has been emailed.') + '</span>'
                             );
                         } else {
-                            $btn.prop('disabled', false).css('opacity', '1').text('Notify Administrator');
+                            $btn.prop('disabled', false).css('opacity', '1').text(ea_settings['trans.notify-administrator'] || 'Notify Administrator');
                             $status.css({'color': '#dc2626', 'display': 'inline-block'}).text(
-                                (res && res.data && res.data.message) ? res.data.message : 'Error sending email. Please try again.'
+                                (res && res.data && res.data.message) ? res.data.message : (ea_settings['trans.error-sending-email'] || 'Error sending email. Please try again.')
                             );
                         }
                     }).fail(function() {
-                        $btn.prop('disabled', false).css('opacity', '1').text('Notify Administrator');
-                        $status.css({'color': '#dc2626', 'display': 'inline-block'}).text('Server error. Please try again later.');
+                        $btn.prop('disabled', false).css('opacity', '1').text(ea_settings['trans.notify-administrator'] || 'Notify Administrator');
+                        $status.css({'color': '#dc2626', 'display': 'inline-block'}).text(ea_settings['trans.server-error'] || 'Server error. Please try again later.');
                     });
                 });
             }
@@ -1135,7 +1135,7 @@
 
                 if (ea_settings['ea_new_ui'] === '1') {
                     var calDateLabel = plugin.formatDateLabel(dateString);
-                    newRow.find('td').append('<p class="ea-times-header">Available times \u2014 ' + calDateLabel + '</p>');
+                    newRow.find('td').append('<p class="ea-times-header">' + (ea_settings['trans.available-times'] || 'Available times') + ' \u2014 ' + calDateLabel + '</p>');
                 }
 
                 newRow.find('td').append(next_element);
@@ -1480,7 +1480,7 @@
             plugin.isSubmitting = true;
 
             var $submitBtn = this.$element.find('.ea-submit');
-            $submitBtn.prop('disabled', true).addClass('ea-loading').html('<span class="ea-btn-spinner"></span><span>Booking...</span>');
+            $submitBtn.prop('disabled', true).addClass('ea-loading').html('<span class="ea-btn-spinner"></span><span>' + (ea_settings['trans.booking-in-progress'] || 'Booking...') + '</span>');
 
             // make pre reservation
             var options = {
@@ -1505,7 +1505,7 @@
                 jQuery('.ea-submit, .booking-button')
                     .removeClass('ea-loading')
                     .prop('disabled', true)
-                    .html('<span>Booked</span>');
+                    .html('<span>' + (ea_settings['trans.booked'] || 'Booked') + '</span>');
                 jQuery('.ea-cancel').hide();
                 plugin.$element.find('.ea-cancel').hide();
                 plugin.$element.find('#paypal-button').hide();
@@ -1612,7 +1612,7 @@
                 if (response.responseJSON.message) {
                     alert(response.responseJSON.message);                    
                 }
-                this.$element.find('.ea-submit').prop('disabled', false).removeClass('ea-loading').html('Book appointment');
+                this.$element.find('.ea-submit').prop('disabled', false).removeClass('ea-loading').html(ea_settings['trans.book-appointment'] || 'Book appointment');
             }, plugin));
         },
 
@@ -1645,7 +1645,7 @@
             plugin.isSubmitting = true;
 
             var $submitBtn = this.$element.find('.ea-submit');
-            $submitBtn.prop('disabled', true).addClass('ea-loading').html('<span class="ea-btn-spinner"></span><span>Booking...</span>');
+            $submitBtn.prop('disabled', true).addClass('ea-loading').html('<span class="ea-btn-spinner"></span><span>' + (ea_settings['trans.booking-in-progress'] || 'Booking...') + '</span>');
 
             // make pre reservation
             var options = {
@@ -1695,7 +1695,7 @@
                                 if (response.responseJSON && response.responseJSON.message) {
                                     alert(response.responseJSON.message);
                                 }
-                                this.$element.find('.ea-submit').prop('disabled', false).removeClass('ea-loading').html('Book appointment');
+                                this.$element.find('.ea-submit').prop('disabled', false).removeClass('ea-loading').html(ea_settings['trans.book-appointment'] || 'Book appointment');
                             }, plugin))
                             .always(jQuery.proxy(function () {
                                 plugin.removeLoader();
@@ -1719,7 +1719,7 @@
                 if (response.responseJSON && response.responseJSON.message) {
                     alert(response.responseJSON.message);
                 }
-                this.$element.find('.ea-submit').prop('disabled', false).removeClass('ea-loading').html('Book appointment');
+                this.$element.find('.ea-submit').prop('disabled', false).removeClass('ea-loading').html(ea_settings['trans.book-appointment'] || 'Book appointment');
             }, plugin))
             .always(jQuery.proxy(function () {
                 plugin.removeLoader();
@@ -1802,7 +1802,7 @@
             // 8. Reset summary bar
             var $bar = plugin.$element.find('.ea-booking-summary-bar');
             if ($bar.length) {
-                $bar.find('.ea-summary-text').text('Select a date & time to continue').addClass('empty');
+                $bar.find('.ea-summary-text').text(ea_settings['trans.select-date-time'] || 'Select a date & time to continue').addClass('empty');
                 $bar.find('.ea-submit, .ea-cancel').hide();
             }
 
@@ -2045,7 +2045,7 @@
             var $summaryText = $bar.find('.ea-summary-text');
 
             if (!$selected.length) {
-                $summaryText.text('Select a date & time to continue').addClass('empty');
+                $summaryText.text(ea_settings['trans.select-date-time'] || 'Select a date & time to continue').addClass('empty');
                 $bar.find('.ea-submit, .ea-cancel').hide();
                 return;
             }
@@ -2074,7 +2074,7 @@
                     } else {
                         var slotText = timeVal;
                         if (duration > 0) {
-                            slotText += ' \u00b7 ' + duration + ' min';
+                            slotText += ' \u00b7 ' + duration + ' ' + (ea_settings['trans.min'] || 'min');
                         }
                         summaryParts.push(slotText);
                     }
@@ -2084,7 +2084,7 @@
             if (summaryParts.length) {
                 $summaryText.text(summaryParts.join(', ')).removeClass('empty');
             } else {
-                $summaryText.text('Select a date & time to continue').addClass('empty');
+                $summaryText.text(ea_settings['trans.select-date-time'] || 'Select a date & time to continue').addClass('empty');
             }
 
             $bar.find('.ea-submit, .ea-cancel').show();
@@ -2241,7 +2241,7 @@ jQuery(document).ready(function() {
 
     if (endType === 'date' && endDate !== '' && startDate !== '') {
         if (new Date(endDate) < new Date(startDate)) {
-            alert('End date cannot be earlier than start date.');
+            alert(ea_settings['trans.end-date-error'] || 'End date cannot be earlier than start date.');
             return;
         }
     }
@@ -2251,9 +2251,9 @@ jQuery(document).ready(function() {
     jQuery('input[name="repeat_start_date"]').val(startDate);
     jQuery('input[name="repeat_end_date"]').val(endDate);
 
-    jQuery('#summary-repeat-week').text(`${repeatWeek} week(s)`);
+    jQuery('#summary-repeat-week').text(repeatWeek + ' ' + (ea_settings['trans.weeks'] || 'week(s)'));
     jQuery('#summary-start-date').text(startDate);
-    jQuery('#summary-end-date').text(endType == 'date' ? endDate : 'Never');
+    jQuery('#summary-end-date').text(endType == 'date' ? endDate : (ea_settings['trans.never'] || 'Never'));
     jQuery('#recurrence-summary').show();
 
     // Hide modal
