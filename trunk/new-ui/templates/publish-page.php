@@ -91,17 +91,17 @@ if (!defined('WPINC')) {
                             <tr>
                                 <td><code>default_date</code></td>
                                 <td><?php esc_html_e('Default selected date (YYYY-MM-DD)', 'easy-appointments'); ?></td>
-                                <td><code><?php echo esc_html(gmdate('Y-m-d')); ?></code></td>
+                                <td><code>today</code></td>
                             </tr>
                             <tr>
                                 <td><code>min_date</code></td>
                                 <td><?php esc_html_e('Minimum selectable date (YYYY-MM-DD)', 'easy-appointments'); ?></td>
-                                <td><code>null</code></td>
+                                <td><code>no limit</code></td>
                             </tr>
                             <tr>
                                 <td><code>max_date</code></td>
                                 <td><?php esc_html_e('Maximum selectable date (YYYY-MM-DD)', 'easy-appointments'); ?></td>
-                                <td><code>null</code></td>
+                                <td><code>no limit</code></td>
                             </tr>
                             <tr>
                                 <td><code>show_remaining_slots</code></td>
@@ -213,17 +213,17 @@ if (!defined('WPINC')) {
                             <tr>
                                 <td><code>default_date</code></td>
                                 <td><?php esc_html_e('Default selected date (YYYY-MM-DD)', 'easy-appointments'); ?></td>
-                                <td><code><?php echo esc_html(gmdate('Y-m-d')); ?></code></td>
+                                <td><code>today</code></td>
                             </tr>
                             <tr>
                                 <td><code>min_date</code></td>
                                 <td><?php esc_html_e('Minimum selectable date (YYYY-MM-DD)', 'easy-appointments'); ?></td>
-                                <td><code>null</code></td>
+                                <td><code>no limit</code></td>
                             </tr>
                             <tr>
                                 <td><code>max_date</code></td>
                                 <td><?php esc_html_e('Maximum selectable date (YYYY-MM-DD)', 'easy-appointments'); ?></td>
-                                <td><code>null</code></td>
+                                <td><code>no limit</code></td>
                             </tr>
                             <tr>
                                 <td><code>show_remaining_slots</code></td>
