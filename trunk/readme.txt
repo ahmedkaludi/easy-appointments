@@ -5,7 +5,7 @@ Tags: appointment, appointments, Booking, calendar, reservation
 Requires at least: 5.0
 Tested up to: 7.1
 Requires PHP: 5.3
-Stable tag: 4.0.3
+Stable tag: 4.0.2.2
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -261,7 +261,12 @@ Terms of use and Policy : https://fullcalendar.io/license
 25. Admin panel - Report - Export page
 
 == Changelog ==
-= 4.0.3 (2026-09-15) =
+= 4.0.2.2 (2026-09-15) =
+* Added next-day-only appointment booking option #344
+* Fixed Delete button in connection is not working #343
+* Fixed JS/JSX strings are not being shown in loco translation plugin #148
+* Fixed Need To Fix "Cancel All" and "Cancel Selected" Not Working After Applying Filters. #323
+* Code improvements #148
 * Fixed Security issue: unauthenticated arbitrary appointment modification and deletion on pre-reservation handler. Reported by blast.
 * Fixed Security issue: unauthenticated appointment cancellation and confirmation via forgeable mail action token. Reported by Morato Antoine.
 * Fixed Security issue: stored XSS in admin UI attribute contexts (CVE-2026-81798). Reported by 0xzenko.
