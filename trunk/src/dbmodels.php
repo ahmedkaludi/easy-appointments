@@ -807,6 +807,17 @@ class EADBModels
         /**
          *
          */
+        if ('ea_services' === $table_name) {
+            $order_by_sequence = $this->options->get_option_value('services.order_by_sequence', '0');
+            $sort_services_by  = $this->options->get_option_value('sort.services-by', 'id');
+            if ($order_by_sequence === '1' || $order_by_sequence === 1 || $order_by_sequence === true || $sort_services_by === 'sequence') {
+                if ($as_string) {
+                    return " ORDER BY `sequence` ASC, `id` ASC";
+                }
+                return array('sequence' => 'ASC', 'id' => 'ASC');
+            }
+        }
+
         $mapping = array(
             'ea_locations' => array(
                 'sort'  => 'sort.locations-by',

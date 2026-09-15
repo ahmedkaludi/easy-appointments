@@ -93,6 +93,26 @@ if ( ! defined( 'WPINC' ) ) {
 
                         <?php
                         /**
+                         * Row: Order Services by Sequence
+                         */
+                        ?>
+                        <div class="ea-nsui-row">
+                            <div class="ea-nsui-row-label">
+                                <span class="ea-nsui-row-title">
+                                    <?php esc_html_e('Order Services by Sequence', 'easy-appointments'); ?>
+                                    <span class="ea-nsui-tip" data-tooltip="<?php esc_attr_e('When enabled, services in the frontend booking form will be displayed ordered by their custom sequence.', 'easy-appointments'); ?>">?</span>
+                                </span>
+                            </div>
+                            <div class="ea-nsui-row-control">
+                                <label class="ea-nsui-switch">
+                                    <input type="checkbox" data-key="services.order_by_sequence" value="1" <?php checked($ea_get('services.order_by_sequence', '0'), '1'); ?>>
+                                    <span class="ea-nsui-switch-track"><span class="ea-nsui-switch-thumb"></span></span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <?php
+                        /**
                          * Row: Max number of appointments
                          */
                         ?>

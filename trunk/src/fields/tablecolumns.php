@@ -190,6 +190,7 @@ class EATableColumns
             'customer_search_roles',
             'show_remaining_slots',
             'show_week',
+            'services.order_by_sequence',
             'sort.locations-by',
             'sort.services-by',
             'sort.workers-by',

@@ -107,7 +107,20 @@ defined( 'ABSPATH' ) || exit;
                         <div class="field-wrap">
                             <input class="field" id="is-multiple-booking-allowed" data-key="is_multiple_booking_allowed"
                                    name="is_multiple_booking_allowed" type="checkbox" <% if
-                            (_.findWhere(settings, {ea_key:'is_multiple_booking_allowed'}).ea_value == "1") {
+                            (_.findWhere(settings, {ea_key:'is_multiple_booking_allowed'}) && _.findWhere(settings, {ea_key:'is_multiple_booking_allowed'}).ea_value == "1") {
+                            %>checked<% } %>>
+                        </div>
+                    </div>
+                    <div class="form-item">
+                        <div class="label-with-tooltip">
+                            <label for="services-order-by-sequence"><?php esc_html_e('Order services by sequence', 'easy-appointments'); ?></label>
+                            <span class="tooltip tooltip-right"
+                                  data-tooltip="<?php esc_attr_e('When enabled, services in the frontend booking form will be displayed ordered by their custom sequence.', 'easy-appointments'); ?>"></span>
+                        </div>
+                        <div class="field-wrap">
+                            <input class="field" id="services-order-by-sequence" data-key="services.order_by_sequence"
+                                   name="services.order_by_sequence" type="checkbox" <% if
+                            (_.findWhere(settings, {ea_key:'services.order_by_sequence'}) && _.findWhere(settings, {ea_key:'services.order_by_sequence'}).ea_value == "1") {
                             %>checked<% } %>>
                         </div>
                     </div>

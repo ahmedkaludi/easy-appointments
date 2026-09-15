@@ -266,7 +266,21 @@ function easy_ea_blocks_get_options(WP_REST_Request $request)
 				$query .= ' AND c.worker=' . $worker_id;
 			}
 
-			$query .= " ORDER BY `id` DESC";
+			global $easy_ea_app;
+			$order_by_sequence = false;
+			if (isset($easy_ea_app) && is_object($easy_ea_app)) {
+				try {
+					$order_by_sequence = ($easy_ea_app->get_container()['options']->get_option_value('services.order_by_sequence', '0') == '1');
+				} catch (Exception $e) {
+					$order_by_sequence = false;
+				}
+			}
+
+			if ($order_by_sequence) {
+				$query .= " ORDER BY `sequence` ASC, `id` ASC";
+			} else {
+				$query .= " ORDER BY `id` DESC";
+			}
 
 			break;
 		case 'ea_staff':
