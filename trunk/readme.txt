@@ -261,7 +261,8 @@ Terms of use and Policy : https://fullcalendar.io/license
 25. Admin panel - Report - Export page
 
 == Changelog ==
-= 4.0.2.2 (2026-09-15) =
+
+= 4.0.2.2 (2026-09-15)
 * Added next-day-only appointment booking option #344
 * Fixed Delete button in connection is not working #343
 * Fixed JS/JSX strings are not being shown in loco translation plugin #148
