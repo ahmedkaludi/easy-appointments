@@ -13,7 +13,6 @@ class EAMail
 {
     // PHP 5.2
     // const CREATED_AT = 'created';
-    // const SALT = 'CStK4zYJSuQPnjbJ1npM';
     /**
      * @var EADBModels
      */
@@ -153,26 +152,35 @@ class EAMail
             wp_safe_redirect(get_home_url());
             return;
         }
+
         // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-        $app_id = (int)$_GET['_ea-app'];
+        $action = sanitize_text_field(wp_unslash($_GET['_ea-action']));
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+        $provided_token = sanitize_text_field(wp_unslash($_GET['_ea-t']));
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+        $app_id = absint($_GET['_ea-app']);
+
+        if (empty($action) || empty($app_id) || empty($provided_token)) {
+            return;
+        }
 
         $data = $this->models->get_appintment_by_id($app_id);
-
-        // check maybe it is a two step process
-        // phpcs:ignore WordPress.Security.NonceVerification.Missing,
-        if (empty($_POST['confirmed']) && (!empty($_POST['confirmed']) && $_POST['confirmed'] !== 'true')) {
-            // phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-            $this->link_action_additional_step($_GET['_ea-action'], $data);
-        }
 
         if (empty($data)) {
             header('Refresh:3; url=' . get_home_url());
             wp_die(esc_html__('No appointment.', 'easy-appointments'));
         }
 
-        // invalid token
-        // phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-        if ($this->generate_token($data, $_GET['_ea-action']) != $_GET['_ea-t']) {
+        // check maybe it is a two step process
+        // phpcs:ignore WordPress.Security.NonceVerification.Missing
+        if (empty($_POST['confirmed']) && (!empty($_POST['confirmed']) && $_POST['confirmed'] !== 'true')) {
+            $this->link_action_additional_step($action, $data);
+        }
+
+        $expected_token = $this->generate_token($data, $action);
+
+        // constant-time token comparison
+        if (!hash_equals($expected_token, $provided_token)) {
             header('Refresh:3; url=' . get_home_url());
             wp_die(esc_html__('Invalid token.', 'easy-appointments'));
         }
@@ -454,11 +462,36 @@ class EAMail
      */
     public function generate_token($data, $action)
     {
-        // moved from const because PHP 5.2
-        $CREATED_AT = 'created';
-        $SALT = 'CStK4zYJSuQPnjbJ1npM';
+        $app_id = isset($data['id']) ? (int)$data['id'] : 0;
+        $token_secret = '';
 
-        return md5($SALT . $data[$CREATED_AT] . $action);
+        if (!empty($data['token'])) {
+            $token_secret = $data['token'];
+        } else if ($app_id > 0) {
+            $row = $this->models->get_row('ea_appointments', $app_id, ARRAY_A);
+            if (!empty($row['token'])) {
+                $token_secret = $row['token'];
+            } else {
+                $new_token = wp_generate_password(32, false);
+                $this->wpdb->update(
+                    $this->wpdb->prefix . 'ea_appointments',
+                    array('token' => $new_token),
+                    array('id' => $app_id),
+                    array('%s'),
+                    array('%d')
+                );
+                $token_secret = $new_token;
+            }
+        }
+
+        if (empty($token_secret)) {
+            $created = isset($data['created']) ? $data['created'] : '';
+            $token_secret = $app_id . '|' . $created;
+        }
+
+        $salt = function_exists('wp_salt') ? wp_salt('auth') : 'ea_default_auth_salt';
+
+        return hash_hmac('sha256', $action . '|' . $app_id . '|' . $token_secret, $salt);
     }
 
     /**

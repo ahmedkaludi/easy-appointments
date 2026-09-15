@@ -5,7 +5,7 @@ Tags: appointment, appointments, Booking, calendar, reservation
 Requires at least: 5.0
 Tested up to: 7.1
 Requires PHP: 5.3
-Stable tag: 4.0.2.1
+Stable tag: 4.0.3
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -261,6 +261,11 @@ Terms of use and Policy : https://fullcalendar.io/license
 25. Admin panel - Report - Export page
 
 == Changelog ==
+= 4.0.3 (2026-09-15) =
+* Fixed Security issue: unauthenticated arbitrary appointment modification and deletion on pre-reservation handler. Reported by blast.
+* Fixed Security issue: unauthenticated appointment cancellation and confirmation via forgeable mail action token. Reported by Morato Antoine.
+* Fixed Security issue: stored XSS in admin UI attribute contexts (CVE-2026-81798). Reported by 0xzenko.
+
 = 4.0.2.1 (2026-09-02)
 * Fixed Getting Opps message on booking page after new update 4.0.2 #340
 * Fixed Security issues on customer search front. Reported by Arnaud BERNARD-BRUNEL.

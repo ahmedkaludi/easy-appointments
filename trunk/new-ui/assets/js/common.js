@@ -16,6 +16,25 @@
     }
 
     /**
+     * Safely escape a string for insertion into HTML elements and HTML attributes.
+     * Escapes &, <, >, ", and '.
+     *
+     * @param {*} value
+     * @return {string}
+     */
+    window.eaEscapeHtml = function (value) {
+        if (value === undefined || value === null) {
+            return '';
+        }
+        return String(value)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;');
+    };
+
+    /**
      * Show a custom confirmation modal in the new UI style.
      *
      * @param {Object} options Configuration options.

@@ -42,7 +42,18 @@
         var SEARCH_FIELDS = ['id', 'name', 'duration', 'slot_step', 'price', 'service_color'];
 
         function escapeHtml(value) {
-            return $('<div>').text(value === undefined || value === null ? '' : value).html();
+            if (typeof window.eaEscapeHtml === 'function') {
+                return window.eaEscapeHtml(value);
+            }
+            if (value === undefined || value === null) {
+                return '';
+            }
+            return String(value)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
         }
 
         var noticeTimer = null;

@@ -21,7 +21,18 @@
     // Helpers
     // ---------------------------------------------------------------
     function escapeHtml(str) {
-        return $('<div>').text(str === null || typeof str === 'undefined' ? '' : String(str)).html();
+        if (typeof window.eaEscapeHtml === 'function') {
+            return window.eaEscapeHtml(str);
+        }
+        if (str === undefined || str === null) {
+            return '';
+        }
+        return String(str)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;');
     }
 
     function setStatus(msg) {

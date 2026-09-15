@@ -604,6 +604,7 @@ class EAAjax
             if (function_exists('wp_raise_memory_limit')) {
                 wp_raise_memory_limit('admin');
             }
+            // phpcs:ignore Squiz.PHP.DiscouragedFunctions.Discouraged -- Used for long-running export process.
             @set_time_limit(300);
 
             global $wpdb;
@@ -636,6 +637,7 @@ class EAAjax
                 $encoded = json_encode($export, JSON_PARTIAL_OUTPUT_ON_ERROR | JSON_UNESCAPED_UNICODE);
             }
 
+            // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Direct JSON output for download.
             echo $encoded;
             exit;
         } else {
@@ -654,6 +656,7 @@ class EAAjax
         if (function_exists('wp_raise_memory_limit')) {
             wp_raise_memory_limit('admin');
         }
+        // phpcs:ignore Squiz.PHP.DiscouragedFunctions.Discouraged -- Used for long-running import process.
         @set_time_limit(300);
 
         if (
@@ -706,6 +709,7 @@ class EAAjax
 
         if ( null === $data ) {
             $json_err = json_last_error_msg();
+            /* translators: %s: JSON error message */
             wp_send_json_error( sprintf( esc_html__( 'Invalid backup file: JSON parse error (%s)', 'easy-appointments' ), $json_err ) );
         }
 
@@ -972,16 +976,19 @@ class EAAjax
             $ids = array_values( array_unique( $ids ) );
         }
 
+        // phpcs:disable WordPress.Security.NonceVerification.Recommended, WordPress.Security.NonceVerification.Missing -- Nonce is verified in validate_admin_nonce() above.
         if ( empty( $ids ) && ! empty( $_REQUEST['ids'] ) ) {
-            $req_ids = is_array( $_REQUEST['ids'] ) ? $_REQUEST['ids'] : explode( ',', sanitize_text_field( wp_unslash( $_REQUEST['ids'] ) ) );
-            array_walk_recursive( $req_ids, function( $val ) use ( &$ids ) {
+            $raw_ids = wp_unslash( $_REQUEST['ids'] ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Sanitized below via absint.
+            $req_ids = is_array( $raw_ids ) ? $raw_ids : explode( ',', sanitize_text_field( $raw_ids ) );
+            foreach ( $req_ids as $val ) {
                 $int_val = absint( $val );
                 if ( $int_val > 0 ) {
                     $ids[] = $int_val;
                 }
-            } );
+            }
             $ids = array_values( array_unique( $ids ) );
         }
+        // phpcs:enable WordPress.Security.NonceVerification.Recommended, WordPress.Security.NonceVerification.Missing
 
         if ( empty( $ids ) ) {
             wp_send_json_error(
@@ -1514,24 +1521,18 @@ class EAAjax
 
         // sanitize input keys
         $dont_remove = array(
-            'id','location','service','worker','name','email','phone',
+            'location','service','worker','name','email','phone',
             'date','start','end','end_date','description','status',
             'user','created','price','ip','session'
         );
-
-        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- nonce already validated
-        $app_id = !empty($_REQUEST['id']) ? intval($_REQUEST['id']) : (!empty($_REQUEST['res_app']) ? intval($_REQUEST['res_app']) : 0);
 
         foreach ($data as $key => $rem) {
             if (!in_array($key, $dont_remove)) unset($data[$key]);
         }
 
-        if ($app_id > 0) {
-            $data['id'] = $app_id;
-        } else {
-            unset($data['id']);
-            $data['id'] = null;
-        }
+        // Unauthenticated pre-reservations must always create a new row
+        unset($data['id']);
+        $data['id'] = null;
         unset($data['action']);
 
         $block_time = (int)$this->options->get_option_value('block.time', 0);
@@ -1539,7 +1540,7 @@ class EAAjax
         // Load open slots
         $open_slots = $this->logic->get_open_slots(
             $data['location'], $data['service'], $data['worker'],
-            $data['date'], $app_id > 0 ? $app_id : null, true, $block_time
+            $data['date'], null, true, $block_time
         );
 
         $slots_list = array();
@@ -1654,21 +1655,11 @@ class EAAjax
             // ===========================
 
             $is_free = false;
-            $app_id  = isset($data['id']) ? (int)$data['id'] : 0;
 
-            if ($app_id > 0) {
-                $existing = $this->models->get_row('ea_appointments', $app_id);
-                if ($existing && !empty($existing->id)) {
+            foreach ($open_slots as $slot) {
+                if ($slot['value'] === $data['start'] && $slot['count'] > 0) {
                     $is_free = true;
-                }
-            }
-
-            if (!$is_free) {
-                foreach ($open_slots as $slot) {
-                    if ($slot['value'] === $data['start'] && $slot['count'] > 0) {
-                        $is_free = true;
-                        break;
-                    }
+                    break;
                 }
             }
 
@@ -1730,6 +1721,8 @@ class EAAjax
             }
         }
 
+        unset($data['id']);
+        $data['id'] = null;
         unset($data['action']);
 
         $block_time = (int)$this->options->get_option_value('block.time', 0);
@@ -1737,21 +1730,11 @@ class EAAjax
         // Validate first slot
         $open_slots = $this->logic->get_open_slots($data['location'], $data['service'], $data['worker'], $data['date'], null, true, $block_time);
         $is_free    = false;
-        $app_id     = isset($data['id']) ? (int)$data['id'] : 0;
 
-        if ($app_id > 0) {
-            $existing = $this->models->get_row('ea_appointments', $app_id);
-            if ($existing && !empty($existing->id)) {
+        foreach ($open_slots as $value) {
+            if ($value['value'] === $data['start'] && $value['count'] > 0) {
                 $is_free = true;
-            }
-        }
-
-        if (!$is_free) {
-            foreach ($open_slots as $value) {
-                if ($value['value'] === $data['start'] && $value['count'] > 0) {
-                    $is_free = true;
-                    break;
-                }
+                break;
             }
         }
 
@@ -1907,18 +1890,32 @@ class EAAjax
 
         $data['status'] = $this->options->get_option_value('default.status', 'pending');
 
-        $appointment = $this->models->get_row('ea_appointments', $data['id'], ARRAY_A);
+        $app_id = !empty($data['id']) ? absint($data['id']) : 0;
+        if (empty($app_id)) {
+            $this->send_err_json_result('{"err":true,"message":"Invalid appointment ID"}');
+        }
 
-        
+        $appointment = $this->models->get_row('ea_appointments', $app_id, ARRAY_A);
+
+        if (empty($appointment) || empty($appointment['id'])) {
+            $this->send_err_json_result('{"err":true,"message":"Appointment not found"}');
+        }
+
+        if (isset($appointment['status']) && $appointment['status'] !== 'reservation') {
+            $this->send_err_json_result('{"err":true,"message":"Invalid appointment status"}');
+        }
 
         // check IP
-
         $remote_ip = isset( $_SERVER['REMOTE_ADDR'] )
             ? sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) )
             : '';
 
-        if ( $appointment['ip'] !== $remote_ip ) {
+        if ( !empty($appointment['ip']) && $appointment['ip'] !== $remote_ip ) {
             $this->send_err_json_result( '{"err":true}' );
+        }
+
+        if (empty($appointment['token'])) {
+            $appointment['token'] = wp_generate_password(32, false);
         }
 
 
@@ -3317,15 +3314,9 @@ class EAAjax
                 }
                 break;
             case 'DELETE':
-                // phpcs:ignore WordPress.Security.NonceVerification.Recommended
                 if ( empty( $data['id'] ) ) {
-                    if ( isset( $_REQUEST['id'] ) ) {
-                        $data['id'] = absint( wp_unslash( $_REQUEST['id'] ) );
-                    } elseif ( isset( $_GET['id'] ) ) {
-                        $data['id'] = absint( wp_unslash( $_GET['id'] ) );
-                    } elseif ( isset( $_POST['id'] ) ) {
-                        $data['id'] = absint( wp_unslash( $_POST['id'] ) );
-                    }
+                    // phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.NonceVerification.Missing
+                    $data['id'] = isset( $_REQUEST['id'] ) ? absint( wp_unslash( $_REQUEST['id'] ) ) : 0;
                 }
                 $response = $this->models->delete($table, $data, true);
                 break;

@@ -940,9 +940,11 @@ class EAAdminPanel
         $settings['trans.loading-table'] = __('Loading table...', 'easy-appointments');
         $settings['trans.error-refresh'] = __('Error, try refresh again.', 'easy-appointments');
         $settings['trans.confirm-appointment-title'] = __('Confirm Appointment', 'easy-appointments');
+        /* translators: %s: Appointment ID */
         $settings['trans.confirm-appointment-msg'] = __('Are you sure you want to mark appointment #%s as confirmed?', 'easy-appointments');
         $settings['trans.confirm'] = __('Confirm', 'easy-appointments');
         $settings['trans.cancel-appointment-title'] = __('Cancel Appointment', 'easy-appointments');
+        /* translators: %s: Appointment ID */
         $settings['trans.cancel-appointment-msg'] = __('Are you sure you want to cancel appointment #%s?', 'easy-appointments');
         $settings['trans.cancel-appointment'] = __('Cancel Appointment', 'easy-appointments');
         $settings['trans.cancel'] = __('Cancel', 'easy-appointments');

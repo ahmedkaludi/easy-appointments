@@ -632,13 +632,18 @@ class Easy_EA_Frontend
         }
         $data_vacation = wp_json_encode($vacation_decoded, $json_flags);
 
+        // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Encoded with JSON_HEX_TAG and JSON_HEX_AMP for safe inline script embedding.
         echo "<script>var ea_settings = " . $data_settings . ";</script>";
+        // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Encoded with JSON_HEX_TAG and JSON_HEX_AMP for safe inline script embedding.
         echo "<script>var ea_vacations = " . $data_vacation . ";</script>";
+        // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Encoded with JSON_HEX_TAG and JSON_HEX_AMP for safe inline script embedding.
         echo "<script>var ea_connections = " . $data_connections . ";</script>";
+        // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Encoded with JSON_HEX_TAG and JSON_HEX_AMP for safe inline script embedding.
         echo "<script>var ea_service_start_data = " . $service_start_data . ";</script>";
 
-        // Sanitize CSS: strip any </style> breakout attempts.
-        $safeCss = str_ireplace('</style', '<\\/style', $customCss);
+        // Sanitize CSS: strip any HTML tags and </style> breakout attempts.
+        $safeCss = wp_strip_all_tags($customCss);
+        // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Sanitized with wp_strip_all_tags.
         echo "<style>" . $safeCss . "</style>";
     }
 

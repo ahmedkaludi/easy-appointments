@@ -667,7 +667,7 @@
                 var file = fileInput.files[0];
                 var parts = file.name.split('.');
                 var ext = parts.length > 1 ? parts.pop().toLowerCase() : 'FILE';
-                var safeName = $('<div>').text(file.name).html();
+                var safeName = (typeof window.eaEscapeHtml === 'function') ? window.eaEscapeHtml(file.name) : String(file.name).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
                 var pillHtml = '<div class="ea-nsui-file-pill">' +
                     '<span class="ea-nsui-file-badge">' + ext + '</span>' +
                     '<span class="ea-nsui-file-name" title="' + safeName + '">' + safeName + '</span>' +
@@ -807,7 +807,18 @@
                 }
 
                 function escapeHtml(str) {
-                    return $('<div>').text(str === undefined || str === null ? '' : String(str)).html();
+                    if (typeof window.eaEscapeHtml === 'function') {
+                        return window.eaEscapeHtml(str);
+                    }
+                    if (str === undefined || str === null) {
+                        return '';
+                    }
+                    return String(str)
+                        .replace(/&/g, '&amp;')
+                        .replace(/</g, '&lt;')
+                        .replace(/>/g, '&gt;')
+                        .replace(/"/g, '&quot;')
+                        .replace(/'/g, '&#39;');
                 }
 
                 function normalizeField(raw) {

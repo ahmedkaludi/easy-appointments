@@ -65,7 +65,18 @@
         jQuery.datepicker.setDefaults(jQuery.datepicker.regional[cfg.datepickerLocale] || {});
 
         function escapeHtml(value) {
-            return $('<div>').text(value === undefined || value === null ? '' : value).html();
+            if (typeof window.eaEscapeHtml === 'function') {
+                return window.eaEscapeHtml(value);
+            }
+            if (value === undefined || value === null) {
+                return '';
+            }
+            return String(value)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
         }
 
         var noticeTimer = null;

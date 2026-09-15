@@ -32,7 +32,9 @@ class EATableColumns
                 'price',
                 'ip',
                 'session',
-                'recurrence_id'
+                'customer_id',
+                'recurrence_id',
+                'token'
             ),
             'ea_connections' => array(
                 'id',

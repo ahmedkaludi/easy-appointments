@@ -86,6 +86,7 @@ class EAInstallTools
             session varchar(32) DEFAULT NULL,
             customer_id int(11) DEFAULT NULL,
             recurrence_id varchar(255) DEFAULT NULL,
+            token varchar(64) DEFAULT NULL,
             PRIMARY KEY (id),
             KEY appointments_location (location),
             KEY appointments_service (service),
