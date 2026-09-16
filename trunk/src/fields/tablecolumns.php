@@ -241,6 +241,15 @@ class EATableColumns
             'reservation_message',
             'field_order',
             'trans.confirmation-title',
+            'style.font_family',
+            'style.primary_color',
+            'style.button_text_color',
+            'style.bg_color',
+            'style.surface_color',
+            'style.text_color',
+            'style.border_color',
+            'style.slot_bg_color',
+            'style.slot_text_color',
         );
 
         foreach ($ea_settings as $key => $value) {

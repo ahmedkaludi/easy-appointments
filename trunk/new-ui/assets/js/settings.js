@@ -1848,6 +1848,88 @@
 
             $(document).on('change', 'input[data-key="connection_expire.mail_enabled"]', toggleConnectionExpireDays);
             toggleConnectionExpireDays();
+
+            // ---------- Colors & Typography Styling Handlers ----------
+            (function () {
+                var $fontSelect = $('#ea-nsui-font-family-select');
+                var $fontPreview = $('#ea-nsui-font-preview');
+
+                function updateFontPreview() {
+                    var font = $fontSelect.val();
+                    if (!font) {
+                        $fontPreview.css('font-family', 'inherit');
+                        return;
+                    }
+
+                    if (font === 'system') {
+                        $fontPreview.css('font-family', '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif');
+                        return;
+                    }
+
+                    // Dynamically load Google Font if needed
+                    var googleFonts = ['Source Serif 4', 'Inter', 'Roboto', 'Open Sans', 'Lato', 'Montserrat', 'Poppins', 'Playfair Display', 'Merriweather'];
+                    if ($.inArray(font, googleFonts) !== -1) {
+                        var fontId = 'ea-google-font-' + font.toLowerCase().replace(/\s+/g, '-');
+                        if (!$('#' + fontId).length) {
+                            var fontUrl = 'https://fonts.googleapis.com/css2?family=' + encodeURIComponent(font) + ':wght@400;600&display=swap';
+                            $('head').append('<link id="' + fontId + '" rel="stylesheet" href="' + fontUrl + '">');
+                        }
+                    }
+
+                    $fontPreview.css('font-family', '"' + font + '", sans-serif');
+                }
+
+                $fontSelect.on('change', updateFontPreview);
+                updateFontPreview();
+
+                // Native color picker to hex text input & button preview sync
+                $(document).on('input change', '.ea-nsui-native-color-picker', function () {
+                    var color = $(this).val();
+                    var $card = $(this).closest('.ea-nsui-color-card');
+                    $card.find('.ea-nsui-color-picker-btn').css('background-color', color);
+                    $card.find('.ea-nsui-color-hex-input').val(color).trigger('input');
+                });
+
+                // Hex text input to native color picker & button preview sync
+                $(document).on('input change', '.ea-nsui-color-hex-input', function () {
+                    var color = $(this).val().trim();
+                    var $card = $(this).closest('.ea-nsui-color-card');
+                    if (/^#([0-9a-f]{3}|[0-9a-f]{6})$/i.test(color)) {
+                        $card.find('.ea-nsui-color-picker-btn').css('background-color', color);
+                        $card.find('.ea-nsui-native-color-picker').val(color);
+                    } else if (!color) {
+                        var defaultColor = $card.data('default-color') || '#ffffff';
+                        $card.find('.ea-nsui-color-picker-btn').css('background-color', defaultColor);
+                        $card.find('.ea-nsui-native-color-picker').val(defaultColor);
+                    }
+                });
+
+                // Preset swatch click handler
+                $(document).on('click', '.ea-nsui-color-swatch-btn', function (e) {
+                    e.preventDefault();
+                    var color = $(this).data('color');
+                    var $card = $(this).closest('.ea-nsui-color-card');
+                    $card.find('.ea-nsui-color-hex-input').val(color).trigger('input');
+                    $card.find('.ea-nsui-color-picker-btn').css('background-color', color);
+                    $card.find('.ea-nsui-native-color-picker').val(color);
+                });
+
+                // Reset Colors button handler
+                $('#ea-nsui-reset-styles-btn').on('click', function (e) {
+                    e.preventDefault();
+                    $('.ea-nsui-color-card').each(function () {
+                        var $card = $(this);
+                        var defaultColor = $card.data('default-color') || '';
+                        $card.find('.ea-nsui-color-hex-input').val('').trigger('input');
+                        if (defaultColor) {
+                            $card.find('.ea-nsui-color-picker-btn').css('background-color', defaultColor);
+                            $card.find('.ea-nsui-native-color-picker').val(defaultColor);
+                        }
+                    });
+                    $fontSelect.val('').trigger('change');
+                    showNotice(i18n.colorsReset || 'Colors reset to theme defaults. Click "Save Changes" to apply.', 'success');
+                });
+            })();
         })();
     });
 })(jQuery);

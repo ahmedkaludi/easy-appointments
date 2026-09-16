@@ -641,10 +641,147 @@ class Easy_EA_Frontend
         // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Encoded with JSON_HEX_TAG and JSON_HEX_AMP for safe inline script embedding.
         echo "<script>var ea_service_start_data = " . $service_start_data . ";</script>";
 
+        // Generate custom form styling if configured
+        $customStyles = $this->get_custom_form_styles($settings);
+        if (!empty($customStyles)) {
+            // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Dynamically generated validated CSS rules.
+            echo "<style id=\"ea-form-custom-styling\">\n" . $customStyles . "\n</style>";
+        }
+
         // Sanitize CSS: strip any HTML tags and </style> breakout attempts.
         $safeCss = wp_strip_all_tags($customCss);
         // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Sanitized with wp_strip_all_tags.
         echo "<style>" . $safeCss . "</style>";
+    }
+
+    /**
+     * Generate dynamic CSS styles based on custom colors and typography settings.
+     *
+     * @param array $settings
+     * @return string
+     */
+    private function get_custom_form_styles($settings)
+    {
+        $font_family        = !empty($settings['style.font_family']) ? sanitize_text_field($settings['style.font_family']) : '';
+        $primary_color      = !empty($settings['style.primary_color']) ? sanitize_hex_color($settings['style.primary_color']) : '';
+        $button_text_color  = !empty($settings['style.button_text_color']) ? sanitize_hex_color($settings['style.button_text_color']) : '';
+        $bg_color           = !empty($settings['style.bg_color']) ? sanitize_hex_color($settings['style.bg_color']) : '';
+        $surface_color      = !empty($settings['style.surface_color']) ? sanitize_hex_color($settings['style.surface_color']) : '';
+        $text_color         = !empty($settings['style.text_color']) ? sanitize_hex_color($settings['style.text_color']) : '';
+        $border_color       = !empty($settings['style.border_color']) ? sanitize_hex_color($settings['style.border_color']) : '';
+        $slot_bg_color      = !empty($settings['style.slot_bg_color']) ? sanitize_hex_color($settings['style.slot_bg_color']) : '';
+        $slot_text_color    = !empty($settings['style.slot_text_color']) ? sanitize_hex_color($settings['style.slot_text_color']) : '';
+
+        // If no styling options set, return empty string
+        if (empty($font_family) && empty($primary_color) && empty($button_text_color) && empty($bg_color)
+            && empty($surface_color) && empty($text_color) && empty($border_color)
+            && empty($slot_bg_color) && empty($slot_text_color)) {
+            return '';
+        }
+
+        $css = '';
+
+        // Google Fonts map
+        $google_fonts = array(
+            'Source Serif 4'   => 'https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700&display=swap',
+            'Inter'            => 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap',
+            'Roboto'           => 'https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap',
+            'Open Sans'        => 'https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap',
+            'Lato'             => 'https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap',
+            'Montserrat'       => 'https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap',
+            'Poppins'          => 'https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap',
+            'Playfair Display' => 'https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&display=swap',
+            'Merriweather'     => 'https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap',
+        );
+
+        if (!empty($font_family) && isset($google_fonts[$font_family])) {
+            $css .= "@import url('" . esc_url($google_fonts[$font_family]) . "');\n";
+        }
+
+        $font_css = '';
+        if ($font_family === 'system') {
+            $font_css = '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif';
+        } elseif (!empty($font_family)) {
+            $serif_fonts = array('Source Serif 4', 'Playfair Display', 'Merriweather', 'Georgia');
+            $fallback = in_array($font_family, $serif_fonts, true) ? 'serif' : 'sans-serif';
+            $font_css = '"' . $font_family . '", ' . $fallback;
+        }
+
+        // CSS Variables Block
+        $vars = array();
+        if (!empty($primary_color)) {
+            $vars[] = '--ea-accent: ' . $primary_color . ';';
+            $vars[] = '--ea-accent-hover: ' . $primary_color . ';';
+            $vars[] = '--ea-accent-ink: ' . $primary_color . ';';
+            $vars[] = '--ea-accent-deep: ' . $primary_color . ';';
+        }
+        if (!empty($bg_color)) {
+            $vars[] = '--ea-paper: ' . $bg_color . ';';
+        }
+        if (!empty($surface_color)) {
+            $vars[] = '--ea-surface: ' . $surface_color . ';';
+        }
+        if (!empty($text_color)) {
+            $vars[] = '--ea-text: ' . $text_color . ';';
+        }
+        if (!empty($font_css)) {
+            $vars[] = '--ea-serif: ' . $font_css . ';';
+            $vars[] = '--ea-sans: ' . $font_css . ';';
+            $vars[] = 'font-family: ' . $font_css . ' !important;';
+        }
+
+        if (!empty($vars)) {
+            $css .= ".ea-new-ui, .ea-bootstrap.ea-new-ui, .ea-bootstrap, .ea-standard {\n    " . implode("\n    ", $vars) . "\n}\n";
+        }
+
+        // Font Family application
+        if (!empty($font_css)) {
+            $css .= ".ea-new-ui, .ea-new-ui *, .ea-bootstrap, .ea-bootstrap *, .ea-standard, .ea-standard * {\n    font-family: " . $font_css . ";\n}\n";
+        }
+
+        // Card / Container Background & Text
+        if (!empty($bg_color)) {
+            $css .= ".ea-bootstrap.ea-new-ui, .ea-bootstrap-wrapper.ea-new-ui, .ea-new-ui .step.final, .ea-bootstrap, .ea-standard {\n    background-color: " . $bg_color . " !important;\n}\n";
+        }
+        if (!empty($text_color)) {
+            $css .= ".ea-new-ui, .ea-new-ui h1, .ea-new-ui h2, .ea-new-ui h3, .ea-new-ui label, .ea-new-ui .ea-label, .ea-new-ui #booking-overview .value, .ea-bootstrap label, .ea-standard label {\n    color: " . $text_color . " !important;\n}\n";
+        }
+        if (!empty($surface_color)) {
+            $css .= ".ea-new-ui #booking-overview, .ea-new-ui .ea-times-header, .ea-new-ui .ui-datepicker-header {\n    background-color: " . $surface_color . " !important;\n}\n";
+        }
+
+        // Primary Buttons & Selected Items
+        if (!empty($primary_color)) {
+            $btn_text_rule = !empty($button_text_color) ? "color: {$button_text_color} !important;\n    " : "color: #ffffff !important;\n    ";
+            $css .= ".ea-new-ui .ea-submit, .ea-new-ui .booking-button, .ea-bootstrap .btn-primary, button.ea-submit {\n    background-color: " . $primary_color . " !important;\n    border-color: " . $primary_color . " !important;\n    " . $btn_text_rule . "box-shadow: 0 4px 14px " . $primary_color . "44 !important;\n}\n";
+            $css .= ".ea-new-ui .ea-submit:hover:not(:disabled), .ea-new-ui .booking-button:hover:not(:disabled), .ea-bootstrap .btn-primary:hover {\n    opacity: 0.92;\n}\n";
+            $css .= ".ea-new-ui .ui-datepicker td.ui-datepicker-current-day a, .ea-new-ui .ui-datepicker .ui-datepicker-current-day a {\n    background-color: " . $primary_color . " !important;\n    " . $btn_text_rule . "}\n";
+            $css .= ".ea-bootstrap .selected-time, .ea-new-ui .time-value.selected-time, .time-value.selected-time {\n    background-color: " . $primary_color . " !important;\n    border-color: " . $primary_color . " !important;\n    " . $btn_text_rule . "box-shadow: 0 4px 14px " . $primary_color . "44 !important;\n}\n";
+            $css .= ".ea-new-ui .form-control:focus, .ea-new-ui select:focus, .ea-new-ui input:focus {\n    border-color: " . $primary_color . " !important;\n}\n";
+        } elseif (!empty($button_text_color)) {
+            $css .= ".ea-new-ui .ea-submit, .ea-new-ui .booking-button, .ea-bootstrap .btn-primary, .ea-new-ui .time-value.selected-time, .ea-new-ui .ui-datepicker td.ui-datepicker-current-day a {\n    color: " . $button_text_color . " !important;\n}\n";
+        }
+
+        // Borders
+        if (!empty($border_color)) {
+            $css .= ".ea-bootstrap.ea-new-ui, .ea-new-ui .form-control, .ea-new-ui .ea-field-group select, .ea-new-ui select, .ea-new-ui input, .ea-new-ui textarea, .ea-new-ui .ea-cancel, .ea-new-ui #booking-overview, .ea-bootstrap .form-control, .ea-standard select, .ea-standard input {\n    border-color: " . $border_color . " !important;\n}\n";
+            $css .= ".ea-new-ui .time-value:not(.time-disabled):not(.selected-time) {\n    border-color: " . $border_color . " !important;\n}\n";
+        }
+
+        // Available Time Slots
+        if (!empty($slot_bg_color) || !empty($slot_text_color)) {
+            $slot_rules = array();
+            if (!empty($slot_bg_color)) {
+                $slot_rules[] = 'background-color: ' . $slot_bg_color . ' !important;';
+                $slot_rules[] = 'background: ' . $slot_bg_color . ' !important;';
+            }
+            if (!empty($slot_text_color)) {
+                $slot_rules[] = 'color: ' . $slot_text_color . ' !important;';
+            }
+            $css .= ".ea-bootstrap .time-value:not(.time-disabled):not(.selected-time), .ea-new-ui .time-value:not(.time-disabled):not(.selected-time), a.time-value:not(.time-disabled):not(.selected-time) {\n    " . implode("\n    ", $slot_rules) . "\n}\n";
+        }
+
+        return $css;
     }
 
     /**

@@ -97,7 +97,164 @@ $ea_nsui_advance_cancel_data     = $ea_nsui_decode_redirects( $ea_nsui_advance_c
         <p><?php esc_html_e('Customize the appearance and behavior of your booking form.', 'easy-appointments'); ?></p>
     </div>
 
-    <!-- ===== FORM STYLE SECTION ===== -->
+    <!-- ===== COLORS & TYPOGRAPHY SECTION ===== -->
+    <div class="ea-nsui-panel-head-sub">
+        <h3><?php esc_html_e('Colors & Typography', 'easy-appointments'); ?></h3>
+        <p><?php esc_html_e('Set the font and colors of the booking form to suit your WordPress theme.', 'easy-appointments'); ?></p>
+    </div>
+
+    <div class="ea-nsui-card">
+        <!-- Font Family Selector -->
+        <div class="ea-nsui-row ea-nsui-row-stacked">
+            <div class="ea-nsui-row-label">
+                <span class="ea-nsui-row-title">
+                    <?php esc_html_e('Font Family', 'easy-appointments'); ?>
+                    <span class="ea-nsui-tip" data-tooltip="<?php esc_attr_e('Choose a font for the booking form, or leave as Default to inherit from your current WordPress theme.', 'easy-appointments'); ?>">?</span>
+                </span>
+            </div>
+            <div class="ea-nsui-row-control ea-nsui-row-control-full">
+                <?php $ea_selected_font = $ea_get('style.font_family', ''); ?>
+                <select class="ea-nsui-select ea-nsui-font-select" data-key="style.font_family" id="ea-nsui-font-family-select">
+                    <option value="" <?php selected($ea_selected_font, ''); ?>><?php esc_html_e('Default (Inherit from Theme)', 'easy-appointments'); ?></option>
+                    <option value="system" <?php selected($ea_selected_font, 'system'); ?>>System Sans-Serif (-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto)</option>
+                    <option value="Source Serif 4" <?php selected($ea_selected_font, 'Source Serif 4'); ?>>Source Serif 4 (Serif)</option>
+                    <option value="Inter" <?php selected($ea_selected_font, 'Inter'); ?>>Inter</option>
+                    <option value="Roboto" <?php selected($ea_selected_font, 'Roboto'); ?>>Roboto</option>
+                    <option value="Open Sans" <?php selected($ea_selected_font, 'Open Sans'); ?>>Open Sans</option>
+                    <option value="Lato" <?php selected($ea_selected_font, 'Lato'); ?>>Lato</option>
+                    <option value="Montserrat" <?php selected($ea_selected_font, 'Montserrat'); ?>>Montserrat</option>
+                    <option value="Poppins" <?php selected($ea_selected_font, 'Poppins'); ?>>Poppins</option>
+                    <option value="Playfair Display" <?php selected($ea_selected_font, 'Playfair Display'); ?>>Playfair Display (Serif)</option>
+                    <option value="Merriweather" <?php selected($ea_selected_font, 'Merriweather'); ?>>Merriweather (Serif)</option>
+                    <option value="Georgia" <?php selected($ea_selected_font, 'Georgia'); ?>>Georgia (Serif)</option>
+                    <option value="Arial" <?php selected($ea_selected_font, 'Arial'); ?>>Arial</option>
+                    <option value="Helvetica Neue" <?php selected($ea_selected_font, 'Helvetica Neue'); ?>>Helvetica Neue</option>
+                </select>
+                <div class="ea-nsui-font-preview" id="ea-nsui-font-preview">
+                    <?php esc_html_e('Preview: Book an appointment with us on Monday at 10:00 AM', 'easy-appointments'); ?>
+                </div>
+            </div>
+        </div>
+
+        <!-- Color Pickers Grid -->
+        <div class="ea-nsui-row ea-nsui-row-stacked">
+            <div class="ea-nsui-row-label">
+                <span class="ea-nsui-row-title">
+                    <?php esc_html_e('Form Colors', 'easy-appointments'); ?>
+                    <span class="ea-nsui-tip" data-tooltip="<?php esc_attr_e('Customize colors for buttons, backgrounds, text, and time slots.', 'easy-appointments'); ?>">?</span>
+                </span>
+            </div>
+            <div class="ea-nsui-row-control ea-nsui-row-control-full">
+                <div class="ea-nsui-color-grid">
+                    <?php
+                    $color_fields = array(
+                        array(
+                            'key'         => 'style.primary_color',
+                            'title'       => __('Primary / Accent Color', 'easy-appointments'),
+                            'desc'        => __('Buttons, selected slot, active date highlight', 'easy-appointments'),
+                            'default'     => '#2563eb',
+                            'placeholder' => '#2563eb',
+                            'swatches'    => array('#2563eb', '#059669', '#7c3aed', '#dc2626', '#ea580c', '#0891b2', '#111827'),
+                        ),
+                        array(
+                            'key'         => 'style.button_text_color',
+                            'title'       => __('Button Text Color', 'easy-appointments'),
+                            'desc'        => __('Text inside submit button & selected time slots', 'easy-appointments'),
+                            'default'     => '#ffffff',
+                            'placeholder' => '#ffffff',
+                            'swatches'    => array('#ffffff', '#f8fafc', '#111827', '#0f172a'),
+                        ),
+                        array(
+                            'key'         => 'style.bg_color',
+                            'title'       => __('Form Background Color', 'easy-appointments'),
+                            'desc'        => __('Main booking card background', 'easy-appointments'),
+                            'default'     => '#ffffff',
+                            'placeholder' => '#ffffff',
+                            'swatches'    => array('#ffffff', '#f8fafc', '#f1f5f9', '#1e293b', '#18181b', '#0f172a'),
+                        ),
+                        array(
+                            'key'         => 'style.surface_color',
+                            'title'       => __('Surface / Panel Background', 'easy-appointments'),
+                            'desc'        => __('Summary box and secondary panel backgrounds', 'easy-appointments'),
+                            'default'     => '#f8f8f7',
+                            'placeholder' => '#f8f8f7',
+                            'swatches'    => array('#f8f8f7', '#f1f5f9', '#f8fafc', '#e2e8f0', '#334155'),
+                        ),
+                        array(
+                            'key'         => 'style.text_color',
+                            'title'       => __('Headings & Text Color', 'easy-appointments'),
+                            'desc'        => __('Titles, labels, and form text', 'easy-appointments'),
+                            'default'     => '#201e1d',
+                            'placeholder' => '#201e1d',
+                            'swatches'    => array('#201e1d', '#111827', '#0f172a', '#334155', '#475569', '#ffffff'),
+                        ),
+                        array(
+                            'key'         => 'style.border_color',
+                            'title'       => __('Border & Input Border Color', 'easy-appointments'),
+                            'desc'        => __('Inputs, select dropdowns, and card borders', 'easy-appointments'),
+                            'default'     => '#d1d5db',
+                            'placeholder' => '#d1d5db',
+                            'swatches'    => array('#d1d5db', '#e2e8f0', '#cbd5e1', '#94a3b8', '#64748b'),
+                        ),
+                        array(
+                            'key'         => 'style.slot_bg_color',
+                            'title'       => __('Available Time Slot Background', 'easy-appointments'),
+                            'desc'        => __('Background of unselected available slot cards', 'easy-appointments'),
+                            'default'     => '#ffffff',
+                            'placeholder' => '#ffffff',
+                            'swatches'    => array('#ffffff', '#f8fafc', '#f1f5f9', '#eff6ff', '#ecfdf5'),
+                        ),
+                        array(
+                            'key'         => 'style.slot_text_color',
+                            'title'       => __('Available Time Slot Text', 'easy-appointments'),
+                            'desc'        => __('Text color of unselected available slot cards', 'easy-appointments'),
+                            'default'     => '#111827',
+                            'placeholder' => '#111827',
+                            'swatches'    => array('#111827', '#1e293b', '#2563eb', '#059669', '#374151'),
+                        ),
+                    );
+
+                    foreach ($color_fields as $cf):
+                        $val = $ea_get($cf['key'], '');
+                        $picker_val = !empty($val) ? $val : $cf['default'];
+                    ?>
+                        <div class="ea-nsui-color-card" data-default-color="<?php echo esc_attr($cf['default']); ?>">
+                            <div class="ea-nsui-color-card-head">
+                                <span class="ea-nsui-color-card-title"><?php echo esc_html($cf['title']); ?></span>
+                                <small class="ea-nsui-color-card-desc"><?php echo esc_html($cf['desc']); ?></small>
+                            </div>
+                            <div class="ea-nsui-color-card-body">
+                                <div class="ea-nsui-color-input-group">
+                                    <div class="ea-nsui-color-picker-btn" style="background-color: <?php echo esc_attr($picker_val); ?>;">
+                                        <input type="color" class="ea-nsui-native-color-picker" value="<?php echo esc_attr($picker_val); ?>" aria-label="<?php echo esc_attr($cf['title']); ?>">
+                                    </div>
+                                    <input type="text" class="ea-nsui-input ea-nsui-color-hex-input" data-key="<?php echo esc_attr($cf['key']); ?>" value="<?php echo esc_attr($val); ?>" placeholder="<?php echo esc_attr($cf['placeholder']); ?>" maxlength="25">
+                                </div>
+                                <div class="ea-nsui-color-swatches">
+                                    <?php foreach ($cf['swatches'] as $swatch): ?>
+                                        <button type="button" class="ea-nsui-color-swatch-btn" data-color="<?php echo esc_attr($swatch); ?>" style="background-color: <?php echo esc_attr($swatch); ?>;" title="<?php echo esc_attr($swatch); ?>"></button>
+                                    <?php endforeach; ?>
+                                </div>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+
+                <div class="ea-nsui-color-actions">
+                    <button type="button" class="ea-nsui-btn ea-nsui-btn-ghost" id="ea-nsui-reset-styles-btn">
+                        <?php esc_html_e('Reset Colors to Theme Default', 'easy-appointments'); ?>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== GENERAL FORM SETTINGS ===== -->
+    <div class="ea-nsui-panel-head-sub">
+        <h3><?php esc_html_e('Form Settings & Custom CSS', 'easy-appointments'); ?></h3>
+        <p><?php esc_html_e('Configure form behavior, labels, and custom styling overrides.', 'easy-appointments'); ?></p>
+    </div>
+
     <div class="ea-nsui-card">
 
         <!-- Custom CSS -->
