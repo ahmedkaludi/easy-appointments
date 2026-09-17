@@ -163,6 +163,7 @@ class EA_Settings_New_UI
         'trans.submit_button_text',
         'trans.customer_search_label',
         // Form Style
+        'form.style',
         'custom.css',
         'css.off',
         'form.label.above',

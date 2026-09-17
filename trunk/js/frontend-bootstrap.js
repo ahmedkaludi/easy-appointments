@@ -202,16 +202,20 @@
 
                 plugin.newUiLayoutDropdowns();
 
-                if (!$bootstrap.find('.ea-booking-summary-bar').length) {
-                    $bootstrap.append(
-                        '<div class="ea-booking-summary-bar">' +
-                            '<span class="ea-summary-text empty">' + (ea_settings['trans.select-date-time'] || 'Select a date &amp; time to continue') + '</span>' +
-                            '<div class="ea-new-ui-actions">' +
-                                '<button type="button" class="ea-btn ea-cancel" style="display:none;">' + (ea_settings['trans.cancel'] || 'Cancel') + '</button>' +
-                                '<button type="button" class="ea-btn ea-submit booking-button" style="display:none;">' + (ea_settings['trans.book-appointment'] || 'Book appointment') + '</button>' +
-                            '</div>' +
-                        '</div>'
-                    );
+                if (ea_settings['form.style'] === 'wizard') {
+                    plugin.initWizardMode();
+                } else {
+                    if (!$bootstrap.find('.ea-booking-summary-bar').length) {
+                        $bootstrap.append(
+                            '<div class="ea-booking-summary-bar">' +
+                                '<span class="ea-summary-text empty">' + (ea_settings['trans.select-date-time'] || 'Select a date &amp; time to continue') + '</span>' +
+                                '<div class="ea-new-ui-actions">' +
+                                    '<button type="button" class="ea-btn ea-cancel" style="display:none;">' + (ea_settings['trans.cancel'] || 'Cancel') + '</button>' +
+                                    '<button type="button" class="ea-btn ea-submit booking-button" style="display:none;">' + (ea_settings['trans.book-appointment'] || 'Book appointment') + '</button>' +
+                                '</div>' +
+                            '</div>'
+                        );
+                    }
                 }
 
             }
@@ -237,6 +241,16 @@
                 invalidHandler: function(form, validator) {
                     if (!validator.numberOfInvalids())
                         return;
+                    if (ea_settings['form.style'] === 'wizard' && plugin.currentWizardStep) {
+                        var $invalidElem = jQuery(validator.errorList[0].element);
+                        var $pane = $invalidElem.closest('.ea-wizard-pane');
+                        if ($pane.length) {
+                            var paneStep = parseInt($pane.data('pane'), 10);
+                            if (paneStep && paneStep !== plugin.currentWizardStep) {
+                                plugin.goToWizardStep(paneStep);
+                            }
+                        }
+                    }
                     $('html, body').animate({
                         scrollTop: ($(validator.errorList[0].element).offset().top - 30)
                     }, 1000);
@@ -366,13 +380,13 @@
                     // for booking overview
                     var booking_data = {};
 
-                    booking_data.location = parentForm.find('[name="location"] > option:selected').text();
-                    booking_data.service = parentForm.find('[name="service"] > option:selected').text();
-                    booking_data.worker = parentForm.find('[name="worker"] > option:selected').text();
+                    booking_data.location = parentForm.find('select[name="location"] > option:selected, [name="location"] > option:selected').first().text();
+                    booking_data.service = parentForm.find('select[name="service"] > option:selected, [name="service"] > option:selected').first().text();
+                    booking_data.worker = parentForm.find('select[name="worker"] > option:selected, [name="worker"] > option:selected').first().text();
                     booking_data.date = parentForm.find('.date').datepicker().val();
-                    booking_data.time = parentForm.find('.selected-time').data('val');
-                    booking_data.price = parentForm.find('[name="service"] > option:selected').data('price');
-                    booking_data.service_description = parentForm.find('[name="service"] > option:selected').data('description') || '';
+                    booking_data.time = parentForm.find('.selected-time').first().data('val');
+                    booking_data.price = parentForm.find('select[name="service"] > option:selected, [name="service"] > option:selected').first().data('price');
+                    booking_data.service_description = parentForm.find('select[name="service"] > option:selected, [name="service"] > option:selected').first().data('description') || '';
                     if (ea_settings['is_multiple_booking_allowed'] == '1') {
                         var $selectedSlots = parentForm.find('.selected-time');
                         booking_data.price = $selectedSlots.length * booking_data.price;
@@ -705,18 +719,28 @@
          * @returns {{}}
          */
         getPrevousOptions: function (element) {
-            var step = element.parents('.step');
-
+            var plugin = this;
             var options = {};
 
-            var data_prev = step.prevAll('.step');
+            // Collect filter values directly from the selects in form/container
+            var locationVal = plugin.$element.find('select[name="location"], select[data-c="location"]').first().val();
+            var serviceVal  = plugin.$element.find('select[name="service"], select[data-c="service"]').first().val();
+            var workerVal   = plugin.$element.find('select[name="worker"], select[data-c="worker"]').first().val();
 
-            data_prev.each(function (index, elem) {
-                // var option = jQuery(elem).find('select,input').first();
-                var input_field = jQuery(elem).find('.filter').filter('input, select');
+            if (locationVal) options.location = locationVal;
+            if (serviceVal)  options.service  = serviceVal;
+            if (workerVal)   options.worker   = workerVal;
 
-                options[jQuery(input_field).data('c')] = input_field.val();
-            });
+            var step = element ? element.parents('.step') : jQuery();
+            if (step.length) {
+                var data_prev = step.prevAll('.step');
+                data_prev.each(function (index, elem) {
+                    var input_field = jQuery(elem).find('.filter').filter('input, select');
+                    if (input_field.length && input_field.data('c') && input_field.val()) {
+                        options[input_field.data('c')] = input_field.val();
+                    }
+                });
+            }
 
             return options;
         },
@@ -777,7 +801,7 @@
 
             if (next.length === 0) {
                 this.blurNextSteps(nextStep, isLocationOrService);
-                if (currentCategory === 'worker') {
+                if (ea_settings['form.style'] !== 'wizard' && currentCategory === 'worker') {
                     this.scrollToElement(this.$element.find('.date'));
                 }
                 return;
@@ -862,7 +886,7 @@
                 plugin.removeLoader();
 
                 // Only auto-scroll when moving past worker step to calendar
-                if (options.next !== 'service' && options.next !== 'worker') {
+                if (ea_settings['form.style'] !== 'wizard' && options.next !== 'service' && options.next !== 'worker') {
                     plugin.scrollToElement(next_element.parent());
                 }
 
@@ -977,7 +1001,7 @@
                     this.selectChange();
                 }
 
-                if (!dontScroll) {
+                if (ea_settings['form.style'] !== 'wizard' && !dontScroll) {
                     this.scrollToElement(calendar);
                 }
             }
@@ -1333,13 +1357,13 @@
 
             // for booking overview
             var booking_data = {};
-            booking_data.location = this.$element.find('[name="location"] > option:selected').text();
-            booking_data.service = this.$element.find('[name="service"] > option:selected').text();
-            booking_data.worker = this.$element.find('[name="worker"] > option:selected').text();
+            booking_data.location = this.$element.find('select[name="location"] > option:selected, [name="location"] > option:selected').first().text();
+            booking_data.service = this.$element.find('select[name="service"] > option:selected, [name="service"] > option:selected').first().text();
+            booking_data.worker = this.$element.find('select[name="worker"] > option:selected, [name="worker"] > option:selected').first().text();
             booking_data.date = this.$element.find('.date').datepicker().val();
-            booking_data.time = this.$element.find('.selected-time').data('val');
-            booking_data.price = this.$element.find('[name="service"] > option:selected').data('price');
-            booking_data.service_description = this.$element.find('[name="service"] > option:selected').data('description') || '';
+            booking_data.time = this.$element.find('.selected-time').first().data('val');
+            booking_data.price = this.$element.find('select[name="service"] > option:selected, [name="service"] > option:selected').first().data('price');
+            booking_data.service_description = this.$element.find('select[name="service"] > option:selected, [name="service"] > option:selected').first().data('description') || '';
 
             var format = ea_settings['date_format'] + ' ' + ea_settings['time_format'];
             var firstTime = (booking_data.time || '').toString().split(',')[0].trim();
@@ -1501,20 +1525,21 @@
                 plugin.storeFormData(options);
                 plugin.isSubmitting = false;
 
-                // Remove loader spinner, update button text to Booked, and hide cancel button
+                // Remove loader spinner, update button text to Booked, and hide cancel & wizard nav buttons
                 jQuery('.ea-submit, .booking-button')
                     .removeClass('ea-loading')
                     .prop('disabled', true)
                     .html('<span>' + (ea_settings['trans.booked'] || 'Booked') + '</span>');
-                jQuery('.ea-cancel').hide();
-                plugin.$element.find('.ea-cancel').hide();
+                jQuery('.ea-cancel, .ea-wizard-btn-back, .ea-wizard-btn-next, .ea-wizard-nav').hide();
+                plugin.$element.find('.ea-cancel, .ea-wizard-btn-back, .ea-wizard-btn-next, .ea-wizard-nav').hide();
                 plugin.$element.find('#paypal-button').hide();
 
                 if (ea_settings['show.display_thankyou_note'] == 1) {
                     plugin.$element.addClass('ea-booking-complete');
                     var $bootstrap = plugin.$element.find('.ea-bootstrap').length ? plugin.$element.find('.ea-bootstrap') : plugin.$element;
                     $bootstrap.addClass('ea-booking-complete');
-                    plugin.$element.find('.ea-filters-grid, .ea-filters-grid-full, .ea-booking-title, .ea-booking-summary-bar, .ea-new-ui-final-actions, .booking-button, .ea-submit').hide();
+                    plugin.$element.find('.ea-filters-grid, .ea-filters-grid-full, .ea-booking-title, .ea-booking-summary-bar, .ea-new-ui-final-actions, .booking-button, .ea-submit, .ea-wizard-stepper-container, .ea-wizard-nav, .ea-wizard-btn-back, .ea-wizard-btn-next').hide();
+                    $bootstrap.find('.ea-wizard-stepper-container, .ea-wizard-nav, .ea-wizard-btn-back, .ea-wizard-btn-next').hide();
                     plugin.$element.find('.step').not('.final').hide();
                     plugin.$element.find('.step.final').find('small, label, .ea_hide_show, .form-group, #booking-overview-header, #ea-overview-message, .ea-confirmation-subtext').hide();
                     plugin.$element.find('small, #booking-overview-header, #ea-overview-message, .ea-confirmation-subtext').not('.ea-confirmation-title').not('.ea-status-note').hide();
@@ -1565,6 +1590,11 @@
                     plugin.$element.find('.ea-status-note').text(ea_settings['default_status_message']);
                     window.scrollTo({ top: 0, behavior: 'smooth' });
                 }else{
+                    plugin.$element.addClass('ea-booking-complete');
+                    var $bootstrap = plugin.$element.find('.ea-bootstrap').length ? plugin.$element.find('.ea-bootstrap') : plugin.$element;
+                    $bootstrap.addClass('ea-booking-complete');
+                    plugin.$element.find('.ea-wizard-stepper-container, .ea-wizard-nav, .ea-wizard-btn-back, .ea-wizard-btn-next').hide();
+                    $bootstrap.find('.ea-wizard-stepper-container, .ea-wizard-nav, .ea-wizard-btn-back, .ea-wizard-btn-next').hide();
                     plugin.$element.find('.final').append('<h3 class="ea-done-message">' + _.escape(ea_settings['trans.done_message']) + '</h3>');
                 }
 
@@ -1576,9 +1606,9 @@
                 plugin.triggerEvent();
 
                 var redirected = false;
-                options.worker_name = plugin.$element.find('[name="worker"] option:selected').text();
-                options.service_name = plugin.$element.find('[name="service"] option:selected').text();
-                options.location_name = plugin.$element.find('[name="location"] option:selected').text();
+                options.worker_name = plugin.$element.find('select[name="worker"] option:selected, [name="worker"] option:selected').first().text();
+                options.service_name = plugin.$element.find('select[name="service"] option:selected, [name="service"] option:selected').first().text();
+                options.location_name = plugin.$element.find('select[name="location"] option:selected, [name="location"] option:selected').first().text();
 
                 // time + datetime
                 options.start_time = plugin.$element.find('.selected-time').data('val');
@@ -1731,12 +1761,12 @@
         triggerEvent: function () {
             var plugin = this;
             var booking_data = {};
-            booking_data.location = plugin.$element.find('[name="location"] > option:selected').text();
-            booking_data.service = plugin.$element.find('[name="service"] > option:selected').text();
-            booking_data.worker = plugin.$element.find('[name="worker"] > option:selected').text();
+            booking_data.location = plugin.$element.find('select[name="location"] > option:selected, [name="location"] > option:selected').first().text();
+            booking_data.service = plugin.$element.find('select[name="service"] > option:selected, [name="service"] > option:selected').first().text();
+            booking_data.worker = plugin.$element.find('select[name="worker"] > option:selected, [name="worker"] > option:selected').first().text();
             booking_data.date = plugin.$element.find('.date').datepicker().val();
-            booking_data.time = plugin.$element.find('.selected-time').data('val');
-            booking_data.price = plugin.$element.find('[name="service"] > option:selected').data('price');
+            booking_data.time = plugin.$element.find('.selected-time').first().data('val');
+            booking_data.price = plugin.$element.find('select[name="service"] > option:selected, [name="service"] > option:selected').first().data('price');
 
             // Create the event.
             var event = new CustomEvent('easyappnewappointment', { detail: booking_data });
@@ -1812,6 +1842,15 @@
 
             // 10. Re-init step visibility/blur
             plugin.blurNextSteps(plugin.$element.find('.step:visible:first'), true, true);
+
+            // 11. Reset wizard mode state if active
+            if (ea_settings['form.style'] === 'wizard') {
+                plugin.maxReachedWizardStep = 1;
+                plugin.goToWizardStep(1);
+                plugin.$element.find('.ea-wizard-nav, .ea-wizard-stepper-container').show();
+                plugin.$element.find('.ea-wizard-btn-back, .ea-wizard-btn-next').show();
+                plugin.updateWizardButtons();
+            }
         },
 
         cancelApp: function (event) {
@@ -1936,8 +1975,13 @@
                 if (lText) {
                     $grp.append('<label>' + lText + '</label>');
                 }
+                var origName = $select.attr('name') || '';
                 var $clone = $select.clone(true);
                 $clone.removeAttr('id');
+                $clone.removeAttr('name');
+                if (origName) {
+                    $clone.attr('data-orig-name', origName);
+                }
                 $clone.addClass('ea-new-ui-select-clone');
                 $grp.append($clone);
 
@@ -2065,7 +2109,7 @@
                 summaryParts.push(timesArr.join(', '));
             } else {
                 var timeVal = $selected.first().data('val') || '';
-                var duration = parseInt(plugin.$element.find('[name="service"] > option:selected').data('duration')) || 0;
+                var duration = parseInt(plugin.$element.find('select[name="service"] > option:selected, [name="service"] > option:selected').first().data('duration')) || 0;
 
                 if (timeVal) {
                     if (ea_settings['label.from_to'] === '1' && duration > 0) {
@@ -2105,6 +2149,340 @@
             } else {
                 $submitBtns.prop('disabled', true).addClass('is-disabled');
             }
+            if (ea_settings['form.style'] === 'wizard') {
+                plugin.updateWizardButtons();
+            }
+        },
+
+        initWizardMode: function () {
+            var plugin = this;
+            var $bootstrap = plugin.$element.find('.ea-bootstrap').length ? plugin.$element.find('.ea-bootstrap') : plugin.$element;
+            var $form = $bootstrap.find('form');
+
+            if ($bootstrap.hasClass('ea-wizard-mode')) {
+                return;
+            }
+
+            $bootstrap.addClass('ea-wizard-mode ea-wizard-step-1');
+            plugin.$element.addClass('ea-wizard-mode ea-wizard-step-1');
+
+            // Wizard should always use full width single-flow layout
+            $bootstrap.removeClass('ea-layout-cols-2');
+            plugin.$element.removeClass('ea-layout-cols-2');
+            $form.find('div.col-md-6').removeClass('col-md-6');
+            $form.find('.step.final.col-md-6').removeClass('col-md-6');
+
+            plugin.currentWizardStep = 1;
+            plugin.maxReachedWizardStep = 1;
+
+            // Stepper header
+            var step1Label = ea_settings['trans.wizard_step_service'] || ea_settings['trans.service'] || 'Service';
+            var step2Label = ea_settings['trans.wizard_step_datetime'] || ea_settings['trans.date-time'] || 'Date & Time';
+            var step3Label = ea_settings['trans.wizard_step_details'] || ea_settings['trans.personal-informations'] || 'Details';
+
+            var stepperHtml =
+                '<div class="ea-wizard-stepper-container">' +
+                    '<div class="ea-wizard-stepper">' +
+                        '<div class="ea-wizard-step-item is-current" data-step="1">' +
+                            '<div class="ea-wizard-step-bubble">' +
+                                '<span class="ea-wizard-step-num">1</span>' +
+                                '<span class="ea-wizard-step-check">&#10003;</span>' +
+                            '</div>' +
+                            '<span class="ea-wizard-step-label">' + step1Label + '</span>' +
+                        '</div>' +
+                        '<div class="ea-wizard-step-line" data-line="1"><div class="ea-wizard-step-line-fill"></div></div>' +
+                        '<div class="ea-wizard-step-item" data-step="2">' +
+                            '<div class="ea-wizard-step-bubble">' +
+                                '<span class="ea-wizard-step-num">2</span>' +
+                                '<span class="ea-wizard-step-check">&#10003;</span>' +
+                            '</div>' +
+                            '<span class="ea-wizard-step-label">' + step2Label + '</span>' +
+                        '</div>' +
+                        '<div class="ea-wizard-step-line" data-line="2"><div class="ea-wizard-step-line-fill"></div></div>' +
+                        '<div class="ea-wizard-step-item" data-step="3">' +
+                            '<div class="ea-wizard-step-bubble">' +
+                                '<span class="ea-wizard-step-num">3</span>' +
+                                '<span class="ea-wizard-step-check">&#10003;</span>' +
+                            '</div>' +
+                            '<span class="ea-wizard-step-label">' + step3Label + '</span>' +
+                        '</div>' +
+                    '</div>' +
+                '</div>';
+
+            var $title = $bootstrap.find('.ea-booking-title');
+            if ($title.length) {
+                $title.after(stepperHtml);
+            } else {
+                $bootstrap.prepend(stepperHtml);
+            }
+
+            // Wrap elements into 3 Panes
+            var $pane1 = jQuery('<div class="ea-wizard-pane ea-wizard-pane-1 is-active" data-pane="1"></div>');
+            var $pane2 = jQuery('<div class="ea-wizard-pane ea-wizard-pane-2" data-pane="2"></div>');
+            var $pane3 = jQuery('<div class="ea-wizard-pane ea-wizard-pane-3" data-pane="3"></div>');
+
+            // Step 1 content - query on $bootstrap so grids created by newUiLayoutDropdowns are included
+            var $grid = $bootstrap.find('.ea-filters-grid, .ea-filters-grid-full');
+            var $hiddenSteps = $bootstrap.find('.ea-new-ui-step-hidden');
+            var $descBox = $bootstrap.find('#ea-service-description');
+            var $stepLocation = $bootstrap.find('[name="location"]').closest('.step');
+            var $stepService = $bootstrap.find('[name="service"]').closest('.step');
+            var $stepWorker = $bootstrap.find('[name="worker"]').closest('.step');
+
+            $pane1.append('<div class="ea-wizard-pane-body"></div>');
+            var $pane1Body = $pane1.find('.ea-wizard-pane-body');
+
+            if ($grid.length) {
+                $pane1Body.append($grid);
+            } else {
+                if ($stepLocation.length) $pane1Body.append($stepLocation);
+                if ($stepService.length) $pane1Body.append($stepService);
+                if ($stepWorker.length) $pane1Body.append($stepWorker);
+            }
+            if ($hiddenSteps.length) {
+                $pane1Body.append($hiddenSteps);
+            }
+            if ($descBox.length) {
+                $pane1Body.append($descBox);
+            }
+
+            var nextText = ea_settings['trans.wizard_next'] || 'Next';
+            var backText = ea_settings['trans.wizard_back'] || 'Back';
+
+            $pane1.append(
+                '<div class="ea-wizard-nav ea-wizard-nav-1">' +
+                    '<button type="button" class="ea-btn ea-wizard-btn-next ea-wizard-next-1 btn btn-primary">' +
+                        nextText + ' <span class="ea-wizard-arrow">&rarr;</span>' +
+                    '</button>' +
+                '</div>'
+            );
+
+            // Step 2 content
+            var $calStep = $bootstrap.find('.step.calendar');
+            var $timeStep = $bootstrap.find('.step').not('.calendar, .final, .ea-new-ui-step-hidden, .form-group');
+            if (!$timeStep.length) {
+                $timeStep = $bootstrap.find('.date').closest('.step').next('.step');
+            }
+
+            $pane2.append('<div class="ea-wizard-pane-body"></div>');
+            var $pane2Body = $pane2.find('.ea-wizard-pane-body');
+            $pane2Body.append($calStep).append($timeStep);
+
+            $pane2.append(
+                '<div class="ea-wizard-nav ea-wizard-nav-2">' +
+                    '<button type="button" class="ea-btn ea-wizard-btn-back ea-wizard-back-2 btn btn-default">' +
+                        '<span class="ea-wizard-arrow">&larr;</span> ' + backText +
+                    '</button>' +
+                    '<button type="button" class="ea-btn ea-wizard-btn-next ea-wizard-next-2 btn btn-primary is-disabled" disabled>' +
+                        nextText + ' <span class="ea-wizard-arrow">&rarr;</span>' +
+                    '</button>' +
+                '</div>'
+            );
+
+            // Step 3 content
+            var $finalStep = $bootstrap.find('.step.final');
+            $pane3.append('<div class="ea-wizard-pane-body"></div>');
+            var $pane3Body = $pane3.find('.ea-wizard-pane-body');
+            $pane3Body.append($finalStep);
+
+            $pane3.append(
+                '<div class="ea-wizard-nav ea-wizard-nav-3">' +
+                    '<button type="button" class="ea-btn ea-wizard-btn-back ea-wizard-back-3 btn btn-default">' +
+                        '<span class="ea-wizard-arrow">&larr;</span> ' + backText +
+                    '</button>' +
+                '</div>'
+            );
+
+            // Append panes to form
+            $form.append($pane1).append($pane2).append($pane3);
+
+            // Move Submit & Cancel buttons inside Step 3 action group or nav
+            var $submitBtn = $finalStep.find('.ea-submit, .booking-button');
+            var $cancelBtn = $finalStep.find('.ea-cancel');
+            var $nav3 = $pane3.find('.ea-wizard-nav-3');
+            if ($submitBtn.length && !$nav3.find('.ea-submit').length) {
+                $nav3.append($submitBtn);
+            }
+            if ($cancelBtn.length && !$nav3.find('.ea-cancel').length) {
+                $nav3.append($cancelBtn);
+            }
+
+            // Step Navigation Event Bindings
+            $bootstrap.on('click', '.ea-wizard-next-1', function (e) {
+                e.preventDefault();
+                plugin.goToWizardStep(2);
+            });
+
+            $bootstrap.on('click', '.ea-wizard-back-2', function (e) {
+                e.preventDefault();
+                plugin.goToWizardStep(1);
+            });
+
+            $bootstrap.on('click', '.ea-wizard-next-2', function (e) {
+                e.preventDefault();
+                plugin.goToWizardStep(3);
+            });
+
+            $bootstrap.on('click', '.ea-wizard-back-3', function (e) {
+                e.preventDefault();
+                plugin.goToWizardStep(2);
+            });
+
+            // Stepper indicator direct clicks
+            $bootstrap.on('click', '.ea-wizard-step-item', function (e) {
+                e.preventDefault();
+                var targetStep = parseInt(jQuery(this).data('step'), 10);
+                if (targetStep && targetStep <= plugin.maxReachedWizardStep) {
+                    plugin.goToWizardStep(targetStep);
+                }
+            });
+
+            // Sync button state on time slot change
+            $bootstrap.on('click', '.time-value', function () {
+                setTimeout(function () {
+                    plugin.updateWizardButtons();
+                }, 50);
+            });
+        },
+
+        updateWizardButtons: function () {
+            var plugin = this;
+            var $bootstrap = plugin.$element.find('.ea-bootstrap').length ? plugin.$element.find('.ea-bootstrap') : plugin.$element;
+            var hasSelectedTime = $bootstrap.find('.selected-time').length > 0;
+            var $next2 = $bootstrap.find('.ea-wizard-next-2');
+
+            if (hasSelectedTime) {
+                $next2.prop('disabled', false).removeClass('is-disabled');
+                if (plugin.maxReachedWizardStep < 2) {
+                    plugin.maxReachedWizardStep = 2;
+                }
+            } else {
+                $next2.prop('disabled', true).addClass('is-disabled');
+            }
+        },
+
+        goToWizardStep: function (targetStep) {
+            var plugin = this;
+            var $bootstrap = plugin.$element.find('.ea-bootstrap').length ? plugin.$element.find('.ea-bootstrap') : plugin.$element;
+
+            targetStep = parseInt(targetStep, 10);
+            if (isNaN(targetStep) || targetStep < 1 || targetStep > 3) return;
+
+            // Validate moving from Step 1 -> 2
+            if (targetStep > 1 && plugin.currentWizardStep === 1) {
+                var serviceVal = $bootstrap.find('[name="service"]').val();
+                if (!serviceVal || serviceVal === '' || serviceVal === '-') {
+                    var $svcField = $bootstrap.find('[name="service"], .ea-field-group:has([name="service"])').first();
+                    $svcField.addClass('ea-shake');
+                    setTimeout(function () { $svcField.removeClass('ea-shake'); }, 600);
+                    return;
+                }
+            }
+
+            // Validate moving from Step 2 -> 3
+            if (targetStep === 3) {
+                var hasTime = $bootstrap.find('.selected-time').length > 0;
+                if (!hasTime) {
+                    var $timeBox = $bootstrap.find('.time, .ea-times-wrap, .date').first();
+                    $timeBox.addClass('ea-shake');
+                    setTimeout(function () { $timeBox.removeClass('ea-shake'); }, 600);
+                    return;
+                }
+
+                // Trigger booking overview update before showing Step 3
+                var $firstSlot = $bootstrap.find('.selected-time').first();
+                if ($firstSlot.length) {
+                    plugin.updateBookingOverviewFromSlot($firstSlot);
+                }
+            }
+
+            // Update Panes visibility
+            $bootstrap.find('.ea-wizard-pane').removeClass('is-active');
+            $bootstrap.find('.ea-wizard-pane-' + targetStep).addClass('is-active');
+
+            // Update Stepper UI
+            var $steps = $bootstrap.find('.ea-wizard-step-item');
+            $steps.each(function () {
+                var s = parseInt(jQuery(this).data('step'), 10);
+                jQuery(this).removeClass('is-current is-completed is-disabled');
+                if (s < targetStep) {
+                    jQuery(this).addClass('is-completed');
+                } else if (s === targetStep) {
+                    jQuery(this).addClass('is-current');
+                } else {
+                    if (s > plugin.maxReachedWizardStep) {
+                        jQuery(this).addClass('is-disabled');
+                    }
+                }
+            });
+
+            // Update divider connector lines
+            $bootstrap.find('.ea-wizard-step-line[data-line="1"]').toggleClass('is-completed', targetStep >= 2);
+            $bootstrap.find('.ea-wizard-step-line[data-line="2"]').toggleClass('is-completed', targetStep >= 3);
+
+            // Update container classes
+            $bootstrap.removeClass('ea-wizard-step-1 ea-wizard-step-2 ea-wizard-step-3').addClass('ea-wizard-step-' + targetStep);
+            plugin.$element.removeClass('ea-wizard-step-1 ea-wizard-step-2 ea-wizard-step-3').addClass('ea-wizard-step-' + targetStep);
+
+            plugin.currentWizardStep = targetStep;
+            if (targetStep > plugin.maxReachedWizardStep) {
+                plugin.maxReachedWizardStep = targetStep;
+            }
+
+            // When entering Step 2, ensure datepicker is refreshed and slots are checked
+            if (targetStep === 2) {
+                var $date = $bootstrap.find('.date');
+                if ($date.hasClass('hasDatepicker')) {
+                    $date.datepicker('refresh');
+                }
+                plugin.selectChange();
+                plugin.updateWizardButtons();
+            }
+
+            // Smooth scroll to top of booking widget if scrolled past it
+            var offsetTop = $bootstrap.offset().top - 30;
+            if (jQuery(window).scrollTop() > offsetTop) {
+                jQuery('html, body').animate({ scrollTop: offsetTop }, 250);
+            }
+        },
+
+        updateBookingOverviewFromSlot: function ($slot) {
+            var plugin = this;
+            var parentForm = $slot.closest('form');
+            if (!parentForm.length) parentForm = plugin.$element.find('form');
+
+            var booking_data = {};
+            booking_data.location = parentForm.find('select[name="location"] > option:selected, [name="location"] > option:selected').first().text();
+            booking_data.service = parentForm.find('select[name="service"] > option:selected, [name="service"] > option:selected').first().text();
+            booking_data.worker = parentForm.find('select[name="worker"] > option:selected, [name="worker"] > option:selected').first().text();
+            booking_data.date = parentForm.find('.date').datepicker().val() || '';
+            booking_data.time = parentForm.find('.selected-time').first().data('val') || '';
+            booking_data.price = parentForm.find('select[name="service"] > option:selected, [name="service"] > option:selected').first().data('price');
+            booking_data.service_description = parentForm.find('select[name="service"] > option:selected, [name="service"] > option:selected').first().data('description') || '';
+
+            if (ea_settings['is_multiple_booking_allowed'] == '1') {
+                var $selectedSlots = parentForm.find('.selected-time');
+                booking_data.price = $selectedSlots.length * booking_data.price;
+                if ($selectedSlots.length > 1) {
+                    var timesArr = [];
+                    $selectedSlots.each(function () {
+                        timesArr.push(jQuery(this).data('val'));
+                    });
+                    booking_data.time = timesArr.join(', ');
+                }
+            }
+
+            var firstTime = (booking_data.time || '').toString().split(',')[0].trim();
+            if (firstTime && booking_data.date) {
+                var formattedDate = moment(booking_data.date + 'T' + firstTime, ea_settings['default_datetime_format']).format(ea_settings['date_format'] || 'YYYY-MM-DD');
+                booking_data.date_time = formattedDate + ' ' + booking_data.time;
+            } else {
+                booking_data.date_time = (booking_data.date || '') + ' ' + (booking_data.time || '');
+            }
+
+            var overview_content = plugin.settings.overview_template({data: booking_data, settings: ea_settings});
+            parentForm.find('#booking-overview').html(overview_content);
+            parentForm.find('.final').removeClass('disabled');
         }
     });
 

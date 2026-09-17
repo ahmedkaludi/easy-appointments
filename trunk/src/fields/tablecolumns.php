@@ -250,6 +250,7 @@ class EATableColumns
             'style.border_color',
             'style.slot_bg_color',
             'style.slot_text_color',
+            'form.style',
         );
 
         foreach ($ea_settings as $key => $value) {

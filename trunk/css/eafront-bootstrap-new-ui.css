@@ -1313,3 +1313,334 @@ button.booking-button:disabled {
 #ea-overview-details td.value li:empty {
     display: none !important;
 }
+
+/* --------------------------------------------------------------------------
+   WIZARD / MULTI-STEP FLOW DESIGN (form.style === 'wizard')
+   -------------------------------------------------------------------------- */
+
+.ea-wizard-mode {
+    --ea-stepper-size: 38px;
+    --ea-stepper-border-color: #e5e7eb;
+    --ea-stepper-bg: #f3f4f6;
+    --ea-stepper-text: #6b7280;
+}
+
+/* Stepper Header Container */
+.ea-wizard-mode .ea-wizard-stepper-container {
+    width: 100%;
+    margin: 0 auto 28px auto;
+    padding: 0 8px;
+    box-sizing: border-box;
+}
+
+.ea-wizard-mode .ea-wizard-stepper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+    width: 100%;
+    max-width: 520px;
+    margin: 0 auto;
+}
+
+/* Individual Stepper Item */
+.ea-wizard-mode .ea-wizard-step-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    position: relative;
+    z-index: 2;
+    cursor: default;
+    user-select: none;
+    transition: transform 0.2s ease;
+}
+
+.ea-wizard-mode .ea-wizard-step-item.is-completed,
+.ea-wizard-mode .ea-wizard-step-item.is-current {
+    cursor: pointer;
+}
+
+.ea-wizard-mode .ea-wizard-step-item.is-completed:hover .ea-wizard-step-bubble {
+    transform: scale(1.08);
+}
+
+/* Stepper Bubble / Circle */
+.ea-wizard-mode .ea-wizard-step-bubble {
+    width: var(--ea-stepper-size);
+    height: var(--ea-stepper-size);
+    border-radius: 50%;
+    background-color: var(--ea-stepper-bg);
+    border: 2px solid var(--ea-stepper-border-color);
+    color: var(--ea-stepper-text);
+    font-size: 14px;
+    font-weight: 700;
+    font-family: var(--ea-sans);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    box-sizing: border-box;
+    position: relative;
+}
+
+.ea-wizard-mode .ea-wizard-step-bubble .ea-wizard-step-check {
+    display: none;
+    font-size: 15px;
+    line-height: 1;
+}
+
+.ea-wizard-mode .ea-wizard-step-bubble .ea-wizard-step-num {
+    display: block;
+    line-height: 1;
+}
+
+/* Active / Current Step */
+.ea-wizard-mode .ea-wizard-step-item.is-current .ea-wizard-step-bubble {
+    background-color: var(--ea-accent, #2563eb);
+    border-color: var(--ea-accent, #2563eb);
+    color: #ffffff;
+    box-shadow: 0 0 0 5px rgba(37, 99, 235, 0.16);
+}
+
+/* Completed Step */
+.ea-wizard-mode .ea-wizard-step-item.is-completed .ea-wizard-step-bubble {
+    background-color: var(--ea-accent, #2563eb);
+    border-color: var(--ea-accent, #2563eb);
+    color: #ffffff;
+}
+
+.ea-wizard-mode .ea-wizard-step-item.is-completed .ea-wizard-step-num {
+    display: none;
+}
+
+.ea-wizard-mode .ea-wizard-step-item.is-completed .ea-wizard-step-check {
+    display: block;
+}
+
+/* Disabled / Inactive Step */
+.ea-wizard-mode .ea-wizard-step-item.is-disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Stepper Label */
+.ea-wizard-mode .ea-wizard-step-label {
+    font-family: var(--ea-sans);
+    font-size: 12.5px;
+    font-weight: 600;
+    color: #64748b;
+    text-align: center;
+    white-space: nowrap;
+    transition: color 0.2s ease;
+}
+
+.ea-wizard-mode .ea-wizard-step-item.is-current .ea-wizard-step-label {
+    color: var(--ea-accent, #2563eb);
+    font-weight: 700;
+}
+
+.ea-wizard-mode .ea-wizard-step-item.is-completed .ea-wizard-step-label {
+    color: #0f172a;
+    font-weight: 600;
+}
+
+/* Stepper Connecting Lines */
+.ea-wizard-mode .ea-wizard-step-line {
+    flex: 1 1 auto;
+    height: 3px;
+    background-color: #e5e7eb;
+    margin: 0 12px;
+    position: relative;
+    top: -14px;
+    z-index: 1;
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.ea-wizard-mode .ea-wizard-step-line-fill {
+    height: 100%;
+    width: 0%;
+    background-color: var(--ea-accent, #2563eb);
+    transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.ea-wizard-mode .ea-wizard-step-line.is-completed .ea-wizard-step-line-fill {
+    width: 100%;
+}
+
+/* Wizard Panes */
+.ea-wizard-mode .ea-wizard-pane {
+    display: none;
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity 0.28s ease, transform 0.28s ease;
+    width: 100%;
+}
+
+.ea-wizard-mode .ea-wizard-pane.is-active {
+    display: block;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Wizard Headings */
+.ea-wizard-mode .ea-wizard-pane-heading {
+    font-family: var(--ea-serif);
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: var(--ea-text, #201e1d);
+    margin: 0 0 18px 0;
+}
+
+/* Ensure inside step elements in wizard mode are clearly visible */
+.ea-wizard-mode .ea-wizard-pane .step:not(.disabled) {
+    opacity: 1;
+    filter: none;
+    pointer-events: auto;
+}
+
+.ea-wizard-mode .ea-wizard-pane .step.final {
+    border-top: none;
+    padding-top: 0;
+    margin-top: 0;
+}
+
+/* Wizard Navigation Buttons Bar */
+.ea-wizard-mode .ea-wizard-nav {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-top: 26px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(32, 30, 29, 0.08);
+}
+
+.ea-wizard-mode .ea-wizard-nav-1 {
+    justify-content: flex-end;
+}
+
+.ea-wizard-mode .ea-wizard-nav-2,
+.ea-wizard-mode .ea-wizard-nav-3 {
+    justify-content: space-between;
+}
+
+/* Button Styling in Wizard */
+.ea-wizard-mode .ea-wizard-nav .ea-btn {
+    min-width: 130px;
+    height: 44px;
+    padding: 0 22px;
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: 8px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    cursor: pointer;
+    transition: all 0.18s ease;
+    box-sizing: border-box;
+}
+
+.ea-wizard-mode .ea-wizard-btn-next,
+.ea-wizard-mode .ea-submit,
+.ea-wizard-mode .booking-button {
+    background-color: var(--ea-accent, #2563eb) !important;
+    border-color: var(--ea-accent, #2563eb) !important;
+    color: #ffffff !important;
+    box-shadow: 0 4px 14px rgba(37, 99, 235, 0.28);
+}
+
+.ea-wizard-mode .ea-wizard-btn-next:hover:not(:disabled),
+.ea-wizard-mode .ea-submit:hover:not(:disabled) {
+    opacity: 0.92;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 18px rgba(37, 99, 235, 0.35);
+}
+
+.ea-wizard-mode .ea-wizard-btn-back,
+.ea-wizard-mode .ea-wizard-nav .ea-cancel {
+    background: #ffffff;
+    border: 1px solid #d1d5db;
+    color: #374151;
+}
+
+.ea-wizard-mode .ea-wizard-btn-back:hover,
+.ea-wizard-mode .ea-wizard-nav .ea-cancel:hover {
+    background: #f9fafb;
+    border-color: #9ca3af;
+    color: #111827;
+}
+
+.ea-wizard-mode .ea-btn:disabled,
+.ea-wizard-mode .ea-btn.is-disabled {
+    opacity: 0.45 !important;
+    cursor: not-allowed !important;
+    pointer-events: none !important;
+    box-shadow: none !important;
+    transform: none !important;
+}
+
+.ea-wizard-mode .ea-wizard-arrow {
+    font-size: 16px;
+    line-height: 1;
+}
+
+/* Shake Animation for Required Validation Feedback */
+@keyframes eaShake {
+    0%, 100% { transform: translateX(0); }
+    20%, 60% { transform: translateX(-6px); }
+    40%, 80% { transform: translateX(6px); }
+}
+
+.ea-shake {
+    animation: eaShake 0.45s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+}
+
+/* Mobile Responsiveness for Wizard */
+@media (max-width: 640px) {
+    .ea-wizard-mode {
+        --ea-stepper-size: 32px;
+    }
+
+    .ea-wizard-mode .ea-wizard-stepper {
+        max-width: 100%;
+    }
+
+    .ea-wizard-mode .ea-wizard-step-label {
+        font-size: 11px;
+    }
+
+    .ea-wizard-mode .ea-wizard-step-line {
+        margin: 0 6px;
+        top: -12px;
+    }
+
+    .ea-wizard-mode .ea-wizard-nav {
+        flex-direction: column-reverse;
+        gap: 10px;
+    }
+
+    .ea-wizard-mode .ea-wizard-nav .ea-btn {
+        width: 100%;
+        min-width: 0;
+    }
+
+    .ea-wizard-mode .ea-wizard-nav-2,
+    .ea-wizard-mode .ea-wizard-nav-3 {
+        flex-direction: column-reverse;
+    }
+}
+
+/* Hide wizard navigation and stepper when booking is completed */
+.ea-booking-complete .ea-wizard-nav,
+.ea-booking-complete .ea-wizard-btn-back,
+.ea-booking-complete .ea-wizard-btn-next,
+.ea-booking-complete .ea-wizard-stepper-container,
+.ea-wizard-mode.ea-booking-complete .ea-wizard-nav,
+.ea-wizard-mode.ea-booking-complete .ea-wizard-stepper-container,
+.ea-bootstrap.ea-booking-complete .ea-wizard-nav,
+.ea-bootstrap.ea-booking-complete .ea-wizard-stepper-container {
+    display: none !important;
+}
+

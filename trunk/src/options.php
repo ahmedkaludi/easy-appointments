@@ -217,6 +217,7 @@ class EAOptions
             'style.border_color'         => '',
             'style.slot_bg_color'        => '',
             'style.slot_text_color'      => '',
+            'form.style'                 => 'default',
         );
     }
 

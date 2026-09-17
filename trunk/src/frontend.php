@@ -290,6 +290,14 @@ class Easy_EA_Frontend
         $settings['trans.weeks'] = __('week(s)', 'easy-appointments');
         $settings['trans.never'] = __('Never', 'easy-appointments');
         $settings['trans.min'] = __('min', 'easy-appointments');
+        $settings['trans.wizard_step_service'] = __('Service', 'easy-appointments');
+        $settings['trans.wizard_step_datetime'] = __('Date & Time', 'easy-appointments');
+        $settings['trans.wizard_step_details'] = __('Details', 'easy-appointments');
+        $settings['trans.wizard_next'] = __('Next', 'easy-appointments');
+        $settings['trans.wizard_back'] = __('Back', 'easy-appointments');
+        $settings['trans.wizard_step_1_title'] = __('Select Service', 'easy-appointments');
+        $settings['trans.wizard_step_2_title'] = __('Select Date & Time', 'easy-appointments');
+        $settings['trans.wizard_step_3_title'] = __('Personal Information', 'easy-appointments');
 
         $customCss = $settings['custom.css'];
         $customCss = wp_strip_all_tags($customCss);
@@ -935,6 +943,14 @@ class Easy_EA_Frontend
         $settings['trans.weeks'] = __('week(s)', 'easy-appointments');
         $settings['trans.never'] = __('Never', 'easy-appointments');
         $settings['trans.min'] = __('min', 'easy-appointments');
+        $settings['trans.wizard_step_service'] = __('Service', 'easy-appointments');
+        $settings['trans.wizard_step_datetime'] = __('Date & Time', 'easy-appointments');
+        $settings['trans.wizard_step_details'] = __('Details', 'easy-appointments');
+        $settings['trans.wizard_next'] = __('Next', 'easy-appointments');
+        $settings['trans.wizard_back'] = __('Back', 'easy-appointments');
+        $settings['trans.wizard_step_1_title'] = __('Select Service', 'easy-appointments');
+        $settings['trans.wizard_step_2_title'] = __('Select Date & Time', 'easy-appointments');
+        $settings['trans.wizard_step_3_title'] = __('Personal Information', 'easy-appointments');
 
         // datetime format
         $settings['time_format'] = $this->datetime->convert_to_moment_format(get_option('time_format', 'H:i'));

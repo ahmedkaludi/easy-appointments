@@ -97,6 +97,74 @@ $ea_nsui_advance_cancel_data     = $ea_nsui_decode_redirects( $ea_nsui_advance_c
         <p><?php esc_html_e('Customize the appearance and behavior of your booking form.', 'easy-appointments'); ?></p>
     </div>
 
+    <!-- ===== FORM LAYOUT SECTION ===== -->
+    <div class="ea-nsui-panel-head-sub">
+        <h3><?php esc_html_e('Form Layout & Style', 'easy-appointments'); ?></h3>
+        <p><?php esc_html_e('Choose between a classic single-page booking form or a multi-step wizard flow.', 'easy-appointments'); ?></p>
+    </div>
+
+    <div class="ea-nsui-card">
+        <div class="ea-nsui-row ea-nsui-row-stacked">
+            <div class="ea-nsui-row-label">
+                <span class="ea-nsui-row-title">
+                    <?php esc_html_e('Form Layout Style', 'easy-appointments'); ?>
+                    <span class="ea-nsui-tip" data-tooltip="<?php esc_attr_e('Select whether your booking form is displayed as a single page or as a 3-step wizard (Services -> Date & Time -> Details). Wizard style applies when New UI is enabled.', 'easy-appointments'); ?>">?</span>
+                </span>
+            </div>
+            <div class="ea-nsui-row-control ea-nsui-row-control-full">
+                <?php $ea_form_style = $ea_get('form.style', 'default'); ?>
+                <div class="ea-nsui-visual-selector ea-nsui-layout-selector" data-hidden-target="ea-nsui-form-style">
+                    <div class="ea-nsui-visual-option ea-nsui-layout-option <?php echo $ea_form_style !== 'wizard' ? 'is-selected' : ''; ?>" data-value="default">
+                        <div class="ea-nsui-layout-preview">
+                            <div class="ea-nsui-layout-wireframe ea-nsui-wireframe-single">
+                                <div class="ea-wireframe-header"></div>
+                                <div class="ea-wireframe-fields">
+                                    <div class="ea-wireframe-line ea-line-short"></div>
+                                    <div class="ea-wireframe-input"></div>
+                                    <div class="ea-wireframe-line ea-line-short"></div>
+                                    <div class="ea-wireframe-input"></div>
+                                </div>
+                                <div class="ea-wireframe-grid">
+                                    <div class="ea-wireframe-box"></div>
+                                    <div class="ea-wireframe-box"></div>
+                                </div>
+                                <div class="ea-wireframe-btn"></div>
+                            </div>
+                        </div>
+                        <span class="ea-nsui-visual-label"><?php esc_html_e('Single Page (Default)', 'easy-appointments'); ?></span>
+                        <small class="ea-nsui-layout-caption"><?php esc_html_e('All fields and calendar on one page', 'easy-appointments'); ?></small>
+                        <span class="ea-nsui-visual-check">✓</span>
+                    </div>
+                    <div class="ea-nsui-visual-option ea-nsui-layout-option <?php echo $ea_form_style === 'wizard' ? 'is-selected' : ''; ?>" data-value="wizard">
+                        <div class="ea-nsui-layout-preview">
+                            <div class="ea-nsui-layout-wireframe ea-nsui-wireframe-wizard">
+                                <div class="ea-wireframe-stepper">
+                                    <span class="ea-stepper-dot active">1</span>
+                                    <span class="ea-stepper-line"></span>
+                                    <span class="ea-stepper-dot">2</span>
+                                    <span class="ea-stepper-line"></span>
+                                    <span class="ea-stepper-dot">3</span>
+                                </div>
+                                <div class="ea-wireframe-header ea-header-wizard"></div>
+                                <div class="ea-wireframe-fields">
+                                    <div class="ea-wireframe-line ea-line-short"></div>
+                                    <div class="ea-wireframe-input"></div>
+                                </div>
+                                <div class="ea-wireframe-nav-arrows">
+                                    <span class="ea-arrow-btn">&rarr;</span>
+                                </div>
+                            </div>
+                        </div>
+                        <span class="ea-nsui-visual-label"><?php esc_html_e('Wizard / Flow (Multi-Step)', 'easy-appointments'); ?></span>
+                        <small class="ea-nsui-layout-caption"><?php esc_html_e('Divided into 3 sequential steps', 'easy-appointments'); ?></small>
+                        <span class="ea-nsui-visual-check">✓</span>
+                    </div>
+                </div>
+                <input type="hidden" id="ea-nsui-form-style" data-key="form.style" value="<?php echo esc_attr($ea_form_style); ?>">
+            </div>
+        </div>
+    </div>
+
     <!-- ===== COLORS & TYPOGRAPHY SECTION ===== -->
     <div class="ea-nsui-panel-head-sub">
         <h3><?php esc_html_e('Colors & Typography', 'easy-appointments'); ?></h3>
