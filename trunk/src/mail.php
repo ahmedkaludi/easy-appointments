@@ -171,18 +171,16 @@ class EAMail
             wp_die(esc_html__('No appointment.', 'easy-appointments'));
         }
 
+        // constant-time token comparison with backward compatibility for legacy links (<= 4.0.2.1)
+        if (!$this->validate_token($data, $action, $provided_token)) {
+            header('Refresh:3; url=' . get_home_url());
+            wp_die(esc_html__('Invalid token.', 'easy-appointments'));
+        }
+
         // check maybe it is a two step process
         // phpcs:ignore WordPress.Security.NonceVerification.Missing
         if (empty($_POST['confirmed']) && (!empty($_POST['confirmed']) && $_POST['confirmed'] !== 'true')) {
             $this->link_action_additional_step($action, $data);
-        }
-
-        $expected_token = $this->generate_token($data, $action);
-
-        // constant-time token comparison
-        if (!hash_equals($expected_token, $provided_token)) {
-            header('Refresh:3; url=' . get_home_url());
-            wp_die(esc_html__('Invalid token.', 'easy-appointments'));
         }
 
         $table = 'ea_appointments';
@@ -492,6 +490,38 @@ class EAMail
         $salt = function_exists('wp_salt') ? wp_salt('auth') : 'ea_default_auth_salt';
 
         return hash_hmac('sha256', $action . '|' . $app_id . '|' . $token_secret, $salt);
+    }
+
+    /**
+     * Validate action token with backward compatibility for legacy MD5 tokens (<= 4.0.2.1).
+     *
+     * @param array  $data Appointment data
+     * @param string $action Action type ("confirm" or "cancel")
+     * @param string $provided_token Token provided in the URL query parameter
+     * @return bool True if token matches current HMAC or legacy MD5 format
+     */
+    public function validate_token($data, $action, $provided_token)
+    {
+        if (empty($provided_token) || !is_string($provided_token) || !is_string($action)) {
+            return false;
+        }
+
+        $expected_token = $this->generate_token($data, $action);
+
+        if (is_string($expected_token) && hash_equals($expected_token, $provided_token)) {
+            return true;
+        }
+
+        // Backward-compatible fallback for links issued in EA <= 4.0.2.1 (strictly 32-char MD5 format)
+        if (strlen($provided_token) === 32 && !empty($data['created']) && is_string($data['created'])) {
+            $legacy_salt  = 'CStK4zYJSuQPnjbJ1npM';
+            $legacy_token = md5($legacy_salt . $data['created'] . $action);
+            if (hash_equals($legacy_token, $provided_token)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
