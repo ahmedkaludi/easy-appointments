@@ -637,6 +637,10 @@ class EAMail
                 $value = date_i18n($date_format, strtotime("$value {$raw_data['start']}"));
             }
 
+            if ($key == 'created' && !empty($value)) {
+                $value = get_date_from_gmt($value, $date_format . ' ' . $time_format);
+            }
+
             // translate status
             if ($key == 'status') {
                 $value = $this->logic->get_status_translation($value);
@@ -813,6 +817,10 @@ class EAMail
                 $value = date_i18n($date_format, strtotime("$value {$app_array['start']}"));
             }
 
+            if ($key == 'created' && !empty($value)) {
+                $value = get_date_from_gmt($value, $date_format . ' ' . $time_format);
+            }
+
             if ($key == 'status') {
                 $value = $this->logic->get_status_translation($value);
             }
@@ -934,6 +942,10 @@ class EAMail
 
             if ($key == 'date') {
                 $value = date_i18n($date_format, strtotime("$value {$app_array['start']}"));
+            }
+
+            if ($key == 'created' && !empty($value)) {
+                $value = get_date_from_gmt($value, $date_format . ' ' . $time_format);
             }
 
             if ($key == 'status') {

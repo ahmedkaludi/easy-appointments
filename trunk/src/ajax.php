@@ -534,7 +534,8 @@ class EAAjax
                     case 'created_date':
                     case 'booking_date':
                     case 'booking_created':
-                        $csv_row[] = $row->created ?? '';
+                        $created_raw = $row->created ?? '';
+                        $csv_row[] = !empty($created_raw) ? get_date_from_gmt($created_raw, 'Y-m-d H:i:s') : '';
                         break;
                     default:
                         if (isset($meta_fields_by_slug[$column])) {
