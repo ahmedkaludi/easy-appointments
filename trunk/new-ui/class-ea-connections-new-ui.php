@@ -253,6 +253,8 @@ class EA_Connections_New_UI
                 'startsAt'              => esc_html__('Starts at', 'easy-appointments'),
                 'endsAt'                => esc_html__('Ends at', 'easy-appointments'),
                 'timeOrderError'        => esc_html__('End time must be after start time.', 'easy-appointments'),
+                'connDurationLessThanService' => esc_html__('Connection duration (%1$d min) must be greater than or equal to service duration (%2$d min).', 'easy-appointments'),
+                'connDurationLessThanServices' => esc_html__('Connection duration (%1$d min) is shorter than duration for: %2$s.', 'easy-appointments'),
                 'requiredField'         => esc_html__('This field is required.', 'easy-appointments'),
                 'customWeekError'       => esc_html__('Custom week number must be 3 or more.', 'easy-appointments'),
                 'tomorrowOnlyNote'      => esc_html__('Customers can only book appointments for tomorrow\'s date.', 'easy-appointments'),

@@ -1008,6 +1008,16 @@
         /**
          * ---------- Time range ----------
          */
+        function timeToMinutes(val) {
+            if (!val) {
+                return 0;
+            }
+            var parts = val.split(':');
+            var h = parseInt(parts[0], 10) || 0;
+            var m = parseInt(parts[1], 10) || 0;
+            return (h * 60) + m;
+        }
+
         function timeFieldErrorCheck() {
             var from = $('#ea-mnui-input-time_from').val();
             var to = $('#ea-mnui-input-time_to').val();
@@ -1016,13 +1026,54 @@
                 return;
             }
 
-            var invalid = to <= from;
+            var fromMinutes = timeToMinutes(from);
+            var toMinutes = timeToMinutes(to);
+            var invalid = toMinutes <= fromMinutes;
+            var errorMsg = i18n.timeOrderError || 'End time must be after start time.';
+
+            if (!invalid) {
+                var connDuration = toMinutes - fromMinutes;
+                if (!isBulk) {
+                    var serviceId = $('#ea-mnui-input-service').val();
+                    if (serviceId) {
+                        var service = byId(services, serviceId);
+                        if (service && service.duration) {
+                            var sDur = parseInt(service.duration, 10) || 0;
+                            if (sDur > 0 && connDuration < sDur) {
+                                invalid = true;
+                                errorMsg = (i18n.connDurationLessThanService || 'Connection duration (%1$d min) must be greater than or equal to service duration (%2$d min).')
+                                    .replace('%1$d', connDuration)
+                                    .replace('%2$d', sDur);
+                            }
+                        }
+                    }
+                } else {
+                    var selectedServices = checkedValues('#ea-mnui-bulk-services');
+                    var invalidNames = [];
+                    $.each(selectedServices, function (i, sId) {
+                        var s = byId(services, sId);
+                        if (s && s.duration) {
+                            var sDur = parseInt(s.duration, 10) || 0;
+                            if (sDur > 0 && connDuration < sDur) {
+                                invalidNames.push(s.name + ' (' + sDur + ' min)');
+                            }
+                        }
+                    });
+                    if (invalidNames.length) {
+                        invalid = true;
+                        errorMsg = (i18n.connDurationLessThanServices || 'Connection duration (%1$d min) is shorter than duration for: %2$s.')
+                            .replace('%1$d', connDuration)
+                            .replace('%2$s', invalidNames.join(', '));
+                    }
+                }
+            }
 
             $('#ea-mnui-input-time_from').closest('.ea-mnui-field').toggleClass('has-error', invalid);
             $('#ea-mnui-input-time_to').closest('.ea-mnui-field').toggleClass('has-error', invalid);
+            $('#ea-mnui-time-to-error').text(errorMsg);
         }
 
-        $drawerForm.on('change', '#ea-mnui-input-time_from, #ea-mnui-input-time_to', timeFieldErrorCheck);
+        $drawerForm.on('change', '#ea-mnui-input-time_from, #ea-mnui-input-time_to, #ea-mnui-input-service, #ea-mnui-bulk-services input', timeFieldErrorCheck);
         $drawerForm.on('blur', '#ea-mnui-input-time_from, #ea-mnui-input-time_to', function () {
             var val = $(this).val();
             var formatted = formatTimeTo24h(val);
@@ -1035,6 +1086,7 @@
          */
         function clearErrors() {
             $drawerForm.find('.ea-mnui-field').removeClass('has-error');
+            $('#ea-mnui-time-to-error').text(i18n.timeOrderError || 'End time must be after start time.');
         }
 
         function fieldValidationOk() {
@@ -1108,9 +1160,57 @@
                 fail($timeToInput);
             }
 
-            if (timeFrom && timeTo && timeTo <= timeFrom) {
-                fail($timeFromInput);
-                fail($timeToInput);
+            if (timeFrom && timeTo) {
+                var fromMinutes = timeToMinutes(timeFrom);
+                var toMinutes = timeToMinutes(timeTo);
+
+                if (toMinutes <= fromMinutes) {
+                    fail($timeFromInput);
+                    fail($timeToInput);
+                    $('#ea-mnui-time-to-error').text(i18n.timeOrderError || 'End time must be after start time.');
+                } else {
+                    var connDuration = toMinutes - fromMinutes;
+                    if (!isBulk) {
+                        var serviceId = $('#ea-mnui-input-service').val();
+                        if (serviceId) {
+                            var service = byId(services, serviceId);
+                            if (service && service.duration) {
+                                var sDur = parseInt(service.duration, 10) || 0;
+                                if (sDur > 0 && connDuration < sDur) {
+                                    fail($timeFromInput);
+                                    fail($timeToInput);
+                                    var errMsg = (i18n.connDurationLessThanService || 'Connection duration (%1$d min) must be greater than or equal to service duration (%2$d min).')
+                                        .replace('%1$d', connDuration)
+                                        .replace('%2$d', sDur);
+                                    $('#ea-mnui-time-to-error').text(errMsg);
+                                    showNotice(errMsg, true);
+                                }
+                            }
+                        }
+                    } else {
+                        var selectedServices = checkedValues('#ea-mnui-bulk-services');
+                        var invalidNames = [];
+                        $.each(selectedServices, function (i, sId) {
+                            var s = byId(services, sId);
+                            if (s && s.duration) {
+                                var sDur = parseInt(s.duration, 10) || 0;
+                                if (sDur > 0 && connDuration < sDur) {
+                                    invalidNames.push(s.name + ' (' + sDur + ' min)');
+                                }
+                            }
+                        });
+                        if (invalidNames.length) {
+                            fail($timeFromInput);
+                            fail($timeToInput);
+                            fail($('#ea-mnui-bulk-services'));
+                            var bulkErrMsg = (i18n.connDurationLessThanServices || 'Connection duration (%1$d min) is shorter than duration for: %2$s.')
+                                .replace('%1$d', connDuration)
+                                .replace('%2$s', invalidNames.join(', '));
+                            $('#ea-mnui-time-to-error').text(bulkErrMsg);
+                            showNotice(bulkErrMsg, true);
+                        }
+                    }
+                }
             }
 
             return ok;
@@ -1260,8 +1360,12 @@
             saveConnection(copied).done(function () {
                 showNotice(i18n.savedSuccess);
                 loadConnections();
-            }).fail(function () {
-                showNotice(i18n.genericError);
+            }).fail(function (xhr) {
+                var message = i18n.genericError;
+                if (xhr && xhr.responseJSON && xhr.responseJSON.message) {
+                    message = xhr.responseJSON.message;
+                }
+                showNotice(message);
                 hideScreenLoader();
             }).always(function () {
                 $btn.prop('disabled', false);
@@ -1444,8 +1548,12 @@
                 showNotice(i18n.bulkSavedSuccess.replace('%d', combos.length));
                 closeDrawer();
                 loadConnections();
-            }).fail(function () {
-                window.alert(i18n.genericError);
+            }).fail(function (xhr) {
+                var message = i18n.genericError;
+                if (xhr && xhr.responseJSON && xhr.responseJSON.message) {
+                    message = xhr.responseJSON.message;
+                }
+                window.alert(message);
                 loadConnections();
             }).always(function () {
                 $submitBtn.prop('disabled', false).text(i18n.save);

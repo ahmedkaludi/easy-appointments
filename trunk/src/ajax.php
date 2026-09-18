@@ -3304,6 +3304,29 @@ class EAAjax
                 break;
             case 'UPDATE':
             case 'NEW':
+                if ($table === 'ea_connections' && class_exists('EA_UI_Switcher') && EA_UI_Switcher::is_new_ui()) {
+                    if (!empty($data['time_from']) && !empty($data['time_to']) && !empty($data['service'])) {
+                        $service = $this->models->get_row('ea_services', absint($data['service']));
+                        if ($service && isset($service->duration)) {
+                            $service_duration = intval($service->duration);
+                            $start_ts = strtotime('1970-01-01 ' . trim($data['time_from']));
+                            $end_ts   = strtotime('1970-01-01 ' . trim($data['time_to']));
+                            if ($start_ts !== false && $end_ts !== false) {
+                                $conn_duration = ($end_ts - $start_ts) / 60;
+                                if ($conn_duration < $service_duration) {
+                                    $this->send_err_json_result(json_encode(array(
+                                        'err'     => true,
+                                        'message' => sprintf(
+                                            __('Connection duration (%1$d minutes) must be greater than or equal to the selected service duration (%2$d minutes).', 'easy-appointments'),
+                                            $conn_duration,
+                                            $service_duration
+                                        )
+                                    )));
+                                }
+                            }
+                        }
+                    }
+                }
                 $response = $this->models->replace($table, $data, true);
                 if ($table === 'ea_staff' && !empty($response->id)) {
                     if ($this->type === 'UPDATE') {

@@ -232,7 +232,7 @@ if (!defined('WPINC')) {
                         <div class="ea-mnui-field" data-field="time_to">
                             <label for="ea-mnui-input-time_to"><?php esc_html_e('End time', 'easy-appointments'); ?> <span class="ea-mnui-required">*</span></label>
                             <input type="text" id="ea-mnui-input-time_to" class="ea-mnui-time-input" data-prop="time_to" placeholder="17:00:00" required>
-                            <div class="ea-mnui-field-error"><?php esc_html_e('Must be after start time!', 'easy-appointments'); ?></div>
+                            <div class="ea-mnui-field-error" id="ea-mnui-time-to-error"><?php esc_html_e('Must be after start time!', 'easy-appointments'); ?></div>
                         </div>
                     </div>
                 </div>
