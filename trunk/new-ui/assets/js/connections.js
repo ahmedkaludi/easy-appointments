@@ -37,18 +37,23 @@
 
         var connections = [];
         var searchTerm = '';
+        var filterFromIso = '';
+        var filterToIso = '';
         var sortBy = 'id';
         var sortDir = 'DESC';
         var editingId = null;
         var processingId = null;
         var isBulk = false;
         var currentPage = 1;
-        var perPage = 10;
+        var perPage = parseInt(window.localStorage.getItem('ea-mnui-connections-per-page') || window.localStorage.getItem('ea-naui-per-page') || 10, 10);
 
         var $tableBody = $('#ea-mnui-rows');
         var $emptyState = $('#ea-mnui-empty');
         var $statusMsg = $('#ea-mnui-status-msg');
         var $bulkDeleteBtn = $('.ea-mnui-delete-selected');
+        var $filterFrom = $('#ea-mnui-filter-from');
+        var $filterTo = $('#ea-mnui-filter-to');
+        var $filterClearDates = $('#ea-mnui-filter-clear-dates');
 
         var $drawer = $('#ea-mnui-drawer');
         var $drawerForm = $('#ea-mnui-drawer-form');
@@ -227,6 +232,26 @@
                 return !!byId(locations, record.location) && !!byId(services, record.service) && !!byId(workers, record.worker);
             });
 
+            if (filterFromIso || filterToIso) {
+                list = $.grep(list, function (record) {
+                    var connFrom = record.day_from || '';
+
+                    if (filterFromIso) {
+                        if (connFrom && connFrom < filterFromIso) {
+                            return false;
+                        }
+                    }
+
+                    if (filterToIso) {
+                        if (connFrom && connFrom > filterToIso) {
+                            return false;
+                        }
+                    }
+
+                    return true;
+                });
+            }
+
             if (term) {
                 list = $.grep(list, function (record) {
                     var loc = byId(locations, record.location);
@@ -267,18 +292,18 @@
             var today = isoDate(new Date());
 
             if (String(record.is_working) !== '1') {
-                return { badge: 'ea-mnui-badge-not-working', label: i18n.notWorking };
+                return { badge: 'ea-mnui-badge-not-working', label: i18n.notWorking, statusClass: 'ea-mnui-row-not-working' };
             }
 
             if (record.day_from && today < record.day_from) {
-                return { badge: 'ea-mnui-badge-scheduled', label: i18n.scheduled || 'Scheduled' };
+                return { badge: 'ea-mnui-badge-scheduled', label: i18n.scheduled || 'Scheduled', statusClass: 'ea-mnui-row-scheduled' };
             }
 
             if (record.day_to && today > record.day_to) {
-                return { badge: 'ea-mnui-badge-inactive', label: i18n.expired || 'Expired' };
+                return { badge: 'ea-mnui-badge-inactive', label: i18n.expired || 'Expired', statusClass: 'ea-mnui-row-expired' };
             }
 
-            return { badge: 'ea-mnui-badge-working', label: i18n.working };
+            return { badge: 'ea-mnui-badge-working', label: i18n.working, statusClass: 'ea-mnui-row-working' };
         }
 
         function renderPagination(totalCount) {
@@ -316,11 +341,13 @@
             if (!list.length) {
                 $emptyState.show();
                 $('#ea-mnui-pagination').empty();
+                $('.ea-mnui-pagination-container').hide();
                 checkBulkButton();
                 return;
             }
 
             $emptyState.hide();
+            $('.ea-mnui-pagination-container').css('display', 'flex');
 
             var startIndex = (currentPage - 1) * perPage;
             var endIndex = startIndex + perPage;
@@ -349,7 +376,7 @@
             });
 
             var $row = $(
-                '<tr class="ea-mnui-row" data-id="' + escapeHtml(row.id) + '">' +
+                '<tr class="ea-mnui-row ' + escapeHtml(status.statusClass) + '" data-id="' + escapeHtml(row.id) + '">' +
                     '<td class="ea-mnui-col-check">' +
                         '<input type="checkbox" class="ea-mnui-row-check" data-id="' + escapeHtml(row.id) + '">' +
                     '</td>' +
@@ -461,13 +488,80 @@
         });
 
         /**
-         * ---------- Search + sort ----------
+         * ---------- Search + sort + filters ----------
          */
         $app.on('keyup change', '#ea-mnui-search', function () {
             searchTerm = $(this).val() || '';
             currentPage = 1;
             render();
         });
+
+        $app.on('change', '#ea-mnui-per-page-select', function () {
+            perPage = parseInt($(this).val(), 10);
+            window.localStorage.setItem('ea-mnui-connections-per-page', perPage);
+            currentPage = 1;
+            render();
+        });
+
+        function initFilterDatepickers() {
+            var regional = jQuery.datepicker.regional[cfg.datepickerLocale] || {};
+            var dateFormat = regional.dateFormat || 'yy-mm-dd';
+
+            $filterFrom.datepicker({
+                dateFormat: dateFormat,
+                changeMonth: true,
+                changeYear: true,
+                yearRange: 'c-15:c+15',
+                beforeShow: function (input, inst) {
+                    inst.dpDiv.addClass('ea-mnui-datepicker-popup').removeClass('ea-timepicker-only');
+                },
+                onSelect: function (dateText, inst) {
+                    var dateObj = $filterFrom.datepicker('getDate');
+                    filterFromIso = dateObj ? isoDate(dateObj) : '';
+                    $filterTo.datepicker('option', 'minDate', dateObj || null);
+                    updateClearDatesBtn();
+                    currentPage = 1;
+                    render();
+                }
+            });
+
+            $filterTo.datepicker({
+                dateFormat: dateFormat,
+                changeMonth: true,
+                changeYear: true,
+                yearRange: 'c-15:c+15',
+                beforeShow: function (input, inst) {
+                    inst.dpDiv.addClass('ea-mnui-datepicker-popup').removeClass('ea-timepicker-only');
+                },
+                onSelect: function (dateText, inst) {
+                    var dateObj = $filterTo.datepicker('getDate');
+                    filterToIso = dateObj ? isoDate(dateObj) : '';
+                    $filterFrom.datepicker('option', 'maxDate', dateObj || null);
+                    updateClearDatesBtn();
+                    currentPage = 1;
+                    render();
+                }
+            });
+
+            function updateClearDatesBtn() {
+                if (filterFromIso || filterToIso || $filterFrom.val() || $filterTo.val()) {
+                    $filterClearDates.show();
+                } else {
+                    $filterClearDates.hide();
+                }
+            }
+
+            $filterClearDates.on('click', function (e) {
+                e.preventDefault();
+                filterFromIso = '';
+                filterToIso = '';
+                $filterFrom.val('').datepicker('setDate', null).datepicker('option', 'maxDate', null);
+                $filterTo.val('').datepicker('setDate', null).datepicker('option', 'minDate', null);
+                $filterClearDates.hide();
+                currentPage = 1;
+                render();
+            });
+        }
 
         $app.on('click', '.ea-mnui-set-sort', function (e) {
             e.preventDefault();
@@ -607,6 +701,9 @@
 
                     $rowDateInput.datepicker({
                         dateFormat: (jQuery.datepicker.regional[cfg.datepickerLocale] || {}).dateFormat || 'yy-mm-dd',
+                        changeMonth: true,
+                        changeYear: true,
+                        yearRange: 'c-15:c+15',
                         minDate: 0,
                         beforeShow: function (input, inst) {
                             inst.dpDiv.addClass('ea-mnui-datepicker-popup').removeClass('ea-timepicker-only');
@@ -883,6 +980,9 @@
         function initDatepickers() {
             $dayFrom.datepicker({
                 dateFormat: (jQuery.datepicker.regional[cfg.datepickerLocale] || {}).dateFormat,
+                changeMonth: true,
+                changeYear: true,
+                yearRange: 'c-15:c+15',
                 minDate: 0,
                 beforeShow: function (input, inst) {
                     inst.dpDiv.addClass('ea-mnui-datepicker-popup').removeClass('ea-timepicker-only');
@@ -911,6 +1011,9 @@
 
             $dayTo.datepicker({
                 dateFormat: (jQuery.datepicker.regional[cfg.datepickerLocale] || {}).dateFormat,
+                changeMonth: true,
+                changeYear: true,
+                yearRange: 'c-15:c+15',
                 minDate: 0,
                 beforeShow: function (input, inst) {
                     inst.dpDiv.addClass('ea-mnui-datepicker-popup').removeClass('ea-timepicker-only');
@@ -1564,8 +1667,10 @@
          * ---------- Init ----------
          */
         populateReferenceUi();
+        $('#ea-mnui-per-page-select').val(perPage);
         renderExtendBar();
         initDatepickers();
+        initFilterDatepickers();
         initTimepickers();
         loadConnections();
     });

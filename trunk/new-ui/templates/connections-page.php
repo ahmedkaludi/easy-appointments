@@ -67,6 +67,24 @@ if (!defined('WPINC')) {
                     </a>
                 </div>
 
+                <div class="ea-mnui-date-range-filter">
+                    <div class="ea-mnui-date-filter-field">
+                        <label for="ea-mnui-filter-from"><?php esc_html_e('From:', 'easy-appointments'); ?></label>
+                        <input type="text" id="ea-mnui-filter-from" class="ea-mnui-date-input" placeholder="<?php esc_attr_e('From date', 'easy-appointments'); ?>" readonly autocomplete="off">
+                    </div>
+                    <div class="ea-mnui-date-filter-field">
+                        <label for="ea-mnui-filter-to"><?php esc_html_e('To:', 'easy-appointments'); ?></label>
+                        <input type="text" id="ea-mnui-filter-to" class="ea-mnui-date-input" placeholder="<?php esc_attr_e('To date', 'easy-appointments'); ?>" readonly autocomplete="off">
+                    </div>
+                    <button type="button" id="ea-mnui-filter-clear-dates" class="ea-mnui-btn ea-mnui-btn-ghost ea-mnui-clear-date-btn" title="<?php esc_attr_e('Clear date filter', 'easy-appointments'); ?>" style="display:none;">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                        </svg>
+                        <?php esc_html_e('Clear', 'easy-appointments'); ?>
+                    </button>
+                </div>
+
                 <div class="ea-mnui-search-wrap" style="margin-left: 0;">
                     <input type="text" id="ea-mnui-search" class="ea-mnui-search"
                         placeholder="<?php esc_attr_e('Search by location, service or employee', 'easy-appointments'); ?>">
@@ -95,7 +113,18 @@ if (!defined('WPINC')) {
                     <?php esc_html_e('No connections found.', 'easy-appointments'); ?>
                 </div>
             </div>
-            <div id="ea-mnui-pagination" class="ea-mnui-pagination"></div>
+            <div class="ea-mnui-pagination-container">
+                <div id="ea-mnui-pagination" class="ea-mnui-pagination"></div>
+                <div class="ea-mnui-per-page">
+                    <label for="ea-mnui-per-page-select"><?php esc_html_e('Per page:', 'easy-appointments'); ?></label>
+                    <select id="ea-mnui-per-page-select">
+                        <option value="10">10</option>
+                        <option value="25">25</option>
+                        <option value="50">50</option>
+                        <option value="100">100</option>
+                    </select>
+                </div>
+            </div>
         </div>
     </div>
 

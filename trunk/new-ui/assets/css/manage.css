@@ -199,6 +199,61 @@
     box-shadow: 0 0 0 3px var(--ea-blue-light);
 }
 
+/* ---------- Date Range Filter in Toolbar ---------- */
+.ea-mnui-date-range-filter {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.ea-mnui-date-filter-field {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.ea-mnui-date-filter-field label {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--ea-text-muted);
+    white-space: nowrap;
+}
+
+.ea-mnui-wrap .ea-mnui-date-filter-field input.ea-mnui-date-input {
+    border: 1px solid var(--ea-border);
+    border-radius: 8px;
+    padding: 7px 10px;
+    font-size: 13px;
+    width: 125px;
+    background: #fff;
+    cursor: pointer;
+    color: var(--ea-text);
+}
+
+.ea-mnui-wrap .ea-mnui-date-filter-field input.ea-mnui-date-input:focus {
+    outline: none;
+    border-color: var(--ea-blue);
+    box-shadow: 0 0 0 3px var(--ea-blue-light);
+}
+
+.ea-mnui-clear-date-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 6px 10px;
+    font-size: 12px;
+    color: var(--ea-text-muted);
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.ea-mnui-clear-date-btn:hover {
+    color: #ef4444;
+    border-color: #fecaca;
+    background: #fef2f2;
+}
+
 .ea-mnui-status-msg {
     font-size: 12px;
     color: var(--ea-text-muted);
@@ -255,6 +310,37 @@
 
 .ea-mnui-row:hover {
     background: var(--ea-bg);
+}
+
+/* ---------- Connections Row Status Colors ---------- */
+.ea-mnui-row.ea-mnui-row-working {
+    background-color: #f0fdf4;
+}
+.ea-mnui-row.ea-mnui-row-working:hover {
+    background-color: #dcfce7;
+}
+
+.ea-mnui-row.ea-mnui-row-not-working {
+    background-color: #fef2f2;
+}
+.ea-mnui-row.ea-mnui-row-not-working:hover {
+    background-color: #fee2e2;
+}
+
+.ea-mnui-row.ea-mnui-row-expired {
+    background-color: #f8fafc;
+    opacity: 0.85;
+}
+.ea-mnui-row.ea-mnui-row-expired:hover {
+    background-color: #f1f5f9;
+    opacity: 1;
+}
+
+.ea-mnui-row.ea-mnui-row-scheduled {
+    background-color: #eff6ff;
+}
+.ea-mnui-row.ea-mnui-row-scheduled:hover {
+    background-color: #dbeafe;
 }
 
 .ea-mnui-row:last-child td {
@@ -1034,7 +1120,7 @@ body.wp-admin #ui-datepicker-div,
     display: none;
     position: absolute;
     z-index: 100050 !important;
-    width: 280px !important;
+    width: 295px !important;
     background: #ffffff !important;
     border: 1px solid #e2e8f0 !important;
     border-radius: 14px !important;
@@ -1050,11 +1136,12 @@ body.wp-admin #ui-datepicker-div .ui-datepicker-header,
     background: transparent !important;
     border: none !important;
     position: relative !important;
-    padding: 2px 0 10px !important;
+    padding: 0 0 10px 0 !important;
     margin: 0 !important;
+    height: 28px !important;
     display: flex !important;
     align-items: center !important;
-    justify-content: space-between !important;
+    justify-content: center !important;
 }
 
 body.wp-admin #ui-datepicker-div .ui-datepicker-title,
@@ -1063,9 +1150,75 @@ body.wp-admin #ui-datepicker-div .ui-datepicker-title,
     text-align: center !important;
     font-weight: 600 !important;
     color: #0f172a !important;
-    font-size: 14px !important;
-    line-height: 1.4 !important;
+    font-size: 13px !important;
+    line-height: 28px !important;
+    height: 28px !important;
     width: 100% !important;
+    padding: 0 34px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 6px !important;
+    box-sizing: border-box !important;
+}
+
+body.wp-admin #ui-datepicker-div .ui-datepicker-title select,
+#ui-datepicker-div.ea-mnui-datepicker-popup .ui-datepicker-title select {
+    display: inline-flex !important;
+    align-items: center !important;
+    height: 28px !important;
+    line-height: 26px !important;
+    padding: 0 18px 0 8px !important;
+    margin: 0 !important;
+    font-family: inherit !important;
+    font-size: 12px !important;
+    font-weight: 600 !important;
+    color: #1e293b !important;
+    background-color: #f8fafc !important;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") !important;
+    background-repeat: no-repeat !important;
+    background-position: right 6px center !important;
+    background-size: 8px 8px !important;
+    border: 1px solid #e2e8f0 !important;
+    border-radius: 6px !important;
+    cursor: pointer !important;
+    outline: none !important;
+    box-shadow: none !important;
+    -webkit-appearance: none !important;
+    -moz-appearance: none !important;
+    appearance: none !important;
+    transition: all 0.15s ease !important;
+    flex: 0 0 auto !important;
+    width: auto !important;
+    min-width: 60px !important;
+    box-sizing: border-box !important;
+}
+
+body.wp-admin #ui-datepicker-div .ui-datepicker-title select.ui-datepicker-month,
+#ui-datepicker-div.ea-mnui-datepicker-popup .ui-datepicker-title select.ui-datepicker-month {
+    min-width: 62px !important;
+    max-width: 76px !important;
+}
+
+body.wp-admin #ui-datepicker-div .ui-datepicker-title select.ui-datepicker-year,
+#ui-datepicker-div.ea-mnui-datepicker-popup .ui-datepicker-title select.ui-datepicker-year {
+    min-width: 68px !important;
+    max-width: 78px !important;
+}
+
+body.wp-admin #ui-datepicker-div .ui-datepicker-title select:hover,
+#ui-datepicker-div.ea-mnui-datepicker-popup .ui-datepicker-title select:hover {
+    background-color: #f1f5f9 !important;
+    border-color: #cbd5e1 !important;
+    color: #0f172a !important;
+}
+
+body.wp-admin #ui-datepicker-div .ui-datepicker-title select:focus,
+#ui-datepicker-div.ea-mnui-datepicker-popup .ui-datepicker-title select:focus {
+    background-color: #ffffff !important;
+    border-color: #2563eb !important;
+    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15) !important;
+    color: #1d4ed8 !important;
 }
 
 body.wp-admin #ui-datepicker-div .ui-datepicker-prev,
@@ -1076,7 +1229,7 @@ body.wp-admin #ui-datepicker-div .ui-datepicker-next,
     top: 0 !important;
     width: 28px !important;
     height: 28px !important;
-    border-radius: 8px !important;
+    border-radius: 6px !important;
     border: 1px solid #e2e8f0 !important;
     cursor: pointer !important;
     text-indent: -9999px !important;
@@ -1419,11 +1572,24 @@ body.wp-admin #ui-datepicker-div td.ui-state-disabled span,
 }
 
 /* ---------- Pagination ---------- */
+.ea-mnui-pagination-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 14px;
+}
+
 .ea-mnui-pagination {
     display: flex;
     flex-wrap: wrap;
     gap: 6px;
     margin-top: 14px;
+}
+
+.ea-mnui-pagination-container .ea-mnui-pagination {
+    margin-top: 0;
 }
 
 .ea-mnui-pagination .ea-mnui-btn[disabled] {
@@ -1432,6 +1598,30 @@ body.wp-admin #ui-datepicker-div td.ui-state-disabled span,
     color: #1d4ed8;
     opacity: 1;
     cursor: default;
+}
+
+.ea-mnui-per-page {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: var(--ea-text-muted);
+}
+
+.ea-mnui-per-page select {
+    padding: 4px 8px;
+    border: 1px solid var(--ea-border);
+    border-radius: 6px;
+    font-size: 13px;
+    color: var(--ea-text);
+    background: #fff;
+    cursor: pointer;
+    outline: none;
+}
+
+.ea-mnui-per-page select:focus {
+    border-color: var(--ea-blue);
+    box-shadow: 0 0 0 3px var(--ea-blue-light);
 }
 
 /* ==========================================================================
