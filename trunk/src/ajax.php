@@ -649,7 +649,7 @@ class EAAjax
     public function ea_ajax_full_import() {
 
         if (! isset( $_REQUEST['_wpnonce'] ) || !wp_verify_nonce( sanitize_text_field( wp_unslash( $_REQUEST['_wpnonce'] ) ), 'ea_ajax_check_nonce' )) {
-            wp_send_json_error('Unauthorized');
+            wp_send_json_error( esc_html__( 'Security check failed (Invalid or expired nonce). Please refresh the page and try again.', 'easy-appointments' ) );
         }
 
         $this->validate_access_rights( 'tools' );
@@ -659,30 +659,39 @@ class EAAjax
         }
         // phpcs:ignore Squiz.PHP.DiscouragedFunctions.Discouraged -- Used for long-running import process.
         @set_time_limit(300);
+        @ini_set('max_execution_time', '300');
+
+        $content_length = isset( $_SERVER['CONTENT_LENGTH'] ) ? (int) $_SERVER['CONTENT_LENGTH'] : 0;
+        if ( $content_length > 0 && empty( $_POST ) && empty( $_FILES ) ) {
+            $post_max = ini_get( 'post_max_size' );
+            /* translators: %s: post_max_size value */
+            wp_send_json_error( sprintf( esc_html__( 'The uploaded file exceeds the server post_max_size directive (%s). Please increase post_max_size and upload_max_filesize in php.ini.', 'easy-appointments' ), $post_max ) );
+        }
 
         if (
             ! isset( $_FILES['file'] ) ||
             ! isset( $_FILES['file']['error'], $_FILES['file']['tmp_name'] )
         ) {
-            wp_send_json_error( esc_html__( 'No file uploaded', 'easy-appointments' ) );
+            wp_send_json_error( esc_html__( 'No file was uploaded or received by the server.', 'easy-appointments' ) );
         }
 
         $file_error = absint( wp_unslash( $_FILES['file']['error'] ) );
 
         if ( UPLOAD_ERR_OK !== $file_error ) {
             $upload_errors = array(
-                UPLOAD_ERR_INI_SIZE   => esc_html__( 'File exceeds upload_max_filesize', 'easy-appointments' ),
-                UPLOAD_ERR_FORM_SIZE  => esc_html__( 'File exceeds MAX_FILE_SIZE', 'easy-appointments' ),
-                UPLOAD_ERR_PARTIAL    => esc_html__( 'File partially uploaded', 'easy-appointments' ),
-                UPLOAD_ERR_NO_FILE    => esc_html__( 'No file uploaded', 'easy-appointments' ),
-                UPLOAD_ERR_NO_TMP_DIR => esc_html__( 'Missing temp folder', 'easy-appointments' ),
-                UPLOAD_ERR_CANT_WRITE => esc_html__( 'Failed to write file', 'easy-appointments' ),
-                UPLOAD_ERR_EXTENSION  => esc_html__( 'Upload stopped by extension', 'easy-appointments' ),
+                /* translators: %s: upload_max_filesize value */
+                UPLOAD_ERR_INI_SIZE   => sprintf( esc_html__( 'The uploaded file exceeds the upload_max_filesize directive in php.ini (Current limit: %s).', 'easy-appointments' ), ini_get( 'upload_max_filesize' ) ),
+                UPLOAD_ERR_FORM_SIZE  => esc_html__( 'The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form.', 'easy-appointments' ),
+                UPLOAD_ERR_PARTIAL    => esc_html__( 'The uploaded file was only partially uploaded. Please check your network connection and try again.', 'easy-appointments' ),
+                UPLOAD_ERR_NO_FILE    => esc_html__( 'No file was uploaded.', 'easy-appointments' ),
+                UPLOAD_ERR_NO_TMP_DIR => esc_html__( 'Missing a temporary folder on the server.', 'easy-appointments' ),
+                UPLOAD_ERR_CANT_WRITE => esc_html__( 'Failed to write file to disk. Check server disk space or folder permissions.', 'easy-appointments' ),
+                UPLOAD_ERR_EXTENSION  => esc_html__( 'A PHP extension stopped the file upload.', 'easy-appointments' ),
             );
 
             $message = isset( $upload_errors[ $file_error ] )
                 ? $upload_errors[ $file_error ]
-                : esc_html__( 'Unknown upload error', 'easy-appointments' );
+                : sprintf( esc_html__( 'Unknown file upload error (Code: %d).', 'easy-appointments' ), $file_error );
 
             wp_send_json_error( $message );
         }
@@ -690,7 +699,7 @@ class EAAjax
         $tmp_name = sanitize_text_field( wp_unslash( $_FILES['file']['tmp_name'] ) );
 
         if ( ! is_uploaded_file( $tmp_name ) ) {
-            wp_send_json_error( esc_html__( 'Invalid uploaded file.', 'easy-appointments' ) );
+            wp_send_json_error( esc_html__( 'Invalid uploaded file: File was not uploaded via HTTP POST.', 'easy-appointments' ) );
         }
 
         $json = file_get_contents( $tmp_name );
@@ -720,6 +729,14 @@ class EAAjax
 
         global $wpdb;
 
+        // Ensure tables exist before importing
+        if (isset($this->install) && method_exists($this->install, 'init_db')) {
+            $this->install->init_db();
+            if (method_exists($this->install, 'ea_create_customers_table')) {
+                $this->install->ea_create_customers_table();
+            }
+        }
+
         // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
         $wpdb->query('SET FOREIGN_KEY_CHECKS=0');
         // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
@@ -729,7 +746,7 @@ class EAAjax
 
             foreach ($this->get_ea_tables() as $table) {
 
-                if (!isset($data['tables'][$table])) {
+                if (!isset($data['tables'][$table]) || !is_array($data['tables'][$table])) {
                     continue;
                 }
 
@@ -738,9 +755,54 @@ class EAAjax
                 // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
                 $wpdb->query("TRUNCATE TABLE {$full}");
 
-                foreach ($data['tables'][$table] as $row) {
-                    // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-                    $wpdb->insert($full, $row);
+                $rows = $data['tables'][$table];
+                if (empty($rows)) {
+                    continue;
+                }
+
+                // Batch insert in chunks of 200 rows to prevent execution timeout on large datasets
+                $chunks = array_chunk($rows, 200);
+
+                foreach ($chunks as $chunk) {
+                    $first_row    = reset($chunk);
+                    $columns      = array_keys($first_row);
+                    $escaped_cols = array_map(function ($col) {
+                        return '`' . str_replace('`', '``', sanitize_key($col)) . '`';
+                    }, $columns);
+                    $col_list     = implode(', ', $escaped_cols);
+
+                    $values_sql       = array();
+                    $placeholders_all = array();
+
+                    foreach ($chunk as $row) {
+                        $row_placeholders = array();
+                        foreach ($columns as $col) {
+                            $val = isset($row[$col]) ? $row[$col] : null;
+                            if ($val === null) {
+                                $row_placeholders[] = 'NULL';
+                            } else {
+                                $values_sql[]       = $val;
+                                $row_placeholders[] = '%s';
+                            }
+                        }
+                        $placeholders_all[] = '(' . implode(', ', $row_placeholders) . ')';
+                    }
+
+                    $sql = "INSERT INTO {$full} ({$col_list}) VALUES " . implode(', ', $placeholders_all);
+
+                    if (!empty($values_sql)) {
+                        $prepared = $wpdb->prepare($sql, $values_sql);
+                    } else {
+                        $prepared = $sql;
+                    }
+
+                    // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared
+                    $result = $wpdb->query($prepared);
+                    if ($result === false) {
+                        /* translators: %s: database table name */
+                        $fallback_err = sprintf( esc_html__( 'Failed to insert into %s', 'easy-appointments' ), $table );
+                        throw new Exception( $wpdb->last_error ? $wpdb->last_error : $fallback_err );
+                    }
                 }
             }
 
@@ -752,7 +814,7 @@ class EAAjax
             // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching            
             $wpdb->query('SET FOREIGN_KEY_CHECKS=1');
 
-            wp_send_json_success('Import completed');
+            wp_send_json_success(esc_html__('Import completed successfully.', 'easy-appointments'));
 
         } catch (Exception $e) {
             // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
@@ -760,7 +822,8 @@ class EAAjax
             // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
             $wpdb->query('SET FOREIGN_KEY_CHECKS=1');
 
-            wp_send_json_error('Import failed: ' . $e->getMessage());
+            /* translators: %s: Error message reason */
+            wp_send_json_error(sprintf(esc_html__('Import failed: %s', 'easy-appointments'), $e->getMessage()));
         }
     }
 

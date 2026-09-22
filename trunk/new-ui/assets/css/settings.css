@@ -2750,6 +2750,8 @@
    ========================================================================== */
 
 #ui-datepicker-div {
+    display: none;
+    position: absolute;
     background: #ffffff;
     border: 1px solid #cbd5e1;
     border-radius: 10px;

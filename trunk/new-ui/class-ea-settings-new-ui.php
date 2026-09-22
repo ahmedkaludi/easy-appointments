@@ -503,6 +503,11 @@ class EA_Settings_New_UI
                 'importData'      => esc_html__('Import Data', 'easy-appointments'),
                 'importCompleted' => esc_html__('Import completed successfully.', 'easy-appointments'),
                 'importFailed'    => esc_html__('Import failed.', 'easy-appointments'),
+                'fileTooLarge'    => esc_html__('Upload failed: File exceeds server upload limit (HTTP 413 Payload Too Large). Please increase upload_max_filesize and post_max_size in php.ini.', 'easy-appointments'),
+                'serverTimeout'   => esc_html__('Server timed out during import. The dataset may be too large for current server timeout settings.', 'easy-appointments'),
+                'serverError'     => esc_html__('Internal server error (HTTP 500). Please check your server PHP error logs.', 'easy-appointments'),
+                'permissionDenied' => esc_html__('Permission denied or session expired (HTTP 403). Please refresh the page and try again.', 'easy-appointments'),
+                'requestTimeout'  => esc_html__('Request timed out while importing data.', 'easy-appointments'),
                 'confirmLoadDefault' => esc_html__('Replace this template with the default admin template? Unsaved changes in this tab will be lost.', 'easy-appointments'),
                 'loadDefaultFailed'  => esc_html__('Could not load the default template.', 'easy-appointments'),
                 // Form Fields tab

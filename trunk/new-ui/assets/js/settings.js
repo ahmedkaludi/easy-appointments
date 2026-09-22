@@ -13,6 +13,7 @@
             return;
         }
 
+        var i18n = eaNewSettingsUI.i18n || {};
         var $notice = $('#ea-nsui-notice');
         var $saveBtn = $('#ea-nsui-save');
         var $resetBtn = $('#ea-nsui-reset');
@@ -672,11 +673,11 @@
                     '<span class="ea-nsui-file-badge">' + ext + '</span>' +
                     '<span class="ea-nsui-file-name" title="' + safeName + '">' + safeName + '</span>' +
                     '<span class="ea-nsui-file-size">(' + formatFileSize(file.size) + ')</span>' +
-                    '<button type="button" class="ea-nsui-file-clear" id="ea-nsui-file-clear" title="' + (i18n.removeFile || 'Remove file') + '">&times;</button>' +
+                    '<button type="button" class="ea-nsui-file-clear" id="ea-nsui-file-clear" title="' + ((eaNewSettingsUI.i18n && eaNewSettingsUI.i18n.removeFile) || (typeof i18n !== 'undefined' && i18n.removeFile) || 'Remove file') + '">&times;</button>' +
                     '</div>';
                 $info.html(pillHtml);
             } else {
-                $info.html('<span class="ea-nsui-file-placeholder">' + (i18n.noFileChosen || 'No file chosen') + '</span>');
+                $info.html('<span class="ea-nsui-file-placeholder">' + ((eaNewSettingsUI.i18n && eaNewSettingsUI.i18n.noFileChosen) || (typeof i18n !== 'undefined' && i18n.noFileChosen) || 'No file chosen') + '</span>');
             }
         }
 
@@ -692,6 +693,11 @@
                 fileInput.value = '';
             }
             updateSelectedFileInfo();
+        });
+
+        $(document).on('click', '#ea-nsui-file-trigger', function (e) {
+            e.preventDefault();
+            $('#ea-nsui-full-import-file').trigger('click');
         });
 
         // Drag and drop support for custom file box
@@ -751,12 +757,35 @@
                         processData: false,
                         contentType: false
                     }).done(function (res) {
+                        if (res && res.success === false) {
+                            var errMsg = (res && res.data) || eaNewSettingsUI.i18n.importFailed;
+                            showNotice(errMsg, 'error');
+                            return;
+                        }
                         showNotice((res && res.data) || eaNewSettingsUI.i18n.importCompleted, 'success');
                         setTimeout(function () {
                             window.location.reload();
                         }, 1500);
-                    }).fail(function (xhr) {
-                        var message = (xhr.responseJSON && xhr.responseJSON.data) || eaNewSettingsUI.i18n.importFailed;
+                    }).fail(function (xhr, textStatus, errorThrown) {
+                        var message = '';
+                        var i18n = (eaNewSettingsUI && eaNewSettingsUI.i18n) || {};
+                        if (xhr.responseJSON && xhr.responseJSON.data) {
+                            message = xhr.responseJSON.data;
+                        } else if (xhr.status === 413) {
+                            message = i18n.fileTooLarge || 'Upload failed: File exceeds server upload limit (HTTP 413 Payload Too Large). Please increase upload_max_filesize and post_max_size in php.ini.';
+                        } else if (xhr.status === 504 || xhr.status === 502) {
+                            message = i18n.serverTimeout || 'Server timed out during import. The dataset may be too large for current server timeout settings.';
+                        } else if (xhr.status === 500) {
+                            message = i18n.serverError || 'Internal server error (HTTP 500). Please check your server PHP error logs.';
+                        } else if (xhr.status === 403) {
+                            message = i18n.permissionDenied || 'Permission denied or session expired (HTTP 403). Please refresh the page and try again.';
+                        } else if (textStatus === 'timeout') {
+                            message = i18n.requestTimeout || 'Request timed out while importing data.';
+                        } else if (xhr.responseText && xhr.responseText.length < 300 && !/<[a-z][\s\S]*>/i.test(xhr.responseText)) {
+                            message = xhr.responseText;
+                        } else {
+                            message = i18n.importFailed || 'Import failed.';
+                        }
                         showNotice(message, 'error');
                     }).always(function () {
                         $importBtn.prop('disabled', false).text($importBtn.data('original-text') || eaNewSettingsUI.i18n.importData);

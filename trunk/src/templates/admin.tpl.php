@@ -1807,11 +1807,11 @@ defined( 'ABSPATH' ) || exit;
             const importSpinner = $('#ea-full-import-spinner');
 
             if (!fileInput.files.length) {
-                alert('Please select a JSON backup file.');
+                alert('<?php echo esc_js( __( 'Please select a JSON backup file.', 'easy-appointments' ) ); ?>');
                 return;
             }
 
-            if (!confirm('⚠ This will DELETE existing data and import backup. Continue?')) {
+            if (!confirm('<?php echo esc_js( __( '⚠ This will DELETE existing data and import the backup. Continue?', 'easy-appointments' ) ); ?>')) {
                 return;
             }
 
@@ -1822,7 +1822,7 @@ defined( 'ABSPATH' ) || exit;
 
             importButton.prop('disabled', true);
             importSpinner.show();
-            importButton.data('original-text', importButton.text()).text('Importing...');
+            importButton.data('original-text', importButton.text()).text('<?php echo esc_js( __( 'Importing…', 'easy-appointments' ) ); ?>');
 
             $.ajax({
                 url: ajaxurl,
@@ -1836,11 +1836,33 @@ defined( 'ABSPATH' ) || exit;
                     importButton.text(importButton.data('original-text') || '<?php esc_html_e('Import Data', 'easy-appointments'); ?>');
                 },
                 success: function(res) {
-                    alert(res.data || 'Import completed successfully.');
+                    if (res && res.success === false) {
+                        alert((res && res.data) || '<?php echo esc_js( __( 'Import failed.', 'easy-appointments' ) ); ?>');
+                        return;
+                    }
+                    alert((res && res.data) || '<?php echo esc_js( __( 'Import completed successfully.', 'easy-appointments' ) ); ?>');
                     location.reload();
                 },
-                error: function(xhr) {
-                    alert(xhr.responseJSON?.data || 'Import failed.');
+                error: function(xhr, textStatus) {
+                    var message = '';
+                    if (xhr.responseJSON && xhr.responseJSON.data) {
+                        message = xhr.responseJSON.data;
+                    } else if (xhr.status === 413) {
+                        message = '<?php echo esc_js( __( 'Upload failed: File exceeds server upload limit (HTTP 413 Payload Too Large). Please increase upload_max_filesize and post_max_size in php.ini.', 'easy-appointments' ) ); ?>';
+                    } else if (xhr.status === 504 || xhr.status === 502) {
+                        message = '<?php echo esc_js( __( 'Server timed out during import. The dataset may be too large for current server timeout settings.', 'easy-appointments' ) ); ?>';
+                    } else if (xhr.status === 500) {
+                        message = '<?php echo esc_js( __( 'Internal server error (HTTP 500). Please check your server PHP error logs.', 'easy-appointments' ) ); ?>';
+                    } else if (xhr.status === 403) {
+                        message = '<?php echo esc_js( __( 'Permission denied or session expired (HTTP 403). Please refresh the page and try again.', 'easy-appointments' ) ); ?>';
+                    } else if (textStatus === 'timeout') {
+                        message = '<?php echo esc_js( __( 'Request timed out while importing data.', 'easy-appointments' ) ); ?>';
+                    } else if (xhr.responseText && xhr.responseText.length < 300 && !/<[a-z][\s\S]*>/i.test(xhr.responseText)) {
+                        message = xhr.responseText;
+                    } else {
+                        message = '<?php echo esc_js( __( 'Import failed.', 'easy-appointments' ) ); ?>';
+                    }
+                    alert(message);
                 }
             });
         });
