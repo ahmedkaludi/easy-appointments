@@ -647,6 +647,11 @@ class EAMail
             }
 
             $params["#$key#"] = $value;
+            if (strpos($key, '-') !== false) {
+                $params['#' . str_replace('-', '_', $key) . '#'] = $value;
+            } elseif (strpos($key, '_') !== false) {
+                $params['#' . str_replace('_', '-', $key) . '#'] = $value;
+            }
             $data[$key] = $value;
         }
 
@@ -750,15 +755,22 @@ class EAMail
             $time_format = 'H:i';
         }
 
+        $params = array();
         foreach ($app_array as $key => $value) {
             if ($key == 'start' || $key == 'end') {
                 $start_date = $app_array['date'] . ' ' . $app_array[$key];
                 $temp_date = DateTime::createFromFormat('Y-m-d H:i:s', $start_date, $this->get_wp_timezone());
-                $value = $temp_date->format($time_format);
+                if ($temp_date !== false) {
+                    $value = $temp_date->format($time_format);
+                }
             }
 
             if ($key == 'date') {
                 $value = date_i18n($date_format, strtotime("$value {$app_array['start']}"));
+            }
+
+            if ($key == 'created' && !empty($value)) {
+                $value = get_date_from_gmt($value, $date_format . ' ' . $time_format);
             }
 
             if ($key == 'status') {
@@ -766,6 +778,11 @@ class EAMail
             }
 
             $params["#$key#"] = $value;
+            if (strpos($key, '-') !== false) {
+                $params['#' . str_replace('-', '_', $key) . '#'] = $value;
+            } elseif (strpos($key, '_') !== false) {
+                $params['#' . str_replace('_', '-', $key) . '#'] = $value;
+            }
         }
 
         $params['#link_cancel#'] = $this->generate_link_element($app_array, 'cancel');
@@ -826,6 +843,11 @@ class EAMail
             }
 
             $params["#$key#"] = $value;
+            if (strpos($key, '-') !== false) {
+                $params['#' . str_replace('-', '_', $key) . '#'] = $value;
+            } elseif (strpos($key, '_') !== false) {
+                $params['#' . str_replace('_', '-', $key) . '#'] = $value;
+            }
         }
 
         $params["#link_cancel#"] = $this->generate_link_element($app_array, 'cancel');
@@ -953,6 +975,11 @@ class EAMail
             }
 
             $params["#$key#"] = $value;
+            if (strpos($key, '-') !== false) {
+                $params['#' . str_replace('-', '_', $key) . '#'] = $value;
+            } elseif (strpos($key, '_') !== false) {
+                $params['#' . str_replace('_', '-', $key) . '#'] = $value;
+            }
         }
 
         $params["#link_cancel#"] = $this->generate_link_element($app_array, 'cancel');

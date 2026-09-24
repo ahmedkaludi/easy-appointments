@@ -114,7 +114,7 @@ $ea_nsui_advance_cancel_data     = $ea_nsui_decode_redirects( $ea_nsui_advance_c
             <div class="ea-nsui-row-control ea-nsui-row-control-full">
                 <?php $ea_form_style = $ea_get('form.style', 'default'); ?>
                 <div class="ea-nsui-visual-selector ea-nsui-layout-selector" data-hidden-target="ea-nsui-form-style">
-                    <div class="ea-nsui-visual-option ea-nsui-layout-option <?php echo $ea_form_style !== 'wizard' ? 'is-selected' : ''; ?>" data-value="default">
+                    <div class="ea-nsui-visual-option ea-nsui-layout-option <?php echo ($ea_form_style !== 'wizard' && $ea_form_style !== 'sidebar') ? 'is-selected' : ''; ?>" data-value="default">
                         <div class="ea-nsui-layout-preview">
                             <div class="ea-nsui-layout-wireframe ea-nsui-wireframe-single">
                                 <div class="ea-wireframe-header"></div>
@@ -157,6 +157,37 @@ $ea_nsui_advance_cancel_data     = $ea_nsui_decode_redirects( $ea_nsui_advance_c
                         </div>
                         <span class="ea-nsui-visual-label"><?php esc_html_e('Wizard / Flow (Multi-Step)', 'easy-appointments'); ?></span>
                         <small class="ea-nsui-layout-caption"><?php esc_html_e('Divided into 3 sequential steps', 'easy-appointments'); ?></small>
+                        <span class="ea-nsui-visual-check">✓</span>
+                    </div>
+                    <div class="ea-nsui-visual-option ea-nsui-layout-option <?php echo $ea_form_style === 'sidebar' ? 'is-selected' : ''; ?>" data-value="sidebar">
+                        <div class="ea-nsui-layout-preview">
+                            <div class="ea-nsui-layout-wireframe ea-nsui-wireframe-sidebar">
+                                <div class="ea-wireframe-sidebar-left">
+                                    <div class="ea-wireframe-sidebar-steps">
+                                        <div class="ea-wireframe-sidebar-item active">
+                                            <span class="ea-wireframe-sidebar-dot"></span>
+                                        </div>
+                                        <div class="ea-wireframe-sidebar-item">
+                                            <span class="ea-wireframe-sidebar-dot"></span>
+                                        </div>
+                                        <div class="ea-wireframe-sidebar-item">
+                                            <span class="ea-wireframe-sidebar-dot"></span>
+                                        </div>
+                                    </div>
+                                    <div class="ea-wireframe-sidebar-collapse"></div>
+                                </div>
+                                <div class="ea-wireframe-sidebar-right">
+                                    <div class="ea-wireframe-header ea-header-sidebar"></div>
+                                    <div class="ea-wireframe-row-2">
+                                        <div class="ea-wireframe-input"></div>
+                                        <div class="ea-wireframe-input"></div>
+                                    </div>
+                                    <div class="ea-wireframe-input"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <span class="ea-nsui-visual-label"><?php esc_html_e('Sidebar & Tabs (Multi-Step)', 'easy-appointments'); ?></span>
+                        <small class="ea-nsui-layout-caption"><?php esc_html_e('Left vertical sidebar with step tabs and form view', 'easy-appointments'); ?></small>
                         <span class="ea-nsui-visual-check">✓</span>
                     </div>
                 </div>

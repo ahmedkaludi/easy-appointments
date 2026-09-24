@@ -204,6 +204,8 @@
 
                 if (ea_settings['form.style'] === 'wizard') {
                     plugin.initWizardMode();
+                } else if (ea_settings['form.style'] === 'sidebar') {
+                    plugin.initSidebarMode();
                 } else {
                     if (!$bootstrap.find('.ea-booking-summary-bar').length) {
                         $bootstrap.append(
@@ -241,13 +243,17 @@
                 invalidHandler: function(form, validator) {
                     if (!validator.numberOfInvalids())
                         return;
-                    if (ea_settings['form.style'] === 'wizard' && plugin.currentWizardStep) {
+                    if ((ea_settings['form.style'] === 'wizard' && plugin.currentWizardStep) || (ea_settings['form.style'] === 'sidebar' && plugin.currentSidebarStep)) {
                         var $invalidElem = jQuery(validator.errorList[0].element);
-                        var $pane = $invalidElem.closest('.ea-wizard-pane');
+                        var $pane = $invalidElem.closest('.ea-wizard-pane, .ea-sidebar-pane');
                         if ($pane.length) {
                             var paneStep = parseInt($pane.data('pane'), 10);
-                            if (paneStep && paneStep !== plugin.currentWizardStep) {
-                                plugin.goToWizardStep(paneStep);
+                            if (paneStep) {
+                                if (ea_settings['form.style'] === 'wizard' && paneStep !== plugin.currentWizardStep) {
+                                    plugin.goToWizardStep(paneStep);
+                                } else if (ea_settings['form.style'] === 'sidebar' && paneStep !== plugin.currentSidebarStep) {
+                                    plugin.goToSidebarStep(paneStep);
+                                }
                             }
                         }
                     }
@@ -359,6 +365,13 @@
                 var parentForm = jQuery(this).closest('form');
 
                 var result = plugin.selectTimes(jQuery(this));
+
+                // Save selected slots & date
+                plugin.savedSelectedSlots = [];
+                plugin.savedSelectedDate = plugin.settings.currentDate || plugin.$element.find('.date').datepicker().val();
+                plugin.$element.find('.selected-time').each(function () {
+                    plugin.savedSelectedSlots.push(jQuery(this).data('val'));
+                });
 
                 plugin.updateSubmitButtonState();
 
@@ -517,6 +530,12 @@
                     elem.addClass('selected-time');
                 });
 
+                plugin.savedSelectedSlots = [];
+                plugin.savedSelectedDate = plugin.settings.currentDate || plugin.$element.find('.date').datepicker().val();
+                plugin.$element.find('.selected-time').each(function () {
+                    plugin.savedSelectedSlots.push(jQuery(this).data('val'));
+                });
+
                 return true;
             }
 
@@ -528,6 +547,13 @@
             }
 
             $element.toggleClass('selected-time');
+
+            plugin.savedSelectedSlots = [];
+            plugin.savedSelectedDate = plugin.settings.currentDate || plugin.$element.find('.date').datepicker().val();
+            plugin.$element.find('.selected-time').each(function () {
+                plugin.savedSelectedSlots.push(jQuery(this).data('val'));
+            });
+
             return true;
         },
 
@@ -801,7 +827,7 @@
 
             if (next.length === 0) {
                 this.blurNextSteps(nextStep, isLocationOrService);
-                if (ea_settings['form.style'] !== 'wizard' && currentCategory === 'worker') {
+                if (ea_settings['form.style'] !== 'wizard' && ea_settings['form.style'] !== 'sidebar' && currentCategory === 'worker') {
                     this.scrollToElement(this.$element.find('.date'));
                 }
                 return;
@@ -851,6 +877,7 @@
                 jQuery.each(response, function (index, element) {
                     var name = element.name;
                     var $option = jQuery('<option value="' + element.id + '">' + name + '</option>');
+                    $option.data('raw-name', element.name);
 
                     if ('price' in element) {
                         // set price for service
@@ -886,7 +913,7 @@
                 plugin.removeLoader();
 
                 // Only auto-scroll when moving past worker step to calendar
-                if (ea_settings['form.style'] !== 'wizard' && options.next !== 'service' && options.next !== 'worker') {
+                if (ea_settings['form.style'] !== 'wizard' && ea_settings['form.style'] !== 'sidebar' && options.next !== 'service' && options.next !== 'worker') {
                     plugin.scrollToElement(next_element.parent());
                 }
 
@@ -1001,7 +1028,7 @@
                     this.selectChange();
                 }
 
-                if (ea_settings['form.style'] !== 'wizard' && !dontScroll) {
+                if (ea_settings['form.style'] !== 'wizard' && ea_settings['form.style'] !== 'sidebar' && !dontScroll) {
                     this.scrollToElement(calendar);
                 }
             }
@@ -1175,8 +1202,23 @@
                     plugin.settings.initScrollOff = false;
                 }
 
-                // auto select time slot if there is only one available
-                if (ea_settings.auto_select_slot === '1') {
+                // Restore previously selected time slot(s) for this date
+                if (plugin.savedSelectedDate === dateString && plugin.savedSelectedSlots && plugin.savedSelectedSlots.length > 0) {
+                    var restoredCount = 0;
+                    next_element.find('.time-value').each(function () {
+                        var val = jQuery(this).data('val');
+                        if (plugin.savedSelectedSlots.indexOf(val) !== -1) {
+                            jQuery(this).addClass('selected-time');
+                            restoredCount++;
+                        }
+                    });
+                    if (restoredCount > 0) {
+                        plugin.updateSidebarButtons();
+                        plugin.updateWizardButtons();
+                        plugin.updateSubmitButtonState();
+                    }
+                } else if (ea_settings.auto_select_slot === '1') {
+                    // auto select time slot if there is only one available
                     if (next_element.find('.time-value').not('.time-disabled').length === 1) {
                         next_element.find('.time-value').not('.time-disabled').click();
                     }
@@ -1503,8 +1545,11 @@
 
             plugin.isSubmitting = true;
 
-            var $submitBtn = this.$element.find('.ea-submit');
+            var $submitBtn = this.$element.find('.ea-submit, .booking-button');
             $submitBtn.prop('disabled', true).addClass('ea-loading').html('<span class="ea-btn-spinner"></span><span>' + (ea_settings['trans.booking-in-progress'] || 'Booking...') + '</span>');
+
+            var $navControls = plugin.$element.find('.ea-cancel, .ea-wizard-btn-back, .ea-sidebar-btn-back, .ea-wizard-btn-next, .ea-sidebar-btn-next, .ea-wizard-step-item, .ea-sidebar-tab-item');
+            $navControls.prop('disabled', true).addClass('is-disabled').css('pointer-events', 'none');
 
             // make pre reservation
             var options = {
@@ -1525,22 +1570,24 @@
                 plugin.storeFormData(options);
                 plugin.isSubmitting = false;
 
-                // Remove loader spinner, update button text to Booked, and hide cancel & wizard nav buttons
+                // Remove loader spinner, update button text to Booked, and hide cancel & wizard / sidebar nav buttons
                 jQuery('.ea-submit, .booking-button')
                     .removeClass('ea-loading')
                     .prop('disabled', true)
                     .html('<span>' + (ea_settings['trans.booked'] || 'Booked') + '</span>');
-                jQuery('.ea-cancel, .ea-wizard-btn-back, .ea-wizard-btn-next, .ea-wizard-nav').hide();
-                plugin.$element.find('.ea-cancel, .ea-wizard-btn-back, .ea-wizard-btn-next, .ea-wizard-nav').hide();
+                jQuery('.ea-cancel, .ea-wizard-btn-back, .ea-wizard-btn-next, .ea-wizard-nav, .ea-sidebar-btn-back, .ea-sidebar-btn-next, .ea-sidebar-nav, .ea-sidebar-nav-wrap, .ea-sidebar-header').hide();
+                plugin.$element.find('.ea-cancel, .ea-wizard-btn-back, .ea-wizard-btn-next, .ea-wizard-nav, .ea-sidebar-btn-back, .ea-sidebar-btn-next, .ea-sidebar-nav, .ea-sidebar-nav-wrap, .ea-sidebar-header').hide();
                 plugin.$element.find('#paypal-button').hide();
 
                 if (ea_settings['show.display_thankyou_note'] == 1) {
                     plugin.$element.addClass('ea-booking-complete');
                     var $bootstrap = plugin.$element.find('.ea-bootstrap').length ? plugin.$element.find('.ea-bootstrap') : plugin.$element;
                     $bootstrap.addClass('ea-booking-complete');
-                    plugin.$element.find('.ea-filters-grid, .ea-filters-grid-full, .ea-booking-title, .ea-booking-summary-bar, .ea-new-ui-final-actions, .booking-button, .ea-submit, .ea-wizard-stepper-container, .ea-wizard-nav, .ea-wizard-btn-back, .ea-wizard-btn-next').hide();
-                    $bootstrap.find('.ea-wizard-stepper-container, .ea-wizard-nav, .ea-wizard-btn-back, .ea-wizard-btn-next').hide();
+                    plugin.$element.find('.ea-filters-grid, .ea-filters-grid-full, .ea-booking-title, .ea-booking-summary-bar, .ea-new-ui-final-actions, .booking-button, .ea-submit, .ea-wizard-stepper-container, .ea-wizard-nav, .ea-wizard-btn-back, .ea-wizard-btn-next, .ea-sidebar-nav-wrap, .ea-sidebar-header, .ea-sidebar-nav').hide();
+                    $bootstrap.find('.ea-wizard-stepper-container, .ea-wizard-nav, .ea-wizard-btn-back, .ea-wizard-btn-next, .ea-sidebar-nav-wrap, .ea-sidebar-header, .ea-sidebar-nav').hide();
                     plugin.$element.find('.step').not('.final').hide();
+                    plugin.$element.find('.ea-sidebar-pane').not('.ea-sidebar-pane-3').hide();
+                    plugin.$element.find('.ea-sidebar-pane-3').addClass('is-active').show();
                     plugin.$element.find('.step.final').find('small, label, .ea_hide_show, .form-group, #booking-overview-header, #ea-overview-message, .ea-confirmation-subtext').hide();
                     plugin.$element.find('small, #booking-overview-header, #ea-overview-message, .ea-confirmation-subtext').not('.ea-confirmation-title').not('.ea-status-note').hide();
                     plugin.$element.find('.step.final').children().not('#booking-overview').not('#ea-success-box').hide();
@@ -1593,9 +1640,11 @@
                     plugin.$element.addClass('ea-booking-complete');
                     var $bootstrap = plugin.$element.find('.ea-bootstrap').length ? plugin.$element.find('.ea-bootstrap') : plugin.$element;
                     $bootstrap.addClass('ea-booking-complete');
-                    plugin.$element.find('.ea-wizard-stepper-container, .ea-wizard-nav, .ea-wizard-btn-back, .ea-wizard-btn-next').hide();
-                    $bootstrap.find('.ea-wizard-stepper-container, .ea-wizard-nav, .ea-wizard-btn-back, .ea-wizard-btn-next').hide();
-                    plugin.$element.find('.final').append('<h3 class="ea-done-message">' + _.escape(ea_settings['trans.done_message']) + '</h3>');
+                    plugin.$element.find('.ea-wizard-stepper-container, .ea-wizard-nav, .ea-wizard-btn-back, .ea-wizard-btn-next, .ea-sidebar-nav-wrap, .ea-sidebar-header, .ea-sidebar-nav').hide();
+                    $bootstrap.find('.ea-wizard-stepper-container, .ea-wizard-nav, .ea-wizard-btn-back, .ea-wizard-btn-next, .ea-sidebar-nav-wrap, .ea-sidebar-header, .ea-sidebar-nav').hide();
+                    plugin.$element.find('.ea-sidebar-pane').not('.ea-sidebar-pane-3').hide();
+                    plugin.$element.find('.ea-sidebar-pane-3').addClass('is-active').show();
+                    plugin.$element.find('.final').show().append('<h3 class="ea-done-message">' + _.escape(ea_settings['trans.done_message']) + '</h3>');
                 }
 
 
@@ -1639,10 +1688,13 @@
                 }
             }, 'json')
             .fail(jQuery.proxy(function (response, status, error) {
-                if (response.responseJSON.message) {
+                plugin.isSubmitting = false;
+                var $navControls = plugin.$element.find('.ea-cancel, .ea-wizard-btn-back, .ea-sidebar-btn-back, .ea-wizard-btn-next, .ea-sidebar-btn-next, .ea-wizard-step-item, .ea-sidebar-tab-item');
+                $navControls.prop('disabled', false).removeClass('is-disabled').css('pointer-events', 'auto');
+                if (response.responseJSON && response.responseJSON.message) {
                     alert(response.responseJSON.message);                    
                 }
-                this.$element.find('.ea-submit').prop('disabled', false).removeClass('ea-loading').html(ea_settings['trans.book-appointment'] || 'Book appointment');
+                this.$element.find('.ea-submit, .booking-button').prop('disabled', false).removeClass('ea-loading').html(ea_settings['trans.book-appointment'] || 'Book appointment');
             }, plugin));
         },
 
@@ -1674,8 +1726,11 @@
 
             plugin.isSubmitting = true;
 
-            var $submitBtn = this.$element.find('.ea-submit');
+            var $submitBtn = this.$element.find('.ea-submit, .booking-button');
             $submitBtn.prop('disabled', true).addClass('ea-loading').html('<span class="ea-btn-spinner"></span><span>' + (ea_settings['trans.booking-in-progress'] || 'Booking...') + '</span>');
+
+            var $navControls = plugin.$element.find('.ea-cancel, .ea-wizard-btn-back, .ea-sidebar-btn-back, .ea-wizard-btn-next, .ea-sidebar-btn-next, .ea-wizard-step-item, .ea-sidebar-tab-item');
+            $navControls.prop('disabled', true).addClass('is-disabled').css('pointer-events', 'none');
 
             // make pre reservation
             var options = {
@@ -1722,10 +1777,12 @@
                         }, 'json')
                             .fail(jQuery.proxy(function (response) {
                                 plugin.isSubmitting = false;
+                                var $navControls = plugin.$element.find('.ea-cancel, .ea-wizard-btn-back, .ea-sidebar-btn-back, .ea-wizard-btn-next, .ea-sidebar-btn-next, .ea-wizard-step-item, .ea-sidebar-tab-item');
+                                $navControls.prop('disabled', false).removeClass('is-disabled').css('pointer-events', 'auto');
                                 if (response.responseJSON && response.responseJSON.message) {
                                     alert(response.responseJSON.message);
                                 }
-                                this.$element.find('.ea-submit').prop('disabled', false).removeClass('ea-loading').html(ea_settings['trans.book-appointment'] || 'Book appointment');
+                                this.$element.find('.ea-submit, .booking-button').prop('disabled', false).removeClass('ea-loading').html(ea_settings['trans.book-appointment'] || 'Book appointment');
                             }, plugin))
                             .always(jQuery.proxy(function () {
                                 plugin.removeLoader();
@@ -1746,10 +1803,12 @@
             }, 'json')
             .fail(jQuery.proxy(function (response) {
                 plugin.isSubmitting = false;
+                var $navControls = plugin.$element.find('.ea-cancel, .ea-wizard-btn-back, .ea-sidebar-btn-back, .ea-wizard-btn-next, .ea-sidebar-btn-next, .ea-wizard-step-item, .ea-sidebar-tab-item');
+                $navControls.prop('disabled', false).removeClass('is-disabled').css('pointer-events', 'auto');
                 if (response.responseJSON && response.responseJSON.message) {
                     alert(response.responseJSON.message);
                 }
-                this.$element.find('.ea-submit').prop('disabled', false).removeClass('ea-loading').html(ea_settings['trans.book-appointment'] || 'Book appointment');
+                this.$element.find('.ea-submit, .booking-button').prop('disabled', false).removeClass('ea-loading').html(ea_settings['trans.book-appointment'] || 'Book appointment');
             }, plugin))
             .always(jQuery.proxy(function () {
                 plugin.removeLoader();
@@ -1843,13 +1902,19 @@
             // 10. Re-init step visibility/blur
             plugin.blurNextSteps(plugin.$element.find('.step:visible:first'), true, true);
 
-            // 11. Reset wizard mode state if active
+            // 11. Reset wizard / sidebar mode state if active
             if (ea_settings['form.style'] === 'wizard') {
                 plugin.maxReachedWizardStep = 1;
                 plugin.goToWizardStep(1);
                 plugin.$element.find('.ea-wizard-nav, .ea-wizard-stepper-container').show();
                 plugin.$element.find('.ea-wizard-btn-back, .ea-wizard-btn-next').show();
                 plugin.updateWizardButtons();
+            } else if (ea_settings['form.style'] === 'sidebar') {
+                plugin.maxReachedSidebarStep = 1;
+                plugin.goToSidebarStep(1);
+                plugin.$element.find('.ea-sidebar-layout').show();
+                plugin.$element.find('.ea-sidebar-btn-back, .ea-sidebar-btn-next').show();
+                plugin.updateSidebarButtons();
             }
         },
 
@@ -2151,6 +2216,8 @@
             }
             if (ea_settings['form.style'] === 'wizard') {
                 plugin.updateWizardButtons();
+            } else if (ea_settings['form.style'] === 'sidebar') {
+                plugin.updateSidebarButtons();
             }
         },
 
@@ -2435,7 +2502,18 @@
                 if ($date.hasClass('hasDatepicker')) {
                     $date.datepicker('refresh');
                 }
-                plugin.selectChange();
+                if ($bootstrap.find('.time-row .time-value').length === 0) {
+                    plugin.selectChange();
+                } else {
+                    if (plugin.savedSelectedSlots && plugin.savedSelectedSlots.length > 0) {
+                        $bootstrap.find('.time-value').each(function () {
+                            var val = jQuery(this).data('val');
+                            if (plugin.savedSelectedSlots.indexOf(val) !== -1) {
+                                jQuery(this).addClass('selected-time');
+                            }
+                        });
+                    }
+                }
                 plugin.updateWizardButtons();
             }
 
@@ -2483,6 +2561,358 @@
             var overview_content = plugin.settings.overview_template({data: booking_data, settings: ea_settings});
             parentForm.find('#booking-overview').html(overview_content);
             parentForm.find('.final').removeClass('disabled');
+        },
+
+        initSidebarMode: function () {
+            var plugin = this;
+            var $bootstrap = plugin.$element.find('.ea-bootstrap').length ? plugin.$element.find('.ea-bootstrap') : plugin.$element;
+            var $form = $bootstrap.find('form');
+
+            if ($bootstrap.hasClass('ea-sidebar-mode')) {
+                return;
+            }
+
+            $bootstrap.addClass('ea-sidebar-mode ea-sidebar-step-1');
+            plugin.$element.addClass('ea-sidebar-mode ea-sidebar-step-1');
+
+            $bootstrap.removeClass('ea-layout-cols-2');
+            plugin.$element.removeClass('ea-layout-cols-2');
+            $form.find('div.col-md-6').removeClass('col-md-6');
+            $form.find('.step.final.col-md-6').removeClass('col-md-6');
+
+            plugin.currentSidebarStep = 1;
+            plugin.maxReachedSidebarStep = 1;
+
+            var step1Label = ea_settings['trans.sidebar_step_service'] || ea_settings['trans.sidebar_step_package'] || 'Select Service';
+            var step2Label = ea_settings['trans.sidebar_step_datetime'] || 'Date & Time';
+            var step3Label = ea_settings['trans.sidebar_step_info'] || 'Your Information';
+            var collapseLabel = ea_settings['trans.sidebar_collapse'] || 'Collapse menu';
+            var continueText = ea_settings['trans.continue'] || 'Continue';
+            var backText = ea_settings['trans.wizard_back'] || 'Back';
+
+            // Sidebar SVG icons
+            var iconPackage = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>';
+            var iconCalendar = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>';
+            var iconUser = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>';
+
+            var sidebarNavHtml =
+                '<div class="ea-sidebar-layout">' +
+                    '<div class="ea-sidebar-nav-wrap">' +
+                        '<div class="ea-sidebar-nav-header">' +
+                            '<div class="ea-sidebar-nav-title">' + (ea_settings['trans.book-appointment'] || 'Appointment Booking') + '</div>' +
+                        '</div>' +
+                        '<div class="ea-sidebar-tabs">' +
+                            '<div class="ea-sidebar-tab-item is-current" data-step="1">' +
+                                '<div class="ea-sidebar-tab-icon">' + iconPackage + '</div>' +
+                                '<div class="ea-sidebar-tab-info">' +
+                                    '<span class="ea-sidebar-tab-num">STEP 1</span>' +
+                                    '<span class="ea-sidebar-tab-title">' + step1Label + '</span>' +
+                                '</div>' +
+                                '<div class="ea-sidebar-tab-status">' +
+                                    '<span class="ea-sidebar-tab-dot"></span>' +
+                                '</div>' +
+                            '</div>' +
+                            '<div class="ea-sidebar-tab-item" data-step="2">' +
+                                '<div class="ea-sidebar-tab-icon">' + iconCalendar + '</div>' +
+                                '<div class="ea-sidebar-tab-info">' +
+                                    '<span class="ea-sidebar-tab-num">STEP 2</span>' +
+                                    '<span class="ea-sidebar-tab-title">' + step2Label + '</span>' +
+                                '</div>' +
+                                '<div class="ea-sidebar-tab-status">' +
+                                    '<span class="ea-sidebar-tab-dot"></span>' +
+                                '</div>' +
+                            '</div>' +
+                            '<div class="ea-sidebar-tab-item" data-step="3">' +
+                                '<div class="ea-sidebar-tab-icon">' + iconUser + '</div>' +
+                                '<div class="ea-sidebar-tab-info">' +
+                                    '<span class="ea-sidebar-tab-num">STEP 3</span>' +
+                                    '<span class="ea-sidebar-tab-title">' + step3Label + '</span>' +
+                                '</div>' +
+                                '<div class="ea-sidebar-tab-status">' +
+                                    '<span class="ea-sidebar-tab-dot"></span>' +
+                                '</div>' +
+                            '</div>' +
+                        '</div>' +
+                        '<div class="ea-sidebar-collapse-wrap">' +
+                            '<button type="button" class="ea-sidebar-collapse-btn">' +
+                                '<span class="ea-sidebar-collapse-icon">&#8592;</span>' +
+                                '<span class="ea-sidebar-collapse-text">' + collapseLabel + '</span>' +
+                            '</button>' +
+                        '</div>' +
+                    '</div>' +
+                    '<div class="ea-sidebar-main-wrap">' +
+                        '<div class="ea-sidebar-header">' +
+                            '<div class="ea-sidebar-header-left">' +
+                                '<h3 class="ea-sidebar-header-title">' + step1Label + '</h3>' +
+                                '<span class="ea-sidebar-header-subtitle">Step 1 of 3</span>' +
+                            '</div>' +
+                        '</div>' +
+                        '<div class="ea-sidebar-panes"></div>' +
+                    '</div>' +
+                '</div>';
+
+            var $title = $bootstrap.find('.ea-booking-title');
+            if ($title.length) {
+                $title.hide();
+            }
+
+            // Create panes inside the sidebar container
+            var $panesContainer = jQuery(sidebarNavHtml).appendTo($form).find('.ea-sidebar-panes');
+
+            // Build Panes
+            var $pane1 = jQuery('<div class="ea-sidebar-pane ea-sidebar-pane-1 is-active" data-pane="1"></div>');
+            var $pane2 = jQuery('<div class="ea-sidebar-pane ea-sidebar-pane-2" data-pane="2"></div>');
+            var $pane3 = jQuery('<div class="ea-sidebar-pane ea-sidebar-pane-3" data-pane="3"></div>');
+
+            // Step 1: Dropdown filters (Location, Service, Worker)
+            var $grid = $bootstrap.find('.ea-filters-grid, .ea-filters-grid-full');
+            var $hiddenSteps = $bootstrap.find('.ea-new-ui-step-hidden');
+            var $descBox = $bootstrap.find('#ea-service-description');
+            var $stepLocation = $bootstrap.find('[name="location"]').closest('.step');
+            var $stepService = $bootstrap.find('[name="service"]').closest('.step');
+            var $stepWorker = $bootstrap.find('[name="worker"]').closest('.step');
+
+            $pane1.append('<div class="ea-sidebar-pane-body"></div>');
+            var $pane1Body = $pane1.find('.ea-sidebar-pane-body');
+
+            if ($grid.length) {
+                $pane1Body.append($grid);
+            } else {
+                if ($stepLocation.length) $pane1Body.append($stepLocation);
+                if ($stepService.length) $pane1Body.append($stepService);
+                if ($stepWorker.length) $pane1Body.append($stepWorker);
+            }
+            if ($hiddenSteps.length) {
+                $pane1Body.append($hiddenSteps);
+            }
+            if ($descBox.length) {
+                $pane1Body.append($descBox);
+            }
+
+            $pane1.append(
+                '<div class="ea-sidebar-nav ea-sidebar-nav-1">' +
+                    '<button type="button" class="ea-btn ea-sidebar-btn-next ea-sidebar-next-1 btn btn-primary">' +
+                        continueText + ' <span class="ea-sidebar-arrow">&rarr;</span>' +
+                    '</button>' +
+                '</div>'
+            );
+
+            // Step 2: Date & Time
+            var $calStep = $bootstrap.find('.step.calendar');
+            var $timeStep = $bootstrap.find('.step').not('.calendar, .final, .ea-new-ui-step-hidden, .form-group');
+            if (!$timeStep.length) {
+                $timeStep = $bootstrap.find('.date').closest('.step').next('.step');
+            }
+
+            $pane2.append('<div class="ea-sidebar-pane-body"></div>');
+            var $pane2Body = $pane2.find('.ea-sidebar-pane-body');
+            $pane2Body.append($calStep).append($timeStep);
+
+            $pane2.append(
+                '<div class="ea-sidebar-nav ea-sidebar-nav-2">' +
+                    '<button type="button" class="ea-btn ea-sidebar-btn-back ea-sidebar-back-2 btn btn-default">' +
+                        '<span class="ea-sidebar-arrow">&larr;</span> ' + backText +
+                    '</button>' +
+                    '<button type="button" class="ea-btn ea-sidebar-btn-next ea-sidebar-next-2 btn btn-primary is-disabled" disabled>' +
+                        continueText + ' <span class="ea-sidebar-arrow">&rarr;</span>' +
+                    '</button>' +
+                '</div>'
+            );
+
+            // Step 3: Customer Details & Confirmation
+            var $finalStep = $bootstrap.find('.step.final');
+            $pane3.append('<div class="ea-sidebar-pane-body"></div>');
+            var $pane3Body = $pane3.find('.ea-sidebar-pane-body');
+            $pane3Body.append($finalStep);
+
+            $pane3.append(
+                '<div class="ea-sidebar-nav ea-sidebar-nav-3">' +
+                    '<button type="button" class="ea-btn ea-sidebar-btn-back ea-sidebar-back-3 btn btn-default">' +
+                        '<span class="ea-sidebar-arrow">&larr;</span> ' + backText +
+                    '</button>' +
+                '</div>'
+            );
+
+            $panesContainer.append($pane1).append($pane2).append($pane3);
+
+            // Move Submit & Cancel buttons to Step 3 nav
+            var $submitBtn = $finalStep.find('.ea-submit, .booking-button');
+            var $cancelBtn = $finalStep.find('.ea-cancel');
+            var $nav3 = $pane3.find('.ea-sidebar-nav-3');
+            if ($submitBtn.length && !$nav3.find('.ea-submit').length) {
+                $nav3.append($submitBtn);
+            }
+            if ($cancelBtn.length && !$nav3.find('.ea-cancel').length) {
+                $nav3.append($cancelBtn);
+            }
+
+            // Toggle Sidebar Collapse
+            $bootstrap.on('click', '.ea-sidebar-collapse-btn', function (e) {
+                e.preventDefault();
+                var $navWrap = $bootstrap.find('.ea-sidebar-nav-wrap');
+                $navWrap.toggleClass('is-collapsed');
+                var isCollapsed = $navWrap.hasClass('is-collapsed');
+                $bootstrap.find('.ea-sidebar-collapse-icon').html(isCollapsed ? '&#8594;' : '&#8592;');
+                $bootstrap.find('.ea-sidebar-collapse-btn').attr('title', isCollapsed ? (ea_settings['trans.sidebar_expand'] || 'Expand menu') : collapseLabel);
+            });
+
+            // Step Navigation Click Handlers
+            $bootstrap.on('click', '.ea-sidebar-next-1', function (e) {
+                e.preventDefault();
+                plugin.goToSidebarStep(2);
+            });
+
+            $bootstrap.on('click', '.ea-sidebar-back-2', function (e) {
+                e.preventDefault();
+                plugin.goToSidebarStep(1);
+            });
+
+            $bootstrap.on('click', '.ea-sidebar-next-2', function (e) {
+                e.preventDefault();
+                plugin.goToSidebarStep(3);
+            });
+
+            $bootstrap.on('click', '.ea-sidebar-back-3', function (e) {
+                e.preventDefault();
+                plugin.goToSidebarStep(2);
+            });
+
+            // Tab Indicator Clicks
+            $bootstrap.on('click', '.ea-sidebar-tab-item', function (e) {
+                e.preventDefault();
+                var targetStep = parseInt(jQuery(this).data('step'), 10);
+                if (targetStep && targetStep <= plugin.maxReachedSidebarStep) {
+                    plugin.goToSidebarStep(targetStep);
+                }
+            });
+
+            // Sync button state on time slot change
+            $bootstrap.on('click', '.time-value', function () {
+                setTimeout(function () {
+                    plugin.updateSidebarButtons();
+                }, 50);
+            });
+        },
+
+        updateSidebarButtons: function () {
+            var plugin = this;
+            var $bootstrap = plugin.$element.find('.ea-bootstrap').length ? plugin.$element.find('.ea-bootstrap') : plugin.$element;
+            var hasSelectedTime = $bootstrap.find('.selected-time').length > 0;
+            var $next2 = $bootstrap.find('.ea-sidebar-next-2');
+
+            if (hasSelectedTime) {
+                $next2.prop('disabled', false).removeClass('is-disabled');
+                if (plugin.maxReachedSidebarStep < 2) {
+                    plugin.maxReachedSidebarStep = 2;
+                }
+            } else {
+                $next2.prop('disabled', true).addClass('is-disabled');
+            }
+        },
+
+        goToSidebarStep: function (targetStep) {
+            var plugin = this;
+            var $bootstrap = plugin.$element.find('.ea-bootstrap').length ? plugin.$element.find('.ea-bootstrap') : plugin.$element;
+
+            targetStep = parseInt(targetStep, 10);
+            if (isNaN(targetStep) || targetStep < 1 || targetStep > 3) return;
+
+            // Validate Step 1 -> 2
+            if (targetStep > 1 && plugin.currentSidebarStep === 1) {
+                var serviceVal = $bootstrap.find('[name="service"]').val();
+                if (!serviceVal || serviceVal === '' || serviceVal === '-') {
+                    var $svcField = $bootstrap.find('[name="service"], .ea-field-group:has([name="service"])').first();
+                    $svcField.addClass('ea-shake');
+                    setTimeout(function () { $svcField.removeClass('ea-shake'); }, 600);
+                    return;
+                }
+            }
+
+            // Validate Step 2 -> 3
+            if (targetStep === 3) {
+                var hasTime = $bootstrap.find('.selected-time').length > 0;
+                if (!hasTime) {
+                    var $timeBox = $bootstrap.find('.time, .ea-times-wrap, .date').first();
+                    $timeBox.addClass('ea-shake');
+                    setTimeout(function () { $timeBox.removeClass('ea-shake'); }, 600);
+                    return;
+                }
+
+                var $firstSlot = $bootstrap.find('.selected-time').first();
+                if ($firstSlot.length) {
+                    plugin.updateBookingOverviewFromSlot($firstSlot);
+                }
+            }
+
+            // Update Panes visibility
+            $bootstrap.find('.ea-sidebar-pane').removeClass('is-active');
+            $bootstrap.find('.ea-sidebar-pane-' + targetStep).addClass('is-active');
+
+            // Update Step Header
+            var step1Label = ea_settings['trans.sidebar_step_service'] || ea_settings['trans.sidebar_step_package'] || 'Select Service';
+            var step2Label = ea_settings['trans.sidebar_step_datetime'] || 'Date & Time';
+            var step3Label = ea_settings['trans.sidebar_step_info'] || 'Your Information';
+
+            var headerTitles = {
+                1: step1Label,
+                2: step2Label,
+                3: step3Label
+            };
+
+            $bootstrap.find('.ea-sidebar-header-title').text(headerTitles[targetStep] || '');
+            $bootstrap.find('.ea-sidebar-header-subtitle').text('Step ' + targetStep + ' of 3');
+
+            // Update Sidebar Tabs
+            var $tabs = $bootstrap.find('.ea-sidebar-tab-item');
+            $tabs.each(function () {
+                var s = parseInt(jQuery(this).data('step'), 10);
+                jQuery(this).removeClass('is-current is-completed is-disabled');
+                if (s < targetStep) {
+                    jQuery(this).addClass('is-completed');
+                } else if (s === targetStep) {
+                    jQuery(this).addClass('is-current');
+                } else {
+                    if (s > plugin.maxReachedSidebarStep) {
+                        jQuery(this).addClass('is-disabled');
+                    }
+                }
+            });
+
+            // Update container classes
+            $bootstrap.removeClass('ea-sidebar-step-1 ea-sidebar-step-2 ea-sidebar-step-3').addClass('ea-sidebar-step-' + targetStep);
+            plugin.$element.removeClass('ea-sidebar-step-1 ea-sidebar-step-2 ea-sidebar-step-3').addClass('ea-sidebar-step-' + targetStep);
+
+            plugin.currentSidebarStep = targetStep;
+            if (targetStep > plugin.maxReachedSidebarStep) {
+                plugin.maxReachedSidebarStep = targetStep;
+            }
+
+            // When entering Step 2, ensure datepicker is refreshed
+            if (targetStep === 2) {
+                var $date = $bootstrap.find('.date');
+                if ($date.hasClass('hasDatepicker')) {
+                    $date.datepicker('refresh');
+                }
+                if ($bootstrap.find('.time-row .time-value').length === 0) {
+                    plugin.selectChange();
+                } else {
+                    if (plugin.savedSelectedSlots && plugin.savedSelectedSlots.length > 0) {
+                        $bootstrap.find('.time-value').each(function () {
+                            var val = jQuery(this).data('val');
+                            if (plugin.savedSelectedSlots.indexOf(val) !== -1) {
+                                jQuery(this).addClass('selected-time');
+                            }
+                        });
+                    }
+                }
+                plugin.updateSidebarButtons();
+            }
+
+            // Smooth scroll to top of booking widget if scrolled past
+            var offsetTop = $bootstrap.offset().top - 30;
+            if (jQuery(window).scrollTop() > offsetTop) {
+                jQuery('html, body').animate({ scrollTop: offsetTop }, 250);
+            }
         }
     });
 

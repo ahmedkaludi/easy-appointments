@@ -225,7 +225,7 @@ class EAInstallTools
 
         foreach ($alter_querys as $query) {
             // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-            $wpdb->query($query);
+            @$wpdb->query($query);
         }
 
         $this->ea_create_customers_table();
@@ -488,6 +488,19 @@ class EAInstallTools
             $version = '1.9.3';
         }
 
+        // Migrate to 4.0.0+ (Customers table, appointment columns, customer synchronization)
+        if (version_compare($version, '4.0.0', '<')) {
+            $this->init_db();
+            $this->ea_create_customers_table();
+            $this->ea_sync_customers_from_appointments();
+            $version = '4.0.0';
+        }
+
+        // Ensure database schema and customers table are completely up to date for current version
+        $this->init_db();
+        $this->ea_create_customers_table();
+
+        $version = $this->easy_app_db_version;
         update_option('easy_app_db_version', $version);
     }
 
