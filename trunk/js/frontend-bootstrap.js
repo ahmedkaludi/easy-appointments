@@ -2027,6 +2027,24 @@
             var plugin = this;
             var $bootstrap = plugin.$element.find('.ea-bootstrap');
 
+            function closeAllCustomSelects() {
+                jQuery('.ea-custom-select').removeClass('is-open is-dropup');
+            }
+
+            if (!plugin._customSelectGlobalBound) {
+                jQuery(document).off('click.eaCustomSelect').on('click.eaCustomSelect', function (e) {
+                    if (!jQuery(e.target).closest('.ea-custom-select').length) {
+                        closeAllCustomSelects();
+                    }
+                });
+                jQuery(document).off('keydown.eaCustomSelect').on('keydown.eaCustomSelect', function (e) {
+                    if (e.key === 'Escape' || e.keyCode === 27) {
+                        closeAllCustomSelects();
+                    }
+                });
+                plugin._customSelectGlobalBound = true;
+            }
+
             var $locationStep = $bootstrap.find('[name="location"]').closest('.step');
             var $serviceStep  = $bootstrap.find('[name="service"]').closest('.step');
             var $workerStep   = $bootstrap.find('[name="worker"]').closest('.step');
@@ -2041,40 +2059,156 @@
                     $grp.append('<label>' + lText + '</label>');
                 }
                 var origName = $select.attr('name') || '';
-                var $clone = $select.clone(true);
-                $clone.removeAttr('id');
-                $clone.removeAttr('name');
-                if (origName) {
-                    $clone.attr('data-orig-name', origName);
+
+                var $customSelect = jQuery(
+                    '<div class="ea-custom-select" data-field="' + origName + '">' +
+                        '<div class="ea-custom-select-trigger" tabindex="0">' +
+                            '<span class="ea-custom-select-label"></span>' +
+                            '<span class="ea-custom-select-arrow">' +
+                                '<svg width="12" height="8" viewBox="0 0 12 8" fill="none"><path d="M1 1.5L6 6.5L11 1.5" stroke="#4b5563" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>' +
+                            '</span>' +
+                        '</div>' +
+                        '<div class="ea-custom-select-dropdown">' +
+                            '<ul class="ea-custom-select-options"></ul>' +
+                        '</div>' +
+                    '</div>'
+                );
+                $grp.append($customSelect);
+
+                function renderCustomOptions() {
+                    var $list = $customSelect.find('.ea-custom-select-options');
+                    $list.empty();
+                    var selectedVal = $select.val();
+                    var selectedLabel = '';
+
+                    $select.find('option').each(function () {
+                        var $opt = jQuery(this);
+                        var val = $opt.attr('value') !== undefined ? $opt.attr('value') : $opt.val();
+                        var text = $opt.text().trim();
+                        var isSelected = (val === selectedVal) || ($opt.is(':selected') && !selectedLabel);
+
+                        if (isSelected && (val !== '' || !selectedLabel)) {
+                            selectedLabel = text;
+                        }
+
+                        var match = text.match(/^(.*?)(?:\s*-\s*([0-9]+(?:\.[0-9]+)?\s*[^\d\s]+|[^\d\s]+\s*[0-9]+(?:\.[0-9]+)?))$/);
+                        var optionHtml = '';
+                        if (match && match[1] && match[2] && val !== '') {
+                            var namePart = match[1].trim();
+                            var pricePart = match[2].trim();
+                            optionHtml = '<span class="ea-custom-opt-name">' + namePart + '</span>' +
+                                         '<span class="ea-custom-opt-price">' + pricePart + '</span>';
+                        } else {
+                            optionHtml = '<span class="ea-custom-opt-name">' + text + '</span>';
+                        }
+
+                        var $li = jQuery(
+                            '<li class="ea-custom-option' + (isSelected ? ' is-selected' : '') + '" data-value="' + val + '" title="' + text + '">' +
+                                optionHtml +
+                            '</li>'
+                        );
+
+                        $li.on('click', function (e) {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            var newVal = jQuery(this).attr('data-value');
+                            $select.val(newVal).trigger('change');
+                            $customSelect.find('.ea-custom-option').removeClass('is-selected');
+                            jQuery(this).addClass('is-selected');
+                            $customSelect.find('.ea-custom-select-label').text(text).attr('title', text);
+                            closeAllCustomSelects();
+                        });
+
+                        $list.append($li);
+                    });
+
+                    if (!selectedLabel) {
+                        selectedLabel = $select.find('option:first').text() || 'Select...';
+                    }
+                    $customSelect.find('.ea-custom-select-label').text(selectedLabel).attr('title', selectedLabel);
                 }
-                $clone.addClass('ea-new-ui-select-clone');
-                $grp.append($clone);
 
                 function syncDisabled() {
                     var isDisabled = $step.hasClass('disabled') || $select.is(':disabled');
-                    $clone.prop('disabled', isDisabled);
                     if (isDisabled) {
-                        $grp.addClass('disabled').css({ opacity: 0.5, 'pointer-events': 'none' });
+                        $grp.addClass('disabled');
+                        $customSelect.addClass('is-disabled').attr('tabindex', '-1');
+                        $customSelect.removeClass('is-open is-dropup');
                     } else {
-                        $grp.removeClass('disabled').css({ opacity: 1, 'pointer-events': 'auto' });
+                        $grp.removeClass('disabled');
+                        $customSelect.removeClass('is-disabled').attr('tabindex', '0');
                     }
                 }
 
-                $clone.on('change', function() {
-                    $select.val(jQuery(this).val()).trigger('change');
-                });
-                $select.on('change', function() {
-                    $clone.val(jQuery(this).val());
-                    if ($clone.find('option').length !== $select.find('option').length) {
-                        $clone.empty().append($select.find('option').clone());
+                $customSelect.find('.ea-custom-select-trigger').on('click', function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    if ($customSelect.hasClass('is-disabled')) return;
+                    var wasOpen = $customSelect.hasClass('is-open');
+                    closeAllCustomSelects();
+                    if (!wasOpen) {
+                        $customSelect.addClass('is-open');
+                        var rect = $customSelect[0].getBoundingClientRect();
+                        var spaceBelow = window.innerHeight - rect.bottom;
+                        if (spaceBelow < 240 && rect.top > 240) {
+                            $customSelect.addClass('is-dropup');
+                        } else {
+                            $customSelect.removeClass('is-dropup');
+                        }
                     }
+                });
+
+                $customSelect.on('keydown', function (e) {
+                    if ($customSelect.hasClass('is-disabled')) return;
+                    var $items = $customSelect.find('.ea-custom-option');
+                    if (!$items.length) return;
+                    var $focused = $customSelect.find('.ea-custom-option.is-focused');
+                    var currIndex = $focused.length ? $items.index($focused) : $items.index($customSelect.find('.ea-custom-option.is-selected'));
+
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        if (!$customSelect.hasClass('is-open')) {
+                            $customSelect.find('.ea-custom-select-trigger').click();
+                        } else if ($focused.length) {
+                            $focused.click();
+                        } else if (currIndex >= 0) {
+                            $items.eq(currIndex).click();
+                        }
+                    } else if (e.key === 'ArrowDown') {
+                        e.preventDefault();
+                        if (!$customSelect.hasClass('is-open')) {
+                            $customSelect.find('.ea-custom-select-trigger').click();
+                        } else {
+                            var nextIdx = currIndex + 1 < $items.length ? currIndex + 1 : 0;
+                            $items.removeClass('is-focused');
+                            var $nextItem = $items.eq(nextIdx).addClass('is-focused');
+                            if ($nextItem.length && $nextItem[0].scrollIntoView) {
+                                $nextItem[0].scrollIntoView({ block: 'nearest' });
+                            }
+                        }
+                    } else if (e.key === 'ArrowUp') {
+                        e.preventDefault();
+                        if (!$customSelect.hasClass('is-open')) {
+                            $customSelect.find('.ea-custom-select-trigger').click();
+                        } else {
+                            var prevIdx = currIndex - 1 >= 0 ? currIndex - 1 : $items.length - 1;
+                            $items.removeClass('is-focused');
+                            var $prevItem = $items.eq(prevIdx).addClass('is-focused');
+                            if ($prevItem.length && $prevItem[0].scrollIntoView) {
+                                $prevItem[0].scrollIntoView({ block: 'nearest' });
+                            }
+                        }
+                    }
+                });
+
+                $select.on('change', function() {
+                    renderCustomOptions();
                     syncDisabled();
                 });
 
                 if (window.MutationObserver && $select[0]) {
                     var observer = new MutationObserver(function() {
-                        $clone.empty().append($select.find('option').clone());
-                        $clone.val($select.val());
+                        renderCustomOptions();
                         syncDisabled();
                     });
                     observer.observe($select[0], { childList: true, attributes: true, attributeFilter: ['disabled', 'class'] });
@@ -2086,6 +2220,7 @@
                     }
                 }
 
+                renderCustomOptions();
                 syncDisabled();
                 return $grp;
             }

@@ -223,13 +223,29 @@
 	margin-bottom: 0.5926em;
 }
 
+.ea-bootstrap #booking-overview table {
+	width: 100% !important;
+	max-width: 100% !important;
+	border-collapse: collapse;
+}
+
 .ea-bootstrap #booking-overview .ea-label {
-	padding: 5px;
+	padding: 5px 15px 5px 5px;
+	white-space: nowrap !important;
+	width: 1% !important;
+	vertical-align: top;
+	text-align: left;
 }
 
 .ea-bootstrap #booking-overview .value {
 	padding: 5px;
 	font-weight: bold;
+	width: auto !important;
+	text-align: right;
+	vertical-align: top;
+	white-space: normal !important;
+	word-break: break-word !important;
+	overflow-wrap: break-word !important;
 }
 
 body .ea-bootstrap label.error,

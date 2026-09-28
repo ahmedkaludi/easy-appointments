@@ -204,20 +204,28 @@
 }
 
 /* --------------------------------------------------------------------------
-   Filters Grid (Location + Service side-by-side, Worker full row)
+   Filters Grid (Full Width Stacked Rows for Location, Service, Worker)
    -------------------------------------------------------------------------- */
 .ea-new-ui .ea-filters-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-    gap: 12px;
-    margin-bottom: 14px;
+    grid-template-columns: 1fr;
+    gap: 16px;
+    margin-bottom: 16px;
+    min-width: 0;
+    max-width: 100%;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .ea-new-ui .ea-filters-grid-full {
     display: grid;
     grid-template-columns: 1fr;
-    gap: 12px;
+    gap: 16px;
     margin-bottom: 16px;
+    min-width: 0;
+    max-width: 100%;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .ea-new-ui .ea-new-ui-step-hidden {
@@ -234,7 +242,12 @@
 .ea-new-ui .ea-field-group {
     display: flex;
     flex-direction: column;
-    gap: 5px;
+    gap: 6px;
+    min-width: 0;
+    max-width: 100%;
+    width: 100%;
+    box-sizing: border-box;
+    position: relative;
 }
 
 .ea-new-ui .ea-field-group label,
@@ -251,9 +264,12 @@
     text-align: left;
 }
 
+/* --- Native Select Fallback Styling --- */
 .ea-new-ui .ea-field-group select,
 .ea-new-ui .ea-field-group .form-control {
     width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
     padding: 10px 36px 10px 14px;
     border: 1px solid rgba(32, 30, 29, 0.14);
     border-radius: 8px;
@@ -278,6 +294,209 @@
     outline: none;
     border-color: #2563eb;
     box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+
+/* --------------------------------------------------------------------------
+   CUSTOM DROPDOWN UI COMPONENT (.ea-custom-select)
+   -------------------------------------------------------------------------- */
+.ea-custom-select {
+    position: relative;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    font-family: inherit;
+    user-select: none;
+}
+
+.ea-custom-select-trigger {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    padding: 10px 14px;
+    border: 1px solid rgba(32, 30, 29, 0.14);
+    border-radius: 8px;
+    background-color: #ffffff;
+    font-size: 14.5px;
+    font-family: var(--ea-sans);
+    font-weight: 400;
+    color: #201e1d;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    cursor: pointer;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
+    min-height: 44px;
+    outline: none;
+}
+
+.ea-custom-select:hover:not(.is-disabled) .ea-custom-select-trigger {
+    border-color: rgba(32, 30, 29, 0.32);
+}
+
+.ea-custom-select.is-open .ea-custom-select-trigger,
+.ea-custom-select-trigger:focus {
+    outline: none;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+
+.ea-custom-select-label {
+    flex: 1;
+    min-width: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: left;
+    font-weight: 500;
+    color: #1e293b;
+}
+
+.ea-custom-select-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    color: #64748b;
+}
+
+.ea-custom-select.is-open .ea-custom-select-arrow {
+    transform: rotate(180deg);
+}
+
+.ea-custom-select-dropdown {
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.12), 0 8px 10px -6px rgba(0, 0, 0, 0.06);
+    max-height: 250px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    z-index: 1050;
+    display: none;
+    animation: eaDropdownFadeIn 0.15s ease-out;
+}
+
+@keyframes eaDropdownFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-4px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.ea-custom-select.is-open .ea-custom-select-dropdown {
+    display: block;
+}
+
+.ea-custom-select.is-dropup .ea-custom-select-dropdown {
+    top: auto;
+    bottom: calc(100% + 4px);
+    box-shadow: 0 -10px 25px -5px rgba(0, 0, 0, 0.12), 0 -8px 10px -6px rgba(0, 0, 0, 0.06);
+}
+
+.ea-custom-select-options {
+    list-style: none !important;
+    margin: 0 !important;
+    padding: 5px 0 !important;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+.ea-custom-option {
+    padding: 9px 14px;
+    font-size: 13.5px;
+    color: #334155;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    transition: background-color 0.12s ease, color 0.12s ease;
+    text-align: left;
+}
+
+.ea-custom-option:hover,
+.ea-custom-option.is-focused {
+    background-color: #f1f5f9;
+    color: #0f172a;
+}
+
+.ea-custom-option.is-selected {
+    background-color: #eff6ff;
+    color: #2563eb;
+    font-weight: 600;
+}
+
+.ea-custom-opt-name {
+    flex: 1;
+    min-width: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.ea-custom-opt-price {
+    flex-shrink: 0;
+    font-weight: 600;
+    font-size: 12px;
+    color: #2563eb;
+    background: rgba(37, 99, 235, 0.08);
+    padding: 2px 7px;
+    border-radius: 4px;
+    white-space: nowrap;
+}
+
+.ea-custom-option.is-selected .ea-custom-opt-price {
+    background: #2563eb;
+    color: #ffffff;
+}
+
+/* Disabled State */
+.ea-custom-select.is-disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+.ea-custom-select.is-disabled .ea-custom-select-trigger {
+    background-color: #f8fafc;
+    border-color: #e2e8f0;
+    color: #94a3b8;
+    cursor: not-allowed;
+}
+
+/* Custom Scrollbar for Dropdown */
+.ea-custom-select-dropdown::-webkit-scrollbar {
+    width: 6px;
+}
+
+.ea-custom-select-dropdown::-webkit-scrollbar-track {
+    background: #f8fafc;
+    border-radius: 4px;
+}
+
+.ea-custom-select-dropdown::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 4px;
+}
+
+.ea-custom-select-dropdown::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
 }
 
 .ea-new-ui #ea-service-description {
@@ -954,14 +1173,6 @@ ul.ui-autocomplete.ui-menu .ui-menu-item.ui-state-focus {
     box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
 }
 
-/* Prevent Date & time label from wrapping */
-.ea-new-ui #booking-overview td,
-.ea-new-ui #booking-overview .ea-label {
-    white-space: nowrap;
-    width: auto;
-    padding-right: 24px;
-}
-
 .ea-new-ui #booking-overview {
     background: #f8f8f7;
     border-radius: 10px;
@@ -969,30 +1180,47 @@ ul.ui-autocomplete.ui-menu .ui-menu-item.ui-state-focus {
     margin: 14px 0 20px 0;
     border: 1px solid rgba(32, 30, 29, 0.08);
     grid-column: 1 / -1;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    overflow: hidden;
 }
 
 .ea-new-ui #booking-overview table {
-    width: 100%;
+    width: 100% !important;
+    max-width: 100% !important;
     border-collapse: collapse;
     border: none;
+    box-sizing: border-box;
 }
 
 .ea-new-ui #booking-overview td {
-    padding: 6px 0;
+    padding: 8px 0;
     border: none;
     font-size: 14px;
+    vertical-align: top;
+    box-sizing: border-box;
 }
 
 .ea-new-ui #booking-overview .ea-label {
     font-family: var(--ea-sans);
     color: rgba(32, 30, 29, 0.62);
     font-weight: 500;
+    white-space: nowrap !important;
+    width: 1% !important;
+    text-align: left;
+    padding-right: 20px;
 }
 
 .ea-new-ui #booking-overview .value {
     color: #201e1d;
     font-weight: 600;
+    width: auto !important;
     text-align: right;
+    white-space: normal !important;
+    word-break: break-word !important;
+    overflow-wrap: break-word !important;
+    word-wrap: break-word !important;
 }
 
 /* --------------------------------------------------------------------------
