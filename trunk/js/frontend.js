@@ -1019,12 +1019,13 @@
                     .removeClass('ea-loading')
                     .prop('disabled', true)
                     .html('<span>' + (ea_settings['trans.booked'] || 'Booked') + '</span>');
-                jQuery('.ea-cancel').hide();
-                plugin.$element.find('.ea-cancel').hide();
+                jQuery('.ea-cancel, #ea-service-description, .ea-service-description, .ea-service-description-wrap').hide();
+                plugin.$element.find('.ea-cancel, #ea-service-description, .ea-service-description, .ea-service-description-wrap').empty().hide();
                 plugin.$element.find('#paypal-button').hide();
 
                 if (ea_settings['show.display_thankyou_note'] == 1) {                    
                     plugin.$element.find('.step').hide();
+                    plugin.$element.find('#ea-service-description, .ea-service-description, .ea-service-description-wrap').hide();
                     var table_html = plugin.$element.find('#booking-overview').find('table').html();
                     plugin.$element.find('#booking-overview').show();
                     plugin.$element.find('#booking-overview').find('table').hide();

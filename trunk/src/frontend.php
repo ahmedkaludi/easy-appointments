@@ -216,7 +216,7 @@ class Easy_EA_Frontend
             'scroll_off'           => false,
             'save_form_content'    => true,
             'start_of_week'        => get_option('start_of_week', 0),
-            'default_date'         => gmdate('Y-m-d'),
+            'default_date'         => current_time('Y-m-d'),
             'min_date'             => null,
             'max_date'             => null,
             'show_remaining_slots' => '0',
@@ -621,7 +621,7 @@ class Easy_EA_Frontend
                 $booking_date_skip = [];
                 for ($i = 0; $i < $advance_booking_days; $i++) {
                     if ($i > 0) {
-                        $booking_date_skip[] = gmdate('Y-m-d', strtotime($current_date . ' +'.$i.' days'));
+                        $booking_date_skip[] = date('Y-m-d', strtotime($current_date . ' +'.$i.' days'));
                     }else{
                         $booking_date_skip[] = $current_date;
                     }
@@ -821,7 +821,7 @@ class Easy_EA_Frontend
             'layout_cols'          => '1',
             'start_of_week'        => get_option('start_of_week', 0),
             'rtl'                  => '0',
-            'default_date'         => gmdate('Y-m-d'),
+            'default_date'         => current_time('Y-m-d'),
             'min_date'             => null,
             'max_date'             => null,
             'show_remaining_slots' => '0',

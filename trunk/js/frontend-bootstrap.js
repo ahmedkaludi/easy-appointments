@@ -1575,16 +1575,16 @@
                     .removeClass('ea-loading')
                     .prop('disabled', true)
                     .html('<span>' + (ea_settings['trans.booked'] || 'Booked') + '</span>');
-                jQuery('.ea-cancel, .ea-wizard-btn-back, .ea-wizard-btn-next, .ea-wizard-nav, .ea-sidebar-btn-back, .ea-sidebar-btn-next, .ea-sidebar-nav, .ea-sidebar-nav-wrap, .ea-sidebar-header').hide();
-                plugin.$element.find('.ea-cancel, .ea-wizard-btn-back, .ea-wizard-btn-next, .ea-wizard-nav, .ea-sidebar-btn-back, .ea-sidebar-btn-next, .ea-sidebar-nav, .ea-sidebar-nav-wrap, .ea-sidebar-header').hide();
+                jQuery('.ea-cancel, .ea-wizard-btn-back, .ea-wizard-btn-next, .ea-wizard-nav, .ea-sidebar-btn-back, .ea-sidebar-btn-next, .ea-sidebar-nav, .ea-sidebar-nav-wrap, .ea-sidebar-header, #ea-service-description, .ea-service-description, .ea-service-description-wrap').hide();
+                plugin.$element.find('.ea-cancel, .ea-wizard-btn-back, .ea-wizard-btn-next, .ea-wizard-nav, .ea-sidebar-btn-back, .ea-sidebar-btn-next, .ea-sidebar-nav, .ea-sidebar-nav-wrap, .ea-sidebar-header, #ea-service-description, .ea-service-description, .ea-service-description-wrap').empty().hide();
                 plugin.$element.find('#paypal-button').hide();
 
                 if (ea_settings['show.display_thankyou_note'] == 1) {
                     plugin.$element.addClass('ea-booking-complete');
                     var $bootstrap = plugin.$element.find('.ea-bootstrap').length ? plugin.$element.find('.ea-bootstrap') : plugin.$element;
                     $bootstrap.addClass('ea-booking-complete');
-                    plugin.$element.find('.ea-filters-grid, .ea-filters-grid-full, .ea-booking-title, .ea-booking-summary-bar, .ea-new-ui-final-actions, .booking-button, .ea-submit, .ea-wizard-stepper-container, .ea-wizard-nav, .ea-wizard-btn-back, .ea-wizard-btn-next, .ea-sidebar-nav-wrap, .ea-sidebar-header, .ea-sidebar-nav').hide();
-                    $bootstrap.find('.ea-wizard-stepper-container, .ea-wizard-nav, .ea-wizard-btn-back, .ea-wizard-btn-next, .ea-sidebar-nav-wrap, .ea-sidebar-header, .ea-sidebar-nav').hide();
+                    plugin.$element.find('.ea-filters-grid, .ea-filters-grid-full, .ea-booking-title, .ea-booking-summary-bar, .ea-new-ui-final-actions, .booking-button, .ea-submit, .ea-wizard-stepper-container, .ea-wizard-nav, .ea-wizard-btn-back, .ea-wizard-btn-next, .ea-sidebar-nav-wrap, .ea-sidebar-header, .ea-sidebar-nav, #ea-service-description, .ea-service-description, .ea-service-description-wrap').hide();
+                    $bootstrap.find('.ea-wizard-stepper-container, .ea-wizard-nav, .ea-wizard-btn-back, .ea-wizard-btn-next, .ea-sidebar-nav-wrap, .ea-sidebar-header, .ea-sidebar-nav, #ea-service-description, .ea-service-description, .ea-service-description-wrap').hide();
                     plugin.$element.find('.step').not('.final').hide();
                     plugin.$element.find('.ea-sidebar-pane').not('.ea-sidebar-pane-3').hide();
                     plugin.$element.find('.ea-sidebar-pane-3').addClass('is-active').show();

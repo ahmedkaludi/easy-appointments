@@ -403,6 +403,12 @@ body .ea-bootstrap label.error,
     white-space: pre-line;
 }
 
+.ea-booking-complete #ea-service-description,
+.ea-booking-complete .ea-service-description,
+.ea-booking-complete .ea-service-description-wrap {
+    display: none !important;
+}
+
 @media (min-width: 768px) {
   .ea-form-v2 .form-horizontal .control-label {
     text-align: left;

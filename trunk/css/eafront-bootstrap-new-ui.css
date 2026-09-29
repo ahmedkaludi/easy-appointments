@@ -1379,6 +1379,9 @@ ul.ui-autocomplete.ui-menu .ui-menu-item.ui-state-focus {
 .ea-booking-complete .ea-booking-title,
 .ea-booking-complete .ea-filters-grid,
 .ea-booking-complete .ea-filters-grid-full,
+.ea-booking-complete #ea-service-description,
+.ea-booking-complete .ea-service-description,
+.ea-booking-complete .ea-service-description-wrap,
 .ea-booking-complete .step:not(.final),
 .ea-booking-complete .ea_hide_show,
 .ea-booking-complete .ea-booking-summary-bar,
@@ -1393,7 +1396,7 @@ ul.ui-autocomplete.ui-menu .ui-menu-item.ui-state-focus {
 .ea-booking-complete #booking-overview-header,
 .ea-booking-complete #ea-overview-message,
 .ea-booking-complete .ea-confirmation-subtext {
-    display: none;
+    display: none !important;
 }
 
 /* Expand the final step (Thank You container) to 100% full width with no side borders */
