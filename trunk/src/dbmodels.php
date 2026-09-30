@@ -590,8 +590,10 @@ class EADBModels
             // Fallback for customer fields if linked via customer_id
             if (!empty($results[0]['customer_id'])) {
                 $table_customers = $this->wpdb->prefix . 'ea_customers';
-                // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-                $customer = $this->wpdb->get_row($this->wpdb->prepare("SELECT * FROM {$table_customers} WHERE id = %d", (int)$results[0]['customer_id']), ARRAY_A);
+                // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+                $customer_query  = $this->wpdb->prepare("SELECT * FROM {$table_customers} WHERE id = %d", (int)$results[0]['customer_id']);
+                // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.PreparedSQL.NotPrepared
+                $customer        = $this->wpdb->get_row($customer_query, ARRAY_A);
                 if ($customer) {
                     if (empty($results[0]['name']) && !empty($customer['name'])) {
                         $results[0]['name'] = $customer['name'];

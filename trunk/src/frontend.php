@@ -621,7 +621,7 @@ class Easy_EA_Frontend
                 $booking_date_skip = [];
                 for ($i = 0; $i < $advance_booking_days; $i++) {
                     if ($i > 0) {
-                        $booking_date_skip[] = date('Y-m-d', strtotime($current_date . ' +'.$i.' days'));
+                        $booking_date_skip[] = gmdate('Y-m-d', strtotime($current_date . ' +'.$i.' days'));
                     }else{
                         $booking_date_skip[] = $current_date;
                     }

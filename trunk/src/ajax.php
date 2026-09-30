@@ -659,6 +659,7 @@ class EAAjax
         }
         // phpcs:ignore Squiz.PHP.DiscouragedFunctions.Discouraged -- Used for long-running import process.
         @set_time_limit(300);
+        // phpcs:ignore Squiz.PHP.DiscouragedFunctions.Discouraged -- Used for long-running import process.
         @ini_set('max_execution_time', '300');
 
         $content_length = isset( $_SERVER['CONTENT_LENGTH'] ) ? (int) $_SERVER['CONTENT_LENGTH'] : 0;
@@ -689,6 +690,7 @@ class EAAjax
                 UPLOAD_ERR_EXTENSION  => esc_html__( 'A PHP extension stopped the file upload.', 'easy-appointments' ),
             );
 
+            /* translators: %d: Error code */
             $message = isset( $upload_errors[ $file_error ] )
                 ? $upload_errors[ $file_error ]
                 : sprintf( esc_html__( 'Unknown file upload error (Code: %d).', 'easy-appointments' ), $file_error );
@@ -791,6 +793,7 @@ class EAAjax
                     $sql = "INSERT INTO {$full} ({$col_list}) VALUES " . implode(', ', $placeholders_all);
 
                     if (!empty($values_sql)) {
+                        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
                         $prepared = $wpdb->prepare($sql, $values_sql);
                     } else {
                         $prepared = $sql;
@@ -1406,8 +1409,8 @@ class EAAjax
             return '';
         }
 
-        // Convert UTC ISO timestamp back to site timezone
-        $tz_string = function_exists('wp_timezone_string') ? wp_timezone_string() : get_option('timezone_string');
+        // Convert UTC ISO timestamp back to site timezone (WP 5.0+ compatible)
+        $tz_string = get_option('timezone_string');
         if (empty($tz_string)) {
             $offset = (float) get_option('gmt_offset', 0);
             $hours = (int) $offset;
@@ -3380,6 +3383,7 @@ class EAAjax
                                 if ($conn_duration < $service_duration) {
                                     $this->send_err_json_result(json_encode(array(
                                         'err'     => true,
+                                        /* translators: 1: Connection duration in minutes, 2: Service duration in minutes */
                                         'message' => sprintf(
                                             __('Connection duration (%1$d minutes) must be greater than or equal to the selected service duration (%2$d minutes).', 'easy-appointments'),
                                             $conn_duration,
