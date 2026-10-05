@@ -690,10 +690,12 @@ class EAAjax
                 UPLOAD_ERR_EXTENSION  => esc_html__( 'A PHP extension stopped the file upload.', 'easy-appointments' ),
             );
 
-            /* translators: %d: Error code */
-            $message = isset( $upload_errors[ $file_error ] )
-                ? $upload_errors[ $file_error ]
-                : sprintf( esc_html__( 'Unknown file upload error (Code: %d).', 'easy-appointments' ), $file_error );
+            if ( isset( $upload_errors[ $file_error ] ) ) {
+                $message = $upload_errors[ $file_error ];
+            } else {
+                /* translators: %d: Error code */
+                $message = sprintf( esc_html__( 'Unknown file upload error (Code: %d).', 'easy-appointments' ), $file_error );
+            }
 
             wp_send_json_error( $message );
         }
@@ -3381,14 +3383,11 @@ class EAAjax
                             if ($start_ts !== false && $end_ts !== false) {
                                 $conn_duration = ($end_ts - $start_ts) / 60;
                                 if ($conn_duration < $service_duration) {
+                                    /* translators: 1: Connection duration in minutes, 2: Service duration in minutes */
+                                    $conn_err_msg = sprintf( esc_html__( 'Connection duration (%1$d minutes) must be greater than or equal to the selected service duration (%2$d minutes).', 'easy-appointments' ), $conn_duration, $service_duration );
                                     $this->send_err_json_result(json_encode(array(
                                         'err'     => true,
-                                        /* translators: 1: Connection duration in minutes, 2: Service duration in minutes */
-                                        'message' => sprintf(
-                                            __('Connection duration (%1$d minutes) must be greater than or equal to the selected service duration (%2$d minutes).', 'easy-appointments'),
-                                            $conn_duration,
-                                            $service_duration
-                                        )
+                                        'message' => $conn_err_msg,
                                     )));
                                 }
                             }
