@@ -42,7 +42,18 @@
         var FIELDS = ['name', 'address', 'location'];
 
         function escapeHtml(value) {
-            return $('<div>').text(value === undefined || value === null ? '' : value).html();
+            if (typeof window.eaEscapeHtml === 'function') {
+                return window.eaEscapeHtml(value);
+            }
+            if (value === undefined || value === null) {
+                return '';
+            }
+            return String(value)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
         }
 
         var noticeTimer = null;
@@ -218,7 +229,7 @@
             }
 
             window.eaConfirm({
-                title: 'Delete Locations',
+                title: (i18n.deleteLocations || 'Delete Locations'),
                 message: i18n.confirmDeleteSelected.replace('%d', ids.length),
                 confirmLabel: i18n.delete || 'Delete',
                 cancelLabel: i18n.cancel || 'Cancel',
@@ -357,7 +368,7 @@
             }
 
             window.eaConfirm({
-                title: 'Delete Location',
+                title: (i18n.deleteLocation || 'Delete Location'),
                 message: i18n.confirmDelete,
                 confirmLabel: i18n.delete || 'Delete',
                 cancelLabel: i18n.cancel || 'Cancel',

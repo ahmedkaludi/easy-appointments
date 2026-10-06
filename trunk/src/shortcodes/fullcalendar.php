@@ -113,7 +113,7 @@ class EasyEAFullCalendar
             'color'                => false,
             'start_of_week'        => (int) get_option('start_of_week', 0),
             'rtl'                  => '0',
-            'default_date'         => gmdate('Y-m-d'),
+            'default_date'         => current_time('Y-m-d'),
             'min_date'             => null,
             'max_date'             => null,
             'time_format'          => $this->get_time_format_by_locale($this->options->get_option_value('time_format')),

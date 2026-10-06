@@ -13,6 +13,7 @@
             return;
         }
 
+        var i18n = eaNewSettingsUI.i18n || {};
         var $notice = $('#ea-nsui-notice');
         var $saveBtn = $('#ea-nsui-save');
         var $resetBtn = $('#ea-nsui-reset');
@@ -667,16 +668,16 @@
                 var file = fileInput.files[0];
                 var parts = file.name.split('.');
                 var ext = parts.length > 1 ? parts.pop().toLowerCase() : 'FILE';
-                var safeName = $('<div>').text(file.name).html();
+                var safeName = (typeof window.eaEscapeHtml === 'function') ? window.eaEscapeHtml(file.name) : String(file.name).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
                 var pillHtml = '<div class="ea-nsui-file-pill">' +
                     '<span class="ea-nsui-file-badge">' + ext + '</span>' +
                     '<span class="ea-nsui-file-name" title="' + safeName + '">' + safeName + '</span>' +
                     '<span class="ea-nsui-file-size">(' + formatFileSize(file.size) + ')</span>' +
-                    '<button type="button" class="ea-nsui-file-clear" id="ea-nsui-file-clear" title="Remove file">&times;</button>' +
+                    '<button type="button" class="ea-nsui-file-clear" id="ea-nsui-file-clear" title="' + ((eaNewSettingsUI.i18n && eaNewSettingsUI.i18n.removeFile) || (typeof i18n !== 'undefined' && i18n.removeFile) || 'Remove file') + '">&times;</button>' +
                     '</div>';
                 $info.html(pillHtml);
             } else {
-                $info.html('<span class="ea-nsui-file-placeholder">No file chosen</span>');
+                $info.html('<span class="ea-nsui-file-placeholder">' + ((eaNewSettingsUI.i18n && eaNewSettingsUI.i18n.noFileChosen) || (typeof i18n !== 'undefined' && i18n.noFileChosen) || 'No file chosen') + '</span>');
             }
         }
 
@@ -692,6 +693,11 @@
                 fileInput.value = '';
             }
             updateSelectedFileInfo();
+        });
+
+        $(document).on('click', '#ea-nsui-file-trigger', function (e) {
+            e.preventDefault();
+            $('#ea-nsui-full-import-file').trigger('click');
         });
 
         // Drag and drop support for custom file box
@@ -751,12 +757,35 @@
                         processData: false,
                         contentType: false
                     }).done(function (res) {
+                        if (res && res.success === false) {
+                            var errMsg = (res && res.data) || eaNewSettingsUI.i18n.importFailed;
+                            showNotice(errMsg, 'error');
+                            return;
+                        }
                         showNotice((res && res.data) || eaNewSettingsUI.i18n.importCompleted, 'success');
                         setTimeout(function () {
                             window.location.reload();
                         }, 1500);
-                    }).fail(function (xhr) {
-                        var message = (xhr.responseJSON && xhr.responseJSON.data) || eaNewSettingsUI.i18n.importFailed;
+                    }).fail(function (xhr, textStatus, errorThrown) {
+                        var message = '';
+                        var i18n = (eaNewSettingsUI && eaNewSettingsUI.i18n) || {};
+                        if (xhr.responseJSON && xhr.responseJSON.data) {
+                            message = xhr.responseJSON.data;
+                        } else if (xhr.status === 413) {
+                            message = i18n.fileTooLarge || 'Upload failed: File exceeds server upload limit (HTTP 413 Payload Too Large). Please increase upload_max_filesize and post_max_size in php.ini.';
+                        } else if (xhr.status === 504 || xhr.status === 502) {
+                            message = i18n.serverTimeout || 'Server timed out during import. The dataset may be too large for current server timeout settings.';
+                        } else if (xhr.status === 500) {
+                            message = i18n.serverError || 'Internal server error (HTTP 500). Please check your server PHP error logs.';
+                        } else if (xhr.status === 403) {
+                            message = i18n.permissionDenied || 'Permission denied or session expired (HTTP 403). Please refresh the page and try again.';
+                        } else if (textStatus === 'timeout') {
+                            message = i18n.requestTimeout || 'Request timed out while importing data.';
+                        } else if (xhr.responseText && xhr.responseText.length < 300 && !/<[a-z][\s\S]*>/i.test(xhr.responseText)) {
+                            message = xhr.responseText;
+                        } else {
+                            message = i18n.importFailed || 'Import failed.';
+                        }
                         showNotice(message, 'error');
                     }).always(function () {
                         $importBtn.prop('disabled', false).text($importBtn.data('original-text') || eaNewSettingsUI.i18n.importData);
@@ -807,7 +836,18 @@
                 }
 
                 function escapeHtml(str) {
-                    return $('<div>').text(str === undefined || str === null ? '' : String(str)).html();
+                    if (typeof window.eaEscapeHtml === 'function') {
+                        return window.eaEscapeHtml(str);
+                    }
+                    if (str === undefined || str === null) {
+                        return '';
+                    }
+                    return String(str)
+                        .replace(/&/g, '&amp;')
+                        .replace(/</g, '&lt;')
+                        .replace(/>/g, '&gt;')
+                        .replace(/"/g, '&quot;')
+                        .replace(/'/g, '&#39;');
                 }
 
                 function normalizeField(raw) {
@@ -1463,7 +1503,7 @@
                             'padding': '0'
                         }).append(
                             $('<div>').addClass('ea-nsui-row-label').append(
-                                $('<span>').addClass('ea-nsui-row-title').text('Endpoint URL')
+                                $('<span>').addClass('ea-nsui-row-title').text(i18n.endpointUrl || 'Endpoint URL')
                             ),
                             $('<div>').addClass('ea-nsui-row-control').append(
                                 $('<input>').attr({
@@ -1509,7 +1549,7 @@
                             'padding': '0'
                         }).append(
                             $('<div>').addClass('ea-nsui-row-label').append(
-                                $('<span>').addClass('ea-nsui-row-title').text('Webhook Events')
+                                $('<span>').addClass('ea-nsui-row-title').text(i18n.webhookEvents || 'Webhook Events')
                             ),
                             $('<div>').addClass('ea-nsui-row-control').append($checkboxGrid)
                         );
@@ -1525,7 +1565,7 @@
                             'display': 'block',
                             'font-size': '13px',
                             'padding': '6px 12px'
-                        }).text('Remove Webhook');
+                        }).text(i18n.removeWebhook || 'Remove Webhook');
 
                         $li.append($urlRow, $eventsRow, $removeBtn);
                         $list.append($li);
@@ -1605,11 +1645,11 @@
             function sendTestMail(native) {
                 var address = $.trim($emailInput.val());
                 if (!address) {
-                    $emailStatus.text('Please enter an email address first.').css('color', '#b42318');
+                    $emailStatus.text(i18n.enterEmail || 'Please enter an email address first.').css('color', '#b42318');
                     return;
                 }
                 
-                $emailStatus.text('Sending…').css('color', 'var(--ea-text-muted)');
+                $emailStatus.text(i18n.sending || 'Sending…').css('color', 'var(--ea-text-muted)');
                 $btnTestMail.prop('disabled', true);
                 $btnTestMailNative.prop('disabled', true);
 
@@ -1625,7 +1665,7 @@
                         $emailInput.val('');
                     },
                     error: function () {
-                        $emailStatus.text('Failed to send test email.').css('color', '#b42318');
+                        $emailStatus.text(i18n.testEmailFailed || 'Failed to send test email.').css('color', '#b42318');
                     },
                     complete: function () {
                         $btnTestMail.prop('disabled', false);
@@ -1651,7 +1691,7 @@
                     cancelLabel: eaNewSettingsUI.i18n.cancel || 'Cancel',
                     isDanger: true,
                     onConfirm: function () {
-                        $resetStatus.text('Resetting…').css('color', 'var(--ea-text-muted)');
+                        $resetStatus.text(i18n.resetting || 'Resetting…').css('color', 'var(--ea-text-muted)');
                         $btnResetPlugin.prop('disabled', true);
 
                         $.ajax({
@@ -1664,7 +1704,7 @@
                                 }, 2000);
                             },
                             error: function () {
-                                $resetStatus.text('Failed to reset plugin.').css('color', '#b42318');
+                                $resetStatus.text(i18n.resetFailed || 'Failed to reset plugin.').css('color', '#b42318');
                                 $btnResetPlugin.prop('disabled', false);
                             }
                         });
@@ -1681,7 +1721,7 @@
                         renderErrors(errors);
                     },
                     error: function () {
-                        $errorsContainer.html('<p style="color: #b42318;">Failed to load error logs.</p>');
+                        $errorsContainer.html('<p style="color: #b42318;">' + (i18n.loadErrorLogsFailed || 'Failed to load error logs.') + '</p>');
                     }
                 });
             }
@@ -1689,7 +1729,7 @@
             // Render errors
             function renderErrors(errors) {
                 if (!errors || !errors.length) {
-                    $errorsContainer.html('<p style="font-size: 13px; color: var(--ea-text-muted); margin: 0;">No errors logged.</p>');
+                    $errorsContainer.html('<p style="font-size: 13px; color: var(--ea-text-muted); margin: 0;">' + (i18n.noErrorsLogged || 'No errors logged.') + '</p>');
                     $btnClearLogs.hide();
                     return;
                 }
@@ -1698,9 +1738,9 @@
 
                 var html = '<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px;">';
                 $.each(errors, function (i, err) {
-                    var label = 'Error';
+                    var label = i18n.errorLbl || 'Error';
                     if (err.error_type === 'MAIL') {
-                        label = 'Mail error';
+                        label = i18n.mailErrorLbl || 'Mail error';
                     }
                     
                     var errText = '';
@@ -1716,7 +1756,7 @@
                     html += '    <strong style="color: #b42318; font-size: 13px; display: block; margin-bottom: 4px;">' + label + '</strong>';
                     html += '    <span style="font-size: 12.5px; color: #b42318; display: block; word-break: break-all;">' + errText + '</span>';
                     html += '  </div>';
-                    html += '  <button type="button" class="ea-nsui-btn ea-nsui-btn-ghost ea-nsui-btn-details" data-details="' + encodeURIComponent(err.errors_data || '') + '" style="margin-top: 12px; font-size: 11px; padding: 4px 8px; align-self: flex-start; border-color: #fda29b; color: #b42318; background: #fff;">Details</button>';
+                    html += '  <button type="button" class="ea-nsui-btn ea-nsui-btn-ghost ea-nsui-btn-details" data-details="' + encodeURIComponent(err.errors_data || '') + '" style="margin-top: 12px; font-size: 11px; padding: 4px 8px; align-self: flex-start; border-color: #fda29b; color: #b42318; background: #fff;">' + (i18n.detailsLbl || 'Details') + '</button>';
                     html += '</div>';
                 });
                 html += '</div>';
@@ -1759,7 +1799,7 @@
                                 fetchErrors();
                             },
                             error: function () {
-                                showNotice('Failed to clear error logs.', 'error');
+                                showNotice(i18n.clearErrorLogsFailed || 'Failed to clear error logs.', 'error');
                                 $btnClearLogs.prop('disabled', false);
                             }
                         });
@@ -1771,10 +1811,10 @@
             $app.on('click', '.btn-gdpr-delete-data', function () {
                 var $btn = $(this);
                 window.eaConfirm({
-                    title: 'Remove customer data',
-                    message: 'This will delete custom form field values and customer-related data from appointments older than 6 months. This action is irreversible. Are you sure you want to continue?',
-                    confirmLabel: 'Remove data now',
-                    cancelLabel: 'Cancel',
+                    title: i18n.removeCustData || 'Remove customer data',
+                    message: i18n.gdprMessage || 'This will delete custom form field values and customer-related data from appointments older than 6 months. This action is irreversible. Are you sure you want to continue?',
+                    confirmLabel: i18n.removeDataNow || 'Remove data now',
+                    cancelLabel: i18n.cancel || 'Cancel',
                     isDanger: true,
                     onConfirm: function () {
                         $btn.prop('disabled', true);
@@ -1782,11 +1822,11 @@
                             url: eaNewSettingsUI.wpRestUrl + 'easy-appointments/v1/gdpr?_wpnonce=' + eaNewSettingsUI.wpRestNonce,
                             method: 'DELETE',
                             success: function (res) {
-                                showNotice(res || 'Data deleted successfully.', 'success');
+                                showNotice(res || (i18n.dataDeletedSuccess || 'Data deleted successfully.'), 'success');
                                 $btn.prop('disabled', false);
                             },
                             error: function () {
-                                showNotice('Failed to delete data.', 'error');
+                                showNotice(i18n.dataDeleteFailed || 'Failed to delete data.', 'error');
                                 $btn.prop('disabled', false);
                             }
                         });
@@ -1837,6 +1877,88 @@
 
             $(document).on('change', 'input[data-key="connection_expire.mail_enabled"]', toggleConnectionExpireDays);
             toggleConnectionExpireDays();
+
+            // ---------- Colors & Typography Styling Handlers ----------
+            (function () {
+                var $fontSelect = $('#ea-nsui-font-family-select');
+                var $fontPreview = $('#ea-nsui-font-preview');
+
+                function updateFontPreview() {
+                    var font = $fontSelect.val();
+                    if (!font) {
+                        $fontPreview.css('font-family', 'inherit');
+                        return;
+                    }
+
+                    if (font === 'system') {
+                        $fontPreview.css('font-family', '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif');
+                        return;
+                    }
+
+                    // Dynamically load Google Font if needed
+                    var googleFonts = ['Source Serif 4', 'Inter', 'Roboto', 'Open Sans', 'Lato', 'Montserrat', 'Poppins', 'Playfair Display', 'Merriweather'];
+                    if ($.inArray(font, googleFonts) !== -1) {
+                        var fontId = 'ea-google-font-' + font.toLowerCase().replace(/\s+/g, '-');
+                        if (!$('#' + fontId).length) {
+                            var fontUrl = 'https://fonts.googleapis.com/css2?family=' + encodeURIComponent(font) + ':wght@400;600&display=swap';
+                            $('head').append('<link id="' + fontId + '" rel="stylesheet" href="' + fontUrl + '">');
+                        }
+                    }
+
+                    $fontPreview.css('font-family', '"' + font + '", sans-serif');
+                }
+
+                $fontSelect.on('change', updateFontPreview);
+                updateFontPreview();
+
+                // Native color picker to hex text input & button preview sync
+                $(document).on('input change', '.ea-nsui-native-color-picker', function () {
+                    var color = $(this).val();
+                    var $card = $(this).closest('.ea-nsui-color-card');
+                    $card.find('.ea-nsui-color-picker-btn').css('background-color', color);
+                    $card.find('.ea-nsui-color-hex-input').val(color).trigger('input');
+                });
+
+                // Hex text input to native color picker & button preview sync
+                $(document).on('input change', '.ea-nsui-color-hex-input', function () {
+                    var color = $(this).val().trim();
+                    var $card = $(this).closest('.ea-nsui-color-card');
+                    if (/^#([0-9a-f]{3}|[0-9a-f]{6})$/i.test(color)) {
+                        $card.find('.ea-nsui-color-picker-btn').css('background-color', color);
+                        $card.find('.ea-nsui-native-color-picker').val(color);
+                    } else if (!color) {
+                        var defaultColor = $card.data('default-color') || '#ffffff';
+                        $card.find('.ea-nsui-color-picker-btn').css('background-color', defaultColor);
+                        $card.find('.ea-nsui-native-color-picker').val(defaultColor);
+                    }
+                });
+
+                // Preset swatch click handler
+                $(document).on('click', '.ea-nsui-color-swatch-btn', function (e) {
+                    e.preventDefault();
+                    var color = $(this).data('color');
+                    var $card = $(this).closest('.ea-nsui-color-card');
+                    $card.find('.ea-nsui-color-hex-input').val(color).trigger('input');
+                    $card.find('.ea-nsui-color-picker-btn').css('background-color', color);
+                    $card.find('.ea-nsui-native-color-picker').val(color);
+                });
+
+                // Reset Colors button handler
+                $('#ea-nsui-reset-styles-btn').on('click', function (e) {
+                    e.preventDefault();
+                    $('.ea-nsui-color-card').each(function () {
+                        var $card = $(this);
+                        var defaultColor = $card.data('default-color') || '';
+                        $card.find('.ea-nsui-color-hex-input').val('').trigger('input');
+                        if (defaultColor) {
+                            $card.find('.ea-nsui-color-picker-btn').css('background-color', defaultColor);
+                            $card.find('.ea-nsui-native-color-picker').val(defaultColor);
+                        }
+                    });
+                    $fontSelect.val('').trigger('change');
+                    showNotice(i18n.colorsReset || 'Colors reset to theme defaults. Click "Save Changes" to apply.', 'success');
+                });
+            })();
         })();
     });
 })(jQuery);

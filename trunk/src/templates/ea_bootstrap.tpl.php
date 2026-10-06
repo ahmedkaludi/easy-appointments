@@ -84,7 +84,7 @@ defined( 'ABSPATH' ) || exit;
 
                 <% } %>
                 
-                <div class="form-group">
+                <div class="form-group ea-service-description-wrap">
                     <div class="col-sm-4"></div>
                     <div class="col-sm-8">
                         <div id="ea-service-description" class="ea-service-description"></div>

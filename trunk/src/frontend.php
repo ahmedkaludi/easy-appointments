@@ -216,7 +216,7 @@ class Easy_EA_Frontend
             'scroll_off'           => false,
             'save_form_content'    => true,
             'start_of_week'        => get_option('start_of_week', 0),
-            'default_date'         => gmdate('Y-m-d'),
+            'default_date'         => current_time('Y-m-d'),
             'min_date'             => null,
             'max_date'             => null,
             'show_remaining_slots' => '0',
@@ -262,6 +262,47 @@ class Easy_EA_Frontend
         $settings['trans.nonce-expired'] = __('Form validation code expired. Please refresh page in order to continue.', 'easy-appointments');
         $settings['trans.internal-error'] = __('Internal error. Please try again later.', 'easy-appointments');
         $settings['trans.ajax-call-not-available'] = __('Unable to make ajax request. Please try again later.', 'easy-appointments');
+
+        // New UI translatable strings
+        $settings['trans.book-an-appointment'] = __('Book an appointment', 'easy-appointments');
+        $settings['trans.select-date-time'] = __('Select a date & time to continue', 'easy-appointments');
+        $settings['trans.book-appointment'] = __('Book appointment', 'easy-appointments');
+        $settings['trans.booking-in-progress'] = __('Booking...', 'easy-appointments');
+        $settings['trans.booked'] = __('Booked', 'easy-appointments');
+        $settings['trans.available-times'] = __('Available times', 'easy-appointments');
+        $settings['trans.not-available'] = __('Not Available', 'easy-appointments');
+        $settings['trans.not-working'] = __('Not Working', 'easy-appointments');
+        $settings['trans.tomorrow-only'] = __('Only tomorrow is available for booking', 'easy-appointments');
+        $settings['trans.setup-required-title'] = __('Easy Appointments - Setup Required', 'easy-appointments');
+        $settings['trans.setup-required-desc'] = __('Online booking is currently unavailable because active connections or required settings are missing or expired.', 'easy-appointments');
+        $settings['trans.connections-expired-title'] = __('Oops! All Connections Have Expired', 'easy-appointments');
+        $settings['trans.connections-expired-desc'] = __('Online booking is currently unavailable because connection end dates have passed.', 'easy-appointments');
+        $settings['trans.booking-unavailable-title'] = __('Online Booking Unavailable', 'easy-appointments');
+        $settings['trans.booking-unavailable-desc'] = __('Online booking is currently unavailable at this time.', 'easy-appointments');
+        $settings['trans.define-active'] = __('Define at least one active', 'easy-appointments');
+        $settings['trans.and-connection'] = __('and connection', 'easy-appointments');
+        $settings['trans.notify-administrator'] = __('Notify Administrator', 'easy-appointments');
+        $settings['trans.sending-notification'] = __('Sending Notification...', 'easy-appointments');
+        $settings['trans.notification-sent'] = __('Notification Sent! Administrator has been emailed.', 'easy-appointments');
+        $settings['trans.error-sending-email'] = __('Error sending email. Please try again.', 'easy-appointments');
+        $settings['trans.server-error'] = __('Server error. Please try again later.', 'easy-appointments');
+        $settings['trans.end-date-error'] = __('End date cannot be earlier than start date.', 'easy-appointments');
+        $settings['trans.weeks'] = __('week(s)', 'easy-appointments');
+        $settings['trans.never'] = __('Never', 'easy-appointments');
+        $settings['trans.min'] = __('min', 'easy-appointments');
+        $settings['trans.wizard_step_service'] = __('Service', 'easy-appointments');
+        $settings['trans.wizard_step_datetime'] = __('Date & Time', 'easy-appointments');
+        $settings['trans.wizard_step_details'] = __('Details', 'easy-appointments');
+        $settings['trans.wizard_next'] = __('Next', 'easy-appointments');
+        $settings['trans.wizard_back'] = __('Back', 'easy-appointments');
+        $settings['trans.wizard_step_1_title'] = __('Select Service', 'easy-appointments');
+        $settings['trans.wizard_step_2_title'] = __('Select Date & Time', 'easy-appointments');
+        $settings['trans.sidebar_step_service'] = __('Select Service', 'easy-appointments');
+        $settings['trans.sidebar_step_package'] = __('Select Service', 'easy-appointments');
+        $settings['trans.sidebar_step_datetime'] = __('Date & Time', 'easy-appointments');
+        $settings['trans.sidebar_step_info'] = __('Your Information', 'easy-appointments');
+        $settings['trans.sidebar_collapse'] = __('Collapse menu', 'easy-appointments');
+        $settings['trans.continue'] = __('Continue', 'easy-appointments');
 
         $customCss = $settings['custom.css'];
         $customCss = wp_strip_all_tags($customCss);
@@ -544,7 +585,7 @@ class Easy_EA_Frontend
 
         $clean_settings['allow_customer_search'] = $allow_customer_search ? 1 : 0;
 
-        $data_settings = json_encode($clean_settings);
+
         $data_vacation = $this->options->get_option_value('vacations', '[]');
 
         // make sure it is just array structure
@@ -588,18 +629,172 @@ class Easy_EA_Frontend
                 $service_start_data[] = array('id' => $service->id, 'booking_date_skip' => $booking_date_skip);
             }
         }
-        $service_start_data = json_encode($service_start_data);
-        $data_connections = json_encode($this->models->get_connections_combinations());
-        // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-        echo "<script>var ea_settings = {$data_settings};</script>";
-        // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-        echo "<script>var ea_vacations = {$data_vacation};</script>";
-        // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-        echo "<script>var ea_connections = {$data_connections};</script>";
-        // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-        echo "<script>var ea_service_start_data = {$service_start_data};</script>";
-        // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-        echo "<style>{$customCss}</style>";
+        // Use JSON_HEX_TAG to prevent </script> breakout XSS attacks.
+        // JSON_HEX_AMP encodes & to prevent entity-based bypasses.
+        $json_flags = JSON_HEX_TAG | JSON_HEX_AMP;
+
+        $data_settings = wp_json_encode($clean_settings, $json_flags);
+
+        $service_start_data = wp_json_encode($service_start_data, $json_flags);
+        $data_connections = wp_json_encode($this->models->get_connections_combinations(), $json_flags);
+
+        // Re-encode vacation data through safe encoder instead of trusting raw DB string.
+        $vacation_decoded = json_decode($data_vacation, true);
+        if (!is_array($vacation_decoded)) {
+            $vacation_decoded = array();
+        }
+        $data_vacation = wp_json_encode($vacation_decoded, $json_flags);
+
+        // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Encoded with JSON_HEX_TAG and JSON_HEX_AMP for safe inline script embedding.
+        echo "<script>var ea_settings = " . $data_settings . ";</script>";
+        // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Encoded with JSON_HEX_TAG and JSON_HEX_AMP for safe inline script embedding.
+        echo "<script>var ea_vacations = " . $data_vacation . ";</script>";
+        // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Encoded with JSON_HEX_TAG and JSON_HEX_AMP for safe inline script embedding.
+        echo "<script>var ea_connections = " . $data_connections . ";</script>";
+        // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Encoded with JSON_HEX_TAG and JSON_HEX_AMP for safe inline script embedding.
+        echo "<script>var ea_service_start_data = " . $service_start_data . ";</script>";
+
+        // Generate custom form styling if configured
+        $customStyles = $this->get_custom_form_styles($settings);
+        if (!empty($customStyles)) {
+            // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Dynamically generated validated CSS rules.
+            echo "<style id=\"ea-form-custom-styling\">\n" . $customStyles . "\n</style>";
+        }
+
+        // Sanitize CSS: strip any HTML tags and </style> breakout attempts.
+        $safeCss = wp_strip_all_tags($customCss);
+        // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Sanitized with wp_strip_all_tags.
+        echo "<style>" . $safeCss . "</style>";
+    }
+
+    /**
+     * Generate dynamic CSS styles based on custom colors and typography settings.
+     *
+     * @param array $settings
+     * @return string
+     */
+    private function get_custom_form_styles($settings)
+    {
+        $font_family        = !empty($settings['style.font_family']) ? sanitize_text_field($settings['style.font_family']) : '';
+        $primary_color      = !empty($settings['style.primary_color']) ? sanitize_hex_color($settings['style.primary_color']) : '';
+        $button_text_color  = !empty($settings['style.button_text_color']) ? sanitize_hex_color($settings['style.button_text_color']) : '';
+        $bg_color           = !empty($settings['style.bg_color']) ? sanitize_hex_color($settings['style.bg_color']) : '';
+        $surface_color      = !empty($settings['style.surface_color']) ? sanitize_hex_color($settings['style.surface_color']) : '';
+        $text_color         = !empty($settings['style.text_color']) ? sanitize_hex_color($settings['style.text_color']) : '';
+        $border_color       = !empty($settings['style.border_color']) ? sanitize_hex_color($settings['style.border_color']) : '';
+        $slot_bg_color      = !empty($settings['style.slot_bg_color']) ? sanitize_hex_color($settings['style.slot_bg_color']) : '';
+        $slot_text_color    = !empty($settings['style.slot_text_color']) ? sanitize_hex_color($settings['style.slot_text_color']) : '';
+
+        // If no styling options set, return empty string
+        if (empty($font_family) && empty($primary_color) && empty($button_text_color) && empty($bg_color)
+            && empty($surface_color) && empty($text_color) && empty($border_color)
+            && empty($slot_bg_color) && empty($slot_text_color)) {
+            return '';
+        }
+
+        $css = '';
+
+        // Google Fonts map
+        $google_fonts = array(
+            'Source Serif 4'   => 'https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700&display=swap',
+            'Inter'            => 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap',
+            'Roboto'           => 'https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap',
+            'Open Sans'        => 'https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap',
+            'Lato'             => 'https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap',
+            'Montserrat'       => 'https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap',
+            'Poppins'          => 'https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap',
+            'Playfair Display' => 'https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&display=swap',
+            'Merriweather'     => 'https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap',
+        );
+
+        if (!empty($font_family) && isset($google_fonts[$font_family])) {
+            $css .= "@import url('" . esc_url($google_fonts[$font_family]) . "');\n";
+        }
+
+        $font_css = '';
+        if ($font_family === 'system') {
+            $font_css = '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif';
+        } elseif (!empty($font_family)) {
+            $serif_fonts = array('Source Serif 4', 'Playfair Display', 'Merriweather', 'Georgia');
+            $fallback = in_array($font_family, $serif_fonts, true) ? 'serif' : 'sans-serif';
+            $font_css = '"' . $font_family . '", ' . $fallback;
+        }
+
+        // CSS Variables Block
+        $vars = array();
+        if (!empty($primary_color)) {
+            $vars[] = '--ea-accent: ' . $primary_color . ';';
+            $vars[] = '--ea-accent-hover: ' . $primary_color . ';';
+            $vars[] = '--ea-accent-ink: ' . $primary_color . ';';
+            $vars[] = '--ea-accent-deep: ' . $primary_color . ';';
+        }
+        if (!empty($bg_color)) {
+            $vars[] = '--ea-paper: ' . $bg_color . ';';
+        }
+        if (!empty($surface_color)) {
+            $vars[] = '--ea-surface: ' . $surface_color . ';';
+        }
+        if (!empty($text_color)) {
+            $vars[] = '--ea-text: ' . $text_color . ';';
+        }
+        if (!empty($font_css)) {
+            $vars[] = '--ea-serif: ' . $font_css . ';';
+            $vars[] = '--ea-sans: ' . $font_css . ';';
+            $vars[] = 'font-family: ' . $font_css . ' !important;';
+        }
+
+        if (!empty($vars)) {
+            $css .= ".ea-new-ui, .ea-bootstrap.ea-new-ui, .ea-bootstrap, .ea-standard {\n    " . implode("\n    ", $vars) . "\n}\n";
+        }
+
+        // Font Family application
+        if (!empty($font_css)) {
+            $css .= ".ea-new-ui, .ea-new-ui *, .ea-bootstrap, .ea-bootstrap *, .ea-standard, .ea-standard * {\n    font-family: " . $font_css . ";\n}\n";
+        }
+
+        // Card / Container Background & Text
+        if (!empty($bg_color)) {
+            $css .= ".ea-bootstrap.ea-new-ui, .ea-bootstrap-wrapper.ea-new-ui, .ea-new-ui .step.final, .ea-bootstrap, .ea-standard {\n    background-color: " . $bg_color . " !important;\n}\n";
+        }
+        if (!empty($text_color)) {
+            $css .= ".ea-new-ui, .ea-new-ui h1, .ea-new-ui h2, .ea-new-ui h3, .ea-new-ui label, .ea-new-ui .ea-label, .ea-new-ui #booking-overview .value, .ea-bootstrap label, .ea-standard label {\n    color: " . $text_color . " !important;\n}\n";
+        }
+        if (!empty($surface_color)) {
+            $css .= ".ea-new-ui #booking-overview, .ea-new-ui .ea-times-header, .ea-new-ui .ui-datepicker-header {\n    background-color: " . $surface_color . " !important;\n}\n";
+        }
+
+        // Primary Buttons & Selected Items
+        if (!empty($primary_color)) {
+            $btn_text_rule = !empty($button_text_color) ? "color: {$button_text_color} !important;\n    " : "color: #ffffff !important;\n    ";
+            $css .= ".ea-new-ui .ea-submit, .ea-new-ui .booking-button, .ea-bootstrap .btn-primary, button.ea-submit {\n    background-color: " . $primary_color . " !important;\n    border-color: " . $primary_color . " !important;\n    " . $btn_text_rule . "box-shadow: 0 4px 14px " . $primary_color . "44 !important;\n}\n";
+            $css .= ".ea-new-ui .ea-submit:hover:not(:disabled), .ea-new-ui .booking-button:hover:not(:disabled), .ea-bootstrap .btn-primary:hover {\n    opacity: 0.92;\n}\n";
+            $css .= ".ea-new-ui .ui-datepicker td.ui-datepicker-current-day a, .ea-new-ui .ui-datepicker .ui-datepicker-current-day a {\n    background-color: " . $primary_color . " !important;\n    " . $btn_text_rule . "}\n";
+            $css .= ".ea-bootstrap .selected-time, .ea-new-ui .time-value.selected-time, .time-value.selected-time {\n    background-color: " . $primary_color . " !important;\n    border-color: " . $primary_color . " !important;\n    " . $btn_text_rule . "box-shadow: 0 4px 14px " . $primary_color . "44 !important;\n}\n";
+            $css .= ".ea-new-ui .form-control:focus, .ea-new-ui select:focus, .ea-new-ui input:focus {\n    border-color: " . $primary_color . " !important;\n}\n";
+        } elseif (!empty($button_text_color)) {
+            $css .= ".ea-new-ui .ea-submit, .ea-new-ui .booking-button, .ea-bootstrap .btn-primary, .ea-new-ui .time-value.selected-time, .ea-new-ui .ui-datepicker td.ui-datepicker-current-day a {\n    color: " . $button_text_color . " !important;\n}\n";
+        }
+
+        // Borders
+        if (!empty($border_color)) {
+            $css .= ".ea-bootstrap.ea-new-ui, .ea-new-ui .form-control, .ea-new-ui .ea-field-group select, .ea-new-ui select, .ea-new-ui input, .ea-new-ui textarea, .ea-new-ui .ea-cancel, .ea-new-ui #booking-overview, .ea-bootstrap .form-control, .ea-standard select, .ea-standard input {\n    border-color: " . $border_color . " !important;\n}\n";
+            $css .= ".ea-new-ui .time-value:not(.time-disabled):not(.selected-time) {\n    border-color: " . $border_color . " !important;\n}\n";
+        }
+
+        // Available Time Slots
+        if (!empty($slot_bg_color) || !empty($slot_text_color)) {
+            $slot_rules = array();
+            if (!empty($slot_bg_color)) {
+                $slot_rules[] = 'background-color: ' . $slot_bg_color . ' !important;';
+                $slot_rules[] = 'background: ' . $slot_bg_color . ' !important;';
+            }
+            if (!empty($slot_text_color)) {
+                $slot_rules[] = 'color: ' . $slot_text_color . ' !important;';
+            }
+            $css .= ".ea-bootstrap .time-value:not(.time-disabled):not(.selected-time), .ea-new-ui .time-value:not(.time-disabled):not(.selected-time), a.time-value:not(.time-disabled):not(.selected-time) {\n    " . implode("\n    ", $slot_rules) . "\n}\n";
+        }
+
+        return $css;
     }
 
     /**
@@ -626,7 +821,7 @@ class Easy_EA_Frontend
             'layout_cols'          => '1',
             'start_of_week'        => get_option('start_of_week', 0),
             'rtl'                  => '0',
-            'default_date'         => gmdate('Y-m-d'),
+            'default_date'         => current_time('Y-m-d'),
             'min_date'             => null,
             'max_date'             => null,
             'show_remaining_slots' => '0',
@@ -725,6 +920,47 @@ class Easy_EA_Frontend
         $settings['trans.nonce-expired'] = __('Form validation code expired. Please refresh page in order to continue.', 'easy-appointments');
         $settings['trans.internal-error'] = __('Internal error. Please try again later.', 'easy-appointments');
         $settings['trans.ajax-call-not-available'] = __('Unable to make ajax request. Please try again later.', 'easy-appointments');
+
+        // New UI translatable strings
+        $settings['trans.book-an-appointment'] = __('Book an appointment', 'easy-appointments');
+        $settings['trans.select-date-time'] = __('Select a date & time to continue', 'easy-appointments');
+        $settings['trans.book-appointment'] = __('Book appointment', 'easy-appointments');
+        $settings['trans.booking-in-progress'] = __('Booking...', 'easy-appointments');
+        $settings['trans.booked'] = __('Booked', 'easy-appointments');
+        $settings['trans.available-times'] = __('Available times', 'easy-appointments');
+        $settings['trans.not-available'] = __('Not Available', 'easy-appointments');
+        $settings['trans.not-working'] = __('Not Working', 'easy-appointments');
+        $settings['trans.tomorrow-only'] = __('Only tomorrow is available for booking', 'easy-appointments');
+        $settings['trans.setup-required-title'] = __('Easy Appointments - Setup Required', 'easy-appointments');
+        $settings['trans.setup-required-desc'] = __('Online booking is currently unavailable because active connections or required settings are missing or expired.', 'easy-appointments');
+        $settings['trans.connections-expired-title'] = __('Oops! All Connections Have Expired', 'easy-appointments');
+        $settings['trans.connections-expired-desc'] = __('Online booking is currently unavailable because connection end dates have passed.', 'easy-appointments');
+        $settings['trans.booking-unavailable-title'] = __('Online Booking Unavailable', 'easy-appointments');
+        $settings['trans.booking-unavailable-desc'] = __('Online booking is currently unavailable at this time.', 'easy-appointments');
+        $settings['trans.define-active'] = __('Define at least one active', 'easy-appointments');
+        $settings['trans.and-connection'] = __('and connection', 'easy-appointments');
+        $settings['trans.notify-administrator'] = __('Notify Administrator', 'easy-appointments');
+        $settings['trans.sending-notification'] = __('Sending Notification...', 'easy-appointments');
+        $settings['trans.notification-sent'] = __('Notification Sent! Administrator has been emailed.', 'easy-appointments');
+        $settings['trans.error-sending-email'] = __('Error sending email. Please try again.', 'easy-appointments');
+        $settings['trans.server-error'] = __('Server error. Please try again later.', 'easy-appointments');
+        $settings['trans.end-date-error'] = __('End date cannot be earlier than start date.', 'easy-appointments');
+        $settings['trans.weeks'] = __('week(s)', 'easy-appointments');
+        $settings['trans.never'] = __('Never', 'easy-appointments');
+        $settings['trans.min'] = __('min', 'easy-appointments');
+        $settings['trans.wizard_step_service'] = __('Service', 'easy-appointments');
+        $settings['trans.wizard_step_datetime'] = __('Date & Time', 'easy-appointments');
+        $settings['trans.wizard_step_details'] = __('Details', 'easy-appointments');
+        $settings['trans.wizard_next'] = __('Next', 'easy-appointments');
+        $settings['trans.wizard_back'] = __('Back', 'easy-appointments');
+        $settings['trans.wizard_step_1_title'] = __('Select Service', 'easy-appointments');
+        $settings['trans.wizard_step_2_title'] = __('Select Date & Time', 'easy-appointments');
+        $settings['trans.sidebar_step_service'] = __('Select Service', 'easy-appointments');
+        $settings['trans.sidebar_step_package'] = __('Select Service', 'easy-appointments');
+        $settings['trans.sidebar_step_datetime'] = __('Date & Time', 'easy-appointments');
+        $settings['trans.sidebar_step_info'] = __('Your Information', 'easy-appointments');
+        $settings['trans.sidebar_collapse'] = __('Collapse menu', 'easy-appointments');
+        $settings['trans.continue'] = __('Continue', 'easy-appointments');
 
         // datetime format
         $settings['time_format'] = $this->datetime->convert_to_moment_format(get_option('time_format', 'H:i'));
@@ -1056,7 +1292,7 @@ class Easy_EA_Frontend
         // phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
         $active_conns = (int) $wpdb->get_var(
             $wpdb->prepare(
-                "SELECT COUNT(*) FROM {$conn_table} WHERE is_working=1 AND (day_to IS NULL OR day_to = '' OR day_to = '0000-00-00' OR day_to >= %s)",
+                "SELECT COUNT(*) FROM {$conn_table} WHERE is_working=1 AND (day_to IS NULL OR CAST(day_to AS CHAR) = '' OR CAST(day_to AS CHAR) = '0000-00-00' OR day_to >= %s)",
                 $curr_date
             )
         );

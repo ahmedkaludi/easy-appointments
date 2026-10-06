@@ -236,6 +236,8 @@ class EA_Customers_New_UI
                 'past'                   => esc_html__('Past', 'easy-appointments'),
                 'search'                 => esc_html__('Search', 'easy-appointments'),
                 'deleteAll'              => esc_html__('Delete All Customers', 'easy-appointments'),
+                'deleteCustomer'         => esc_html__('Delete Customer', 'easy-appointments'),
+                'deleteCustomers'        => esc_html__('Delete Customers', 'easy-appointments'),
             ),
         );
     }

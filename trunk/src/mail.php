@@ -13,7 +13,6 @@ class EAMail
 {
     // PHP 5.2
     // const CREATED_AT = 'created';
-    // const SALT = 'CStK4zYJSuQPnjbJ1npM';
     /**
      * @var EADBModels
      */
@@ -153,28 +152,35 @@ class EAMail
             wp_safe_redirect(get_home_url());
             return;
         }
+
         // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-        $app_id = (int)$_GET['_ea-app'];
+        $action = sanitize_text_field(wp_unslash($_GET['_ea-action']));
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+        $provided_token = sanitize_text_field(wp_unslash($_GET['_ea-t']));
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+        $app_id = absint($_GET['_ea-app']);
+
+        if (empty($action) || empty($app_id) || empty($provided_token)) {
+            return;
+        }
 
         $data = $this->models->get_appintment_by_id($app_id);
-
-        // check maybe it is a two step process
-        // phpcs:ignore WordPress.Security.NonceVerification.Missing,
-        if (empty($_POST['confirmed']) && (!empty($_POST['confirmed']) && $_POST['confirmed'] !== 'true')) {
-            // phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-            $this->link_action_additional_step($_GET['_ea-action'], $data);
-        }
 
         if (empty($data)) {
             header('Refresh:3; url=' . get_home_url());
             wp_die(esc_html__('No appointment.', 'easy-appointments'));
         }
 
-        // invalid token
-        // phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-        if ($this->generate_token($data, $_GET['_ea-action']) != $_GET['_ea-t']) {
+        // constant-time token comparison with backward compatibility for legacy links (<= 4.0.2.1)
+        if (!$this->validate_token($data, $action, $provided_token)) {
             header('Refresh:3; url=' . get_home_url());
             wp_die(esc_html__('Invalid token.', 'easy-appointments'));
+        }
+
+        // check maybe it is a two step process
+        // phpcs:ignore WordPress.Security.NonceVerification.Missing
+        if (empty($_POST['confirmed']) && (!empty($_POST['confirmed']) && $_POST['confirmed'] !== 'true')) {
+            $this->link_action_additional_step($action, $data);
         }
 
         $table = 'ea_appointments';
@@ -454,11 +460,68 @@ class EAMail
      */
     public function generate_token($data, $action)
     {
-        // moved from const because PHP 5.2
-        $CREATED_AT = 'created';
-        $SALT = 'CStK4zYJSuQPnjbJ1npM';
+        $app_id = isset($data['id']) ? (int)$data['id'] : 0;
+        $token_secret = '';
 
-        return md5($SALT . $data[$CREATED_AT] . $action);
+        if (!empty($data['token'])) {
+            $token_secret = $data['token'];
+        } else if ($app_id > 0) {
+            $row = $this->models->get_row('ea_appointments', $app_id, ARRAY_A);
+            if (!empty($row['token'])) {
+                $token_secret = $row['token'];
+            } else {
+                $new_token = wp_generate_password(32, false);
+                $this->wpdb->update(
+                    $this->wpdb->prefix . 'ea_appointments',
+                    array('token' => $new_token),
+                    array('id' => $app_id),
+                    array('%s'),
+                    array('%d')
+                );
+                $token_secret = $new_token;
+            }
+        }
+
+        if (empty($token_secret)) {
+            $created = isset($data['created']) ? $data['created'] : '';
+            $token_secret = $app_id . '|' . $created;
+        }
+
+        $salt = function_exists('wp_salt') ? wp_salt('auth') : 'ea_default_auth_salt';
+
+        return hash_hmac('sha256', $action . '|' . $app_id . '|' . $token_secret, $salt);
+    }
+
+    /**
+     * Validate action token with backward compatibility for legacy MD5 tokens (<= 4.0.2.1).
+     *
+     * @param array  $data Appointment data
+     * @param string $action Action type ("confirm" or "cancel")
+     * @param string $provided_token Token provided in the URL query parameter
+     * @return bool True if token matches current HMAC or legacy MD5 format
+     */
+    public function validate_token($data, $action, $provided_token)
+    {
+        if (empty($provided_token) || !is_string($provided_token) || !is_string($action)) {
+            return false;
+        }
+
+        $expected_token = $this->generate_token($data, $action);
+
+        if (is_string($expected_token) && hash_equals($expected_token, $provided_token)) {
+            return true;
+        }
+
+        // Backward-compatible fallback for links issued in EA <= 4.0.2.1 (strictly 32-char MD5 format)
+        if (strlen($provided_token) === 32 && !empty($data['created']) && is_string($data['created'])) {
+            $legacy_salt  = 'CStK4zYJSuQPnjbJ1npM';
+            $legacy_token = md5($legacy_salt . $data['created'] . $action);
+            if (hash_equals($legacy_token, $provided_token)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -574,12 +637,21 @@ class EAMail
                 $value = date_i18n($date_format, strtotime("$value {$raw_data['start']}"));
             }
 
+            if ($key == 'created' && !empty($value)) {
+                $value = get_date_from_gmt($value, $date_format . ' ' . $time_format);
+            }
+
             // translate status
             if ($key == 'status') {
                 $value = $this->logic->get_status_translation($value);
             }
 
             $params["#$key#"] = $value;
+            if (strpos($key, '-') !== false) {
+                $params['#' . str_replace('-', '_', $key) . '#'] = $value;
+            } elseif (strpos($key, '_') !== false) {
+                $params['#' . str_replace('_', '-', $key) . '#'] = $value;
+            }
             $data[$key] = $value;
         }
 
@@ -683,15 +755,22 @@ class EAMail
             $time_format = 'H:i';
         }
 
+        $params = array();
         foreach ($app_array as $key => $value) {
             if ($key == 'start' || $key == 'end') {
                 $start_date = $app_array['date'] . ' ' . $app_array[$key];
                 $temp_date = DateTime::createFromFormat('Y-m-d H:i:s', $start_date, $this->get_wp_timezone());
-                $value = $temp_date->format($time_format);
+                if ($temp_date !== false) {
+                    $value = $temp_date->format($time_format);
+                }
             }
 
             if ($key == 'date') {
                 $value = date_i18n($date_format, strtotime("$value {$app_array['start']}"));
+            }
+
+            if ($key == 'created' && !empty($value)) {
+                $value = get_date_from_gmt($value, $date_format . ' ' . $time_format);
             }
 
             if ($key == 'status') {
@@ -699,6 +778,11 @@ class EAMail
             }
 
             $params["#$key#"] = $value;
+            if (strpos($key, '-') !== false) {
+                $params['#' . str_replace('-', '_', $key) . '#'] = $value;
+            } elseif (strpos($key, '_') !== false) {
+                $params['#' . str_replace('_', '-', $key) . '#'] = $value;
+            }
         }
 
         $params['#link_cancel#'] = $this->generate_link_element($app_array, 'cancel');
@@ -750,11 +834,20 @@ class EAMail
                 $value = date_i18n($date_format, strtotime("$value {$app_array['start']}"));
             }
 
+            if ($key == 'created' && !empty($value)) {
+                $value = get_date_from_gmt($value, $date_format . ' ' . $time_format);
+            }
+
             if ($key == 'status') {
                 $value = $this->logic->get_status_translation($value);
             }
 
             $params["#$key#"] = $value;
+            if (strpos($key, '-') !== false) {
+                $params['#' . str_replace('-', '_', $key) . '#'] = $value;
+            } elseif (strpos($key, '_') !== false) {
+                $params['#' . str_replace('_', '-', $key) . '#'] = $value;
+            }
         }
 
         $params["#link_cancel#"] = $this->generate_link_element($app_array, 'cancel');
@@ -873,11 +966,20 @@ class EAMail
                 $value = date_i18n($date_format, strtotime("$value {$app_array['start']}"));
             }
 
+            if ($key == 'created' && !empty($value)) {
+                $value = get_date_from_gmt($value, $date_format . ' ' . $time_format);
+            }
+
             if ($key == 'status') {
                 $value = $this->logic->get_status_translation($value);
             }
 
             $params["#$key#"] = $value;
+            if (strpos($key, '-') !== false) {
+                $params['#' . str_replace('-', '_', $key) . '#'] = $value;
+            } elseif (strpos($key, '_') !== false) {
+                $params['#' . str_replace('_', '-', $key) . '#'] = $value;
+            }
         }
 
         $params["#link_cancel#"] = $this->generate_link_element($app_array, 'cancel');

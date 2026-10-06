@@ -434,10 +434,10 @@
             var wrapper = new EA.SettingsWrapper({options: this.collection, fields: this.fields});
             wrapper.save( null, {
                 error: function(response){
-                    alert('There has been some error. Please try later.');
+                    alert((ea_settings['trans.error-occurred'] || 'There has been some error. Please try later.'));
                 },
                 success: function(){
-                    alert('Settings saved!');
+                    alert((ea_settings['trans.settings-saved'] || 'Settings saved!'));
                 }
             });
         },
@@ -578,7 +578,7 @@
 
             element.save( null, {
                 error: function(response){
-                    alert('There has been some error.');
+                    alert((ea_settings['trans.error-generic'] || 'There has been some error.'));
                 }
             });
 
@@ -606,7 +606,7 @@
                     obj.renderFields();
                 },
                 error: function() {
-                    alert('Error on delete!');
+                    alert((ea_settings['trans.error-delete'] || 'Error on delete!'));
                 }
             });
         },
@@ -674,7 +674,7 @@
 
                 if (!service) {
                     service = {
-                        name: 'REMOVED'
+                        name: (ea_settings['trans.removed'] || 'REMOVED')
                     };
                 }
 
@@ -738,7 +738,7 @@
 
                 if (!service) {
                     service = {
-                        name: 'REMOVED'
+                        name: (ea_settings['trans.removed'] || 'REMOVED')
                     };
                 }
 
@@ -864,7 +864,7 @@
         },
 
         gdprDeleteData: function() {
-            if (!confirm("Are you sure?")) {
+            if (!confirm((ea_settings['trans.are-you-sure'] || 'Are you sure?'))) {
                 return;
             }
 

@@ -5,7 +5,7 @@ Tags: appointment, appointments, Booking, calendar, reservation
 Requires at least: 5.0
 Tested up to: 7.1
 Requires PHP: 5.3
-Stable tag: 4.0.2
+Stable tag: 4.0.3
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -261,6 +261,33 @@ Terms of use and Policy : https://fullcalendar.io/license
 25. Admin panel - Report - Export page
 
 == Changelog ==
+
+= 4.0.3 (2026-10-05)
+* Added an option to set sequence of services in booking form #331
+* Added Colors and font management for booking form #317
+* Added Booking form design selector #316
+* Added Auto-set minimum connection duration based on service duration #351
+* Added Add option to delete bulk connections with date filter #353
+* Fixed Connection(s) Expiring / Expired Email – Login Link Broken #341
+* Fixed 4.0.2.2 breaks previously issued cancellation links – “Invalid token” after upgrade #348
+* Fixed Appointment created timestamp appears inconsistent with actual booking time #352
+* Fixed Import issue in old ui with large file #354
+* Fixed Timezone Offset Bug in EALogic: gmdate() Causes +5:30 Shift for Asia/Kolkata #356
+
+= 4.0.2.2 (2026-09-15)
+* Added next-day-only appointment booking option #344
+* Fixed Delete button in connection is not working #343
+* Fixed JS/JSX strings are not being shown in loco translation plugin #148
+* Fixed Need To Fix "Cancel All" and "Cancel Selected" Not Working After Applying Filters. #323
+* Code improvements #148
+* Fixed Security issue: unauthenticated arbitrary appointment modification and deletion on pre-reservation handler. Reported by blast.
+* Fixed Security issue: unauthenticated appointment cancellation and confirmation via forgeable mail action token. Reported by Morato Antoine.
+* Fixed Security issue: stored XSS in admin UI attribute contexts (CVE-2026-81798). Reported by 0xzenko.
+
+= 4.0.2.1 (2026-09-02)
+* Fixed Getting Opps message on booking page after new update 4.0.2 #340
+* Fixed Security issues on customer search front. Reported by Arnaud BERNARD-BRUNEL.
+
 = 4.0.2 (2026-09-01)
 * Fixed version 4.0.1 causing issue with shortcode [ea_standard] #329
 * Fixed Vacation availability is not working as expected with latest version 4.0 #326

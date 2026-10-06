@@ -253,8 +253,26 @@ class EA_Connections_New_UI
                 'startsAt'              => esc_html__('Starts at', 'easy-appointments'),
                 'endsAt'                => esc_html__('Ends at', 'easy-appointments'),
                 'timeOrderError'        => esc_html__('End time must be after start time.', 'easy-appointments'),
+                /* translators: 1: Connection duration in minutes, 2: Service duration in minutes */
+                'connDurationLessThanService' => esc_html__('Connection duration (%1$d min) must be greater than or equal to service duration (%2$d min).', 'easy-appointments'),
+                /* translators: 1: Connection duration in minutes, 2: List of service names */
+                'connDurationLessThanServices' => esc_html__('Connection duration (%1$d min) is shorter than duration for: %2$s.', 'easy-appointments'),
                 'requiredField'         => esc_html__('This field is required.', 'easy-appointments'),
                 'customWeekError'       => esc_html__('Custom week number must be 3 or more.', 'easy-appointments'),
+                'tomorrowOnlyNote'      => esc_html__('Customers can only book appointments for tomorrow\'s date.', 'easy-appointments'),
+                'deleteConnections'     => esc_html__('Delete Connections', 'easy-appointments'),
+                'oneConnExpired'        => esc_html__('1 connection has expired', 'easy-appointments'),
+                'andRequiresEndDateExt' => esc_html__(' and requires an end date extension to remain active.', 'easy-appointments'),
+                'connsHaveExpired'      => esc_html__(' connections have expired', 'easy-appointments'),
+                'andRequireEndDateExt'  => esc_html__(' and require an end date extension to remain active.', 'easy-appointments'),
+                'of'                    => esc_html__(' of ', 'easy-appointments'),
+                'selected'              => esc_html__(' selected', 'easy-appointments'),
+                'infinite'              => esc_html__('∞ (Infinite)', 'easy-appointments'),
+                'pleaseSelectOneConnToExt' => esc_html__('Please select at least one connection to extend.', 'easy-appointments'),
+                'successExtended'       => esc_html__('Successfully extended ', 'easy-appointments'),
+                'connectionS'           => esc_html__(' connection(s)', 'easy-appointments'),
+                'extendSelConns'        => esc_html__('Extend Selected Connections', 'easy-appointments'),
+                'deleteConnection'      => esc_html__('Delete Connection', 'easy-appointments'),
             ),
         );
     }
@@ -461,8 +479,8 @@ class EA_Connections_New_UI
              LEFT JOIN {$staff_table} w ON (c.worker = w.id)
              WHERE c.is_working = 1
                AND c.day_to IS NOT NULL
-               AND c.day_to != ''
-               AND c.day_to != '0000-00-00'
+               AND CAST(c.day_to AS CHAR) != ''
+               AND CAST(c.day_to AS CHAR) != '0000-00-00'
                AND c.day_to <= %s
              ORDER BY c.day_to ASC",
             $threshold_date
@@ -535,7 +553,8 @@ class EA_Connections_New_UI
             );
         }
 
-        $manage_url = admin_url('admin.php?page=easy_app_connections_new');
+        $page_slug  = (class_exists('EA_UI_Switcher') && EA_UI_Switcher::is_new_ui()) ? 'easy_app_connections_new' : 'easy_app_connections';
+        $manage_url = admin_url('admin.php?page=' . $page_slug);
         /* translators: %s: Management URL */
         $body .= sprintf(__("\nPlease log in to your dashboard to manage or extend these connections:\n%s\n\n---\nEasy Appointments", 'easy-appointments'), $manage_url);
 

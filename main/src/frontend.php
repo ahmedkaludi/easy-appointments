@@ -121,6 +121,8 @@ class Easy_EA_Frontend
             true
         );
 
+
+
         // frontend standard script
         wp_register_script(
             'ea-google-recaptcha',
@@ -133,6 +135,7 @@ class Easy_EA_Frontend
         // init for masked input field
         wp_add_inline_script('ea-front-end', "jQuery(document).on('ea-init:completed', function () { jQuery('.masked-field').inputmask(); });", 'after');
         wp_add_inline_script('ea-front-bootstrap', "jQuery(document).on('ea-init:completed', function () { jQuery('.masked-field').inputmask(); });", 'after');
+        wp_add_inline_script('ea-front-bootstrap-new-ui', "jQuery(document).on('ea-init:completed', function () { jQuery('.masked-field').inputmask(); });", 'after');
 
         wp_register_style(
             'ea-jqueryui-style',
@@ -167,6 +170,18 @@ class Easy_EA_Frontend
             EA_PLUGIN_URL . 'css/eafront-bootstrap.css',
             array(),
             EASY_APPOINTMENTS_VERSION
+        );
+
+        $new_ui_version = file_exists(EA_PLUGIN_DIR . 'css/eafront-bootstrap-new-ui.css')
+            ? filemtime(EA_PLUGIN_DIR . 'css/eafront-bootstrap-new-ui.css')
+            : EASY_APPOINTMENTS_VERSION;
+
+        // frontend new UI dedicated style
+        wp_register_style(
+            'ea-frontend-bootstrap-new-ui',
+            EA_PLUGIN_URL . 'css/eafront-bootstrap-new-ui.css',
+            array('ea-bootstrap'),
+            $new_ui_version
         );
 
         // admin style
@@ -242,6 +257,7 @@ class Easy_EA_Frontend
         $settings['time_format'] = $this->datetime->convert_to_moment_format(get_option('time_format', 'H:i'));
         $settings['date_format'] = $this->datetime->convert_to_moment_format(get_option('date_format', 'F j, Y'));
         $settings['default_datetime_format'] = $this->datetime->convert_to_moment_format($this->datetime->default_format());
+        $settings['connection_status'] = $this->get_connection_status();
 
         $settings['trans.nonce-expired'] = __('Form validation code expired. Please refresh page in order to continue.', 'easy-appointments');
         $settings['trans.internal-error'] = __('Internal error. Please try again later.', 'easy-appointments');
@@ -573,10 +589,13 @@ class Easy_EA_Frontend
             }
         }
         $service_start_data = json_encode($service_start_data);
+        $data_connections = json_encode($this->models->get_connections_combinations());
         // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
         echo "<script>var ea_settings = {$data_settings};</script>";
         // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
         echo "<script>var ea_vacations = {$data_vacation};</script>";
+        // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+        echo "<script>var ea_connections = {$data_connections};</script>";
         // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
         echo "<script>var ea_service_start_data = {$service_start_data};</script>";
         // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
@@ -696,6 +715,7 @@ class Easy_EA_Frontend
         $settings['trans.booking-overview'] = __('Booking overview', 'easy-appointments');
         $settings['trans.date-time'] = __('Date & time', 'easy-appointments');
         $settings['trans.submit'] = __('Submit', 'easy-appointments');
+        $settings['trans.submit_button_text'] = $this->options->get_option_value('trans.submit_button_text', __('Submit', 'easy-appointments'));
         $settings['trans.cancel'] = __('Cancel', 'easy-appointments');
         $settings['trans.price'] = __('Price', 'easy-appointments');
         $settings['trans.iagree'] = __('I agree with terms and conditions', 'easy-appointments');
@@ -710,6 +730,7 @@ class Easy_EA_Frontend
         $settings['time_format'] = $this->datetime->convert_to_moment_format(get_option('time_format', 'H:i'));
         $settings['date_format'] = $this->datetime->convert_to_moment_format(get_option('date_format', 'F j, Y'));
         $settings['default_datetime_format'] = $this->datetime->convert_to_moment_format($this->datetime->default_format());
+        $settings['connection_status'] = $this->get_connection_status();
         $settings['field_order'] = $code_params['order'];
 
         // CUSTOM CSS
@@ -733,17 +754,27 @@ class Easy_EA_Frontend
         }
         $settings['MetaFields'] = $rows;
 
+        $is_new_ui = class_exists('EA_UI_Switcher') && EA_UI_Switcher::is_new_ui();
+        $settings['ea_new_ui'] = $is_new_ui ? '1' : '0';
+
+        if ($is_new_ui && (!is_array($atts) || !array_key_exists('width', $atts))) {
+            $settings['width'] = '800px';
+        }
+
         wp_enqueue_script('underscore');
         wp_enqueue_script('ea-validator');
         
-
         wp_enqueue_script('ea-bootstrap');
         wp_enqueue_script('ea-front-bootstrap');
 
         if (empty($settings['css.off'])) {
             wp_enqueue_style('ea-bootstrap');
             wp_enqueue_style('ea-admin-awesome-css');
-            wp_enqueue_style('ea-frontend-bootstrap');
+            if ($is_new_ui) {
+                wp_enqueue_style('ea-frontend-bootstrap-new-ui');
+            } else {
+                wp_enqueue_style('ea-frontend-bootstrap');
+            }
         }
 
         if (!empty($settings['captcha.site-key'])) {
@@ -1009,6 +1040,34 @@ class Easy_EA_Frontend
 
             }
         }
+    }
+
+    /**
+     * Determine connection status for frontend warning messages
+     * @return string 'none'|'expired'|'ok'
+     */
+    public function get_connection_status()
+    {
+        global $wpdb;
+        $conn_table  = esc_sql($wpdb->prefix . 'ea_connections');
+        $curr_date   = current_time('Y-m-d');
+        // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+        $total_conns = (int) $wpdb->get_var("SELECT COUNT(*) FROM {$conn_table}");
+        // phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+        $active_conns = (int) $wpdb->get_var(
+            $wpdb->prepare(
+                "SELECT COUNT(*) FROM {$conn_table} WHERE is_working=1 AND (day_to IS NULL OR CAST(day_to AS CHAR) = '' OR CAST(day_to AS CHAR) = '0000-00-00' OR day_to >= %s)",
+                $curr_date
+            )
+        );
+        // phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+
+        if ($total_conns === 0) {
+            return 'none';
+        } elseif ($active_conns === 0) {
+            return 'expired';
+        }
+        return 'ok';
     }
 }
 

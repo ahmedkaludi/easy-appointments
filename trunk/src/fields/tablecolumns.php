@@ -32,7 +32,9 @@ class EATableColumns
                 'price',
                 'ip',
                 'session',
-                'recurrence_id'
+                'customer_id',
+                'recurrence_id',
+                'token'
             ),
             'ea_connections' => array(
                 'id',
@@ -188,6 +190,7 @@ class EATableColumns
             'customer_search_roles',
             'show_remaining_slots',
             'show_week',
+            'services.order_by_sequence',
             'sort.locations-by',
             'sort.services-by',
             'sort.workers-by',
@@ -238,6 +241,16 @@ class EATableColumns
             'reservation_message',
             'field_order',
             'trans.confirmation-title',
+            'style.font_family',
+            'style.primary_color',
+            'style.button_text_color',
+            'style.bg_color',
+            'style.surface_color',
+            'style.text_color',
+            'style.border_color',
+            'style.slot_bg_color',
+            'style.slot_text_color',
+            'form.style',
         );
 
         foreach ($ea_settings as $key => $value) {

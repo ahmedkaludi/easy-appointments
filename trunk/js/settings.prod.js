@@ -422,12 +422,12 @@
             var filter = this.getFilter();
             var that = this;
 
-            this.showMessage('Loading table...', true);
+            this.showMessage((ea_settings['trans.loading-table'] || 'Loading table...'), true);
 
             this.collection.fetch({data: jQuery.param(filter), reset: true}, {
                 error: function (response) {
                     that.showMessage('');
-                    alert('Error, try refresh again.');
+                    alert((ea_settings['trans.error-refresh'] || 'Error, try refresh again.'));
                 }
             });
         },
@@ -728,14 +728,14 @@
         confirmStatus: function(e) {
             if (e) e.preventDefault();
             var id = this.model.get('id');
-            var msg = 'Are you sure you want to mark appointment #' + id + ' as confirmed?';
+            var msg = (ea_settings['trans.confirm-appointment-msg'] || 'Are you sure you want to mark appointment #%s as confirmed?').replace('%s', id);
             if (typeof window.eaConfirm === 'function') {
                 var self = this;
                 window.eaConfirm({
-                    title: 'Confirm Appointment',
+                    title: (ea_settings['trans.confirm-appointment-title'] || 'Confirm Appointment'),
                     message: msg,
-                    confirmLabel: 'Confirm',
-                    cancelLabel: 'Cancel',
+                    confirmLabel: (ea_settings['trans.confirm'] || 'Confirm'),
+                    cancelLabel: (ea_settings['trans.cancel'] || 'Cancel'),
                     isDanger: false,
                     onConfirm: function() {
                         self.updateStatus('confirmed');
@@ -749,14 +749,14 @@
         cancelStatus: function(e) {
             if (e) e.preventDefault();
             var id = this.model.get('id');
-            var msg = 'Are you sure you want to cancel appointment #' + id + '?';
+            var msg = (ea_settings['trans.cancel-appointment-msg'] || 'Are you sure you want to cancel appointment #%s?').replace('%s', id);
             if (typeof window.eaConfirm === 'function') {
                 var self = this;
                 window.eaConfirm({
-                    title: 'Cancel Appointment',
+                    title: (ea_settings['trans.cancel-appointment-title'] || 'Cancel Appointment'),
                     message: msg,
-                    confirmLabel: 'Cancel Appointment',
-                    cancelLabel: 'Cancel',
+                    confirmLabel: (ea_settings['trans.cancel-appointment'] || 'Cancel Appointment'),
+                    cancelLabel: (ea_settings['trans.cancel'] || 'Cancel'),
                     isDanger: true,
                     onConfirm: function() {
                         self.updateStatus('canceled');
@@ -1083,7 +1083,7 @@
         removeItem: function() {
             var view = this;
 
-            if (!confirm('Are you sure?')) {
+            if (!confirm((ea_settings['trans.are-you-sure'] || 'Are you sure?'))) {
                 return;
             }
 

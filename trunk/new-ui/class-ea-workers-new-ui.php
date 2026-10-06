@@ -197,6 +197,10 @@ class EA_Workers_New_UI
                 'duplicateEmail'        => esc_html__('This email address is already in use by another employee.', 'easy-appointments'),
                 'emailRequired'         => esc_html__('Email is required.', 'easy-appointments'),
                 'phoneRequired'         => esc_html__('Phone number is required.', 'easy-appointments'),
+                'deleteEmployee'        => esc_html__('Delete Employee', 'easy-appointments'),
+                'deleteEmployees'       => esc_html__('Delete Employees', 'easy-appointments'),
+                'disconnectGC'          => esc_html__('Disconnect Google Calendar', 'easy-appointments'),
+                'disconnectBtn'         => esc_html__('Disconnect', 'easy-appointments'),
             ),
         );
     }

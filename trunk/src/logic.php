@@ -78,16 +78,16 @@ class EALogic
         // current day as weekday now (string)
         $day_of_week = gmdate('l', strtotime($day));
 
-        // get current datetime as int
-        $time_now = current_time('timestamp', false);
+        // get current local date & time strings
+        $today_str      = current_time('Y-m-d');
+        $time_now_str   = current_time('H:i');
+        $is_current_day = ($today_str === $day);
 
-        // add block minutes
-        $block_time = $time_now + intval($block_before) * 60;
+        // Reference DateTime for lead-time (block_before) checking based on the site's local time
+        $current_local_dt = new DateTime(current_time('Y-m-d H:i'));
+        $min_allowed_dt   = $block_before > 0 ? (clone $current_local_dt)->modify("+{$block_before} minutes") : null;
+        $tomorrow         = (clone $current_local_dt)->modify('+1 day')->format('Y-m-d');
 
-        // calculate if that is current day that we are looking
-        $is_current_day = (gmdate('Y-m-d') == $day);
-
-        $block_date = gmdate('Y-m-d', $block_time);
         // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared	
         $query = $this->wpdb->prepare("SELECT * FROM {$this->wpdb->prefix}ea_connections WHERE 
 			location=%d AND 
@@ -110,6 +110,14 @@ class EALogic
          * Example on Appointment 08:00 - 20:00 today
          */
         foreach ($open_days as $working_day) {
+            // "Tomorrow Only" mode: only return slots for tomorrow's date.
+            $repeat_week = (int)$working_day->repeat_week;
+            if ($repeat_week === -1) {
+                if ($day !== $tomorrow) {
+                    continue;
+                }
+            }
+
             // upper time 20:00;
             $upper_time = strtotime($working_day->time_to);
 
@@ -131,20 +139,21 @@ class EALogic
                 // 08:00 at first pass, second 09:00
                 $temp_time += $run_time;
 
-                $temp_date_time = strtotime("$day {$working_day->time_from}") + $run_time;
-
                 // is that before upper time limit (slot end time must not exceed working hours end time)
                 if (($temp_time + ($serviceObj->duration * 60)) <= $upper_time) {
                     $current_time = gmdate('H:i', $temp_time);
 
-                    // check if current time is greater then slot start time
-                    if ($check_current_day && $is_current_day && $time_now > $temp_time) {
+                    // check if current time is greater than slot start time on today
+                    if ($check_current_day && $is_current_day && $current_time <= $time_now_str) {
                         continue;
                     }
 
                     // block time - skip if it is under block time
-                    if ($block_before > 0 && $check_current_day && $block_time > $temp_date_time) {
-                        continue;
+                    if ($block_before > 0 && $min_allowed_dt !== null) {
+                        $slot_dt = new DateTime("$day $current_time");
+                        if ($slot_dt < $min_allowed_dt) {
+                            continue;
+                        }
                     }
 
                     // slot count
@@ -185,9 +194,15 @@ class EALogic
     {
         $day_of_week = gmdate('l', strtotime($day));
 
-        $time_now = current_time('timestamp', false);
-        $block_time = $time_now + intval($block_before) * 60;
-        $is_current_day = (gmdate('Y-m-d') == $day);
+        $today_str      = current_time('Y-m-d');
+        $time_now_str   = current_time('H:i');
+        $is_current_day = ($today_str === $day);
+
+        // Reference DateTime for lead-time (block_before) checking based on the site's local time
+        $current_local_dt = new DateTime(current_time('Y-m-d H:i'));
+        $min_allowed_dt   = $block_before > 0 ? (clone $current_local_dt)->modify("+{$block_before} minutes") : null;
+        $tomorrow         = (clone $current_local_dt)->modify('+1 day')->format('Y-m-d');
+
         // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
         $query = $this->wpdb->prepare("SELECT * FROM {$this->wpdb->prefix}ea_connections WHERE 
             location=%d AND 
@@ -217,6 +232,14 @@ class EALogic
             }
 
             $repeat_week = (int)$working_day->repeat_week;
+
+            // "Tomorrow Only" mode: only return slots for tomorrow's date.
+            if ($repeat_week === -1) {
+                if ($day !== $tomorrow) {
+                    continue;
+                }
+            }
+
             $day_from = !empty($working_day->day_from) ? $working_day->day_from : $day;
             $current_date = new DateTime($day);
             if ($repeat_week > 1) {
@@ -249,18 +272,20 @@ class EALogic
                 }
 
                 $temp_time += $run_time;
-                $temp_date_time = strtotime("$day {$working_day->time_from}") + $run_time;
 
                 // is that before upper time limit (slot end time must not exceed working hours end time)
                 if (($temp_time + ($serviceObj->duration * 60)) <= $upper_time) {
                     $current_time = gmdate('H:i', $temp_time);
 
-                    if ($check_current_day && $is_current_day && $time_now > $temp_time) {
+                    if ($check_current_day && $is_current_day && $current_time <= $time_now_str) {
                         continue;
                     }
 
-                    if ($block_before > 0 && $check_current_day && $block_time > $temp_date_time) {
-                        continue;
+                    if ($block_before > 0 && $min_allowed_dt !== null) {
+                        $slot_dt = new DateTime("$day $current_time");
+                        if ($slot_dt < $min_allowed_dt) {
+                            continue;
+                        }
                     }
 
                     $slot_count = is_numeric($working_day->slot_count) ? (int) $working_day->slot_count : 1;
@@ -579,7 +604,7 @@ class EALogic
                     $result[] = array(
                         'count' => $count,
                         'value' => $time,
-                        'show'  => gmdate( 'h:i a', strtotime($time)),
+                        'show'  => gmdate('h:i a', strtotime($time)),
                         'ends'  => gmdate('h:i a', strtotime("{$time} + $service_duration minute"))
                     );
                     break;

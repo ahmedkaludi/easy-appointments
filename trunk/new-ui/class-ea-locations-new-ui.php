@@ -185,6 +185,8 @@ class EA_Locations_New_UI
                 'deletedSuccess'        => esc_html__('Location(s) deleted successfully.', 'easy-appointments'),
                 'savedSuccess'          => esc_html__('Location saved successfully.', 'easy-appointments'),
                 'genericError'          => esc_html__('Something went wrong. Please try again.', 'easy-appointments'),
+                'deleteLocation'        => esc_html__('Delete Location', 'easy-appointments'),
+                'deleteLocations'       => esc_html__('Delete Locations', 'easy-appointments'),
             ),
         );
     }

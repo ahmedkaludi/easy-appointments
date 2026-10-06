@@ -21,7 +21,18 @@
     // Helpers
     // ---------------------------------------------------------------
     function escapeHtml(str) {
-        return $('<div>').text(str === null || typeof str === 'undefined' ? '' : String(str)).html();
+        if (typeof window.eaEscapeHtml === 'function') {
+            return window.eaEscapeHtml(str);
+        }
+        if (str === undefined || str === null) {
+            return '';
+        }
+        return String(str)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;');
     }
 
     function setStatus(msg) {
@@ -483,7 +494,7 @@
         $(document).on('click', '.ea-mnui-delete-row', function () {
             var id = $(this).closest('tr').data('id');
             window.eaConfirm({
-                title: 'Delete Customer',
+                title: (i18n.deleteCustomer || 'Delete Customer'),
                 message: i18n.confirmDelete || 'Are you sure you want to delete this customer?',
                 confirmLabel: i18n.delete || 'Delete',
                 cancelLabel: i18n.cancel || 'Cancel',
@@ -533,7 +544,7 @@
             if (!ids.length) return;
 
             window.eaConfirm({
-                title: 'Delete Customers',
+                title: (i18n.deleteCustomers || 'Delete Customers'),
                 message: (i18n.confirmDeleteSelected || 'Are you sure you want to delete %d selected customers?').replace('%d', ids.length),
                 confirmLabel: i18n.delete || 'Delete',
                 cancelLabel: i18n.cancel || 'Cancel',

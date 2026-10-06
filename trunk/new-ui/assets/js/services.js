@@ -42,7 +42,18 @@
         var SEARCH_FIELDS = ['id', 'name', 'duration', 'slot_step', 'price', 'service_color'];
 
         function escapeHtml(value) {
-            return $('<div>').text(value === undefined || value === null ? '' : value).html();
+            if (typeof window.eaEscapeHtml === 'function') {
+                return window.eaEscapeHtml(value);
+            }
+            if (value === undefined || value === null) {
+                return '';
+            }
+            return String(value)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
         }
 
         var noticeTimer = null;
@@ -267,7 +278,7 @@
             }
 
             window.eaConfirm({
-                title: 'Delete Services',
+                title: (i18n.deleteServices || 'Delete Services'),
                 message: i18n.confirmDeleteSelected.replace('%d', ids.length),
                 confirmLabel: i18n.delete || 'Delete',
                 cancelLabel: i18n.cancel || 'Cancel',
@@ -509,7 +520,7 @@
             }
 
             window.eaConfirm({
-                title: 'Delete Service',
+                title: (i18n.deleteService || 'Delete Service'),
                 message: i18n.confirmDelete.replace('%s', row.name || ''),
                 confirmLabel: i18n.delete || 'Delete',
                 cancelLabel: i18n.cancel || 'Cancel',

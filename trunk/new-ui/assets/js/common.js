@@ -16,6 +16,25 @@
     }
 
     /**
+     * Safely escape a string for insertion into HTML elements and HTML attributes.
+     * Escapes &, <, >, ", and '.
+     *
+     * @param {*} value
+     * @return {string}
+     */
+    window.eaEscapeHtml = function (value) {
+        if (value === undefined || value === null) {
+            return '';
+        }
+        return String(value)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;');
+    };
+
+    /**
      * Show a custom confirmation modal in the new UI style.
      *
      * @param {Object} options Configuration options.
@@ -29,10 +48,10 @@
      */
     window.eaConfirm = function (options) {
         var defaults = {
-            title: 'Confirm Action',
-            message: 'Are you sure you want to proceed?',
-            confirmLabel: 'Confirm',
-            cancelLabel: 'Cancel',
+            title: (window.eaCommonI18n && window.eaCommonI18n.confirmAction) || 'Confirm Action',
+            message: (window.eaCommonI18n && window.eaCommonI18n.areYouSureProceed) || 'Are you sure you want to proceed?',
+            confirmLabel: (window.eaCommonI18n && window.eaCommonI18n.confirm) || 'Confirm',
+            cancelLabel: (window.eaCommonI18n && window.eaCommonI18n.cancel) || 'Cancel',
             isDanger: true,
             onConfirm: function () {},
             onCancel: function () {}

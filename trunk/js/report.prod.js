@@ -333,7 +333,7 @@
             };
 
             jQuery.post(ajaxurl, data, function (result) {
-                alert('Settings saved');
+                alert((ea_settings['trans.settings-saved'] || 'Settings saved'));
             });
         }
 

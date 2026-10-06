@@ -47,7 +47,18 @@
         var SEARCH_FIELDS = FIELDS.concat(['id']);
 
         function escapeHtml(value) {
-            return $('<div>').text(value === undefined || value === null ? '' : value).html();
+            if (typeof window.eaEscapeHtml === 'function') {
+                return window.eaEscapeHtml(value);
+            }
+            if (value === undefined || value === null) {
+                return '';
+            }
+            return String(value)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
         }
 
         var noticeTimer = null;
@@ -306,7 +317,7 @@
             }
 
             window.eaConfirm({
-                title: 'Delete Employees',
+                title: (i18n.deleteEmployees || 'Delete Employees'),
                 message: i18n.confirmDeleteSelected.replace('%d', ids.length),
                 confirmLabel: i18n.delete || 'Delete',
                 cancelLabel: i18n.cancel || 'Cancel',
@@ -483,7 +494,7 @@
             }
 
             window.eaConfirm({
-                title: 'Delete Employee',
+                title: (i18n.deleteEmployee || 'Delete Employee'),
                 message: i18n.confirmDelete.replace('%s', row.name || ''),
                 confirmLabel: i18n.delete || 'Delete',
                 cancelLabel: i18n.cancel || 'Cancel',
@@ -531,9 +542,9 @@
             }
 
             window.eaConfirm({
-                title: 'Disconnect Google Calendar',
+                title: (i18n.disconnectGC || 'Disconnect Google Calendar'),
                 message: i18n.confirmUnlinkGoogle.replace('%s', (row && row.name) || ''),
-                confirmLabel: 'Disconnect',
+                confirmLabel: (i18n.disconnectBtn || 'Disconnect'),
                 cancelLabel: i18n.cancel || 'Cancel',
                 isDanger: true,
                 onConfirm: function () {
