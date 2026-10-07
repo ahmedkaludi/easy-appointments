@@ -147,6 +147,7 @@ class EA_Settings_New_UI
         'user.access.workers',
         'user.access.connections',
         'user.access.reports',
+        'user.access.vacation',
         // Booking Rules settings
         'block.time',
         'cancel_time',

@@ -45,9 +45,7 @@ class EasyEAVacationActions
             array(
                 'methods' => WP_REST_Server::READABLE,
                 'callback' => array($this, 'get_vacations'),
-                'permission_callback' => function () {
-                    return current_user_can('manage_options');
-                },
+                'permission_callback' => array($this, 'check_permission'),
 
             )
         ));
@@ -56,11 +54,15 @@ class EasyEAVacationActions
             array(
                 'methods' => WP_REST_Server::EDITABLE,
                 'callback' => array($this, 'update_vacations'),
-                'permission_callback' => function () {
-                    return current_user_can('manage_options');
-                }
+                'permission_callback' => array($this, 'check_permission'),
             )
         ));
+    }
+
+    public function check_permission()
+    {
+        $capability = apply_filters('easy-appointments-user-ajax-capabilities', 'manage_options', 'vacation');
+        return current_user_can($capability) || current_user_can('manage_options');
     }
 
     public function get_vacations()
