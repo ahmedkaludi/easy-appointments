@@ -213,7 +213,7 @@
                                 '<span class="ea-summary-text empty">' + (ea_settings['trans.select-date-time'] || 'Select a date &amp; time to continue') + '</span>' +
                                 '<div class="ea-new-ui-actions">' +
                                     '<button type="button" class="ea-btn ea-cancel" style="display:none;">' + (ea_settings['trans.cancel'] || 'Cancel') + '</button>' +
-                                    '<button type="button" class="ea-btn ea-submit booking-button" style="display:none;">' + (ea_settings['trans.book-appointment'] || 'Book appointment') + '</button>' +
+                                    '<button type="button" class="ea-btn ea-submit booking-button" style="display:none;">' + (ea_settings['trans.submit_button_text'] || ea_settings['trans.submit'] || ea_settings['trans.book-appointment'] || 'Book appointment') + '</button>' +
                                 '</div>' +
                             '</div>'
                         );
@@ -1694,7 +1694,7 @@
                 if (response.responseJSON && response.responseJSON.message) {
                     alert(response.responseJSON.message);                    
                 }
-                this.$element.find('.ea-submit, .booking-button').prop('disabled', false).removeClass('ea-loading').html(ea_settings['trans.book-appointment'] || 'Book appointment');
+                this.$element.find('.ea-submit, .booking-button').prop('disabled', false).removeClass('ea-loading').html(ea_settings['trans.submit_button_text'] || ea_settings['trans.submit'] || ea_settings['trans.book-appointment'] || 'Book appointment');
             }, plugin));
         },
 
@@ -1782,7 +1782,7 @@
                                 if (response.responseJSON && response.responseJSON.message) {
                                     alert(response.responseJSON.message);
                                 }
-                                this.$element.find('.ea-submit, .booking-button').prop('disabled', false).removeClass('ea-loading').html(ea_settings['trans.book-appointment'] || 'Book appointment');
+                                this.$element.find('.ea-submit, .booking-button').prop('disabled', false).removeClass('ea-loading').html(ea_settings['trans.submit_button_text'] || ea_settings['trans.submit'] || ea_settings['trans.book-appointment'] || 'Book appointment');
                             }, plugin))
                             .always(jQuery.proxy(function () {
                                 plugin.removeLoader();
@@ -1808,7 +1808,7 @@
                 if (response.responseJSON && response.responseJSON.message) {
                     alert(response.responseJSON.message);
                 }
-                this.$element.find('.ea-submit, .booking-button').prop('disabled', false).removeClass('ea-loading').html(ea_settings['trans.book-appointment'] || 'Book appointment');
+                this.$element.find('.ea-submit, .booking-button').prop('disabled', false).removeClass('ea-loading').html(ea_settings['trans.submit_button_text'] || ea_settings['trans.submit'] || ea_settings['trans.book-appointment'] || 'Book appointment');
             }, plugin))
             .always(jQuery.proxy(function () {
                 plugin.removeLoader();
@@ -2085,6 +2085,11 @@
                         var $opt = jQuery(this);
                         var val = $opt.attr('value') !== undefined ? $opt.attr('value') : $opt.val();
                         var text = $opt.text().trim();
+
+                        if (val === '' && text === '') {
+                            return;
+                        }
+
                         var isSelected = (val === selectedVal) || ($opt.is(':selected') && !selectedLabel);
 
                         if (isSelected && (val !== '' || !selectedLabel)) {
