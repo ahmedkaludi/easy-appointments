@@ -116,6 +116,7 @@
                 }
                 render();
                 checkAllGoogleConnections();
+                checkAllOutlookConnections();
                 showNotice('');
                 hideScreenLoader();
             }).fail(function () {
@@ -134,6 +135,7 @@
                 isPro = !!response;
                 render();
                 checkAllGoogleConnections();
+                checkAllOutlookConnections();
             });
         }
 
@@ -197,6 +199,7 @@
                     '<td>' + escapeHtml(row.phone) + '</td>' +
                     '<td class="ea-mnui-col-actions">' +
                         buildGoogleButtonHtml(row) +
+                        buildOutlookButtonHtml(row) +
                         '<button type="button" class="ea-mnui-icon-btn ea-mnui-edit" title="' + escapeHtml(i18n.edit) + '">' +
                             '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>' +
                         '</button>' +
@@ -276,6 +279,68 @@
 
             $.each(workers, function (i, row) {
                 checkGoogleConnection(row);
+            });
+        }
+
+        /**
+         * ---------- Outlook Calendar action icon (list view) ----------
+         */
+        function buildOutlookButtonHtml(row) {
+            if (!isPro) {
+                return '';
+            }
+
+            if (row.outlookConnected === true) {
+                return '<button type="button" class="ea-mnui-icon-btn ea-mnui-outlook-btn ea-mnui-outlook-linked" ' +
+                    'data-id="' + escapeHtml(row.id) + '" title="' + escapeHtml((i18n.outlookConnected || 'Outlook Calendar connected for "%s". Click to disconnect.').replace('%s', row.name || '')) + '">' +
+                    '<svg viewBox="0 0 24 24" width="14" height="14" fill="none"><circle cx="12" cy="12" r="10" fill="#e0f2fe"/><path d="M8 12.3l2.6 2.6L16.2 9" stroke="#0284c7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>' +
+                    '</button>';
+            }
+
+            if (row.outlookConnected === false) {
+                var href = '?init_outlook_employee=true&employ_id_outlook=' + encodeURIComponent(row.id);
+
+                return '<a href="' + escapeHtml(href) + '" target="_blank" rel="noopener noreferrer" ' +
+                    'class="ea-mnui-icon-btn ea-mnui-outlook-btn ea-mnui-outlook-unlinked" data-id="' + escapeHtml(row.id) + '" title="' + escapeHtml(i18n.linkOutlookCalendar || 'Link Outlook Calendar') + '">' +
+                    '<svg viewBox="0 0 32 32" width="14" height="14"><path fill="#0078D4" d="M18 6h11a1 1 0 0 1 1 1v18a1 1 0 0 1-1 1H18V6z"/><path fill="#28A8EA" d="M18 10h10v12H18z"/><path fill="#0078D4" d="M2 9.5l14-4.5v22l-14-4.5z"/><ellipse cx="9" cy="16" rx="4" ry="5.5" fill="#fff"/><ellipse cx="9" cy="16" rx="2.2" ry="3.5" fill="#0078D4"/></svg>' +
+                    '</a>';
+            }
+
+            // Still checking - neutral placeholder
+            return '<span class="ea-mnui-icon-btn ea-mnui-outlook-btn ea-mnui-outlook-checking" data-id="' + escapeHtml(row.id) + '" aria-hidden="true">&#8635;</span>';
+        }
+
+        function updateOutlookButtonForRow(row) {
+            $tableBody.find('tr[data-id="' + row.id + '"] .ea-mnui-outlook-btn').replaceWith(buildOutlookButtonHtml(row));
+        }
+
+        function checkOutlookConnection(row) {
+            $.ajax({
+                url: cfg.ajaxUrl,
+                method: 'GET',
+                dataType: 'json',
+                data: {
+                    action: 'ea_check_outlook_calendar_token',
+                    id: row.id,
+                    _wpnonce: cfg.restNonce
+                }
+            }).done(function (response) {
+                var connected = response && (response === true || (response.data && response.data.connected) || response.connected);
+                row.outlookConnected = !!connected;
+            }).fail(function () {
+                row.outlookConnected = false;
+            }).always(function () {
+                updateOutlookButtonForRow(row);
+            });
+        }
+
+        function checkAllOutlookConnections() {
+            if (!isPro) {
+                return;
+            }
+
+            $.each(workers, function (i, row) {
+                checkOutlookConnection(row);
             });
         }
 
@@ -567,6 +632,59 @@
             });
         });
 
+        /**
+         * ---------- Outlook Calendar disconnect (list view) ----------
+         */
+        $app.on('click', '.ea-mnui-outlook-linked', function (e) {
+            e.preventDefault();
+
+            var $btn = $(this);
+            var id = $btn.data('id');
+            var row = $tableBody.find('tr[data-id="' + id + '"]').data('row');
+
+            if (!id) {
+                return;
+            }
+
+            window.eaConfirm({
+                title: (i18n.disconnectOutlook || 'Disconnect Outlook Calendar'),
+                message: (i18n.confirmUnlinkOutlook || 'Disconnect Outlook Calendar for "%s"?').replace('%s', (row && row.name) || ''),
+                confirmLabel: (i18n.disconnectBtn || 'Disconnect'),
+                cancelLabel: i18n.cancel || 'Cancel',
+                isDanger: true,
+                onConfirm: function () {
+                    showScreenLoader();
+                    var url = cfg.ajaxUrl + '?action=ea_remove_outlook_calendar&id=' + encodeURIComponent(id) +
+                        '&_wpnonce=' + encodeURIComponent(cfg.restNonce) + '&_method=DELETE';
+
+                    $.post(url).done(function () {
+                        if (row) {
+                            row.outlookConnected = false;
+                            updateOutlookButtonForRow(row);
+                        }
+                        showNotice(i18n.outlookUnlinked || 'Outlook Calendar disconnected.');
+                        hideScreenLoader();
+                    }).fail(function () {
+                        showNotice(i18n.genericError);
+                        hideScreenLoader();
+                    });
+                }
+            });
+        });
+
+        /**
+         * ---------- Open OAuth in popup ----------
+         */
+        $app.on('click', '.ea-mnui-google-unlinked, .ea-mnui-outlook-unlinked', function (e) {
+            e.preventDefault();
+            var href = $(this).attr('href');
+            if (!href) return;
+            var width = 600, height = 700;
+            var left = (screen.width / 2) - (width / 2);
+            var top = (screen.height / 2) - (height / 2);
+            window.open(href, 'ea_oauth', 'width=' + width + ',height=' + height + ',top=' + top + ',left=' + left + ',resizable,scrollbars,status');
+        });
+
         $('#ea-mnui-drawer-close, .ea-mnui-drawer-cancel').on('click', function (e) {
             e.preventDefault();
             closeDrawer();
@@ -626,12 +744,20 @@
             });
         });
 
-        // The "Link Google Calendar" icon opens Google's OAuth flow in a
-        // new tab. When the admin comes back to this tab, re-check
+        // The "Link Google/Outlook Calendar" icons open OAuth flow in a
+        // new tab/window. When the admin comes back to this tab, re-check
         // connection status so a freshly-linked employee flips to the
         // "connected" icon without needing a manual refresh.
         $(window).on('focus', function () {
             checkAllGoogleConnections();
+            checkAllOutlookConnections();
+        });
+
+        window.addEventListener('message', function (event) {
+            if (event.data === 'eaol_auth_success' || event.data === 'eagc_auth_success') {
+                checkAllGoogleConnections();
+                checkAllOutlookConnections();
+            }
         });
 
         /**

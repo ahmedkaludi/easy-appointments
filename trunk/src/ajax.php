@@ -2743,7 +2743,15 @@ class EAAjax
     {
         $this->validate_admin_nonce();
         $response = false;
-        if ( is_plugin_active( 'easy-appointments-connect/main.php' ) ) {
+        if (
+            is_plugin_active( 'easy-appointments-connect/main.php' ) ||
+            is_plugin_active( 'ea-google-calendar/ea-google-calendar.php' ) ||
+            is_plugin_active( 'ea-outlook/ea-outlook.php' ) ||
+            defined( 'EAGC_VERSION' ) ||
+            defined( 'EAOL_VERSION' ) ||
+            class_exists( 'EAGC_Plugin' ) ||
+            class_exists( 'EAOL_Plugin' )
+        ) {
             $response = true;
         }
         header("Content-Type: application/json");

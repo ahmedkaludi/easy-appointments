@@ -451,6 +451,30 @@
     animation: ea-mnui-spin 1s linear infinite;
 }
 
+/* ---------- Outlook Calendar action icon (Workers list / Pro) ---------- */
+
+.ea-mnui-outlook-btn {
+    padding: 0;
+}
+
+.ea-mnui-outlook-unlinked {
+    text-decoration: none;
+}
+
+.ea-mnui-outlook-linked {
+    border-color: #bae6fd;
+    background: #f0f9ff;
+}
+
+.ea-mnui-outlook-linked:hover {
+    background: #e0f2fe;
+}
+
+.ea-mnui-outlook-checking {
+    cursor: default;
+    animation: ea-mnui-spin 1s linear infinite;
+}
+
 @keyframes ea-mnui-spin {
     from {
         transform: rotate(0deg);

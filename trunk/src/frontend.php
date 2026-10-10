@@ -252,6 +252,8 @@ class Easy_EA_Frontend
         $settings['trans.please-select-new-date'] = __('Please select another day', 'easy-appointments');
         $settings['trans.date-time'] = __('Date & time', 'easy-appointments');
         $settings['trans.price'] = __('Price', 'easy-appointments');
+        $settings['trans.submit'] = __('Submit', 'easy-appointments');
+        $settings['trans.submit_button_text'] = easy_ea_helper_polylang_trans($this->options->get_option_value('trans.submit_button_text', __('Submit', 'easy-appointments')));
 
         // datetime format
         $settings['time_format'] = $this->datetime->convert_to_moment_format(get_option('time_format', 'H:i'));
@@ -303,6 +305,10 @@ class Easy_EA_Frontend
         $settings['trans.sidebar_step_info'] = __('Your Information', 'easy-appointments');
         $settings['trans.sidebar_collapse'] = __('Collapse menu', 'easy-appointments');
         $settings['trans.continue'] = __('Continue', 'easy-appointments');
+        $settings['trans.book-again'] = easy_ea_helper_polylang_trans($this->options->get_option_value('trans.book-again', __('Book New Appointment', 'easy-appointments')));
+        $settings['trans.add-to-calendar'] = easy_ea_helper_polylang_trans($this->options->get_option_value('trans.add-to-calendar', __('Add to Google Calendar', 'easy-appointments')));
+        $settings['trans.description'] = easy_ea_helper_polylang_trans($this->options->get_option_value('trans.description', __('Description', 'easy-appointments')));
+        $settings['trans.confirmation-title'] = !empty($settings['heading']) ? $settings['heading'] : __('Thank You for Booking!', 'easy-appointments');
 
         $customCss = $settings['custom.css'];
         $customCss = wp_strip_all_tags($customCss);
@@ -512,6 +518,11 @@ class Easy_EA_Frontend
     private function output_inline_ea_settings($settings, $customCss)
     {
         $clean_settings = EATableColumns::clear_settings_data_frontend($settings);
+        foreach ($settings as $k => $v) {
+            if (strpos($k, 'trans.') === 0) {
+                $clean_settings[$k] = $v;
+            }
+        }
         if ( isset($settings['default.status'])) {
             $clean_settings['default.status'] = $settings['default.status'];
         }
@@ -910,7 +921,7 @@ class Easy_EA_Frontend
         $settings['trans.booking-overview'] = __('Booking overview', 'easy-appointments');
         $settings['trans.date-time'] = __('Date & time', 'easy-appointments');
         $settings['trans.submit'] = __('Submit', 'easy-appointments');
-        $settings['trans.submit_button_text'] = $this->options->get_option_value('trans.submit_button_text', __('Submit', 'easy-appointments'));
+        $settings['trans.submit_button_text'] = easy_ea_helper_polylang_trans($this->options->get_option_value('trans.submit_button_text', __('Submit', 'easy-appointments')));
         $settings['trans.cancel'] = __('Cancel', 'easy-appointments');
         $settings['trans.price'] = __('Price', 'easy-appointments');
         $settings['trans.iagree'] = __('I agree with terms and conditions', 'easy-appointments');
@@ -961,6 +972,10 @@ class Easy_EA_Frontend
         $settings['trans.sidebar_step_info'] = __('Your Information', 'easy-appointments');
         $settings['trans.sidebar_collapse'] = __('Collapse menu', 'easy-appointments');
         $settings['trans.continue'] = __('Continue', 'easy-appointments');
+        $settings['trans.book-again'] = easy_ea_helper_polylang_trans($this->options->get_option_value('trans.book-again', __('Book New Appointment', 'easy-appointments')));
+        $settings['trans.add-to-calendar'] = easy_ea_helper_polylang_trans($this->options->get_option_value('trans.add-to-calendar', __('Add to Google Calendar', 'easy-appointments')));
+        $settings['trans.description'] = easy_ea_helper_polylang_trans($this->options->get_option_value('trans.description', __('Description', 'easy-appointments')));
+        $settings['trans.confirmation-title'] = !empty($settings['heading']) ? $settings['heading'] : __('Thank You for Booking!', 'easy-appointments');
 
         // datetime format
         $settings['time_format'] = $this->datetime->convert_to_moment_format(get_option('time_format', 'H:i'));
@@ -1195,16 +1210,20 @@ class Easy_EA_Frontend
             if ($type === 'staff') {
                 $default_value = easy_ea_helper_polylang_trans($this->options->get_option_value("trans.worker_option"));
             }
-            
         }
-        printf(
-            '<option value="" selected="selected">%s</option>',
-            esc_html( $default_value )
-        );
 
+        $has_placeholder = (trim((string)$default_value) !== '' && $default_value !== '-');
 
-        foreach ($rows as $row) {
+        if ($has_placeholder) {
+            printf(
+                '<option value="" selected="selected">%s</option>',
+                esc_html( $default_value )
+            );
+        }
+
+        foreach ($rows as $index => $row) {
             $name = esc_html($row->name);
+            $selected_attr = (!$has_placeholder && $index === 0) ? ' selected="selected"' : '';
 
             // only in case of services
             if ($type === 'services') {
@@ -1223,8 +1242,9 @@ class Easy_EA_Frontend
                 if ( $type !== 'services' ) {
 
                     printf(
-                        '<option value="%s">%s</option>',
+                        '<option value="%s"%s>%s</option>',
                         esc_attr( $row->id ),
+                        $selected_attr,
                         esc_html( $name )
                     );
 
@@ -1232,11 +1252,12 @@ class Easy_EA_Frontend
 
                     // for service
                     printf(
-                        '<option value="%s" data-duration="%s" data-slot_step="%s" data-description="%s">%s</option>',
+                        '<option value="%s" data-duration="%s" data-slot_step="%s" data-description="%s"%s>%s</option>',
                         esc_attr( $row->id ),
                         esc_attr( $duration ),
                         esc_attr( $slot_step ),
                         esc_attr($row->description),
+                        $selected_attr,
                         esc_html( $name )
                     );
 
@@ -1257,20 +1278,22 @@ class Easy_EA_Frontend
                         data-duration="%s" 
                         data-slot_step="%s" 
                         data-description="%s"
-                        %s>%s</option>',
+                        %s%s>%s</option>',
                     esc_attr($row->id),
                     esc_attr($duration),
                     esc_attr($slot_step),
                     esc_attr($row->description),
                     !empty($row->price) ? " data-price='" . esc_attr($row->price) . "'" : '',
+                    $selected_attr,
                     esc_html($name_price)
                 );
 
             } else {
 
                 printf(
-                    '<option value="%s">%s</option>',
+                    '<option value="%s"%s>%s</option>',
                     esc_attr( $row->id ),
+                    $selected_attr,
                     esc_html( $name )
                 );
 

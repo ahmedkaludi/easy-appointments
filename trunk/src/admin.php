@@ -95,6 +95,8 @@ class EAAdminPanel
                 'trans.done_message'            => 'Done',
                 'trans.submit_button_text'      => 'Submit',
                 'trans.create_new_booking'      => 'Create New Booking',
+                'trans.book-again'              => 'Book New Appointment',
+                'trans.add-to-calendar'         => 'Add to Google Calendar',
                 'pending.subject.email'         => 'New Reservation #id#',
                 'pending.subject.visitor.email' => 'Reservation #id#',
                 'gdpr.label'                    => 'By using this form you agree with the storage and handling of your data by this website.',
