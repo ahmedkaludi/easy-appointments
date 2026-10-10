@@ -144,6 +144,92 @@
         });
     };
 
+    /**
+     * Render smart pagination controls with ellipsis into a container element.
+     *
+     * @param {jQuery|string} container Container element or selector.
+     * @param {Object} options Options:
+     *   - currentPage {number} Current page number (1-based).
+     *   - totalPages {number} Total number of pages.
+     *   - btnClass {string} CSS class for page buttons.
+     *   - ellipsisClass {string} CSS class for ellipsis span.
+     *   - activeClass {string} CSS class for the active page button.
+     *   - disabledClass {string} CSS class for disabled buttons.
+     */
+    window.eaRenderPagination = function (container, options) {
+        var $pag = $(container);
+        if (!$pag.length) {
+            return;
+        }
+        $pag.empty();
+
+        var totalPages = parseInt(options && options.totalPages, 10) || 0;
+        var currentPage = parseInt(options && options.currentPage, 10) || 1;
+        var btnClass = (options && options.btnClass) || 'ea-mnui-btn ea-mnui-btn-ghost ea-mnui-page-btn';
+        var ellipsisClass = (options && options.ellipsisClass) || 'ea-mnui-pagination-ellipsis';
+        var activeClass = (options && options.activeClass) || 'is-active';
+        var disabledClass = (options && options.disabledClass) || 'is-disabled';
+
+        if (totalPages <= 1) {
+            return;
+        }
+
+        if (currentPage < 1) {
+            currentPage = 1;
+        }
+        if (currentPage > totalPages) {
+            currentPage = totalPages;
+        }
+
+        // Previous button
+        var isPrevDisabled = currentPage <= 1;
+        var $prevBtn = $('<button type="button" class="' + btnClass + (isPrevDisabled ? ' ' + disabledClass : '') + '" data-page="' + (currentPage - 1) + '"' + (isPrevDisabled ? ' disabled' : '') + ' aria-label="Previous page">&larr;</button>');
+        $pag.append($prevBtn);
+
+        // Calculate page list with ellipsis
+        var items = [];
+        if (totalPages <= 7) {
+            for (var i = 1; i <= totalPages; i++) {
+                items.push(i);
+            }
+        } else if (currentPage <= 4) {
+            for (var j = 1; j <= 5; j++) {
+                items.push(j);
+            }
+            items.push('...');
+            items.push(totalPages);
+        } else if (currentPage >= totalPages - 3) {
+            items.push(1);
+            items.push('...');
+            for (var k = totalPages - 4; k <= totalPages; k++) {
+                items.push(k);
+            }
+        } else {
+            items.push(1);
+            items.push('...');
+            for (var m = currentPage - 1; m <= currentPage + 1; m++) {
+                items.push(m);
+            }
+            items.push('...');
+            items.push(totalPages);
+        }
+
+        $.each(items, function (index, item) {
+            if (item === '...') {
+                $pag.append($('<span class="' + ellipsisClass + '">&hellip;</span>'));
+            } else {
+                var isActive = item === currentPage;
+                var $btn = $('<button type="button" class="' + btnClass + (isActive ? ' ' + activeClass : '') + '" data-page="' + item + '"' + (isActive ? ' disabled' : '') + '>' + item + '</button>');
+                $pag.append($btn);
+            }
+        });
+
+        // Next button
+        var isNextDisabled = currentPage >= totalPages;
+        var $nextBtn = $('<button type="button" class="' + btnClass + (isNextDisabled ? ' ' + disabledClass : '') + '" data-page="' + (currentPage + 1) + '"' + (isNextDisabled ? ' disabled' : '') + ' aria-label="Next page">&rarr;</button>');
+        $pag.append($nextBtn);
+    };
+
     // Auto-select text on clicking or focusing time input fields so typing replaces text starting with first number
     $(document).on('focus click', 'input.ea-mnui-time-input, input.ea-nsui-time-input, input[data-key="cancel_time"], #ea-mnui-input-time_from, #ea-mnui-input-time_to', function () {
         var input = this;

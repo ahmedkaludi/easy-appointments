@@ -1148,18 +1148,45 @@ body.wp-admin #ui-datepicker-div td.ea-naui-blocked span,
 
 .ea-naui-pagination {
     display: flex;
+    align-items: center;
     flex-wrap: wrap;
     gap: 6px;
     padding: 0;
     margin-top: 0;
 }
 
-.ea-naui-pagination .ea-naui-btn[disabled] {
+.ea-naui-pagination .ea-naui-btn.is-active,
+.ea-naui-pagination .ea-naui-btn.active,
+.ea-naui-pagination .ea-naui-btn[disabled]:not(.is-disabled) {
     background: #eef4ff;
     border-color: #2563eb;
     color: #1d4ed8;
+    font-weight: 600;
     opacity: 1;
     cursor: default;
+}
+
+.ea-naui-pagination .ea-naui-btn.is-disabled,
+.ea-naui-pagination .ea-naui-btn[disabled].is-disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    background: transparent;
+    border-color: var(--ea-border, #e5e7eb);
+    color: var(--ea-text-muted, #9ca3af);
+    pointer-events: none;
+}
+
+.ea-naui-pagination-ellipsis {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 32px;
+    height: 32px;
+    padding: 0 4px;
+    color: var(--ea-text-muted, #64748b);
+    font-size: 14px;
+    font-weight: 500;
+    user-select: none;
 }
 
 .ea-naui-per-page {

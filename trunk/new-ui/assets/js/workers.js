@@ -140,6 +140,16 @@
         }
 
         function renderPagination() {
+            if (typeof window.eaRenderPagination === 'function') {
+                window.eaRenderPagination('#ea-mnui-pagination', {
+                    currentPage: currentPage,
+                    totalPages: totalPages,
+                    btnClass: 'ea-mnui-btn ea-mnui-btn-ghost ea-mnui-page-btn',
+                    ellipsisClass: 'ea-mnui-pagination-ellipsis'
+                });
+                return;
+            }
+
             var $pag = $('#ea-mnui-pagination');
             $pag.empty();
 
@@ -147,20 +157,18 @@
                 return;
             }
 
-            // Previous button
-            var $prevBtn = $('<button type="button" class="ea-mnui-btn ea-mnui-btn-ghost ea-mnui-page-btn" data-page="' + (currentPage - 1) + '"' + (currentPage === 1 ? ' disabled' : '') + '>&larr;</button>');
+            var isPrevDisabled = currentPage === 1;
+            var $prevBtn = $('<button type="button" class="ea-mnui-btn ea-mnui-btn-ghost ea-mnui-page-btn' + (isPrevDisabled ? ' is-disabled' : '') + '" data-page="' + (currentPage - 1) + '"' + (isPrevDisabled ? ' disabled' : '') + '>&larr;</button>');
             $pag.append($prevBtn);
 
             for (var i = 1; i <= totalPages; i++) {
-                var $btn = $('<button type="button" class="ea-mnui-btn ea-mnui-btn-ghost ea-mnui-page-btn" data-page="' + i + '">' + i + '</button>');
-                if (i === currentPage) {
-                    $btn.prop('disabled', true);
-                }
+                var isActive = i === currentPage;
+                var $btn = $('<button type="button" class="ea-mnui-btn ea-mnui-btn-ghost ea-mnui-page-btn' + (isActive ? ' is-active' : '') + '" data-page="' + i + '"' + (isActive ? ' disabled' : '') + '>' + i + '</button>');
                 $pag.append($btn);
             }
 
-            // Next button
-            var $nextBtn = $('<button type="button" class="ea-mnui-btn ea-mnui-btn-ghost ea-mnui-page-btn" data-page="' + (currentPage + 1) + '"' + (currentPage === totalPages ? ' disabled' : '') + '>&rarr;</button>');
+            var isNextDisabled = currentPage === totalPages;
+            var $nextBtn = $('<button type="button" class="ea-mnui-btn ea-mnui-btn-ghost ea-mnui-page-btn' + (isNextDisabled ? ' is-disabled' : '') + '" data-page="' + (currentPage + 1) + '"' + (isNextDisabled ? ' disabled' : '') + '>&rarr;</button>');
             $pag.append($nextBtn);
         }
 
@@ -443,8 +451,10 @@
 
         $app.on('click', '.ea-mnui-page-btn', function (e) {
             e.preventDefault();
-            var page = $(this).data('page');
-            loadWorkers(page);
+            var page = parseInt($(this).data('page'), 10);
+            if (page && page !== currentPage) {
+                loadWorkers(page);
+            }
         });
 
         $app.on('click', '.ea-mnui-refresh', function (e) {
