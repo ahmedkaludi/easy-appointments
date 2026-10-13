@@ -65,6 +65,9 @@ if (!defined('WPINC')) {
                     <a href="#" class="ea-mnui-btn ea-mnui-btn-danger ea-mnui-delete-selected" style="display:none;">
                         <?php esc_html_e('Delete Selected', 'easy-appointments'); ?>
                     </a>
+                    <a href="#" class="ea-mnui-btn ea-mnui-btn-danger ea-mnui-delete-expired-no-app" id="ea-mnui-delete-expired-no-app" title="<?php esc_attr_e('Delete all expired connections with no appointment', 'easy-appointments'); ?>">
+                        <?php esc_html_e('Delete Expired Connections', 'easy-appointments'); ?>
+                    </a>
                 </div>
 
                 <div class="ea-mnui-date-range-filter">
