@@ -164,6 +164,15 @@ class EAMail
             return;
         }
 
+        // Rate limiting for token validation attempts
+        $client_ip = isset($_SERVER['REMOTE_ADDR']) ? sanitize_text_field(wp_unslash($_SERVER['REMOTE_ADDR'])) : 'unknown';
+        $rate_key  = 'ea_mail_link_fail_' . md5($client_ip . '_' . $app_id);
+        $attempts  = (int) get_transient($rate_key);
+        if ($attempts >= 5) {
+            header('Refresh:3; url=' . get_home_url());
+            wp_die(esc_html__('Too many invalid attempts. Please try again later.', 'easy-appointments'), 429);
+        }
+
         $data = $this->models->get_appintment_by_id($app_id);
 
         if (empty($data)) {
@@ -171,11 +180,14 @@ class EAMail
             wp_die(esc_html__('No appointment.', 'easy-appointments'));
         }
 
-        // constant-time token comparison with backward compatibility for legacy links (<= 4.0.2.1)
+        // constant-time token comparison
         if (!$this->validate_token($data, $action, $provided_token)) {
+            set_transient($rate_key, $attempts + 1, 15 * MINUTE_IN_SECONDS);
             header('Refresh:3; url=' . get_home_url());
-            wp_die(esc_html__('Invalid token.', 'easy-appointments'));
+            wp_die(esc_html__('Invalid token.', 'easy-appointments'), 403);
         }
+
+        delete_transient($rate_key);
 
         // check maybe it is a two step process
         // phpcs:ignore WordPress.Security.NonceVerification.Missing
@@ -279,9 +291,6 @@ class EAMail
             }
 
             $response = $this->models->replace($table, $app_data, true);
-
-            // trigger new appointment
-            do_action('easy_ea_new_app', $app_data['id'], $app_data);
 
             // for user
             do_action('easy_ea_user_email_notification', $app_data['id']);
@@ -510,15 +519,6 @@ class EAMail
 
         if (is_string($expected_token) && hash_equals($expected_token, $provided_token)) {
             return true;
-        }
-
-        // Backward-compatible fallback for links issued in EA <= 4.0.2.1 (strictly 32-char MD5 format)
-        if (strlen($provided_token) === 32 && !empty($data['created']) && is_string($data['created'])) {
-            $legacy_salt  = 'CStK4zYJSuQPnjbJ1npM';
-            $legacy_token = md5($legacy_salt . $data['created'] . $action);
-            if (hash_equals($legacy_token, $provided_token)) {
-                return true;
-            }
         }
 
         return false;
