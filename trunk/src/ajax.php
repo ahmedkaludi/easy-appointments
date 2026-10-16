@@ -1969,6 +1969,11 @@ class EAAjax
         }
 
         if (isset($appointment['status']) && $appointment['status'] !== 'reservation') {
+            if (isset($appointment['status']) && in_array($appointment['status'], array('confirmed', 'pending'))) {
+                $response = new stdClass();
+                $response->message = 'Ok';
+                $this->send_ok_json_result($response);
+            }
             $this->send_err_json_result('{"err":true,"message":"Invalid appointment status"}');
         }
 
