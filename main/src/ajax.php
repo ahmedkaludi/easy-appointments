@@ -498,7 +498,7 @@ class EAAjax
             }
         }
 
-        fputcsv($output, $csv_headers);
+        fputcsv($output, $csv_headers, ',', '"', '\\');
 
         foreach ($appointments as $row) {
             $csv_row = [];
@@ -546,7 +546,7 @@ class EAAjax
                 }
             }
 
-            fputcsv($output, $csv_row);
+            fputcsv($output, $csv_row, ',', '"', '\\');
         }
 
         // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose -- Closing php://output stream; WP_Filesystem does not support output streams.
@@ -3260,7 +3260,7 @@ class EAAjax
         $out = fopen('php://output', 'w');
 
         if (count($rows) > 0) {
-            fputcsv($out, $app_fields);
+            fputcsv($out, $app_fields, ',', '"', '\\');
         }
 
         foreach ($rows as $row) {
@@ -3293,7 +3293,7 @@ class EAAjax
                 $app[] = $arr[$field];
             }
 
-            fputcsv($out, $app);
+            fputcsv($out, $app, ',', '"', '\\');
         }
         // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose
         fclose($out);
