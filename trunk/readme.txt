@@ -5,7 +5,7 @@ Tags: appointment, appointments, Booking, calendar, reservation
 Requires at least: 5.0
 Tested up to: 7.1
 Requires PHP: 5.3
-Stable tag: 4.0.3
+Stable tag: 4.0.4
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -261,6 +261,18 @@ Terms of use and Policy : https://fullcalendar.io/license
 25. Admin panel - Report - Export page
 
 == Changelog ==
+
+= 4.0.4 (2026-10-21)
+* Added worker wise sync for outlook calendar #357
+* Added Feature Request: Add a Button to Delete All Expired Appointments #364
+* Fixed "Appointment not found" issue when booking slot. #367
+* Fixed eCAPTCHA keys are not saved in the new UI (v4.0.2.2) #359
+* Fixed Vacation & Appointment page ignores User Access permissions and requires manage_options #360
+* Fixed Stripe card value not able to enter in stripe payment #361
+* Fixed Pagination page are not proper number showing to n number of page #363
+* Fixed Few translation issue #362
+* Fixed PHP 8.4 Deprecation Warnings in CSV Exports and REST API #365
+* Fixed Security issue: Insecure Direct Object Reference / Authorization Bypass Through User-Controlled Key reported to us by Kuba #366.
 
 = 4.0.3 (2026-10-05)
 * Added an option to set sequence of services in booking form #331
