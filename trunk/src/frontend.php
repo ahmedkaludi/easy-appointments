@@ -1223,7 +1223,7 @@ class Easy_EA_Frontend
 
         foreach ($rows as $index => $row) {
             $name = esc_html($row->name);
-            $selected_attr = (!$has_placeholder && $index === 0) ? ' selected="selected"' : '';
+            $is_selected = (!$has_placeholder && $index === 0);
 
             // only in case of services
             if ($type === 'services') {
@@ -1244,7 +1244,7 @@ class Easy_EA_Frontend
                     printf(
                         '<option value="%s"%s>%s</option>',
                         esc_attr( $row->id ),
-                        $selected_attr,
+                        selected( $is_selected, true, false ),
                         esc_html( $name )
                     );
 
@@ -1257,7 +1257,7 @@ class Easy_EA_Frontend
                         esc_attr( $duration ),
                         esc_attr( $slot_step ),
                         esc_attr($row->description),
-                        $selected_attr,
+                        selected( $is_selected, true, false ),
                         esc_html( $name )
                     );
 
@@ -1284,7 +1284,7 @@ class Easy_EA_Frontend
                     esc_attr($slot_step),
                     esc_attr($row->description),
                     !empty($row->price) ? " data-price='" . esc_attr($row->price) . "'" : '',
-                    $selected_attr,
+                    selected( $is_selected, true, false ),
                     esc_html($name_price)
                 );
 
@@ -1293,7 +1293,7 @@ class Easy_EA_Frontend
                 printf(
                     '<option value="%s"%s>%s</option>',
                     esc_attr( $row->id ),
-                    $selected_attr,
+                    selected( $is_selected, true, false ),
                     esc_html( $name )
                 );
 

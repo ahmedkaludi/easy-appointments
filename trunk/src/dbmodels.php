@@ -629,7 +629,9 @@ class EADBModels
 
         // Stored created timestamps are UTC via current_time('mysql', 1)
         $cutoff = gmdate('Y-m-d H:i:s', time() - 900);
+        // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
         $query = $this->wpdb->prepare("DELETE FROM $table_app WHERE status = 'reservation' AND created < %s", $cutoff);
+        // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.PreparedSQL.NotPrepared
         $this->wpdb->query($query);
     }
 
