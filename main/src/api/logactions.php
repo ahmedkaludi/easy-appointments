@@ -67,7 +67,10 @@ class EasyEALogActions {
         return __('Log records deleted', 'easy-appointments');
     }
 
-    public function extend_connections(WP_REST_Request $request = null) {
+    /**
+     * @param WP_REST_Request|null $request
+     */
+    public function extend_connections($request = null) {
         $table_app = $this->db_models->get_wpdb()->prefix . 'ea_connections';
         $params = $request ? $request->get_json_params() : null;
         if (empty($params) && $request) {
