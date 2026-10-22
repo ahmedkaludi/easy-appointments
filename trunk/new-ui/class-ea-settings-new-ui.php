@@ -147,6 +147,7 @@ class EA_Settings_New_UI
         'user.access.workers',
         'user.access.connections',
         'user.access.reports',
+        'user.access.vacation',
         // Booking Rules settings
         'block.time',
         'cancel_time',
@@ -200,6 +201,11 @@ class EA_Settings_New_UI
         'gdpr.link',
         'gdpr.message',
         'gdpr.auto_remove',
+        // Integrations / reCAPTCHA
+        'captcha.site-key',
+        'captcha.secret-key',
+        'captcha3.site-key',
+        'captcha3.secret-key',
     );
 
     /**

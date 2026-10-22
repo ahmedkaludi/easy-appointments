@@ -307,29 +307,36 @@
         }
 
         function renderPagination(totalCount) {
+            var totalPages = Math.ceil(totalCount / perPage);
+            if (typeof window.eaRenderPagination === 'function') {
+                window.eaRenderPagination('#ea-mnui-pagination', {
+                    currentPage: currentPage,
+                    totalPages: totalPages,
+                    btnClass: 'ea-mnui-btn ea-mnui-btn-ghost ea-mnui-page-btn',
+                    ellipsisClass: 'ea-mnui-pagination-ellipsis'
+                });
+                return;
+            }
+
             var $pag = $('#ea-mnui-pagination');
             $pag.empty();
-
-            var totalPages = Math.ceil(totalCount / perPage);
 
             if (totalPages <= 1) {
                 return;
             }
 
-            // Previous button
-            var $prevBtn = $('<button type="button" class="ea-mnui-btn ea-mnui-btn-ghost ea-mnui-page-btn" data-page="' + (currentPage - 1) + '"' + (currentPage === 1 ? ' disabled' : '') + '>&larr;</button>');
+            var isPrevDisabled = currentPage === 1;
+            var $prevBtn = $('<button type="button" class="ea-mnui-btn ea-mnui-btn-ghost ea-mnui-page-btn' + (isPrevDisabled ? ' is-disabled' : '') + '" data-page="' + (currentPage - 1) + '"' + (isPrevDisabled ? ' disabled' : '') + '>&larr;</button>');
             $pag.append($prevBtn);
 
             for (var i = 1; i <= totalPages; i++) {
-                var $btn = $('<button type="button" class="ea-mnui-btn ea-mnui-btn-ghost ea-mnui-page-btn" data-page="' + i + '">' + i + '</button>');
-                if (i === currentPage) {
-                    $btn.prop('disabled', true);
-                }
+                var isActive = i === currentPage;
+                var $btn = $('<button type="button" class="ea-mnui-btn ea-mnui-btn-ghost ea-mnui-page-btn' + (isActive ? ' is-active' : '') + '" data-page="' + i + '"' + (isActive ? ' disabled' : '') + '>' + i + '</button>');
                 $pag.append($btn);
             }
 
-            // Next button
-            var $nextBtn = $('<button type="button" class="ea-mnui-btn ea-mnui-btn-ghost ea-mnui-page-btn" data-page="' + (currentPage + 1) + '"' + (currentPage === totalPages ? ' disabled' : '') + '>&rarr;</button>');
+            var isNextDisabled = currentPage === totalPages;
+            var $nextBtn = $('<button type="button" class="ea-mnui-btn ea-mnui-btn-ghost ea-mnui-page-btn' + (isNextDisabled ? ' is-disabled' : '') + '" data-page="' + (currentPage + 1) + '"' + (isNextDisabled ? ' disabled' : '') + '>&rarr;</button>');
             $pag.append($nextBtn);
         }
 
@@ -484,6 +491,100 @@
                         hideScreenLoader();
                     });
                 }
+            });
+        });
+
+        $app.on('click', '.ea-mnui-delete-expired-no-app', function (e) {
+            e.preventDefault();
+
+            var $btn = $(this);
+            if ($btn.is('[disabled]') || $btn.hasClass('is-loading')) {
+                return;
+            }
+
+            showScreenLoader();
+
+            // First check how many expired connections with no appointment exist
+            $.ajax({
+                url: cfg.ajaxUrl,
+                method: 'POST',
+                dataType: 'json',
+                data: {
+                    action: 'ea_delete_expired_connections_no_appointments',
+                    action_type: 'check',
+                    _wpnonce: cfg.restNonce
+                }
+            }).done(function (res) {
+                hideScreenLoader();
+
+                if (!res || !res.success) {
+                    var errMsg = (res && res.data && res.data.message) ? res.data.message : i18n.genericError;
+                    showNotice(errMsg);
+                    return;
+                }
+
+                var count = res.data ? parseInt(res.data.count, 10) : 0;
+                var ids = (res.data && res.data.ids) ? res.data.ids : [];
+
+                if (count <= 0) {
+                    showNotice(i18n.noExpiredNoAppFound || 'No expired connections with no appointment found.');
+                    return;
+                }
+
+                var confirmMsg = (i18n.confirmDeleteExpiredNoApp || 'Are you sure you want to delete %d expired connection(s) with no appointment? This action cannot be undone.')
+                    .replace('%d', count);
+
+                window.eaConfirm({
+                    title: (i18n.deleteExpiredConnections || 'Delete Expired Connections'),
+                    message: confirmMsg,
+                    confirmLabel: (i18n.delete || 'Delete'),
+                    cancelLabel: (i18n.cancel || 'Cancel'),
+                    isDanger: true,
+                    onConfirm: function () {
+                        showScreenLoader();
+
+                        $.ajax({
+                            url: cfg.ajaxUrl,
+                            method: 'POST',
+                            dataType: 'json',
+                            data: {
+                                action: 'ea_delete_expired_connections_no_appointments',
+                                action_type: 'delete',
+                                ids: ids,
+                                _wpnonce: cfg.restNonce
+                            }
+                        }).done(function (delRes) {
+                            hideScreenLoader();
+
+                            if (delRes && delRes.success) {
+                                var delCount = delRes.data ? parseInt(delRes.data.count, 10) : count;
+                                var succMsg = (delRes.data && delRes.data.message)
+                                    ? delRes.data.message
+                                    : (i18n.deleteExpiredNoAppSuccess || '%d expired connection(s) with no appointment deleted successfully.').replace('%d', delCount);
+
+                                showNotice(succMsg);
+                                loadConnections();
+                            } else {
+                                var err = (delRes && delRes.data && delRes.data.message) ? delRes.data.message : i18n.genericError;
+                                showNotice(err);
+                            }
+                        }).fail(function (xhr) {
+                            hideScreenLoader();
+                            var err = i18n.genericError;
+                            if (xhr && xhr.responseJSON && xhr.responseJSON.data && xhr.responseJSON.data.message) {
+                                err = xhr.responseJSON.data.message;
+                            }
+                            showNotice(err);
+                        });
+                    }
+                });
+            }).fail(function (xhr) {
+                hideScreenLoader();
+                var err = i18n.genericError;
+                if (xhr && xhr.responseJSON && xhr.responseJSON.data && xhr.responseJSON.data.message) {
+                    err = xhr.responseJSON.data.message;
+                }
+                showNotice(err);
             });
         });
 

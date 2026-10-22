@@ -103,9 +103,7 @@ class EAAjax
         add_action('wp_ajax_ea_month_status', array($this, 'ajax_month_status'));
         add_action('wp_ajax_nopriv_ea_month_status', array($this, 'ajax_month_status'));
         add_action('wp_ajax_ea_search_customers', array($this, 'ajax_search_customers'));
-        add_action('wp_ajax_nopriv_ea_search_customers', array($this, 'ajax_search_customers'));
         add_action('wp_ajax_ea_get_customer_detail', array($this, 'ajax_customer_detail'));
-        add_action('wp_ajax_nopriv_ea_get_customer_detail', array($this, 'ajax_customer_detail'));
         add_action('wp_ajax_ea_update_customer_data', array($this, 'ea_update_customer_data'));
 
         add_action('wp_ajax_ea_notify_admin_booking_issue', array($this, 'ajax_notify_admin_booking_issue'));
@@ -498,7 +496,7 @@ class EAAjax
             }
         }
 
-        fputcsv($output, $csv_headers);
+        fputcsv($output, $csv_headers, ',', '"', '\\');
 
         foreach ($appointments as $row) {
             $csv_row = [];
@@ -547,7 +545,7 @@ class EAAjax
                 }
             }
 
-            fputcsv($output, $csv_row);
+            fputcsv($output, $csv_row, ',', '"', '\\');
         }
 
         // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose -- Closing php://output stream; WP_Filesystem does not support output streams.
@@ -1971,6 +1969,11 @@ class EAAjax
         }
 
         if (isset($appointment['status']) && $appointment['status'] !== 'reservation') {
+            if (isset($appointment['status']) && in_array($appointment['status'], array('confirmed', 'pending'))) {
+                $response = new stdClass();
+                $response->message = 'Ok';
+                $this->send_ok_json_result($response);
+            }
             $this->send_err_json_result('{"err":true,"message":"Invalid appointment status"}');
         }
 
@@ -2743,7 +2746,15 @@ class EAAjax
     {
         $this->validate_admin_nonce();
         $response = false;
-        if ( is_plugin_active( 'easy-appointments-connect/main.php' ) ) {
+        if (
+            is_plugin_active( 'easy-appointments-connect/main.php' ) ||
+            is_plugin_active( 'ea-google-calendar/ea-google-calendar.php' ) ||
+            is_plugin_active( 'ea-outlook/ea-outlook.php' ) ||
+            defined( 'EAGC_VERSION' ) ||
+            defined( 'EAOL_VERSION' ) ||
+            class_exists( 'EAGC_Plugin' ) ||
+            class_exists( 'EAOL_Plugin' )
+        ) {
             $response = true;
         }
         header("Content-Type: application/json");
@@ -3080,6 +3091,7 @@ class EAAjax
             'user.access.locations'         => '',
             'user.access.connections'       => '',
             'user.access.reports'           => '',
+            'user.access.vacation'          => '',
             'max.appointments_by_user'      => '0',
             'is_multiple_booking_allowed'   => '0',
             'webhook.endpoints'             => '[]',
@@ -3310,7 +3322,7 @@ class EAAjax
         $out = fopen('php://output', 'w');
 
         if (count($rows) > 0) {
-            fputcsv($out, $app_fields);
+            fputcsv($out, $app_fields, ',', '"', '\\');
         }
 
         foreach ($rows as $row) {
@@ -3343,7 +3355,7 @@ class EAAjax
                 $app[] = $arr[$field];
             }
 
-            fputcsv($out, $app);
+            fputcsv($out, $app, ',', '"', '\\');
         }
         // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose
         fclose($out);
@@ -3744,12 +3756,22 @@ class EAAjax
         $dbmodels = new EADBModels($wpdb, new EATableColumns(), new EAOptions($wpdb));
         $appointment = $dbmodels->get_appintment_by_id($id);
 
-        $name    = $appointment['name'];
-        $email   = $appointment['email'];
-        $mobile  = $appointment['phone'];
+        if (empty($appointment)) {
+            return;
+        }
 
-        $user_id = get_current_user_id();
-        $user_id = $user_id > 0 ? $user_id : null;
+        $name    = isset($appointment['name']) ? $appointment['name'] : '';
+        $email   = isset($appointment['email']) ? $appointment['email'] : '';
+        $mobile  = isset($appointment['phone']) ? $appointment['phone'] : '';
+
+        $current_user_id = get_current_user_id();
+        $current_user = $current_user_id > 0 ? wp_get_current_user() : null;
+        $current_user_email = ($current_user && !empty($current_user->user_email)) ? strtolower(trim($current_user->user_email)) : '';
+        $booking_email = strtolower(trim($email));
+
+        // Only associate user_id if the current logged-in user's email matches the booking email
+        $is_owner = ($current_user_id > 0 && !empty($current_user_email) && !empty($booking_email) && $current_user_email === $booking_email);
+        $user_id_to_store = $is_owner ? $current_user_id : null;
 
         // Check if customer exists
         // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
@@ -3759,13 +3781,13 @@ class EAAjax
         ));
 
         if (!$existing_customer) {
-            // Insert new customer
+            // Insert new customer - only set user_id if current user owns this email
             // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
             $inserted = $wpdb->insert("{$wpdb->prefix}ea_customers", [
                 'name'    => $name,
                 'email'   => $email,
                 'mobile'  => $mobile,
-                'user_id' => $user_id,
+                'user_id' => $user_id_to_store,
             ]);
 
             if ($inserted) {
@@ -3781,22 +3803,24 @@ class EAAjax
             }
 
         } else {
-            // Append user_id if not already included
-            $existing_user_ids = array_filter(array_map('trim', explode(',', $existing_customer->user_id)));
-            if (!in_array($user_id, $existing_user_ids)) {
-                $existing_user_ids[] = $user_id;
-                $new_user_id_string = implode(',', array_unique($existing_user_ids));
-                // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-                $wpdb->update(
-                    "{$wpdb->prefix}ea_customers",
-                    ['user_id' => $new_user_id_string],
-                    ['id' => $existing_customer->id],
-                    ['%s'],
-                    ['%d']
-                );
+            // Append user_id ONLY if the logged-in user actually owns this email
+            if ($is_owner) {
+                $existing_user_ids = array_filter(array_map('trim', explode(',', (string)$existing_customer->user_id)));
+                if (!in_array((string)$current_user_id, $existing_user_ids, true)) {
+                    $existing_user_ids[] = (string)$current_user_id;
+                    $new_user_id_string = implode(',', array_unique($existing_user_ids));
+                    // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+                    $wpdb->update(
+                        "{$wpdb->prefix}ea_customers",
+                        ['user_id' => $new_user_id_string],
+                        ['id' => $existing_customer->id],
+                        ['%s'],
+                        ['%d']
+                    );
+                }
             }
 
-            // Optional: Also update appointment with existing customer ID
+            // Also update appointment with existing customer ID
             // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
             $wpdb->update(
                 "{$wpdb->prefix}ea_appointments",
@@ -4039,37 +4063,94 @@ class EAAjax
         ]);
     }
 
+    /**
+     * Check if the current user is authorized to search/read all customer records
+     * via the front-end customer search.
+     *
+     * @return bool
+     */
+    protected function is_customer_search_authorized_staff() {
+        if ( current_user_can( 'manage_options' ) ) {
+            return true;
+        }
+
+        $settings = $this->options->get_options();
+        if ( empty( $settings['show.customer_search_front'] ) ) {
+            return false;
+        }
+
+        if ( empty( $settings['customer_search_roles'] ) ) {
+            return false;
+        }
+
+        $allowed_roles = json_decode( $settings['customer_search_roles'], true );
+        if ( ! is_array( $allowed_roles ) || empty( $allowed_roles ) ) {
+            return false;
+        }
+
+        // Never allow subscriber role to search all customers
+        $allowed_roles = array_diff( $allowed_roles, [ 'subscriber' ] );
+        if ( empty( $allowed_roles ) ) {
+            return false;
+        }
+
+        $current_user = wp_get_current_user();
+        if ( ! $current_user || empty( $current_user->roles ) ) {
+            return false;
+        }
+
+        foreach ( (array) $current_user->roles as $role ) {
+            if ( in_array( $role, $allowed_roles, true ) ) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     public function ajax_search_customers () {
         $settings = $this->options->get_options();
 
-        // Require login — unauthenticated users have no customer records to search
+        // Require login — unauthenticated users cannot search customer records
         if ( ! is_user_logged_in() ) {
             wp_send_json( [] );
             return;
         }
 
-        // Nonce verification
-        check_ajax_referer( 'ea-bootstrap-form', 'check' );
+        // Customer search front must be enabled, or caller must have manage_options
+        if ( empty( $settings['show.customer_search_front'] ) && ! current_user_can( 'manage_options' ) ) {
+            wp_send_json( [] );
+            return;
+        }
+
+        // Nonce verification supporting both 'nonce' and 'check' parameters
+        $nonce = isset( $_REQUEST['nonce'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['nonce'] ) ) : ( isset( $_REQUEST['check'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['check'] ) ) : '' );
+        if ( ! wp_verify_nonce( $nonce, 'ea-bootstrap-form' ) ) {
+            wp_send_json( [], 403 );
+            return;
+        }
 
         global $wpdb;
+        $current_user = wp_get_current_user();
         $current_user_id = get_current_user_id();
+        $current_user_email = ( $current_user && ! empty( $current_user->user_email ) ) ? strtolower( trim( $current_user->user_email ) ) : '';
         $q = isset( $_GET['q'] ) ? sanitize_text_field( wp_unslash( $_GET['q'] ) ) : '';
 
         $like_clause = '%' . $wpdb->esc_like( $q ) . '%';
 
-        if ( current_user_can( 'manage_options' ) ) {
-            // Admins can search all customers
+        if ( $this->is_customer_search_authorized_staff() ) {
+            // Admins or explicitly authorized staff roles can search all customers
             // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
             $results = $wpdb->get_results( $wpdb->prepare(
                 "SELECT id, name, email FROM {$wpdb->prefix}ea_customers WHERE (name LIKE %s OR email LIKE %s) LIMIT 20",
                 $like_clause, $like_clause
             ) );
-        } elseif ( ! empty( $settings['show.customer_search_front'] ) ) {
-            // Non-admin logged-in users: only their own records, even with front search enabled
+        } elseif ( ! empty( $settings['show.customer_search_front'] ) && $current_user_id > 0 && ! empty( $current_user_email ) ) {
+            // Non-staff logged-in users: strictly limited to customer rows matching BOTH their user_id and verified email
             // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
             $results = $wpdb->get_results( $wpdb->prepare(
-                "SELECT id, name, email FROM {$wpdb->prefix}ea_customers WHERE FIND_IN_SET(%d, user_id) AND (name LIKE %s OR email LIKE %s) LIMIT 20",
-                $current_user_id, $like_clause, $like_clause
+                "SELECT id, name, email FROM {$wpdb->prefix}ea_customers WHERE FIND_IN_SET(%d, user_id) AND LOWER(email) = %s AND (name LIKE %s OR email LIKE %s) LIMIT 20",
+                $current_user_id, $current_user_email, $like_clause, $like_clause
             ) );
         } else {
             $results = [];
@@ -4087,10 +4168,19 @@ class EAAjax
             return;
         }
 
+        // Customer search front must be enabled, or caller must have manage_options
+        if ( empty( $settings['show.customer_search_front'] ) && ! current_user_can( 'manage_options' ) ) {
+            wp_send_json( [], 403 );
+            return;
+        }
+
         $this->validate_nonce();
 
         global $wpdb;
         $current_user_id = get_current_user_id();
+        $current_user = wp_get_current_user();
+        $current_user_email = ( $current_user && ! empty( $current_user->user_email ) ) ? strtolower( trim( $current_user->user_email ) ) : '';
+
         $id = isset( $_POST['id'] ) ? absint( $_POST['id'] ) : 0; // phpcs:ignore WordPress.Security.NonceVerification.Missing
         // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
         $cust = $wpdb->get_row( $wpdb->prepare(
@@ -4102,15 +4192,25 @@ class EAAjax
             return;
         }
 
-        // Admins can view any customer record
-        if ( current_user_can( 'manage_options' ) ) {
+        // Admins or explicitly authorized staff roles can view any customer record
+        if ( $this->is_customer_search_authorized_staff() ) {
             wp_send_json( $cust );
             return;
         }
 
-        // All other users: enforce ownership check — show.customer_search_front does NOT bypass this
+        // Non-staff users: strictly enforce ownership check:
+        // 1. Caller user_id must be present in user_id column
+        // 2. Caller user_email MUST match customer email
         $allowed_user_ids = array_filter( array_map( 'trim', explode( ',', (string) ( $cust['user_id'] ?? '' ) ) ) );
-        if ( $current_user_id <= 0 || ! in_array( (string) $current_user_id, $allowed_user_ids, true ) ) {
+        $cust_email = strtolower( trim( (string) ( $cust['email'] ?? '' ) ) );
+
+        if (
+            $current_user_id <= 0 ||
+            empty( $current_user_email ) ||
+            empty( $cust_email ) ||
+            $current_user_email !== $cust_email ||
+            ! in_array( (string) $current_user_id, $allowed_user_ids, true )
+        ) {
             wp_send_json( [], 403 );
             return;
         }

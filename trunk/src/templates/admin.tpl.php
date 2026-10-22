@@ -329,6 +329,16 @@ defined( 'ABSPATH' ) || exit;
                     </div>
                     <div class="form-item">
                         <div class="label-with-tooltip">
+                            <label for="user.access.appointments"><?php esc_html_e('Appointments Page', 'easy-appointments'); ?></label>
+                            <span class="tooltip tooltip-right"
+                                  data-tooltip="<?php esc_html_e('Default capability: manage_options.', 'easy-appointments'); ?>"></span>
+                        </div>
+                        <input class="field" data-key="user.access.appointments"
+                            name="user.access.appointments" type="text"
+                            value="<%- _.findWhere(settings, {ea_key:'user.access.appointments'}).ea_value %>">
+                    </div>
+                    <div class="form-item">
+                        <div class="label-with-tooltip">
                             <label for="user.access.locations"><?php esc_html_e('Locations Page', 'easy-appointments'); ?></label>
                             <span class="tooltip tooltip-right"
                                   data-tooltip="<?php esc_html_e('Default capability: manage_options.', 'easy-appointments'); ?>"></span>
@@ -376,6 +386,16 @@ defined( 'ABSPATH' ) || exit;
                         <input class="field" data-key="user.access.reports"
                                name="user.access.reports" type="text"
                                value="<%- _.findWhere(settings, {ea_key:'user.access.reports'}).ea_value %>">
+                    </div>
+                    <div class="form-item">
+                        <div class="label-with-tooltip">
+                            <label for="user.access.vacation"><?php esc_html_e('Vacation Page', 'easy-appointments'); ?></label>
+                            <span class="tooltip tooltip-right"
+                                  data-tooltip="<?php esc_html_e('Default capability: manage_options.', 'easy-appointments'); ?>"></span>
+                        </div>
+                        <input class="field" data-key="user.access.vacation"
+                               name="user.access.vacation" type="text"
+                               value="<%- _.findWhere(settings, {ea_key:'user.access.vacation'}).ea_value %>">
                     </div>
                     <div class="form-item">
                         <div class="form-wrap">

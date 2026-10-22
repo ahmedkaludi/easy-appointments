@@ -436,29 +436,36 @@
         }
 
         function renderPagination() {
+            var totalPages = Math.ceil(appointments.length / perPage);
+            if (typeof window.eaRenderPagination === 'function') {
+                window.eaRenderPagination('#ea-naui-pagination', {
+                    currentPage: currentPage,
+                    totalPages: totalPages,
+                    btnClass: 'ea-naui-btn ea-naui-btn-ghost ea-naui-page-btn',
+                    ellipsisClass: 'ea-naui-pagination-ellipsis'
+                });
+                return;
+            }
+
             var $pag = $('#ea-naui-pagination');
             $pag.empty();
-
-            var totalPages = Math.ceil(appointments.length / perPage);
 
             if (totalPages <= 1) {
                 return;
             }
 
-            // Previous button
-            var $prevBtn = $('<button type="button" class="ea-naui-btn ea-naui-btn-ghost ea-naui-page-btn" data-page="' + (currentPage - 1) + '"' + (currentPage === 1 ? ' disabled' : '') + '>&larr;</button>');
+            var isPrevDisabled = currentPage === 1;
+            var $prevBtn = $('<button type="button" class="ea-naui-btn ea-naui-btn-ghost ea-naui-page-btn' + (isPrevDisabled ? ' is-disabled' : '') + '" data-page="' + (currentPage - 1) + '"' + (isPrevDisabled ? ' disabled' : '') + '>&larr;</button>');
             $pag.append($prevBtn);
 
             for (var i = 1; i <= totalPages; i++) {
-                var $btn = $('<button type="button" class="ea-naui-btn ea-naui-btn-ghost ea-naui-page-btn" data-page="' + i + '">' + i + '</button>');
-                if (i === currentPage) {
-                    $btn.prop('disabled', true);
-                }
+                var isActive = i === currentPage;
+                var $btn = $('<button type="button" class="ea-naui-btn ea-naui-btn-ghost ea-naui-page-btn' + (isActive ? ' is-active' : '') + '" data-page="' + i + '"' + (isActive ? ' disabled' : '') + '>' + i + '</button>');
                 $pag.append($btn);
             }
 
-            // Next button
-            var $nextBtn = $('<button type="button" class="ea-naui-btn ea-naui-btn-ghost ea-naui-page-btn" data-page="' + (currentPage + 1) + '"' + (currentPage === totalPages ? ' disabled' : '') + '>&rarr;</button>');
+            var isNextDisabled = currentPage === totalPages;
+            var $nextBtn = $('<button type="button" class="ea-naui-btn ea-naui-btn-ghost ea-naui-page-btn' + (isNextDisabled ? ' is-disabled' : '') + '" data-page="' + (currentPage + 1) + '"' + (isNextDisabled ? ' disabled' : '') + '>&rarr;</button>');
             $pag.append($nextBtn);
         }
 

@@ -74,6 +74,7 @@ class EA_Connections_New_UI
         // Expiration Alert AJAX actions for New UI
         add_action('wp_ajax_ea_save_connection_expire_settings', array(__CLASS__, 'ajax_save_connection_expire_settings'));
         add_action('wp_ajax_ea_trigger_connection_expire_check', array(__CLASS__, 'ajax_trigger_connection_expire_check'));
+        add_action('wp_ajax_ea_delete_expired_connections_no_appointments', array(__CLASS__, 'ajax_delete_expired_connections_no_appointments'));
 
         // WP-Cron event hook for daily expiration check
         add_action('easy_ea_daily_connection_expire_check', array(__CLASS__, 'check_and_notify_expiring_connections'));
@@ -273,6 +274,13 @@ class EA_Connections_New_UI
                 'connectionS'           => esc_html__(' connection(s)', 'easy-appointments'),
                 'extendSelConns'        => esc_html__('Extend Selected Connections', 'easy-appointments'),
                 'deleteConnection'      => esc_html__('Delete Connection', 'easy-appointments'),
+                'deleteExpiredNoApp'         => esc_html__('Delete all expired connections with no appointment', 'easy-appointments'),
+                'deleteExpiredConnections'   => esc_html__('Delete Expired Connections', 'easy-appointments'),
+                'noExpiredNoAppFound'        => esc_html__('No expired connections with no appointment found.', 'easy-appointments'),
+                /* translators: %d: number of expired connections */
+                'confirmDeleteExpiredNoApp'  => esc_html__('Are you sure you want to delete %d expired connection(s) with no appointment? This action cannot be undone.', 'easy-appointments'),
+                /* translators: %d: number of expired connections */
+                'deleteExpiredNoAppSuccess'  => esc_html__('%d expired connection(s) with no appointment deleted successfully.', 'easy-appointments'),
             ),
         );
     }
@@ -577,6 +585,125 @@ class EA_Connections_New_UI
             'success' => false,
             'message' => esc_html__('Failed to send connection expiration alert email.', 'easy-appointments'),
         );
+    }
+
+    /**
+     * Get IDs of expired connections that have no associated appointments.
+     *
+     * @return array Array of connection IDs (integers).
+     */
+    public static function get_expired_connections_no_appointments_ids()
+    {
+        global $wpdb;
+
+        $connections_table  = esc_sql($wpdb->prefix . 'ea_connections');
+        $appointments_table = esc_sql($wpdb->prefix . 'ea_appointments');
+        $today              = current_time('Y-m-d');
+
+        // phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+        $query = $wpdb->prepare(
+            "SELECT c.id
+             FROM {$connections_table} c
+             WHERE c.day_to IS NOT NULL
+               AND CAST(c.day_to AS CHAR) != ''
+               AND CAST(c.day_to AS CHAR) != '0000-00-00'
+               AND c.day_to < %s
+               AND NOT EXISTS (
+                   SELECT 1
+                   FROM {$appointments_table} a
+                   WHERE a.location = c.location
+                     AND a.service = c.service
+                     AND a.worker = c.worker
+                     AND (c.day_from IS NULL OR CAST(c.day_from AS CHAR) = '' OR CAST(c.day_from AS CHAR) = '0000-00-00' OR a.date >= c.day_from)
+                     AND a.date <= c.day_to
+                     AND (a.status IS NULL OR a.status NOT IN ('abandoned', 'reservation'))
+               )
+             ORDER BY c.id DESC",
+            $today
+        );
+        // phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+
+        // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared
+        $results = $wpdb->get_col($query);
+
+        if (empty($results) || !is_array($results)) {
+            return array();
+        }
+
+        return array_map('intval', $results);
+    }
+
+    /**
+     * AJAX endpoint: Delete all expired connections with no appointment.
+     */
+    public static function ajax_delete_expired_connections_no_appointments()
+    {
+        if (!current_user_can(self::capability())) {
+            wp_send_json_error(array('message' => esc_html__('Permission denied.', 'easy-appointments')));
+        }
+
+        check_ajax_referer(self::REST_NONCE_ACTION, '_wpnonce');
+
+        $action_type = isset($_POST['action_type']) ? sanitize_text_field(wp_unslash($_POST['action_type'])) : 'delete';
+
+        $expired_ids = self::get_expired_connections_no_appointments_ids();
+
+        if ($action_type === 'check') {
+            wp_send_json_success(array(
+                'count' => count($expired_ids),
+                'ids'   => $expired_ids,
+            ));
+        }
+
+        if (empty($expired_ids)) {
+            wp_send_json_success(array(
+                'count'   => 0,
+                'ids'     => array(),
+                'message' => esc_html__('No expired connections with no appointment found.', 'easy-appointments'),
+            ));
+        }
+
+        // Filter by requested IDs if provided
+        $ids_to_delete = $expired_ids;
+        if (!empty($_POST['ids'])) {
+            $raw_ids = wp_unslash($_POST['ids']); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- sanitized via absint below
+            $req_ids = is_array($raw_ids) ? array_map('absint', $raw_ids) : array_map('absint', explode(',', sanitize_text_field($raw_ids)));
+            $ids_to_delete = array_values(array_intersect($expired_ids, $req_ids));
+        }
+
+        if (empty($ids_to_delete)) {
+            wp_send_json_success(array(
+                'count'   => 0,
+                'ids'     => array(),
+                'message' => esc_html__('No expired connections with no appointment found.', 'easy-appointments'),
+            ));
+        }
+
+        global $wpdb;
+        $connections_table = esc_sql($wpdb->prefix . 'ea_connections');
+
+        $placeholders = implode(',', array_fill(0, count($ids_to_delete), '%d'));
+        // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
+        $delete_query = $wpdb->prepare("DELETE FROM {$connections_table} WHERE id IN ($placeholders)", $ids_to_delete);
+
+        // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared
+        $deleted = $wpdb->query($delete_query);
+
+        if (false === $deleted) {
+            wp_send_json_error(array(
+                'message' => esc_html__('Failed to delete expired connections.', 'easy-appointments'),
+            ));
+        }
+
+        wp_send_json_success(array(
+            'count'   => count($ids_to_delete),
+            'ids'     => $ids_to_delete,
+            'message' => sprintf(
+                /* translators: %d: number of deleted connections */
+                esc_html__('%d expired connection(s) with no appointment deleted successfully.', 'easy-appointments'),
+                count($ids_to_delete)
+            ),
+        ));
     }
 }
 

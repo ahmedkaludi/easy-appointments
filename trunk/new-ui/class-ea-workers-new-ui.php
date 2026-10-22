@@ -193,6 +193,12 @@ class EA_Workers_New_UI
                 /* translators: %s: employee name */
                 'confirmUnlinkGoogle'   => esc_html__('Disconnect Google Calendar for "%s"?', 'easy-appointments'),
                 'googleUnlinked'        => esc_html__('Google Calendar disconnected.', 'easy-appointments'),
+                'linkOutlookCalendar'   => esc_html__('Link Outlook Calendar', 'easy-appointments'),
+                /* translators: %s: employee name */
+                'outlookConnected'      => esc_html__('Outlook Calendar connected for "%s". Click to disconnect.', 'easy-appointments'),
+                /* translators: %s: employee name */
+                'confirmUnlinkOutlook'  => esc_html__('Disconnect Outlook Calendar for "%s"?', 'easy-appointments'),
+                'outlookUnlinked'       => esc_html__('Outlook Calendar disconnected.', 'easy-appointments'),
                 'invalidEmail'          => esc_html__('Please enter a valid email address.', 'easy-appointments'),
                 'duplicateEmail'        => esc_html__('This email address is already in use by another employee.', 'easy-appointments'),
                 'emailRequired'         => esc_html__('Email is required.', 'easy-appointments'),
@@ -200,6 +206,7 @@ class EA_Workers_New_UI
                 'deleteEmployee'        => esc_html__('Delete Employee', 'easy-appointments'),
                 'deleteEmployees'       => esc_html__('Delete Employees', 'easy-appointments'),
                 'disconnectGC'          => esc_html__('Disconnect Google Calendar', 'easy-appointments'),
+                'disconnectOutlook'     => esc_html__('Disconnect Outlook Calendar', 'easy-appointments'),
                 'disconnectBtn'         => esc_html__('Disconnect', 'easy-appointments'),
             ),
         );

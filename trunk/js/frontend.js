@@ -941,6 +941,14 @@
             booking_data.date_time = moment(booking_data.date + 'T' + booking_data.time, ea_settings['default_datetime_format']).format(format);
 
             jQuery.get(ea_ajaxurl, options, function (response) {
+                if (!response || !response.id) {
+                    plugin.res_app = null;
+                    plugin.removeLoader();
+                    if (response && response.message) {
+                        alert(response.message);
+                    }
+                    return;
+                }
 
                 plugin.res_app = response.id;
 
@@ -975,7 +983,10 @@
 
             }, 'json')
                 .fail(function (response) {
-                    alert(response.responseJSON.message);
+                    plugin.res_app = null;
+                    if (response && response.responseJSON && response.responseJSON.message) {
+                        alert(response.responseJSON.message);
+                    }
                 })
                 .always(jQuery.proxy(function () {
                     this.removeLoader();
@@ -985,15 +996,28 @@
          * Comform appointment
          */
         finalComformation: function (event) {
-            event.preventDefault();
+            if (typeof event !== 'undefined') {
+                event.preventDefault();
+            }
 
             var plugin = this;
+
+            if (plugin.isSubmitting) {
+                return;
+            }
 
             var form = this.$element.find('form');
 
             if (!form.valid()) {
                 return;
             }
+
+            if (!this.res_app) {
+                plugin.singleConformation(event);
+                return;
+            }
+
+            plugin.isSubmitting = true;
 
             this.$element.find('.ea-submit').prop('disabled', true);
 
@@ -1012,6 +1036,7 @@
             options._cb    = Math.floor(Math.random() * 1000000);
 
             jQuery.get(ea_ajaxurl, options, function (response) {
+                plugin._isRetrying = false;
                 plugin.isSubmitting = false;
 
                 // Remove loader spinner, update button text to Booked, and hide cancel button
@@ -1093,19 +1118,41 @@
                     }, 2000);
                 }
             }, 'json')
-                .fail(jQuery.proxy(function () {
+                .fail(jQuery.proxy(function (response, status, error) {
+                    plugin.res_app = null;
+                    plugin.isSubmitting = false;
+
+                    // If appointment was not found (e.g. reservation expired/purged), automatically retry once via singleConformation
+                    if (response && response.responseJSON && response.responseJSON.message === 'Appointment not found' && !plugin._isRetrying) {
+                        plugin._isRetrying = true;
+                        plugin.singleConformation(event);
+                        return;
+                    }
+                    plugin._isRetrying = false;
+
+                    if (response && response.responseJSON && response.responseJSON.message) {
+                        alert(response.responseJSON.message);
+                    }
                     this.$element.find('.ea-submit').prop('disabled', false);
                 }, plugin));
         },
         singleConformation: function (event) {
-            event.preventDefault();
+            if (typeof event !== 'undefined') {
+                event.preventDefault();
+            }
             var plugin = this;
+
+            if (plugin.isSubmitting) {
+                return;
+            }
 
             var form = this.$element.find('form');
 
             if (!form.valid()) {
                 return;
             }
+
+            plugin.isSubmitting = true;
 
             this.$element.find('.ea-submit').prop('disabled', true);
 
@@ -1128,12 +1175,28 @@
             options._cb    = Math.floor(Math.random() * 1000000);
 
             jQuery.get(ea_ajaxurl, options, function (response) {
+                if (!response || !response.id) {
+                    plugin.res_app = null;
+                    plugin.isSubmitting = false;
+                    plugin._isRetrying = false;
+                    if (response && response.message) {
+                        alert(response.message);
+                    }
+                    plugin.$element.find('.ea-submit').prop('disabled', false);
+                    return;
+                }
                 plugin.res_app = response.id;
+                plugin.isSubmitting = false;
 
                 plugin.finalComformation(event);
             }, 'json')
                 .fail(jQuery.proxy(function (response) {
-                    alert(response.responseJSON.message);
+                    plugin.res_app = null;
+                    plugin.isSubmitting = false;
+                    plugin._isRetrying = false;
+                    if (response && response.responseJSON && response.responseJSON.message) {
+                        alert(response.responseJSON.message);
+                    }
                     this.$element.find('.ea-submit').prop('disabled', false);
                 }, plugin))
                 .always(jQuery.proxy(function () {

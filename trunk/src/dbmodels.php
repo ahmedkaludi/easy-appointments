@@ -283,6 +283,15 @@ class EADBModels
         // full table name
         $table_name = $this->wpdb->prefix . $table_name;
 
+        $insert_id = -1;
+
+        $is_update = array_key_exists('id', $data) && $data['id'] != '-1' && !empty($data['id']);
+        $update_id = $is_update ? $data['id'] : null;
+
+        if (!$is_update && array_key_exists('id', $data)) {
+            unset($data['id']);
+        }
+
         $types = array();
 
         foreach ($data as $key => $value) {
@@ -331,25 +340,17 @@ class EADBModels
             }
         }
 
-        $insert_id = -1;
-
         // check if there is id set, if true just update
-        if (array_key_exists('id', $data) && $data['id'] != '-1' && !empty($data['id'])) {
+        if ($is_update) {
             $return = $this->wpdb->update(
                 $table_name,
                 $data,
-                array('id' => $data['id']),
+                array('id' => $update_id),
                 $types
             );
 
-            $insert_id = $data['id'];
+            $insert_id = $update_id;
         } else {
-            // clone - new
-            if (array_key_exists('id', $data)) {
-                unset($data['id']);
-                unset($types[0]);
-            }
-
             $return = $this->wpdb->insert(
                 $table_name,
                 $data,
@@ -620,14 +621,17 @@ class EADBModels
     }
 
     /**
-     * Removes reservation older then 6 minutes
+     * Removes reservation older then 15 minutes (UTC-safe)
      */
     public function delete_reservations()
     {
         $table_app = $this->wpdb->prefix . 'ea_appointments';
 
-        $query = "DELETE FROM $table_app WHERE status = 'reservation' AND created < (NOW() - INTERVAL 6 MINUTE)";
-        // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
+        // Stored created timestamps are UTC via current_time('mysql', 1)
+        $cutoff = gmdate('Y-m-d H:i:s', time() - 900);
+        // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+        $query = $this->wpdb->prepare("DELETE FROM $table_app WHERE status = 'reservation' AND created < %s", $cutoff);
+        // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.PreparedSQL.NotPrepared
         $this->wpdb->query($query);
     }
 

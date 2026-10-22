@@ -32,7 +32,7 @@ defined( 'ABSPATH' ) || exit;
             <% if(data.service_description) { %>
                 <% if(data.service_description.length > 0) { %>
                 <tr class="row-service-description">
-                    <td class="ea-label"><%- settings['trans.description'] || 'Description' %></td>
+                    <td class="ea-label"><%- settings['trans.description'] || '<?php echo esc_js(__('Description', 'easy-appointments')); ?>' %></td>
                     <td class="value" style="white-space: pre-line;"><%= data.service_description %></td>
                 </tr>
                 <% } %>
@@ -69,7 +69,7 @@ defined( 'ABSPATH' ) || exit;
             <% if(data.service_description) { %>
                 <% if(data.service_description.length > 0) { %>
                 <tr class="row-service-description">
-                    <td class="ea-label"><%- settings['trans.description'] || 'Description' %></td>
+                    <td class="ea-label"><%- settings['trans.description'] || '<?php echo esc_js(__('Description', 'easy-appointments')); ?>' %></td>
                     <td class="value" style="white-space: pre-line;"><%= data.service_description %></td>
                 </tr>
                 <% } %>
@@ -115,7 +115,7 @@ defined( 'ABSPATH' ) || exit;
             </div>
         </div>
         <h3 style="color: #0f172a !important; margin: 0 0 10px 0 !important; font-size: 22px !important; font-weight: 700 !important; letter-spacing: -0.01em !important; display: block !important; visibility: visible !important;" class="ea-confirmation-title">
-            <%- settings['trans.confirmation-title'] || 'Thank You for Booking!' %>
+            <%- settings['trans.confirmation-title'] || '<?php echo esc_js(__('Thank You for Booking!', 'easy-appointments')); ?>' %>
         </h3>
         <div style="margin: 0 0 20px 0;">
             <p style="font-size: 14.5px; color: #475569; line-height: 1.6; margin: 0; word-wrap: break-word; white-space: normal; max-width: 100%; display: block !important; visibility: visible !important;" class="ea-status-note">
@@ -132,7 +132,7 @@ defined( 'ABSPATH' ) || exit;
                 style="padding: 10px 20px; background: #2563eb; color: #ffffff !important; text-decoration: none !important; border-radius: 8px; font-weight: 600; font-size: 14px; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 2px 4px rgba(37, 99, 235, 0.2); transition: all 0.2s ease;" 
                 class="ea-button-book-again">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="fill:none !important; stroke:#ffffff !important; width:16px !important; height:16px !important; flex-shrink:0;"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
-                <span><%- settings['trans.book-again'] || 'Book New Appointment' %></span>
+                <span><%- settings['trans.book-again'] || '<?php echo esc_js(__('Book New Appointment', 'easy-appointments')); ?>' %></span>
             </a>
             <a 
                 id="ea-add-to-calendar" 
@@ -140,7 +140,7 @@ defined( 'ABSPATH' ) || exit;
                 target="_blank" 
                 style="padding: 10px 20px; background: #16a34a; color: #ffffff !important; text-decoration: none !important; border-radius: 8px; font-weight: 600; font-size: 14px; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 2px 4px rgba(22, 163, 74, 0.2); transition: all 0.2s ease;">                
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="fill:none !important; stroke:#ffffff !important; width:16px !important; height:16px !important; flex-shrink:0;"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
-                <span><%- settings['trans.add-to-calendar'] || 'Add to Google Calendar' %></span>
+                <span><%- settings['trans.add-to-calendar'] || '<?php echo esc_js(__('Add to Google Calendar', 'easy-appointments')); ?>' %></span>
             </a>
         </div>
     </div>

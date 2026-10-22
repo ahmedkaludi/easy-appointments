@@ -200,6 +200,7 @@ class EAOptions
             'user.access.locations'         => '',
             'user.access.connections'       => '',
             'user.access.reports'           => '',
+            'user.access.vacation'          => '',
             'max.appointments_by_user'      => '0',
             'is_multiple_booking_allowed'   => '0',
             'services.order_by_sequence'    => '0',

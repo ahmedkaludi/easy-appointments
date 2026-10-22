@@ -498,7 +498,7 @@ class EAAjax
             }
         }
 
-        fputcsv($output, $csv_headers);
+        fputcsv($output, $csv_headers, ',', '"', '\\');
 
         foreach ($appointments as $row) {
             $csv_row = [];
@@ -546,7 +546,7 @@ class EAAjax
                 }
             }
 
-            fputcsv($output, $csv_row);
+            fputcsv($output, $csv_row, ',', '"', '\\');
         }
 
         // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose -- Closing php://output stream; WP_Filesystem does not support output streams.
@@ -1907,9 +1907,25 @@ class EAAjax
 
         $data['status'] = $this->options->get_option_value('default.status', 'pending');
 
-        $appointment = $this->models->get_row('ea_appointments', $data['id'], ARRAY_A);
+        $app_id = !empty($data['id']) ? absint($data['id']) : 0;
+        if (empty($app_id)) {
+            $this->send_err_json_result('{"err":true,"message":"Invalid appointment ID"}');
+        }
 
-        
+        $appointment = $this->models->get_row('ea_appointments', $app_id, ARRAY_A);
+
+        if (empty($appointment) || empty($appointment['id'])) {
+            $this->send_err_json_result('{"err":true,"message":"Appointment not found"}');
+        }
+
+        if (isset($appointment['status']) && $appointment['status'] !== 'reservation') {
+            if (isset($appointment['status']) && in_array($appointment['status'], array('confirmed', 'pending'))) {
+                $response = new stdClass();
+                $response->message = 'Ok';
+                $this->send_ok_json_result($response);
+            }
+            $this->send_err_json_result('{"err":true,"message":"Invalid appointment status"}');
+        }
 
         // check IP
 
@@ -1917,7 +1933,7 @@ class EAAjax
             ? sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) )
             : '';
 
-        if ( $appointment['ip'] !== $remote_ip ) {
+        if ( !empty($appointment['ip']) && $appointment['ip'] !== $remote_ip ) {
             $this->send_err_json_result( '{"err":true}' );
         }
 
@@ -3244,7 +3260,7 @@ class EAAjax
         $out = fopen('php://output', 'w');
 
         if (count($rows) > 0) {
-            fputcsv($out, $app_fields);
+            fputcsv($out, $app_fields, ',', '"', '\\');
         }
 
         foreach ($rows as $row) {
@@ -3277,7 +3293,7 @@ class EAAjax
                 $app[] = $arr[$field];
             }
 
-            fputcsv($out, $app);
+            fputcsv($out, $app, ',', '"', '\\');
         }
         // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose
         fclose($out);
