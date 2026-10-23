@@ -2309,9 +2309,12 @@ class EAAjax
             $this->send_ok_json_result($response);
         }
 
-        if (isset($this->data['_mail'])) {
-            $this->mail->send_user_email_notification_action($response->id);
-            $this->mail->send_admin_email_notification_action($response->id);
+        $app_id = isset($response->id) ? (int)$response->id : 0;
+        $status_is_canceled = isset($this->data['status']) && $this->data['status'] === 'canceled';
+
+        if (isset($this->data['_mail']) || $status_is_canceled) {
+            $this->mail->send_user_email_notification_action($app_id);
+            $this->mail->send_admin_email_notification_action($app_id);
         }
 
         $this->send_ok_json_result($response);
@@ -3464,7 +3467,9 @@ class EAAjax
         $end_time = strtotime("{$data['start']} + {$service->duration} minute");
         $app_data['end'] = gmdate('H:i', $end_time);
 
-        if (!empty($app_data['date']) && !empty($app_data['start'])) {
+        $is_canceling = (isset($app_data['status']) && 'canceled' === $app_data['status']);
+
+        if (!$is_canceling && !empty($app_data['date']) && !empty($app_data['start'])) {
 
             // Appointment datetime (YYYY-mm-dd HH:ii)
             $appointment_datetime = strtotime(
@@ -3507,6 +3512,10 @@ class EAAjax
                 $response = $this->models->get_row($table, $id);
                 break;
             case 'UPDATE':
+                $old_appointment = $this->models->get_row($table, $app_data['id'], ARRAY_A);
+                $old_status = isset($old_appointment['status']) ? $old_appointment['status'] : '';
+                $new_status = isset($app_data['status']) ? $app_data['status'] : '';
+
                 $response = $this->models->replace($table, $app_data, true);
 
                 $this->models->delete($fields, array('app_id' => $app_data['id']), true);
@@ -3518,6 +3527,19 @@ class EAAjax
 
                 // edit app
                 do_action('easy_ea_edit_app', $app_data['id']);
+
+                if ($new_status !== $old_status) {
+                    do_action('easy_ea_status_changed', $app_data['id'], $new_status, $old_status, $app_data);
+
+                    if ('canceled' === $new_status) {
+                        do_action('easy_ea_cancel_app', $app_data['id'], $app_data);
+                    }
+                }
+
+                $updated_appointment = $this->models->get_row($table, $app_data['id']);
+                if ($updated_appointment) {
+                    $response = $updated_appointment;
+                }
 
                 break;
             case 'NEW':

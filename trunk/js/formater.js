@@ -51,6 +51,13 @@ function formatDateTime(datetime) {
         return datetime;
     }
 
+    var m = moment.utc(datetime, ['YYYY-MM-DD HH:mm:ss', 'YYYY-MM-DD HH:mm', 'YYYY-MM-DD']);
+
+    if (m.isValid()) {
+        m.local();
+        return formatDate(m.format('YYYY-MM-DD')) + ' ' + formatTime(m.format('HH:mm'));
+    }
+
     var parts = datetime.split(' ');
 
     if (parts.length !== 2) {

@@ -319,18 +319,24 @@ EA.AppointmentView = Backbone.View.extend({
         // Saves appointment
         appointment.save(customParams, {
             success: function(model, response) {
+                view.$el.removeClass('ea-editing');
+                view.template = view.template_show;
                 view.render();
+                view.edit_mode = false;
+            },
+            error: function(model, xhr) {
+                var errorMsg = (ea_settings['trans.error-saving'] || 'Error saving appointment.');
+                if (xhr && xhr.responseText) {
+                    try {
+                        var parsed = JSON.parse(xhr.responseText);
+                        if (parsed.message) {
+                            errorMsg = parsed.message;
+                        }
+                    } catch(e) {}
+                }
+                alert(errorMsg);
             }
         });
-
-        this.$el.removeClass('ea-editing');
-
-        // show row
-        this.template = this.template_show;
-
-        this.render();
-
-        this.edit_mode = false;
     },
 
     cancel: function() {
@@ -443,29 +449,18 @@ EA.AppointmentView = Backbone.View.extend({
 
     setEndTimeApp: function() {
         var start = this.$el.find('.time-start').val();
-        var date = this.$el.find('.date-start').val();
-
-        // service duration
         var service = this.$el.find('[name="ea-input-services"]');
-        var duration = parseInt(service.children(':selected').data('duration'));
+        var duration = parseInt(service.children(':selected').data('duration'), 10);
 
-        var startTime = new Date(date + "T" + start);
-
-        var newDateObj = new Date(startTime.getTime() + duration * 60000);
-
-        var minutes = newDateObj.getMinutes();
-        var hours = newDateObj.getHours();
-
-        if(minutes.length === 1) {
-            minutes = '0' + minutes;
+        if (!start || isNaN(duration)) {
+            return;
         }
 
-        if(hours.length === 1) {
-            hours = '0' + hours;
+        var m = moment(start, ['HH:mm', 'H:mm', 'h:mm A', 'hh:mm A']);
+        if (m.isValid()) {
+            m.add(duration, 'minutes');
+            this.model.set('end', m.format('HH:mm'));
         }
-        // FIX there is time end issue here
-        // this.model.set('end', hours + ":" + minutes);
-        this.model.set('end', null);
     },
 
     serviceChange: function() {
