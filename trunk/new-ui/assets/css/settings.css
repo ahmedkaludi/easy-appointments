@@ -1038,24 +1038,25 @@
     display: flex;
     flex-wrap: wrap;
     justify-content: flex-end;
-    gap: 8px;
-    max-width: 460px;
+    gap: 6px;
+    max-width: none;
 }
 
 .ea-nsui-chip {
     position: relative;
     display: inline-flex;
     align-items: center;
-    gap: 7px;
-    padding: 6px 12px 6px 10px;
+    gap: 6px;
+    padding: 5px 11px 5px 9px;
     border: 1px solid var(--ea-border);
     border-radius: 999px;
     background: #fff;
-    font-size: 12.5px;
+    font-size: 12px;
     font-weight: 500;
     color: var(--ea-text);
     cursor: pointer;
     user-select: none;
+    white-space: nowrap;
     transition: border-color 0.15s ease, background 0.15s ease, color 0.15s ease;
 }
 
@@ -2627,7 +2628,12 @@
     max-width: 140px;
 }
 
-@media (max-width: 1400px) {
+.ea-nsui-row-chips .ea-nsui-chip-group {
+    flex-wrap: nowrap;
+    max-width: none;
+}
+
+@media (max-width: 1200px) {
     .ea-nsui-row-chips {
         flex-direction: column;
         align-items: flex-start;
@@ -2645,6 +2651,7 @@
     .ea-nsui-row-chips .ea-nsui-chip-group {
         justify-content: flex-start;
         max-width: 100%;
+        flex-wrap: wrap;
     }
 }
 

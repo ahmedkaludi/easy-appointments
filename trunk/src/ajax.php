@@ -2337,7 +2337,7 @@ class EAAjax
             wp_send_json_error( array( 'message' => esc_html__( 'Invalid appointment or status.', 'easy-appointments' ) ), 400 );
         }
 
-        $allowed_statuses = array( 'pending', 'confirmed', 'canceled', 'reservation' );
+        $allowed_statuses = array( 'pending', 'confirmed', 'canceled', 'reservation', 'abandoned' );
         if ( ! in_array( $new_status, $allowed_statuses, true ) ) {
             wp_send_json_error( array( 'message' => esc_html__( 'Invalid status value.', 'easy-appointments' ) ), 400 );
         }

@@ -487,6 +487,11 @@ class EAInstallTools
             $version = '1.9.3';
         }
 
+        if (version_compare($version, '4.0.5', '<')) {
+            $this->update_email_options('user');
+            $this->update_email_options('worker');
+        }
+
         update_option('easy_app_db_version', $version);
     }
 
@@ -504,6 +509,7 @@ class EAInstallTools
                 'send.user.reservation_email',
                 'send.user.cancelled_email',
                 'send.user.confirmed_email',
+                'send.user.abandoned_email',
             ];
         } elseif ($type === 'worker') {
             $parent_key = 'send.worker.email';
@@ -512,6 +518,7 @@ class EAInstallTools
                 'send.worker.reservation_email',
                 'send.worker.cancelled_email',
                 'send.worker.confirmed_email',
+                'send.worker.abandoned_email',
             ];
         } else {
             return false; // Invalid type
@@ -525,23 +532,13 @@ class EAInstallTools
             return false; // Parent not enabled, do nothing
         }
 
-        // Insert or update each child key
+        // Insert missing child keys
         foreach ($children as $key) {
             // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
             $existing = $wpdb->get_var($wpdb->prepare( "SELECT COUNT(*) FROM $table_name WHERE ea_key = %s", $key ));
 
-            if ($existing) {
-                // Update to 1
-                // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-                $wpdb->update(
-                    $table_name,
-                    ['ea_value' => '1'],
-                    ['ea_key'   => $key],
-                    ['%s'],
-                    ['%s']
-                );
-            } else {
-                // Insert as 1
+            if (! $existing) {
+                // Insert as 1 only if child does not exist yet
                 // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
                 $wpdb->insert(
                     $table_name,

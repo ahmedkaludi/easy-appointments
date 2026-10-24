@@ -241,6 +241,11 @@ if ( ! defined( 'WPINC' ) ) {
                                         <span class="ea-nsui-chip-box"></span>
                                         <span class="ea-nsui-chip-text"><?php esc_html_e('Confirmed', 'easy-appointments'); ?></span>
                                     </label>
+                                    <label class="ea-nsui-chip">
+                                        <input type="checkbox" data-key="send.worker.abandoned_email" value="1" <?php checked($ea_get('send.worker.abandoned_email', '0'), '1'); ?>>
+                                        <span class="ea-nsui-chip-box"></span>
+                                        <span class="ea-nsui-chip-text"><?php esc_html_e('Abandoned', 'easy-appointments'); ?></span>
+                                    </label>
                                 </div>
                             </div>
                         </div>
@@ -281,6 +286,11 @@ if ( ! defined( 'WPINC' ) ) {
                                         <input type="checkbox" data-key="send.user.confirmed_email" value="1" <?php checked($ea_get('send.user.confirmed_email', '0'), '1'); ?>>
                                         <span class="ea-nsui-chip-box"></span>
                                         <span class="ea-nsui-chip-text"><?php esc_html_e('Confirmed', 'easy-appointments'); ?></span>
+                                    </label>
+                                    <label class="ea-nsui-chip">
+                                        <input type="checkbox" data-key="send.user.abandoned_email" value="1" <?php checked($ea_get('send.user.abandoned_email', '0'), '1'); ?>>
+                                        <span class="ea-nsui-chip-box"></span>
+                                        <span class="ea-nsui-chip-text"><?php esc_html_e('Abandoned', 'easy-appointments'); ?></span>
                                     </label>
                                 </div>
                             </div>

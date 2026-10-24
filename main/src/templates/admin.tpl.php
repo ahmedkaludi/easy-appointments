@@ -594,6 +594,11 @@ defined( 'ABSPATH' ) || exit;
                                         name="send.worker.confirmed_email" id="send.worker.confirmed_email" type="checkbox" <% if
                                     (_.findWhere(settings, {ea_key:'send.worker.confirmed_email'}).ea_value == "1") {
                                     %>checked<% } %>> <?php esc_html_e('Confirmed', 'easy-appointments'); ?>
+                                    </label>&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <label for="send.worker.abandoned_email"><input class="field" data-key="send.worker.abandoned_email"
+                                        name="send.worker.abandoned_email" id="send.worker.abandoned_email" type="checkbox" <% if
+                                    (typeof _.findWhere(settings, {ea_key:'send.worker.abandoned_email'}) !== 'undefined' && _.findWhere(settings, {ea_key:'send.worker.abandoned_email'}).ea_value == "1") {
+                                    %>checked<% } %>> <?php esc_html_e('Abandoned', 'easy-appointments'); ?>
                                     </label>
                                 </div>
                             </div>
@@ -632,6 +637,11 @@ defined( 'ABSPATH' ) || exit;
                                         name="send.user.confirmed_email" id="send.user.confirmed_email" type="checkbox" <% if
                                     (_.findWhere(settings, {ea_key:'send.user.confirmed_email'}).ea_value == "1") {
                                     %>checked<% } %>> <?php esc_html_e('Confirmed', 'easy-appointments'); ?>
+                                    </label>&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <label for="send.user.abandoned_email"><input class="field" data-key="send.user.abandoned_email"
+                                        name="send.user.abandoned_email" id="send.user.abandoned_email" type="checkbox" <% if
+                                    (typeof _.findWhere(settings, {ea_key:'send.user.abandoned_email'}) !== 'undefined' && _.findWhere(settings, {ea_key:'send.user.abandoned_email'}).ea_value == "1") {
+                                    %>checked<% } %>> <?php esc_html_e('Abandoned', 'easy-appointments'); ?>
                                     </label>
                                 </div>
                             </div>
@@ -1845,7 +1855,8 @@ defined( 'ABSPATH' ) || exit;
             var map = {
                 pending: 'pending_email',
                 confirmed: 'confirmed_email',
-                reservation: 'reservation_email'
+                reservation: 'reservation_email',
+                abandoned: 'abandoned_email'
             };
 
             var key = map[status];

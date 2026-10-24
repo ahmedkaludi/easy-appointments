@@ -376,6 +376,9 @@ class EAMail
         if ($this->options->get_option_value('send.user.confirmed_email')) {
            $enable_options[] = 'confirmed';
         }
+        if ($this->options->get_option_value('send.user.abandoned_email')) {
+           $enable_options[] = 'abandoned';
+        }
         return $enable_options;
     }
     public function get_worker_email_notification_active(){
@@ -391,6 +394,9 @@ class EAMail
         }
         if ($this->options->get_option_value('send.worker.confirmed_email')) {
            $enable_options[] = 'confirmed';
+        }
+        if ($this->options->get_option_value('send.worker.abandoned_email')) {
+           $enable_options[] = 'abandoned';
         }
         return $enable_options;
     }
@@ -619,11 +625,18 @@ class EAMail
         // create links for cancel and confirm email
         $links = array();
 
-        $links['#link_cancel#'] = $this->generate_link_element($raw_data, 'cancel', __('Cancel appointment', 'easy-appointments'));
-        $links['#link_confirm#'] = $this->generate_link_element($raw_data, 'confirm', __('Confirm appointment', 'easy-appointments'));
+        if (isset($raw_data['status']) && $raw_data['status'] === 'abandoned') {
+            $links['#link_cancel#'] = '';
+            $links['#link_confirm#'] = '';
+            $links['#url_cancel#'] = '';
+            $links['#url_confirm#'] = '';
+        } else {
+            $links['#link_cancel#'] = $this->generate_link_element($raw_data, 'cancel', __('Cancel appointment', 'easy-appointments'));
+            $links['#link_confirm#'] = $this->generate_link_element($raw_data, 'confirm', __('Confirm appointment', 'easy-appointments'));
 
-        $links['#url_cancel#'] = $this->generate_url($raw_data, 'cancel');
-        $links['#url_confirm#'] = $this->generate_url($raw_data, 'confirm');
+            $links['#url_cancel#'] = $this->generate_url($raw_data, 'cancel');
+            $links['#url_confirm#'] = $this->generate_url($raw_data, 'confirm');
+        }
 
         $subject_template = $this->options->get_option_value('pending.subject.email', 'Notification : #id#');
         $enable_status_subjects = $this->options->get_option_value('enable_status_subjects', '0');
@@ -655,6 +668,8 @@ class EAMail
             $body_template = $this->options->get_option_value('mail.admin.canceled', $body_template);
         } elseif ($raw_data['status'] == 'reservation') {
             $body_template = $this->options->get_option_value('mail.admin.reservation', $body_template);
+        } elseif ($raw_data['status'] == 'abandoned') {
+            $body_template = $this->options->get_option_value('mail.admin.abandoned', '');
         }
         $body_template = apply_filters('easy_ea_admin_mail_template', $body_template);
 
@@ -668,6 +683,13 @@ class EAMail
 
             require EA_SRC_DIR . 'templates/mail.notification.tpl.php';
             $mail_content = ob_get_clean();
+            if (isset($raw_data['status']) && $raw_data['status'] === 'abandoned') {
+                $mail_content = str_replace(
+                    array('<p style="font-weight: bold">- #link_confirm#</p>', '<p style="font-weight: bold">- #link_cancel#</p>'),
+                    '',
+                    $mail_content
+                );
+            }
             $mail_content = str_replace(array_keys($links), array_values($links), $mail_content);
         }
 
@@ -734,11 +756,18 @@ class EAMail
             $params["#$key#"] = $value;
         }
 
-        $params['#link_cancel#'] = $this->generate_link_element($app_array, 'cancel');
-        $params['#link_confirm#'] = $this->generate_link_element($app_array, 'confirm');
+        if (isset($app_array['status']) && $app_array['status'] === 'abandoned') {
+            $params['#link_cancel#'] = '';
+            $params['#link_confirm#'] = '';
+            $params['#url_cancel#'] = '';
+            $params['#url_confirm#'] = '';
+        } else {
+            $params['#link_cancel#'] = $this->generate_link_element($app_array, 'cancel');
+            $params['#link_confirm#'] = $this->generate_link_element($app_array, 'confirm');
 
-        $params['#url_cancel#'] = $this->generate_url($app_array, 'cancel');
-        $params['#url_confirm#'] = $this->generate_url($app_array, 'confirm');
+            $params['#url_cancel#'] = $this->generate_url($app_array, 'cancel');
+            $params['#url_confirm#'] = $this->generate_url($app_array, 'confirm');
+        }
 
         $mail_content = str_replace(array_keys($params), array_values($params), $body_template);
 
@@ -790,11 +819,18 @@ class EAMail
             $params["#$key#"] = $value;
         }
 
-        $params["#link_cancel#"] = $this->generate_link_element($app_array, 'cancel');
-        $params["#link_confirm#"] = $this->generate_link_element($app_array, 'confirm');
+        if (isset($app_array['status']) && $app_array['status'] === 'abandoned') {
+            $params["#link_cancel#"] = '';
+            $params["#link_confirm#"] = '';
+            $params['#url_cancel#'] = '';
+            $params['#url_confirm#'] = '';
+        } else {
+            $params["#link_cancel#"] = $this->generate_link_element($app_array, 'cancel');
+            $params["#link_confirm#"] = $this->generate_link_element($app_array, 'confirm');
 
-        $params['#url_cancel#'] = $this->generate_url($app_array, 'cancel');
-        $params['#url_confirm#'] = $this->generate_url($app_array, 'confirm');
+            $params['#url_cancel#'] = $this->generate_url($app_array, 'cancel');
+            $params['#url_confirm#'] = $this->generate_url($app_array, 'confirm');
+        }
 
         $subject_template = $this->options->get_option_value('pending.subject.visitor.email', 'Reservation : #id#');
         $enable_status_subjects = $this->options->get_option_value('enable_status_subjects', '0');
@@ -814,7 +850,20 @@ class EAMail
         // Hook for customize subject of email template
         $subject_template = apply_filters( 'easy_ea_customer_mail_subject_template', $subject_template);
 
-        $body_template = $this->options->get_option_value('mail.' . $app->status, 'mail');
+        if ($app->status === 'abandoned') {
+            $default_template = $this->get_default_admin_template();
+            $default_template = str_replace(
+                array(
+                    '<p style="font-weight: bold">- #link_confirm#</p>',
+                    '<p style="font-weight: bold">- #link_cancel#</p>',
+                ),
+                '',
+                $default_template
+            );
+            $body_template = $this->options->get_option_value('mail.abandoned', $default_template);
+        } else {
+            $body_template = $this->options->get_option_value('mail.' . $app->status, 'mail');
+        }
 
         // Hook for customize body of email template
         $body_template = apply_filters( 'easy_ea_customer_mail_template', $body_template, $app_array, $params );
@@ -913,11 +962,18 @@ class EAMail
             $params["#$key#"] = $value;
         }
 
-        $params["#link_cancel#"] = $this->generate_link_element($app_array, 'cancel');
-        $params["#link_confirm#"] = $this->generate_link_element($app_array, 'confirm');
+        if (isset($app_array['status']) && $app_array['status'] === 'abandoned') {
+            $params["#link_cancel#"] = '';
+            $params["#link_confirm#"] = '';
+            $params['#url_cancel#'] = '';
+            $params['#url_confirm#'] = '';
+        } else {
+            $params["#link_cancel#"] = $this->generate_link_element($app_array, 'cancel');
+            $params["#link_confirm#"] = $this->generate_link_element($app_array, 'confirm');
 
-        $params['#url_cancel#'] = $this->generate_url($app_array, 'cancel');
-        $params['#url_confirm#'] = $this->generate_url($app_array, 'confirm');
+            $params['#url_cancel#'] = $this->generate_url($app_array, 'cancel');
+            $params['#url_confirm#'] = $this->generate_url($app_array, 'confirm');
+        }
 
         $subject_template = $this->options->get_option_value('pending.subject.visitor.email', 'Reservation : #id#');
 
@@ -938,7 +994,20 @@ class EAMail
         // Hook for customize subject of email template
         $subject_template = apply_filters( 'easy_ea_customer_mail_subject_template', $subject_template);
 
-        $body_template = $this->options->get_option_value('mail.' . $app->status, 'mail');
+        if ($app->status === 'abandoned') {
+            $default_template = $this->get_default_admin_template();
+            $default_template = str_replace(
+                array(
+                    '<p style="font-weight: bold">- #link_confirm#</p>',
+                    '<p style="font-weight: bold">- #link_cancel#</p>',
+                ),
+                '',
+                $default_template
+            );
+            $body_template = $this->options->get_option_value('mail.abandoned', $default_template);
+        } else {
+            $body_template = $this->options->get_option_value('mail.' . $app->status, 'mail');
+        }
 
         // Hook for customize body of email template
         
