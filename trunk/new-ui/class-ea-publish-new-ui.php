@@ -44,6 +44,49 @@ class EA_Publish_New_UI
     {
         add_action('admin_menu', array(__CLASS__, 'register_menu'), 20);
         add_action('admin_enqueue_scripts', array(__CLASS__, 'enqueue_assets'));
+        add_action('wp_ajax_ea_create_booking_page', array(__CLASS__, 'ajax_create_booking_page'));
+    }
+
+    /**
+     * AJAX handler to create a draft booking page and return the editor redirect URL.
+     */
+    public static function ajax_create_booking_page()
+    {
+        check_ajax_referer('ea_publish_nonce', 'nonce');
+
+        if (!current_user_can('edit_pages')) {
+            wp_send_json_error(array('message' => esc_html__('You do not have permission to create pages.', 'easy-appointments')));
+        }
+
+        $shortcode = isset($_POST['shortcode']) ? sanitize_text_field(wp_unslash($_POST['shortcode'])) : '[ea_bootstrap]';
+        if (empty($shortcode) || strpos($shortcode, '[ea_') === false) {
+            $shortcode = '[ea_bootstrap]';
+        }
+
+        $page_data = array(
+            'post_title'   => __('Book an Appointment', 'easy-appointments'),
+            'post_content' => '<!-- wp:create-block/ea-blocks {"width":"100%","layoutCols":"1"} -->' . $shortcode . '<!-- /wp:create-block/ea-blocks -->',
+            'post_status'  => 'draft',
+            'post_type'    => 'page',
+        );
+
+        $page_id = wp_insert_post($page_data);
+
+        if (is_wp_error($page_id) || !$page_id) {
+            $err_msg = is_wp_error($page_id) ? $page_id->get_error_message() : esc_html__('Failed to create page.', 'easy-appointments');
+            wp_send_json_error(array('message' => $err_msg));
+        }
+
+        $edit_url = get_edit_post_link($page_id, 'raw');
+        if (!$edit_url) {
+            $edit_url = admin_url('post.php?post=' . $page_id . '&action=edit');
+        }
+
+        wp_send_json_success(array(
+            'page_id'  => $page_id,
+            'edit_url' => $edit_url,
+            'message'  => esc_html__('Draft booking page created! Redirecting to editor...', 'easy-appointments'),
+        ));
     }
 
     /**
@@ -131,9 +174,14 @@ class EA_Publish_New_UI
         );
 
         wp_localize_script('ea-new-publish-ui', 'eaPublishUI', array(
-            'i18n' => array(
+            'ajaxUrl' => admin_url('admin-ajax.php'),
+            'nonce'   => wp_create_nonce('ea_publish_nonce'),
+            'i18n'    => array(
                 'copyToClipboard' => esc_html__('Copy to clipboard', 'easy-appointments'),
-                'copied' => esc_html__('Copied!', 'easy-appointments'),
+                'copied'          => esc_html__('Copied!', 'easy-appointments'),
+                'creating'        => esc_html__('Creating draft page...', 'easy-appointments'),
+                'redirecting'     => esc_html__('Page created! Redirecting to editor...', 'easy-appointments'),
+                'error'           => esc_html__('Failed to create page. Please try again.', 'easy-appointments'),
             ),
         ));
     }
@@ -152,6 +200,47 @@ class EA_Publish_New_UI
         if (!current_user_can($capability)) {
             wp_die(esc_html__('You do not have sufficient permissions to access this page.', 'easy-appointments'));
         }
+
+        global $wpdb;
+
+        // 1. Setup readiness checks
+        $locations_count = (int) $wpdb->get_var("SELECT COUNT(*) FROM {$wpdb->prefix}ea_locations");
+        $services_count  = (int) $wpdb->get_var("SELECT COUNT(*) FROM {$wpdb->prefix}ea_services");
+        $workers_count   = (int) $wpdb->get_var("SELECT COUNT(*) FROM {$wpdb->prefix}ea_staff");
+
+        $connections_count = (int) $wpdb->get_var(
+            "SELECT COUNT(c.id) 
+             FROM {$wpdb->prefix}ea_connections c
+             INNER JOIN {$wpdb->prefix}ea_locations l ON (l.id = c.location)
+             INNER JOIN {$wpdb->prefix}ea_services s ON (s.id = c.service)
+             INNER JOIN {$wpdb->prefix}ea_staff w ON (w.id = c.worker)
+             WHERE c.is_working = 1"
+        );
+
+        $is_setup_ready = ($locations_count > 0 && $services_count > 0 && $workers_count > 0 && $connections_count > 0);
+
+        // URLs for fixing missing items (UI mode aware)
+        $is_new_ui = class_exists('EA_UI_Switcher') && EA_UI_Switcher::is_new_ui();
+        $urls = array(
+            'locations'   => admin_url('admin.php?page=' . ($is_new_ui ? 'easy_app_locations_new' : 'easy_app_locations')),
+            'services'    => admin_url('admin.php?page=' . ($is_new_ui ? 'easy_app_services_new' : 'easy_app_services')),
+            'workers'     => admin_url('admin.php?page=' . ($is_new_ui ? 'easy_app_workers_new' : 'easy_app_workers')),
+            'connections' => admin_url('admin.php?page=' . ($is_new_ui ? 'easy_app_connections_new' : 'easy_app_connections')),
+        );
+
+        // 2. Existing booking pages detection
+        $existing_pages = $wpdb->get_results(
+            "SELECT ID, post_title, post_status FROM {$wpdb->posts} 
+             WHERE post_type = 'page' 
+               AND post_status IN ('publish', 'draft', 'pending', 'private')
+               AND (post_content LIKE '%[ea_bootstrap]%' OR post_content LIKE '%[ea_standard]%' OR post_content LIKE '%create-block/ea-blocks%')
+             ORDER BY post_date DESC LIMIT 3"
+        );
+
+        // 3. Dropdown records for the live Shortcode Generator
+        $locations = $wpdb->get_results("SELECT id, name FROM {$wpdb->prefix}ea_locations ORDER BY name ASC");
+        $services  = $wpdb->get_results("SELECT id, name, duration, price FROM {$wpdb->prefix}ea_services ORDER BY name ASC");
+        $workers   = $wpdb->get_results("SELECT id, name FROM {$wpdb->prefix}ea_staff ORDER BY name ASC");
 
         require EA_PLUGIN_DIR . 'new-ui/templates/publish-page.php';
     }

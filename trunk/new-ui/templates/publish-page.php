@@ -42,10 +42,341 @@ if (!defined('WPINC')) {
         <!-- Body -->
         <div class="ea-publish-body">
 
-            <!-- Intro -->
+            <!-- ===== 1. SETUP READINESS CHECK / CONNECTION CHECKER ===== -->
+            <?php if ($is_setup_ready): ?>
+                <div class="ea-publish-readiness-banner ea-publish-banner-success">
+                    <div class="ea-publish-banner-icon">
+                        <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                            <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                        </svg>
+                    </div>
+                    <div class="ea-publish-banner-content">
+                        <div class="ea-publish-banner-title">
+                            <h3><?php esc_html_e('All Systems Ready for Booking', 'easy-appointments'); ?></h3>
+                            <span class="ea-publish-badge ea-publish-badge-success"><?php esc_html_e('Ready', 'easy-appointments'); ?></span>
+                        </div>
+                        <p class="ea-publish-banner-desc">
+                            <?php esc_html_e('Your locations, services, staff, and active schedule connections are configured. Front-end visitors will be able to view and book open slots immediately.', 'easy-appointments'); ?>
+                        </p>
+                        <div class="ea-publish-banner-stats">
+                            <span class="ea-publish-stat-chip">
+                                <strong><?php echo esc_html($locations_count); ?></strong> <?php esc_html_e('Locations', 'easy-appointments'); ?>
+                            </span>
+                            <span class="ea-publish-stat-chip">
+                                <strong><?php echo esc_html($services_count); ?></strong> <?php esc_html_e('Services', 'easy-appointments'); ?>
+                            </span>
+                            <span class="ea-publish-stat-chip">
+                                <strong><?php echo esc_html($workers_count); ?></strong> <?php esc_html_e('Staff Members', 'easy-appointments'); ?>
+                            </span>
+                            <span class="ea-publish-stat-chip ea-publish-stat-highlight">
+                                <strong><?php echo esc_html($connections_count); ?></strong> <?php esc_html_e('Active Connections', 'easy-appointments'); ?>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            <?php else: ?>
+                <div class="ea-publish-readiness-banner ea-publish-banner-warning">
+                    <div class="ea-publish-banner-icon">
+                        <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                            <line x1="12" y1="9" x2="12" y2="13"></line>
+                            <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                        </svg>
+                    </div>
+                    <div class="ea-publish-banner-content">
+                        <div class="ea-publish-banner-title">
+                            <h3><?php esc_html_e('Setup Incomplete — Calendar Will Not Show Available Slots', 'easy-appointments'); ?></h3>
+                            <span class="ea-publish-badge ea-publish-badge-warning"><?php esc_html_e('Action Required', 'easy-appointments'); ?></span>
+                        </div>
+                        <p class="ea-publish-banner-desc">
+                            <?php esc_html_e('Easy Appointments requires at least one Location, Service, Staff member, and an Active Connection linking them together with working hours before booking slots can render. Please complete the missing setup below:', 'easy-appointments'); ?>
+                        </p>
+                        <div class="ea-publish-checklist-grid">
+                            <!-- Location -->
+                            <div class="ea-publish-check-item <?php echo $locations_count > 0 ? 'is-complete' : 'is-missing'; ?>">
+                                <div class="ea-publish-check-status">
+                                    <?php if ($locations_count > 0): ?>
+                                        <span class="ea-check-icon ea-check-icon-ok">✓</span>
+                                    <?php else: ?>
+                                        <span class="ea-check-icon ea-check-icon-bad">✕</span>
+                                    <?php endif; ?>
+                                    <span class="ea-check-title">
+                                        <?php printf(esc_html__('Locations: %d added', 'easy-appointments'), $locations_count); ?>
+                                    </span>
+                                </div>
+                                <div class="ea-publish-check-action">
+                                    <a href="<?php echo esc_url($urls['locations']); ?>" class="ea-publish-btn ea-publish-btn-xs <?php echo $locations_count > 0 ? 'ea-publish-btn-ghost' : 'ea-publish-btn-primary'; ?>">
+                                        <?php echo $locations_count > 0 ? esc_html__('Manage', 'easy-appointments') : esc_html__('+ Add Location', 'easy-appointments'); ?>
+                                    </a>
+                                </div>
+                            </div>
+
+                            <!-- Service -->
+                            <div class="ea-publish-check-item <?php echo $services_count > 0 ? 'is-complete' : 'is-missing'; ?>">
+                                <div class="ea-publish-check-status">
+                                    <?php if ($services_count > 0): ?>
+                                        <span class="ea-check-icon ea-check-icon-ok">✓</span>
+                                    <?php else: ?>
+                                        <span class="ea-check-icon ea-check-icon-bad">✕</span>
+                                    <?php endif; ?>
+                                    <span class="ea-check-title">
+                                        <?php printf(esc_html__('Services: %d added', 'easy-appointments'), $services_count); ?>
+                                    </span>
+                                </div>
+                                <div class="ea-publish-check-action">
+                                    <a href="<?php echo esc_url($urls['services']); ?>" class="ea-publish-btn ea-publish-btn-xs <?php echo $services_count > 0 ? 'ea-publish-btn-ghost' : 'ea-publish-btn-primary'; ?>">
+                                        <?php echo $services_count > 0 ? esc_html__('Manage', 'easy-appointments') : esc_html__('+ Add Service', 'easy-appointments'); ?>
+                                    </a>
+                                </div>
+                            </div>
+
+                            <!-- Worker / Staff -->
+                            <div class="ea-publish-check-item <?php echo $workers_count > 0 ? 'is-complete' : 'is-missing'; ?>">
+                                <div class="ea-publish-check-status">
+                                    <?php if ($workers_count > 0): ?>
+                                        <span class="ea-check-icon ea-check-icon-ok">✓</span>
+                                    <?php else: ?>
+                                        <span class="ea-check-icon ea-check-icon-bad">✕</span>
+                                    <?php endif; ?>
+                                    <span class="ea-check-title">
+                                        <?php printf(esc_html__('Staff: %d added', 'easy-appointments'), $workers_count); ?>
+                                    </span>
+                                </div>
+                                <div class="ea-publish-check-action">
+                                    <a href="<?php echo esc_url($urls['workers']); ?>" class="ea-publish-btn ea-publish-btn-xs <?php echo $workers_count > 0 ? 'ea-publish-btn-ghost' : 'ea-publish-btn-primary'; ?>">
+                                        <?php echo $workers_count > 0 ? esc_html__('Manage', 'easy-appointments') : esc_html__('+ Add Staff', 'easy-appointments'); ?>
+                                    </a>
+                                </div>
+                            </div>
+
+                            <!-- Connection -->
+                            <div class="ea-publish-check-item <?php echo $connections_count > 0 ? 'is-complete' : 'is-missing'; ?>">
+                                <div class="ea-publish-check-status">
+                                    <?php if ($connections_count > 0): ?>
+                                        <span class="ea-check-icon ea-check-icon-ok">✓</span>
+                                    <?php else: ?>
+                                        <span class="ea-check-icon ea-check-icon-bad">✕</span>
+                                    <?php endif; ?>
+                                    <span class="ea-check-title">
+                                        <?php printf(esc_html__('Connections: %d active', 'easy-appointments'), $connections_count); ?>
+                                    </span>
+                                </div>
+                                <div class="ea-publish-check-action">
+                                    <a href="<?php echo esc_url($urls['connections']); ?>" class="ea-publish-btn ea-publish-btn-xs <?php echo $connections_count > 0 ? 'ea-publish-btn-ghost' : 'ea-publish-btn-primary'; ?>">
+                                        <?php echo $connections_count > 0 ? esc_html__('Manage', 'easy-appointments') : esc_html__('+ Connect Staff & Service', 'easy-appointments'); ?>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <?php endif; ?>
+
+            <!-- ===== 2. ONE-CLICK "CREATE A BOOKING PAGE FOR ME" CTA ===== -->
+            <div class="ea-publish-hero-card">
+                <div class="ea-publish-hero-main">
+                    <div class="ea-publish-hero-text">
+                        <span class="ea-publish-hero-tag"><?php esc_html_e('Quick Launch', 'easy-appointments'); ?></span>
+                        <h2><?php esc_html_e('Create a Booking Page in One Click', 'easy-appointments'); ?></h2>
+                        <p><?php esc_html_e('Automatically inserts a draft WordPress page with your booking form and opens it directly in the editor so you can review and publish instantly.', 'easy-appointments'); ?></p>
+                    </div>
+                    <div class="ea-publish-hero-actions">
+                        <button type="button" class="ea-publish-btn ea-publish-btn-hero" id="ea-create-booking-page-btn">
+                            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                <line x1="16" y1="2" x2="16" y2="6"></line>
+                                <line x1="8" y1="2" x2="8" y2="6"></line>
+                                <line x1="3" y1="10" x2="21" y2="10"></line>
+                                <line x1="12" y1="14" x2="12" y2="18"></line>
+                                <line x1="10" y1="16" x2="14" y2="16"></line>
+                            </svg>
+                            <span class="ea-hero-btn-label"><?php esc_html_e('Create a Booking Page for Me', 'easy-appointments'); ?></span>
+                        </button>
+                    </div>
+                </div>
+
+                <div id="ea-create-page-status" class="ea-publish-hero-notice" style="display: none;"></div>
+
+                <?php if (!empty($existing_pages)): ?>
+                    <div class="ea-publish-existing-pages">
+                        <span class="ea-existing-label"><?php esc_html_e('Existing booking pages detected:', 'easy-appointments'); ?></span>
+                        <div class="ea-existing-list">
+                            <?php foreach ($existing_pages as $p): ?>
+                                <span class="ea-existing-item">
+                                    <strong><?php echo esc_html($p->post_title ?: __('(Untitled)', 'easy-appointments')); ?></strong>
+                                    <small class="ea-existing-status">(<?php echo esc_html(ucfirst($p->post_status)); ?>)</small>
+                                    <a href="<?php echo esc_url(get_edit_post_link($p->ID)); ?>" target="_blank" class="ea-existing-link"><?php esc_html_e('Edit', 'easy-appointments'); ?></a>
+                                    <?php if ($p->post_status === 'publish'): ?>
+                                        <a href="<?php echo esc_url(get_permalink($p->ID)); ?>" target="_blank" class="ea-existing-link"><?php esc_html_e('View', 'easy-appointments'); ?></a>
+                                    <?php endif; ?>
+                                </span>
+                            <?php endforeach; ?>
+                        </div>
+                    </div>
+                <?php endif; ?>
+            </div>
+
+            <!-- ===== 3. INTERACTIVE SHORTCODE GENERATOR ===== -->
+            <div class="ea-publish-card ea-publish-generator-card">
+                <div class="ea-publish-card-header">
+                    <div>
+                        <h3><?php esc_html_e('Interactive Shortcode Generator', 'easy-appointments'); ?></h3>
+                        <p class="ea-publish-card-desc"><?php esc_html_e('Select options populated directly from your database records. The shortcode updates dynamically in real time.', 'easy-appointments'); ?></p>
+                    </div>
+                </div>
+
+                <div class="ea-publish-generator-body">
+                    <!-- Generator Controls Grid -->
+                    <div class="ea-gen-controls-grid">
+
+                        <!-- Form Type Selector -->
+                        <div class="ea-gen-control-item ea-gen-control-full">
+                            <label class="ea-gen-label"><?php esc_html_e('Booking Form Type', 'easy-appointments'); ?></label>
+                            <div class="ea-gen-type-pills">
+                                <label class="ea-gen-type-pill active">
+                                    <input type="radio" name="ea_gen_type" value="bootstrap" checked>
+                                    <span class="ea-pill-box">
+                                        <strong>[ea_bootstrap]</strong>
+                                        <small><?php esc_html_e('Responsive Modern Layout (Recommended)', 'easy-appointments'); ?></small>
+                                    </span>
+                                </label>
+                                <label class="ea-gen-type-pill">
+                                    <input type="radio" name="ea_gen_type" value="standard">
+                                    <span class="ea-pill-box">
+                                        <strong>[ea_standard]</strong>
+                                        <small><?php esc_html_e('Classic Form Layout', 'easy-appointments'); ?></small>
+                                    </span>
+                                </label>
+                                <label class="ea-gen-type-pill">
+                                    <input type="radio" name="ea_gen_type" value="fullcalendar">
+                                    <span class="ea-pill-box">
+                                        <strong>[ea_full_calendar]</strong>
+                                        <small><?php esc_html_e('Full Month Calendar View', 'easy-appointments'); ?></small>
+                                    </span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Location Dropdown -->
+                        <div class="ea-gen-control-item">
+                            <label for="ea-gen-location" class="ea-gen-label"><?php esc_html_e('Preselect Location', 'easy-appointments'); ?></label>
+                            <select id="ea-gen-location" class="ea-gen-select">
+                                <option value=""><?php esc_html_e('— All Locations (User Selects) —', 'easy-appointments'); ?></option>
+                                <?php if (!empty($locations)): ?>
+                                    <?php foreach ($locations as $loc): ?>
+                                        <option value="<?php echo esc_attr($loc->id); ?>">
+                                            <?php echo esc_html($loc->name); ?> (ID: <?php echo esc_html($loc->id); ?>)
+                                        </option>
+                                    <?php endforeach; ?>
+                                <?php endif; ?>
+                            </select>
+                        </div>
+
+                        <!-- Service Dropdown -->
+                        <div class="ea-gen-control-item">
+                            <label for="ea-gen-service" class="ea-gen-label"><?php esc_html_e('Preselect Service', 'easy-appointments'); ?></label>
+                            <select id="ea-gen-service" class="ea-gen-select">
+                                <option value=""><?php esc_html_e('— All Services (User Selects) —', 'easy-appointments'); ?></option>
+                                <?php if (!empty($services)): ?>
+                                    <?php foreach ($services as $srv): ?>
+                                        <option value="<?php echo esc_attr($srv->id); ?>">
+                                            <?php echo esc_html($srv->name); ?> (ID: <?php echo esc_html($srv->id); ?>)
+                                        </option>
+                                    <?php endforeach; ?>
+                                <?php endif; ?>
+                            </select>
+                        </div>
+
+                        <!-- Staff / Worker Dropdown -->
+                        <div class="ea-gen-control-item">
+                            <label for="ea-gen-worker" class="ea-gen-label"><?php esc_html_e('Preselect Staff / Worker', 'easy-appointments'); ?></label>
+                            <select id="ea-gen-worker" class="ea-gen-select">
+                                <option value=""><?php esc_html_e('— All Staff (User Selects) —', 'easy-appointments'); ?></option>
+                                <?php if (!empty($workers)): ?>
+                                    <?php foreach ($workers as $wrk): ?>
+                                        <option value="<?php echo esc_attr($wrk->id); ?>">
+                                            <?php echo esc_html($wrk->name); ?> (ID: <?php echo esc_html($wrk->id); ?>)
+                                        </option>
+                                    <?php endforeach; ?>
+                                <?php endif; ?>
+                            </select>
+                        </div>
+
+                        <!-- Column Layout (Bootstrap only) -->
+                        <div class="ea-gen-control-item ea-gen-field-cols">
+                            <label for="ea-gen-cols" class="ea-gen-label"><?php esc_html_e('Layout Columns', 'easy-appointments'); ?></label>
+                            <select id="ea-gen-cols" class="ea-gen-select">
+                                <option value="1" selected><?php esc_html_e('1 Column (Default)', 'easy-appointments'); ?></option>
+                                <option value="2"><?php esc_html_e('2 Columns (Side by Side)', 'easy-appointments'); ?></option>
+                            </select>
+                        </div>
+
+                        <!-- Container Width -->
+                        <div class="ea-gen-control-item ea-gen-field-width">
+                            <label for="ea-gen-width" class="ea-gen-label"><?php esc_html_e('Widget Width', 'easy-appointments'); ?></label>
+                            <select id="ea-gen-width" class="ea-gen-select">
+                                <option value="100%" selected><?php esc_html_e('100% (Responsive Fluid)', 'easy-appointments'); ?></option>
+                                <option value="800px">800px</option>
+                                <option value="600px">600px</option>
+                                <option value="400px">400px</option>
+                            </select>
+                        </div>
+
+                        <!-- Optional Toggles -->
+                        <div class="ea-gen-control-item ea-gen-control-full">
+                            <label class="ea-gen-label"><?php esc_html_e('Additional Settings', 'easy-appointments'); ?></label>
+                            <div class="ea-gen-checkbox-group">
+                                <label class="ea-gen-checkbox">
+                                    <input type="checkbox" id="ea-gen-show-slots" value="1">
+                                    <span><?php esc_html_e('Display remaining available slot count (show_remaining_slots="1")', 'easy-appointments'); ?></span>
+                                </label>
+                                <label class="ea-gen-checkbox">
+                                    <input type="checkbox" id="ea-gen-scroll-off" value="true">
+                                    <span><?php esc_html_e('Disable auto-scroll on step change (scroll_off="true")', 'easy-appointments'); ?></span>
+                                </label>
+                                <label class="ea-gen-checkbox">
+                                    <input type="checkbox" id="ea-gen-show-week" value="1">
+                                    <span><?php esc_html_e('Show week numbers in calendar (show_week="1")', 'easy-appointments'); ?></span>
+                                </label>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Live Shortcode Output Bar -->
+                    <div class="ea-publish-output-bar">
+                        <div class="ea-output-header">
+                            <span class="ea-output-label"><?php esc_html_e('Generated Shortcode (Ready to Use):', 'easy-appointments'); ?></span>
+                            <div class="ea-output-actions">
+                                <button type="button" class="ea-publish-btn ea-publish-btn-primary" id="ea-copy-gen-shortcode-btn">
+                                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+                                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                                    </svg>
+                                    <span class="ea-gen-copy-text"><?php esc_html_e('Copy Shortcode', 'easy-appointments'); ?></span>
+                                </button>
+                                <button type="button" class="ea-publish-btn ea-publish-btn-ghost" id="ea-create-page-with-gen-btn" title="<?php esc_attr_e('Create a new page containing this exact configured shortcode', 'easy-appointments'); ?>">
+                                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                        <polyline points="14 2 14 8 20 8"></polyline>
+                                        <line x1="12" y1="18" x2="12" y2="12"></line>
+                                        <line x1="9" y1="15" x2="15" y2="15"></line>
+                                    </svg>
+                                    <span><?php esc_html_e('Insert into New Page', 'easy-appointments'); ?></span>
+                                </button>
+                            </div>
+                        </div>
+                        <pre class="ea-publish-code ea-publish-gen-code"><code id="ea-generated-shortcode">[ea_bootstrap]</code></pre>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- ===== 4. SHORTCODE DOCUMENTATION & USAGE GUIDE ===== -->
             <div class="ea-publish-intro">
-                <h2><?php esc_html_e('Shortcode Usage Guide', 'easy-appointments'); ?></h2>
-                <p><?php esc_html_e('To insert the front-end plugin on a page or post, use the following shortcodes.', 'easy-appointments'); ?></p>
+                <h2><?php esc_html_e('Shortcode Reference & Attribute Guide', 'easy-appointments'); ?></h2>
+                <p><?php esc_html_e('To manually customize shortcodes in standard widgets or page builders, refer to the supported parameters below.', 'easy-appointments'); ?></p>
             </div>
 
             <!-- Standard Form Shortcode -->
@@ -168,17 +499,17 @@ if (!defined('WPINC')) {
                             <tr>
                                 <td><code>location</code></td>
                                 <td><?php esc_html_e('Predefined location (ID number)', 'easy-appointments'); ?></td>
-                                <td><code>null</code></td>
+                                <td><code>all</code></td>
                             </tr>
                             <tr>
                                 <td><code>service</code></td>
                                 <td><?php esc_html_e('Predefined service (ID number, comma-separated for multiple)', 'easy-appointments'); ?></td>
-                                <td><code>null</code></td>
+                                <td><code>all</code></td>
                             </tr>
                             <tr>
                                 <td><code>worker</code></td>
                                 <td><?php esc_html_e('Predefined worker (ID number)', 'easy-appointments'); ?></td>
-                                <td><code>null</code></td>
+                                <td><code>all</code></td>
                             </tr>
                             <tr>
                                 <td><code>width</code></td>
@@ -248,7 +579,7 @@ if (!defined('WPINC')) {
                             <tr>
                                 <td><code>block_days</code></td>
                                 <td><?php esc_html_e('Block specific dates (comma-separated YYYY-MM-DD)', 'easy-appointments'); ?></td>
-                                <td><code>null</code></td>
+                                <td><code>none</code></td>
                             </tr>
                             <tr>
                                 <td><code>block_days_tooltip</code></td>
