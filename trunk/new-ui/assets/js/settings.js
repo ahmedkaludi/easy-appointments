@@ -1958,6 +1958,32 @@
                     $fontSelect.val('').trigger('change');
                     showNotice(i18n.colorsReset || 'Colors reset to theme defaults. Click "Save Changes" to apply.', 'success');
                 });
+
+                // Slot Capacity Fill live visual preview
+                function updateSlotFillPreview() {
+                    var hex = $('#ea-nsui-slot-fill-color-input').val() || '#ef4444';
+                    var cleanHex = hex.replace('#', '').trim();
+                    if (cleanHex.length === 3) {
+                        cleanHex = cleanHex.split('').map(function (c) { return c + c; }).join('');
+                    }
+                    var num = parseInt(cleanHex, 16);
+                    var r = (num >> 16) & 255;
+                    var g = (num >> 8) & 255;
+                    var b = num & 255;
+                    var rgb = (!isNaN(r) && !isNaN(g) && !isNaN(b)) ? r + ', ' + g + ', ' + b : '239, 68, 68';
+
+                    $('.ea-nsui-slot-fill-preview-box.ea-slot-box-0').css('background', '#ffffff');
+                    $('.ea-nsui-slot-fill-preview-box.ea-slot-box-25').css('background', 'linear-gradient(to top, rgba(' + rgb + ', 0.38) 0%, rgba(' + rgb + ', 0.38) 28%, transparent 28%, transparent 100%)');
+                    $('.ea-nsui-slot-fill-preview-box.ea-slot-box-50').css('background', 'linear-gradient(to top, rgba(' + rgb + ', 0.60) 0%, rgba(' + rgb + ', 0.60) 50%, transparent 50%, transparent 100%)');
+                    $('.ea-nsui-slot-fill-preview-box.ea-slot-box-75').css('background', 'linear-gradient(to top, rgba(' + rgb + ', 0.80) 0%, rgba(' + rgb + ', 0.80) 75%, transparent 75%, transparent 100%)');
+                    $('.ea-nsui-slot-fill-preview-box.ea-slot-box-100').css({
+                        'background': hex,
+                        'background-color': hex
+                    });
+                }
+
+                $(document).on('input change', '#ea-nsui-slot-fill-color-input, #ea-nsui-slot-fill-color-picker', updateSlotFillPreview);
+                updateSlotFillPreview();
             })();
         })();
     });

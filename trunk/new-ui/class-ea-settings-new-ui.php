@@ -181,6 +181,8 @@ class EA_Settings_New_UI
         'style.border_color',
         'style.slot_bg_color',
         'style.slot_text_color',
+        'style.calendar_slot_fill',
+        'style.slot_fill_color',
         // Redirect
         'submit.redirect',
         'advance.redirect',

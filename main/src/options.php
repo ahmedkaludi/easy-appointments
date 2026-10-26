@@ -193,6 +193,8 @@ class EAOptions
             'confirmed_message'   => 'Your appointment has been confirmed. Thank you!',
             'reservation_message'   => 'Your appointment has been reserved. You will be notified once it is confirmed.',
             'trans.confirmation-title'   => 'Thank You for Booking!',
+            'style.calendar_slot_fill'   => '0',
+            'style.slot_fill_color'      => '#ef4444',
         );
     }
 

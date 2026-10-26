@@ -348,6 +348,112 @@ $ea_nsui_advance_cancel_data     = $ea_nsui_decode_redirects( $ea_nsui_advance_c
         </div>
     </div>
 
+    <!-- ===== CALENDAR SLOT CAPACITY FILL SECTION ===== -->
+    <div class="ea-nsui-panel-head-sub">
+        <h3><?php esc_html_e('Calendar Slot Capacity Fill', 'easy-appointments'); ?></h3>
+        <p><?php esc_html_e('Display booked slot percentage as a visual color fill directly on calendar dates (0%, 25%, 50%, 75%, 100%).', 'easy-appointments'); ?></p>
+    </div>
+
+    <div class="ea-nsui-card">
+        <!-- Enable Slot Fill Toggle -->
+        <div class="ea-nsui-row">
+            <div class="ea-nsui-row-label">
+                <span class="ea-nsui-row-title">
+                    <?php esc_html_e('Enable Slot Capacity Fill', 'easy-appointments'); ?>
+                    <span class="ea-nsui-tip" data-tooltip="<?php esc_attr_e('When enabled, dates on the booking calendar show bottom-to-top color fill indicating how full each day is (0% to 100% booked).', 'easy-appointments'); ?>">?</span>
+                </span>
+            </div>
+            <div class="ea-nsui-row-control">
+                <label class="ea-nsui-switch">
+                    <input type="checkbox" id="ea-nsui-calendar-slot-fill-toggle" data-key="style.calendar_slot_fill" value="1" <?php checked($ea_get('style.calendar_slot_fill', '0'), '1'); ?>>
+                    <span class="ea-nsui-switch-track">
+                        <span class="ea-nsui-switch-thumb"></span>
+                    </span>
+                </label>
+            </div>
+        </div>
+
+        <!-- Slot Fill Color Picker -->
+        <?php
+        $ea_slot_fill_color = $ea_get('style.slot_fill_color', '#ef4444');
+        $ea_slot_fill_swatches = array('#ef4444', '#ea580c', '#f59e0b', '#10b981', '#2563eb', '#7c3aed', '#db2777', '#111827');
+        ?>
+        <div class="ea-nsui-row ea-nsui-row-stacked">
+            <div class="ea-nsui-row-label">
+                <span class="ea-nsui-row-title">
+                    <?php esc_html_e('Slot Fill Color', 'easy-appointments'); ?>
+                    <span class="ea-nsui-tip" data-tooltip="<?php esc_attr_e('Select the accent color used for the capacity gradient fill on calendar days.', 'easy-appointments'); ?>">?</span>
+                </span>
+            </div>
+            <div class="ea-nsui-row-control ea-nsui-row-control-full">
+                <div class="ea-nsui-color-card" data-default-color="#ef4444" style="max-width: 480px;">
+                    <div class="ea-nsui-color-card-head">
+                        <span class="ea-nsui-color-card-title"><?php esc_html_e('Capacity Fill Color', 'easy-appointments'); ?></span>
+                        <small class="ea-nsui-color-card-desc"><?php esc_html_e('Gradient shade and 100% full day background', 'easy-appointments'); ?></small>
+                    </div>
+                    <div class="ea-nsui-color-card-body">
+                        <div class="ea-nsui-color-input-group">
+                            <div class="ea-nsui-color-picker-btn" style="background-color: <?php echo esc_attr($ea_slot_fill_color); ?>;">
+                                <input type="color" class="ea-nsui-native-color-picker" id="ea-nsui-slot-fill-color-picker" value="<?php echo esc_attr($ea_slot_fill_color); ?>" aria-label="<?php esc_attr_e('Slot Fill Color', 'easy-appointments'); ?>">
+                            </div>
+                            <input type="text" class="ea-nsui-input ea-nsui-color-hex-input" id="ea-nsui-slot-fill-color-input" data-key="style.slot_fill_color" value="<?php echo esc_attr($ea_slot_fill_color); ?>" placeholder="#ef4444" maxlength="25">
+                        </div>
+                        <div class="ea-nsui-color-swatches">
+                            <?php foreach ($ea_slot_fill_swatches as $swatch): ?>
+                                <button type="button" class="ea-nsui-color-swatch-btn" data-color="<?php echo esc_attr($swatch); ?>" style="background-color: <?php echo esc_attr($swatch); ?>;" title="<?php echo esc_attr($swatch); ?>"></button>
+                            <?php endforeach; ?>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Live Visual Preview (matching design) -->
+        <div class="ea-nsui-row ea-nsui-row-stacked">
+            <div class="ea-nsui-row-label">
+                <span class="ea-nsui-row-title"><?php esc_html_e('Live Appearance Preview', 'easy-appointments'); ?></span>
+            </div>
+            <div class="ea-nsui-row-control ea-nsui-row-control-full">
+                <div class="ea-nsui-slot-fill-preview-wrap">
+                    <div class="ea-nsui-slot-fill-preview-grid" id="ea-nsui-slot-fill-preview-grid">
+                        <div class="ea-nsui-slot-fill-preview-item">
+                            <div class="ea-nsui-slot-fill-preview-box ea-slot-box-0" data-percent="0">
+                                <span class="ea-slot-box-num">16</span>
+                            </div>
+                            <span class="ea-slot-box-title"><?php esc_html_e('0% booked', 'easy-appointments'); ?></span>
+                            <small class="ea-slot-box-sub"><?php esc_html_e('(all slots available)', 'easy-appointments'); ?></small>
+                        </div>
+                        <div class="ea-nsui-slot-fill-preview-item">
+                            <div class="ea-nsui-slot-fill-preview-box ea-slot-box-25" data-percent="25">
+                                <span class="ea-slot-box-num">16</span>
+                            </div>
+                            <span class="ea-slot-box-title"><?php esc_html_e('25% booked', 'easy-appointments'); ?></span>
+                        </div>
+                        <div class="ea-nsui-slot-fill-preview-item">
+                            <div class="ea-nsui-slot-fill-preview-box ea-slot-box-50" data-percent="50">
+                                <span class="ea-slot-box-num">16</span>
+                            </div>
+                            <span class="ea-slot-box-title"><?php esc_html_e('50% booked', 'easy-appointments'); ?></span>
+                        </div>
+                        <div class="ea-nsui-slot-fill-preview-item">
+                            <div class="ea-nsui-slot-fill-preview-box ea-slot-box-75" data-percent="75">
+                                <span class="ea-slot-box-num">16</span>
+                            </div>
+                            <span class="ea-slot-box-title"><?php esc_html_e('75% booked', 'easy-appointments'); ?></span>
+                        </div>
+                        <div class="ea-nsui-slot-fill-preview-item">
+                            <div class="ea-nsui-slot-fill-preview-box ea-slot-box-100" data-percent="100">
+                                <span class="ea-slot-box-num">16</span>
+                            </div>
+                            <span class="ea-slot-box-title"><?php esc_html_e('100% booked', 'easy-appointments'); ?></span>
+                            <small class="ea-slot-box-sub"><?php esc_html_e('(no slots available)', 'easy-appointments'); ?></small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- ===== GENERAL FORM SETTINGS ===== -->
     <div class="ea-nsui-panel-head-sub">
         <h3><?php esc_html_e('Form Settings & Custom CSS', 'easy-appointments'); ?></h3>
