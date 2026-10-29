@@ -340,9 +340,17 @@ $ea_nsui_advance_cancel_data     = $ea_nsui_decode_redirects( $ea_nsui_advance_c
                 </div>
 
                 <div class="ea-nsui-color-actions">
+                    <button type="button" class="ea-nsui-btn ea-nsui-btn-secondary" id="ea-nsui-detect-theme-colors-btn" title="<?php esc_attr_e('Read color palette from current WordPress theme', 'easy-appointments'); ?>">
+                        <span class="dashicons dashicons-admin-appearance" style="margin-right: 4px; vertical-align: text-bottom;"></span>
+                        <span class="ea-nsui-btn-text"><?php esc_html_e('Auto-Detect from Site Theme', 'easy-appointments'); ?></span>
+                    </button>
                     <button type="button" class="ea-nsui-btn ea-nsui-btn-ghost" id="ea-nsui-reset-styles-btn">
                         <?php esc_html_e('Reset Colors to Theme Default', 'easy-appointments'); ?>
                     </button>
+                </div>
+                <div class="ea-nsui-theme-detection-hint" id="ea-nsui-theme-detection-hint" style="display:none;">
+                    <span class="dashicons dashicons-yes-alt" style="color: #059669; vertical-align: text-bottom; margin-right: 4px;"></span>
+                    <span class="ea-nsui-theme-detection-msg"></span>
                 </div>
             </div>
         </div>

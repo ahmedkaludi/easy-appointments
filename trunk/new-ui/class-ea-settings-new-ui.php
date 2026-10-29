@@ -222,6 +222,7 @@ class EA_Settings_New_UI
         add_action('wp_ajax_ea_new_ui_save_settings', array(__CLASS__, 'ajax_save_settings'));
         add_action('wp_ajax_ea_nsui_activate_license', array(__CLASS__, 'ajax_activate_license'));
         add_action('wp_ajax_ea_nsui_deactivate_license', array(__CLASS__, 'ajax_deactivate_license'));
+        add_action('wp_ajax_ea_nsui_detect_theme_colors', array(__CLASS__, 'ajax_detect_theme_colors'));
     }
 
     /**
@@ -535,6 +536,9 @@ class EA_Settings_New_UI
                 'cancel'            => esc_html__('Cancel', 'easy-appointments'),
                 'fieldNoTags'       => esc_html__('none yet', 'easy-appointments'),
                 // Form Style & Redirect tab
+                'detectingColors'     => __('Detecting theme colors…', 'easy-appointments'),
+                'themeColorsDetected' => __('Applied colors from %theme% (%source%). Fine-tune any setting above or click "Save Changes".', 'easy-appointments'),
+                'detectColorsFailed'  => __('Could not detect theme colors automatically.', 'easy-appointments'),
                 'redirectUrlRequired' => esc_html__('Please enter a redirect URL first.', 'easy-appointments'),
                 'servicesLoadFailed'  => esc_html__('Could not load the services list.', 'easy-appointments'),
                 'redirectRemoved'     => esc_html__('service removed', 'easy-appointments'),
@@ -765,6 +769,582 @@ class EA_Settings_New_UI
             'message' => esc_html__('Settings saved successfully.', 'easy-appointments'),
             'settings' => $saved,
         ));
+    }
+
+    /**
+     * AJAX handler: detect active theme colors and return suggested palette.
+     */
+    public static function ajax_detect_theme_colors()
+    {
+        check_ajax_referer(self::NONCE_ACTION, 'nonce');
+
+        $capability = apply_filters(
+            'easy-appointments-user-menu-capabilities',
+            'manage_options',
+            'easy_app_settings_new'
+        );
+
+        if (!current_user_can($capability)) {
+            wp_send_json_error(array(
+                'message' => esc_html__('You do not have permission to do this.', 'easy-appointments'),
+            ), 403);
+        }
+
+        $detected = self::detect_theme_colors();
+
+        wp_send_json_success($detected);
+    }
+
+    /**
+     * Normalize color string to lowercase 6-digit hex format (#rrggbb).
+     *
+     * @param string $color
+     * @return string
+     */
+    public static function normalize_hex($color)
+    {
+        if (empty($color) || !is_string($color)) {
+            return '';
+        }
+
+        $color = trim($color);
+
+        if (preg_match('/^#?([0-9a-f]{3}|[0-9a-f]{6})$/i', $color, $m)) {
+            $hex = $m[1];
+            if (strlen($hex) === 3) {
+                $hex = $hex[0] . $hex[0] . $hex[1] . $hex[1] . $hex[2] . $hex[2];
+            }
+            return '#' . strtolower($hex);
+        }
+
+        if (preg_match('/rgba?\(\s*([0-9]{1,3})\s*,\s*([0-9]{1,3})\s*,\s*([0-9]{1,3})/i', $color, $m)) {
+            $r = (int) $m[1];
+            $g = (int) $m[2];
+            $b = (int) $m[3];
+            return sprintf('#%02x%02x%02x', $r, $g, $b);
+        }
+
+        return '';
+    }
+
+    /**
+     * Calculate relative WCAG luminance of a hex color (0 to 1).
+     *
+     * @param string $hex
+     * @return float
+     */
+    public static function get_luminance($hex)
+    {
+        $hex = self::normalize_hex($hex);
+        if (empty($hex)) {
+            return 1.0;
+        }
+
+        $hex = ltrim($hex, '#');
+        $r = hexdec(substr($hex, 0, 2)) / 255;
+        $g = hexdec(substr($hex, 2, 2)) / 255;
+        $b = hexdec(substr($hex, 4, 2)) / 255;
+
+        return (0.299 * $r + 0.587 * $g + 0.114 * $b);
+    }
+
+    /**
+     * Get a contrasting text color (#ffffff or #111827) for a given background hex.
+     *
+     * @param string $bg_hex
+     * @return string
+     */
+    public static function get_contrast_color($bg_hex)
+    {
+        return self::get_luminance($bg_hex) > 0.6 ? '#111827' : '#ffffff';
+    }
+
+    /**
+     * Convert HSL color values to 6-digit hex string (#rrggbb).
+     *
+     * @param float $h Hue (0 - 360)
+     * @param float $s Saturation (0 - 100)
+     * @param float $l Lightness (0 - 100)
+     * @return string
+     */
+    public static function hsl_to_hex($h, $s, $l)
+    {
+        $h = fmod((float) $h, 360) / 360;
+        if ($h < 0) {
+            $h += 1;
+        }
+        $s = max(0, min(100, (float) $s)) / 100;
+        $l = max(0, min(100, (float) $l)) / 100;
+
+        if ($s == 0) {
+            $r = $g = $b = $l;
+        } else {
+            $q = $l < 0.5 ? $l * (1 + $s) : $l + $s - ($l * $s);
+            $p = 2 * $l - $q;
+
+            $hue2rgb = function ($p, $q, $t) {
+                if ($t < 0) $t += 1;
+                if ($t > 1) $t -= 1;
+                if ($t < 1 / 6) return $p + ($q - $p) * 6 * $t;
+                if ($t < 1 / 2) return $q;
+                if ($t < 2 / 3) return $p + ($q - $p) * (2 / 3 - $t) * 6;
+                return $p;
+            };
+
+            $r = $hue2rgb($p, $q, $h + 1 / 3);
+            $g = $hue2rgb($p, $q, $h);
+            $b = $hue2rgb($p, $q, $h - 1 / 3);
+        }
+
+        return sprintf('#%02x%02x%02x', (int) round($r * 255), (int) round($g * 255), (int) round($b * 255));
+    }
+
+    /**
+     * Automatically detect the active WordPress theme's color scheme
+     * using theme.json, Global Styles, block palettes, theme mods,
+     * or active stylesheet parsing.
+     *
+     * @return array
+     */
+    public static function detect_theme_colors()
+    {
+        $theme = function_exists('wp_get_theme') ? wp_get_theme() : null;
+        $theme_name = $theme ? $theme->get('Name') : 'Active Theme';
+
+        $primary         = '';
+        $button_text     = '';
+        $bg_color        = '';
+        $surface_color   = '';
+        $text_color      = '';
+        $border_color    = '';
+        $slot_bg_color   = '';
+        $slot_text_color = '';
+        $source          = '';
+
+        $palette_colors = array();
+
+        $is_block_theme = function_exists('wp_is_block_theme') && wp_is_block_theme();
+
+        // 1. Block Themes / Full Site Editing (FSE): ONLY if active theme is truly a block theme
+        if ($is_block_theme) {
+            if (function_exists('wp_get_global_settings')) {
+                $theme_palette   = wp_get_global_settings(array('color', 'palette', 'theme'));
+                $custom_palette  = wp_get_global_settings(array('color', 'palette', 'custom'));
+                $default_palette = wp_get_global_settings(array('color', 'palette', 'default'));
+
+                $merged_palettes = array();
+                if (is_array($custom_palette)) {
+                    $merged_palettes = array_merge($merged_palettes, $custom_palette);
+                }
+                if (is_array($theme_palette)) {
+                    $merged_palettes = array_merge($merged_palettes, $theme_palette);
+                }
+                if (is_array($default_palette)) {
+                    $merged_palettes = array_merge($merged_palettes, $default_palette);
+                }
+
+                foreach ($merged_palettes as $p_item) {
+                    if (!empty($p_item['slug']) && !empty($p_item['color'])) {
+                        $palette_colors[$p_item['slug']] = self::normalize_hex($p_item['color']);
+                    }
+                }
+            }
+
+            // Helper to resolve preset tokens (e.g. var:preset|color|slug or var(--wp--preset--color--slug))
+            $resolve_preset = function ($val) use ($palette_colors) {
+                if (empty($val) || !is_string($val)) {
+                    return '';
+                }
+                $val = trim($val);
+                $hex = self::normalize_hex($val);
+                if (!empty($hex)) {
+                    return $hex;
+                }
+                if (preg_match('/var:preset\|color\|([a-zA-Z0-9_\-]+)/', $val, $m)) {
+                    return isset($palette_colors[$m[1]]) ? $palette_colors[$m[1]] : '';
+                }
+                if (preg_match('/var\(--wp--preset--color--([a-zA-Z0-9_\-]+)\)/', $val, $m)) {
+                    return isset($palette_colors[$m[1]]) ? $palette_colors[$m[1]] : '';
+                }
+                return '';
+            };
+
+            if (function_exists('wp_get_global_styles')) {
+                $btn_bg_raw  = wp_get_global_styles(array('elements', 'button', 'color', 'background'));
+                $btn_txt_raw = wp_get_global_styles(array('elements', 'button', 'color', 'text'));
+                $bg_raw      = wp_get_global_styles(array('color', 'background'));
+                $txt_raw     = wp_get_global_styles(array('color', 'text'));
+
+                $res_btn_bg  = $resolve_preset($btn_bg_raw);
+                $res_btn_txt = $resolve_preset($btn_txt_raw);
+                $res_bg      = $resolve_preset($bg_raw);
+                $res_txt     = $resolve_preset($txt_raw);
+
+                if (!empty($res_btn_bg)) {
+                    $primary = $res_btn_bg;
+                    $source = 'Block Theme Global Styles';
+                }
+                if (!empty($res_btn_txt)) {
+                    $button_text = $res_btn_txt;
+                }
+                if (!empty($res_bg)) {
+                    $bg_color = $res_bg;
+                }
+                if (!empty($res_txt)) {
+                    $text_color = $res_txt;
+                }
+            }
+
+            // Direct theme.json inspection if not found via global styles functions
+            if (empty($primary) && function_exists('get_stylesheet_directory')) {
+                $theme_json_file = get_stylesheet_directory() . '/theme.json';
+                if (!file_exists($theme_json_file) && function_exists('get_template_directory')) {
+                    $theme_json_file = get_template_directory() . '/theme.json';
+                }
+
+                if (file_exists($theme_json_file)) {
+                    // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents -- Local file read for theme metadata.
+                    $tj_raw = @file_get_contents($theme_json_file);
+                    $tj_data = !empty($tj_raw) ? json_decode($tj_raw, true) : null;
+                    if (is_array($tj_data)) {
+                        if (!empty($tj_data['settings']['color']['palette']['theme']) && is_array($tj_data['settings']['color']['palette']['theme'])) {
+                            foreach ($tj_data['settings']['color']['palette']['theme'] as $p_item) {
+                                if (!empty($p_item['slug']) && !empty($p_item['color'])) {
+                                    $palette_colors[$p_item['slug']] = self::normalize_hex($p_item['color']);
+                                }
+                            }
+                        } elseif (!empty($tj_data['settings']['color']['palette']) && is_array($tj_data['settings']['color']['palette'])) {
+                            foreach ($tj_data['settings']['color']['palette'] as $p_item) {
+                                if (!empty($p_item['slug']) && !empty($p_item['color'])) {
+                                    $palette_colors[$p_item['slug']] = self::normalize_hex($p_item['color']);
+                                }
+                            }
+                        }
+
+                        if (empty($primary) && !empty($tj_data['styles']['elements']['button']['color']['background'])) {
+                            $primary = $resolve_preset($tj_data['styles']['elements']['button']['color']['background']);
+                            if ($primary) {
+                                $source = 'theme.json Button Element';
+                            }
+                        }
+                        if (empty($button_text) && !empty($tj_data['styles']['elements']['button']['color']['text'])) {
+                            $button_text = $resolve_preset($tj_data['styles']['elements']['button']['color']['text']);
+                        }
+                        if (empty($bg_color) && !empty($tj_data['styles']['color']['background'])) {
+                            $bg_color = $resolve_preset($tj_data['styles']['color']['background']);
+                        }
+                        if (empty($text_color) && !empty($tj_data['styles']['color']['text'])) {
+                            $text_color = $resolve_preset($tj_data['styles']['color']['text']);
+                        }
+                    }
+                }
+            }
+
+            // Look for common palette slugs if primary is still empty
+            if (empty($primary) && !empty($palette_colors)) {
+                foreach (array('primary', 'accent', 'brand', 'theme', 'vivid-cyan-blue', 'main', 'secondary') as $slug) {
+                    if (!empty($palette_colors[$slug])) {
+                        $primary = $palette_colors[$slug];
+                        $source  = 'Block Theme Palette';
+                        break;
+                    }
+                }
+                if (empty($bg_color)) {
+                    foreach (array('background', 'base', 'white') as $slug) {
+                        if (!empty($palette_colors[$slug])) {
+                            $bg_color = $palette_colors[$slug];
+                            break;
+                        }
+                    }
+                }
+                if (empty($text_color)) {
+                    foreach (array('text', 'foreground', 'contrast', 'black') as $slug) {
+                        if (!empty($palette_colors[$slug])) {
+                            $text_color = $palette_colors[$slug];
+                            break;
+                        }
+                    }
+                }
+                if (empty($surface_color)) {
+                    foreach (array('surface', 'base-2', 'tertiary', 'secondary') as $slug) {
+                        if (!empty($palette_colors[$slug])) {
+                            $surface_color = $palette_colors[$slug];
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        // 2. Classic Themes: Check editor-color-palette theme support (Gutenberg palettes for classic themes like Twenty Nineteen)
+        if (empty($primary) && function_exists('current_theme_supports') && current_theme_supports('editor-color-palette')) {
+            $palette = get_theme_support('editor-color-palette');
+            if (!empty($palette[0]) && is_array($palette[0])) {
+                foreach ($palette[0] as $p_item) {
+                    if (!empty($p_item['slug']) && !empty($p_item['color'])) {
+                        $palette_colors[$p_item['slug']] = self::normalize_hex($p_item['color']);
+                    }
+                }
+                foreach (array('primary', 'accent', 'brand', 'theme', 'main') as $slug) {
+                    if (!empty($palette_colors[$slug])) {
+                        $primary = $palette_colors[$slug];
+                        $source  = 'Theme Palette';
+                        break;
+                    }
+                }
+                if (empty($text_color)) {
+                    foreach (array('dark-gray', 'contrast', 'text', 'foreground', 'black') as $slug) {
+                        if (!empty($palette_colors[$slug])) {
+                            $text_color = $palette_colors[$slug];
+                            break;
+                        }
+                    }
+                }
+                if (empty($bg_color)) {
+                    foreach (array('white', 'base', 'background') as $slug) {
+                        if (!empty($palette_colors[$slug])) {
+                            $bg_color = $palette_colors[$slug];
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        // 3. Theme Mods (Twenty Nineteen, Twenty Twenty, Twenty Twenty-One, Customizer)
+        if (empty($primary) && function_exists('get_theme_mod')) {
+            // Twenty Nineteen / Twenty Twenty special primary color
+            $tw_primary = get_theme_mod('primary_color');
+            if ($tw_primary === 'custom') {
+                $hue = (int) get_theme_mod('primary_color_hue', 199);
+                $primary = self::hsl_to_hex($hue, 100, 33);
+                $source  = 'Theme Customizer';
+            } elseif (!empty($tw_primary) && $tw_primary !== 'default') {
+                $hex = self::normalize_hex($tw_primary);
+                if ($hex) {
+                    $primary = $hex;
+                    $source  = 'Theme Customizer';
+                }
+            }
+        }
+
+        // 3. Popular Theme Frameworks & Customizer Options
+        // Astra Theme
+        if (empty($primary) && function_exists('get_option')) {
+            $astra_settings = get_option('astra-settings');
+            if (is_array($astra_settings)) {
+                if (!empty($astra_settings['global-color-palette']['palette']) && is_array($astra_settings['global-color-palette']['palette'])) {
+                    $pal = $astra_settings['global-color-palette']['palette'];
+                    if (!empty($pal[0])) {
+                        $primary = self::normalize_hex($pal[0]);
+                    }
+                    if (empty($text_color) && !empty($pal[3])) {
+                        $text_color = self::normalize_hex($pal[3]);
+                    }
+                    if (empty($bg_color) && !empty($pal[5])) {
+                        $bg_color = self::normalize_hex($pal[5]);
+                    }
+                    if (empty($surface_color) && !empty($pal[4])) {
+                        $surface_color = self::normalize_hex($pal[4]);
+                    }
+                    if ($primary) {
+                        $source = 'Astra Global Palette';
+                    }
+                }
+                if (empty($primary) && !empty($astra_settings['theme-color'])) {
+                    $primary = self::normalize_hex($astra_settings['theme-color']);
+                    $source = 'Astra Theme Color';
+                }
+            }
+        }
+
+        // GeneratePress Theme
+        if (empty($primary) && function_exists('get_option')) {
+            $gp_settings = get_option('generate_settings');
+            if (is_array($gp_settings)) {
+                if (!empty($gp_settings['form_button_background_color'])) {
+                    $primary = self::normalize_hex($gp_settings['form_button_background_color']);
+                    $source = 'GeneratePress Button Style';
+                } elseif (!empty($gp_settings['link_color'])) {
+                    $primary = self::normalize_hex($gp_settings['link_color']);
+                    $source = 'GeneratePress Link Color';
+                }
+                if (empty($button_text) && !empty($gp_settings['form_button_text_color'])) {
+                    $button_text = self::normalize_hex($gp_settings['form_button_text_color']);
+                }
+            }
+        }
+
+        // OceanWP Theme
+        if (empty($primary) && function_exists('get_theme_mod')) {
+            $ocean_color = get_theme_mod('ocean_primary_color');
+            if (!empty($ocean_color)) {
+                $primary = self::normalize_hex($ocean_color);
+                $source = 'OceanWP Customizer';
+            }
+        }
+
+        // Kadence Theme
+        if (empty($primary) && function_exists('get_theme_mod')) {
+            $kadence_color = get_theme_mod('palette_color_1');
+            if (!empty($kadence_color)) {
+                $primary = self::normalize_hex($kadence_color);
+                $source = 'Kadence Customizer';
+            }
+        }
+
+        // Divi Theme
+        if (empty($primary) && function_exists('get_option')) {
+            $divi_options = get_option('et_divi');
+            if (is_array($divi_options) && !empty($divi_options['accent_color'])) {
+                $primary = self::normalize_hex($divi_options['accent_color']);
+                $source = 'Divi Accent Color';
+            }
+        }
+
+        // Standard WordPress Customizer Theme Mods
+        if (function_exists('get_theme_mods')) {
+            $mods = get_theme_mods();
+            if (is_array($mods)) {
+                $candidates = array('primary_color', 'accent_color', 'link_color', 'theme_color', 'main_color', 'button_background_color');
+                foreach ($candidates as $cand) {
+                    if (empty($primary) && !empty($mods[$cand]) && is_string($mods[$cand])) {
+                        $hex = self::normalize_hex($mods[$cand]);
+                        if ($hex) {
+                            $primary = $hex;
+                            $source  = 'Theme Customizer';
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        if (empty($bg_color) && function_exists('get_background_color')) {
+            $wp_bg = get_background_color();
+            if (!empty($wp_bg) && $wp_bg !== 'default-color') {
+                $bg_color = self::normalize_hex('#' . ltrim($wp_bg, '#'));
+            }
+        }
+
+        // 4. Stylesheet Parsing (Child theme / Parent theme style.css)
+        if (empty($primary) && function_exists('get_stylesheet_directory')) {
+            $css_files = array();
+            $sheet_dir = get_stylesheet_directory();
+            if (file_exists($sheet_dir . '/style.css')) {
+                $css_files[] = $sheet_dir . '/style.css';
+            }
+            if (function_exists('get_template_directory')) {
+                $tpl_dir = get_template_directory();
+                if ($tpl_dir !== $sheet_dir && file_exists($tpl_dir . '/style.css')) {
+                    $css_files[] = $tpl_dir . '/style.css';
+                }
+            }
+
+            foreach ($css_files as $css_path) {
+                // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents -- Local stylesheet read for color extraction.
+                $css_content = @file_get_contents($css_path, false, null, 0, 150000);
+                if (empty($css_content)) {
+                    continue;
+                }
+
+                // Check CSS Variables: --primary, --accent, --theme-color, --color-primary
+                if (preg_match('/--(?:primary|theme|accent|brand)(?:-color)?:\s*(#[0-9a-fA-F]{3,6}|rgba?\([^)]+\))/i', $css_content, $m)) {
+                    $hex = self::normalize_hex($m[1]);
+                    if ($hex) {
+                        $primary = $hex;
+                        $source  = 'Theme CSS Variable';
+                        break;
+                    }
+                }
+
+                // Check .navbar background
+                if (empty($primary) && preg_match('/\.navbar(?:-default)?\s*\{[^}]*background-color:\s*(#[0-9a-fA-F]{3,6})/is', $css_content, $m)) {
+                    $hex = self::normalize_hex($m[1]);
+                    if ($hex) {
+                        $primary = $hex;
+                        $source  = 'Theme Navbar Style';
+                        break;
+                    }
+                }
+
+                // Check .btn-primary background
+                if (empty($primary) && preg_match('/\.btn-primary\s*\{[^}]*background(?:-color)?:\s*(#[0-9a-fA-F]{3,6})/is', $css_content, $m)) {
+                    $hex = self::normalize_hex($m[1]);
+                    if ($hex) {
+                        $primary = $hex;
+                        $source  = 'Theme Button Style';
+                        break;
+                    }
+                }
+
+                // Check a { color: ... }
+                if (empty($primary) && preg_match('/(?:^|\})\s*a\s*\{[^}]*color:\s*(#[0-9a-fA-F]{3,6})/is', $css_content, $m)) {
+                    $hex = self::normalize_hex($m[1]);
+                    if ($hex) {
+                        $primary = $hex;
+                        $source  = 'Theme Link Style';
+                        break;
+                    }
+                }
+            }
+        }
+
+        // 5. Intelligent Fallbacks & Harmonic Color Generation
+        if (empty($primary)) {
+            $primary = '#2563eb';
+            $source  = 'Default Palette';
+        }
+
+        if (empty($bg_color)) {
+            $bg_color = '#ffffff';
+        }
+
+        $bg_lum = self::get_luminance($bg_color);
+        $is_dark_bg = $bg_lum < 0.45;
+
+        // Button text: calculate luminance contrast
+        if (empty($button_text)) {
+            $button_text = self::get_contrast_color($primary);
+        }
+
+        // Text color
+        if (empty($text_color)) {
+            $text_color = $is_dark_bg ? '#f9fafb' : '#1f2937';
+        }
+
+        // Surface / secondary panel color
+        if (empty($surface_color)) {
+            $surface_color = $is_dark_bg ? '#1e293b' : '#f8f8f7';
+        }
+
+        // Border color
+        if (empty($border_color)) {
+            $border_color = $is_dark_bg ? '#374151' : '#d1d5db';
+        }
+
+        // Slot background & text
+        if (empty($slot_bg_color)) {
+            $slot_bg_color = $is_dark_bg ? '#1e293b' : '#ffffff';
+        }
+        if (empty($slot_text_color)) {
+            $slot_text_color = $text_color;
+        }
+
+        return array(
+            'theme_name' => $theme_name,
+            'source'     => $source,
+            'colors'     => array(
+                'style.primary_color'     => $primary,
+                'style.button_text_color' => $button_text,
+                'style.bg_color'          => $bg_color,
+                'style.surface_color'     => $surface_color,
+                'style.text_color'        => $text_color,
+                'style.border_color'      => $border_color,
+                'style.slot_bg_color'     => $slot_bg_color,
+                'style.slot_text_color'   => $slot_text_color,
+            ),
+        );
     }
 }
 

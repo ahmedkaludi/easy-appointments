@@ -118,6 +118,26 @@
     background: var(--ea-bg);
 }
 
+.ea-nsui-btn-secondary {
+    background: #f1f5f9;
+    border-color: #cbd5e1;
+    color: #1e293b;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.ea-nsui-btn-secondary:hover:not(:disabled) {
+    background: #e2e8f0;
+    border-color: #94a3b8;
+    color: #0f172a;
+}
+
+.ea-nsui-btn-secondary:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
 /* ---------- Notice ---------- */
 
 .ea-nsui-notice {
@@ -3167,6 +3187,23 @@ body.wp-admin #ui-datepicker-div.ea-timepicker-only .ui-datepicker-header,
     margin-top: 16px;
     display: flex;
     justify-content: flex-start;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.ea-nsui-theme-detection-hint {
+    margin-top: 12px;
+    background: #ecfdf5;
+    border: 1px solid #a7f3d0;
+    color: #065f46;
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-size: 13px;
+    line-height: 1.5;
+    display: flex;
+    align-items: center;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
 }
 
 /* --------------------------------------------------------------------------

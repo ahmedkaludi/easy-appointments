@@ -1943,6 +1943,73 @@
                     $card.find('.ea-nsui-native-color-picker').val(color);
                 });
 
+                // Auto-Detect from Site Theme button handler
+                $('#ea-nsui-detect-theme-colors-btn').on('click', function (e) {
+                    e.preventDefault();
+                    var $btn = $(this);
+                    if ($btn.hasClass('is-loading') || $btn.prop('disabled')) {
+                        return;
+                    }
+
+                    var $text = $btn.find('.ea-nsui-btn-text');
+                    var origText = $text.text();
+                    $btn.addClass('is-loading').prop('disabled', true);
+                    $text.text(i18n.detectingColors || 'Detecting theme colors…');
+
+                    $.ajax({
+                        url: eaNewSettingsUI.ajaxUrl,
+                        type: 'POST',
+                        dataType: 'json',
+                        data: {
+                            action: 'ea_nsui_detect_theme_colors',
+                            nonce: eaNewSettingsUI.nonce
+                        }
+                    }).done(function (res) {
+                        if (res && res.success && res.data && res.data.colors) {
+                            var colors = res.data.colors;
+                            var themeName = res.data.theme_name || 'Active Theme';
+                            var source = res.data.source || 'Appearance Style';
+
+                            // Fill each color input and trigger preview sync
+                            $.each(colors, function (key, val) {
+                                if (val) {
+                                    var $input = $('.ea-nsui-color-hex-input[data-key="' + key + '"]');
+                                    if ($input.length) {
+                                        $input.val(val).trigger('input');
+                                    }
+                                }
+                            });
+
+                            var template = i18n.themeColorsDetected || 'Applied colors from %theme% (%source%). Fine-tune any setting above or click "Save Changes".';
+                            var rawMsg = template.replace('%theme%', themeName).replace('%source%', source);
+
+                            // Decode any HTML entities so &quot; or &#039; render as clean quotes in .text()
+                            var decodeEntities = function (str) {
+                                var txt = document.createElement('textarea');
+                                txt.innerHTML = str;
+                                return txt.value;
+                            };
+                            var msg = decodeEntities(rawMsg);
+
+                            $('#ea-nsui-theme-detection-hint')
+                                .show()
+                                .find('.ea-nsui-theme-detection-msg')
+                                .text(msg);
+
+                            showNotice(msg, 'success');
+                            markDirty();
+                        } else {
+                            var errMsg = (res && res.data && res.data.message) ? res.data.message : (i18n.detectColorsFailed || 'Could not detect theme colors automatically.');
+                            showNotice(errMsg, 'error');
+                        }
+                    }).fail(function () {
+                        showNotice(i18n.detectColorsFailed || 'Could not detect theme colors automatically.', 'error');
+                    }).always(function () {
+                        $btn.removeClass('is-loading').prop('disabled', false);
+                        $text.text(origText);
+                    });
+                });
+
                 // Reset Colors button handler
                 $('#ea-nsui-reset-styles-btn').on('click', function (e) {
                     e.preventDefault();
