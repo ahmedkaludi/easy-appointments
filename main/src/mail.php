@@ -164,6 +164,15 @@ class EAMail
             return;
         }
 
+        // Rate limiting for token validation attempts
+        $client_ip = isset($_SERVER['REMOTE_ADDR']) ? sanitize_text_field(wp_unslash($_SERVER['REMOTE_ADDR'])) : 'unknown';
+        $rate_key  = 'ea_mail_link_fail_' . md5($client_ip . '_' . $app_id);
+        $attempts  = (int) get_transient($rate_key);
+        if ($attempts >= 5) {
+            header('Refresh:3; url=' . get_home_url());
+            wp_die(esc_html__('Too many invalid attempts. Please try again later.', 'easy-appointments'), 429);
+        }
+
         $data = $this->models->get_appintment_by_id($app_id);
 
         if (empty($data)) {
@@ -171,18 +180,19 @@ class EAMail
             wp_die(esc_html__('No appointment.', 'easy-appointments'));
         }
 
+        // constant-time token comparison
+        if (!$this->validate_token($data, $action, $provided_token)) {
+            set_transient($rate_key, $attempts + 1, 15 * MINUTE_IN_SECONDS);
+            header('Refresh:3; url=' . get_home_url());
+            wp_die(esc_html__('Invalid token.', 'easy-appointments'), 403);
+        }
+
+        delete_transient($rate_key);
+
         // check maybe it is a two step process
         // phpcs:ignore WordPress.Security.NonceVerification.Missing
         if (empty($_POST['confirmed']) && (!empty($_POST['confirmed']) && $_POST['confirmed'] !== 'true')) {
             $this->link_action_additional_step($action, $data);
-        }
-
-        $expected_token = $this->generate_token($data, $action);
-
-        // constant-time token comparison
-        if (!hash_equals($expected_token, $provided_token)) {
-            header('Refresh:3; url=' . get_home_url());
-            wp_die(esc_html__('Invalid token.', 'easy-appointments'));
         }
 
         $table = 'ea_appointments';
@@ -498,6 +508,111 @@ class EAMail
         $salt = function_exists('wp_salt') ? wp_salt('auth') : 'ea_default_auth_salt';
 
         return hash_hmac('sha256', $action . '|' . $app_id . '|' . $token_secret, $salt);
+    }
+
+    /**
+     * Check whether legacy MD5 token validation is allowed for an appointment.
+     *
+     * Legacy validation is strictly confined to appointments created before the HMAC
+     * token mechanism was introduced, preventing authorization bypass on newly created appointments.
+     *
+     * @param array  $data   Appointment data
+     * @param string $action Action type ("confirm" or "cancel")
+     * @return bool True if appointment is eligible for legacy token fallback
+     */
+    public function is_legacy_token_allowed($data, $action = '')
+    {
+        if (empty($data) || !is_array($data)) {
+            return false;
+        }
+
+        if (empty($data['created']) || !is_string($data['created'])) {
+            return false;
+        }
+
+        $app_created_time = strtotime($data['created']);
+        if ($app_created_time === false || $app_created_time <= 0) {
+            return false;
+        }
+
+        // Retrieve cutoff timestamp from wp_options
+        $cutoff = get_option('easy_ea_token_migration_cutoff', '');
+
+        // Allow developers to override cutoff via filter
+        $cutoff = apply_filters('easy_ea_legacy_token_cutoff', $cutoff, $data, $action);
+
+        $allowed = false;
+
+        if (!empty($cutoff)) {
+            $cutoff_time = is_numeric($cutoff) ? (int)$cutoff : strtotime($cutoff);
+            if ($cutoff_time && $cutoff_time > 0) {
+                $allowed = ($app_created_time <= $cutoff_time);
+            }
+        } else {
+            // Fallback if no cutoff has been explicitly set or initialized:
+            // Freeze migration boundary by saving the current time.
+            $current_cutoff = current_time('mysql', 1);
+            add_option('easy_ea_token_migration_cutoff', $current_cutoff);
+            $cutoff_time = strtotime($current_cutoff);
+            $allowed = ($app_created_time <= $cutoff_time);
+        }
+
+        return (bool) apply_filters('easy_ea_allow_legacy_token', $allowed, $data, $action);
+    }
+
+    /**
+     * Validate action token with backward compatibility for legacy MD5 tokens (<= 4.0.2.1).
+     *
+     * @param array  $data Appointment data
+     * @param string $action Action type ("confirm" or "cancel")
+     * @param string $provided_token Token provided in the URL query parameter
+     * @return bool True if token matches current HMAC or legacy MD5 format
+     */
+    public function validate_token($data, $action, $provided_token)
+    {
+        if (empty($provided_token) || !is_string($provided_token) || !is_string($action)) {
+            return false;
+        }
+
+        $token_length = strlen($provided_token);
+
+        // 1. Current HMAC token validation (64-character SHA-256 HMAC)
+        if ($token_length === 64 && ctype_xdigit($provided_token)) {
+            $expected_token = $this->generate_token($data, $action);
+            if (is_string($expected_token) && hash_equals(strtolower($expected_token), strtolower($provided_token))) {
+                return true;
+            }
+            return false;
+        }
+
+        // 2. Backward-compatible fallback for links issued in EA <= 4.0.2.1 (strictly 32-char MD5 format)
+        // Strictly restricted to appointments created before the HMAC migration cutoff.
+        if ($token_length === 32 && ctype_xdigit($provided_token)) {
+            if ($this->is_legacy_token_allowed($data, $action)) {
+                $legacy_salt  = 'CStK4zYJSuQPnjbJ1npM';
+                $legacy_token = md5($legacy_salt . $data['created'] . $action);
+                if (hash_equals($legacy_token, strtolower($provided_token))) {
+                    // Upgrade appointment token in database if not already populated
+                    $app_id = isset($data['id']) ? (int)$data['id'] : 0;
+                    if ($app_id > 0 && empty($data['token']) && isset($this->wpdb) && isset($this->models)) {
+                        $row = $this->models->get_row('ea_appointments', $app_id, ARRAY_A);
+                        if (empty($row['token'])) {
+                            $new_token = wp_generate_password(32, false);
+                            $this->wpdb->update(
+                                $this->wpdb->prefix . 'ea_appointments',
+                                array('token' => $new_token),
+                                array('id' => $app_id),
+                                array('%s'),
+                                array('%d')
+                            );
+                        }
+                    }
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
     /**

@@ -273,6 +273,14 @@ class EADBModels
      */
     public function replace($table_name, $data, $json = false, $forceStrings = false)
     {
+        if ($table_name === 'ea_appointments' && (empty($data['id']) || $data['id'] == '-1') && empty($data['created'])) {
+            $data['created'] = current_time('mysql', 1);
+        }
+
+        if ($table_name === 'ea_appointments' && (empty($data['id']) || $data['id'] == '-1') && empty($data['token'])) {
+            $data['token'] = wp_generate_password(32, false);
+        }
+
         // strip out fields that are not mapped inside table
         $this->table_columns->clear_data($table_name, $data);
 

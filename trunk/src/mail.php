@@ -508,6 +508,56 @@ class EAMail
     }
 
     /**
+     * Check whether legacy MD5 token validation is allowed for an appointment.
+     *
+     * Legacy validation is strictly confined to appointments created before the HMAC
+     * token mechanism was introduced, preventing authorization bypass on newly created appointments.
+     *
+     * @param array  $data   Appointment data
+     * @param string $action Action type ("confirm" or "cancel")
+     * @return bool True if appointment is eligible for legacy token fallback
+     */
+    public function is_legacy_token_allowed($data, $action = '')
+    {
+        if (empty($data) || !is_array($data)) {
+            return false;
+        }
+
+        if (empty($data['created']) || !is_string($data['created'])) {
+            return false;
+        }
+
+        $app_created_time = strtotime($data['created']);
+        if ($app_created_time === false || $app_created_time <= 0) {
+            return false;
+        }
+
+        // Retrieve cutoff timestamp from wp_options
+        $cutoff = get_option('easy_ea_token_migration_cutoff', '');
+
+        // Allow developers to override cutoff via filter
+        $cutoff = apply_filters('easy_ea_legacy_token_cutoff', $cutoff, $data, $action);
+
+        $allowed = false;
+
+        if (!empty($cutoff)) {
+            $cutoff_time = is_numeric($cutoff) ? (int)$cutoff : strtotime($cutoff);
+            if ($cutoff_time && $cutoff_time > 0) {
+                $allowed = ($app_created_time <= $cutoff_time);
+            }
+        } else {
+            // Fallback if no cutoff has been explicitly set or initialized:
+            // Freeze migration boundary by saving the current time.
+            $current_cutoff = current_time('mysql', 1);
+            add_option('easy_ea_token_migration_cutoff', $current_cutoff);
+            $cutoff_time = strtotime($current_cutoff);
+            $allowed = ($app_created_time <= $cutoff_time);
+        }
+
+        return (bool) apply_filters('easy_ea_allow_legacy_token', $allowed, $data, $action);
+    }
+
+    /**
      * Validate action token with backward compatibility for legacy MD5 tokens (<= 4.0.2.1).
      *
      * @param array  $data Appointment data
@@ -521,10 +571,42 @@ class EAMail
             return false;
         }
 
-        $expected_token = $this->generate_token($data, $action);
+        $token_length = strlen($provided_token);
 
-        if (is_string($expected_token) && hash_equals($expected_token, $provided_token)) {
-            return true;
+        // 1. Current HMAC token validation (64-character SHA-256 HMAC)
+        if ($token_length === 64 && ctype_xdigit($provided_token)) {
+            $expected_token = $this->generate_token($data, $action);
+            if (is_string($expected_token) && hash_equals(strtolower($expected_token), strtolower($provided_token))) {
+                return true;
+            }
+            return false;
+        }
+
+        // 2. Backward-compatible fallback for links issued in EA <= 4.0.2.1 (strictly 32-char MD5 format)
+        // Strictly restricted to appointments created before the HMAC migration cutoff.
+        if ($token_length === 32 && ctype_xdigit($provided_token)) {
+            if ($this->is_legacy_token_allowed($data, $action)) {
+                $legacy_salt  = 'CStK4zYJSuQPnjbJ1npM';
+                $legacy_token = md5($legacy_salt . $data['created'] . $action);
+                if (hash_equals($legacy_token, strtolower($provided_token))) {
+                    // Upgrade appointment token in database if not already populated
+                    $app_id = isset($data['id']) ? (int)$data['id'] : 0;
+                    if ($app_id > 0 && empty($data['token']) && isset($this->wpdb) && isset($this->models)) {
+                        $row = $this->models->get_row('ea_appointments', $app_id, ARRAY_A);
+                        if (empty($row['token'])) {
+                            $new_token = wp_generate_password(32, false);
+                            $this->wpdb->update(
+                                $this->wpdb->prefix . 'ea_appointments',
+                                array('token' => $new_token),
+                                array('id' => $app_id),
+                                array('%s'),
+                                array('%d')
+                            );
+                        }
+                    }
+                    return true;
+                }
+            }
         }
 
         return false;

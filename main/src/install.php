@@ -277,6 +277,10 @@ class EAInstallTools
         if (get_option('easy_ea_ui_mode') === false) {
             add_option('easy_ea_ui_mode', 'new');
         }
+
+        if (get_option('easy_ea_token_migration_cutoff') === false) {
+            add_option('easy_ea_token_migration_cutoff', current_time('mysql', 1));
+        }
     }
 
     public function update()
@@ -293,6 +297,13 @@ class EAInstallTools
         if (version_compare($version, '4.0.0', '<')) {
             if (get_option('easy_ea_ui_mode') === false) {
                 add_option('easy_ea_ui_mode', 'old');
+            }
+        }
+
+        // Record migration cutoff if upgrading from a version before HMAC tokens were introduced (4.0.3)
+        if (version_compare($version, '4.0.3', '<')) {
+            if (get_option('easy_ea_token_migration_cutoff') === false) {
+                add_option('easy_ea_token_migration_cutoff', current_time('mysql', 1));
             }
         }
 
@@ -490,6 +501,10 @@ class EAInstallTools
         if (version_compare($version, '4.0.5', '<')) {
             $this->update_email_options('user');
             $this->update_email_options('worker');
+
+            if (get_option('easy_ea_token_migration_cutoff') === false) {
+                add_option('easy_ea_token_migration_cutoff', current_time('mysql', 1));
+            }
         }
 
         update_option('easy_app_db_version', $version);
