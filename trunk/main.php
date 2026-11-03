@@ -64,6 +64,7 @@ if (version_compare(PHP_VERSION, '5.3', '<')) {
 require_once dirname(__FILE__) . '/ea-blocks/ea-blocks.php';
 require_once dirname(__FILE__) . '/src/webhook.php';
 require_once dirname(__FILE__) . '/new-ui/class-ea-appointments-new-ui.php';
+require EA_PLUGIN_DIR . 'new-ui/class-ea-daily-schedule-new-ui.php';
 require EA_PLUGIN_DIR . 'new-ui/class-ea-locations-new-ui.php';
 require EA_PLUGIN_DIR . 'new-ui/class-ea-services-new-ui.php';
 require EA_PLUGIN_DIR . 'new-ui/class-ea-workers-new-ui.php';
