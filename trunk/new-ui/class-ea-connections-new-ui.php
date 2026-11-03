@@ -68,6 +68,8 @@ class EA_Connections_New_UI
      */
     public static function init()
     {
+        self::ensure_database_schema();
+
         add_action('admin_menu', array(__CLASS__, 'register_menu'), 20);
         add_action('admin_enqueue_scripts', array(__CLASS__, 'enqueue_assets'));
 
@@ -81,6 +83,24 @@ class EA_Connections_New_UI
 
         if (!wp_next_scheduled('easy_ea_daily_connection_expire_check')) {
             wp_schedule_event(time(), 'daily', 'easy_ea_daily_connection_expire_check');
+        }
+    }
+
+    /**
+     * Ensure cancel_time column exists on ea_connections table.
+     */
+    public static function ensure_database_schema()
+    {
+        global $wpdb;
+
+        $table = $wpdb->prefix . 'ea_connections';
+
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+        $column = $wpdb->get_results($wpdb->prepare("SHOW COLUMNS FROM {$table} LIKE %s", 'cancel_time'));
+
+        if (empty($column)) {
+            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+            @$wpdb->query("ALTER TABLE {$table} ADD COLUMN cancel_time VARCHAR(20) DEFAULT NULL");
         }
     }
 
@@ -211,6 +231,7 @@ class EA_Connections_New_UI
             'dateFormat'       => $cache['date_format'],
             'timeFormat'       => $cache['time_format'],
             'datepickerLocale' => $cache['datepicker'],
+            'globalCancelTime' => $cache['global_cancel_time'],
             'cache'            => array(
                 'locations' => $cache['locations'],
                 'services'  => $cache['services'],
@@ -281,6 +302,12 @@ class EA_Connections_New_UI
                 'confirmDeleteExpiredNoApp'  => esc_html__('Are you sure you want to delete %d expired connection(s) with no appointment? This action cannot be undone.', 'easy-appointments'),
                 /* translators: %d: number of expired connections */
                 'deleteExpiredNoAppSuccess'  => esc_html__('%d expired connection(s) with no appointment deleted successfully.', 'easy-appointments'),
+                'cancelBefore'               => esc_html__('Cancel Before', 'easy-appointments'),
+                'cancelBookingBeforeHour'    => esc_html__('Cancel Booking Before Hour', 'easy-appointments'),
+                'cancelBeforeTip'            => esc_html__('Users are allowed to cancel their appointments only up to hours before the scheduled time for this connection.', 'easy-appointments'),
+                'defaultLabel'               => esc_html__('default', 'easy-appointments'),
+                'globalDefault'              => esc_html__('Global default', 'easy-appointments'),
+                'invalidCancelTime'          => esc_html__('Please enter a valid time (e.g. 02:00 or 24:00).', 'easy-appointments'),
             ),
         );
     }
@@ -330,10 +357,11 @@ class EA_Connections_New_UI
             'locations'   => $models->get_all_rows('ea_locations', array(), $models->get_order_by_part('ea_locations')),
             'services'    => $models->get_all_rows('ea_services', array(), $models->get_order_by_part('ea_services')),
             'workers'     => $models->get_all_rows('ea_staff', array(), $models->get_order_by_part('ea_workers')),
-            'date_format' => $datetime->convert_to_moment_format(get_option('date_format', 'F j, Y')),
-            'time_format' => $options->get_option_value('time_format', '24h'),
-            'datepicker'  => $options->get_option_value('datepicker', 'en'),
-            'extend_url'  => $extend_url,
+            'date_format'        => $datetime->convert_to_moment_format(get_option('date_format', 'F j, Y')),
+            'time_format'        => $options->get_option_value('time_format', '24h'),
+            'datepicker'         => $options->get_option_value('datepicker', 'en'),
+            'global_cancel_time' => $options->get_option_value('cancel_time', ''),
+            'extend_url'         => $extend_url,
         );
     }
 

@@ -120,6 +120,33 @@
             return m.isValid() ? m.format(timeFormatPattern()) : timeStr;
         }
 
+        function formatCancelTime(val) {
+            if (!val) {
+                return '';
+            }
+            var str = String(val).trim();
+            if (!str || str === '0') {
+                return '';
+            }
+            var parts = str.split(':');
+            if (parts.length >= 2) {
+                var h = parts[0];
+                var m = parts[1];
+                if (h.length === 1) {
+                    h = '0' + h;
+                }
+                if (m.length === 1) {
+                    m = '0' + m;
+                }
+                return h + ':' + m;
+            }
+            if (!isNaN(str)) {
+                var num = parseInt(str, 10);
+                return (num < 10 ? '0' + num : num) + ':00';
+            }
+            return str;
+        }
+
         // Same timezone-safe "local date -> YYYY-MM-DD" conversion used by
         // the legacy React DatePicker fields.
         function isoDate(date) {
@@ -263,7 +290,8 @@
                         loc ? loc.name : '',
                         ser ? ser.name : '',
                         wrk ? wrk.name : '',
-                        record.day_of_week
+                        record.day_of_week,
+                        record.cancel_time || ''
                     ].join(' ').toLowerCase();
 
                     return haystack.indexOf(term) !== -1;
@@ -382,6 +410,13 @@
                 dayBadges += '<span class="ea-mnui-day-badge">' + escapeHtml(day) + '</span>';
             });
 
+            var cancelBeforeHtml = '—';
+            if (row.cancel_time && $.trim(row.cancel_time) !== '' && $.trim(row.cancel_time) !== '0' && $.trim(row.cancel_time) !== '00:00' && $.trim(row.cancel_time) !== '00:00:00') {
+                cancelBeforeHtml = '<span class="ea-mnui-cell-text" style="font-weight:600;">' + escapeHtml(formatCancelTime(row.cancel_time)) + '</span>';
+            } else if (cfg.globalCancelTime && $.trim(cfg.globalCancelTime) !== '' && $.trim(cfg.globalCancelTime) !== '0' && $.trim(cfg.globalCancelTime) !== '00:00' && $.trim(cfg.globalCancelTime) !== '00:00:00') {
+                cancelBeforeHtml = '<span class="ea-mnui-cell-text" style="color:var(--ea-text-muted);" title="' + escapeHtml(i18n.globalDefault || 'Global default') + '">' + escapeHtml(formatCancelTime(cfg.globalCancelTime)) + ' <span style="font-size:11px;">(' + escapeHtml(i18n.defaultLabel || 'default') + ')</span></span>';
+            }
+
             var $row = $(
                 '<tr class="ea-mnui-row ' + escapeHtml(status.statusClass) + '" data-id="' + escapeHtml(row.id) + '">' +
                     '<td class="ea-mnui-col-check">' +
@@ -409,6 +444,7 @@
                         '<span class="ea-mnui-cell-label">' + escapeHtml(i18n.to) + '</span>' +
                         '<span class="ea-mnui-cell-text">' + (row.day_from && row.day_to && diffYears(row.day_from, row.day_to) >= 10 ? '∞ (Infinite)' : escapeHtml(formatDate(row.day_to))) + '</span>' +
                     '</td>' +
+                    '<td>' + cancelBeforeHtml + '</td>' +
                     '<td>' +
                         '<span class="ea-mnui-badge ' + status.badge + '">' + escapeHtml(status.label) + '</span>' +
                     '</td>' +
@@ -1129,6 +1165,7 @@
         function initTimepickers() {
             var $timeFrom = $('#ea-mnui-input-time_from');
             var $timeTo = $('#ea-mnui-input-time_to');
+            var $cancelTime = $('#ea-mnui-input-cancel_time');
             if ($.fn.timepicker) {
                 var opts = {
                     timeOnly: true,
@@ -1144,6 +1181,20 @@
                 };
                 $timeFrom.timepicker(opts);
                 $timeTo.timepicker(opts);
+
+                var cancelOpts = {
+                    timeOnly: true,
+                    timeFormat: 'HH:mm',
+                    showSecond: false,
+                    controlType: 'select',
+                    oneLine: true,
+                    beforeShow: function() {
+                        setTimeout(function() {
+                            $('#ui-datepicker-div').addClass('ea-timepicker-only');
+                        }, 0);
+                    }
+                };
+                $cancelTime.timepicker(cancelOpts);
             }
         }
 
@@ -1284,6 +1335,12 @@
             $(this).val(formatted);
             timeFieldErrorCheck();
         });
+        $drawerForm.on('blur', '#ea-mnui-input-cancel_time', function () {
+            var val = $.trim($(this).val());
+            if (val) {
+                $(this).val(formatCancelTime(val));
+            }
+        });
 
         /**
          * ---------- Add / Edit / Delete ----------
@@ -1417,6 +1474,15 @@
                 }
             }
 
+            var $cancelInput = $('#ea-mnui-input-cancel_time');
+            var cancelVal = $.trim($cancelInput.val());
+            if (cancelVal) {
+                var validCancel = /^\d{1,3}(:\d{1,2})?$/.test(cancelVal);
+                if (!validCancel) {
+                    fail($cancelInput);
+                }
+            }
+
             return ok;
         }
 
@@ -1479,6 +1545,7 @@
 
             $('#ea-mnui-input-time_from').val('09:00:00');
             $('#ea-mnui-input-time_to').val('17:00:00');
+            $('#ea-mnui-input-cancel_time').val('');
         }
 
         function openDrawer(row, bulk) {
@@ -1514,6 +1581,7 @@
 
                 $('#ea-mnui-input-time_from').val(withSeconds(row.time_from) || '09:00:00');
                 $('#ea-mnui-input-time_to').val(withSeconds(row.time_to) || '17:00:00');
+                $('#ea-mnui-input-cancel_time').val(row.cancel_time ? formatCancelTime(row.cancel_time) : '');
             } else {
                 resetSharedFields();
             }
@@ -1638,6 +1706,8 @@
                 ? WEEK_DAYS.join(',')
                 : getSelectedDays().join(',');
 
+            var cancelVal = $.trim($('#ea-mnui-input-cancel_time').val());
+
             return {
                 slot_count: parseInt($('#ea-mnui-input-slot_count').val(), 10) || 1,
                 day_of_week: dayOfWeek,
@@ -1646,6 +1716,7 @@
                 day_to: getDayToIso(),
                 time_from: withSeconds($('#ea-mnui-input-time_from').val()),
                 time_to: withSeconds($('#ea-mnui-input-time_to').val()),
+                cancel_time: cancelVal ? cancelVal : null,
                 is_working: $('#ea-mnui-input-is_working').val()
             };
         }

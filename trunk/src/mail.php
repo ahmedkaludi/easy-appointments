@@ -262,8 +262,10 @@ class EAMail
                 wp_die(esc_html__('Appointment can\'t be cancelled!', 'easy-appointments'));
             }
 
-            $cancel_time = $this->options->get_option_value('cancel_time');
-            if (!empty($cancel_time)) {
+            $cancel_time = $this->get_appointment_cancel_time($app_data);
+            $cancel_minutes = $this->parse_cancel_time_to_minutes($cancel_time);
+
+            if ($cancel_minutes > 0) {
                 // Convert appointment datetime
                 $appointment_dt = new DateTime($app_data['date'] . ' ' . $app_data['start']);
                 $current_dt     = new DateTime(current_time('Y-m-d H:i'));
@@ -272,18 +274,16 @@ class EAMail
                 $diff_seconds = $appointment_dt->getTimestamp() - $current_dt->getTimestamp();
                 $diff_minutes = floor($diff_seconds / 60);
 
-                // If cancel_time stored as hours → convert to minutes
-                $cancel_minutes = intval($cancel_time) * 60;
-
                 if ($diff_minutes < $cancel_minutes) {
+                    $url = apply_filters('easy_ea_cant_be_canceled_redirect_url', get_home_url());
+                    header('Refresh:3; url=' . $url);
                     wp_die(
                         esc_html__('Cancellation is not allowed within the specified time before the appointment.', 'easy-appointments')
                     );
                 }
             }
-            
 
-            if (new DateTime() > new DateTime($app_data['date'] . ' ' . $app_data['start'])) {
+            if (new DateTime(current_time('Y-m-d H:i')) > new DateTime($app_data['date'] . ' ' . $app_data['start'])) {
                 $url = apply_filters( 'easy_ea_cant_be_canceled_redirect_url', get_home_url());
 
                 header('Refresh:3; url=' . $url);
@@ -610,6 +610,114 @@ class EAMail
         }
 
         return false;
+    }
+
+    /**
+     * Parse cancel_time string into minutes.
+     * Supports "HH:mm" (e.g. "02:00" -> 120, "01:30" -> 90),
+     * decimal hours ("1.5" -> 90), or plain integer hours ("2" -> 120).
+     *
+     * @param string|int|null $cancel_time
+     * @return int Minutes
+     */
+    public function parse_cancel_time_to_minutes($cancel_time)
+    {
+        if ($cancel_time === null || $cancel_time === '') {
+            return 0;
+        }
+
+        $cancel_time = trim((string)$cancel_time);
+
+        if ($cancel_time === '0' || $cancel_time === '00:00' || $cancel_time === '00:00:00') {
+            return 0;
+        }
+
+        if (strpos($cancel_time, ':') !== false) {
+            $parts = explode(':', $cancel_time);
+            $hours = isset($parts[0]) ? intval($parts[0]) : 0;
+            $mins  = isset($parts[1]) ? intval($parts[1]) : 0;
+            return ($hours * 60) + $mins;
+        }
+
+        if (is_numeric($cancel_time)) {
+            return (int) round(floatval($cancel_time) * 60);
+        }
+
+        return intval($cancel_time) * 60;
+    }
+
+    /**
+     * Get cancellation deadline (cancel_time) for a given appointment.
+     * Checks matching connection for connection-specific cancel_time first.
+     * If the connection has a cancel_time defined (non-empty string / non-null), uses it.
+     * Otherwise, falls back to the global cancel_time option.
+     *
+     * @param array $app_data
+     * @return string
+     */
+    public function get_appointment_cancel_time($app_data)
+    {
+        global $wpdb;
+
+        if (!empty($app_data['location']) && !empty($app_data['service']) && !empty($app_data['worker'])) {
+            $table = $wpdb->prefix . 'ea_connections';
+
+            $location = absint($app_data['location']);
+            $service  = absint($app_data['service']);
+            $worker   = absint($app_data['worker']);
+            $date     = !empty($app_data['date']) ? $app_data['date'] : '';
+            $start    = !empty($app_data['start']) ? $app_data['start'] : '';
+
+            $conn = null;
+
+            if (!empty($date)) {
+                $day_of_week = date('l', strtotime($date));
+
+                if (!empty($start)) {
+                    // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+                    $conn = $wpdb->get_row($wpdb->prepare(
+                        "SELECT cancel_time FROM {$table}
+                         WHERE location = %d AND service = %d AND worker = %d
+                           AND day_of_week LIKE %s
+                           AND (day_from IS NULL OR day_from <= %s)
+                           AND (day_to IS NULL OR day_to >= %s)
+                           AND (time_from IS NULL OR time_from <= %s)
+                           AND (time_to IS NULL OR time_to >= %s)
+                         ORDER BY id DESC LIMIT 1",
+                        $location, $service, $worker, "%{$day_of_week}%", $date, $date, $start, $start
+                    ));
+                }
+
+                if (!$conn) {
+                    // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+                    $conn = $wpdb->get_row($wpdb->prepare(
+                        "SELECT cancel_time FROM {$table}
+                         WHERE location = %d AND service = %d AND worker = %d
+                           AND day_of_week LIKE %s
+                           AND (day_from IS NULL OR day_from <= %s)
+                           AND (day_to IS NULL OR day_to >= %s)
+                         ORDER BY id DESC LIMIT 1",
+                        $location, $service, $worker, "%{$day_of_week}%", $date, $date
+                    ));
+                }
+            }
+
+            if (!$conn) {
+                // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+                $conn = $wpdb->get_row($wpdb->prepare(
+                    "SELECT cancel_time FROM {$table}
+                     WHERE location = %d AND service = %d AND worker = %d
+                     ORDER BY id DESC LIMIT 1",
+                    $location, $service, $worker
+                ));
+            }
+
+            if ($conn && isset($conn->cancel_time) && $conn->cancel_time !== null && trim((string)$conn->cancel_time) !== '') {
+                return trim((string)$conn->cancel_time);
+            }
+        }
+
+        return $this->options->get_option_value('cancel_time');
     }
 
     /**

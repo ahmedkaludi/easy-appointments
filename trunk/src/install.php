@@ -110,6 +110,7 @@ class EAInstallTools
             is_working smallint(3) DEFAULT NULL,
             repeat_week smallint(3) DEFAULT NULL,
             repeat_booking smallint(3) DEFAULT NULL,
+            cancel_time varchar(20) DEFAULT NULL,
             PRIMARY KEY (id),
             KEY location_to_connection (location),
             KEY service_to_location (service),
@@ -216,6 +217,7 @@ class EAInstallTools
             ADD CONSTRAINT ' . $table_prefix . 'ea_connections_ibfk_3 FOREIGN KEY (worker) REFERENCES ' . $table_prefix . 'ea_staff (id) ON DELETE CASCADE';
 
         $alter_querys[] = 'ALTER TABLE ' . $table_prefix . 'ea_services ADD COLUMN description TEXT NULL';
+        $alter_querys[] = 'ALTER TABLE ' . $table_prefix . 'ea_connections ADD COLUMN cancel_time VARCHAR(20) DEFAULT NULL';
 
         require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 

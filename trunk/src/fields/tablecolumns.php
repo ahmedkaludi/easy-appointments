@@ -50,6 +50,7 @@ class EATableColumns
                 'day_to',
                 'repeat_week',
                 'repeat_booking',
+                'cancel_time',
                 'is_working'
             ),
             'ea_meta_fields' => array(
