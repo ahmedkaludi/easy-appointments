@@ -93,14 +93,12 @@ class EA_Connections_New_UI
     {
         global $wpdb;
 
-        $table = $wpdb->prefix . 'ea_connections';
-
-        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-        $column = $wpdb->get_results($wpdb->prepare("SHOW COLUMNS FROM {$table} LIKE %s", 'cancel_time'));
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Checking whether cancel_time column exists on custom connections table.
+        $column = $wpdb->get_results($wpdb->prepare("SHOW COLUMNS FROM {$wpdb->prefix}ea_connections LIKE %s", 'cancel_time'));
 
         if (empty($column)) {
-            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-            @$wpdb->query("ALTER TABLE {$table} ADD COLUMN cancel_time VARCHAR(20) DEFAULT NULL");
+            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.SchemaChange -- Adding missing cancel_time column to custom connections table.
+            @$wpdb->query("ALTER TABLE {$wpdb->prefix}ea_connections ADD COLUMN cancel_time VARCHAR(20) DEFAULT NULL");
         }
     }
 

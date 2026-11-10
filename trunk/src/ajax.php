@@ -2672,56 +2672,51 @@ class EAAjax
         // Fetch connections for working hours on this day
         global $wpdb;
 
-        $conn_where = "is_working = 1 AND (day_from IS NULL OR day_from <= %s) AND (day_to IS NULL OR day_to >= %s)";
-        $conn_params = array($date, $date);
-        if ($location > 0) {
-            $conn_where .= " AND location = %d";
-            $conn_params[] = $location;
-        }
-        if ($service > 0) {
-            $conn_where .= " AND service = %d";
-            $conn_params[] = $service;
-        }
-        if ($worker > 0) {
-            $conn_where .= " AND worker = %d";
-            $conn_params[] = $worker;
-        }
+        $loc_filter = ($location > 0) ? $location : 0;
+        $srv_filter = ($service > 0) ? $service : 0;
+        $wrk_filter = ($worker > 0) ? $worker : 0;
 
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Querying live custom connections table for daily schedule.
         $connections = $wpdb->get_results(
             $wpdb->prepare(
-                "SELECT * FROM {$wpdb->prefix}ea_connections WHERE {$conn_where} ORDER BY time_from ASC",
-                $conn_params
+                "SELECT * FROM {$wpdb->prefix}ea_connections
+                WHERE is_working = 1
+                  AND (day_from IS NULL OR day_from <= %s)
+                  AND (day_to IS NULL OR day_to >= %s)
+                  AND (%d = 0 OR location = %d)
+                  AND (%d = 0 OR service = %d)
+                  AND (%d = 0 OR worker = %d)
+                ORDER BY time_from ASC",
+                $date,
+                $date,
+                $loc_filter,
+                $loc_filter,
+                $srv_filter,
+                $srv_filter,
+                $wrk_filter,
+                $wrk_filter
             )
         );
 
         // If no date-bounded connections found, check general active connections
         if (empty($connections)) {
-            $conn_where_gen = "is_working = 1";
-            $conn_params_gen = array();
-            if ($location > 0) {
-                $conn_where_gen .= " AND location = %d";
-                $conn_params_gen[] = $location;
-            }
-            if ($service > 0) {
-                $conn_where_gen .= " AND service = %d";
-                $conn_params_gen[] = $service;
-            }
-            if ($worker > 0) {
-                $conn_where_gen .= " AND worker = %d";
-                $conn_params_gen[] = $worker;
-            }
-            if (!empty($conn_params_gen)) {
-                $connections = $wpdb->get_results(
-                    $wpdb->prepare(
-                        "SELECT * FROM {$wpdb->prefix}ea_connections WHERE {$conn_where_gen} ORDER BY time_from ASC",
-                        $conn_params_gen
-                    )
-                );
-            } else {
-                $connections = $wpdb->get_results(
-                    "SELECT * FROM {$wpdb->prefix}ea_connections WHERE is_working = 1 ORDER BY time_from ASC"
-                );
-            }
+            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Querying live custom connections table for fallback daily schedule.
+            $connections = $wpdb->get_results(
+                $wpdb->prepare(
+                    "SELECT * FROM {$wpdb->prefix}ea_connections
+                    WHERE is_working = 1
+                      AND (%d = 0 OR location = %d)
+                      AND (%d = 0 OR service = %d)
+                      AND (%d = 0 OR worker = %d)
+                    ORDER BY time_from ASC",
+                    $loc_filter,
+                    $loc_filter,
+                    $srv_filter,
+                    $srv_filter,
+                    $wrk_filter,
+                    $wrk_filter
+                )
+            );
         }
 
         // Determine working time intervals and slot steps
@@ -2951,6 +2946,7 @@ class EAAjax
         global $wpdb;
         $app_id = $inserted ? (int)$inserted : (int)$wpdb->insert_id;
 
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Querying custom meta fields table.
         $name_field = $wpdb->get_row("SELECT * FROM {$wpdb->prefix}ea_meta_fields WHERE slug = 'name'");
         if ($name_field) {
             $this->models->replace('ea_fields', array(
@@ -2960,6 +2956,7 @@ class EAAjax
             ));
         }
 
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Querying custom meta fields table.
         $desc_field = $wpdb->get_row("SELECT * FROM {$wpdb->prefix}ea_meta_fields WHERE slug = 'description' OR slug = 'comment'");
         if ($desc_field && !empty($notes)) {
             $this->models->replace('ea_fields', array(
@@ -2980,11 +2977,11 @@ class EAAjax
         if (empty($time_hi)) {
             return '';
         }
-        $ts = strtotime('2000-01-01 ' . $time_hi);
+        $ts = strtotime('2000-01-01 ' . $time_hi . ' UTC');
         if ($format === 'am-pm') {
-            return date('g:i A', $ts);
+            return gmdate('g:i A', $ts);
         }
-        return date('H:i', $ts);
+        return gmdate('H:i', $ts);
     }
 
     public function delete_selected_appointment()

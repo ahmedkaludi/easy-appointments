@@ -203,11 +203,19 @@ class EA_Publish_New_UI
 
         global $wpdb;
 
-        // 1. Setup readiness checks
-        $locations_count = (int) $wpdb->get_var("SELECT COUNT(*) FROM {$wpdb->prefix}ea_locations");
-        $services_count  = (int) $wpdb->get_var("SELECT COUNT(*) FROM {$wpdb->prefix}ea_services");
-        $workers_count   = (int) $wpdb->get_var("SELECT COUNT(*) FROM {$wpdb->prefix}ea_staff");
+        // 1. Dropdown records for the live Shortcode Generator & setup readiness checks.
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Querying live custom locations table.
+        $locations = $wpdb->get_results("SELECT id, name FROM {$wpdb->prefix}ea_locations ORDER BY name ASC");
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Querying live custom services table.
+        $services  = $wpdb->get_results("SELECT id, name, duration, price FROM {$wpdb->prefix}ea_services ORDER BY name ASC");
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Querying live custom staff table.
+        $workers   = $wpdb->get_results("SELECT id, name FROM {$wpdb->prefix}ea_staff ORDER BY name ASC");
 
+        $locations_count = is_array($locations) ? count($locations) : 0;
+        $services_count  = is_array($services) ? count($services) : 0;
+        $workers_count   = is_array($workers) ? count($workers) : 0;
+
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Querying live custom connections table.
         $connections_count = (int) $wpdb->get_var(
             "SELECT COUNT(c.id) 
              FROM {$wpdb->prefix}ea_connections c
@@ -229,18 +237,23 @@ class EA_Publish_New_UI
         );
 
         // 2. Existing booking pages detection
-        $existing_pages = $wpdb->get_results(
-            "SELECT ID, post_title, post_status FROM {$wpdb->posts} 
-             WHERE post_type = 'page' 
-               AND post_status IN ('publish', 'draft', 'pending', 'private')
-               AND (post_content LIKE '%[ea_bootstrap]%' OR post_content LIKE '%[ea_standard]%' OR post_content LIKE '%create-block/ea-blocks%')
-             ORDER BY post_date DESC LIMIT 3"
-        );
+        $ea_bootstrap_like = '%' . $wpdb->esc_like('[ea_bootstrap]') . '%';
+        $ea_standard_like  = '%' . $wpdb->esc_like('[ea_standard]') . '%';
+        $ea_block_like     = '%' . $wpdb->esc_like('create-block/ea-blocks') . '%';
 
-        // 3. Dropdown records for the live Shortcode Generator
-        $locations = $wpdb->get_results("SELECT id, name FROM {$wpdb->prefix}ea_locations ORDER BY name ASC");
-        $services  = $wpdb->get_results("SELECT id, name, duration, price FROM {$wpdb->prefix}ea_services ORDER BY name ASC");
-        $workers   = $wpdb->get_results("SELECT id, name FROM {$wpdb->prefix}ea_staff ORDER BY name ASC");
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Searching live page post_content for plugin shortcodes or block marker.
+        $existing_pages = $wpdb->get_results(
+            $wpdb->prepare(
+                "SELECT ID, post_title, post_status FROM {$wpdb->posts} 
+                 WHERE post_type = 'page' 
+                   AND post_status IN ('publish', 'draft', 'pending', 'private')
+                   AND (post_content LIKE %s OR post_content LIKE %s OR post_content LIKE %s)
+                 ORDER BY post_date DESC LIMIT 3",
+                $ea_bootstrap_like,
+                $ea_standard_like,
+                $ea_block_like
+            )
+        );
 
         require EA_PLUGIN_DIR . 'new-ui/templates/publish-page.php';
     }

@@ -660,8 +660,6 @@ class EAMail
         global $wpdb;
 
         if (!empty($app_data['location']) && !empty($app_data['service']) && !empty($app_data['worker'])) {
-            $table = $wpdb->prefix . 'ea_connections';
-
             $location = absint($app_data['location']);
             $service  = absint($app_data['service']);
             $worker   = absint($app_data['worker']);
@@ -671,12 +669,12 @@ class EAMail
             $conn = null;
 
             if (!empty($date)) {
-                $day_of_week = date('l', strtotime($date));
+                $day_of_week = gmdate('l', strtotime($date));
 
                 if (!empty($start)) {
                     // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
                     $conn = $wpdb->get_row($wpdb->prepare(
-                        "SELECT cancel_time FROM {$table}
+                        "SELECT cancel_time FROM {$wpdb->prefix}ea_connections
                          WHERE location = %d AND service = %d AND worker = %d
                            AND day_of_week LIKE %s
                            AND (day_from IS NULL OR day_from <= %s)
@@ -691,7 +689,7 @@ class EAMail
                 if (!$conn) {
                     // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
                     $conn = $wpdb->get_row($wpdb->prepare(
-                        "SELECT cancel_time FROM {$table}
+                        "SELECT cancel_time FROM {$wpdb->prefix}ea_connections
                          WHERE location = %d AND service = %d AND worker = %d
                            AND day_of_week LIKE %s
                            AND (day_from IS NULL OR day_from <= %s)
@@ -705,7 +703,7 @@ class EAMail
             if (!$conn) {
                 // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
                 $conn = $wpdb->get_row($wpdb->prepare(
-                    "SELECT cancel_time FROM {$table}
+                    "SELECT cancel_time FROM {$wpdb->prefix}ea_connections
                      WHERE location = %d AND service = %d AND worker = %d
                      ORDER BY id DESC LIMIT 1",
                     $location, $service, $worker

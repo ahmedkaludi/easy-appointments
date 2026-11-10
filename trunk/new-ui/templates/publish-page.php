@@ -102,7 +102,13 @@ if (!defined('WPINC')) {
                                         <span class="ea-check-icon ea-check-icon-bad">✕</span>
                                     <?php endif; ?>
                                     <span class="ea-check-title">
-                                        <?php printf(esc_html__('Locations: %d added', 'easy-appointments'), $locations_count); ?>
+                                        <?php
+                                        printf(
+                                            /* translators: %d: number of locations */
+                                            esc_html__('Locations: %d added', 'easy-appointments'),
+                                            absint($locations_count)
+                                        );
+                                        ?>
                                     </span>
                                 </div>
                                 <div class="ea-publish-check-action">
@@ -121,7 +127,13 @@ if (!defined('WPINC')) {
                                         <span class="ea-check-icon ea-check-icon-bad">✕</span>
                                     <?php endif; ?>
                                     <span class="ea-check-title">
-                                        <?php printf(esc_html__('Services: %d added', 'easy-appointments'), $services_count); ?>
+                                        <?php
+                                        printf(
+                                            /* translators: %d: number of services */
+                                            esc_html__('Services: %d added', 'easy-appointments'),
+                                            absint($services_count)
+                                        );
+                                        ?>
                                     </span>
                                 </div>
                                 <div class="ea-publish-check-action">
@@ -140,7 +152,13 @@ if (!defined('WPINC')) {
                                         <span class="ea-check-icon ea-check-icon-bad">✕</span>
                                     <?php endif; ?>
                                     <span class="ea-check-title">
-                                        <?php printf(esc_html__('Staff: %d added', 'easy-appointments'), $workers_count); ?>
+                                        <?php
+                                        printf(
+                                            /* translators: %d: number of staff members */
+                                            esc_html__('Staff: %d added', 'easy-appointments'),
+                                            absint($workers_count)
+                                        );
+                                        ?>
                                     </span>
                                 </div>
                                 <div class="ea-publish-check-action">
@@ -159,7 +177,13 @@ if (!defined('WPINC')) {
                                         <span class="ea-check-icon ea-check-icon-bad">✕</span>
                                     <?php endif; ?>
                                     <span class="ea-check-title">
-                                        <?php printf(esc_html__('Connections: %d active', 'easy-appointments'), $connections_count); ?>
+                                        <?php
+                                        printf(
+                                            /* translators: %d: number of active connections */
+                                            esc_html__('Connections: %d active', 'easy-appointments'),
+                                            absint($connections_count)
+                                        );
+                                        ?>
                                     </span>
                                 </div>
                                 <div class="ea-publish-check-action">
@@ -202,13 +226,13 @@ if (!defined('WPINC')) {
                     <div class="ea-publish-existing-pages">
                         <span class="ea-existing-label"><?php esc_html_e('Existing booking pages detected:', 'easy-appointments'); ?></span>
                         <div class="ea-existing-list">
-                            <?php foreach ($existing_pages as $p): ?>
+                            <?php foreach ($existing_pages as $easy_appointments_page): ?>
                                 <span class="ea-existing-item">
-                                    <strong><?php echo esc_html($p->post_title ?: __('(Untitled)', 'easy-appointments')); ?></strong>
-                                    <small class="ea-existing-status">(<?php echo esc_html(ucfirst($p->post_status)); ?>)</small>
-                                    <a href="<?php echo esc_url(get_edit_post_link($p->ID)); ?>" target="_blank" class="ea-existing-link"><?php esc_html_e('Edit', 'easy-appointments'); ?></a>
-                                    <?php if ($p->post_status === 'publish'): ?>
-                                        <a href="<?php echo esc_url(get_permalink($p->ID)); ?>" target="_blank" class="ea-existing-link"><?php esc_html_e('View', 'easy-appointments'); ?></a>
+                                    <strong><?php echo esc_html($easy_appointments_page->post_title ?: __('(Untitled)', 'easy-appointments')); ?></strong>
+                                    <small class="ea-existing-status">(<?php echo esc_html(ucfirst($easy_appointments_page->post_status)); ?>)</small>
+                                    <a href="<?php echo esc_url(get_edit_post_link($easy_appointments_page->ID)); ?>" target="_blank" class="ea-existing-link"><?php esc_html_e('Edit', 'easy-appointments'); ?></a>
+                                    <?php if ($easy_appointments_page->post_status === 'publish'): ?>
+                                        <a href="<?php echo esc_url(get_permalink($easy_appointments_page->ID)); ?>" target="_blank" class="ea-existing-link"><?php esc_html_e('View', 'easy-appointments'); ?></a>
                                     <?php endif; ?>
                                 </span>
                             <?php endforeach; ?>
@@ -264,9 +288,9 @@ if (!defined('WPINC')) {
                             <select id="ea-gen-location" class="ea-gen-select">
                                 <option value=""><?php esc_html_e('— All Locations (User Selects) —', 'easy-appointments'); ?></option>
                                 <?php if (!empty($locations)): ?>
-                                    <?php foreach ($locations as $loc): ?>
-                                        <option value="<?php echo esc_attr($loc->id); ?>">
-                                            <?php echo esc_html($loc->name); ?> (ID: <?php echo esc_html($loc->id); ?>)
+                                    <?php foreach ($locations as $easy_appointments_loc): ?>
+                                        <option value="<?php echo esc_attr($easy_appointments_loc->id); ?>">
+                                            <?php echo esc_html($easy_appointments_loc->name); ?> (ID: <?php echo esc_html($easy_appointments_loc->id); ?>)
                                         </option>
                                     <?php endforeach; ?>
                                 <?php endif; ?>
@@ -279,9 +303,9 @@ if (!defined('WPINC')) {
                             <select id="ea-gen-service" class="ea-gen-select">
                                 <option value=""><?php esc_html_e('— All Services (User Selects) —', 'easy-appointments'); ?></option>
                                 <?php if (!empty($services)): ?>
-                                    <?php foreach ($services as $srv): ?>
-                                        <option value="<?php echo esc_attr($srv->id); ?>">
-                                            <?php echo esc_html($srv->name); ?> (ID: <?php echo esc_html($srv->id); ?>)
+                                    <?php foreach ($services as $easy_appointments_srv): ?>
+                                        <option value="<?php echo esc_attr($easy_appointments_srv->id); ?>">
+                                            <?php echo esc_html($easy_appointments_srv->name); ?> (ID: <?php echo esc_html($easy_appointments_srv->id); ?>)
                                         </option>
                                     <?php endforeach; ?>
                                 <?php endif; ?>
@@ -294,9 +318,9 @@ if (!defined('WPINC')) {
                             <select id="ea-gen-worker" class="ea-gen-select">
                                 <option value=""><?php esc_html_e('— All Staff (User Selects) —', 'easy-appointments'); ?></option>
                                 <?php if (!empty($workers)): ?>
-                                    <?php foreach ($workers as $wrk): ?>
-                                        <option value="<?php echo esc_attr($wrk->id); ?>">
-                                            <?php echo esc_html($wrk->name); ?> (ID: <?php echo esc_html($wrk->id); ?>)
+                                    <?php foreach ($workers as $easy_appointments_wrk): ?>
+                                        <option value="<?php echo esc_attr($easy_appointments_wrk->id); ?>">
+                                            <?php echo esc_html($easy_appointments_wrk->name); ?> (ID: <?php echo esc_html($easy_appointments_wrk->id); ?>)
                                         </option>
                                     <?php endforeach; ?>
                                 <?php endif; ?>

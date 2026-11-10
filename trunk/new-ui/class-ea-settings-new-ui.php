@@ -537,6 +537,7 @@ class EA_Settings_New_UI
                 'fieldNoTags'       => esc_html__('none yet', 'easy-appointments'),
                 // Form Style & Redirect tab
                 'detectingColors'     => __('Detecting theme colors…', 'easy-appointments'),
+                /* translators: %theme%: Active WordPress theme name, %source%: Theme color detection source */
                 'themeColorsDetected' => __('Applied colors from %theme% (%source%). Fine-tune any setting above or click "Save Changes".', 'easy-appointments'),
                 'detectColorsFailed'  => __('Could not detect theme colors automatically.', 'easy-appointments'),
                 'redirectUrlRequired' => esc_html__('Please enter a redirect URL first.', 'easy-appointments'),
