@@ -156,8 +156,6 @@ class EasyAppointment
         /** @var EAAjax $ajax */
         $ajax = $this->container['ajax'];
         $ajax->init();
-
-        $this->install();
     }
 
     /**
@@ -237,6 +235,98 @@ class EasyAppointment
     }
 
     /**
+     * Ensure plugin cron hooks are scheduled once at deterministic slots and remove duplicates/legacy hooks.
+     */
+    public static function sync_cron_events()
+    {
+        if (function_exists('wp_cache_delete')) {
+            wp_cache_delete('alloptions', 'options');
+            wp_cache_delete('cron', 'options');
+        }
+
+        if ((function_exists('has_filter') && (has_filter('pre_unschedule_hook') || has_filter('pre_schedule_event')))
+            || !function_exists('_get_cron_array')
+            || !function_exists('_set_cron_array')
+        ) {
+            if (wp_next_scheduled('easyapp_hourly_event') === false) {
+                $hourly_slot = ((int) floor(time() / HOUR_IN_SECONDS) + 1) * HOUR_IN_SECONDS;
+                wp_schedule_event($hourly_slot, 'hourly', 'easyapp_hourly_event');
+            }
+
+            if (class_exists('EA_Connections_New_UI') && wp_next_scheduled('easy_ea_daily_connection_expire_check') === false) {
+                $daily_slot = ((int) floor(time() / DAY_IN_SECONDS) + 1) * DAY_IN_SECONDS;
+                wp_schedule_event($daily_slot, 'daily', 'easy_ea_daily_connection_expire_check');
+            }
+
+            if (wp_next_scheduled('ea_daily_expire_appointments') !== false) {
+                wp_clear_scheduled_hook('ea_daily_expire_appointments');
+            }
+            return;
+        }
+
+        $crons = _get_cron_array();
+        if (!is_array($crons)) {
+            $crons = array();
+        }
+
+        $targets = array(
+            'easyapp_hourly_event' => array('hourly', HOUR_IN_SECONDS),
+        );
+        if (class_exists('EA_Connections_New_UI')) {
+            $targets['easy_ea_daily_connection_expire_check'] = array('daily', DAY_IN_SECONDS);
+        }
+
+        $changed = false;
+        foreach ($targets as $hook => $spec) {
+            $count = 0;
+            foreach ($crons as $hooks) {
+                if (is_array($hooks) && !empty($hooks[$hook]) && is_array($hooks[$hook])) {
+                    $count += count($hooks[$hook]);
+                }
+            }
+            if ($count === 1) {
+                continue;
+            }
+
+            foreach ($crons as $ts => $hooks) {
+                if (is_array($hooks) && isset($hooks[$hook])) {
+                    unset($crons[$ts][$hook]);
+                    if (empty($crons[$ts])) {
+                        unset($crons[$ts]);
+                    }
+                }
+            }
+
+            list($recurrence, $interval) = $spec;
+            $slot = ((int) floor(time() / $interval) + 1) * $interval;
+            $crons[$slot][$hook][md5(serialize(array()))] = array(
+                'schedule' => $recurrence,
+                'args'     => array(),
+                'interval' => $interval,
+            );
+            $changed = true;
+        }
+
+        foreach ($crons as $ts => $hooks) {
+            if (is_array($hooks) && isset($hooks['ea_daily_expire_appointments'])) {
+                unset($crons[$ts]['ea_daily_expire_appointments']);
+                if (empty($crons[$ts])) {
+                    unset($crons[$ts]);
+                }
+                $changed = true;
+            }
+        }
+
+        if ($changed) {
+            uksort($crons, 'strnatcasecmp');
+            if (!_set_cron_array($crons) && function_exists('wp_cache_delete')) {
+                wp_cache_delete('alloptions', 'options');
+                wp_cache_delete('cron', 'options');
+            }
+        }
+    }
+
+    /**
      * Installation of DB
      */
     public function install()
@@ -249,13 +339,9 @@ class EasyAppointment
             $install->init_db();
             $install->init_data();
         }
-        if ( wp_next_scheduled( 'easyapp_hourly_event' ) === false ) {
-            wp_schedule_event(time(), 'hourly', 'easyapp_hourly_event');
-        }
-        if (wp_next_scheduled('ea_daily_expire_appointments') === true) {
-            wp_clear_scheduled_hook('ea_daily_expire_appointments');
-            // wp_schedule_event(strtotime('00:05:00'), 'daily', 'ea_daily_expire_appointments');
-        }
+
+        self::sync_cron_events();
+        update_option('easy_ea_cron_dedup_done', '1', true);
     }
 
     /**
@@ -279,14 +365,26 @@ class EasyAppointment
      */
     public static function remove_scheduled_event()
     {
-        wp_clear_scheduled_hook('easyapp_hourly_event');
-        wp_clear_scheduled_hook('ea_daily_expire_appointments');
+        $hooks = array('easyapp_hourly_event', 'ea_daily_expire_appointments', 'easy_ea_daily_connection_expire_check');
+        foreach ($hooks as $hook) {
+            if (function_exists('wp_unschedule_hook')) {
+                wp_unschedule_hook($hook);
+            } else {
+                wp_clear_scheduled_hook($hook);
+            }
+        }
     }
 
     public function update()
     {
         // register domain
         $this->register_text_domain();
+
+        // One-time cleanup for existing sites that accumulated duplicate cron events.
+        if (get_option('easy_ea_cron_dedup_done') !== '1') {
+            self::sync_cron_events();
+            update_option('easy_ea_cron_dedup_done', '1', true);
+        }
 
         // update database
         /** @var EAInstallTools $tools */
@@ -341,6 +439,29 @@ class EasyAppointment
      */
     public function delete_reservations()
     {
+        static $already_ran = false;
+
+        if (defined('DOING_CRON') && DOING_CRON) {
+            $hourly_count = 0;
+            if (function_exists('_get_cron_array')) {
+                $crons = _get_cron_array();
+                if (is_array($crons)) {
+                    foreach ($crons as $hooks) {
+                        if (is_array($hooks) && !empty($hooks['easyapp_hourly_event']) && is_array($hooks['easyapp_hourly_event'])) {
+                            $hourly_count += count($hooks['easyapp_hourly_event']);
+                        }
+                    }
+                }
+            }
+            if ($hourly_count > 1 && !has_action('shutdown', array(__CLASS__, 'sync_cron_events'))) {
+                add_action('shutdown', array(__CLASS__, 'sync_cron_events'));
+            }
+            if ($already_ran) {
+                return;
+            }
+            $already_ran = true;
+        }
+
         /** @var EADBModels $models */
         $models = $this->container['db_models'];
         $models->delete_reservations();

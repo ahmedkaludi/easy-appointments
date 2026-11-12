@@ -78,12 +78,8 @@ class EA_Connections_New_UI
         add_action('wp_ajax_ea_trigger_connection_expire_check', array(__CLASS__, 'ajax_trigger_connection_expire_check'));
         add_action('wp_ajax_ea_delete_expired_connections_no_appointments', array(__CLASS__, 'ajax_delete_expired_connections_no_appointments'));
 
-        // WP-Cron event hook for daily expiration check
+        // WP-Cron event hook for daily expiration check (scheduled via EasyAppointment::install / update).
         add_action('easy_ea_daily_connection_expire_check', array(__CLASS__, 'check_and_notify_expiring_connections'));
-
-        if (!wp_next_scheduled('easy_ea_daily_connection_expire_check')) {
-            wp_schedule_event(time(), 'daily', 'easy_ea_daily_connection_expire_check');
-        }
     }
 
     /**
