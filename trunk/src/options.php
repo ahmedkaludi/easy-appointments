@@ -223,6 +223,7 @@ class EAOptions
             'style.calendar_slot_fill'   => '0',
             'style.slot_fill_color'      => '#ef4444',
             'form.style'                 => 'default',
+            'daily_schedule.enabled'     => '0',
         );
     }
 

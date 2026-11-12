@@ -195,6 +195,7 @@ class EAOptions
             'trans.confirmation-title'   => 'Thank You for Booking!',
             'style.calendar_slot_fill'   => '0',
             'style.slot_fill_color'      => '#ef4444',
+            'daily_schedule.enabled'     => '0',
         );
     }
 

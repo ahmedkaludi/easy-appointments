@@ -2394,12 +2394,23 @@ class EAAjax
     }
 
     /**
+     * Ensure Daily Schedule is enabled before handling schedule AJAX requests.
+     */
+    private function ensure_daily_schedule_enabled()
+    {
+        if ((string) $this->options->get_option_value('daily_schedule.enabled', '0') !== '1') {
+            wp_send_json_error(array('message' => esc_html__('Daily Schedule is disabled.', 'easy-appointments')), 403);
+        }
+    }
+
+    /**
      * Get full daily schedule including all time slots, statuses, details, and summary
      */
     public function ajax_get_daily_schedule()
     {
         $this->validate_admin_nonce();
         $this->validate_access_rights('appointments', 'manage_options');
+        $this->ensure_daily_schedule_enabled();
 
         $data = $this->parse_input_data();
 
@@ -2882,6 +2893,7 @@ class EAAjax
     {
         $this->validate_admin_nonce();
         $this->validate_access_rights('appointments', 'manage_options');
+        $this->ensure_daily_schedule_enabled();
 
         $data = $this->parse_input_data();
 

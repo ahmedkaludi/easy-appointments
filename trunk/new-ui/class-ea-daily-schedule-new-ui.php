@@ -64,10 +64,36 @@ class EA_Daily_Schedule_New_UI
     }
 
     /**
+     * Whether the Daily Schedule feature is enabled in settings.
+     *
+     * @return bool
+     */
+    public static function is_enabled()
+    {
+        global $easy_ea_app;
+
+        if ($easy_ea_app instanceof EasyAppointment) {
+            try {
+                $options = $easy_ea_app->get_container()['options'];
+
+                return (string) $options->get_option_value('daily_schedule.enabled', '0') === '1';
+            } catch (RuntimeException $e) {
+                return false;
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * Register the admin submenu page under "Easy Appointments".
      */
     public static function register_menu()
     {
+        if (!self::is_enabled()) {
+            return;
+        }
+
         $hook_suffix = add_submenu_page(
             self::PARENT_SLUG,
             esc_html__('Daily Schedule', 'easy-appointments'),
@@ -95,6 +121,10 @@ class EA_Daily_Schedule_New_UI
      */
     public static function enqueue_assets($hook)
     {
+        if (!self::is_enabled()) {
+            return;
+        }
+
         // phpcs:ignore WordPress.Security.NonceVerification.Recommended
         $page = isset($_GET['page']) ? sanitize_text_field(wp_unslash($_GET['page'])) : '';
 
@@ -248,6 +278,14 @@ class EA_Daily_Schedule_New_UI
      */
     public static function render_page()
     {
+        if (!self::is_enabled()) {
+            wp_die(
+                esc_html__('Daily Schedule is currently disabled in Easy Appointments settings.', 'easy-appointments'),
+                '',
+                array('response' => 403)
+            );
+        }
+
         if (!current_user_can(self::capability())) {
             wp_die(esc_html__('You do not have sufficient permissions to access this page.', 'easy-appointments'));
         }
