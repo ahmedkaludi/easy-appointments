@@ -3,9 +3,9 @@ Contributors: easyappointments
 Donate link: https://easy-appointments.com/
 Tags: appointment, appointments, Booking, calendar, reservation
 Requires at least: 5.0
-Tested up to: 7.0
+Tested up to: 7.1
 Requires PHP: 5.3
-Stable tag: 4.0
+Stable tag: 4.0.5
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -261,6 +261,75 @@ Terms of use and Policy : https://fullcalendar.io/license
 25. Admin panel - Report - Export page
 
 == Changelog ==
+
+= 4.0.5 (2026-11-12)
+* Added support for syncing Google Calendar appointment time updates to EA #310
+* Added Visual Availability/Occupancy Indicator to Calendar Days #349
+* Added Use AI to auto select the color scheme of the form #318
+* Added different cancellation deadlines for different connection #350
+* Added admin day schedule view with free slots and booking status color coding
+ #283
+* Fixed Regression in 4.0.3: changing appointment status to “Canceled” via Edit does not fully process the cancellation #368
+* Fixed Abandoned email not going out in newest version #370
+* Fixed Improve Publish page #314
+* Fixed Duplicate easyapp_hourly_event Cron Events Accumulating on Every Request #374
+
+= 4.0.4 (2026-10-21)
+* Added worker wise sync for outlook calendar #357
+* Added Feature Request: Add a Button to Delete All Expired Appointments #364
+* Fixed "Appointment not found" issue when booking slot. #367
+* Fixed eCAPTCHA keys are not saved in the new UI (v4.0.2.2) #359
+* Fixed Vacation & Appointment page ignores User Access permissions and requires manage_options #360
+* Fixed Stripe card value not able to enter in stripe payment #361
+* Fixed Pagination page are not proper number showing to n number of page #363
+* Fixed Few translation issue #362
+* Fixed PHP 8.4 Deprecation Warnings in CSV Exports and REST API #365
+* Fixed Security issue: Insecure Direct Object Reference / Authorization Bypass Through User-Controlled Key reported to us by Kuba #366.
+
+= 4.0.3 (2026-10-05)
+* Added an option to set sequence of services in booking form #331
+* Added Colors and font management for booking form #317
+* Added Booking form design selector #316
+* Added Auto-set minimum connection duration based on service duration #351
+* Added Add option to delete bulk connections with date filter #353
+* Fixed Connection(s) Expiring / Expired Email – Login Link Broken #341
+* Fixed 4.0.2.2 breaks previously issued cancellation links – “Invalid token” after upgrade #348
+* Fixed Appointment created timestamp appears inconsistent with actual booking time #352
+* Fixed Import issue in old ui with large file #354
+* Fixed Timezone Offset Bug in EALogic: gmdate() Causes +5:30 Shift for Asia/Kolkata #356
+
+= 4.0.2.2 (2026-09-15)
+* Added next-day-only appointment booking option #344
+* Fixed Delete button in connection is not working #343
+* Fixed JS/JSX strings are not being shown in loco translation plugin #148
+* Fixed Need To Fix "Cancel All" and "Cancel Selected" Not Working After Applying Filters. #323
+* Code improvements #148
+* Fixed Security issue: unauthenticated arbitrary appointment modification and deletion on pre-reservation handler. Reported by blast.
+* Fixed Security issue: unauthenticated appointment cancellation and confirmation via forgeable mail action token. Reported by Morato Antoine.
+* Fixed Security issue: stored XSS in admin UI attribute contexts (CVE-2026-81798). Reported by 0xzenko.
+
+= 4.0.2.1 (2026-09-02)
+* Fixed Getting Opps message on booking page after new update 4.0.2 #340
+* Fixed Security issues on customer search front. Reported by Arnaud BERNARD-BRUNEL.
+
+= 4.0.2 (2026-09-01)
+* Fixed version 4.0.1 causing issue with shortcode [ea_standard] #329
+* Fixed Vacation availability is not working as expected with latest version 4.0 #326
+* Fixed Reset the form and add proper, thank you message - #321
+* Fixed Some improvements in Connection management popup #334
+* Fixed some missing points in NEW UI. #328
+* Fixed Redirects to wrong url when role is editor #337
+* Added Expired connections should not be displayed in the Booking Calendar dropdown. #332
+* Added Allow user to extend each connection by choosing end date and infinity option #333
+* Added quick action buttons for Approval and Cancellation for the appointment in appointment page #336
+* Added Appointment Export Does Not Include the Booking/Created Time #335
+* Test with WordPress 7.1
+
+= 4.0.2 (2026-08-14)
+* Fixed Security issues to appointment-management handlers. Reported by Shikhali Jamalzade.
+* Fixed Security issue: missing authorization allowing Contributor-level read/modify/delete of appointments. Reported by Youssef massoudi.
+* Added an option to increase appointment list number #324
+
 = 4.0 (2026-08-10)
 * Fixed Timezone Issue in the "Created At" Field #307.
 * Fixed Am Pm making confusion in cancel booking before hour #309.
