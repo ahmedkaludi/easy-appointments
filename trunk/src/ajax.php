@@ -2330,11 +2330,16 @@ class EAAjax
             wp_send_json_error( array( 'message' => esc_html__( 'Unauthorized', 'easy-appointments' ) ), 401 );
         }
 
+        if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce(
+            sanitize_text_field( wp_unslash( $_REQUEST['_wpnonce'] ) ),
+            'ea_ajax_check_nonce'
+        ) ) {
+            wp_send_json_error( array( 'message' => esc_html__( 'Security check failed.', 'easy-appointments' ) ), 403 );
+        }
+
         $this->validate_access_rights( 'appointments', 'manage_options' );
 
-        // phpcs:ignore WordPress.Security.NonceVerification.Recommended
         $app_id = isset( $_REQUEST['id'] ) ? intval( $_REQUEST['id'] ) : 0;
-        // phpcs:ignore WordPress.Security.NonceVerification.Recommended
         $new_status = isset( $_REQUEST['status'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['status'] ) ) : '';
 
         if ( $app_id <= 0 || empty( $new_status ) ) {
