@@ -240,12 +240,17 @@ class Easy_EA_Frontend
 
         $settings['check'] = wp_create_nonce('ea-bootstrap-form');
 
+        $is_new_ui = class_exists('EA_UI_Switcher') && EA_UI_Switcher::is_new_ui();
+        $is_fill_enabled = $is_new_ui && !empty($settings['style.calendar_slot_fill']) && ($settings['style.calendar_slot_fill'] === '1' || $settings['style.calendar_slot_fill'] === 'true');
+
         $settings['scroll_off']           = $code_params['scroll_off'];
         $settings['start_of_week']        = $code_params['start_of_week'];
         $settings['default_date']         = $code_params['default_date'];
         $settings['min_date']             = $code_params['min_date'];
         $settings['max_date']             = $code_params['max_date'];
         $settings['show_remaining_slots'] = $code_params['show_remaining_slots'];
+        $settings['calendar_slot_fill']   = $is_fill_enabled ? '1' : '0';
+        $settings['slot_fill_color']      = !empty($settings['style.slot_fill_color']) ? $settings['style.slot_fill_color'] : '#ef4444';
         $settings['save_form_content']    = $code_params['save_form_content'];
         $settings['show_week']            = $code_params['show_week'];
 
@@ -695,11 +700,12 @@ class Easy_EA_Frontend
         $border_color       = !empty($settings['style.border_color']) ? sanitize_hex_color($settings['style.border_color']) : '';
         $slot_bg_color      = !empty($settings['style.slot_bg_color']) ? sanitize_hex_color($settings['style.slot_bg_color']) : '';
         $slot_text_color    = !empty($settings['style.slot_text_color']) ? sanitize_hex_color($settings['style.slot_text_color']) : '';
+        $slot_fill_color    = !empty($settings['style.slot_fill_color']) ? sanitize_hex_color($settings['style.slot_fill_color']) : '';
 
         // If no styling options set, return empty string
         if (empty($font_family) && empty($primary_color) && empty($button_text_color) && empty($bg_color)
             && empty($surface_color) && empty($text_color) && empty($border_color)
-            && empty($slot_bg_color) && empty($slot_text_color)) {
+            && empty($slot_bg_color) && empty($slot_text_color) && empty($slot_fill_color)) {
             return '';
         }
 
@@ -738,6 +744,13 @@ class Easy_EA_Frontend
             $vars[] = '--ea-accent-hover: ' . $primary_color . ';';
             $vars[] = '--ea-accent-ink: ' . $primary_color . ';';
             $vars[] = '--ea-accent-deep: ' . $primary_color . ';';
+        }
+        if (!empty($slot_fill_color)) {
+            $vars[] = '--ea-slot-fill-color: ' . $slot_fill_color . ';';
+            list($fr, $fg, $fb) = sscanf($slot_fill_color, "#%02x%02x%02x");
+            if ($fr !== null && $fg !== null && $fb !== null) {
+                $vars[] = '--ea-fill-rgb: ' . "$fr, $fg, $fb" . ';';
+            }
         }
         if (!empty($bg_color)) {
             $vars[] = '--ea-paper: ' . $bg_color . ';';
@@ -888,6 +901,11 @@ class Easy_EA_Frontend
 
         $settings['check'] = wp_create_nonce('ea-bootstrap-form');
 
+        $is_new_ui = class_exists('EA_UI_Switcher') && EA_UI_Switcher::is_new_ui();
+        $settings['ea_new_ui'] = $is_new_ui ? '1' : '0';
+
+        $is_fill_enabled = $is_new_ui && !empty($settings['style.calendar_slot_fill']) && ($settings['style.calendar_slot_fill'] === '1' || $settings['style.calendar_slot_fill'] === 'true');
+
         $settings['width']                  = $code_params['width'];
         $settings['scroll_off']             = $code_params['scroll_off'];
         $settings['layout_cols']            = $code_params['layout_cols'];
@@ -897,6 +915,8 @@ class Easy_EA_Frontend
         $settings['min_date']               = $code_params['min_date'];
         $settings['max_date']               = $code_params['max_date'];
         $settings['show_remaining_slots']   = $code_params['show_remaining_slots'];
+        $settings['calendar_slot_fill']     = $is_fill_enabled ? '1' : '0';
+        $settings['slot_fill_color']        = !empty($settings['style.slot_fill_color']) ? $settings['style.slot_fill_color'] : '#ef4444';
         $settings['show_week']              = $code_params['show_week'];
         $settings['save_form_content']      = $code_params['save_form_content'];
         $settings['cal_auto_select']        = $code_params['cal_auto_select'];

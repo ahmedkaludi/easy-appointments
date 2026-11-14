@@ -114,23 +114,42 @@ class EAReport
                 continue;
             }
 
-            if (count($value) == 0) {
-                $result[$key] = 'no-slots';
+            $total_slots  = count($value);
+
+            if ($total_slots == 0) {
+                $result[$key] = array(
+                    'status'         => 'no-slots',
+                    'percent_booked' => 0,
+                    'free_slots'     => 0,
+                    'total_slots'    => 0,
+                );
                 continue;
             }
 
-            $has_free = false;
+            $free_slots   = 0;
+            $total_spots  = 0;
+            $booked_spots = 0;
+
             foreach ($value as $k => $v) {
-                if (((int)$v['count']) > 0) {
-                    $result[$key] = 'free';
-                    $has_free = true;
-                    break;
+                $cap = isset($v['total']) ? (int) $v['total'] : 1;
+                $rem = isset($v['count']) ? (int) $v['count'] : 0;
+                $total_spots  += $cap;
+                $booked_spots += max(0, $cap - $rem);
+
+                if ($rem > 0) {
+                    $free_slots++;
                 }
             }
 
-            if (!$has_free) {
-                $result[$key] = 'busy';
-            }
+            $status         = ($free_slots > 0) ? 'free' : 'busy';
+            $percent_booked = $total_spots > 0 ? (int) round(($booked_spots / $total_spots) * 100) : 0;
+
+            $result[$key] = array(
+                'status'         => $status,
+                'percent_booked' => $percent_booked,
+                'free_slots'     => $free_slots,
+                'total_slots'    => $total_slots,
+            );
         }
 
         return $result;

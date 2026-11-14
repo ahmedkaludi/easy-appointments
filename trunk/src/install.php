@@ -110,6 +110,7 @@ class EAInstallTools
             is_working smallint(3) DEFAULT NULL,
             repeat_week smallint(3) DEFAULT NULL,
             repeat_booking smallint(3) DEFAULT NULL,
+            cancel_time varchar(20) DEFAULT NULL,
             PRIMARY KEY (id),
             KEY location_to_connection (location),
             KEY service_to_location (service),
@@ -216,6 +217,7 @@ class EAInstallTools
             ADD CONSTRAINT ' . $table_prefix . 'ea_connections_ibfk_3 FOREIGN KEY (worker) REFERENCES ' . $table_prefix . 'ea_staff (id) ON DELETE CASCADE';
 
         $alter_querys[] = 'ALTER TABLE ' . $table_prefix . 'ea_services ADD COLUMN description TEXT NULL';
+        $alter_querys[] = 'ALTER TABLE ' . $table_prefix . 'ea_connections ADD COLUMN cancel_time VARCHAR(20) DEFAULT NULL';
 
         require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 
@@ -278,6 +280,10 @@ class EAInstallTools
         if (get_option('easy_ea_ui_mode') === false) {
             add_option('easy_ea_ui_mode', 'new');
         }
+
+        if (get_option('easy_ea_token_migration_cutoff') === false) {
+            add_option('easy_ea_token_migration_cutoff', current_time('mysql', 1));
+        }
     }
 
     public function update()
@@ -294,6 +300,13 @@ class EAInstallTools
         if (version_compare($version, '4.0.0', '<')) {
             if (get_option('easy_ea_ui_mode') === false) {
                 add_option('easy_ea_ui_mode', 'old');
+            }
+        }
+
+        // Record migration cutoff if upgrading from a version before HMAC tokens were introduced (4.0.3)
+        if (version_compare($version, '4.0.3', '<')) {
+            if (get_option('easy_ea_token_migration_cutoff') === false) {
+                add_option('easy_ea_token_migration_cutoff', current_time('mysql', 1));
             }
         }
 
@@ -496,6 +509,15 @@ class EAInstallTools
             $version = '4.0.0';
         }
 
+        if (version_compare($version, '4.0.5', '<')) {
+            $this->update_email_options('user');
+            $this->update_email_options('worker');
+
+            if (get_option('easy_ea_token_migration_cutoff') === false) {
+                add_option('easy_ea_token_migration_cutoff', current_time('mysql', 1));
+            }
+        }
+
         // Ensure database schema and customers table are completely up to date for current version
         $this->init_db();
         $this->ea_create_customers_table();
@@ -518,6 +540,7 @@ class EAInstallTools
                 'send.user.reservation_email',
                 'send.user.cancelled_email',
                 'send.user.confirmed_email',
+                'send.user.abandoned_email',
             ];
         } elseif ($type === 'worker') {
             $parent_key = 'send.worker.email';
@@ -526,6 +549,7 @@ class EAInstallTools
                 'send.worker.reservation_email',
                 'send.worker.cancelled_email',
                 'send.worker.confirmed_email',
+                'send.worker.abandoned_email',
             ];
         } else {
             return false; // Invalid type
@@ -539,23 +563,13 @@ class EAInstallTools
             return false; // Parent not enabled, do nothing
         }
 
-        // Insert or update each child key
+        // Insert missing child keys
         foreach ($children as $key) {
             // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
             $existing = $wpdb->get_var($wpdb->prepare( "SELECT COUNT(*) FROM $table_name WHERE ea_key = %s", $key ));
 
-            if ($existing) {
-                // Update to 1
-                // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-                $wpdb->update(
-                    $table_name,
-                    ['ea_value' => '1'],
-                    ['ea_key'   => $key],
-                    ['%s'],
-                    ['%s']
-                );
-            } else {
-                // Insert as 1
+            if (! $existing) {
+                // Insert as 1 only if child does not exist yet
                 // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
                 $wpdb->insert(
                     $table_name,

@@ -626,3 +626,508 @@
         flex-wrap: wrap;
     }
 }
+
+/* ==========================================================================
+   New Publish UI: Setup Readiness, One-Click Hero & Shortcode Generator
+   ========================================================================== */
+
+/* ---------- 1. Readiness Banner ---------- */
+.ea-publish-readiness-banner {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 20px 24px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.ea-publish-banner-success {
+    background: #f0fdf4;
+    border: 1px solid #bbf7d0;
+    color: #166534;
+}
+
+.ea-publish-banner-warning {
+    background: #fffbeb;
+    border: 1px solid #fde68a;
+    color: #92400e;
+}
+
+.ea-publish-banner-icon {
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+.ea-publish-banner-success .ea-publish-banner-icon {
+    color: #16a34a;
+}
+
+.ea-publish-banner-warning .ea-publish-banner-icon {
+    color: #d97706;
+}
+
+.ea-publish-banner-content {
+    flex: 1;
+}
+
+.ea-publish-banner-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 6px;
+}
+
+.ea-publish-banner-title h3 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 700;
+    color: inherit;
+}
+
+.ea-publish-badge {
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 999px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.ea-publish-badge-success {
+    background: #16a34a;
+    color: #ffffff;
+}
+
+.ea-publish-badge-warning {
+    background: #d97706;
+    color: #ffffff;
+}
+
+.ea-publish-banner-desc {
+    margin: 0 0 12px 0;
+    font-size: 13.5px;
+    line-height: 1.5;
+    color: inherit;
+    opacity: 0.95;
+}
+
+.ea-publish-banner-stats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.ea-publish-stat-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: #ffffff;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-radius: 8px;
+    padding: 5px 12px;
+    font-size: 12.5px;
+    color: #1e293b;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+}
+
+.ea-publish-stat-chip strong {
+    font-weight: 700;
+    color: #16a34a;
+}
+
+.ea-publish-stat-highlight {
+    background: #dcfce7;
+    border-color: #86efac;
+}
+
+.ea-publish-stat-highlight strong {
+    color: #15803d;
+}
+
+/* Checklist Grid */
+.ea-publish-checklist-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.ea-publish-check-item {
+    background: #ffffff;
+    border-radius: 8px;
+    padding: 10px 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    border: 1px solid #e2e8f0;
+}
+
+.ea-publish-check-item.is-missing {
+    background: #fff5f5;
+    border-color: #fca5a5;
+}
+
+.ea-publish-check-item.is-complete {
+    background: #f0fdf4;
+    border-color: #bbf7d0;
+}
+
+.ea-publish-check-status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.ea-check-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    font-size: 12px;
+    font-weight: 800;
+}
+
+.ea-check-icon-ok {
+    background: #dcfce7;
+    color: #16a34a;
+}
+
+.ea-check-icon-bad {
+    background: #fee2e2;
+    color: #dc2626;
+}
+
+.ea-publish-btn-xs {
+    padding: 4px 10px;
+    font-size: 11.5px;
+    font-weight: 600;
+    border-radius: 6px;
+    white-space: nowrap;
+}
+
+/* ---------- 2. Hero Action Card ---------- */
+.ea-publish-hero-card {
+    background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+    color: #ffffff;
+    border-radius: 12px;
+    padding: 26px 28px;
+    margin-bottom: 24px;
+    box-shadow: 0 4px 20px rgba(15, 23, 42, 0.12);
+}
+
+.ea-publish-hero-main {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.ea-publish-hero-tag {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #38bdf8;
+    background: rgba(56, 189, 248, 0.12);
+    padding: 3px 10px;
+    border-radius: 999px;
+    margin-bottom: 8px;
+}
+
+.ea-publish-hero-text h2 {
+    color: #ffffff;
+    font-size: 20px;
+    font-weight: 700;
+    margin: 0 0 6px 0;
+}
+
+.ea-publish-hero-text p {
+    color: #94a3b8;
+    font-size: 13.5px;
+    line-height: 1.5;
+    margin: 0;
+    max-width: 600px;
+}
+
+.ea-publish-btn-hero {
+    background: #2563eb;
+    color: #ffffff;
+    padding: 12px 24px;
+    font-size: 14.5px;
+    font-weight: 700;
+    border-radius: 10px;
+    border: none;
+    box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.ea-publish-btn-hero:hover {
+    background: #1d4ed8;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 18px rgba(37, 99, 235, 0.45);
+    color: #ffffff;
+}
+
+.ea-publish-btn-hero:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.ea-publish-hero-notice {
+    margin-top: 14px;
+    padding: 10px 16px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.ea-publish-hero-notice.is-success {
+    background: rgba(34, 197, 94, 0.18);
+    color: #86efac;
+    border: 1px solid rgba(34, 197, 94, 0.3);
+}
+
+.ea-publish-hero-notice.is-error {
+    background: rgba(239, 68, 68, 0.18);
+    color: #fca5a5;
+    border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.ea-publish-existing-pages {
+    margin-top: 18px;
+    padding-top: 16px;
+    border-top: 1px solid rgba(255, 255, 255, 0.12);
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.ea-existing-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: #94a3b8;
+}
+
+.ea-existing-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.ea-existing-item {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 6px;
+    padding: 3px 10px;
+    font-size: 12px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.ea-existing-item strong {
+    color: #f1f5f9;
+}
+
+.ea-existing-status {
+    color: #94a3b8;
+}
+
+.ea-existing-link {
+    color: #38bdf8;
+    text-decoration: underline;
+    font-size: 11.5px;
+}
+
+/* ---------- 3. Interactive Shortcode Generator ---------- */
+.ea-publish-generator-card {
+    background: #ffffff;
+    border: 1px solid var(--ea-border);
+    border-radius: 12px;
+    margin-bottom: 24px;
+    overflow: hidden;
+}
+
+.ea-publish-card-desc {
+    margin: 4px 0 0 0;
+    font-size: 13.5px;
+    color: var(--ea-text-muted);
+}
+
+.ea-publish-generator-body {
+    padding: 24px;
+}
+
+.ea-gen-controls-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+    margin-bottom: 22px;
+}
+
+.ea-gen-control-full {
+    grid-column: 1 / -1;
+}
+
+.ea-gen-label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ea-text);
+    margin-bottom: 6px;
+}
+
+.ea-gen-type-pills {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+    gap: 12px;
+}
+
+.ea-gen-type-pill {
+    cursor: pointer;
+    position: relative;
+    user-select: none;
+}
+
+.ea-gen-type-pill input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.ea-pill-box {
+    display: flex;
+    flex-direction: column;
+    padding: 12px 14px;
+    border: 2px solid var(--ea-border);
+    border-radius: 10px;
+    background: #f8fafc;
+    transition: all 0.15s ease;
+}
+
+.ea-gen-type-pill.active .ea-pill-box,
+.ea-gen-type-pill input[type="radio"]:checked ~ .ea-pill-box {
+    border-color: #2563eb;
+    background: #eff6ff;
+}
+
+.ea-pill-box strong {
+    font-size: 13.5px;
+    color: #1e293b;
+    margin-bottom: 2px;
+    font-family: 'Courier New', Consolas, monospace;
+}
+
+.ea-pill-box small {
+    font-size: 11.5px;
+    color: #64748b;
+    line-height: 1.3;
+}
+
+.ea-gen-select {
+    width: 100%;
+    height: 40px;
+    padding: 6px 12px;
+    font-size: 13.5px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    background: #ffffff;
+    color: #1e293b;
+    outline: none;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.ea-gen-select:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+
+.ea-gen-checkbox-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 18px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 12px 16px;
+}
+
+.ea-gen-checkbox {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: #334155;
+    cursor: pointer;
+    user-select: none;
+}
+
+.ea-gen-checkbox input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+    accent-color: #2563eb;
+}
+
+/* ---------- Generated Shortcode Output Bar ---------- */
+.ea-publish-output-bar {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 18px 20px;
+    margin-bottom: 24px;
+}
+
+.ea-output-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.ea-output-label {
+    font-size: 13px;
+    font-weight: 700;
+    color: #1e293b;
+}
+
+.ea-output-actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.ea-publish-gen-code {
+    margin: 0;
+    background: #0f172a;
+    color: #38bdf8;
+    padding: 14px 18px;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    font-family: 'Courier New', Consolas, monospace;
+    overflow-x: auto;
+    border: 1px solid #1e293b;
+}
+
+@media (max-width: 900px) {
+    .ea-gen-controls-grid {
+        grid-template-columns: 1fr;
+    }
+}

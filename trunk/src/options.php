@@ -129,6 +129,7 @@ class EAOptions
             'send.user.reservation_email'   => '0',
             'send.user.cancelled_email'     => '0',
             'send.user.confirmed_email'     => '0',
+            'send.user.abandoned_email'     => '0',
             'custom.css'                    => '',
             'form.label.above'              => '0',
             'show.iagree'                   => '0',
@@ -168,6 +169,7 @@ class EAOptions
             'send.worker.reservation_email' => '0',
             'send.worker.cancelled_email'   => '0',
             'send.worker.confirmed_email'   => '0',
+            'send.worker.abandoned_email'   => '0',
             'currency.before'               => '0',
             'nonce.off'                     => '0',
             'gdpr.on'                       => '0',
@@ -218,7 +220,10 @@ class EAOptions
             'style.border_color'         => '',
             'style.slot_bg_color'        => '',
             'style.slot_text_color'      => '',
+            'style.calendar_slot_fill'   => '0',
+            'style.slot_fill_color'      => '#ef4444',
             'form.style'                 => 'default',
+            'daily_schedule.enabled'     => '0',
         );
     }
 

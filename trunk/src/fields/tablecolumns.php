@@ -50,6 +50,7 @@ class EATableColumns
                 'day_to',
                 'repeat_week',
                 'repeat_booking',
+                'cancel_time',
                 'is_working'
             ),
             'ea_meta_fields' => array(
@@ -189,6 +190,10 @@ class EATableColumns
             'delete_data_on_uninstall',
             'customer_search_roles',
             'show_remaining_slots',
+            'calendar_slot_fill',
+            'slot_fill_color',
+            'style.calendar_slot_fill',
+            'style.slot_fill_color',
             'show_week',
             'services.order_by_sequence',
             'sort.locations-by',
@@ -250,6 +255,8 @@ class EATableColumns
             'style.border_color',
             'style.slot_bg_color',
             'style.slot_text_color',
+            'style.calendar_slot_fill',
+            'style.slot_fill_color',
             'form.style',
         );
 

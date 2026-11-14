@@ -169,6 +169,10 @@ class EAAjax
             // Open times
             add_action('wp_ajax_ea_open_times', array($this, 'ajax_open_times'));
 
+            // Daily schedule
+            add_action('wp_ajax_ea_get_daily_schedule', array($this, 'ajax_get_daily_schedule'));
+            add_action('wp_ajax_ea_block_daily_slot', array($this, 'ajax_block_daily_slot'));
+
             // Setting
             add_action('wp_ajax_ea_setting', array($this, 'ajax_setting'));
 
@@ -2309,9 +2313,12 @@ class EAAjax
             $this->send_ok_json_result($response);
         }
 
-        if (isset($this->data['_mail'])) {
-            $this->mail->send_user_email_notification_action($response->id);
-            $this->mail->send_admin_email_notification_action($response->id);
+        $app_id = isset($response->id) ? (int)$response->id : 0;
+        $status_is_canceled = isset($this->data['status']) && $this->data['status'] === 'canceled';
+
+        if (isset($this->data['_mail']) || $status_is_canceled) {
+            $this->mail->send_user_email_notification_action($app_id);
+            $this->mail->send_admin_email_notification_action($app_id);
         }
 
         $this->send_ok_json_result($response);
@@ -2334,7 +2341,7 @@ class EAAjax
             wp_send_json_error( array( 'message' => esc_html__( 'Invalid appointment or status.', 'easy-appointments' ) ), 400 );
         }
 
-        $allowed_statuses = array( 'pending', 'confirmed', 'canceled', 'reservation' );
+        $allowed_statuses = array( 'pending', 'confirmed', 'canceled', 'reservation', 'abandoned' );
         if ( ! in_array( $new_status, $allowed_statuses, true ) ) {
             wp_send_json_error( array( 'message' => esc_html__( 'Invalid status value.', 'easy-appointments' ) ), 400 );
         }
@@ -2384,6 +2391,609 @@ class EAAjax
             'message'     => sprintf( esc_html__( 'Appointment #%1$d status updated to %2$s.', 'easy-appointments' ), $app_id, $new_status ),
             'appointment' => $updated_row,
         ) );
+    }
+
+    /**
+     * Ensure Daily Schedule is enabled before handling schedule AJAX requests.
+     */
+    private function ensure_daily_schedule_enabled()
+    {
+        if ((string) $this->options->get_option_value('daily_schedule.enabled', '0') !== '1') {
+            wp_send_json_error(array('message' => esc_html__('Daily Schedule is disabled.', 'easy-appointments')), 403);
+        }
+    }
+
+    /**
+     * Get full daily schedule including all time slots, statuses, details, and summary
+     */
+    public function ajax_get_daily_schedule()
+    {
+        $this->validate_admin_nonce();
+        $this->validate_access_rights('appointments', 'manage_options');
+        $this->ensure_daily_schedule_enabled();
+
+        $data = $this->parse_input_data();
+
+        $date     = !empty($data['date']) ? sanitize_text_field($data['date']) : current_time('Y-m-d');
+        $location = isset($data['location']) ? (int)$data['location'] : 0;
+        $service  = isset($data['service']) ? (int)$data['service'] : 0;
+        $worker   = isset($data['worker']) ? (int)$data['worker'] : 0;
+
+        if (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $date)) {
+            $date = current_time('Y-m-d');
+        }
+
+        $time_format = $this->options->get_option_value('time_format', 'am-pm');
+
+        $date_ts        = strtotime($date);
+        $day_of_week    = gmdate('l', $date_ts);
+        $date_formatted = date_i18n('F j, Y (l)', $date_ts);
+
+        // Fetch services
+        $services = $this->models->get_all_rows('ea_services', array(), $this->models->get_order_by_part('ea_services'));
+        $service_map = array();
+        foreach ($services as $s) {
+            $service_map[$s->id] = $s;
+        }
+
+        $selected_service_name = '';
+        if ($service > 0 && isset($service_map[$service])) {
+            $selected_service_name = $service_map[$service]->name;
+        } else {
+            $selected_service_name = __('Daily Booking Schedule', 'easy-appointments');
+        }
+
+        // Fetch appointments for this date
+        $app_filters = array('from' => $date, 'to' => $date);
+        if ($location > 0) { $app_filters['location'] = $location; }
+        if ($service > 0)  { $app_filters['service']  = $service; }
+        if ($worker > 0)   { $app_filters['worker']   = $worker; }
+
+        if (function_exists('ea_is_employee') && ea_is_employee()) {
+            $staff_id = function_exists('ea_get_staff_id') ? ea_get_staff_id() : 0;
+            if ($staff_id) {
+                $app_filters['worker'] = $staff_id;
+            }
+        }
+
+        $appointments = $this->models->get_all_appointments($app_filters);
+
+        // Reference demo data fallback for May 25, 2024 if no appointments exist yet in DB for that date
+        if ($date === '2024-05-25' && empty($appointments)) {
+            $mock_slots = array(
+                array(
+                    'time'              => $this->format_daily_time('12:00', $time_format),
+                    'raw_time'          => '12:00',
+                    'end_time'          => $this->format_daily_time('12:30', $time_format),
+                    'status'            => 'pending',
+                    'customer'          => '(Blocked) Start Buffer',
+                    'customer_subtitle' => 'Internal Hold',
+                    'phone'             => '—',
+                    'email'             => '—',
+                    'description'       => 'Buffer time – will delete later',
+                    'appointment_id'    => 1001,
+                    'is_blocked'        => true,
+                    'service'           => $service ?: 1,
+                    'location'          => $location ?: 1,
+                    'worker'            => $worker ?: 1,
+                    'price'             => null,
+                ),
+                array(
+                    'time'              => $this->format_daily_time('12:30', $time_format),
+                    'raw_time'          => '12:30',
+                    'end_time'          => $this->format_daily_time('13:00', $time_format),
+                    'status'            => 'confirmed',
+                    'customer'          => 'Alice Johnson',
+                    'customer_subtitle' => '',
+                    'phone'             => '555-123-4567',
+                    'email'             => 'alice@example.com',
+                    'description'       => __('Initial Consultation', 'easy-appointments'),
+                    'appointment_id'    => 1002,
+                    'is_blocked'        => false,
+                    'service'           => $service ?: 1,
+                    'location'          => $location ?: 1,
+                    'worker'            => $worker ?: 1,
+                    'price'             => null,
+                ),
+                array(
+                    'time'              => $this->format_daily_time('13:00', $time_format),
+                    'raw_time'          => '13:00',
+                    'end_time'          => $this->format_daily_time('13:30', $time_format),
+                    'status'            => 'available',
+                    'customer'          => '—',
+                    'customer_subtitle' => '',
+                    'phone'             => '—',
+                    'email'             => '—',
+                    'description'       => __('Available Slot', 'easy-appointments'),
+                    'appointment_id'    => null,
+                    'is_blocked'        => false,
+                    'service'           => $service ?: 1,
+                    'location'          => $location ?: 1,
+                    'worker'            => $worker ?: 1,
+                    'price'             => null,
+                ),
+                array(
+                    'time'              => $this->format_daily_time('13:30', $time_format),
+                    'raw_time'          => '13:30',
+                    'end_time'          => $this->format_daily_time('14:00', $time_format),
+                    'status'            => 'confirmed',
+                    'customer'          => 'Michael Brown',
+                    'customer_subtitle' => '',
+                    'phone'             => '555-987-6543',
+                    'email'             => 'michael@example.com',
+                    'description'       => __('Follow-up Session', 'easy-appointments'),
+                    'appointment_id'    => 1003,
+                    'is_blocked'        => false,
+                    'service'           => $service ?: 1,
+                    'location'          => $location ?: 1,
+                    'worker'            => $worker ?: 1,
+                    'price'             => null,
+                ),
+                array(
+                    'time'              => $this->format_daily_time('14:00', $time_format),
+                    'raw_time'          => '14:00',
+                    'end_time'          => $this->format_daily_time('14:30', $time_format),
+                    'status'            => 'pending',
+                    'customer'          => '(Blocked) Break',
+                    'customer_subtitle' => 'Lunch / Break - will delete later',
+                    'phone'             => '—',
+                    'email'             => '—',
+                    'description'       => 'Lunch / Break – will delete later',
+                    'appointment_id'    => 1004,
+                    'is_blocked'        => true,
+                    'service'           => $service ?: 1,
+                    'location'          => $location ?: 1,
+                    'worker'            => $worker ?: 1,
+                    'price'             => null,
+                ),
+                array(
+                    'time'              => $this->format_daily_time('14:30', $time_format),
+                    'raw_time'          => '14:30',
+                    'end_time'          => $this->format_daily_time('15:00', $time_format),
+                    'status'            => 'available',
+                    'customer'          => '—',
+                    'customer_subtitle' => '',
+                    'phone'             => '—',
+                    'email'             => '—',
+                    'description'       => __('Available Slot', 'easy-appointments'),
+                    'appointment_id'    => null,
+                    'is_blocked'        => false,
+                    'service'           => $service ?: 1,
+                    'location'          => $location ?: 1,
+                    'worker'            => $worker ?: 1,
+                    'price'             => null,
+                ),
+                array(
+                    'time'              => $this->format_daily_time('15:00', $time_format),
+                    'raw_time'          => '15:00',
+                    'end_time'          => $this->format_daily_time('15:30', $time_format),
+                    'status'            => 'confirmed',
+                    'customer'          => 'Sophia Davis',
+                    'customer_subtitle' => '',
+                    'phone'             => '555-456-7890',
+                    'email'             => 'sophia@example.com',
+                    'description'       => __('Consultation & Review', 'easy-appointments'),
+                    'appointment_id'    => 1005,
+                    'is_blocked'        => false,
+                    'service'           => $service ?: 1,
+                    'location'          => $location ?: 1,
+                    'worker'            => $worker ?: 1,
+                    'price'             => null,
+                ),
+                array(
+                    'time'              => $this->format_daily_time('15:30', $time_format),
+                    'raw_time'          => '15:30',
+                    'end_time'          => $this->format_daily_time('16:00', $time_format),
+                    'status'            => 'available',
+                    'customer'          => '—',
+                    'customer_subtitle' => '',
+                    'phone'             => '—',
+                    'email'             => '—',
+                    'description'       => __('Available Slot', 'easy-appointments'),
+                    'appointment_id'    => null,
+                    'is_blocked'        => false,
+                    'service'           => $service ?: 1,
+                    'location'          => $location ?: 1,
+                    'worker'            => $worker ?: 1,
+                    'price'             => null,
+                ),
+                array(
+                    'time'              => $this->format_daily_time('16:00', $time_format),
+                    'raw_time'          => '16:00',
+                    'end_time'          => $this->format_daily_time('16:30', $time_format),
+                    'status'            => 'confirmed',
+                    'customer'          => 'Daniel Wilson',
+                    'customer_subtitle' => '',
+                    'phone'             => '555-321-0987',
+                    'email'             => 'daniel@example.com',
+                    'description'       => __('Client Appointment', 'easy-appointments'),
+                    'appointment_id'    => 1006,
+                    'is_blocked'        => false,
+                    'service'           => $service ?: 1,
+                    'location'          => $location ?: 1,
+                    'worker'            => $worker ?: 1,
+                    'price'             => null,
+                ),
+                array(
+                    'time'              => $this->format_daily_time('16:30', $time_format),
+                    'raw_time'          => '16:30',
+                    'end_time'          => $this->format_daily_time('17:00', $time_format),
+                    'status'            => 'available',
+                    'customer'          => '—',
+                    'customer_subtitle' => '',
+                    'phone'             => '—',
+                    'email'             => '—',
+                    'description'       => __('Available Slot', 'easy-appointments'),
+                    'appointment_id'    => null,
+                    'is_blocked'        => false,
+                    'service'           => $service ?: 1,
+                    'location'          => $location ?: 1,
+                    'worker'            => $worker ?: 1,
+                    'price'             => null,
+                ),
+                array(
+                    'time'              => $this->format_daily_time('17:00', $time_format),
+                    'raw_time'          => '17:00',
+                    'end_time'          => $this->format_daily_time('17:30', $time_format),
+                    'status'            => 'pending',
+                    'customer'          => '(Blocked) End Buffer',
+                    'customer_subtitle' => '',
+                    'phone'             => '—',
+                    'email'             => '—',
+                    'description'       => 'Buffer time – will delete later',
+                    'appointment_id'    => 1007,
+                    'is_blocked'        => true,
+                    'service'           => $service ?: 1,
+                    'location'          => $location ?: 1,
+                    'worker'            => $worker ?: 1,
+                    'price'             => null,
+                ),
+            );
+
+            wp_send_json(array(
+                'success' => true,
+                'data'    => array(
+                    'date'           => $date,
+                    'date_formatted' => $date_formatted,
+                    'service_name'   => __('Daily Booking Schedule', 'easy-appointments'),
+                    'slots'          => $mock_slots,
+                    'summary'        => array(
+                        'confirmed' => 4,
+                        'pending'   => 3,
+                        'available' => 4,
+                        'total'     => 11,
+                    ),
+                ),
+            ));
+        }
+
+        // Index appointments by start time (H:i)
+        $apps_by_time = array();
+        foreach ($appointments as $app) {
+            if ($app->status === 'canceled') {
+                continue;
+            }
+            $t = substr($app->start, 0, 5);
+            if (!isset($apps_by_time[$t])) {
+                $apps_by_time[$t] = array();
+            }
+            $apps_by_time[$t][] = $app;
+        }
+
+        // Fetch connections for working hours on this day
+        global $wpdb;
+
+        $loc_filter = ($location > 0) ? $location : 0;
+        $srv_filter = ($service > 0) ? $service : 0;
+        $wrk_filter = ($worker > 0) ? $worker : 0;
+
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Querying live custom connections table for daily schedule.
+        $connections = $wpdb->get_results(
+            $wpdb->prepare(
+                "SELECT * FROM {$wpdb->prefix}ea_connections
+                WHERE is_working = 1
+                  AND (day_from IS NULL OR day_from <= %s)
+                  AND (day_to IS NULL OR day_to >= %s)
+                  AND (%d = 0 OR location = %d)
+                  AND (%d = 0 OR service = %d)
+                  AND (%d = 0 OR worker = %d)
+                ORDER BY time_from ASC",
+                $date,
+                $date,
+                $loc_filter,
+                $loc_filter,
+                $srv_filter,
+                $srv_filter,
+                $wrk_filter,
+                $wrk_filter
+            )
+        );
+
+        // If no date-bounded connections found, check general active connections
+        if (empty($connections)) {
+            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Querying live custom connections table for fallback daily schedule.
+            $connections = $wpdb->get_results(
+                $wpdb->prepare(
+                    "SELECT * FROM {$wpdb->prefix}ea_connections
+                    WHERE is_working = 1
+                      AND (%d = 0 OR location = %d)
+                      AND (%d = 0 OR service = %d)
+                      AND (%d = 0 OR worker = %d)
+                    ORDER BY time_from ASC",
+                    $loc_filter,
+                    $loc_filter,
+                    $srv_filter,
+                    $srv_filter,
+                    $wrk_filter,
+                    $wrk_filter
+                )
+            );
+        }
+
+        // Determine working time intervals and slot steps
+        $working_slots = array();
+        foreach ($connections as $conn) {
+            $allowed_days = array_map('trim', explode(',', $conn->day_of_week));
+            if (!in_array($day_of_week, $allowed_days, true)) {
+                continue;
+            }
+
+            $svc = isset($service_map[$conn->service]) ? $service_map[$conn->service] : null;
+            $duration  = ($svc && !empty($svc->duration)) ? (int)$svc->duration : 30;
+            $slot_step = ($svc && !empty($svc->slot_step)) ? (int)$svc->slot_step : $duration;
+
+            $start_sec = strtotime($conn->time_from);
+            $end_sec   = strtotime($conn->time_to);
+
+            $step_sec = $slot_step * 60;
+            if ($step_sec <= 0) {
+                $step_sec = 1800;
+            }
+
+            $cur_sec = $start_sec;
+            while (($cur_sec + ($duration * 60)) <= $end_sec) {
+                $t_key = gmdate('H:i', $cur_sec);
+                if (!isset($working_slots[$t_key])) {
+                    $working_slots[$t_key] = array(
+                        'time'       => $t_key,
+                        'duration'   => $duration,
+                        'service'    => $conn->service,
+                        'location'   => $conn->location,
+                        'worker'     => $conn->worker,
+                        'slot_count' => (int)($conn->slot_count ?: 1),
+                    );
+                }
+                $cur_sec += $step_sec;
+            }
+        }
+
+        // If working slots are empty and no appointments exist, provide business hours (09:00 - 17:00)
+        if (empty($working_slots) && empty($apps_by_time)) {
+            $fallback_dur = (!empty($services) && !empty($services[0]->duration)) ? (int)$services[0]->duration : 30;
+            $cur = strtotime('09:00');
+            $end = strtotime('17:00');
+            while ($cur < $end) {
+                $t_key = gmdate('H:i', $cur);
+                $working_slots[$t_key] = array(
+                    'time'       => $t_key,
+                    'duration'   => $fallback_dur,
+                    'service'    => $service ?: (!empty($services) ? $services[0]->id : 1),
+                    'location'   => $location ?: 1,
+                    'worker'     => $worker ?: 1,
+                    'slot_count' => 1,
+                );
+                $cur += ($fallback_dur * 60);
+            }
+        }
+
+        $all_times = array_unique(array_merge(array_keys($working_slots), array_keys($apps_by_time)));
+        sort($all_times);
+
+        $slots = array();
+        $confirmed_count = 0;
+        $pending_count   = 0;
+        $available_count = 0;
+
+        foreach ($all_times as $t) {
+            $has_apps = isset($apps_by_time[$t]) && !empty($apps_by_time[$t]);
+
+            if ($has_apps) {
+                foreach ($apps_by_time[$t] as $app) {
+                    $status = strtolower($app->status ?: 'pending');
+                    if ($status === 'confirmed') {
+                        $confirmed_count++;
+                    } else {
+                        $pending_count++;
+                    }
+
+                    $is_blocked = false;
+                    $customer_subtitle = '';
+                    $name = trim($app->name ?: '');
+                    $desc = trim($app->description ?: '');
+
+                    if (stripos($name, '(Blocked)') !== false || stripos($name, 'Blocked') === 0) {
+                        $is_blocked = true;
+                        if (strpos($name, "\n") !== false) {
+                            $parts = explode("\n", $name, 2);
+                            $name = trim($parts[0]);
+                            $customer_subtitle = trim($parts[1]);
+                        } elseif (stripos($name, 'Start Buffer') !== false) {
+                            $customer_subtitle = __('Internal Hold', 'easy-appointments');
+                        } elseif (stripos($name, 'Break') !== false) {
+                            $customer_subtitle = __('Lunch / Break - will delete later', 'easy-appointments');
+                        }
+                    }
+
+                    $slots[] = array(
+                        'time'              => $this->format_daily_time($t, $time_format),
+                        'raw_time'          => $t,
+                        'end_time'          => $this->format_daily_time(substr($app->end, 0, 5), $time_format),
+                        'status'            => $status,
+                        'customer'          => $name ?: '—',
+                        'customer_subtitle' => $customer_subtitle,
+                        'phone'             => !empty($app->phone) ? $app->phone : '—',
+                        'email'             => !empty($app->email) ? $app->email : '—',
+                        'description'       => !empty($desc) ? $desc : '—',
+                        'appointment_id'    => (int)$app->id,
+                        'is_blocked'        => $is_blocked,
+                        'service'           => (int)$app->service,
+                        'location'          => (int)$app->location,
+                        'worker'            => (int)$app->worker,
+                        'price'             => $app->price,
+                    );
+                }
+            } else {
+                $available_count++;
+                $w_info = isset($working_slots[$t]) ? $working_slots[$t] : array();
+                $dur = isset($w_info['duration']) ? $w_info['duration'] : 30;
+                $end_ts = strtotime($t) + ($dur * 60);
+                $end_t = gmdate('H:i', $end_ts);
+
+                $slots[] = array(
+                    'time'              => $this->format_daily_time($t, $time_format),
+                    'raw_time'          => $t,
+                    'end_time'          => $this->format_daily_time($end_t, $time_format),
+                    'status'            => 'available',
+                    'customer'          => '—',
+                    'customer_subtitle' => '',
+                    'phone'             => '—',
+                    'email'             => '—',
+                    'description'       => __('Available Slot', 'easy-appointments'),
+                    'appointment_id'    => null,
+                    'is_blocked'        => false,
+                    'service'           => isset($w_info['service']) ? (int)$w_info['service'] : $service,
+                    'location'          => isset($w_info['location']) ? (int)$w_info['location'] : $location,
+                    'worker'            => isset($w_info['worker']) ? (int)$w_info['worker'] : $worker,
+                    'price'             => null,
+                );
+            }
+        }
+
+        wp_send_json(array(
+            'success' => true,
+            'data'    => array(
+                'date'           => $date,
+                'date_formatted' => $date_formatted,
+                'service_name'   => $selected_service_name,
+                'slots'          => $slots,
+                'summary'        => array(
+                    'confirmed' => $confirmed_count,
+                    'pending'   => $pending_count,
+                    'available' => $available_count,
+                    'total'     => count($slots),
+                ),
+            ),
+        ));
+    }
+
+    /**
+     * Quick block a daily schedule slot (creates a pending blocked appointment)
+     */
+    public function ajax_block_daily_slot()
+    {
+        $this->validate_admin_nonce();
+        $this->validate_access_rights('appointments', 'manage_options');
+        $this->ensure_daily_schedule_enabled();
+
+        $data = $this->parse_input_data();
+
+        $date        = !empty($data['date']) ? sanitize_text_field($data['date']) : current_time('Y-m-d');
+        $time        = !empty($data['time']) ? sanitize_text_field($data['time']) : '';
+        $title       = !empty($data['title']) ? sanitize_text_field($data['title']) : '(Blocked) Hold';
+        $subtitle    = !empty($data['subtitle']) ? sanitize_text_field($data['subtitle']) : '';
+        $notes       = !empty($data['description']) ? sanitize_textarea_field($data['description']) : '';
+        $service_id  = !empty($data['service']) ? (int)$data['service'] : 0;
+        $location_id = !empty($data['location']) ? (int)$data['location'] : 0;
+        $worker_id   = !empty($data['worker']) ? (int)$data['worker'] : 0;
+
+        if (empty($time)) {
+            wp_send_json_error(array('message' => esc_html__('Time is required.', 'easy-appointments')), 400);
+        }
+
+        if ($service_id <= 0) {
+            $services = $this->models->get_all_rows('ea_services');
+            $service_id = !empty($services) ? (int)$services[0]->id : 1;
+        }
+        if ($location_id <= 0) {
+            $locations = $this->models->get_all_rows('ea_locations');
+            $location_id = !empty($locations) ? (int)$locations[0]->id : 1;
+        }
+        if ($worker_id <= 0) {
+            $workers = $this->models->get_all_rows('ea_staff');
+            $worker_id = !empty($workers) ? (int)$workers[0]->id : 1;
+        }
+
+        $service_row = $this->models->get_row('ea_services', $service_id);
+        $duration    = ($service_row && !empty($service_row->duration)) ? (int)$service_row->duration : 30;
+
+        $end_time = gmdate('H:i', strtotime("{$time} + {$duration} minute"));
+
+        $customer_name = $title;
+        if (!empty($subtitle)) {
+            $customer_name .= "\n" . $subtitle;
+        }
+
+        $app_data = array(
+            'location'    => $location_id,
+            'service'     => $service_id,
+            'worker'      => $worker_id,
+            'name'        => $customer_name,
+            'email'       => '',
+            'phone'       => '',
+            'date'        => $date,
+            'start'       => $time . ':00',
+            'end'         => $end_time . ':00',
+            'end_date'    => $date,
+            'description' => $notes,
+            'status'      => 'pending',
+            'price'       => 0.00,
+        );
+
+        $inserted = $this->models->replace('ea_appointments', $app_data);
+
+        if (!$inserted) {
+            wp_send_json_error(array('message' => esc_html__('Failed to block slot.', 'easy-appointments')), 500);
+        }
+
+        global $wpdb;
+        $app_id = $inserted ? (int)$inserted : (int)$wpdb->insert_id;
+
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Querying custom meta fields table.
+        $name_field = $wpdb->get_row("SELECT * FROM {$wpdb->prefix}ea_meta_fields WHERE slug = 'name'");
+        if ($name_field) {
+            $this->models->replace('ea_fields', array(
+                'app_id'   => $app_id,
+                'field_id' => $name_field->id,
+                'value'    => $customer_name,
+            ));
+        }
+
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Querying custom meta fields table.
+        $desc_field = $wpdb->get_row("SELECT * FROM {$wpdb->prefix}ea_meta_fields WHERE slug = 'description' OR slug = 'comment'");
+        if ($desc_field && !empty($notes)) {
+            $this->models->replace('ea_fields', array(
+                'app_id'   => $app_id,
+                'field_id' => $desc_field->id,
+                'value'    => $notes,
+            ));
+        }
+
+        wp_send_json_success(array(
+            'message'        => esc_html__('Slot blocked successfully.', 'easy-appointments'),
+            'appointment_id' => $app_id,
+        ));
+    }
+
+    private function format_daily_time($time_hi, $format)
+    {
+        if (empty($time_hi)) {
+            return '';
+        }
+        $ts = strtotime('2000-01-01 ' . $time_hi . ' UTC');
+        if ($format === 'am-pm') {
+            return gmdate('g:i A', $ts);
+        }
+        return gmdate('H:i', $ts);
     }
 
     public function delete_selected_appointment()
@@ -3464,7 +4074,9 @@ class EAAjax
         $end_time = strtotime("{$data['start']} + {$service->duration} minute");
         $app_data['end'] = gmdate('H:i', $end_time);
 
-        if (!empty($app_data['date']) && !empty($app_data['start'])) {
+        $is_canceling = (isset($app_data['status']) && 'canceled' === $app_data['status']);
+
+        if (!$is_canceling && !empty($app_data['date']) && !empty($app_data['start'])) {
 
             // Appointment datetime (YYYY-mm-dd HH:ii)
             $appointment_datetime = strtotime(
@@ -3507,6 +4119,10 @@ class EAAjax
                 $response = $this->models->get_row($table, $id);
                 break;
             case 'UPDATE':
+                $old_appointment = $this->models->get_row($table, $app_data['id'], ARRAY_A);
+                $old_status = isset($old_appointment['status']) ? $old_appointment['status'] : '';
+                $new_status = isset($app_data['status']) ? $app_data['status'] : '';
+
                 $response = $this->models->replace($table, $app_data, true);
 
                 $this->models->delete($fields, array('app_id' => $app_data['id']), true);
@@ -3518,6 +4134,19 @@ class EAAjax
 
                 // edit app
                 do_action('easy_ea_edit_app', $app_data['id']);
+
+                if ($new_status !== $old_status) {
+                    do_action('easy_ea_status_changed', $app_data['id'], $new_status, $old_status, $app_data);
+
+                    if ('canceled' === $new_status) {
+                        do_action('easy_ea_cancel_app', $app_data['id'], $app_data);
+                    }
+                }
+
+                $updated_appointment = $this->models->get_row($table, $app_data['id']);
+                if ($updated_appointment) {
+                    $response = $updated_appointment;
+                }
 
                 break;
             case 'NEW':

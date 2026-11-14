@@ -118,6 +118,26 @@
     background: var(--ea-bg);
 }
 
+.ea-nsui-btn-secondary {
+    background: #f1f5f9;
+    border-color: #cbd5e1;
+    color: #1e293b;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.ea-nsui-btn-secondary:hover:not(:disabled) {
+    background: #e2e8f0;
+    border-color: #94a3b8;
+    color: #0f172a;
+}
+
+.ea-nsui-btn-secondary:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
 /* ---------- Notice ---------- */
 
 .ea-nsui-notice {
@@ -1038,24 +1058,25 @@
     display: flex;
     flex-wrap: wrap;
     justify-content: flex-end;
-    gap: 8px;
-    max-width: 460px;
+    gap: 6px;
+    max-width: none;
 }
 
 .ea-nsui-chip {
     position: relative;
     display: inline-flex;
     align-items: center;
-    gap: 7px;
-    padding: 6px 12px 6px 10px;
+    gap: 6px;
+    padding: 5px 11px 5px 9px;
     border: 1px solid var(--ea-border);
     border-radius: 999px;
     background: #fff;
-    font-size: 12.5px;
+    font-size: 12px;
     font-weight: 500;
     color: var(--ea-text);
     cursor: pointer;
     user-select: none;
+    white-space: nowrap;
     transition: border-color 0.15s ease, background 0.15s ease, color 0.15s ease;
 }
 
@@ -2627,7 +2648,12 @@
     max-width: 140px;
 }
 
-@media (max-width: 1400px) {
+.ea-nsui-row-chips .ea-nsui-chip-group {
+    flex-wrap: nowrap;
+    max-width: none;
+}
+
+@media (max-width: 1200px) {
     .ea-nsui-row-chips {
         flex-direction: column;
         align-items: flex-start;
@@ -2645,6 +2671,7 @@
     .ea-nsui-row-chips .ea-nsui-chip-group {
         justify-content: flex-start;
         max-width: 100%;
+        flex-wrap: wrap;
     }
 }
 
@@ -3160,7 +3187,94 @@ body.wp-admin #ui-datepicker-div.ea-timepicker-only .ui-datepicker-header,
     margin-top: 16px;
     display: flex;
     justify-content: flex-start;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
 }
+
+.ea-nsui-theme-detection-hint {
+    margin-top: 12px;
+    background: #ecfdf5;
+    border: 1px solid #a7f3d0;
+    color: #065f46;
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-size: 13px;
+    line-height: 1.5;
+    display: flex;
+    align-items: center;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+
+/* --------------------------------------------------------------------------
+   Slot Capacity Fill Preview Styles
+   -------------------------------------------------------------------------- */
+.ea-nsui-slot-fill-preview-wrap {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 24px;
+    margin-top: 6px;
+}
+
+.ea-nsui-slot-fill-preview-grid {
+    display: flex;
+    align-items: flex-start;
+    gap: 24px;
+    flex-wrap: wrap;
+}
+
+.ea-nsui-slot-fill-preview-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    width: 110px;
+}
+
+.ea-nsui-slot-fill-preview-box {
+    width: 72px;
+    height: 72px;
+    border: 1px solid #cbd5e1;
+    border-radius: 10px;
+    background: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 10px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+    box-sizing: border-box;
+    transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.ea-nsui-slot-fill-preview-box .ea-slot-box-num {
+    font-size: 17px;
+    font-weight: 700;
+    color: #1e293b;
+    z-index: 2;
+    position: relative;
+    transition: color 0.15s ease;
+}
+
+.ea-nsui-slot-fill-preview-box.ea-slot-box-100 .ea-slot-box-num {
+    color: #ffffff !important;
+}
+
+.ea-slot-box-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: #334155;
+    margin-bottom: 2px;
+}
+
+.ea-slot-box-sub {
+    font-size: 11px;
+    color: #64748b;
+    line-height: 1.2;
+}
+
 
 
 

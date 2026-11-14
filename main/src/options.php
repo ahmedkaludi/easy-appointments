@@ -114,6 +114,7 @@ class EAOptions
             'send.user.reservation_email'   => '0',
             'send.user.cancelled_email'     => '0',
             'send.user.confirmed_email'     => '0',
+            'send.user.abandoned_email'     => '0',
             'custom.css'                    => '',
             'form.label.above'              => '0',
             'show.iagree'                   => '0',
@@ -153,6 +154,7 @@ class EAOptions
             'send.worker.reservation_email' => '0',
             'send.worker.cancelled_email'   => '0',
             'send.worker.confirmed_email'   => '0',
+            'send.worker.abandoned_email'   => '0',
             'currency.before'               => '0',
             'nonce.off'                     => '0',
             'gdpr.on'                       => '0',
@@ -191,6 +193,9 @@ class EAOptions
             'confirmed_message'   => 'Your appointment has been confirmed. Thank you!',
             'reservation_message'   => 'Your appointment has been reserved. You will be notified once it is confirmed.',
             'trans.confirmation-title'   => 'Thank You for Booking!',
+            'style.calendar_slot_fill'   => '0',
+            'style.slot_fill_color'      => '#ef4444',
+            'daily_schedule.enabled'     => '0',
         );
     }
 

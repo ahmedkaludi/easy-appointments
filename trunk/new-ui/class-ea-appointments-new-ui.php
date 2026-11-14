@@ -315,9 +315,10 @@ class EA_Appointments_New_UI
             'date_format'         => 'MM/DD/YYYY',
             'time_format'         => '24h',
             'datepicker'          => 'en',
-            'block_days'          => array(),
-            'block_days_tooltip'  => '',
-            'send_mail_default'   => 0,
+            'block_days'             => array(),
+            'block_days_tooltip'     => '',
+            'send_mail_default'      => 0,
+            'daily_schedule_enabled' => false,
         );
 
         global $easy_ea_app;
@@ -360,9 +361,10 @@ class EA_Appointments_New_UI
             'date_format'        => $datetime->convert_to_moment_format(get_option('date_format', 'F j, Y')),
             'time_format'        => $options->get_option_value('time_format', '24h'),
             'datepicker'         => $options->get_option_value('datepicker', 'en'),
-            'block_days'         => $options->get_option_value('block_days', array()),
-            'block_days_tooltip' => $options->get_option_value('block_days_tooltip', ''),
-            'send_mail_default'  => $options->get_option_value('mail.send_email_notification', 0),
+            'block_days'             => $options->get_option_value('block_days', array()),
+            'block_days_tooltip'     => $options->get_option_value('block_days_tooltip', ''),
+            'send_mail_default'      => $options->get_option_value('mail.send_email_notification', 0),
+            'daily_schedule_enabled' => class_exists('EA_Daily_Schedule_New_UI', false) ? EA_Daily_Schedule_New_UI::is_enabled() : ((string) $options->get_option_value('daily_schedule.enabled', '0') === '1'),
         );
     }
 

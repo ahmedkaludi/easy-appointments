@@ -65,27 +65,27 @@ defined( 'ABSPATH' ) || exit;
             </thead>
             <tbody>
                 <tr>
-                    <td>scroll_off<?php esc_html_e('Name', 'easy-appointments'); ?></td>
+                    <td><code>scroll_off</code></td>
                     <td><?php esc_html_e('Disable scroll {true, false}, default: "false"', 'easy-appointments'); ?></td>
                 </tr>
                 <tr>
-                    <td><?php esc_html_e('default_date', 'easy-appointments'); ?></td>
-                    <td><?php esc_html_e('Set a default selected date (YYYY-MM-DD). Example: 2017-12-31', 'easy-appointments'); ?></td>
+                    <td><code>default_date</code></td>
+                    <td><?php esc_html_e('Default selected date (YYYY-MM-DD), default: "today"', 'easy-appointments'); ?></td>
                 </tr>
                 <tr>
-                    <td><?php esc_html_e('min_date', 'easy-appointments'); ?></td>
-                    <td><?php esc_html_e('Minimum selectable date. Example: 2018-12-31', 'easy-appointments'); ?></td>
+                    <td><code>min_date</code></td>
+                    <td><?php esc_html_e('Minimum selectable date (YYYY-MM-DD), default: "no limit"', 'easy-appointments'); ?></td>
                 </tr>
                 <tr>
-                    <td><?php esc_html_e('max_date', 'easy-appointments'); ?></td>
-                    <td><?php esc_html_e('Maximum selectable date. Example: 2018-12-31', 'easy-appointments'); ?></td>
+                    <td><code>max_date</code></td>
+                    <td><?php esc_html_e('Maximum selectable date (YYYY-MM-DD), default: "no limit"', 'easy-appointments'); ?></td>
                 </tr>
                 <tr>
-                    <td><?php esc_html_e('show_remaining_slots', 'easy-appointments'); ?></td>
+                    <td><code>show_remaining_slots</code></td>
                     <td><?php esc_html_e('Display remaining slots {"0", "1"}, default: "0"', 'easy-appointments'); ?></td>
                 </tr>
                 <tr>
-                    <td>show_week</td>
+                    <td><code>show_week</code></td>
                     <td><?php esc_html_e('Show week numbers in the calendar {"0", "1"}, default: "0"', 'easy-appointments'); ?></td>
                 </tr>
             </tbody>
@@ -120,15 +120,15 @@ defined( 'ABSPATH' ) || exit;
                 </tr>
                 <tr>
                     <td><?php esc_html_e('location', 'easy-appointments'); ?></td>
-                    <td><?php esc_html_e('Predefined location (ID number), default: null', 'easy-appointments'); ?></td>
+                    <td><?php esc_html_e('Predefined location (ID number), default: "all"', 'easy-appointments'); ?></td>
                 </tr>
                 <tr>
                     <td><?php esc_html_e('service', 'easy-appointments'); ?></td>
-                    <td><?php esc_html_e('Predefined service (ID number), default: null', 'easy-appointments'); ?></td>
+                    <td><?php esc_html_e('Predefined service (ID number), default: "all"', 'easy-appointments'); ?></td>
                 </tr>
                 <tr>
                     <td><?php esc_html_e('worker', 'easy-appointments'); ?></td>
-                    <td><?php esc_html_e('Predefined worker (ID number), default: null', 'easy-appointments'); ?></td>
+                    <td><?php esc_html_e('Predefined worker (ID number), default: "all"', 'easy-appointments'); ?></td>
                 </tr>
                 <tr>
                     <td><?php esc_html_e('rtl', 'easy-appointments'); ?></td>

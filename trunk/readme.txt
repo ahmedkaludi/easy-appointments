@@ -5,7 +5,7 @@ Tags: appointment, appointments, Booking, calendar, reservation
 Requires at least: 5.0
 Tested up to: 7.1
 Requires PHP: 5.3
-Stable tag: 4.0.4
+Stable tag: 4.0.5
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -261,6 +261,18 @@ Terms of use and Policy : https://fullcalendar.io/license
 25. Admin panel - Report - Export page
 
 == Changelog ==
+
+= 4.0.5 (2026-11-12)
+* Added support for syncing Google Calendar appointment time updates to EA #310
+* Added Visual Availability/Occupancy Indicator to Calendar Days #349
+* Added Use AI to auto select the color scheme of the form #318
+* Added different cancellation deadlines for different connection #350
+* Added admin day schedule view with free slots and booking status color coding
+ #283
+* Fixed Regression in 4.0.3: changing appointment status to “Canceled” via Edit does not fully process the cancellation #368
+* Fixed Abandoned email not going out in newest version #370
+* Fixed Improve Publish page #314
+* Fixed Duplicate easyapp_hourly_event Cron Events Accumulating on Every Request #374
 
 = 4.0.4 (2026-10-21)
 * Added worker wise sync for outlook calendar #357

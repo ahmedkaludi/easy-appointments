@@ -1272,9 +1272,26 @@
 
             // check is all filled
             if (this.checkStatus()) {
-                var selects = this.$element.find('select').not('.custom-field');
+                var selects = this.$element.find('select, input.filter, input[type="hidden"]').filter('[name="location"], [name="service"], [name="worker"], [data-c="location"], [data-c="service"], [data-c="worker"]').not('.custom-field');
+                if (!selects.length) {
+                    selects = this.$element.find('select').not('.custom-field');
+                }
 
                 var fields = selects.serializeArray();
+                var fieldsMap = {};
+                jQuery.each(fields, function (i, f) {
+                    fieldsMap[f.name] = f.value;
+                });
+
+                ['location', 'service', 'worker'].forEach(function (key) {
+                    if (!fieldsMap[key]) {
+                        var val = self.$element.find('[name="' + key + '"], [data-c="' + key + '"]').first().val();
+                        if (val) {
+                            fields.push({'name': key, 'value': val});
+                            fieldsMap[key] = val;
+                        }
+                    }
+                });
 
                 fields.push({'name': 'action', 'value': 'ea_month_status'});
                 fields.push({'name': 'month', 'value': month});
@@ -1328,18 +1345,96 @@
          * @param data
          */
         refreshData: function (data) {
-
             var datepicker = this.$element.find('.date');
+            if (!data || !datepicker.length) {
+                this.removeLoader();
+                return;
+            }
 
-            jQuery.each(data, function (key, status) {
+            var isNewUi = (
+                ea_settings['ea_new_ui'] === '1' ||
+                ea_settings['ea_new_ui'] === 1 ||
+                this.$element.hasClass('ea-new-ui') ||
+                this.$element.parents('.ea-new-ui').length > 0
+            );
+
+            var isFillEnabled = isNewUi && (
+                ea_settings['calendar_slot_fill'] === '1' ||
+                ea_settings['style.calendar_slot_fill'] === '1'
+            );
+
+            var fillColor = ea_settings['slot_fill_color'] || ea_settings['style.slot_fill_color'] || '#ef4444';
+
+            function getRgb(hex) {
+                hex = (hex || '#ef4444').toString().replace('#', '').trim();
+                if (hex.length === 3) {
+                    hex = hex.split('').map(function (c) { return c + c; }).join('');
+                }
+                var num = parseInt(hex, 16);
+                if (isNaN(num)) return '239, 68, 68';
+                return ((num >> 16) & 255) + ', ' + ((num >> 8) & 255) + ', ' + (num & 255);
+            }
+            var fillRgb = getRgb(fillColor);
+
+            jQuery.each(data, function (key, val) {
                 var $td = datepicker.find('.' + key);
+                if (!$td.length) return;
 
-                // remove all class and leave just date 2020-01-01
-                $td.removeClass('free');
-                $td.removeClass('busy');
-                $td.removeClass('no-slots');
+                // remove all status and fill classes
+                $td.removeClass('free busy no-slots ea-slot-fill-day ea-slot-fill-0 ea-slot-fill-25 ea-slot-fill-50 ea-slot-fill-75 ea-slot-fill-100');
+                var $link = $td.find('a, span');
+                $link.css({
+                    'background': '',
+                    'background-color': '',
+                    'color': ''
+                });
+
+                var status = (typeof val === 'object' && val !== null) ? val.status : val;
+                var percent = (typeof val === 'object' && val !== null && typeof val.percent_booked !== 'undefined') ? parseInt(val.percent_booked, 10) : (status === 'busy' ? 100 : 0);
 
                 $td.addClass(status);
+
+                if (isFillEnabled && status !== 'no-slots') {
+                    $td.addClass('ea-slot-fill-day');
+                    $td.attr('data-booked-percent', percent);
+
+                    if (percent >= 100 || status === 'busy') {
+                        $td.addClass('ea-slot-fill-100');
+                        $link.css({
+                            'background': fillColor,
+                            'background-color': fillColor,
+                            'color': '#ffffff'
+                        });
+                    } else if (percent > 0) {
+                        var alpha = 0.38;
+                        var fillHeight = percent;
+
+                        if (percent <= 25) {
+                            $td.addClass('ea-slot-fill-25');
+                            alpha = 0.38;
+                            fillHeight = 28;
+                        } else if (percent <= 50) {
+                            $td.addClass('ea-slot-fill-50');
+                            alpha = 0.60;
+                            fillHeight = 50;
+                        } else if (percent <= 75) {
+                            $td.addClass('ea-slot-fill-75');
+                            alpha = 0.80;
+                            fillHeight = 75;
+                        } else {
+                            $td.addClass('ea-slot-fill-75');
+                            alpha = 0.90;
+                            fillHeight = percent;
+                        }
+
+                        var gradBg = 'linear-gradient(to top, rgba(' + fillRgb + ', ' + alpha + ') 0%, rgba(' + fillRgb + ', ' + alpha + ') ' + fillHeight + '%, transparent ' + fillHeight + '%, transparent 100%)';
+                        $link.css({
+                            'background': gradBg
+                        });
+                    } else {
+                        $td.addClass('ea-slot-fill-0');
+                    }
+                }
             });
 
             this.removeLoader();
@@ -1349,7 +1444,10 @@
          * @return {boolean} Is ready for sending data
          */
         checkStatus: function () {
-            var selects = this.$element.find('select').not('.custom-field');
+            var selects = this.$element.find('select, input.filter, input[type="hidden"]').filter('[name="location"], [name="service"], [name="worker"], [data-c="location"], [data-c="service"], [data-c="worker"]').not('.custom-field');
+            if (!selects.length) {
+                selects = this.$element.find('select').not('.custom-field');
+            }
 
             var isComplete = true;
 

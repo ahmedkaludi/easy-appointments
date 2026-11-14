@@ -677,6 +677,36 @@
     padding: 10px;
 }
 
+/* Slot Capacity Fill (show_remaining_slots / calendar_slot_fill) */
+.ea-new-ui .ui-datepicker td.ea-slot-fill-day a,
+.ea-new-ui .ui-datepicker td.ea-slot-fill-day span {
+    position: relative;
+    overflow: hidden;
+    border-radius: 8px;
+    box-sizing: border-box;
+}
+
+.ea-new-ui .ui-datepicker td.ea-slot-fill-100 a,
+.ea-new-ui .ui-datepicker td.ea-slot-fill-100 span,
+.ea-new-ui .ui-datepicker td.ea-slot-fill-day.busy a,
+.ea-new-ui .ui-datepicker td.ea-slot-fill-day.busy span {
+    color: #ffffff !important;
+    font-weight: 700;
+}
+
+/* When a slot-fill day is selected: keep fill visible with crisp outline/border */
+.ea-new-ui .ui-datepicker td.ea-slot-fill-day.ui-datepicker-current-day a,
+.ea-new-ui .ui-datepicker .ea-slot-fill-day.ui-datepicker-current-day a {
+    background-color: transparent;
+    box-shadow: inset 0 0 0 2px var(--ea-accent, #2563eb) !important;
+    border: 2px solid var(--ea-accent, #2563eb) !important;
+    color: #111827;
+}
+
+.ea-new-ui .ui-datepicker td.ea-slot-fill-100.ui-datepicker-current-day a {
+    color: #ffffff !important;
+}
+
 .ea-new-ui .ui-datepicker .ui-state-disabled span,
 .ea-new-ui .ui-datepicker .ui-state-disabled a {
     color: rgba(32, 30, 29, 0.30);

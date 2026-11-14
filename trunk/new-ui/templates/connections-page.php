@@ -106,6 +106,7 @@ if (!defined('WPINC')) {
                             <th><?php esc_html_e('Days of week', 'easy-appointments'); ?></th>
                             <th><?php esc_html_e('Working Hours', 'easy-appointments'); ?></th>
                             <th><?php esc_html_e('Date range', 'easy-appointments'); ?></th>
+                            <th><a href="#" class="ea-mnui-set-sort" data-key="cancel_time"><?php esc_html_e('Cancel Before', 'easy-appointments'); ?></a></th>
                             <th><?php esc_html_e('Is working', 'easy-appointments'); ?></th>
                             <th class="ea-mnui-col-actions"><?php esc_html_e('Actions', 'easy-appointments'); ?></th>
                         </tr>
@@ -267,6 +268,18 @@ if (!defined('WPINC')) {
                             <div class="ea-mnui-field-error" id="ea-mnui-time-to-error"><?php esc_html_e('Must be after start time!', 'easy-appointments'); ?></div>
                         </div>
                     </div>
+                </div>
+
+                <div class="ea-mnui-field ea-mnui-span-full ea-mnui-field-group" data-field="cancel_time">
+                    <label for="ea-mnui-input-cancel_time">
+                        <?php esc_html_e('Cancel Booking Before Hour', 'easy-appointments'); ?>
+                        <span class="ea-mnui-tip" data-tooltip="<?php esc_attr_e('Users are allowed to cancel their appointments only up to hours before the scheduled time for this connection. Format: HH:mm (e.g. 02:00 for 2 hours, 24:00 for 24 hours). Leave empty to use global setting.', 'easy-appointments'); ?>">?</span>
+                    </label>
+                    <p class="ea-mnui-field-hint"><?php esc_html_e('Set a connection-specific cancellation deadline (e.g. 02:00 for 2 hours before). Leave blank to use the global setting.', 'easy-appointments'); ?></p>
+                    <div style="max-width: 240px;">
+                        <input type="text" id="ea-mnui-input-cancel_time" class="ea-mnui-time-input" data-prop="cancel_time" placeholder="00:00" autocomplete="off">
+                    </div>
+                    <div class="ea-mnui-field-error"><?php esc_html_e('Please enter a valid time (e.g. 02:00 or 24:00).', 'easy-appointments'); ?></div>
                 </div>
             </div>
 

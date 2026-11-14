@@ -113,6 +113,26 @@ if ( ! defined( 'WPINC' ) ) {
 
                         <?php
                         /**
+                         * Row: Enable Daily Schedule
+                         */
+                        ?>
+                        <div class="ea-nsui-row">
+                            <div class="ea-nsui-row-label">
+                                <span class="ea-nsui-row-title">
+                                    <?php esc_html_e('Enable Daily Schedule', 'easy-appointments'); ?>
+                                    <span class="ea-nsui-tip" data-tooltip="<?php esc_attr_e('Enable the admin Daily Schedule view with free slots and booking status color coding. Refresh the page after saving to update the admin menu.', 'easy-appointments'); ?>">?</span>
+                                </span>
+                            </div>
+                            <div class="ea-nsui-row-control">
+                                <label class="ea-nsui-switch">
+                                    <input type="checkbox" data-key="daily_schedule.enabled" value="1" <?php checked($ea_get('daily_schedule.enabled', '0'), '1'); ?>>
+                                    <span class="ea-nsui-switch-track"><span class="ea-nsui-switch-thumb"></span></span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <?php
+                        /**
                          * Row: Max number of appointments
                          */
                         ?>

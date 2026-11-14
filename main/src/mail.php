@@ -164,6 +164,15 @@ class EAMail
             return;
         }
 
+        // Rate limiting for token validation attempts
+        $client_ip = isset($_SERVER['REMOTE_ADDR']) ? sanitize_text_field(wp_unslash($_SERVER['REMOTE_ADDR'])) : 'unknown';
+        $rate_key  = 'ea_mail_link_fail_' . md5($client_ip . '_' . $app_id);
+        $attempts  = (int) get_transient($rate_key);
+        if ($attempts >= 5) {
+            header('Refresh:3; url=' . get_home_url());
+            wp_die(esc_html__('Too many invalid attempts. Please try again later.', 'easy-appointments'), 429);
+        }
+
         $data = $this->models->get_appintment_by_id($app_id);
 
         if (empty($data)) {
@@ -171,18 +180,19 @@ class EAMail
             wp_die(esc_html__('No appointment.', 'easy-appointments'));
         }
 
+        // constant-time token comparison
+        if (!$this->validate_token($data, $action, $provided_token)) {
+            set_transient($rate_key, $attempts + 1, 15 * MINUTE_IN_SECONDS);
+            header('Refresh:3; url=' . get_home_url());
+            wp_die(esc_html__('Invalid token.', 'easy-appointments'), 403);
+        }
+
+        delete_transient($rate_key);
+
         // check maybe it is a two step process
         // phpcs:ignore WordPress.Security.NonceVerification.Missing
         if (empty($_POST['confirmed']) && (!empty($_POST['confirmed']) && $_POST['confirmed'] !== 'true')) {
             $this->link_action_additional_step($action, $data);
-        }
-
-        $expected_token = $this->generate_token($data, $action);
-
-        // constant-time token comparison
-        if (!hash_equals($expected_token, $provided_token)) {
-            header('Refresh:3; url=' . get_home_url());
-            wp_die(esc_html__('Invalid token.', 'easy-appointments'));
         }
 
         $table = 'ea_appointments';
@@ -252,8 +262,10 @@ class EAMail
                 wp_die(esc_html__('Appointment can\'t be cancelled!', 'easy-appointments'));
             }
 
-            $cancel_time = $this->options->get_option_value('cancel_time');
-            if (!empty($cancel_time)) {
+            $cancel_time = $this->get_appointment_cancel_time($app_data);
+            $cancel_minutes = $this->parse_cancel_time_to_minutes($cancel_time);
+
+            if ($cancel_minutes > 0) {
                 // Convert appointment datetime
                 $appointment_dt = new DateTime($app_data['date'] . ' ' . $app_data['start']);
                 $current_dt     = new DateTime(current_time('Y-m-d H:i'));
@@ -262,18 +274,16 @@ class EAMail
                 $diff_seconds = $appointment_dt->getTimestamp() - $current_dt->getTimestamp();
                 $diff_minutes = floor($diff_seconds / 60);
 
-                // If cancel_time stored as hours → convert to minutes
-                $cancel_minutes = intval($cancel_time) * 60;
-
                 if ($diff_minutes < $cancel_minutes) {
+                    $url = apply_filters('easy_ea_cant_be_canceled_redirect_url', get_home_url());
+                    header('Refresh:3; url=' . $url);
                     wp_die(
                         esc_html__('Cancellation is not allowed within the specified time before the appointment.', 'easy-appointments')
                     );
                 }
             }
-            
 
-            if (new DateTime() > new DateTime($app_data['date'] . ' ' . $app_data['start'])) {
+            if (new DateTime(current_time('Y-m-d H:i')) > new DateTime($app_data['date'] . ' ' . $app_data['start'])) {
                 $url = apply_filters( 'easy_ea_cant_be_canceled_redirect_url', get_home_url());
 
                 header('Refresh:3; url=' . $url);
@@ -376,6 +386,9 @@ class EAMail
         if ($this->options->get_option_value('send.user.confirmed_email')) {
            $enable_options[] = 'confirmed';
         }
+        if ($this->options->get_option_value('send.user.abandoned_email')) {
+           $enable_options[] = 'abandoned';
+        }
         return $enable_options;
     }
     public function get_worker_email_notification_active(){
@@ -391,6 +404,9 @@ class EAMail
         }
         if ($this->options->get_option_value('send.worker.confirmed_email')) {
            $enable_options[] = 'confirmed';
+        }
+        if ($this->options->get_option_value('send.worker.abandoned_email')) {
+           $enable_options[] = 'abandoned';
         }
         return $enable_options;
     }
@@ -492,6 +508,217 @@ class EAMail
         $salt = function_exists('wp_salt') ? wp_salt('auth') : 'ea_default_auth_salt';
 
         return hash_hmac('sha256', $action . '|' . $app_id . '|' . $token_secret, $salt);
+    }
+
+    /**
+     * Check whether legacy MD5 token validation is allowed for an appointment.
+     *
+     * Legacy validation is strictly confined to appointments created before the HMAC
+     * token mechanism was introduced, preventing authorization bypass on newly created appointments.
+     *
+     * @param array  $data   Appointment data
+     * @param string $action Action type ("confirm" or "cancel")
+     * @return bool True if appointment is eligible for legacy token fallback
+     */
+    public function is_legacy_token_allowed($data, $action = '')
+    {
+        if (empty($data) || !is_array($data)) {
+            return false;
+        }
+
+        if (empty($data['created']) || !is_string($data['created'])) {
+            return false;
+        }
+
+        $app_created_time = strtotime($data['created']);
+        if ($app_created_time === false || $app_created_time <= 0) {
+            return false;
+        }
+
+        // Retrieve cutoff timestamp from wp_options
+        $cutoff = get_option('easy_ea_token_migration_cutoff', '');
+
+        // Allow developers to override cutoff via filter
+        $cutoff = apply_filters('easy_ea_legacy_token_cutoff', $cutoff, $data, $action);
+
+        $allowed = false;
+
+        if (!empty($cutoff)) {
+            $cutoff_time = is_numeric($cutoff) ? (int)$cutoff : strtotime($cutoff);
+            if ($cutoff_time && $cutoff_time > 0) {
+                $allowed = ($app_created_time <= $cutoff_time);
+            }
+        } else {
+            // Fallback if no cutoff has been explicitly set or initialized:
+            // Freeze migration boundary by saving the current time.
+            $current_cutoff = current_time('mysql', 1);
+            add_option('easy_ea_token_migration_cutoff', $current_cutoff);
+            $cutoff_time = strtotime($current_cutoff);
+            $allowed = ($app_created_time <= $cutoff_time);
+        }
+
+        return (bool) apply_filters('easy_ea_allow_legacy_token', $allowed, $data, $action);
+    }
+
+    /**
+     * Validate action token with backward compatibility for legacy MD5 tokens (<= 4.0.2.1).
+     *
+     * @param array  $data Appointment data
+     * @param string $action Action type ("confirm" or "cancel")
+     * @param string $provided_token Token provided in the URL query parameter
+     * @return bool True if token matches current HMAC or legacy MD5 format
+     */
+    public function validate_token($data, $action, $provided_token)
+    {
+        if (empty($provided_token) || !is_string($provided_token) || !is_string($action)) {
+            return false;
+        }
+
+        $token_length = strlen($provided_token);
+
+        // 1. Current HMAC token validation (64-character SHA-256 HMAC)
+        if ($token_length === 64 && ctype_xdigit($provided_token)) {
+            $expected_token = $this->generate_token($data, $action);
+            if (is_string($expected_token) && hash_equals(strtolower($expected_token), strtolower($provided_token))) {
+                return true;
+            }
+            return false;
+        }
+
+        // 2. Backward-compatible fallback for links issued in EA <= 4.0.2.1 (strictly 32-char MD5 format)
+        // Strictly restricted to appointments created before the HMAC migration cutoff.
+        if ($token_length === 32 && ctype_xdigit($provided_token)) {
+            if ($this->is_legacy_token_allowed($data, $action)) {
+                $legacy_salt  = 'CStK4zYJSuQPnjbJ1npM';
+                $legacy_token = md5($legacy_salt . $data['created'] . $action);
+                if (hash_equals($legacy_token, strtolower($provided_token))) {
+                    // Upgrade appointment token in database if not already populated
+                    $app_id = isset($data['id']) ? (int)$data['id'] : 0;
+                    if ($app_id > 0 && empty($data['token']) && isset($this->wpdb) && isset($this->models)) {
+                        $row = $this->models->get_row('ea_appointments', $app_id, ARRAY_A);
+                        if (empty($row['token'])) {
+                            $new_token = wp_generate_password(32, false);
+                            $this->wpdb->update(
+                                $this->wpdb->prefix . 'ea_appointments',
+                                array('token' => $new_token),
+                                array('id' => $app_id),
+                                array('%s'),
+                                array('%d')
+                            );
+                        }
+                    }
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Parse cancel_time string into minutes.
+     * Supports "HH:mm" (e.g. "02:00" -> 120, "01:30" -> 90),
+     * decimal hours ("1.5" -> 90), or plain integer hours ("2" -> 120).
+     *
+     * @param string|int|null $cancel_time
+     * @return int Minutes
+     */
+    public function parse_cancel_time_to_minutes($cancel_time)
+    {
+        if ($cancel_time === null || $cancel_time === '') {
+            return 0;
+        }
+
+        $cancel_time = trim((string)$cancel_time);
+
+        if ($cancel_time === '0' || $cancel_time === '00:00' || $cancel_time === '00:00:00') {
+            return 0;
+        }
+
+        if (strpos($cancel_time, ':') !== false) {
+            $parts = explode(':', $cancel_time);
+            $hours = isset($parts[0]) ? intval($parts[0]) : 0;
+            $mins  = isset($parts[1]) ? intval($parts[1]) : 0;
+            return ($hours * 60) + $mins;
+        }
+
+        if (is_numeric($cancel_time)) {
+            return (int) round(floatval($cancel_time) * 60);
+        }
+
+        return intval($cancel_time) * 60;
+    }
+
+    /**
+     * Get cancellation deadline (cancel_time) for a given appointment.
+     * Checks matching connection for connection-specific cancel_time first.
+     * If the connection has a cancel_time defined (non-empty string / non-null), uses it.
+     * Otherwise, falls back to the global cancel_time option.
+     *
+     * @param array $app_data
+     * @return string
+     */
+    public function get_appointment_cancel_time($app_data)
+    {
+        global $wpdb;
+
+        if (!empty($app_data['location']) && !empty($app_data['service']) && !empty($app_data['worker'])) {
+            $location = absint($app_data['location']);
+            $service  = absint($app_data['service']);
+            $worker   = absint($app_data['worker']);
+            $date     = !empty($app_data['date']) ? $app_data['date'] : '';
+            $start    = !empty($app_data['start']) ? $app_data['start'] : '';
+
+            $conn = null;
+
+            if (!empty($date)) {
+                $day_of_week = gmdate('l', strtotime($date));
+
+                if (!empty($start)) {
+                    // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+                    $conn = $wpdb->get_row($wpdb->prepare(
+                        "SELECT cancel_time FROM {$wpdb->prefix}ea_connections
+                         WHERE location = %d AND service = %d AND worker = %d
+                           AND day_of_week LIKE %s
+                           AND (day_from IS NULL OR day_from <= %s)
+                           AND (day_to IS NULL OR day_to >= %s)
+                           AND (time_from IS NULL OR time_from <= %s)
+                           AND (time_to IS NULL OR time_to >= %s)
+                         ORDER BY id DESC LIMIT 1",
+                        $location, $service, $worker, "%{$day_of_week}%", $date, $date, $start, $start
+                    ));
+                }
+
+                if (!$conn) {
+                    // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+                    $conn = $wpdb->get_row($wpdb->prepare(
+                        "SELECT cancel_time FROM {$wpdb->prefix}ea_connections
+                         WHERE location = %d AND service = %d AND worker = %d
+                           AND day_of_week LIKE %s
+                           AND (day_from IS NULL OR day_from <= %s)
+                           AND (day_to IS NULL OR day_to >= %s)
+                         ORDER BY id DESC LIMIT 1",
+                        $location, $service, $worker, "%{$day_of_week}%", $date, $date
+                    ));
+                }
+            }
+
+            if (!$conn) {
+                // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+                $conn = $wpdb->get_row($wpdb->prepare(
+                    "SELECT cancel_time FROM {$wpdb->prefix}ea_connections
+                     WHERE location = %d AND service = %d AND worker = %d
+                     ORDER BY id DESC LIMIT 1",
+                    $location, $service, $worker
+                ));
+            }
+
+            if ($conn && isset($conn->cancel_time) && $conn->cancel_time !== null && trim((string)$conn->cancel_time) !== '') {
+                return trim((string)$conn->cancel_time);
+            }
+        }
+
+        return $this->options->get_option_value('cancel_time');
     }
 
     /**
@@ -619,11 +846,18 @@ class EAMail
         // create links for cancel and confirm email
         $links = array();
 
-        $links['#link_cancel#'] = $this->generate_link_element($raw_data, 'cancel', __('Cancel appointment', 'easy-appointments'));
-        $links['#link_confirm#'] = $this->generate_link_element($raw_data, 'confirm', __('Confirm appointment', 'easy-appointments'));
+        if (isset($raw_data['status']) && $raw_data['status'] === 'abandoned') {
+            $links['#link_cancel#'] = '';
+            $links['#link_confirm#'] = '';
+            $links['#url_cancel#'] = '';
+            $links['#url_confirm#'] = '';
+        } else {
+            $links['#link_cancel#'] = $this->generate_link_element($raw_data, 'cancel', __('Cancel appointment', 'easy-appointments'));
+            $links['#link_confirm#'] = $this->generate_link_element($raw_data, 'confirm', __('Confirm appointment', 'easy-appointments'));
 
-        $links['#url_cancel#'] = $this->generate_url($raw_data, 'cancel');
-        $links['#url_confirm#'] = $this->generate_url($raw_data, 'confirm');
+            $links['#url_cancel#'] = $this->generate_url($raw_data, 'cancel');
+            $links['#url_confirm#'] = $this->generate_url($raw_data, 'confirm');
+        }
 
         $subject_template = $this->options->get_option_value('pending.subject.email', 'Notification : #id#');
         $enable_status_subjects = $this->options->get_option_value('enable_status_subjects', '0');
@@ -655,6 +889,8 @@ class EAMail
             $body_template = $this->options->get_option_value('mail.admin.canceled', $body_template);
         } elseif ($raw_data['status'] == 'reservation') {
             $body_template = $this->options->get_option_value('mail.admin.reservation', $body_template);
+        } elseif ($raw_data['status'] == 'abandoned') {
+            $body_template = $this->options->get_option_value('mail.admin.abandoned', '');
         }
         $body_template = apply_filters('easy_ea_admin_mail_template', $body_template);
 
@@ -668,6 +904,13 @@ class EAMail
 
             require EA_SRC_DIR . 'templates/mail.notification.tpl.php';
             $mail_content = ob_get_clean();
+            if (isset($raw_data['status']) && $raw_data['status'] === 'abandoned') {
+                $mail_content = str_replace(
+                    array('<p style="font-weight: bold">- #link_confirm#</p>', '<p style="font-weight: bold">- #link_cancel#</p>'),
+                    '',
+                    $mail_content
+                );
+            }
             $mail_content = str_replace(array_keys($links), array_values($links), $mail_content);
         }
 
@@ -734,11 +977,18 @@ class EAMail
             $params["#$key#"] = $value;
         }
 
-        $params['#link_cancel#'] = $this->generate_link_element($app_array, 'cancel');
-        $params['#link_confirm#'] = $this->generate_link_element($app_array, 'confirm');
+        if (isset($app_array['status']) && $app_array['status'] === 'abandoned') {
+            $params['#link_cancel#'] = '';
+            $params['#link_confirm#'] = '';
+            $params['#url_cancel#'] = '';
+            $params['#url_confirm#'] = '';
+        } else {
+            $params['#link_cancel#'] = $this->generate_link_element($app_array, 'cancel');
+            $params['#link_confirm#'] = $this->generate_link_element($app_array, 'confirm');
 
-        $params['#url_cancel#'] = $this->generate_url($app_array, 'cancel');
-        $params['#url_confirm#'] = $this->generate_url($app_array, 'confirm');
+            $params['#url_cancel#'] = $this->generate_url($app_array, 'cancel');
+            $params['#url_confirm#'] = $this->generate_url($app_array, 'confirm');
+        }
 
         $mail_content = str_replace(array_keys($params), array_values($params), $body_template);
 
@@ -790,11 +1040,18 @@ class EAMail
             $params["#$key#"] = $value;
         }
 
-        $params["#link_cancel#"] = $this->generate_link_element($app_array, 'cancel');
-        $params["#link_confirm#"] = $this->generate_link_element($app_array, 'confirm');
+        if (isset($app_array['status']) && $app_array['status'] === 'abandoned') {
+            $params["#link_cancel#"] = '';
+            $params["#link_confirm#"] = '';
+            $params['#url_cancel#'] = '';
+            $params['#url_confirm#'] = '';
+        } else {
+            $params["#link_cancel#"] = $this->generate_link_element($app_array, 'cancel');
+            $params["#link_confirm#"] = $this->generate_link_element($app_array, 'confirm');
 
-        $params['#url_cancel#'] = $this->generate_url($app_array, 'cancel');
-        $params['#url_confirm#'] = $this->generate_url($app_array, 'confirm');
+            $params['#url_cancel#'] = $this->generate_url($app_array, 'cancel');
+            $params['#url_confirm#'] = $this->generate_url($app_array, 'confirm');
+        }
 
         $subject_template = $this->options->get_option_value('pending.subject.visitor.email', 'Reservation : #id#');
         $enable_status_subjects = $this->options->get_option_value('enable_status_subjects', '0');
@@ -814,7 +1071,20 @@ class EAMail
         // Hook for customize subject of email template
         $subject_template = apply_filters( 'easy_ea_customer_mail_subject_template', $subject_template);
 
-        $body_template = $this->options->get_option_value('mail.' . $app->status, 'mail');
+        if ($app->status === 'abandoned') {
+            $default_template = $this->get_default_admin_template();
+            $default_template = str_replace(
+                array(
+                    '<p style="font-weight: bold">- #link_confirm#</p>',
+                    '<p style="font-weight: bold">- #link_cancel#</p>',
+                ),
+                '',
+                $default_template
+            );
+            $body_template = $this->options->get_option_value('mail.abandoned', $default_template);
+        } else {
+            $body_template = $this->options->get_option_value('mail.' . $app->status, 'mail');
+        }
 
         // Hook for customize body of email template
         $body_template = apply_filters( 'easy_ea_customer_mail_template', $body_template, $app_array, $params );
@@ -913,11 +1183,18 @@ class EAMail
             $params["#$key#"] = $value;
         }
 
-        $params["#link_cancel#"] = $this->generate_link_element($app_array, 'cancel');
-        $params["#link_confirm#"] = $this->generate_link_element($app_array, 'confirm');
+        if (isset($app_array['status']) && $app_array['status'] === 'abandoned') {
+            $params["#link_cancel#"] = '';
+            $params["#link_confirm#"] = '';
+            $params['#url_cancel#'] = '';
+            $params['#url_confirm#'] = '';
+        } else {
+            $params["#link_cancel#"] = $this->generate_link_element($app_array, 'cancel');
+            $params["#link_confirm#"] = $this->generate_link_element($app_array, 'confirm');
 
-        $params['#url_cancel#'] = $this->generate_url($app_array, 'cancel');
-        $params['#url_confirm#'] = $this->generate_url($app_array, 'confirm');
+            $params['#url_cancel#'] = $this->generate_url($app_array, 'cancel');
+            $params['#url_confirm#'] = $this->generate_url($app_array, 'confirm');
+        }
 
         $subject_template = $this->options->get_option_value('pending.subject.visitor.email', 'Reservation : #id#');
 
@@ -938,7 +1215,20 @@ class EAMail
         // Hook for customize subject of email template
         $subject_template = apply_filters( 'easy_ea_customer_mail_subject_template', $subject_template);
 
-        $body_template = $this->options->get_option_value('mail.' . $app->status, 'mail');
+        if ($app->status === 'abandoned') {
+            $default_template = $this->get_default_admin_template();
+            $default_template = str_replace(
+                array(
+                    '<p style="font-weight: bold">- #link_confirm#</p>',
+                    '<p style="font-weight: bold">- #link_cancel#</p>',
+                ),
+                '',
+                $default_template
+            );
+            $body_template = $this->options->get_option_value('mail.abandoned', $default_template);
+        } else {
+            $body_template = $this->options->get_option_value('mail.' . $app->status, 'mail');
+        }
 
         // Hook for customize body of email template
         
