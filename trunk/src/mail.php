@@ -369,40 +369,54 @@ class EAMail
      *
      * @param  int $app_id Application id
      */
+    /**
+     * Check if status notification is explicitly enabled (handles '1', 1, true, 'true').
+     *
+     * @param string $key Option key
+     * @return bool
+     */
+    private function is_status_notification_enabled($key)
+    {
+        $val = $this->options->get_option_value($key, '0');
+        return ($val === '1' || $val === 1 || $val === true || $val === 'true');
+    }
+
     public function get_user_email_notification_active(){
         $enable_options = [];        
-        if ($this->options->get_option_value('send.user.pending_email')) {
+        if ($this->is_status_notification_enabled('send.user.pending_email')) {
            $enable_options[] = 'pending';
         }
-        if ($this->options->get_option_value('send.user.reservation_email')) {
+        if ($this->is_status_notification_enabled('send.user.reservation_email')) {
            $enable_options[] = 'reservation';
         }
-        if ($this->options->get_option_value('send.user.cancelled_email')) {
+        if ($this->is_status_notification_enabled('send.user.cancelled_email')) {
            $enable_options[] = 'canceled';
+           $enable_options[] = 'cancelled';
         }
-        if ($this->options->get_option_value('send.user.confirmed_email')) {
+        if ($this->is_status_notification_enabled('send.user.confirmed_email')) {
            $enable_options[] = 'confirmed';
         }
-        if ($this->options->get_option_value('send.user.abandoned_email')) {
+        if ($this->is_status_notification_enabled('send.user.abandoned_email')) {
            $enable_options[] = 'abandoned';
         }
         return $enable_options;
     }
     public function get_worker_email_notification_active(){
         $enable_options = [];        
-        if ($this->options->get_option_value('send.worker.pending_email')) {
+        if ($this->is_status_notification_enabled('send.worker.pending_email')) {
            $enable_options[] = 'pending';
         }
-        if ($this->options->get_option_value('send.worker.reservation_email')) {
+        if ($this->is_status_notification_enabled('send.worker.reservation_email')) {
            $enable_options[] = 'reservation';
         }
-        if ($this->options->get_option_value('send.worker.cancelled_email')) {
+        if ($this->is_status_notification_enabled('send.worker.cancelled_email')) {
            $enable_options[] = 'canceled';
+           $enable_options[] = 'cancelled';
         }
-        if ($this->options->get_option_value('send.worker.confirmed_email')) {
+        if ($this->is_status_notification_enabled('send.worker.confirmed_email')) {
            $enable_options[] = 'confirmed';
         }
-        if ($this->options->get_option_value('send.worker.abandoned_email')) {
+        if ($this->is_status_notification_enabled('send.worker.abandoned_email')) {
            $enable_options[] = 'abandoned';
         }
         return $enable_options;
@@ -448,22 +462,13 @@ class EAMail
      */
     public function send_admin_email_notification_action($app_id, $worker_only = false)
     {
-        if ($this->options->get_option_value('send.worker.email', '0') == '1') {
-            $enable_actions = $this->get_worker_email_notification_active();
-            $table_name = 'ea_appointments';
-            $app = $this->models->get_row($table_name, $app_id);
-            if (!empty($enable_actions)) {
-                if (in_array($app->status, $enable_actions)) {
-                    $this->send_notification(array('id' => $app_id), $worker_only);
-                }
-            }else{
-                $default_status = $this->options->get_option_value('default.status');
-                if ($app->status == $default_status) {
-                    $this->send_status_change_mail($app_id);
-                }
-            }
-
+        $table_name = 'ea_appointments';
+        $app = $this->models->get_row($table_name, $app_id);
+        if (!$app) {
+            return;
         }
+
+        $this->send_notification(array('id' => $app_id), $worker_only);
     }
 
     /**
@@ -781,27 +786,55 @@ class EAMail
         $emails = array();
 
         // get admin emails
-        $pendingEmails = $this->options->get_option_value('pending.email', '');
+        if (!$worker_only) {
+            $pendingEmails = $this->options->get_option_value('pending.email', '');
 
-        if (!empty($pendingEmails)) {
-            $emails = array_merge($emails, explode(',', $pendingEmails));
+            if (!empty($pendingEmails)) {
+                $admin_emails = array_map('trim', explode(',', $pendingEmails));
+                foreach ($admin_emails as $admin_email) {
+                    if (is_email($admin_email)) {
+                        $emails[] = $admin_email;
+                    }
+                }
+            }
         }
 
-        $app_id = $input_data['id'];
+        $app_id = isset($input_data['id']) ? (int)$input_data['id'] : 0;
+        if (empty($app_id)) {
+            return;
+        }
 
         $raw_data = $this->models->get_appintment_by_id($app_id);
+        if (empty($raw_data)) {
+            return;
+        }
 
         $raw_data = $this->escape_data($raw_data);
 
         // worker email
         if ($this->options->get_option_value('send.worker.email', '0') == '1') {
-            // if we only want to send it to worker
-            if ($worker_only) {
-                $emails = array();
+            $worker_actions = $this->get_worker_email_notification_active();
+            $should_send_worker = false;
+            if (!empty($worker_actions)) {
+                if (isset($raw_data['status']) && in_array($raw_data['status'], $worker_actions, true)) {
+                    $should_send_worker = true;
+                }
+            } else {
+                $default_status = $this->options->get_option_value('default.status', 'pending');
+                if (isset($raw_data['status']) && $raw_data['status'] === $default_status) {
+                    $should_send_worker = true;
+                }
             }
 
-            $emails[] = $raw_data['worker_email'];
+            if ($should_send_worker && !empty($raw_data['worker_email'])) {
+                $worker_email = trim($raw_data['worker_email']);
+                if (is_email($worker_email)) {
+                    $emails[] = $worker_email;
+                }
+            }
         }
+
+        $emails = array_unique($emails);
 
         if (empty($emails)) {
             return;
@@ -824,7 +857,12 @@ class EAMail
             if ($key == 'start' || $key == 'end') {
                 $start_date = $raw_data['date'] . ' ' . $raw_data[$key];
                 $temp_date = DateTime::createFromFormat('Y-m-d H:i:s', $start_date, $this->get_wp_timezone());
-                $value = $temp_date->format($time_format);
+                if ($temp_date === false) {
+                    $temp_date = DateTime::createFromFormat('Y-m-d H:i', $start_date, $this->get_wp_timezone());
+                }
+                if ($temp_date !== false) {
+                    $value = $temp_date->format($time_format);
+                }
             }
 
             if ($key == 'date') {
@@ -970,6 +1008,9 @@ class EAMail
             if ($key == 'start' || $key == 'end') {
                 $start_date = $app_array['date'] . ' ' . $app_array[$key];
                 $temp_date = DateTime::createFromFormat('Y-m-d H:i:s', $start_date, $this->get_wp_timezone());
+                if ($temp_date === false) {
+                    $temp_date = DateTime::createFromFormat('Y-m-d H:i', $start_date, $this->get_wp_timezone());
+                }
                 if ($temp_date !== false) {
                     $value = $temp_date->format($time_format);
                 }

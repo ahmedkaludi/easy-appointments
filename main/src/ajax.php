@@ -2007,6 +2007,7 @@ class EAAjax
             }
             do_action('easy_ea_new_app_from_customer', $appointment['id'], $appointment, true);
             do_action('easy_ea_repeat_appointment_mail_notification', $appointment['id'],$appointments);
+            $this->mail->send_notification(array('id' => $appointment['id']));
         }else {
             $check = $this->logic->can_update_reservation($appointment, $data);
             if (!$check['status']) {
@@ -2058,7 +2059,7 @@ class EAAjax
             if ($response == false) {
                 $this->send_err_json_result('{"err":true}');
             } else {
-                $this->mail->send_notification($data);
+                $this->mail->send_notification(array('id' => $appointment['id']));
 
                 // trigger send user email notification appointment
                 do_action('easy_ea_user_email_notification', $appointment['id']);

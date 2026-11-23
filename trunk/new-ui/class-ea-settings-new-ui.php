@@ -732,7 +732,7 @@ class EA_Settings_New_UI
 
             // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, PluginCheck.Security.DirectDB.UnescapedDBParameter -- Querying custom settings table using local prefixed table.
             $existing_id = $wpdb->get_var(
-                $wpdb->prepare("SELECT id FROM {$table} WHERE ea_key = %s", $key) // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+                $wpdb->prepare("SELECT id FROM {$table} WHERE ea_key = %s LIMIT 1", $key) // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
             );
 
             if ($existing_id) {
@@ -740,9 +740,9 @@ class EA_Settings_New_UI
                 $wpdb->update(
                     $table,
                     array('ea_value' => $value),
-                    array('id' => (int) $existing_id),
+                    array('ea_key' => $key),
                     array('%s'),
-                    array('%d')
+                    array('%s')
                 );
             } else {
                 // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Inserting into custom settings table.
