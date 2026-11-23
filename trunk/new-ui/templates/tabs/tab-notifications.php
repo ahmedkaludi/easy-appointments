@@ -29,6 +29,7 @@ if ( ! defined( 'WPINC' ) ) {
                             <button type="button" class="ea-nsui-mail-tab" data-target="#ea-nsui-mail-user-reservation"><?php esc_html_e('Reservation', 'easy-appointments'); ?></button>
                             <button type="button" class="ea-nsui-mail-tab" data-target="#ea-nsui-mail-user-cancelled"><?php esc_html_e('Cancelled', 'easy-appointments'); ?></button>
                             <button type="button" class="ea-nsui-mail-tab" data-target="#ea-nsui-mail-user-confirmed"><?php esc_html_e('Confirmed', 'easy-appointments'); ?></button>
+                            <button type="button" class="ea-nsui-mail-tab" data-target="#ea-nsui-mail-user-abandoned"><?php esc_html_e('Abandoned', 'easy-appointments'); ?></button>
                         </div>
 
                         <div id="ea-nsui-mail-user-pending" class="ea-nsui-mail-tab-content is-active">
@@ -42,6 +43,9 @@ if ( ! defined( 'WPINC' ) ) {
                         </div>
                         <div id="ea-nsui-mail-user-confirmed" class="ea-nsui-mail-tab-content">
                             <textarea id="mail-confirmed" class="ea-nsui-textarea ea-nsui-rich-editor" data-key="mail.confirmed"><?php echo esc_textarea($ea_get('mail.confirmed', '')); ?></textarea>
+                        </div>
+                        <div id="ea-nsui-mail-user-abandoned" class="ea-nsui-mail-tab-content">
+                            <textarea id="mail-abandoned" class="ea-nsui-textarea ea-nsui-rich-editor" data-key="mail.abandoned"><?php echo esc_textarea($ea_get('mail.abandoned', '')); ?></textarea>
                         </div>
 
                         <div class="ea-nsui-mail-tags-hint">
@@ -70,6 +74,7 @@ if ( ! defined( 'WPINC' ) ) {
                             <button type="button" class="ea-nsui-mail-tab" data-target="#ea-nsui-mail-admin-reservation"><?php esc_html_e('Reservation', 'easy-appointments'); ?></button>
                             <button type="button" class="ea-nsui-mail-tab" data-target="#ea-nsui-mail-admin-cancelled"><?php esc_html_e('Cancelled', 'easy-appointments'); ?></button>
                             <button type="button" class="ea-nsui-mail-tab" data-target="#ea-nsui-mail-admin-confirmed"><?php esc_html_e('Confirmed', 'easy-appointments'); ?></button>
+                            <button type="button" class="ea-nsui-mail-tab" data-target="#ea-nsui-mail-admin-abandoned"><?php esc_html_e('Abandoned', 'easy-appointments'); ?></button>
                         </div>
 
                         <div id="ea-nsui-mail-admin-pending" class="ea-nsui-mail-tab-content is-active">
@@ -98,6 +103,13 @@ if ( ! defined( 'WPINC' ) ) {
                             <div class="ea-nsui-mail-tab-footer">
                                 <small><?php esc_html_e('Leave a status blank to fall back to the Pending admin template.', 'easy-appointments'); ?></small>
                                 <button type="button" class="ea-nsui-load-default-admin" data-target="mail-admin-confirmed"><?php esc_html_e('Load default admin template', 'easy-appointments'); ?></button>
+                            </div>
+                        </div>
+                        <div id="ea-nsui-mail-admin-abandoned" class="ea-nsui-mail-tab-content">
+                            <textarea id="mail-admin-abandoned" class="ea-nsui-textarea ea-nsui-rich-editor" data-key="mail.admin.abandoned"><?php echo esc_textarea($ea_get('mail.admin.abandoned', '')); ?></textarea>
+                            <div class="ea-nsui-mail-tab-footer">
+                                <small><?php esc_html_e('Leave a status blank to fall back to the Pending admin template.', 'easy-appointments'); ?></small>
+                                <button type="button" class="ea-nsui-load-default-admin" data-target="mail-admin-abandoned"><?php esc_html_e('Load default admin template', 'easy-appointments'); ?></button>
                             </div>
                         </div>
                     </div>
@@ -368,6 +380,14 @@ if ( ! defined( 'WPINC' ) ) {
                                 <input type="text" class="ea-nsui-input" data-key="reservation_subject_admin" value="<?php echo esc_attr($ea_get('reservation_subject_admin', '')); ?>">
                             </div>
                         </div>
+                        <div class="ea-nsui-row ea-nsui-status-subject">
+                            <div class="ea-nsui-row-label">
+                                <span class="ea-nsui-row-title"><?php esc_html_e('Abandoned', 'easy-appointments'); ?></span>
+                            </div>
+                            <div class="ea-nsui-row-control ea-nsui-row-control-stack">
+                                <input type="text" class="ea-nsui-input" data-key="abandoned_subject_admin" value="<?php echo esc_attr($ea_get('abandoned_subject_admin', '')); ?>">
+                            </div>
+                        </div>
 
                         <div class="ea-nsui-row ea-nsui-status-subject">
                             <div class="ea-nsui-row-label"></div>
@@ -399,12 +419,20 @@ if ( ! defined( 'WPINC' ) ) {
                                 <input type="text" class="ea-nsui-input" data-key="cancelled_subject_visitor" value="<?php echo esc_attr($ea_get('cancelled_subject_visitor', '')); ?>">
                             </div>
                         </div>
-                        <div class="ea-nsui-row ea-nsui-row-last ea-nsui-status-subject">
+                        <div class="ea-nsui-row ea-nsui-status-subject">
                             <div class="ea-nsui-row-label">
                                 <span class="ea-nsui-row-title"><?php esc_html_e('Reservation', 'easy-appointments'); ?></span>
                             </div>
                             <div class="ea-nsui-row-control ea-nsui-row-control-stack">
                                 <input type="text" class="ea-nsui-input" data-key="reservation_subject_visitor" value="<?php echo esc_attr($ea_get('reservation_subject_visitor', '')); ?>">
+                            </div>
+                        </div>
+                        <div class="ea-nsui-row ea-nsui-row-last ea-nsui-status-subject">
+                            <div class="ea-nsui-row-label">
+                                <span class="ea-nsui-row-title"><?php esc_html_e('Abandoned', 'easy-appointments'); ?></span>
+                            </div>
+                            <div class="ea-nsui-row-control ea-nsui-row-control-stack">
+                                <input type="text" class="ea-nsui-input" data-key="abandoned_subject_visitor" value="<?php echo esc_attr($ea_get('abandoned_subject_visitor', '')); ?>">
                             </div>
                         </div>
                     </div>

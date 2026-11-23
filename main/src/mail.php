@@ -908,6 +908,8 @@ class EAMail
                 $subject_template = $this->options->get_option_value('cancelled_subject_admin', $subject_template);
             } elseif ($raw_data['status'] == 'reservation') {
                 $subject_template = $this->options->get_option_value('reservation_subject_admin', $subject_template);
+            } elseif ($raw_data['status'] == 'abandoned') {
+                $subject_template = $this->options->get_option_value('abandoned_subject_admin', $subject_template);
             }
         }
         $send_from = $this->options->get_option_value('send.from.email', '');
@@ -918,17 +920,22 @@ class EAMail
         $emails = apply_filters('easy_ea_admin_mail_address_list', $emails, $raw_data);
 
         $body_template = $this->options->get_option_value('mail.admin', '');
+        $pending_admin_tpl = $this->options->get_option_value('mail.admin.pending', $body_template);
         
         if ($raw_data['status'] == 'pending') {
-            $body_template = $this->options->get_option_value('mail.admin.pending', $body_template);
+            $body_template = $pending_admin_tpl;
         } elseif ($raw_data['status'] == 'confirmed') {
-            $body_template = $this->options->get_option_value('mail.admin.confirmed', $body_template);
+            $confirmed_admin = $this->options->get_option_value('mail.admin.confirmed', '');
+            $body_template = !empty(trim($confirmed_admin)) ? $confirmed_admin : $pending_admin_tpl;
         } elseif ($raw_data['status'] == 'canceled') {
-            $body_template = $this->options->get_option_value('mail.admin.canceled', $body_template);
+            $canceled_admin = $this->options->get_option_value('mail.admin.canceled', '');
+            $body_template = !empty(trim($canceled_admin)) ? $canceled_admin : $pending_admin_tpl;
         } elseif ($raw_data['status'] == 'reservation') {
-            $body_template = $this->options->get_option_value('mail.admin.reservation', $body_template);
+            $res_admin = $this->options->get_option_value('mail.admin.reservation', '');
+            $body_template = !empty(trim($res_admin)) ? $res_admin : $pending_admin_tpl;
         } elseif ($raw_data['status'] == 'abandoned') {
-            $body_template = $this->options->get_option_value('mail.admin.abandoned', '');
+            $abandoned_admin = $this->options->get_option_value('mail.admin.abandoned', '');
+            $body_template = !empty(trim($abandoned_admin)) ? $abandoned_admin : $pending_admin_tpl;
         }
         $body_template = apply_filters('easy_ea_admin_mail_template', $body_template);
 
@@ -1108,6 +1115,8 @@ class EAMail
                 $subject_template = $this->options->get_option_value('cancelled_subject_visitor', $subject_template);
             } elseif ($app_array['status'] == 'reservation') {
                 $subject_template = $this->options->get_option_value('reservation_subject_visitor', $subject_template);
+            } elseif ($app_array['status'] == 'abandoned') {
+                $subject_template = $this->options->get_option_value('abandoned_subject_visitor', $subject_template);
             }
         }
 
@@ -1115,16 +1124,21 @@ class EAMail
         $subject_template = apply_filters( 'easy_ea_customer_mail_subject_template', $subject_template);
 
         if ($app->status === 'abandoned') {
-            $default_template = $this->get_default_admin_template();
-            $default_template = str_replace(
-                array(
-                    '<p style="font-weight: bold">- #link_confirm#</p>',
-                    '<p style="font-weight: bold">- #link_cancel#</p>',
-                ),
-                '',
-                $default_template
-            );
-            $body_template = $this->options->get_option_value('mail.abandoned', $default_template);
+            $abandoned_custom = $this->options->get_option_value('mail.abandoned', '');
+            if (!empty(trim($abandoned_custom))) {
+                $body_template = $abandoned_custom;
+            } else {
+                $default_template = $this->get_default_admin_template();
+                $default_template = str_replace(
+                    array(
+                        '<p style="font-weight: bold">- #link_confirm#</p>',
+                        '<p style="font-weight: bold">- #link_cancel#</p>',
+                    ),
+                    '',
+                    $default_template
+                );
+                $body_template = $default_template;
+            }
         } else {
             $body_template = $this->options->get_option_value('mail.' . $app->status, 'mail');
         }
@@ -1252,6 +1266,8 @@ class EAMail
                 $subject_template = $this->options->get_option_value('canceled_subject_visitor', $subject_template);
             } elseif ($app_array['status'] == 'reservation') {
                 $subject_template = $this->options->get_option_value('reservation_subject_visitor', $subject_template);
+            } elseif ($app_array['status'] == 'abandoned') {
+                $subject_template = $this->options->get_option_value('abandoned_subject_visitor', $subject_template);
             }
         }
 
@@ -1259,16 +1275,21 @@ class EAMail
         $subject_template = apply_filters( 'easy_ea_customer_mail_subject_template', $subject_template);
 
         if ($app->status === 'abandoned') {
-            $default_template = $this->get_default_admin_template();
-            $default_template = str_replace(
-                array(
-                    '<p style="font-weight: bold">- #link_confirm#</p>',
-                    '<p style="font-weight: bold">- #link_cancel#</p>',
-                ),
-                '',
-                $default_template
-            );
-            $body_template = $this->options->get_option_value('mail.abandoned', $default_template);
+            $abandoned_custom = $this->options->get_option_value('mail.abandoned', '');
+            if (!empty(trim($abandoned_custom))) {
+                $body_template = $abandoned_custom;
+            } else {
+                $default_template = $this->get_default_admin_template();
+                $default_template = str_replace(
+                    array(
+                        '<p style="font-weight: bold">- #link_confirm#</p>',
+                        '<p style="font-weight: bold">- #link_cancel#</p>',
+                    ),
+                    '',
+                    $default_template
+                );
+                $body_template = $default_template;
+            }
         } else {
             $body_template = $this->options->get_option_value('mail.' . $app->status, 'mail');
         }
