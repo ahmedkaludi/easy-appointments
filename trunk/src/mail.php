@@ -190,9 +190,24 @@ class EAMail
         delete_transient($rate_key);
 
         // check maybe it is a two step process
-        // phpcs:ignore WordPress.Security.NonceVerification.Missing
-        if (empty($_POST['confirmed']) && (!empty($_POST['confirmed']) && $_POST['confirmed'] !== 'true')) {
-            $this->link_action_additional_step($action, $data);
+        $is_two_step = $this->options->get_option_value('mail.action.two_step');
+        if (!empty($is_two_step)) {
+            // phpcs:ignore WordPress.Security.NonceVerification.Missing
+            $is_post      = ('POST' === strtoupper($_SERVER['REQUEST_METHOD'] ?? ''));
+            // phpcs:ignore WordPress.Security.NonceVerification.Missing
+            $is_confirmed = $is_post && !empty($_POST['confirmed']) && ('true' === $_POST['confirmed']);
+
+            // For cancellation, require confirmation checkbox to prevent automated headless browser scanners (e.g. Defender Safe Links) from auto-canceling
+            // phpcs:ignore WordPress.Security.NonceVerification.Missing
+            $has_checkbox_flag = isset($_POST['has_confirm_checkbox']);
+            // phpcs:ignore WordPress.Security.NonceVerification.Missing
+            $is_checkbox_valid = !empty($_POST['confirm_checkbox']) && ('yes' === $_POST['confirm_checkbox']);
+            $is_valid_cancel   = $is_confirmed && (!$has_checkbox_flag || $is_checkbox_valid);
+            $is_valid_action   = ('cancel' === $action) ? $is_valid_cancel : $is_confirmed;
+
+            if (!$is_valid_action) {
+                $this->link_action_additional_step($action, $data);
+            }
         }
 
         $table = 'ea_appointments';
