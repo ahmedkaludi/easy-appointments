@@ -192,16 +192,18 @@ class EAMail
         // check maybe it is a two step process
         $is_two_step = $this->options->get_option_value('mail.action.two_step');
         if (!empty($is_two_step)) {
+            $request_method = isset($_SERVER['REQUEST_METHOD']) ? sanitize_text_field(wp_unslash($_SERVER['REQUEST_METHOD'])) : '';
+            $is_post        = ('POST' === strtoupper($request_method));
             // phpcs:ignore WordPress.Security.NonceVerification.Missing
-            $is_post      = ('POST' === strtoupper($_SERVER['REQUEST_METHOD'] ?? ''));
-            // phpcs:ignore WordPress.Security.NonceVerification.Missing
-            $is_confirmed = $is_post && !empty($_POST['confirmed']) && ('true' === $_POST['confirmed']);
+            $post_confirmed = isset($_POST['confirmed']) ? sanitize_text_field(wp_unslash($_POST['confirmed'])) : '';
+            $is_confirmed   = $is_post && ('true' === $post_confirmed);
 
             // For cancellation, require confirmation checkbox to prevent automated headless browser scanners (e.g. Defender Safe Links) from auto-canceling
             // phpcs:ignore WordPress.Security.NonceVerification.Missing
             $has_checkbox_flag = isset($_POST['has_confirm_checkbox']);
             // phpcs:ignore WordPress.Security.NonceVerification.Missing
-            $is_checkbox_valid = !empty($_POST['confirm_checkbox']) && ('yes' === $_POST['confirm_checkbox']);
+            $confirm_checkbox  = isset($_POST['confirm_checkbox']) ? sanitize_text_field(wp_unslash($_POST['confirm_checkbox'])) : '';
+            $is_checkbox_valid = ('yes' === $confirm_checkbox);
             $is_valid_cancel   = $is_confirmed && (!$has_checkbox_flag || $is_checkbox_valid);
             $is_valid_action   = ('cancel' === $action) ? $is_valid_cancel : $is_confirmed;
 

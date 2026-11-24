@@ -16,6 +16,11 @@ if (!defined('WPINC')) {
 }
 ?>
 <div id="ea-admin-app" class="wrap ea-nsui-wrap">
+    <?php
+    if (class_exists('EA_Black_Friday')) {
+        EA_Black_Friday::render_banner();
+    }
+    ?>
     <div id="ea-nsui-app" class="ea-nsui">
 
         <div id="ea-nsui-notice" class="ea-nsui-notice" role="status" aria-live="polite"></div>

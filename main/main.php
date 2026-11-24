@@ -75,6 +75,7 @@ require_once dirname(__FILE__) . '/new-ui/class-ea-settings-new-ui.php';
 require EA_PLUGIN_DIR . 'new-ui/class-ea-vacation-new-ui.php';
 require EA_PLUGIN_DIR . 'new-ui/class-ea-help-support-new-ui.php';
 require EA_PLUGIN_DIR . 'new-ui/class-ea-ui-mode-switcher.php';
+require EA_PLUGIN_DIR . 'black-friday/class-ea-black-friday.php';
 
 /**
  * Entry point
@@ -138,6 +139,8 @@ class EasyAppointment
 
             $ui_switcher = new EA_UI_Switcher();
             $ui_switcher->init();
+
+            EA_Black_Friday::init();
         } else {
             /** @var Easy_EA_Frontend $frontend */
             $frontend = $this->container['frontend'];

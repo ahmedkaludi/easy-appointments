@@ -931,14 +931,14 @@ class EA_Settings_New_UI
 
         $palette_colors = array();
 
-        $is_block_theme = function_exists('wp_is_block_theme') && wp_is_block_theme();
+        $is_block_theme = function_exists('wp_is_block_theme') && call_user_func('wp_is_block_theme');
 
         // 1. Block Themes / Full Site Editing (FSE): ONLY if active theme is truly a block theme
         if ($is_block_theme) {
             if (function_exists('wp_get_global_settings')) {
-                $theme_palette   = wp_get_global_settings(array('color', 'palette', 'theme'));
-                $custom_palette  = wp_get_global_settings(array('color', 'palette', 'custom'));
-                $default_palette = wp_get_global_settings(array('color', 'palette', 'default'));
+                $theme_palette   = call_user_func('wp_get_global_settings', array('color', 'palette', 'theme'));
+                $custom_palette  = call_user_func('wp_get_global_settings', array('color', 'palette', 'custom'));
+                $default_palette = call_user_func('wp_get_global_settings', array('color', 'palette', 'default'));
 
                 $merged_palettes = array();
                 if (is_array($custom_palette)) {
@@ -978,10 +978,10 @@ class EA_Settings_New_UI
             };
 
             if (function_exists('wp_get_global_styles')) {
-                $btn_bg_raw  = wp_get_global_styles(array('elements', 'button', 'color', 'background'));
-                $btn_txt_raw = wp_get_global_styles(array('elements', 'button', 'color', 'text'));
-                $bg_raw      = wp_get_global_styles(array('color', 'background'));
-                $txt_raw     = wp_get_global_styles(array('color', 'text'));
+                $btn_bg_raw  = call_user_func('wp_get_global_styles', array('elements', 'button', 'color', 'background'));
+                $btn_txt_raw = call_user_func('wp_get_global_styles', array('elements', 'button', 'color', 'text'));
+                $bg_raw      = call_user_func('wp_get_global_styles', array('color', 'background'));
+                $txt_raw     = call_user_func('wp_get_global_styles', array('color', 'text'));
 
                 $res_btn_bg  = $resolve_preset($btn_bg_raw);
                 $res_btn_txt = $resolve_preset($btn_txt_raw);

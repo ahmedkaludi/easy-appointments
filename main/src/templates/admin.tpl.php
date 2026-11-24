@@ -8,6 +8,11 @@ defined( 'ABSPATH' ) || exit;
 
     ?>
     <div class="wrap">
+        <?php
+        if (class_exists('EA_Black_Friday')) {
+            EA_Black_Friday::render_banner();
+        }
+        ?>
         <div id="tab-content"></div>
     </div>
 </script>
