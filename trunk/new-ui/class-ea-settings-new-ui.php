@@ -123,19 +123,23 @@ class EA_Settings_New_UI
         'confirmed_subject_admin',
         'cancelled_subject_admin',
         'reservation_subject_admin',
+        'abandoned_subject_admin',
         'pending_subject_visitor',
         'confirmed_subject_visitor',
         'cancelled_subject_visitor',
         'reservation_subject_visitor',
+        'abandoned_subject_visitor',
         'mail.pending',
         'mail.reservation',
         'mail.canceled',
         'mail.confirmed',
+        'mail.abandoned',
         'mail.admin',
         'mail.admin.pending',
         'mail.admin.reservation',
         'mail.admin.confirmed',
         'mail.admin.canceled',
+        'mail.admin.abandoned',
         'fullcalendar.public',
         'fullcalendar.my_booking',
         'fullcalendar.my_booking_full_calendar',
@@ -684,10 +688,12 @@ class EA_Settings_New_UI
             'mail.reservation',
             'mail.canceled',
             'mail.confirmed',
+            'mail.abandoned',
             'mail.admin.pending',
             'mail.admin.reservation',
             'mail.admin.canceled',
             'mail.admin.confirmed',
+            'mail.admin.abandoned',
             'fullcalendar.event.template',
             'custom.css',
         );
@@ -732,7 +738,7 @@ class EA_Settings_New_UI
 
             // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, PluginCheck.Security.DirectDB.UnescapedDBParameter -- Querying custom settings table using local prefixed table.
             $existing_id = $wpdb->get_var(
-                $wpdb->prepare("SELECT id FROM {$table} WHERE ea_key = %s", $key) // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+                $wpdb->prepare("SELECT id FROM {$table} WHERE ea_key = %s LIMIT 1", $key) // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
             );
 
             if ($existing_id) {
@@ -740,9 +746,9 @@ class EA_Settings_New_UI
                 $wpdb->update(
                     $table,
                     array('ea_value' => $value),
-                    array('id' => (int) $existing_id),
+                    array('ea_key' => $key),
                     array('%s'),
-                    array('%d')
+                    array('%s')
                 );
             } else {
                 // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Inserting into custom settings table.
@@ -925,14 +931,14 @@ class EA_Settings_New_UI
 
         $palette_colors = array();
 
-        $is_block_theme = function_exists('wp_is_block_theme') && wp_is_block_theme();
+        $is_block_theme = function_exists('wp_is_block_theme') && call_user_func('wp_is_block_theme');
 
         // 1. Block Themes / Full Site Editing (FSE): ONLY if active theme is truly a block theme
         if ($is_block_theme) {
             if (function_exists('wp_get_global_settings')) {
-                $theme_palette   = wp_get_global_settings(array('color', 'palette', 'theme'));
-                $custom_palette  = wp_get_global_settings(array('color', 'palette', 'custom'));
-                $default_palette = wp_get_global_settings(array('color', 'palette', 'default'));
+                $theme_palette   = call_user_func('wp_get_global_settings', array('color', 'palette', 'theme'));
+                $custom_palette  = call_user_func('wp_get_global_settings', array('color', 'palette', 'custom'));
+                $default_palette = call_user_func('wp_get_global_settings', array('color', 'palette', 'default'));
 
                 $merged_palettes = array();
                 if (is_array($custom_palette)) {
@@ -972,10 +978,10 @@ class EA_Settings_New_UI
             };
 
             if (function_exists('wp_get_global_styles')) {
-                $btn_bg_raw  = wp_get_global_styles(array('elements', 'button', 'color', 'background'));
-                $btn_txt_raw = wp_get_global_styles(array('elements', 'button', 'color', 'text'));
-                $bg_raw      = wp_get_global_styles(array('color', 'background'));
-                $txt_raw     = wp_get_global_styles(array('color', 'text'));
+                $btn_bg_raw  = call_user_func('wp_get_global_styles', array('elements', 'button', 'color', 'background'));
+                $btn_txt_raw = call_user_func('wp_get_global_styles', array('elements', 'button', 'color', 'text'));
+                $bg_raw      = call_user_func('wp_get_global_styles', array('color', 'background'));
+                $txt_raw     = call_user_func('wp_get_global_styles', array('color', 'text'));
 
                 $res_btn_bg  = $resolve_preset($btn_bg_raw);
                 $res_btn_txt = $resolve_preset($btn_txt_raw);

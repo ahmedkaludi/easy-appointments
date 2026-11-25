@@ -5,7 +5,7 @@ Tags: appointment, appointments, Booking, calendar, reservation
 Requires at least: 5.0
 Tested up to: 7.1
 Requires PHP: 5.3
-Stable tag: 4.0.5
+Stable tag: 4.0.6
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -261,6 +261,12 @@ Terms of use and Policy : https://fullcalendar.io/license
 25. Admin panel - Report - Export page
 
 == Changelog ==
+
+= 4.0.6 (2026-11-24)
+* Added Abandoned email template – Not able to create/used to used canceled #376
+* Added Black Friday / Cyber Monday promotional banner #380
+* Fixed Admin and Worker Email Notifications Not Triggered for Pending Bookings in Easy Appointments v4.0.5 #378
+* Fixed Appointments auto canceling #379
 
 = 4.0.5 (2026-11-12)
 * Added support for syncing Google Calendar appointment time updates to EA #310

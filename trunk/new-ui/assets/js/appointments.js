@@ -51,6 +51,8 @@
         var $drawerOverlay = $('#ea-naui-drawer-overlay');
         var editingId = null; // null = creating a new appointment
         var editingStart = null;
+        var editingDate = null;
+        var dateManuallyChanged = false;
         var cloningFrom = null;
 
         jQuery.datepicker.setDefaults(jQuery.datepicker.regional[cfg.datepickerLocale] || {});
@@ -943,6 +945,8 @@
         function openDrawer(row, isClone) {
             editingId = isClone ? null : (row.id || null);
             editingStart = isClone ? null : (row.start || null);
+            editingDate = isClone ? null : (row.date || null);
+            dateManuallyChanged = false;
             cloningFrom = isClone ? row.id : null;
 
             var drawerTitle;
@@ -998,13 +1002,14 @@
             $('#ea-naui-input-date')
                 .datepicker('destroy')
                 .datepicker({
-                    dateFormat: (jQuery.datepicker.regional[cfg.datepickerLocale] || {}).dateFormat,
+                    dateFormat: (jQuery.datepicker.regional[cfg.datepickerLocale] || {}).dateFormat || 'yy-mm-dd',
                     minDate: editingId ? null : 0,
                     beforeShowDay: vacationCheck,
                     beforeShow: function (input, inst) {
                         inst.dpDiv.addClass('ea-mnui-datepicker-popup');
                     },
                     onSelect: function () {
+                        dateManuallyChanged = true;
                         $(this).trigger('change');
                     }
                 })
@@ -1129,6 +1134,8 @@
             $('#ea-naui-input-date').datepicker('hide').trigger('blur');
             editingId = null;
             editingStart = null;
+            editingDate = null;
+            dateManuallyChanged = false;
             cloningFrom = null;
         }
 
@@ -1321,7 +1328,10 @@
             $('#ea-naui-input-date').datepicker('refresh');
             refreshTimeSlots();
         });
-        $drawer.on('change', '#ea-naui-input-date', refreshTimeSlots);
+        $drawer.on('change', '#ea-naui-input-date', function () {
+            dateManuallyChanged = true;
+            refreshTimeSlots();
+        });
 
         $app.on('keydown', '#ea-naui-drawer', function (e) {
             if (e.which === 27) {
@@ -1344,7 +1354,18 @@
                 payload[$field.data('prop')] = $field.val();
             });
 
-            payload.date = moment($('#ea-naui-input-date').datepicker('getDate')).format('YYYY-MM-DD');
+            if (editingId && !dateManuallyChanged && editingDate) {
+                payload.date = editingDate;
+            } else {
+                var pickedDate = $('#ea-naui-input-date').datepicker('getDate');
+                if (pickedDate) {
+                    payload.date = moment(pickedDate).format('YYYY-MM-DD');
+                } else if (editingDate) {
+                    payload.date = editingDate;
+                } else {
+                    payload.date = moment().format('YYYY-MM-DD');
+                }
+            }
             payload.end_date = payload.date;
 
             if ($('#ea-naui-send-mail').is(':checked')) {

@@ -1,0 +1,472 @@
+/**
+ * Easy Appointments - Black Friday / Cyber Monday / Christmas Sale Banner Styles
+ *
+ * Dedicated styling matching the promotional banner design.
+ */
+
+.ea-bf-banner {
+    position: relative;
+    clear: both;
+    width: 100%;
+    overflow: hidden;
+    background: radial-gradient(circle at 22% 50%, #2b0c26 0%, #170a22 45%, #09090f 100%);
+    background-color: #09090f;
+    border: 1px solid rgba(255, 60, 110, 0.28);
+    border-radius: 12px;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.45), 0 0 35px rgba(255, 42, 95, 0.08);
+    padding: 14px 22px 14px 24px;
+    margin: 0 0 20px 0;
+    box-sizing: border-box;
+    color: #ffffff;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    transition: opacity 0.35s ease, max-height 0.4s ease, margin 0.35s ease, padding 0.35s ease, transform 0.35s ease;
+    max-height: 500px;
+}
+
+.ea-bf-banner * {
+    box-sizing: border-box;
+}
+
+/* Dismissing state animation */
+.ea-bf-banner.ea-bf-dismissing {
+    opacity: 0 !important;
+    transform: translateY(-8px) scale(0.98);
+    max-height: 0 !important;
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+    pointer-events: none;
+}
+
+/* Background atmospheric glows */
+.ea-bf-bg-glow {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(50px);
+    pointer-events: none;
+    z-index: 1;
+}
+
+.ea-bf-bg-glow-left {
+    top: -20%;
+    left: 8%;
+    width: 260px;
+    height: 160px;
+    background: rgba(244, 63, 94, 0.16);
+}
+
+.ea-bf-bg-glow-right {
+    bottom: -20%;
+    right: 15%;
+    width: 240px;
+    height: 140px;
+    background: rgba(245, 158, 11, 0.12);
+}
+
+/* Main Container */
+.ea-bf-container {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    width: 100%;
+}
+
+/* ==========================================================================
+   Left Column
+   ========================================================================== */
+.ea-bf-left-col {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    flex: 1 1 520px;
+    min-width: 280px;
+}
+
+/* Top Pill Badge */
+.ea-bf-pill-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(244, 63, 94, 0.12);
+    border: 1px solid rgba(244, 63, 94, 0.4);
+    border-radius: 9999px;
+    padding: 3px 10px 3px 8px;
+    width: fit-content;
+}
+
+.ea-bf-pill-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #f43f5e;
+    box-shadow: 0 0 6px #f43f5e;
+    display: inline-block;
+}
+
+.ea-bf-pill-icon {
+    font-size: 11px;
+    color: #f43f5e;
+    line-height: 1;
+}
+
+.ea-bf-pill-text {
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 0.6px;
+    color: #fda4af;
+    text-transform: uppercase;
+    line-height: 1;
+}
+
+/* Main Content: 60% OFF + Headings */
+.ea-bf-main-content {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+/* Discount Badge */
+.ea-bf-discount-badge {
+    display: inline-flex;
+    align-items: baseline;
+    justify-content: center;
+    gap: 4px;
+    background: linear-gradient(135deg, #ff2a5f 0%, #e11d48 100%);
+    box-shadow: 0 0 16px rgba(255, 42, 95, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    border-radius: 8px;
+    padding: 6px 12px;
+    flex-shrink: 0;
+}
+
+.ea-bf-discount-num {
+    font-size: 20px;
+    font-weight: 900;
+    color: #ffffff;
+    line-height: 1;
+}
+
+.ea-bf-discount-lbl {
+    font-size: 11px;
+    font-weight: 800;
+    color: #ffffff;
+    text-transform: uppercase;
+    line-height: 1;
+}
+
+/* Text Group */
+.ea-bf-text-group {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.ea-bf-heading {
+    font-size: 14.5px;
+    font-weight: 800;
+    color: #facc15;
+    text-transform: uppercase;
+    margin: 0;
+    padding: 0;
+    line-height: 1.25;
+    letter-spacing: 0.2px;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+.ea-bf-subheading {
+    font-size: 12px;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.92);
+    margin: 0;
+    padding: 0;
+    line-height: 1.3;
+}
+
+/* Coupon Button */
+.ea-bf-coupon-wrap {
+    display: flex;
+    align-items: center;
+    margin-top: 1px;
+}
+
+.ea-bf-coupon-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(245, 158, 11, 0.08);
+    border: 1.5px dashed #f59e0b;
+    border-radius: 5px;
+    padding: 3px 10px;
+    color: #fbbf24;
+    font-size: 11.5px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+    outline: none;
+    line-height: 1.4;
+}
+
+.ea-bf-coupon-badge:hover,
+.ea-bf-coupon-badge:focus {
+    background: rgba(245, 158, 11, 0.18);
+    border-color: #fcd34d;
+    box-shadow: 0 0 10px rgba(245, 158, 11, 0.3);
+}
+
+.ea-bf-coupon-prefix {
+    font-weight: 600;
+    color: #f59e0b;
+}
+
+.ea-bf-coupon-code {
+    font-weight: 800;
+    color: #fef08a;
+    letter-spacing: 0.5px;
+}
+
+.ea-bf-copy-icon {
+    display: inline-flex;
+    align-items: center;
+    color: #f59e0b;
+}
+
+.ea-bf-copied-indicator {
+    display: none;
+    margin-left: 4px;
+    padding: 1px 6px;
+    background: #10b981;
+    color: #ffffff;
+    font-size: 10px;
+    font-weight: 700;
+    border-radius: 4px;
+    animation: eaBfFadeIn 0.2s ease;
+}
+
+.ea-bf-copied-indicator.ea-bf-show {
+    display: inline-block;
+}
+
+@keyframes eaBfFadeIn {
+    from { opacity: 0; transform: scale(0.9); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+/* ==========================================================================
+   Right Column (Timer + CTA)
+   ========================================================================== */
+.ea-bf-right-col {
+    display: flex;
+    align-items: center;
+    gap: 22px;
+    flex-shrink: 0;
+    padding-right: 28px; /* Room for dismiss button */
+}
+
+/* Countdown Section */
+.ea-bf-timer-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+}
+
+.ea-bf-timer-label {
+    font-size: 10.5px;
+    font-weight: 700;
+    color: #fbbf24;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    line-height: 1;
+}
+
+.ea-bf-hourglass {
+    font-size: 11px;
+}
+
+.ea-bf-countdown {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.ea-bf-timer-box {
+    background: #110e19;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 7px;
+    min-width: 44px;
+    padding: 5px 6px 4px 6px;
+    text-align: center;
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.6), 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.ea-bf-timer-num {
+    display: block;
+    font-size: 18px;
+    font-weight: 800;
+    color: #ffffff;
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+}
+
+.ea-bf-timer-unit {
+    display: block;
+    font-size: 8.5px;
+    font-weight: 800;
+    color: #fbbf24;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-top: 3px;
+    line-height: 1;
+}
+
+.ea-bf-timer-sep {
+    font-size: 18px;
+    font-weight: 800;
+    color: rgba(255, 255, 255, 0.45);
+    line-height: 1;
+    margin: 0 1px;
+}
+
+/* Action Section (CTA + Guarantee) */
+.ea-bf-action-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+}
+
+.ea-bf-cta-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background: linear-gradient(90deg, #ff2453 0%, #ff5722 55%, #ff9800 100%);
+    color: #ffffff !important;
+    text-decoration: none !important;
+    font-size: 14px;
+    font-weight: 800;
+    letter-spacing: 0.2px;
+    padding: 11px 26px;
+    border-radius: 9999px;
+    box-shadow: 0 4px 18px rgba(255, 36, 83, 0.45), 0 0 25px rgba(255, 87, 34, 0.25);
+    border: none;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    white-space: nowrap;
+    line-height: 1.2;
+}
+
+.ea-bf-cta-btn:hover,
+.ea-bf-cta-btn:focus {
+    transform: translateY(-1px) scale(1.02);
+    box-shadow: 0 6px 22px rgba(255, 36, 83, 0.6), 0 0 30px rgba(255, 87, 34, 0.35);
+    color: #ffffff !important;
+}
+
+.ea-bf-cta-bolt {
+    font-size: 14px;
+    line-height: 1;
+}
+
+.ea-bf-guarantee {
+    font-size: 10.5px;
+    color: rgba(255, 255, 255, 0.72);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    line-height: 1;
+}
+
+.ea-bf-lock-icon {
+    font-size: 10.5px;
+}
+
+/* ==========================================================================
+   Dismiss Button
+   ========================================================================== */
+.ea-bf-dismiss-btn {
+    position: absolute;
+    top: 10px;
+    right: 12px;
+    z-index: 10;
+    background: transparent;
+    border: none;
+    padding: 6px;
+    border-radius: 50%;
+    color: rgba(255, 255, 255, 0.45);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    outline: none;
+}
+
+.ea-bf-dismiss-btn:hover,
+.ea-bf-dismiss-btn:focus {
+    background: rgba(255, 255, 255, 0.12);
+    color: #ffffff;
+}
+
+/* ==========================================================================
+   Responsive Adaptations
+   ========================================================================== */
+@media (max-width: 1200px) {
+    .ea-bf-container {
+        gap: 18px;
+    }
+    .ea-bf-right-col {
+        gap: 16px;
+        padding-right: 24px;
+    }
+    .ea-bf-heading {
+        font-size: 13.5px;
+    }
+    .ea-bf-cta-btn {
+        padding: 10px 22px;
+        font-size: 13.5px;
+    }
+}
+
+@media (max-width: 992px) {
+    .ea-bf-container {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
+    }
+    .ea-bf-right-col {
+        width: 100%;
+        justify-content: space-between;
+        padding-right: 0;
+        padding-top: 10px;
+        border-top: 1px solid rgba(255, 255, 255, 0.08);
+    }
+}
+
+@media (max-width: 650px) {
+    .ea-bf-banner {
+        padding: 14px 16px;
+    }
+    .ea-bf-main-content {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+    .ea-bf-right-col {
+        flex-direction: column;
+        align-items: center;
+        gap: 14px;
+    }
+    .ea-bf-action-section {
+        width: 100%;
+    }
+    .ea-bf-cta-btn {
+        width: 100%;
+    }
+}

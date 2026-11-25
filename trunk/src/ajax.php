@@ -2060,6 +2060,7 @@ class EAAjax
             }
             do_action('easy_ea_new_app_from_customer', $appointment['id'], $appointment, true);
             do_action('easy_ea_repeat_appointment_mail_notification', $appointment['id'],$appointments);
+            $this->mail->send_notification(array('id' => $appointment['id']));
         }else {
             $check = $this->logic->can_update_reservation($appointment, $data);
             if (!$check['status']) {
@@ -2111,7 +2112,7 @@ class EAAjax
             if ($response == false) {
                 $this->send_err_json_result('{"err":true}');
             } else {
-                $this->mail->send_notification($data);
+                $this->mail->send_notification(array('id' => $appointment['id']));
 
                 // trigger send user email notification appointment
                 do_action('easy_ea_user_email_notification', $appointment['id']);
@@ -2314,9 +2315,9 @@ class EAAjax
         }
 
         $app_id = isset($response->id) ? (int)$response->id : 0;
-        $status_is_canceled = isset($this->data['status']) && $this->data['status'] === 'canceled';
+        $status_is_notifiable = isset($this->data['status']) && in_array($this->data['status'], array('canceled', 'abandoned'), true);
 
-        if (isset($this->data['_mail']) || $status_is_canceled) {
+        if (isset($this->data['_mail']) || $status_is_notifiable) {
             $this->mail->send_user_email_notification_action($app_id);
             $this->mail->send_admin_email_notification_action($app_id);
         }
@@ -2330,11 +2331,16 @@ class EAAjax
             wp_send_json_error( array( 'message' => esc_html__( 'Unauthorized', 'easy-appointments' ) ), 401 );
         }
 
+        if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce(
+            sanitize_text_field( wp_unslash( $_REQUEST['_wpnonce'] ) ),
+            'ea_ajax_check_nonce'
+        ) ) {
+            wp_send_json_error( array( 'message' => esc_html__( 'Security check failed.', 'easy-appointments' ) ), 403 );
+        }
+
         $this->validate_access_rights( 'appointments', 'manage_options' );
 
-        // phpcs:ignore WordPress.Security.NonceVerification.Recommended
         $app_id = isset( $_REQUEST['id'] ) ? intval( $_REQUEST['id'] ) : 0;
-        // phpcs:ignore WordPress.Security.NonceVerification.Recommended
         $new_status = isset( $_REQUEST['status'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['status'] ) ) : '';
 
         if ( $app_id <= 0 || empty( $new_status ) ) {
@@ -3614,12 +3620,14 @@ class EAAjax
             'mail.reservation'              => 'reservation',
             'mail.canceled'                 => 'canceled',
             'mail.confirmed'                => 'confirmed',
+            'mail.abandoned'                => '',
             'mail.admin'                    => '',
             'mail.admin.all'                    => '',
             'mail.admin.pending'                    => '',
             'mail.admin.confirmed'                    => '',
             'mail.admin.canceled'                    => '',
             'mail.admin.reservation'                    => '',
+            'mail.admin.abandoned'                  => '',
             'mail.action.two_step'          => '0',
             'mail.send_email_notification'          => '1',
             'trans.service'                 => 'Service',
@@ -3655,10 +3663,12 @@ class EAAjax
             'confirmed_subject_admin'       => 'New Reservation #id#',
             'cancelled_subject_admin'       => 'New Reservation #id#',
             'reservation_subject_admin'     => 'New Reservation #id#',
+            'abandoned_subject_admin'       => 'New Reservation #id#',
             'pending_subject_visitor'       => 'Reservation #id#',
             'confirmed_subject_visitor'     => 'Reservation #id#',
             'cancelled_subject_visitor'     => 'Reservation #id#',
             'reservation_subject_visitor'   => 'Reservation #id#',
+            'abandoned_subject_visitor'     => 'Reservation #id#',
             'css.off'                       => '0',
             'submit.redirect'               => '',
             'advance.redirect'              => '[]',
@@ -4074,9 +4084,28 @@ class EAAjax
         $end_time = strtotime("{$data['start']} + {$service->duration} minute");
         $app_data['end'] = gmdate('H:i', $end_time);
 
-        $is_canceling = (isset($app_data['status']) && 'canceled' === $app_data['status']);
+        $is_exempt = (isset($app_data['status']) && in_array($app_data['status'], array('canceled', 'abandoned'), true));
 
-        if (!$is_canceling && !empty($app_data['date']) && !empty($app_data['start'])) {
+        $is_existing_past_appointment = false;
+        if ($this->type === 'UPDATE' && !empty($app_data['id'])) {
+            $old_appointment = $this->models->get_row($table, $app_data['id'], ARRAY_A);
+            if ($old_appointment) {
+                // If date and start time did not change, editing existing past appointment is allowed
+                if (isset($app_data['date']) && isset($app_data['start']) && $old_appointment['date'] === $app_data['date'] && $old_appointment['start'] === $app_data['start']) {
+                    $is_existing_past_appointment = true;
+                }
+
+                // If status is being changed to abandoned or canceled, always preserve original date/time
+                if ($is_exempt) {
+                    $app_data['date']     = $old_appointment['date'];
+                    $app_data['end_date'] = $old_appointment['end_date'];
+                    $app_data['start']    = $old_appointment['start'];
+                    $app_data['end']      = $old_appointment['end'];
+                }
+            }
+        }
+
+        if (!$is_exempt && !$is_existing_past_appointment && !empty($app_data['date']) && !empty($app_data['start'])) {
 
             // Appointment datetime (YYYY-mm-dd HH:ii)
             $appointment_datetime = strtotime(

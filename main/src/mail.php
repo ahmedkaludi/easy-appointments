@@ -190,9 +190,26 @@ class EAMail
         delete_transient($rate_key);
 
         // check maybe it is a two step process
-        // phpcs:ignore WordPress.Security.NonceVerification.Missing
-        if (empty($_POST['confirmed']) && (!empty($_POST['confirmed']) && $_POST['confirmed'] !== 'true')) {
-            $this->link_action_additional_step($action, $data);
+        $is_two_step = $this->options->get_option_value('mail.action.two_step');
+        if (!empty($is_two_step)) {
+            $request_method = isset($_SERVER['REQUEST_METHOD']) ? sanitize_text_field(wp_unslash($_SERVER['REQUEST_METHOD'])) : '';
+            $is_post        = ('POST' === strtoupper($request_method));
+            // phpcs:ignore WordPress.Security.NonceVerification.Missing
+            $post_confirmed = isset($_POST['confirmed']) ? sanitize_text_field(wp_unslash($_POST['confirmed'])) : '';
+            $is_confirmed   = $is_post && ('true' === $post_confirmed);
+
+            // For cancellation, require confirmation checkbox to prevent automated headless browser scanners (e.g. Defender Safe Links) from auto-canceling
+            // phpcs:ignore WordPress.Security.NonceVerification.Missing
+            $has_checkbox_flag = isset($_POST['has_confirm_checkbox']);
+            // phpcs:ignore WordPress.Security.NonceVerification.Missing
+            $confirm_checkbox  = isset($_POST['confirm_checkbox']) ? sanitize_text_field(wp_unslash($_POST['confirm_checkbox'])) : '';
+            $is_checkbox_valid = ('yes' === $confirm_checkbox);
+            $is_valid_cancel   = $is_confirmed && (!$has_checkbox_flag || $is_checkbox_valid);
+            $is_valid_action   = ('cancel' === $action) ? $is_valid_cancel : $is_confirmed;
+
+            if (!$is_valid_action) {
+                $this->link_action_additional_step($action, $data);
+            }
         }
 
         $table = 'ea_appointments';
@@ -372,40 +389,54 @@ class EAMail
      *
      * @param  int $app_id Application id
      */
+    /**
+     * Check if status notification is explicitly enabled (handles '1', 1, true, 'true').
+     *
+     * @param string $key Option key
+     * @return bool
+     */
+    private function is_status_notification_enabled($key)
+    {
+        $val = $this->options->get_option_value($key, '0');
+        return ($val === '1' || $val === 1 || $val === true || $val === 'true');
+    }
+
     public function get_user_email_notification_active(){
         $enable_options = [];        
-        if ($this->options->get_option_value('send.user.pending_email')) {
+        if ($this->is_status_notification_enabled('send.user.pending_email')) {
            $enable_options[] = 'pending';
         }
-        if ($this->options->get_option_value('send.user.reservation_email')) {
+        if ($this->is_status_notification_enabled('send.user.reservation_email')) {
            $enable_options[] = 'reservation';
         }
-        if ($this->options->get_option_value('send.user.cancelled_email')) {
+        if ($this->is_status_notification_enabled('send.user.cancelled_email')) {
            $enable_options[] = 'canceled';
+           $enable_options[] = 'cancelled';
         }
-        if ($this->options->get_option_value('send.user.confirmed_email')) {
+        if ($this->is_status_notification_enabled('send.user.confirmed_email')) {
            $enable_options[] = 'confirmed';
         }
-        if ($this->options->get_option_value('send.user.abandoned_email')) {
+        if ($this->is_status_notification_enabled('send.user.abandoned_email')) {
            $enable_options[] = 'abandoned';
         }
         return $enable_options;
     }
     public function get_worker_email_notification_active(){
         $enable_options = [];        
-        if ($this->options->get_option_value('send.worker.pending_email')) {
+        if ($this->is_status_notification_enabled('send.worker.pending_email')) {
            $enable_options[] = 'pending';
         }
-        if ($this->options->get_option_value('send.worker.reservation_email')) {
+        if ($this->is_status_notification_enabled('send.worker.reservation_email')) {
            $enable_options[] = 'reservation';
         }
-        if ($this->options->get_option_value('send.worker.cancelled_email')) {
+        if ($this->is_status_notification_enabled('send.worker.cancelled_email')) {
            $enable_options[] = 'canceled';
+           $enable_options[] = 'cancelled';
         }
-        if ($this->options->get_option_value('send.worker.confirmed_email')) {
+        if ($this->is_status_notification_enabled('send.worker.confirmed_email')) {
            $enable_options[] = 'confirmed';
         }
-        if ($this->options->get_option_value('send.worker.abandoned_email')) {
+        if ($this->is_status_notification_enabled('send.worker.abandoned_email')) {
            $enable_options[] = 'abandoned';
         }
         return $enable_options;
@@ -451,22 +482,13 @@ class EAMail
      */
     public function send_admin_email_notification_action($app_id, $worker_only = false)
     {
-        if ($this->options->get_option_value('send.worker.email', '0') == '1') {
-            $enable_actions = $this->get_worker_email_notification_active();
-            $table_name = 'ea_appointments';
-            $app = $this->models->get_row($table_name, $app_id);
-            if (!empty($enable_actions)) {
-                if (in_array($app->status, $enable_actions)) {
-                    $this->send_notification(array('id' => $app_id), $worker_only);
-                }
-            }else{
-                $default_status = $this->options->get_option_value('default.status');
-                if ($app->status == $default_status) {
-                    $this->send_status_change_mail($app_id);
-                }
-            }
-
+        $table_name = 'ea_appointments';
+        $app = $this->models->get_row($table_name, $app_id);
+        if (!$app) {
+            return;
         }
+
+        $this->send_notification(array('id' => $app_id), $worker_only);
     }
 
     /**
@@ -784,27 +806,55 @@ class EAMail
         $emails = array();
 
         // get admin emails
-        $pendingEmails = $this->options->get_option_value('pending.email', '');
+        if (!$worker_only) {
+            $pendingEmails = $this->options->get_option_value('pending.email', '');
 
-        if (!empty($pendingEmails)) {
-            $emails = array_merge($emails, explode(',', $pendingEmails));
+            if (!empty($pendingEmails)) {
+                $admin_emails = array_map('trim', explode(',', $pendingEmails));
+                foreach ($admin_emails as $admin_email) {
+                    if (is_email($admin_email)) {
+                        $emails[] = $admin_email;
+                    }
+                }
+            }
         }
 
-        $app_id = $input_data['id'];
+        $app_id = isset($input_data['id']) ? (int)$input_data['id'] : 0;
+        if (empty($app_id)) {
+            return;
+        }
 
         $raw_data = $this->models->get_appintment_by_id($app_id);
+        if (empty($raw_data)) {
+            return;
+        }
 
         $raw_data = $this->escape_data($raw_data);
 
         // worker email
         if ($this->options->get_option_value('send.worker.email', '0') == '1') {
-            // if we only want to send it to worker
-            if ($worker_only) {
-                $emails = array();
+            $worker_actions = $this->get_worker_email_notification_active();
+            $should_send_worker = false;
+            if (!empty($worker_actions)) {
+                if (isset($raw_data['status']) && in_array($raw_data['status'], $worker_actions, true)) {
+                    $should_send_worker = true;
+                }
+            } else {
+                $default_status = $this->options->get_option_value('default.status', 'pending');
+                if (isset($raw_data['status']) && $raw_data['status'] === $default_status) {
+                    $should_send_worker = true;
+                }
             }
 
-            $emails[] = $raw_data['worker_email'];
+            if ($should_send_worker && !empty($raw_data['worker_email'])) {
+                $worker_email = trim($raw_data['worker_email']);
+                if (is_email($worker_email)) {
+                    $emails[] = $worker_email;
+                }
+            }
         }
+
+        $emails = array_unique($emails);
 
         if (empty($emails)) {
             return;
@@ -827,7 +877,12 @@ class EAMail
             if ($key == 'start' || $key == 'end') {
                 $start_date = $raw_data['date'] . ' ' . $raw_data[$key];
                 $temp_date = DateTime::createFromFormat('Y-m-d H:i:s', $start_date, $this->get_wp_timezone());
-                $value = $temp_date->format($time_format);
+                if ($temp_date === false) {
+                    $temp_date = DateTime::createFromFormat('Y-m-d H:i', $start_date, $this->get_wp_timezone());
+                }
+                if ($temp_date !== false) {
+                    $value = $temp_date->format($time_format);
+                }
             }
 
             if ($key == 'date') {
@@ -870,6 +925,8 @@ class EAMail
                 $subject_template = $this->options->get_option_value('cancelled_subject_admin', $subject_template);
             } elseif ($raw_data['status'] == 'reservation') {
                 $subject_template = $this->options->get_option_value('reservation_subject_admin', $subject_template);
+            } elseif ($raw_data['status'] == 'abandoned') {
+                $subject_template = $this->options->get_option_value('abandoned_subject_admin', $subject_template);
             }
         }
         $send_from = $this->options->get_option_value('send.from.email', '');
@@ -880,17 +937,22 @@ class EAMail
         $emails = apply_filters('easy_ea_admin_mail_address_list', $emails, $raw_data);
 
         $body_template = $this->options->get_option_value('mail.admin', '');
+        $pending_admin_tpl = $this->options->get_option_value('mail.admin.pending', $body_template);
         
         if ($raw_data['status'] == 'pending') {
-            $body_template = $this->options->get_option_value('mail.admin.pending', $body_template);
+            $body_template = $pending_admin_tpl;
         } elseif ($raw_data['status'] == 'confirmed') {
-            $body_template = $this->options->get_option_value('mail.admin.confirmed', $body_template);
+            $confirmed_admin = $this->options->get_option_value('mail.admin.confirmed', '');
+            $body_template = !empty(trim($confirmed_admin)) ? $confirmed_admin : $pending_admin_tpl;
         } elseif ($raw_data['status'] == 'canceled') {
-            $body_template = $this->options->get_option_value('mail.admin.canceled', $body_template);
+            $canceled_admin = $this->options->get_option_value('mail.admin.canceled', '');
+            $body_template = !empty(trim($canceled_admin)) ? $canceled_admin : $pending_admin_tpl;
         } elseif ($raw_data['status'] == 'reservation') {
-            $body_template = $this->options->get_option_value('mail.admin.reservation', $body_template);
+            $res_admin = $this->options->get_option_value('mail.admin.reservation', '');
+            $body_template = !empty(trim($res_admin)) ? $res_admin : $pending_admin_tpl;
         } elseif ($raw_data['status'] == 'abandoned') {
-            $body_template = $this->options->get_option_value('mail.admin.abandoned', '');
+            $abandoned_admin = $this->options->get_option_value('mail.admin.abandoned', '');
+            $body_template = !empty(trim($abandoned_admin)) ? $abandoned_admin : $pending_admin_tpl;
         }
         $body_template = apply_filters('easy_ea_admin_mail_template', $body_template);
 
@@ -963,7 +1025,12 @@ class EAMail
             if ($key == 'start' || $key == 'end') {
                 $start_date = $app_array['date'] . ' ' . $app_array[$key];
                 $temp_date = DateTime::createFromFormat('Y-m-d H:i:s', $start_date, $this->get_wp_timezone());
-                $value = $temp_date->format($time_format);
+                if ($temp_date === false) {
+                    $temp_date = DateTime::createFromFormat('Y-m-d H:i', $start_date, $this->get_wp_timezone());
+                }
+                if ($temp_date !== false) {
+                    $value = $temp_date->format($time_format);
+                }
             }
 
             if ($key == 'date') {
@@ -1065,6 +1132,8 @@ class EAMail
                 $subject_template = $this->options->get_option_value('cancelled_subject_visitor', $subject_template);
             } elseif ($app_array['status'] == 'reservation') {
                 $subject_template = $this->options->get_option_value('reservation_subject_visitor', $subject_template);
+            } elseif ($app_array['status'] == 'abandoned') {
+                $subject_template = $this->options->get_option_value('abandoned_subject_visitor', $subject_template);
             }
         }
 
@@ -1072,16 +1141,21 @@ class EAMail
         $subject_template = apply_filters( 'easy_ea_customer_mail_subject_template', $subject_template);
 
         if ($app->status === 'abandoned') {
-            $default_template = $this->get_default_admin_template();
-            $default_template = str_replace(
-                array(
-                    '<p style="font-weight: bold">- #link_confirm#</p>',
-                    '<p style="font-weight: bold">- #link_cancel#</p>',
-                ),
-                '',
-                $default_template
-            );
-            $body_template = $this->options->get_option_value('mail.abandoned', $default_template);
+            $abandoned_custom = $this->options->get_option_value('mail.abandoned', '');
+            if (!empty(trim($abandoned_custom))) {
+                $body_template = $abandoned_custom;
+            } else {
+                $default_template = $this->get_default_admin_template();
+                $default_template = str_replace(
+                    array(
+                        '<p style="font-weight: bold">- #link_confirm#</p>',
+                        '<p style="font-weight: bold">- #link_cancel#</p>',
+                    ),
+                    '',
+                    $default_template
+                );
+                $body_template = $default_template;
+            }
         } else {
             $body_template = $this->options->get_option_value('mail.' . $app->status, 'mail');
         }
@@ -1209,6 +1283,8 @@ class EAMail
                 $subject_template = $this->options->get_option_value('canceled_subject_visitor', $subject_template);
             } elseif ($app_array['status'] == 'reservation') {
                 $subject_template = $this->options->get_option_value('reservation_subject_visitor', $subject_template);
+            } elseif ($app_array['status'] == 'abandoned') {
+                $subject_template = $this->options->get_option_value('abandoned_subject_visitor', $subject_template);
             }
         }
 
@@ -1216,16 +1292,21 @@ class EAMail
         $subject_template = apply_filters( 'easy_ea_customer_mail_subject_template', $subject_template);
 
         if ($app->status === 'abandoned') {
-            $default_template = $this->get_default_admin_template();
-            $default_template = str_replace(
-                array(
-                    '<p style="font-weight: bold">- #link_confirm#</p>',
-                    '<p style="font-weight: bold">- #link_cancel#</p>',
-                ),
-                '',
-                $default_template
-            );
-            $body_template = $this->options->get_option_value('mail.abandoned', $default_template);
+            $abandoned_custom = $this->options->get_option_value('mail.abandoned', '');
+            if (!empty(trim($abandoned_custom))) {
+                $body_template = $abandoned_custom;
+            } else {
+                $default_template = $this->get_default_admin_template();
+                $default_template = str_replace(
+                    array(
+                        '<p style="font-weight: bold">- #link_confirm#</p>',
+                        '<p style="font-weight: bold">- #link_cancel#</p>',
+                    ),
+                    '',
+                    $default_template
+                );
+                $body_template = $default_template;
+            }
         } else {
             $body_template = $this->options->get_option_value('mail.' . $app->status, 'mail');
         }

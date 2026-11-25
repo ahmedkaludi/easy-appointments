@@ -920,7 +920,7 @@
 
             datepickerElement.datepicker({
                 dateFormat: jQuery.datepicker.regional[ea_settings.datepicker].dateFormat,
-                minDate: 0,
+                minDate: this.model.isNew() ? 0 : null,
                 beforeShowDay: function(date) {
                     var month = date.getMonth() + 1;
                     var days = date.getDate();
@@ -1033,8 +1033,11 @@
                 var $elem = jQuery(elem);
 
                 if ($elem.data('prop') === 'date') {
-                    appointment.set($elem.data('prop'), moment(jQuery(elem).datepicker('getDate')).format('YYYY-MM-DD'));
-                    appointment.set('end_date', moment(jQuery(elem).datepicker('getDate')).format('YYYY-MM-DD'));
+                    var pickedDate = jQuery(elem).datepicker('getDate');
+                    if (pickedDate) {
+                        appointment.set($elem.data('prop'), moment(pickedDate).format('YYYY-MM-DD'));
+                        appointment.set('end_date', moment(pickedDate).format('YYYY-MM-DD'));
+                    }
                 } else {
                     if (!$(elem).is(':disabled')) {
                         appointment.set($elem.data('prop'), $elem.val());

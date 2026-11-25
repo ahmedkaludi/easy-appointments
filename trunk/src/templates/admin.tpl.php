@@ -8,6 +8,11 @@ defined( 'ABSPATH' ) || exit;
 
     ?>
     <div class="wrap">
+        <?php
+        if (class_exists('EA_Black_Friday')) {
+            EA_Black_Friday::render_banner();
+        }
+        ?>
         <div id="tab-content"></div>
     </div>
 </script>
@@ -434,6 +439,8 @@ defined( 'ABSPATH' ) || exit;
                                         <a class="mail-tab"
                                            data-textarea="#mail-confirmed"><?php esc_html_e('Confirmed', 'easy-appointments'); ?></a>
                                         <a class="mail-tab"
+                                           data-textarea="#mail-abandoned"><?php esc_html_e('Abandoned', 'easy-appointments'); ?></a>
+                                        <a class="mail-tab"
                                            data-textarea="#mail-admin-all"><?php esc_html_e('Admin', 'easy-appointments'); ?></a>
                                     </p>
                                     <div id="admin-subtabs-row" style="display:none; margin:10px 0 15px 0;">
@@ -457,6 +464,11 @@ defined( 'ABSPATH' ) || exit;
                                             <a href="#" class="nav-tab admin-sub-tab"
                                             data-textarea="#mail-admin-canceled">
                                                 <?php esc_html_e('Cancelled', 'easy-appointments'); ?>
+                                            </a>
+
+                                            <a href="#" class="nav-tab admin-sub-tab"
+                                            data-textarea="#mail-admin-abandoned">
+                                                <?php esc_html_e('Abandoned', 'easy-appointments'); ?>
                                             </a>
                                         </div>
 
@@ -501,6 +513,11 @@ defined( 'ABSPATH' ) || exit;
                                                 <%- getAdminValue('mail.admin.canceled') %>
                                             </textarea>
 
+                                            <textarea id="mail-admin-abandoned" class="field"
+                                                data-key="mail.admin.abandoned">
+                                                <%- getAdminValue('mail.admin.abandoned') %>
+                                            </textarea>
+
                                         </div>
                                     </div>
 
@@ -527,6 +544,13 @@ defined( 'ABSPATH' ) || exit;
                                     <textarea id="mail-confirmed" class="field"
                                               data-key="mail.confirmed"><%- _.findWhere(settings, {ea_key:'mail.confirmed'}).ea_value %></textarea>
                                 </td>
+                            </tr>
+                            <tr style="display:none;">
+                                <td>
+                                    <textarea id="mail-abandoned" class="field"
+                                              data-key="mail.abandoned"><%- _.findWhere(settings, {ea_key:'mail.abandoned'}) ? _.findWhere(settings, {ea_key:'mail.abandoned'}).ea_value : '' %></textarea>
+                                </td>
+                                <td></td>
                             </tr>
 
 
