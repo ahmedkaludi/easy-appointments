@@ -78,6 +78,36 @@ class EasyEAApiFullCalendar
     }
 
     /**
+     * Check whether the current logged-in user belongs to any role granted
+     * FullCalendar data visibility in plugin settings.
+     *
+     * @return bool
+     */
+    protected function current_user_has_fullcalendar_role_access() {
+        if ( ! is_user_logged_in() ) {
+            return false;
+        }
+
+        if ( current_user_can( 'manage_options' ) ) {
+            return true;
+        }
+
+        $raw_roles = $this->options->get_option_value( 'fullcalendar.visible_roles', '[]' );
+        $allowed_roles = is_array( $raw_roles ) ? $raw_roles : json_decode( (string) $raw_roles, true );
+
+        if ( ! is_array( $allowed_roles ) || empty( $allowed_roles ) ) {
+            return false;
+        }
+
+        $user = wp_get_current_user();
+        if ( ! $user || empty( $user->roles ) ) {
+            return false;
+        }
+
+        return ! empty( array_intersect( (array) $user->roles, $allowed_roles ) );
+    }
+
+    /**
      * Check permissions for the read.
      *
      * @param WP_REST_Request $request get data from request.
@@ -89,6 +119,12 @@ class EasyEAApiFullCalendar
 
         // Administrators can always access all appointments.
         if ( current_user_can( 'manage_options' ) ) {
+            return true;
+        }
+
+        // Users whose role is explicitly selected in FullCalendar visibility settings
+        // can access FullCalendar appointments along with Administrators.
+        if ( $this->current_user_has_fullcalendar_role_access() ) {
             return true;
         }
 
@@ -233,12 +269,14 @@ class EasyEAApiFullCalendar
                 $this->options->get_option_value( 'fullcalendar.my_booking_full_calendar' )
             ) && current_user_can( 'edit_posts' );
 
-            if ( ! $show_all && ! $opted_in_full_view ) {
+            $role_has_full_view = $this->current_user_has_fullcalendar_role_access();
+
+            if ( ! $show_all && ! $opted_in_full_view && ! $role_has_full_view ) {
                 $current_user_id = get_current_user_id();
 
-                $res = array_filter( $res, function ( $element ) use ( $current_user_id ) {
+                $res = array_values( array_filter( $res, function ( $element ) use ( $current_user_id ) {
                     return (int) $element->user === (int) $current_user_id;
-                } );
+                } ) );
             }
         }
 

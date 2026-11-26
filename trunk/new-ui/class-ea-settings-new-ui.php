@@ -143,6 +143,7 @@ class EA_Settings_New_UI
         'fullcalendar.public',
         'fullcalendar.my_booking',
         'fullcalendar.my_booking_full_calendar',
+        'fullcalendar.visible_roles',
         'fullcalendar.manage_appointment.show',
         'fullcalendar.event.show',
         'fullcalendar.event.title_fields',
@@ -727,6 +728,13 @@ class EA_Settings_New_UI
                         }
                     }
                     $value = wp_json_encode($sanitized_webhooks);
+                } else {
+                    $value = '[]';
+                }
+            } else if ($key === 'fullcalendar.visible_roles' || $key === 'customer_search_roles') {
+                $decoded_roles = json_decode($value, true);
+                if (is_array($decoded_roles)) {
+                    $value = wp_json_encode(array_values(array_map('sanitize_key', $decoded_roles)));
                 } else {
                     $value = '[]';
                 }

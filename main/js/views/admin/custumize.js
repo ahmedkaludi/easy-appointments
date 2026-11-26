@@ -244,6 +244,9 @@ EA.CustumizeView = Backbone.View.extend({
                 }
 
                 model.unset('for_delete', {silent:true});
+            } else if (input.is('select[multiple]')) {
+                model.set('ea_value', input.val() || []);
+                model.unset('for_delete', {silent:true});
             } else {
                 model.set('ea_value', input.val());
                 model.unset('for_delete', {silent:true});

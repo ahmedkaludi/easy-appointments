@@ -3703,6 +3703,7 @@ class EAAjax
             'fullcalendar.public'           => '0',
             'fullcalendar.my_booking'       => '0',
             'fullcalendar.my_booking_full_calendar'       => '0',
+            'fullcalendar.visible_roles'    => '[]',
             'fullcalendar.event.show'       => '0',
             'fullcalendar.event.title_fields'       => '',
             'fullcalendar.event.template'   => '',

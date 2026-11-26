@@ -927,6 +927,52 @@ defined( 'ABSPATH' ) || exit;
                   </div>
                   <div class="form-item">
                       <div class="label-with-tooltip">
+                          <label for="fullcalendar_visible_roles"><?php esc_html_e('FullCalendar Data Visible Roles', 'easy-appointments'); ?></label>
+                          <span class="tooltip tooltip-right"
+                                data-tooltip="<?php esc_attr_e('Select user roles that can view all appointments in FullCalendar along with Administrators.', 'easy-appointments'); ?>"></span>
+                      </div>
+                      <?php
+                      $easy_ea_fc_roles = array();
+                      if (function_exists('wp_roles')) {
+                          $easy_ea_fc_roles = wp_roles()->roles;
+                      } else {
+                          global $wp_roles;
+                          if (isset($wp_roles) && is_object($wp_roles)) {
+                              $easy_ea_fc_roles = $wp_roles->roles;
+                          }
+                      }
+                      ?>
+                      <select multiple
+                              class="field"
+                              id="fullcalendar_visible_roles"
+                              style="height: auto; min-height: 90px;"
+                              name="fullcalendar.visible_roles[]"
+                              data-key="fullcalendar.visible_roles">
+                          <?php foreach ($easy_ea_fc_roles as $easy_ea_fc_role_key => $easy_ea_fc_role) : ?>
+                              <?php if ('administrator' === $easy_ea_fc_role_key) { continue; } ?>
+                              <option value="<?php echo esc_attr($easy_ea_fc_role_key); ?>"
+                              <%
+                                  var fcRoleSetting = _.findWhere(settings, { ea_key: 'fullcalendar.visible_roles' });
+                                  var fcSelectedRoles = [];
+
+                                  if (fcRoleSetting && fcRoleSetting.ea_value) {
+                                      try {
+                                          fcSelectedRoles = JSON.parse(fcRoleSetting.ea_value);
+                                      } catch (e) {
+                                          fcSelectedRoles = [];
+                                      }
+                                  }
+
+                                  if (_.contains(fcSelectedRoles, '<?php echo esc_js($easy_ea_fc_role_key); ?>')) {
+                              %> selected <% } %>>
+                                  <?php echo esc_html($easy_ea_fc_role['name']); ?>
+                              </option>
+                          <?php endforeach; ?>
+                      </select>
+                      <small><?php esc_html_e('Administrators always have full access to view all appointments. Hold Ctrl/Cmd to select multiple roles.', 'easy-appointments'); ?></small>
+                  </div>
+                  <div class="form-item">
+                      <div class="label-with-tooltip">
                           <label for=""><?php esc_attr_e('Manage appointmennt in popup', 'easy-appointments'); ?></label>
                           <span class="tooltip tooltip-right"
                                 data-tooltip="<?php esc_attr_e('Popup dialog for modify appointment details, It works only for logged in users.', 'easy-appointments'); ?>"></span>

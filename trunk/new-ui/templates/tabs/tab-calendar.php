@@ -90,6 +90,41 @@ if ( ! defined( 'WPINC' ) ) {
                             </div>
                         </div>
 
+                        <?php
+                        $ea_nsui_fc_roles = array();
+                        if (function_exists('wp_roles')) {
+                            $ea_nsui_fc_roles = wp_roles()->roles;
+                        } else {
+                            global $wp_roles;
+                            if (isset($wp_roles) && is_object($wp_roles)) {
+                                $ea_nsui_fc_roles = $wp_roles->roles;
+                            }
+                        }
+                        $ea_nsui_fc_selected_roles = json_decode($ea_get('fullcalendar.visible_roles', '[]'), true);
+                        if (!is_array($ea_nsui_fc_selected_roles)) {
+                            $ea_nsui_fc_selected_roles = array();
+                        }
+                        ?>
+                        <div class="ea-nsui-row">
+                            <div class="ea-nsui-row-label">
+                                <span class="ea-nsui-row-title">
+                                    <?php esc_html_e('FullCalendar Data Visible Roles', 'easy-appointments'); ?>
+                                    <span class="ea-nsui-tip" data-tooltip="<?php esc_attr_e('Select user roles that can view all appointments in FullCalendar along with Administrators.', 'easy-appointments'); ?>">?</span>
+                                </span>
+                                <small style="color: #64748b; display: block; margin-top: 3px; font-weight: 400;"><?php esc_html_e('Administrators always have full access to view all appointments.', 'easy-appointments'); ?></small>
+                            </div>
+                            <div class="ea-nsui-row-control ea-nsui-row-control-stack" style="width: 250px;">
+                                <select multiple class="ea-nsui-select ea-nsui-select-multi" data-key="fullcalendar.visible_roles" data-multi="1" data-placeholder="<?php esc_attr_e('Select user roles…', 'easy-appointments'); ?>">
+                                    <?php foreach ($ea_nsui_fc_roles as $ea_nsui_fc_role_key => $ea_nsui_fc_role) : ?>
+                                        <?php if ('administrator' === $ea_nsui_fc_role_key) { continue; } ?>
+                                        <option value="<?php echo esc_attr($ea_nsui_fc_role_key); ?>" <?php echo in_array($ea_nsui_fc_role_key, $ea_nsui_fc_selected_roles, true) ? 'selected' : ''; ?>>
+                                            <?php echo esc_html($ea_nsui_fc_role['name']); ?>
+                                        </option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+                        </div>
+
                         <div class="ea-nsui-row">
                             <div class="ea-nsui-row-label">
                                 <span class="ea-nsui-row-title">

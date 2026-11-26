@@ -308,7 +308,7 @@ class EADBModels
 
             if (
                 isset($data['ea_key']) &&
-                $data['ea_key'] === 'customer_search_roles' &&
+                in_array($data['ea_key'], array('customer_search_roles', 'fullcalendar.visible_roles'), true) &&
                 $key === 'ea_value'
             ) {
                 if (is_array($value)) {
