@@ -2228,6 +2228,9 @@ class EAAjax
             do_action('easy_ea_update_options', $data['options']);
 
             foreach ($data['options'] as $option) {
+                if (isset($option['ea_key']) && $option['ea_key'] === 'vacations') {
+                    continue;
+                }
                 // update single option
                 $response['options'][] = $this->models->replace('ea_options', $option);
             }

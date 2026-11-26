@@ -763,8 +763,13 @@ class EADBModels
     public function clear_options($type = 'default')
     {
         $table = $this->wpdb->prefix . 'ea_options';
-        /* phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared */
-        $query = $this->wpdb->prepare("DELETE FROM $table WHERE `type` = %s", $type);
+        if ($type === 'default') {
+            /* phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared */
+            $query = $this->wpdb->prepare("DELETE FROM $table WHERE `type` = %s OR `type` IS NULL OR `type` = ''", $type);
+        } else {
+            /* phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared */
+            $query = $this->wpdb->prepare("DELETE FROM $table WHERE `type` = %s", $type);
+        }
         // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.PreparedSQL.NotPrepared
         $this->wpdb->query($query);
     }

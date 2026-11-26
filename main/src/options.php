@@ -200,6 +200,8 @@ class EAOptions
             'style.calendar_slot_fill'   => '0',
             'style.slot_fill_color'      => '#ef4444',
             'daily_schedule.enabled'     => '0',
+            'connection_expire.mail_enabled' => function_exists('get_option') ? (string) get_option('ea_connection_expire_mail_enabled', '1') : '1',
+            'connection_expire.days_before'  => function_exists('get_option') ? (string) get_option('ea_connection_expire_days_before', '7') : '7',
         );
     }
 
@@ -317,7 +319,7 @@ class EAOptions
         $table_name = esc_sql( $this->wpdb->prefix . 'ea_options' );
 
         /* phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter */
-        $query = "SELECT ea_key, ea_value FROM {$table_name}";
+        $query = "SELECT ea_key, ea_value FROM {$table_name} ORDER BY id DESC";
         
         /* phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared */
         $output = $this->wpdb->get_results($query, OBJECT_K);

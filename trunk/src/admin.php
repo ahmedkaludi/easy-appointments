@@ -495,7 +495,7 @@ class EAAdminPanel
                 'wp-api',
                 'thickbox'
             ),
-            EASY_APPOINTMENTS_VERSION,
+            file_exists(EA_JS_DIR . 'admin.prod.js') ? filemtime(EA_JS_DIR . 'admin.prod.js') : EASY_APPOINTMENTS_VERSION,
             true
         );
 

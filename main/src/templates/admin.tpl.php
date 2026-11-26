@@ -118,6 +118,19 @@ defined( 'ABSPATH' ) || exit;
                     </div>
                     <div class="form-item">
                         <div class="label-with-tooltip">
+                            <label for="daily-schedule-enabled"><?php esc_html_e('Enable Daily Schedule', 'easy-appointments'); ?></label>
+                            <span class="tooltip tooltip-right"
+                                  data-tooltip="<?php esc_attr_e('Enable the admin Daily Schedule view with free slots and booking status color coding. Refresh the page after saving to update the admin menu.', 'easy-appointments'); ?>"></span>
+                        </div>
+                        <div class="field-wrap">
+                            <input class="field" id="daily-schedule-enabled" data-key="daily_schedule.enabled"
+                                   name="daily_schedule.enabled" type="checkbox" <% if
+                            (_.findWhere(settings, {ea_key:'daily_schedule.enabled'}) && _.findWhere(settings, {ea_key:'daily_schedule.enabled'}).ea_value == "1") {
+                            %>checked<% } %>>
+                        </div>
+                    </div>
+                    <div class="form-item">
+                        <div class="label-with-tooltip">
                             <label for=""><?php esc_html_e('Max number of appointments', 'easy-appointments'); ?></label>
                             <span class="tooltip tooltip-right"
                                   data-tooltip="<?php esc_html_e('Number of appointments that one visitor can make reservation before limit alert is shown. Appointments are counted during one day.', 'easy-appointments'); ?>"></span>
@@ -509,6 +522,38 @@ defined( 'ABSPATH' ) || exit;
                                                                                                                                                                                                                                                                                                                                                                                                                     // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
                                                                                                                                                                                                                                                                                                                                                                                                                     echo implode(', ', EADBModels::get_custom_fields_tags()); ?></small></div>
                     </div>
+                    <div class="form-item" style="border: 1px solid #ececec; padding: 4px 10px 8px 10px; border-radius: 4px;">
+                        <div class="label-with-tooltip" style="display:flex; align-items:center; gap:8px;">
+                            <label for="connection-expire-mail-enabled" style="display:flex; align-items:center; gap:6px;">
+                                <input class="field"
+                                    id="connection-expire-mail-enabled"
+                                    data-key="connection_expire.mail_enabled"
+                                    name="connection_expire.mail_enabled"
+                                    type="checkbox"
+                                    <% var expireEnabledOpt = _.findWhere(settings, {ea_key:'connection_expire.mail_enabled'});
+                                    if (!expireEnabledOpt || expireEnabledOpt.ea_value == "1") { %>checked<% } %>>
+                                <?php esc_html_e('Enable connection expiration email alerts', 'easy-appointments'); ?>
+                            </label>
+                            <span class="tooltip tooltip-right"
+                                  data-tooltip="<?php esc_attr_e('Configure automated email notifications for expiring and expired connections.', 'easy-appointments'); ?>"></span>
+                        </div>
+                        <div class="ea-connection-expire-days" style="width: 100%; margin-top: 6px; padding-top: 6px; border-top: 1px solid #f0f0f0;">
+                            <div class="label-with-tooltip">
+                                <label for="connection-expire-days-before"><?php esc_html_e('Alert before (Days)', 'easy-appointments'); ?></label>
+                                <span class="tooltip tooltip-right"
+                                      data-tooltip="<?php esc_attr_e('Number of days before connection end date to send the email alert to administrator.', 'easy-appointments'); ?>"></span>
+                            </div>
+                            <input class="field"
+                                id="connection-expire-days-before"
+                                data-key="connection_expire.days_before"
+                                name="connection_expire.days_before"
+                                type="number"
+                                min="1"
+                                max="60"
+                                style="width: 120px; height: 32px; padding: 4px 11px; color: rgba(0, 0, 0, 0.65); font-size: 14px; line-height: 1.5; background-color: #fff; border: 1px solid #d9d9d9; border-radius: 4px;"
+                                value="<%- (_.findWhere(settings, {ea_key:'connection_expire.days_before'}) && _.findWhere(settings, {ea_key:'connection_expire.days_before'}).ea_value) ? _.findWhere(settings, {ea_key:'connection_expire.days_before'}).ea_value : '7' %>">
+                        </div>
+                    </div>
                     <div class="form-item">
                         <div class="label-with-tooltip">
                             <label for="mail.send_email_notification"><?php esc_html_e('Send email notification on edit', 'easy-appointments'); ?></label>
@@ -733,6 +778,13 @@ defined( 'ABSPATH' ) || exit;
                             value="<%- _.findWhere(settings, {ea_key:'reservation_subject_admin'}).ea_value %>">
                     </div>
 
+                    <div class="form-item ea-status-subjects">
+                        <label><?php esc_html_e('Abandoned', 'easy-appointments'); ?></label>
+                        <input class="field" data-key="abandoned_subject_admin"
+                            name="abandoned_subject_admin" type="text"
+                            value="<%- _.findWhere(settings, {ea_key:'abandoned_subject_admin'}) ? _.findWhere(settings, {ea_key:'abandoned_subject_admin'}).ea_value : 'New Reservation #id#' %>">
+                    </div>
+
 
                     <!-- VISITOR SUBJECTS -->
                     <h3 class="ea-status-heading ea-status-subjects"><?php esc_html_e('Visitor Subjects', 'easy-appointments'); ?></h3>
@@ -763,6 +815,13 @@ defined( 'ABSPATH' ) || exit;
                         <input class="field" data-key="reservation_subject_visitor"
                             name="reservation_subject_visitor" type="text"
                             value="<%- _.findWhere(settings, {ea_key:'reservation_subject_visitor'}).ea_value %>">
+                    </div>
+
+                    <div class="form-item ea-status-subjects">
+                        <label><?php esc_html_e('Abandoned', 'easy-appointments'); ?></label>
+                        <input class="field" data-key="abandoned_subject_visitor"
+                            name="abandoned_subject_visitor" type="text"
+                            value="<%- _.findWhere(settings, {ea_key:'abandoned_subject_visitor'}) ? _.findWhere(settings, {ea_key:'abandoned_subject_visitor'}).ea_value : 'Reservation #id#' %>">
                     </div>
 
 
@@ -1778,6 +1837,7 @@ defined( 'ABSPATH' ) || exit;
             checked_worker_count();
             checked_user_count();
             toggleStatusSubjects();
+            toggleConnectionExpireDays();
         }, 2000);
 
 
@@ -1787,9 +1847,23 @@ defined( 'ABSPATH' ) || exit;
             $('.ea-status-subjects').toggle(enabled);
         }
 
+        function toggleConnectionExpireDays() {
+            var $expireCheck = $('[data-key="connection_expire.mail_enabled"]');
+            if ($expireCheck.length) {
+                $('.ea-connection-expire-days').toggle($expireCheck.is(':checked'));
+            }
+        }
+
 
 
         $(document).on('change', '[name="enable_status_subjects"]', toggleStatusSubjects);
+        $(document).on('change', '[data-key="connection_expire.mail_enabled"]', toggleConnectionExpireDays);
+        $(document).on('click', '.tab-selection a', function() {
+            toggleConnectionExpireDays();
+            toggleStatusSubjects();
+            checked_worker_count();
+            checked_user_count();
+        });
 
         $(document).on('click', '#ea-full-export', function() {
             if (!confirm('Export all Easy Appointments data?')) {

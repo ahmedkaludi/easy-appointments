@@ -738,17 +738,22 @@ class EA_Settings_New_UI
 
             // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, PluginCheck.Security.DirectDB.UnescapedDBParameter -- Querying custom settings table using local prefixed table.
             $existing_id = $wpdb->get_var(
-                $wpdb->prepare("SELECT id FROM {$table} WHERE ea_key = %s LIMIT 1", $key) // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+                $wpdb->prepare("SELECT id FROM {$table} WHERE ea_key = %s ORDER BY id DESC LIMIT 1", $key) // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
             );
 
             if ($existing_id) {
+                // Remove any duplicate rows for the same key before updating.
+                // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, PluginCheck.Security.DirectDB.UnescapedDBParameter
+                $wpdb->query(
+                    $wpdb->prepare("DELETE FROM {$table} WHERE ea_key = %s AND id != %d", $key, (int) $existing_id) // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+                );
                 // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Updating custom settings table.
                 $wpdb->update(
                     $table,
-                    array('ea_value' => $value),
-                    array('ea_key' => $key),
-                    array('%s'),
-                    array('%s')
+                    array('ea_value' => $value, 'type' => 'default'),
+                    array('id' => (int) $existing_id),
+                    array('%s', '%s'),
+                    array('%d')
                 );
             } else {
                 // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Inserting into custom settings table.
@@ -757,8 +762,9 @@ class EA_Settings_New_UI
                     array(
                         'ea_key'   => $key,
                         'ea_value' => $value,
+                        'type'     => 'default',
                     ),
-                    array('%s', '%s')
+                    array('%s', '%s', '%s')
                 );
             }
 

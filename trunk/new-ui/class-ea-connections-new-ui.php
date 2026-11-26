@@ -80,6 +80,9 @@ class EA_Connections_New_UI
 
         // WP-Cron event hook for daily expiration check (scheduled via EasyAppointment::install / update).
         add_action('easy_ea_daily_connection_expire_check', array(__CLASS__, 'check_and_notify_expiring_connections'));
+
+        // Keep wp_options in sync when settings are saved via either Classic or New Settings UI.
+        add_action('easy_ea_update_options', array(__CLASS__, 'sync_connection_expire_options'));
     }
 
     /**
@@ -372,6 +375,38 @@ class EA_Connections_New_UI
     }
 
     /**
+     * Sync connection expiration settings to wp_options when updated from Settings UI.
+     *
+     * @param array $options List of ['ea_key' => ..., 'ea_value' => ...] option entries.
+     */
+    public static function sync_connection_expire_options($options)
+    {
+        if (!is_array($options)) {
+            return;
+        }
+
+        foreach ($options as $option) {
+            if (!is_array($option) || empty($option['ea_key'])) {
+                continue;
+            }
+
+            if ($option['ea_key'] === 'connection_expire.mail_enabled') {
+                $val = isset($option['ea_value']) ? (string) $option['ea_value'] : '0';
+                $enabled = ($val === '1' || $val === 'true') ? '1' : '0';
+                update_option('ea_connection_expire_mail_enabled', $enabled);
+            } elseif ($option['ea_key'] === 'connection_expire.days_before') {
+                $days = isset($option['ea_value']) ? intval($option['ea_value']) : 7;
+                if ($days < 1) {
+                    $days = 7;
+                } elseif ($days > 60) {
+                    $days = 60;
+                }
+                update_option('ea_connection_expire_days_before', $days);
+            }
+        }
+    }
+
+    /**
      * AJAX endpoint: Save Connection Expiration alert settings.
      */
     public static function ajax_save_connection_expire_settings()
@@ -386,21 +421,50 @@ class EA_Connections_New_UI
         $days_before = isset($_POST['days_before']) ? intval($_POST['days_before']) : 7;
         if ($days_before < 1) {
             $days_before = 7;
+        } elseif ($days_before > 60) {
+            $days_before = 60;
         }
 
         update_option('ea_connection_expire_mail_enabled', $enabled);
         update_option('ea_connection_expire_days_before', $days_before);
 
-        if (class_exists('EADBModels')) {
-            global $easy_ea_app;
-            if ($easy_ea_app instanceof EasyAppointment) {
-                try {
-                    $options = $easy_ea_app->get_container()['options'];
-                    $options->save_option('connection_expire.mail_enabled', $enabled);
-                    $options->save_option('connection_expire.days_before', $days_before);
-                } catch (Exception $e) {
-                    // Ignore container error
-                }
+        global $wpdb;
+        $options_table = $wpdb->prefix . 'ea_options';
+        $pairs = array(
+            'connection_expire.mail_enabled' => $enabled,
+            'connection_expire.days_before'  => (string) $days_before,
+        );
+
+        foreach ($pairs as $opt_key => $opt_val) {
+            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, PluginCheck.Security.DirectDB.UnescapedDBParameter
+            $existing_id = $wpdb->get_var(
+                $wpdb->prepare("SELECT id FROM {$options_table} WHERE ea_key = %s ORDER BY id DESC LIMIT 1", $opt_key) // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+            );
+
+            if ($existing_id) {
+                // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, PluginCheck.Security.DirectDB.UnescapedDBParameter
+                $wpdb->query(
+                    $wpdb->prepare("DELETE FROM {$options_table} WHERE ea_key = %s AND id != %d", $opt_key, (int) $existing_id) // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+                );
+                // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+                $wpdb->update(
+                    $options_table,
+                    array('ea_value' => $opt_val, 'type' => 'default'),
+                    array('id' => (int) $existing_id),
+                    array('%s', '%s'),
+                    array('%d')
+                );
+            } else {
+                // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+                $wpdb->insert(
+                    $options_table,
+                    array(
+                        'ea_key'   => $opt_key,
+                        'ea_value' => $opt_val,
+                        'type'     => 'default',
+                    ),
+                    array('%s', '%s', '%s')
+                );
             }
         }
 

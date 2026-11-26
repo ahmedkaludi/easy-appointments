@@ -401,6 +401,12 @@
 
                 var input = fields.filter('[data-key="' + key + '"]');
 
+                if (input.length === 0) {
+                    model.unset('for_delete', {silent:true});
+                    processed.push(key);
+                    return;
+                }
+
                 if(input.is('[type="checkbox"]')) {
                     if(input.is(':checked')) {
                         model.set('ea_value', 1);
