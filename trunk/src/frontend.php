@@ -313,7 +313,7 @@ class Easy_EA_Frontend
         $settings['trans.book-again'] = easy_ea_helper_polylang_trans($this->options->get_option_value('trans.book-again', __('Book New Appointment', 'easy-appointments')));
         $settings['trans.add-to-calendar'] = easy_ea_helper_polylang_trans($this->options->get_option_value('trans.add-to-calendar', __('Add to Google Calendar', 'easy-appointments')));
         $settings['trans.description'] = easy_ea_helper_polylang_trans($this->options->get_option_value('trans.description', __('Description', 'easy-appointments')));
-        $settings['trans.confirmation-title'] = !empty($settings['heading']) ? $settings['heading'] : __('Thank You for Booking!', 'easy-appointments');
+        $settings['trans.confirmation-title'] = $this->resolve_confirmation_title($settings);
 
         $customCss = $settings['custom.css'];
         $customCss = wp_strip_all_tags($customCss);
@@ -995,7 +995,7 @@ class Easy_EA_Frontend
         $settings['trans.book-again'] = easy_ea_helper_polylang_trans($this->options->get_option_value('trans.book-again', __('Book New Appointment', 'easy-appointments')));
         $settings['trans.add-to-calendar'] = easy_ea_helper_polylang_trans($this->options->get_option_value('trans.add-to-calendar', __('Add to Google Calendar', 'easy-appointments')));
         $settings['trans.description'] = easy_ea_helper_polylang_trans($this->options->get_option_value('trans.description', __('Description', 'easy-appointments')));
-        $settings['trans.confirmation-title'] = !empty($settings['heading']) ? $settings['heading'] : __('Thank You for Booking!', 'easy-appointments');
+        $settings['trans.confirmation-title'] = $this->resolve_confirmation_title($settings);
 
         // datetime format
         $settings['time_format'] = $this->datetime->convert_to_moment_format(get_option('time_format', 'H:i'));
@@ -1347,6 +1347,24 @@ class Easy_EA_Frontend
             return 'expired';
         }
         return 'ok';
+    }
+
+    /**
+     * Resolve the thank-you screen confirmation title from saved settings or translation fallback.
+     *
+     * @param array $settings
+     * @return string
+     */
+    private function resolve_confirmation_title($settings)
+    {
+        $title = !empty($settings['trans.confirmation-title']) ? $settings['trans.confirmation-title'] : '';
+        if ($title === '' && !empty($settings['heading'])) {
+            $title = $settings['heading'];
+        }
+        if ($title === '' || $title === 'Thank You for Booking!') {
+            return __('Thank You for Booking!', 'easy-appointments');
+        }
+        return function_exists('pll__') ? pll__($title) : $title;
     }
 }
 

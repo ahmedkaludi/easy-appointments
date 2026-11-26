@@ -1216,6 +1216,9 @@
                         plugin.updateSidebarButtons();
                         plugin.updateWizardButtons();
                         plugin.updateSubmitButtonState();
+                        if (ea_settings['ea_new_ui'] === '1') {
+                            plugin.updateNewUiSummaryBar();
+                        }
                     }
                 } else if (ea_settings.auto_select_slot === '1') {
                     // auto select time slot if there is only one available
@@ -1539,6 +1542,16 @@
                 overview_content = plugin.settings.overview_template({data: booking_data, settings: ea_settings});
 
                 plugin.$element.find('#booking-overview').html(overview_content);
+
+                plugin.$element.find('#ea-payment-select').show();
+
+                jQuery(document).trigger('ea-timeslot:selected');
+
+                if (ea_settings['ea_new_ui'] === '1') {
+                    plugin.updateNewUiSummaryBar();
+                } else {
+                    plugin.updateSubmitButtonState();
+                }
 
                 plugin.$element.find('#ea-total-amount').on('checkout:done', function( event, checkoutId ) {
                     var paypal_input = plugin.$element.find('#paypal_transaction_id');

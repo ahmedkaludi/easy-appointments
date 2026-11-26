@@ -6062,3 +6062,8 @@ msgstr ""
 #: src/templates/report.tpl.php:106
 msgid "Export data"
 msgstr ""
+
+#: src/frontend.php:1365
+#: src/templates/booking.overview.tpl.php:118
+msgid "Thank You for Booking!"
+msgstr ""
