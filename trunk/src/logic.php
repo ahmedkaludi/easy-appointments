@@ -182,6 +182,296 @@ class EALogic
         return $this->format_time($working_hours, $serviceObj->duration);
     }
 
+    /**
+     * Whether multi-service sequential booking is enabled in settings.
+     *
+     * @return bool
+     */
+    public function is_multiple_services_enabled()
+    {
+        return $this->options->get_option_value('services.allow_multiple', '0') === '1';
+    }
+
+    /**
+     * Parse service parameter (single ID, comma-separated IDs, or array) into unique positive ints.
+     *
+     * @param mixed $service
+     * @return array
+     */
+    public function parse_service_ids($service)
+    {
+        if (is_array($service)) {
+            $raw = $service;
+        } elseif (is_string($service) && strpos($service, ',') !== false) {
+            $raw = explode(',', $service);
+        } elseif (!empty($service) && is_numeric($service)) {
+            $raw = array($service);
+        } else {
+            return array();
+        }
+
+        $ids = array();
+        foreach ($raw as $item) {
+            $id = intval(trim((string) $item));
+            if ($id > 0 && !in_array($id, $ids, true)) {
+                $ids[] = $id;
+            }
+        }
+
+        return $ids;
+    }
+
+    /**
+     * Check whether a connection row applies to the given calendar date.
+     *
+     * @param object $working_day
+     * @param string $day Y-m-d
+     * @param string $day_of_week Full day name
+     * @param string $tomorrow Y-m-d
+     * @return bool
+     */
+    private function is_connection_active_on_day($working_day, $day, $day_of_week, $tomorrow)
+    {
+        $day_name_map = array(
+            'Sunday' => 0, 'Monday' => 1, 'Tuesday' => 2,
+            'Wednesday' => 3, 'Thursday' => 4, 'Friday' => 5, 'Saturday' => 6
+        );
+
+        $allowed_days = array_map('trim', explode(',', $working_day->day_of_week));
+        if (!in_array($day_of_week, $allowed_days, true)) {
+            return false;
+        }
+
+        $repeat_week = (int) $working_day->repeat_week;
+        if ($repeat_week === -1 && $day !== $tomorrow) {
+            return false;
+        }
+
+        if ($repeat_week > 1) {
+            $day_from = !empty($working_day->day_from) ? $working_day->day_from : $day;
+            $current_date = new DateTime($day);
+            $target_dow = $day_name_map[$day_of_week];
+            $start_date = new DateTime($day_from);
+            while ((int) $start_date->format('w') !== $target_dow) {
+                $start_date->modify('+1 day');
+            }
+            $interval = $start_date->diff($current_date);
+            $weeks_between = floor($interval->days / 7);
+            if ($weeks_between % $repeat_week !== 0) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Query active or closed connections for (location, service, worker, day).
+     *
+     * @param int    $location
+     * @param int    $service
+     * @param int    $worker
+     * @param string $day
+     * @param int    $is_working 1 or 0
+     * @return array
+     */
+    private function get_connections_for_day($location, $service, $worker, $day, $is_working = 1)
+    {
+        // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+        $query = $this->wpdb->prepare(
+            "SELECT * FROM {$this->wpdb->prefix}ea_connections WHERE
+            location=%d AND
+            service=%d AND
+            worker=%d AND
+            is_working=%d AND
+            (day_from IS NULL OR day_from <= %s) AND
+            (day_to IS NULL OR day_to >= %s)",
+            $location, $service, $worker, $is_working, $day, $day
+        );
+        // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.PreparedSQL.NotPrepared
+        return $this->wpdb->get_results($query);
+    }
+
+    /**
+     * Compute open start slots when booking multiple services sequentially (same worker).
+     *
+     * Each returned start time guarantees continuous availability across all selected
+     * services in order, respecting each service's working/closed connections, daily limit,
+     * block_before/block_after buffers, and existing overlapping appointments.
+     *
+     * @param int    $location
+     * @param array  $service_ids
+     * @param int    $worker
+     * @param string $day
+     * @param mixed  $app_id
+     * @param bool   $check_current_day
+     * @param int    $block_before
+     * @return array
+     */
+    private function get_open_slots_multiple_services($location, $service_ids, $worker, $day, $app_id, $check_current_day, $block_before)
+    {
+        $services = array();
+        $total_duration = 0;
+
+        foreach ($service_ids as $sid) {
+            $svc = $this->get_service($sid);
+            if (empty($svc) || (int) $svc->duration <= 0) {
+                return array();
+            }
+            $services[] = $svc;
+            $total_duration += (int) $svc->duration;
+        }
+
+        $day_of_week      = gmdate('l', strtotime($day));
+        $today_str        = current_time('Y-m-d');
+        $time_now_str     = current_time('H:i');
+        $is_current_day   = ($today_str === $day);
+        $current_local_dt = new DateTime(current_time('Y-m-d H:i'));
+        $min_allowed_dt   = $block_before > 0 ? (clone $current_local_dt)->modify("+{$block_before} minutes") : null;
+        $tomorrow         = (clone $current_local_dt)->modify('+1 day')->format('Y-m-d');
+
+        // Candidate start times driven by the first service's working schedule, spanning total_duration
+        $first_service  = $services[0];
+        $first_open_raw = $this->get_connections_for_day($location, $first_service->id, $worker, $day, 1);
+        $candidate_slots = array();
+
+        foreach ($first_open_raw as $working_day) {
+            if (!$this->is_connection_active_on_day($working_day, $day, $day_of_week, $tomorrow)) {
+                continue;
+            }
+
+            $upper_time = strtotime($working_day->time_to);
+            $step_mins  = !empty($first_service->slot_step) ? (int) $first_service->slot_step : (int) $first_service->duration;
+            if ($step_mins <= 0) {
+                $step_mins = 15;
+            }
+
+            $counter = 0;
+            while (true) {
+                $temp_time = strtotime($working_day->time_from) + ($step_mins * 60 * $counter++);
+                if (($temp_time + ($total_duration * 60)) > $upper_time) {
+                    break;
+                }
+
+                $current_time = gmdate('H:i', $temp_time);
+
+                if ($check_current_day && $is_current_day && $current_time <= $time_now_str) {
+                    continue;
+                }
+
+                if ($block_before > 0 && $min_allowed_dt !== null) {
+                    $slot_dt = new DateTime("$day $current_time");
+                    if ($slot_dt < $min_allowed_dt) {
+                        continue;
+                    }
+                }
+
+                $slot_count = is_numeric($working_day->slot_count) ? (int) $working_day->slot_count : 1;
+                if (!array_key_exists($current_time, $candidate_slots)) {
+                    $candidate_slots[$current_time] = $slot_count;
+                } else {
+                    $candidate_slots[$current_time] += $slot_count;
+                }
+            }
+        }
+
+        if (empty($candidate_slots)) {
+            return $this->format_time($candidate_slots, $total_duration);
+        }
+
+        if ($app_id == '') {
+            $app_id = -1;
+        }
+
+        // Validate every sequential sub-service segment against working/closed rules and busy appointments
+        $offset_minutes = 0;
+        foreach ($services as $svc) {
+            $seg_duration = (int) $svc->duration;
+            $open_conns   = $this->get_connections_for_day($location, $svc->id, $worker, $day, 1);
+            $closed_conns = $this->get_connections_for_day($location, $svc->id, $worker, $day, 0);
+
+            $busy_query   = $this->slots_logic->get_busy_slot_query($location, $svc->id, $worker, $day, $app_id);
+            // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.PreparedSQL.NotPrepared
+            $appointments = $this->wpdb->get_results($busy_query);
+
+            $limit = $svc->daily_limit ? (int) $svc->daily_limit : 0;
+            $service_count = 0;
+            foreach ($appointments as $app) {
+                if ((int) $svc->id === (int) $app->service) {
+                    $service_count++;
+                }
+            }
+            $limit_reached = ($limit > 0 && $limit <= $service_count);
+
+            foreach ($candidate_slots as $start_str => $curr_count) {
+                if ($curr_count <= 0) {
+                    continue;
+                }
+
+                if ($limit_reached) {
+                    $candidate_slots[$start_str] = 0;
+                    continue;
+                }
+
+                $seg_start_ts = strtotime($start_str) + ($offset_minutes * 60);
+                $seg_end_ts   = $seg_start_ts + ($seg_duration * 60);
+
+                // Capacity from active working connections covering [seg_start_ts, seg_end_ts]
+                $seg_capacity = 0;
+                foreach ($open_conns as $conn) {
+                    if (!$this->is_connection_active_on_day($conn, $day, $day_of_week, $tomorrow)) {
+                        continue;
+                    }
+                    $conn_from = strtotime($conn->time_from);
+                    $conn_to   = strtotime($conn->time_to);
+                    if ($seg_start_ts >= $conn_from && $seg_end_ts <= $conn_to) {
+                        $seg_capacity += is_numeric($conn->slot_count) ? (int) $conn->slot_count : 1;
+                    }
+                }
+
+                // Subtract closed connections overlapping [seg_start_ts, seg_end_ts]
+                foreach ($closed_conns as $closed) {
+                    $c_from = strtotime($closed->time_from);
+                    $c_to   = strtotime($closed->time_to);
+                    if (!($c_to <= $seg_start_ts || $c_from >= $seg_end_ts)) {
+                        $seg_capacity -= is_numeric($closed->slot_count) ? (int) $closed->slot_count : 1;
+                    }
+                }
+
+                // Subtract overlapping existing appointments (including block_before/after)
+                foreach ($appointments as $app) {
+                    $app_start_str = ($app->date == $day) ? $app->start : '00:00';
+                    $app_end_str   = ($app->end_date == $day) ? $app->end : '23:59';
+                    $lower_time    = strtotime($app_start_str);
+                    $upper_time    = strtotime($app_end_str);
+
+                    $app_svc = $this->get_service($app->service);
+                    if (!empty($app_svc)) {
+                        $lower_time -= ((int) $app_svc->block_before * 60);
+                        $upper_time += ((int) $app_svc->block_after * 60);
+                    }
+
+                    $svc_bb = (int) $svc->block_before * 60;
+                    $svc_ba = (int) $svc->block_after * 60;
+
+                    if (!(($seg_end_ts + $svc_ba) <= $lower_time || $upper_time <= ($seg_start_ts - $svc_bb))) {
+                        if ($this->slots_logic->is_exclusive_mode() && $this->slots_logic->is_provider_is_busy($app, $location, $svc->id)) {
+                            $seg_capacity = 0;
+                            break;
+                        }
+                        $seg_capacity -= 1;
+                    }
+                }
+
+                $candidate_slots[$start_str] = max(0, min($curr_count, $seg_capacity));
+            }
+
+            $offset_minutes += $seg_duration;
+        }
+
+        return $this->format_time($candidate_slots, $total_duration);
+    }
+
     public function get_open_slots(
         $location = null,
         $service = null,
@@ -192,6 +482,16 @@ class EALogic
         $block_before = 0
     )
     {
+        if ($this->is_multiple_services_enabled()) {
+            $service_ids = $this->parse_service_ids($service);
+            if (count($service_ids) > 1) {
+                return $this->get_open_slots_multiple_services($location, $service_ids, $worker, $day, $app_id, $check_current_day, $block_before);
+            }
+            if (count($service_ids) === 1) {
+                $service = $service_ids[0];
+            }
+        }
+
         $day_of_week = gmdate('l', strtotime($day));
 
         $today_str      = current_time('Y-m-d');

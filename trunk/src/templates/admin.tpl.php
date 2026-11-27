@@ -118,6 +118,19 @@ defined( 'ABSPATH' ) || exit;
                     </div>
                     <div class="form-item">
                         <div class="label-with-tooltip">
+                            <label for="services-allow-multiple"><?php esc_html_e('Allow Multiple Services', 'easy-appointments'); ?></label>
+                            <span class="tooltip tooltip-right"
+                                  data-tooltip="<?php esc_attr_e('Allow customers to select and book multiple services consecutively in a single booking. Separate appointments will be created for each selected service.', 'easy-appointments'); ?>"></span>
+                        </div>
+                        <div class="field-wrap">
+                            <input class="field" id="services-allow-multiple" data-key="services.allow_multiple"
+                                   name="services.allow_multiple" type="checkbox" <% if
+                            (_.findWhere(settings, {ea_key:'services.allow_multiple'}) && _.findWhere(settings, {ea_key:'services.allow_multiple'}).ea_value == "1") {
+                            %>checked<% } %>>
+                        </div>
+                    </div>
+                    <div class="form-item">
+                        <div class="label-with-tooltip">
                             <label for="services-order-by-sequence"><?php esc_html_e('Order services by sequence', 'easy-appointments'); ?></label>
                             <span class="tooltip tooltip-right"
                                   data-tooltip="<?php esc_attr_e('When enabled, services in the frontend booking form will be displayed ordered by their custom sequence.', 'easy-appointments'); ?>"></span>

@@ -826,6 +826,28 @@ class EAMail
             return;
         }
 
+        // If part of a multi-service sequential booking group (ms_*), aggregate service names, end time, and total price
+        $multi_service_rows = $this->get_multi_service_group_appointments($app_id);
+        if (count($multi_service_rows) > 1) {
+            $svc_names = array();
+            $total_price = 0.0;
+            foreach ($multi_service_rows as $ms_row) {
+                $svc_obj = $this->models->get_row('ea_services', $ms_row['service']);
+                if ($svc_obj && !empty($svc_obj->name)) {
+                    $svc_names[] = $svc_obj->name . ' (' . substr($ms_row['start'], 0, 5) . ' - ' . substr($ms_row['end'], 0, 5) . ')';
+                }
+                $total_price += floatval($ms_row['price']);
+            }
+            if (!empty($svc_names)) {
+                $raw_data['service_name'] = implode(', ', $svc_names);
+            }
+            $last_ms = end($multi_service_rows);
+            if (!empty($last_ms['end'])) {
+                $raw_data['end'] = $last_ms['end'];
+            }
+            $raw_data['price'] = number_format($total_price, 2, '.', '');
+        }
+
         $raw_data = $this->escape_data($raw_data);
 
         // worker email
@@ -1346,15 +1368,48 @@ class EAMail
         }
 
         // Hook for customize body of email template
-        
-        $email_body = esc_html__('Here are your scheduled repeat appointments', 'easy-appointments');
-        $email_body .= ":\n\n";
-        foreach ($appointments as $appointment) {
-            $email_body .= "Date: " . gmdate('F j, Y', strtotime($appointment['date'])) . "\n";
-            $email_body .= "Time: " . gmdate('H:i', strtotime($appointment['start'])) . " - " . gmdate('H:i', strtotime($appointment['end'])) . "\n";
-            $email_body .= "----------------------------------\n";
+        if (!empty($app->recurrence_id) && strpos($app->recurrence_id, 'ms_') === 0) {
+            $currency = $this->options->get_option_value('trans.currency', '');
+            $svc_names = array();
+            $total_price = 0.0;
+            $email_body = '<p><strong>' . esc_html__('Booked Services:', 'easy-appointments') . '</strong></p><ul>';
+            foreach ($appointments as $appointment) {
+                $svc_obj = $this->models->get_row('ea_services', $appointment['service']);
+                $svc_label = $svc_obj ? $svc_obj->name : ('#' . $appointment['service']);
+                $svc_names[] = $svc_label;
+                $total_price += floatval($appointment['price']);
+                $t_start = gmdate('H:i', strtotime($appointment['start']));
+                $t_end   = gmdate('H:i', strtotime($appointment['end']));
+                $email_body .= '<li>' . esc_html($svc_label) . ' (' . esc_html($t_start . ' - ' . $t_end) . ') - ' . esc_html($appointment['price'] . $currency) . '</li>';
+            }
+            $email_body .= '</ul>';
+            $email_body .= '<p><strong>' . esc_html__('Total Price:', 'easy-appointments') . '</strong> ' . esc_html(number_format($total_price, 2, '.', '') . $currency) . '</p>';
+
+            if (!empty($svc_names)) {
+                $params['#service_name#'] = esc_html(implode(', ', $svc_names));
+                $params['#service-name#'] = $params['#service_name#'];
+            }
+            $last_app = end($appointments);
+            if (!empty($last_app['end'])) {
+                $temp_end = DateTime::createFromFormat('Y-m-d H:i:s', $last_app['date'] . ' ' . $last_app['end'], $this->get_wp_timezone());
+                if ($temp_end === false) {
+                    $temp_end = DateTime::createFromFormat('Y-m-d H:i', $last_app['date'] . ' ' . $last_app['end'], $this->get_wp_timezone());
+                }
+                if ($temp_end !== false) {
+                    $params['#end#'] = $temp_end->format($time_format);
+                }
+            }
+            $params['#price#'] = number_format($total_price, 2, '.', '');
+        } else {
+            $email_body = esc_html__('Here are your scheduled repeat appointments', 'easy-appointments');
+            $email_body .= ":\n\n";
+            foreach ($appointments as $appointment) {
+                $email_body .= "Date: " . gmdate('F j, Y', strtotime($appointment['date'])) . "\n";
+                $email_body .= "Time: " . gmdate('H:i', strtotime($appointment['start'])) . " - " . gmdate('H:i', strtotime($appointment['end'])) . "\n";
+                $email_body .= "----------------------------------\n";
+            }
+            $email_body .= esc_html__('Thank you for using our service!', 'easy-appointments');
         }
-        $email_body .= esc_html__('Thank you for using our service!', 'easy-appointments');
         $body_template = $email_body. "\n\n" . $body_template;
         $body_template = apply_filters( 'easy_ea_customer_mail_template', $body_template, $app_array, $params );
 
@@ -1410,6 +1465,32 @@ class EAMail
 
             $this->send_email($email_to, $subject, $body, $headers, $files);
         }
+    }
+
+    /**
+     * Fetch all appointments in the same multi-service booking group (ms_* recurrence_id).
+     *
+     * @param int $app_id
+     * @return array
+     */
+    private function get_multi_service_group_appointments($app_id)
+    {
+        $row = $this->models->get_row('ea_appointments', $app_id, ARRAY_A);
+        if (empty($row) || empty($row['recurrence_id']) || strpos($row['recurrence_id'], 'ms_') !== 0) {
+            return array();
+        }
+
+        $table = $this->wpdb->prefix . 'ea_appointments';
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+        $rows = $this->wpdb->get_results(
+            $this->wpdb->prepare(
+                "SELECT * FROM {$table} WHERE recurrence_id = %s ORDER BY start ASC, id ASC",
+                $row['recurrence_id']
+            ),
+            ARRAY_A
+        );
+
+        return is_array($rows) ? $rows : array();
     }
 
     /**

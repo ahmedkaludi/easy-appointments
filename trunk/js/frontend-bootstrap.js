@@ -23,10 +23,260 @@
     }
 
     jQuery.extend(Plugin.prototype, {
+        isMultiServiceEnabled: function () {
+            return typeof ea_settings !== 'undefined' && ea_settings['services.allow_multiple'] === '1';
+        },
+
+        getSelectedServiceIds: function () {
+            if (!this.isMultiServiceEnabled()) {
+                var val = this.$element.find('select[name="service"], [name="service"]').first().val();
+                return val ? [String(val)] : [];
+            }
+
+            if (Array.isArray(this.selectedServiceIds)) {
+                return this.selectedServiceIds.slice();
+            }
+
+            var rawVal = this.$element.find('select[name="service"], [name="service"]').first().val();
+            if (!rawVal) {
+                return [];
+            }
+
+            return String(rawVal).split(',').map(function (s) { return s.trim(); }).filter(Boolean);
+        },
+
+        getSelectedServiceCsv: function () {
+            return this.getSelectedServiceIds().join(',');
+        },
+
+        getSelectedServiceOptions: function () {
+            var $select = this.$element.find('select[name="service"], [name="service"]').first();
+            var ids = this.getSelectedServiceIds();
+            var opts = [];
+
+            ids.forEach(function (id) {
+                var $match = $select.find('option').filter(function () {
+                    return String(jQuery(this).val()) === String(id);
+                }).first();
+                if ($match.length) {
+                    opts.push($match);
+                }
+            });
+
+            return opts;
+        },
+
+        getSelectedServicesMeta: function () {
+            var opts = this.getSelectedServiceOptions();
+            var names = [];
+            var rawNames = [];
+            var descriptions = [];
+            var totalPrice = 0;
+            var totalDuration = 0;
+
+            opts.forEach(function ($opt) {
+                var text = $opt.text().trim();
+                var rawName = $opt.data('raw-name') || text;
+                if (text) names.push(text);
+                if (rawName) rawNames.push(rawName);
+                var p = parseFloat($opt.data('price'));
+                if (!isNaN(p)) totalPrice += p;
+                var d = parseInt($opt.data('duration'), 10);
+                if (!isNaN(d)) totalDuration += d;
+                var desc = $opt.data('description');
+                if (desc) descriptions.push(desc);
+            });
+
+            return {
+                count: opts.length,
+                namesText: names.join(', '),
+                rawNamesText: rawNames.join(', '),
+                price: Math.round(totalPrice * 100) / 100,
+                duration: totalDuration,
+                descriptions: descriptions.join('<br>')
+            };
+        },
+
+        buildBookingOverviewData: function ($container) {
+            var $scope = ($container && $container.length) ? $container : this.$element;
+            var booking_data = {};
+            booking_data.location = $scope.find('select[name="location"] > option:selected, [name="location"] > option:selected').first().text();
+            booking_data.worker   = $scope.find('select[name="worker"] > option:selected, [name="worker"] > option:selected').first().text();
+            booking_data.date     = $scope.find('.date').datepicker().val() || '';
+            booking_data.time     = $scope.find('.selected-time').first().data('val') || '';
+
+            if (this.isMultiServiceEnabled()) {
+                var meta = this.getSelectedServicesMeta();
+                booking_data.service = meta.namesText || '';
+                booking_data.price = meta.price;
+                booking_data.service_description = meta.descriptions || '';
+            } else {
+                var $svcOpt = $scope.find('select[name="service"] > option:selected, [name="service"] > option:selected').first();
+                booking_data.service = $svcOpt.text();
+                booking_data.price = $svcOpt.data('price');
+                booking_data.service_description = $svcOpt.data('description') || '';
+            }
+
+            if (ea_settings['is_multiple_booking_allowed'] == '1') {
+                var $selectedSlots = $scope.find('.selected-time');
+                if ($selectedSlots.length > 0 && !this.isMultiServiceEnabled()) {
+                    booking_data.price = $selectedSlots.length * booking_data.price;
+                }
+                if ($selectedSlots.length > 1) {
+                    var timesArr = [];
+                    $selectedSlots.each(function () {
+                        timesArr.push(jQuery(this).data('val'));
+                    });
+                    booking_data.time = timesArr.join(', ');
+                }
+            }
+
+            var firstTime = (booking_data.time || '').toString().split(',')[0].trim();
+            if (firstTime && booking_data.date) {
+                var formattedDate = moment(booking_data.date + 'T' + firstTime, ea_settings['default_datetime_format']).format(ea_settings['date_format'] || 'YYYY-MM-DD');
+                booking_data.date_time = formattedDate + ' ' + booking_data.time;
+            } else {
+                booking_data.date_time = (booking_data.date ? booking_data.date + ' ' : '') + (booking_data.time || '');
+            }
+
+            return booking_data;
+        },
+
+        onMultiServiceChanged: function () {
+            var $select = this.$element.find('select[name="service"], [name="service"]').first();
+            var ids = this.getSelectedServiceIds();
+            $select.val(ids.length ? ids[0] : '');
+            this.getNextOptions({ target: $select[0] });
+            if (this.checkStatus()) {
+                this.selectChange();
+            }
+            if (ea_settings['ea_new_ui'] === '1') {
+                this.updateNewUiSummaryBar();
+            }
+        },
+
+        initClassicMultiServiceBox: function () {
+            var plugin = this;
+            var $select = plugin.$element.find('select[name="service"]').first();
+            if (!$select.length || $select.next('.ea-multi-service-wrap').length) {
+                return;
+            }
+
+            $select.addClass('ea-service-select-hidden');
+
+            var $wrap = jQuery(
+                '<div class="ea-multi-service-wrap">' +
+                    '<div class="ea-multi-service-list"></div>' +
+                    '<div class="ea-multi-service-summary" style="display:none;"></div>' +
+                '</div>'
+            );
+            $select.after($wrap);
+
+            function renderBoxes() {
+                var $list = $wrap.find('.ea-multi-service-list');
+                var $summary = $wrap.find('.ea-multi-service-summary');
+                $list.empty();
+
+                var validValues = [];
+                $select.find('option').each(function () {
+                    var v = String(jQuery(this).val() || '');
+                    if (v !== '') validValues.push(v);
+                });
+
+                if (!Array.isArray(plugin.selectedServiceIds)) {
+                    var pre = $select.val();
+                    plugin.selectedServiceIds = (pre && validValues.indexOf(String(pre)) !== -1) ? [String(pre)] : [];
+                } else {
+                    plugin.selectedServiceIds = plugin.selectedServiceIds.filter(function (id) {
+                        return validValues.indexOf(String(id)) !== -1;
+                    });
+                }
+
+                $select.find('option').each(function () {
+                    var $opt = jQuery(this);
+                    var val = $opt.attr('value') !== undefined ? String($opt.attr('value')) : String($opt.val() || '');
+                    if (val === '') {
+                        return;
+                    }
+                    var labelText = $opt.data('raw-name') || $opt.text().trim();
+                    var dur = parseInt($opt.data('duration'), 10);
+                    var price = $opt.data('price');
+                    var currency = $select.data('currency') || ea_settings['trans.currency'] || '';
+                    var metaParts = [];
+                    if (!isNaN(dur) && dur > 0) metaParts.push(dur + ' ' + (ea_settings['trans.min'] || 'min'));
+                    if (price !== undefined && price !== '' && ea_settings['price.hide'] !== '1' && ea_settings['price.hide.service'] !== '1') {
+                        var dispPrice = (ea_settings['hide.decimal_in_price'] == '1' && !isNaN(price)) ? Math.round(price) : price;
+                        metaParts.push(ea_settings['currency.before'] === '1' ? (currency + dispPrice) : (dispPrice + currency));
+                    }
+
+                    var checked = plugin.selectedServiceIds.indexOf(val) !== -1;
+                    var $item = jQuery(
+                        '<label class="ea-multi-service-item' + (checked ? ' is-selected' : '') + '">' +
+                            '<span class="ea-multi-service-left">' +
+                                '<input type="checkbox" value="' + _.escape(val) + '"' + (checked ? ' checked' : '') + ' />' +
+                                '<span class="ea-multi-service-name">' + _.escape(labelText) + '</span>' +
+                            '</span>' +
+                            (metaParts.length ? '<span class="ea-multi-service-meta">' + _.escape(metaParts.join(' · ')) + '</span>' : '') +
+                        '</label>'
+                    );
+
+                    $item.find('input[type="checkbox"]').on('change', function () {
+                        var idVal = String(jQuery(this).val());
+                        var idx = plugin.selectedServiceIds.indexOf(idVal);
+                        if (jQuery(this).is(':checked')) {
+                            if (idx === -1) plugin.selectedServiceIds.push(idVal);
+                            $item.addClass('is-selected');
+                        } else {
+                            if (idx !== -1) plugin.selectedServiceIds.splice(idx, 1);
+                            $item.removeClass('is-selected');
+                        }
+                        updateSummary();
+                        plugin.onMultiServiceChanged();
+                    });
+
+                    $list.append($item);
+                });
+
+                updateSummary();
+            }
+
+            function updateSummary() {
+                var $summary = $wrap.find('.ea-multi-service-summary');
+                var meta = plugin.getSelectedServicesMeta();
+                if (meta.count === 0) {
+                    $summary.hide().empty();
+                    return;
+                }
+                var currency = ea_settings['trans.currency'] || '';
+                var dispPrice = (ea_settings['hide.decimal_in_price'] == '1') ? Math.round(meta.price) : meta.price;
+                var parts = [meta.count + ' ' + (ea_settings['trans.selected'] || 'selected')];
+                if (meta.duration > 0) {
+                    parts.push(meta.duration + ' ' + (ea_settings['trans.min'] || 'min'));
+                }
+                if (ea_settings['price.hide'] !== '1' && ea_settings['price.hide.service'] !== '1') {
+                    parts.push(ea_settings['currency.before'] === '1' ? (currency + dispPrice) : (dispPrice + currency));
+                }
+                $summary.text(parts.join(' · ')).show();
+            }
+
+            if (window.MutationObserver && $select[0]) {
+                var classicObserver = new MutationObserver(function () {
+                    renderBoxes();
+                });
+                classicObserver.observe($select[0], { childList: true });
+            }
+
+            renderBoxes();
+        },
+
         vacation: function(workerId, day, serviceId=null) {
             var response = [true, day, ''];
+            var serviceIds = serviceId ? String(serviceId).split(',').map(function (s) { return s.trim(); }).filter(Boolean) : [];
             jQuery.each(ea_service_start_data, function(index, service_start_data) {
-                if (serviceId == service_start_data.id && jQuery.inArray(day, service_start_data.booking_date_skip) !== -1) {
+                var matchesService = serviceIds.length > 0
+                    ? (serviceIds.indexOf(String(service_start_data.id)) !== -1)
+                    : (serviceId == service_start_data.id);
+                if (matchesService && jQuery.inArray(day, service_start_data.booking_date_skip) !== -1) {
                     response = [false, 'blocked vacation', (ea_settings['trans.not-available'] || 'Not Available')];
                 }
             });
@@ -223,6 +473,10 @@
             }
             // ---- END NEW UI ENHANCEMENTS ----
 
+            if (plugin.isMultiServiceEnabled() && ea_settings['ea_new_ui'] !== '1') {
+                plugin.initClassicMultiServiceBox();
+            }
+
             // close plugin if something is missing
             if (!this.settingsOk()) {
                 return;
@@ -299,7 +553,7 @@
 
                     var dateString = date.getFullYear() + '-' + month + '-' + days;
                     var locationId = plugin.$element.find('[name="location"]').val();
-                    var serviceId = plugin.$element.find('[name="service"]').val();
+                    var serviceId = plugin.getSelectedServiceCsv();
                     var workerId = plugin.$element.find('[name="worker"]').val();
 
                     // Filter connection working days
@@ -307,8 +561,9 @@
                         if (locationId && serviceId && workerId) {
                             var dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
                             var dayName = dayNames[date.getDay()];
-                            var isWorkingDay = false;
-                            var hasTomorrowOnly = false;
+                            var serviceIdList = plugin.isMultiServiceEnabled() ? plugin.getSelectedServiceIds() : [String(serviceId)];
+                            var allServicesWorking = true;
+                            var anyTomorrowOnlyMismatch = false;
 
                             // Calculate tomorrow's date string
                             var now = new Date();
@@ -317,35 +572,48 @@
                                 (tomorrow.getMonth() + 1 < 10 ? '0' : '') + (tomorrow.getMonth() + 1) + '-' +
                                 (tomorrow.getDate() < 10 ? '0' : '') + tomorrow.getDate();
 
-                            jQuery.each(ea_connections, function(i, conn) {
-                                if (conn.location == locationId && conn.service == serviceId && conn.worker == workerId) {
-                                    if (conn.day_from && dateString < conn.day_from) return true;
-                                    if (conn.day_to && dateString > conn.day_to) return true;
+                            jQuery.each(serviceIdList, function(idx, reqServiceId) {
+                                var isWorkingDay = false;
+                                var hasTomorrowOnly = false;
 
-                                    // "Tomorrow Only" connection: only allow tomorrow's date
-                                    if (parseInt(conn.repeat_week, 10) === -1) {
-                                        hasTomorrowOnly = true;
-                                        if (dateString === tomorrowStr) {
-                                            isWorkingDay = true;
-                                        }
-                                        return false;
-                                    }
+                                jQuery.each(ea_connections, function(i, conn) {
+                                    if (conn.location == locationId && conn.service == reqServiceId && conn.worker == workerId) {
+                                        if (conn.day_from && dateString < conn.day_from) return true;
+                                        if (conn.day_to && dateString > conn.day_to) return true;
 
-                                    if (conn.day_of_week) {
-                                        var daysArr = conn.day_of_week.split(',').map(function(s) { return s.trim(); });
-                                        if (jQuery.inArray(dayName, daysArr) !== -1) {
-                                            isWorkingDay = true;
+                                        // "Tomorrow Only" connection: only allow tomorrow's date
+                                        if (parseInt(conn.repeat_week, 10) === -1) {
+                                            hasTomorrowOnly = true;
+                                            if (dateString === tomorrowStr) {
+                                                isWorkingDay = true;
+                                            }
                                             return false;
                                         }
+
+                                        if (conn.day_of_week) {
+                                            var daysArr = conn.day_of_week.split(',').map(function(s) { return s.trim(); });
+                                            if (jQuery.inArray(dayName, daysArr) !== -1) {
+                                                isWorkingDay = true;
+                                                return false;
+                                            }
+                                        }
                                     }
+                                });
+
+                                if (hasTomorrowOnly && !isWorkingDay) {
+                                    anyTomorrowOnlyMismatch = true;
+                                }
+                                if (!isWorkingDay) {
+                                    allServicesWorking = false;
+                                    return false;
                                 }
                             });
 
-                            if (hasTomorrowOnly && !isWorkingDay) {
+                            if (anyTomorrowOnlyMismatch) {
                                 return [false, 'tomorrow-only', (ea_settings['trans.tomorrow-only'] || 'Only tomorrow is available for booking')];
                             }
 
-                            if (!isWorkingDay) {
+                            if (!allServicesWorking) {
                                 return [false, 'not-working', (ea_settings['trans.not-working'] || 'Not Working')];
                             }
                         }
@@ -391,35 +659,7 @@
                     plugin.appSelected.apply(plugin);
                 } else {
                     // for booking overview
-                    var booking_data = {};
-
-                    booking_data.location = parentForm.find('select[name="location"] > option:selected, [name="location"] > option:selected').first().text();
-                    booking_data.service = parentForm.find('select[name="service"] > option:selected, [name="service"] > option:selected').first().text();
-                    booking_data.worker = parentForm.find('select[name="worker"] > option:selected, [name="worker"] > option:selected').first().text();
-                    booking_data.date = parentForm.find('.date').datepicker().val();
-                    booking_data.time = parentForm.find('.selected-time').first().data('val');
-                    booking_data.price = parentForm.find('select[name="service"] > option:selected, [name="service"] > option:selected').first().data('price');
-                    booking_data.service_description = parentForm.find('select[name="service"] > option:selected, [name="service"] > option:selected').first().data('description') || '';
-                    if (ea_settings['is_multiple_booking_allowed'] == '1') {
-                        var $selectedSlots = parentForm.find('.selected-time');
-                        booking_data.price = $selectedSlots.length * booking_data.price;
-                        if ($selectedSlots.length > 1) {
-                            var timesArr = [];
-                            $selectedSlots.each(function () {
-                                timesArr.push(jQuery(this).data('val'));
-                            });
-                            booking_data.time = timesArr.join(', ');
-                        }
-                    }
-
-                    var format = ea_settings['date_format'] + ' ' + ea_settings['time_format'];
-                    var firstTime = (booking_data.time || '').toString().split(',')[0].trim();
-                    if (firstTime) {
-                        var formattedDate = moment(booking_data.date + 'T' + firstTime, ea_settings['default_datetime_format']).format(ea_settings['date_format'] || 'YYYY-MM-DD');
-                        booking_data.date_time = formattedDate + ' ' + booking_data.time;
-                    } else {
-                        booking_data.date_time = booking_data.date + ' ' + booking_data.time;
-                    }
+                    var booking_data = plugin.buildBookingOverviewData(parentForm);
 
                     // set overview cancel_appointment
                     var overview_content = '';
@@ -481,6 +721,14 @@
 
         selectTimes: function ($element) {
             var plugin = this;
+            if (ea_settings['is_multiple_booking_allowed'] != '1' && plugin.isMultiServiceEnabled()) {
+                if ($element.hasClass('time-disabled')) {
+                    return false;
+                }
+                $element.parent().children().removeClass('selected-time');
+                $element.addClass('selected-time');
+                return true;
+            }
             if (ea_settings['is_multiple_booking_allowed'] != '1') {
                 var serviceData = plugin.$element.find('[name="service"] > option:selected').data();
                 var duration = serviceData.duration;
@@ -750,7 +998,7 @@
 
             // Collect filter values directly from the selects in form/container
             var locationVal = plugin.$element.find('select[name="location"], select[data-c="location"]').first().val();
-            var serviceVal  = plugin.$element.find('select[name="service"], select[data-c="service"]').first().val();
+            var serviceVal  = plugin.getSelectedServiceCsv();
             var workerVal   = plugin.$element.find('select[name="worker"], select[data-c="worker"]').first().val();
 
             if (locationVal) options.location = locationVal;
@@ -762,8 +1010,12 @@
                 var data_prev = step.prevAll('.step');
                 data_prev.each(function (index, elem) {
                     var input_field = jQuery(elem).find('.filter').filter('input, select');
-                    if (input_field.length && input_field.data('c') && input_field.val()) {
-                        options[input_field.data('c')] = input_field.val();
+                    if (input_field.length && input_field.data('c')) {
+                        var key = input_field.data('c');
+                        var val = (key === 'service' && plugin.isMultiServiceEnabled()) ? plugin.getSelectedServiceCsv() : input_field.val();
+                        if (val) {
+                            options[key] = val;
+                        }
                     }
                 });
             }
@@ -777,9 +1029,14 @@
             var current = jQuery(event.target);
             var currentCategory = current.data('c');
             var isLocationOrService = (currentCategory === 'location' || currentCategory === 'service');
+            var currentValue = (currentCategory === 'service' && this.isMultiServiceEnabled())
+                ? this.getSelectedServiceCsv()
+                : current.val();
 
             if (currentCategory === 'service') {
-                var desc = current.find('option:selected').data('description') || '';
+                var desc = this.isMultiServiceEnabled()
+                    ? this.getSelectedServicesMeta().descriptions
+                    : (current.find('option:selected').data('description') || '');
                 if (desc) {
                     jQuery('#ea-service-description').html(desc).show();
                 } else {
@@ -798,26 +1055,27 @@
             this.blurNextSteps(step, isLocationOrService);
 
             // nothing selected
-            if (current.val() === '') {
+            if (!currentValue || currentValue === '') {
                 return;
             }
 
             var options = {};
 
-            options[currentCategory] = current.val();
+            options[currentCategory] = currentValue;
 
             var data_prev = step.prevAll('.step');
 
+            var plugin = this;
             data_prev.each(function (index, elem) {
                 var option = jQuery(elem).find('select,input').first();
-
-                options[jQuery(option).data('c')] = option.val();
+                var key = jQuery(option).data('c');
+                options[key] = (key === 'service' && plugin.isMultiServiceEnabled()) ? plugin.getSelectedServiceCsv() : option.val();
             });
             // hidden
             this.$element.find('.step:hidden').each(function (index, elem) {
                 var option = jQuery(elem).find('select,input').first();
-
-                options[jQuery(option).data('c')] = option.val();
+                var key = jQuery(option).data('c');
+                options[key] = (key === 'service' && plugin.isMultiServiceEnabled()) ? plugin.getSelectedServiceCsv() : option.val();
             });
 
             //only visible step
@@ -863,8 +1121,9 @@
                 if (options.next == 'worker') {
                     jQuery('#ea-service-description').hide();
                     default_option_value = ea_settings['trans.worker_option'];
-                    var selectedService = plugin.$element.find('[name="service"] option:selected');
-                    var desc = selectedService.data('description') || '';
+                    var desc = plugin.isMultiServiceEnabled()
+                        ? plugin.getSelectedServicesMeta().descriptions
+                        : (plugin.$element.find('[name="service"] option:selected').data('description') || '');
                     jQuery('#ea-service-description').html(desc).toggle(!!desc);
                 }
                 plugin.$element.find('[id="repeat_booking"]').parents('.form-group').hide();
@@ -1102,7 +1361,9 @@
                     if (window.ea_partial_vacations && window.ea_partial_vacations.length > 0) {
                         var selectedWorker = plugin.$element.find('[name="worker"] option:selected, .ea-filters-grid select[data-c="worker"] option:selected').filter(':selected').val() || plugin.$element.find('[name="worker"]').val();
                         var $selectedService = plugin.$element.find('[name="service"] option:selected, .ea-filters-grid select[data-c="service"] option:selected').filter(':selected');
-                        var serviceDuration = parseInt($selectedService.data('duration')) || parseInt(plugin.$element.find('[name="service"]').find('option:selected').data('duration')) || 0;
+                        var serviceDuration = plugin.isMultiServiceEnabled()
+                            ? plugin.getSelectedServicesMeta().duration
+                            : (parseInt($selectedService.data('duration')) || parseInt(plugin.$element.find('[name="service"]').find('option:selected').data('duration')) || 0);
 
                         window.ea_partial_vacations.forEach(function(vac) {
                             if (vac.day === plugin.settings.currentDate && vac.workerId == selectedWorker) {
@@ -1287,6 +1548,15 @@
                 });
 
                 ['location', 'service', 'worker'].forEach(function (key) {
+                    if (key === 'service' && self.isMultiServiceEnabled()) {
+                        var svcCsv = self.getSelectedServiceCsv();
+                        fieldsMap['service'] = svcCsv;
+                        fields = jQuery.grep(fields, function (f) { return f.name !== 'service'; });
+                        if (svcCsv) {
+                            fields.push({'name': 'service', 'value': svcCsv});
+                        }
+                        return;
+                    }
                     if (!fieldsMap[key]) {
                         var val = self.$element.find('[name="' + key + '"], [data-c="' + key + '"]').first().val();
                         if (val) {
@@ -1453,9 +1723,15 @@
             }
 
             var isComplete = true;
+            var plugin = this;
 
             selects.each(function (index, element) {
-                isComplete = isComplete && jQuery(element).val() !== '';
+                var $el = jQuery(element);
+                if (($el.attr('name') === 'service' || $el.data('c') === 'service') && plugin.isMultiServiceEnabled()) {
+                    isComplete = isComplete && plugin.getSelectedServiceCsv() !== '';
+                } else {
+                    isComplete = isComplete && $el.val() !== '';
+                }
             });
 
             return isComplete;
@@ -1472,7 +1748,7 @@
             // make pre reservation
             var options = {
                 location: this.$element.find('[name="location"]').val(),
-                service: this.$element.find('[name="service"]').val(),
+                service: this.getSelectedServiceCsv(),
                 worker: this.$element.find('[name="worker"]').val(),
                 repeat_booking: this.$element.find('[name="repeat_booking"]').val(),
                 repeat_start_date: this.$element.find('[name="repeat_start_date"]').val(),
@@ -1499,23 +1775,7 @@
             options._cb = Math.floor(Math.random() * 1000000);
 
             // for booking overview
-            var booking_data = {};
-            booking_data.location = this.$element.find('select[name="location"] > option:selected, [name="location"] > option:selected').first().text();
-            booking_data.service = this.$element.find('select[name="service"] > option:selected, [name="service"] > option:selected').first().text();
-            booking_data.worker = this.$element.find('select[name="worker"] > option:selected, [name="worker"] > option:selected').first().text();
-            booking_data.date = this.$element.find('.date').datepicker().val();
-            booking_data.time = this.$element.find('.selected-time').first().data('val');
-            booking_data.price = this.$element.find('select[name="service"] > option:selected, [name="service"] > option:selected').first().data('price');
-            booking_data.service_description = this.$element.find('select[name="service"] > option:selected, [name="service"] > option:selected').first().data('description') || '';
-
-            var format = ea_settings['date_format'] + ' ' + ea_settings['time_format'];
-            var firstTime = (booking_data.time || '').toString().split(',')[0].trim();
-            if (firstTime) {
-                var formattedDate = moment(booking_data.date + 'T' + firstTime, ea_settings['default_datetime_format']).format(ea_settings['date_format'] || 'YYYY-MM-DD');
-                booking_data.date_time = formattedDate + ' ' + booking_data.time;
-            } else {
-                booking_data.date_time = booking_data.date + ' ' + booking_data.time;
-            }
+            var booking_data = plugin.buildBookingOverviewData(this.$element);
 
             var req = jQuery.get(ea_ajaxurl, options, function (response) {
                 if (!response || !response.id) {
@@ -1739,7 +1999,8 @@
                         const description = `Service: ${service}\nWorker: ${worker}\nPrice: ${price}${currency}`;
                         const startDateObj = new Date(rawDateTime);
                         if (!isNaN(startDateObj.getTime())) {
-                            const endDateObj = new Date(startDateObj.getTime() + 60 * 60 * 1000); // +1 hour
+                            var calDur = plugin.isMultiServiceEnabled() ? (plugin.getSelectedServicesMeta().duration || 60) : 60;
+                            const endDateObj = new Date(startDateObj.getTime() + calDur * 60 * 1000);
 
                             const formatDateForGoogle = (dateObj) =>
                                 dateObj.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
@@ -1783,7 +2044,9 @@
 
                 var redirected = false;
                 options.worker_name = plugin.$element.find('select[name="worker"] option:selected, [name="worker"] option:selected').first().text();
-                options.service_name = plugin.$element.find('select[name="service"] option:selected, [name="service"] option:selected').first().text();
+                options.service_name = plugin.isMultiServiceEnabled()
+                    ? plugin.getSelectedServicesMeta().namesText
+                    : plugin.$element.find('select[name="service"] option:selected, [name="service"] option:selected').first().text();
                 options.location_name = plugin.$element.find('select[name="location"] option:selected, [name="location"] option:selected').first().text();
 
                 // time + datetime
@@ -1793,10 +2056,11 @@
                 // if there is redirect do that
                 if (ea_settings['advance.redirect'] !== '') {
                     var data = JSON.parse(ea_settings['advance.redirect'].replaceAll('&quot;', '"'));
-                    var service = plugin.$element.find('[name="service"]').val();
+                    var service = plugin.getSelectedServiceCsv();
+                    var serviceFirst = plugin.getSelectedServiceIds()[0] || '';
 
                     var redirect = data.find(function(el) {
-                        return el.service === service;
+                        return el.service === service || el.service === serviceFirst;
                     });
 
                     if (redirect) {
@@ -1872,7 +2136,7 @@
             // make pre reservation
             var options = {
                 location: this.$element.find('[name="location"]').val(),
-                service: this.$element.find('[name="service"]').val(),
+                service: this.getSelectedServiceCsv(),
                 worker: this.$element.find('[name="worker"]').val(),
                 repeat_booking: this.$element.find('[name="repeat_booking"]').val(),
                 repeat_start_date: this.$element.find('[name="repeat_start_date"]').val(),
@@ -2021,11 +2285,17 @@
             var plugin = this;
             var booking_data = {};
             booking_data.location = plugin.$element.find('select[name="location"] > option:selected, [name="location"] > option:selected').first().text();
-            booking_data.service = plugin.$element.find('select[name="service"] > option:selected, [name="service"] > option:selected').first().text();
+            if (plugin.isMultiServiceEnabled()) {
+                var meta = plugin.getSelectedServicesMeta();
+                booking_data.service = meta.namesText;
+                booking_data.price = meta.price;
+            } else {
+                booking_data.service = plugin.$element.find('select[name="service"] > option:selected, [name="service"] > option:selected').first().text();
+                booking_data.price = plugin.$element.find('select[name="service"] > option:selected, [name="service"] > option:selected').first().data('price');
+            }
             booking_data.worker = plugin.$element.find('select[name="worker"] > option:selected, [name="worker"] > option:selected').first().text();
             booking_data.date = plugin.$element.find('.date').datepicker().val();
             booking_data.time = plugin.$element.find('.selected-time').first().data('val');
-            booking_data.price = plugin.$element.find('select[name="service"] > option:selected, [name="service"] > option:selected').first().data('price');
 
             // Create the event.
             var event = new CustomEvent('easyappnewappointment', { detail: booking_data });
@@ -2057,6 +2327,11 @@
             }
 
             // 2. Reset select filters (Location, Service, Worker)
+            plugin.selectedServiceIds = [];
+            plugin.$element.find('.ea-multi-service-wrap input[type="checkbox"]').prop('checked', false);
+            plugin.$element.find('.ea-multi-service-item').removeClass('is-selected');
+            plugin.$element.find('.ea-multi-service-summary').hide().empty();
+            plugin.$element.find('.ea-multi-service-tags').removeClass('has-items').empty();
             plugin.$element.find('select.filter, select.custom-field, .ea-new-ui select').each(function() {
                 var $select = jQuery(this);
                 var firstVal = $select.find('option:first').val() || '';
@@ -2259,9 +2534,10 @@
                     $grp.append('<label>' + lText + '</label>');
                 }
                 var origName = $select.attr('name') || '';
+                var isMultiService = (origName === 'service' && plugin.isMultiServiceEnabled());
 
                 var $customSelect = jQuery(
-                    '<div class="ea-custom-select" data-field="' + origName + '">' +
+                    '<div class="ea-custom-select' + (isMultiService ? ' is-multi' : '') + '" data-field="' + origName + '">' +
                         '<div class="ea-custom-select-trigger" tabindex="0">' +
                             '<span class="ea-custom-select-label"></span>' +
                             '<span class="ea-custom-select-arrow">' +
@@ -2275,11 +2551,81 @@
                 );
                 $grp.append($customSelect);
 
+                var $multiTagsBar = null;
+                if (isMultiService) {
+                    $multiTagsBar = jQuery('<div class="ea-multi-service-tags"></div>');
+                    $grp.append($multiTagsBar);
+                }
+
+                function renderMultiTagsBar() {
+                    if (!$multiTagsBar) return;
+                    $multiTagsBar.empty();
+                    var ids = plugin.getSelectedServiceIds();
+                    if (!ids.length) {
+                        $multiTagsBar.removeClass('has-items');
+                        return;
+                    }
+                    ids.forEach(function (sid) {
+                        var $opt = $select.find('option').filter(function () {
+                            return String(jQuery(this).val()) === String(sid);
+                        }).first();
+                        if (!$opt.length) return;
+                        var name = $opt.data('raw-name') || $opt.text().trim();
+                        var $tag = jQuery(
+                            '<span class="ea-multi-service-tag" data-value="' + _.escape(sid) + '">' +
+                                '<span>' + _.escape(name) + '</span>' +
+                                '<button type="button" class="ea-multi-service-tag-remove" aria-label="Remove">&times;</button>' +
+                            '</span>'
+                        );
+                        $tag.find('.ea-multi-service-tag-remove').on('click', function (e) {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            var idx = plugin.selectedServiceIds.indexOf(String(sid));
+                            if (idx !== -1) {
+                                plugin.selectedServiceIds.splice(idx, 1);
+                            }
+                            renderCustomOptions();
+                            plugin.onMultiServiceChanged();
+                        });
+                        $multiTagsBar.append($tag);
+                    });
+
+                    var meta = plugin.getSelectedServicesMeta();
+                    var currency = ea_settings['trans.currency'] || '';
+                    var dispPrice = (ea_settings['hide.decimal_in_price'] == '1') ? Math.round(meta.price) : meta.price;
+                    var totalParts = [];
+                    if (meta.duration > 0) {
+                        totalParts.push(meta.duration + ' ' + (ea_settings['trans.min'] || 'min'));
+                    }
+                    if (ea_settings['price.hide'] !== '1' && ea_settings['price.hide.service'] !== '1') {
+                        totalParts.push(ea_settings['currency.before'] === '1' ? (currency + dispPrice) : (dispPrice + currency));
+                    }
+                    if (totalParts.length) {
+                        $multiTagsBar.append('<span class="ea-multi-service-total-pill">' + _.escape(totalParts.join(' · ')) + '</span>');
+                    }
+                    $multiTagsBar.addClass('has-items');
+                }
+
                 function renderCustomOptions() {
                     var $list = $customSelect.find('.ea-custom-select-options');
                     $list.empty();
                     var selectedVal = $select.val();
                     var selectedLabel = '';
+
+                    if (isMultiService) {
+                        var validVals = [];
+                        $select.find('option').each(function () {
+                            var v = String(jQuery(this).attr('value') !== undefined ? jQuery(this).attr('value') : jQuery(this).val() || '');
+                            if (v !== '') validVals.push(v);
+                        });
+                        if (!Array.isArray(plugin.selectedServiceIds)) {
+                            plugin.selectedServiceIds = (selectedVal && validVals.indexOf(String(selectedVal)) !== -1) ? [String(selectedVal)] : [];
+                        } else {
+                            plugin.selectedServiceIds = plugin.selectedServiceIds.filter(function (id) {
+                                return validVals.indexOf(String(id)) !== -1;
+                            });
+                        }
+                    }
 
                     $select.find('option').each(function () {
                         var $opt = jQuery(this);
@@ -2290,9 +2636,15 @@
                             return;
                         }
 
-                        var isSelected = (val === selectedVal) || ($opt.is(':selected') && !selectedLabel);
+                        if (isMultiService && val === '') {
+                            return;
+                        }
 
-                        if (isSelected && (val !== '' || !selectedLabel)) {
+                        var isSelected = isMultiService
+                            ? (plugin.selectedServiceIds.indexOf(String(val)) !== -1)
+                            : ((val === selectedVal) || ($opt.is(':selected') && !selectedLabel));
+
+                        if (!isMultiService && isSelected && (val !== '' || !selectedLabel)) {
                             selectedLabel = text;
                         }
 
@@ -2301,10 +2653,25 @@
                         if (match && match[1] && match[2] && val !== '') {
                             var namePart = match[1].trim();
                             var pricePart = match[2].trim();
-                            optionHtml = '<span class="ea-custom-opt-name">' + namePart + '</span>' +
-                                         '<span class="ea-custom-opt-price">' + pricePart + '</span>';
+                            if (isMultiService) {
+                                optionHtml = '<span class="ea-custom-opt-main">' +
+                                                '<span class="ea-multi-checkbox"></span>' +
+                                                '<span class="ea-custom-opt-name">' + namePart + '</span>' +
+                                             '</span>' +
+                                             '<span class="ea-custom-opt-price">' + pricePart + '</span>';
+                            } else {
+                                optionHtml = '<span class="ea-custom-opt-name">' + namePart + '</span>' +
+                                             '<span class="ea-custom-opt-price">' + pricePart + '</span>';
+                            }
                         } else {
-                            optionHtml = '<span class="ea-custom-opt-name">' + text + '</span>';
+                            if (isMultiService) {
+                                optionHtml = '<span class="ea-custom-opt-main">' +
+                                                '<span class="ea-multi-checkbox"></span>' +
+                                                '<span class="ea-custom-opt-name">' + text + '</span>' +
+                                             '</span>';
+                            } else {
+                                optionHtml = '<span class="ea-custom-opt-name">' + text + '</span>';
+                            }
                         }
 
                         var $li = jQuery(
@@ -2316,7 +2683,18 @@
                         $li.on('click', function (e) {
                             e.preventDefault();
                             e.stopPropagation();
-                            var newVal = jQuery(this).attr('data-value');
+                            var newVal = String(jQuery(this).attr('data-value'));
+                            if (isMultiService) {
+                                var idx = plugin.selectedServiceIds.indexOf(newVal);
+                                if (idx === -1) {
+                                    plugin.selectedServiceIds.push(newVal);
+                                } else {
+                                    plugin.selectedServiceIds.splice(idx, 1);
+                                }
+                                renderCustomOptions();
+                                plugin.onMultiServiceChanged();
+                                return;
+                            }
                             $select.val(newVal).trigger('change');
                             $customSelect.find('.ea-custom-option').removeClass('is-selected');
                             jQuery(this).addClass('is-selected');
@@ -2327,7 +2705,15 @@
                         $list.append($li);
                     });
 
-                    if (!selectedLabel) {
+                    if (isMultiService) {
+                        var meta = plugin.getSelectedServicesMeta();
+                        if (meta.count > 0) {
+                            selectedLabel = meta.rawNamesText + (meta.count > 1 ? ' (' + meta.count + ')' : '');
+                        } else {
+                            selectedLabel = $select.find('option:first').text() || ea_settings['trans.select-services'] || 'Select Services';
+                        }
+                        renderMultiTagsBar();
+                    } else if (!selectedLabel) {
                         selectedLabel = $select.find('option:first').text() || 'Select...';
                     }
                     $customSelect.find('.ea-custom-select-label').text(selectedLabel).attr('title', selectedLabel);
@@ -2514,7 +2900,9 @@
                 summaryParts.push(timesArr.join(', '));
             } else {
                 var timeVal = $selected.first().data('val') || '';
-                var duration = parseInt(plugin.$element.find('select[name="service"] > option:selected, [name="service"] > option:selected').first().data('duration')) || 0;
+                var duration = plugin.isMultiServiceEnabled()
+                    ? plugin.getSelectedServicesMeta().duration
+                    : (parseInt(plugin.$element.find('select[name="service"] > option:selected, [name="service"] > option:selected').first().data('duration')) || 0);
 
                 if (timeVal) {
                     if (ea_settings['label.from_to'] === '1' && duration > 0) {
@@ -2777,7 +3165,7 @@
 
             // Validate moving from Step 1 -> 2
             if (targetStep > 1 && plugin.currentWizardStep === 1) {
-                var serviceVal = $bootstrap.find('[name="service"]').val();
+                var serviceVal = plugin.getSelectedServiceCsv();
                 if (!serviceVal || serviceVal === '' || serviceVal === '-') {
                     var $svcField = $bootstrap.find('[name="service"], .ea-field-group:has([name="service"])').first();
                     $svcField.addClass('ea-shake');
@@ -2869,34 +3257,7 @@
             var parentForm = $slot.closest('form');
             if (!parentForm.length) parentForm = plugin.$element.find('form');
 
-            var booking_data = {};
-            booking_data.location = parentForm.find('select[name="location"] > option:selected, [name="location"] > option:selected').first().text();
-            booking_data.service = parentForm.find('select[name="service"] > option:selected, [name="service"] > option:selected').first().text();
-            booking_data.worker = parentForm.find('select[name="worker"] > option:selected, [name="worker"] > option:selected').first().text();
-            booking_data.date = parentForm.find('.date').datepicker().val() || '';
-            booking_data.time = parentForm.find('.selected-time').first().data('val') || '';
-            booking_data.price = parentForm.find('select[name="service"] > option:selected, [name="service"] > option:selected').first().data('price');
-            booking_data.service_description = parentForm.find('select[name="service"] > option:selected, [name="service"] > option:selected').first().data('description') || '';
-
-            if (ea_settings['is_multiple_booking_allowed'] == '1') {
-                var $selectedSlots = parentForm.find('.selected-time');
-                booking_data.price = $selectedSlots.length * booking_data.price;
-                if ($selectedSlots.length > 1) {
-                    var timesArr = [];
-                    $selectedSlots.each(function () {
-                        timesArr.push(jQuery(this).data('val'));
-                    });
-                    booking_data.time = timesArr.join(', ');
-                }
-            }
-
-            var firstTime = (booking_data.time || '').toString().split(',')[0].trim();
-            if (firstTime && booking_data.date) {
-                var formattedDate = moment(booking_data.date + 'T' + firstTime, ea_settings['default_datetime_format']).format(ea_settings['date_format'] || 'YYYY-MM-DD');
-                booking_data.date_time = formattedDate + ' ' + booking_data.time;
-            } else {
-                booking_data.date_time = (booking_data.date || '') + ' ' + (booking_data.time || '');
-            }
+            var booking_data = plugin.buildBookingOverviewData(parentForm);
 
             var overview_content = plugin.settings.overview_template({data: booking_data, settings: ea_settings});
             parentForm.find('#booking-overview').html(overview_content);
@@ -3159,7 +3520,7 @@
 
             // Validate Step 1 -> 2
             if (targetStep > 1 && plugin.currentSidebarStep === 1) {
-                var serviceVal = $bootstrap.find('[name="service"]').val();
+                var serviceVal = plugin.getSelectedServiceCsv();
                 if (!serviceVal || serviceVal === '' || serviceVal === '-') {
                     var $svcField = $bootstrap.find('[name="service"], .ea-field-group:has([name="service"])').first();
                     $svcField.addClass('ea-shake');

@@ -93,6 +93,26 @@ if ( ! defined( 'WPINC' ) ) {
 
                         <?php
                         /**
+                         * Row: Allow Multiple Services
+                         */
+                        ?>
+                        <div class="ea-nsui-row">
+                            <div class="ea-nsui-row-label">
+                                <span class="ea-nsui-row-title">
+                                    <?php esc_html_e('Allow Multiple Services', 'easy-appointments'); ?>
+                                    <span class="ea-nsui-tip" data-tooltip="<?php esc_attr_e('Allow customers to select and book multiple services consecutively in a single booking. Separate appointments will be created for each selected service.', 'easy-appointments'); ?>">?</span>
+                                </span>
+                            </div>
+                            <div class="ea-nsui-row-control">
+                                <label class="ea-nsui-switch">
+                                    <input type="checkbox" data-key="services.allow_multiple" value="1" <?php checked($ea_get('services.allow_multiple', '0'), '1'); ?>>
+                                    <span class="ea-nsui-switch-track"><span class="ea-nsui-switch-thumb"></span></span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <?php
+                        /**
                          * Row: Order Services by Sequence
                          */
                         ?>

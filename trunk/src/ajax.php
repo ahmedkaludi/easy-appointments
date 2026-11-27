@@ -1276,11 +1276,6 @@ class EAAjax
 
         $orderPart = $this->models->get_order_by_part($mapping[$data['next']], true);
 
-        // Support multiple services from shortcode
-        if (!empty($data['service']) && strpos($data['service'], ',') !== false) {
-            $data['service_ids'] = array_filter(array_map('intval', explode(',', $data['service'])));
-        }
-
         $result = $this->models->get_next($data, $orderPart);
 
         $this->send_ok_json_result($result);
@@ -1311,7 +1306,16 @@ class EAAjax
         global $wpdb;
         $day_of_week = gmdate('l', strtotime($date));
         $time_now = current_time('timestamp', false);
-        $block_time = $time_now + intval($block_time) * 60;       
+        $block_time = $time_now + intval($block_time) * 60;
+        $conn_service_id = $service;
+        $is_multi_service = false;
+        if ($this->logic->is_multiple_services_enabled()) {
+            $parsed_sids = $this->logic->parse_service_ids($service);
+            if (!empty($parsed_sids)) {
+                $conn_service_id = $parsed_sids[0];
+                $is_multi_service = count($parsed_sids) > 1;
+            }
+        }
         $query1 = $wpdb->prepare("SELECT * FROM {$wpdb->prefix}ea_connections WHERE 
                 location = %d AND 
                 service = %d AND 
@@ -1320,9 +1324,13 @@ class EAAjax
                 (day_from IS NULL OR day_from <= %s)
                 ORDER BY day_to DESC
                 LIMIT 1",
-                $location, $service, $worker, $date);
+                $location, $conn_service_id, $worker, $date);
         // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared
         $connection_details = $wpdb->get_row($query1);
+        if ($is_multi_service && is_object($connection_details)) {
+            // Repeat booking and multi-service both share recurrence_id; disable repeat when multiple services selected
+            $connection_details->repeat_booking = 0;
+        }
         $result =  array('calendar_slots' =>$slots, 'connection_details' => $connection_details);
        
 
@@ -1534,8 +1542,17 @@ class EAAjax
             return $slots;
         }
 
-        $service_row = $this->models->get_row('ea_services', $service);
-        $duration = $service_row ? intval($service_row->duration) : 0;
+        if ($this->logic->is_multiple_services_enabled()) {
+            $service_ids = $this->logic->parse_service_ids($service);
+            $duration = 0;
+            foreach ($service_ids as $sid) {
+                $svc_row = $this->models->get_row('ea_services', $sid);
+                $duration += $svc_row ? intval($svc_row->duration) : 0;
+            }
+        } else {
+            $service_row = $this->models->get_row('ea_services', $service);
+            $duration = $service_row ? intval($service_row->duration) : 0;
+        }
 
         $filtered = array();
         foreach ($slots as $slot) {
@@ -1572,8 +1589,17 @@ class EAAjax
         $res_service = isset($_GET['service']) ? sanitize_text_field(wp_unslash($_GET['service'])) : '';
 
         if ($res_worker && $res_date && $res_start && $res_service) {
-            $svc_row = $this->models->get_row('ea_services', $res_service);
-            $dur = $svc_row ? intval($svc_row->duration) : 0;
+            if ($this->logic->is_multiple_services_enabled()) {
+                $res_sids = $this->logic->parse_service_ids($res_service);
+                $dur = 0;
+                foreach ($res_sids as $sid) {
+                    $svc_row = $this->models->get_row('ea_services', $sid);
+                    $dur += $svc_row ? intval($svc_row->duration) : 0;
+                }
+            } else {
+                $svc_row = $this->models->get_row('ea_services', $res_service);
+                $dur = $svc_row ? intval($svc_row->duration) : 0;
+            }
             $s_end = $dur > 0
                 ? gmdate('H:i', strtotime($res_date . ' ' . $res_start . " + {$dur} minutes"))
                 : $res_start;
@@ -1586,6 +1612,18 @@ class EAAjax
         $table = 'ea_appointments';
         // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- nonce already validated
         $data = $_GET;
+
+        // Multi-service sequential booking (Option A: consecutive slots for one worker)
+        if ($this->logic->is_multiple_services_enabled()) {
+            $multi_sids = $this->logic->parse_service_ids(isset($data['service']) ? $data['service'] : '');
+            if (count($multi_sids) > 1) {
+                $this->create_multi_service_reservation($data, $multi_sids);
+                return;
+            }
+            if (count($multi_sids) === 1) {
+                $data['service'] = $multi_sids[0];
+            }
+        }
 
         $multiple_allowed = intval($this->options->get_option_value('is_multiple_booking_allowed', 0));
         $has_range = (!empty($data['end']) && $multiple_allowed === 1);
@@ -1766,6 +1804,132 @@ class EAAjax
 
         $response->_hash = wp_hash($response->id);
         $this->send_ok_json_result($response);
+    }
+
+    /**
+     * Create consecutive reservation rows in ea_appointments for a multi-service booking.
+     *
+     * @param array $raw_input
+     * @param array $service_ids
+     */
+    private function create_multi_service_reservation($raw_input, $service_ids)
+    {
+        $table = 'ea_appointments';
+        $allowed = array(
+            'location', 'worker', 'name', 'email', 'phone',
+            'date', 'start', 'end_date', 'description', 'user', 'created'
+        );
+
+        $base = array();
+        foreach ($allowed as $key) {
+            if (isset($raw_input[$key])) {
+                $base[$key] = sanitize_text_field(wp_unslash($raw_input[$key]));
+            }
+        }
+
+        if (empty($base['end_date']) && !empty($base['date'])) {
+            $base['end_date'] = $base['date'];
+        }
+
+        $start_time = isset($base['start']) ? trim($base['start']) : '';
+        if (strpos($start_time, ',') !== false) {
+            $parts = array_filter(array_map('trim', explode(',', $start_time)));
+            $start_time = !empty($parts) ? reset($parts) : '';
+        }
+        $base['start'] = $start_time;
+
+        $block_time = (int) $this->options->get_option_value('block.time', 0);
+        $open_slots = $this->logic->get_open_slots(
+            $base['location'],
+            $service_ids,
+            $base['worker'],
+            $base['date'],
+            null,
+            true,
+            $block_time
+        );
+
+        $is_free = false;
+        foreach ($open_slots as $slot) {
+            if (isset($slot['value']) && $slot['value'] === $start_time && (int) $slot['count'] > 0) {
+                $is_free = true;
+                break;
+            }
+        }
+
+        if (!$is_free) {
+            $this->send_err_json_result('{"err":true,"message":"Slot is taken"}');
+        }
+
+        $base['status']  = 'reservation';
+        $base['ip']      = isset($_SERVER['REMOTE_ADDR']) ? sanitize_text_field(wp_unslash($_SERVER['REMOTE_ADDR'])) : '';
+        $base['session'] = session_id();
+        if (is_user_logged_in()) {
+            $base['user'] = get_current_user_id();
+        }
+
+        $check_data = $base;
+        $check_data['service'] = $service_ids[0];
+        $check = $this->logic->can_make_reservation($check_data);
+        if (!$check['status']) {
+            $this->send_err_json_result(wp_json_encode(array('err' => true, 'message' => $check['message'])));
+        }
+
+        $group_id     = 'ms_' . uniqid();
+        $cursor_ts    = strtotime($base['date'] . ' ' . $start_time);
+        $created_rows = array();
+
+        foreach ($service_ids as $sid) {
+            $svc = $this->models->get_row('ea_services', $sid);
+            if (!$svc || (int) $svc->duration <= 0) {
+                $this->rollback_reservations($created_rows);
+                $this->send_err_json_result('{"err":true,"message":"Invalid service"}');
+            }
+
+            $seg_start  = gmdate('H:i', $cursor_ts);
+            $cursor_ts += ((int) $svc->duration * 60);
+            $seg_end    = gmdate('H:i', $cursor_ts);
+
+            $seg_data = $base;
+            $seg_data['id']            = null;
+            $seg_data['service']       = $sid;
+            $seg_data['start']         = $seg_start;
+            $seg_data['end']           = $seg_end;
+            $seg_data['price']         = $svc->price;
+            $seg_data['recurrence_id'] = $group_id;
+
+            $res = $this->models->replace($table, $seg_data, true);
+            if ($res === false || empty($res->id)) {
+                $this->rollback_reservations($created_rows);
+                $this->send_err_json_result('{"err":true,"message":"DB error"}');
+            }
+
+            $created_rows[] = $res;
+        }
+
+        $first_row = $created_rows[0];
+        $first_row->_hash = wp_hash($first_row->id);
+        $first_row->recurrence_id = $group_id;
+        $first_row->multi_service_ids = wp_list_pluck($created_rows, 'id');
+        $this->send_ok_json_result($first_row);
+    }
+
+    /**
+     * Abandon partially created reservations on multi-service failure.
+     *
+     * @param array $rows
+     */
+    private function rollback_reservations($rows)
+    {
+        foreach ($rows as $row) {
+            if (!empty($row->id)) {
+                $existing = $this->models->get_row('ea_appointments', $row->id, ARRAY_A);
+                if (!empty($existing)) {
+                    $existing['status'] = 'abandoned';
+                    $this->models->replace('ea_appointments', $existing, true);
+                }
+            }
+        }
     }
 
 
@@ -2001,9 +2165,9 @@ class EAAjax
             $recurrence_id = $appointment['recurrence_id'];
             $table_a = $wpdb->prefix . 'ea_appointments';
             // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-            $appointments = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$table_a} WHERE recurrence_id = %s", $recurrence_id ), ARRAY_A );
+            $appointments = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$table_a} WHERE recurrence_id = %s ORDER BY start ASC, id ASC", $recurrence_id ), ARRAY_A );
 
-            
+            $updated_appointments = array();
             foreach ($appointments as $appointment) {
                 $data['id'] = $appointment['id'];
                 $appointment = $this->models->get_row('ea_appointments', $data['id'], ARRAY_A);
@@ -2053,14 +2217,16 @@ class EAAjax
 
                     $response = $response && $this->models->replace('ea_fields', $fields, true, true);
                 }
+                $updated_appointments[] = $appointment;
                 // trigger new appointment
                 do_action('easy_ea_new_app', $appointment['id'], $appointment, true);
 
                 // trigger new appointment from customer
             }
-            do_action('easy_ea_new_app_from_customer', $appointment['id'], $appointment, true);
-            do_action('easy_ea_repeat_appointment_mail_notification', $appointment['id'],$appointments);
-            $this->mail->send_notification(array('id' => $appointment['id']));
+            $primary_app = !empty($updated_appointments) ? $updated_appointments[0] : $appointment;
+            do_action('easy_ea_new_app_from_customer', $primary_app['id'], $primary_app, true);
+            do_action('easy_ea_repeat_appointment_mail_notification', $primary_app['id'], $updated_appointments);
+            $this->mail->send_notification(array('id' => $primary_app['id']));
         }else {
             $check = $this->logic->can_update_reservation($appointment, $data);
             if (!$check['status']) {
@@ -2162,6 +2328,21 @@ class EAAjax
 
         if ($response == false) {
             $this->send_err_json_result('{"err":true}');
+        }
+
+        // Abandon any sibling multi-service reservations in the same group
+        if (!empty($appointment['recurrence_id']) && strpos($appointment['recurrence_id'], 'ms_') === 0) {
+            global $wpdb;
+            $table_a = $wpdb->prefix . 'ea_appointments';
+            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+            $siblings = $wpdb->get_results(
+                $wpdb->prepare("SELECT * FROM {$table_a} WHERE recurrence_id = %s AND id <> %d", $appointment['recurrence_id'], $appointment['id']),
+                ARRAY_A
+            );
+            foreach ($siblings as $sibling) {
+                $sibling['status'] = 'abandoned';
+                $this->models->replace($table, $sibling, true);
+            }
         }
 
         $response = new stdClass;
@@ -3718,6 +3899,7 @@ class EAAjax
             'user.access.vacation'          => '',
             'max.appointments_by_user'      => '0',
             'is_multiple_booking_allowed'   => '0',
+            'services.allow_multiple'       => '0',
             'webhook.endpoints'             => '[]',
         );
     }

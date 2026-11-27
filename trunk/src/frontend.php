@@ -95,11 +95,14 @@ class Easy_EA_Frontend
         );
 
         // frontend standard script
+        $front_end_version = file_exists(EA_PLUGIN_DIR . 'js/frontend.js')
+            ? filemtime(EA_PLUGIN_DIR . 'js/frontend.js')
+            : EASY_APPOINTMENTS_VERSION;
         wp_register_script(
             'ea-front-end',
             EA_PLUGIN_URL . 'js/frontend.js',
             array('jquery', 'jquery-ui-datepicker', 'ea-datepicker-localization', 'moment', 'ea-masked'),
-            EASY_APPOINTMENTS_VERSION,
+            $front_end_version,
             true
         );
 
@@ -112,12 +115,15 @@ class Easy_EA_Frontend
             true
         );
 
-        // frontend standard script
+        // frontend bootstrap script
+        $front_bootstrap_version = file_exists(EA_PLUGIN_DIR . 'js/frontend-bootstrap.js')
+            ? filemtime(EA_PLUGIN_DIR . 'js/frontend-bootstrap.js')
+            : EASY_APPOINTMENTS_VERSION;
         wp_register_script(
             'ea-front-bootstrap',
             EA_PLUGIN_URL . 'js/frontend-bootstrap.js',
             array('jquery', 'jquery-ui-datepicker', 'ea-datepicker-localization', 'moment', 'ea-masked'),
-            EASY_APPOINTMENTS_VERSION,
+            $front_bootstrap_version,
             true
         );
 
@@ -158,18 +164,24 @@ class Easy_EA_Frontend
             EASY_APPOINTMENTS_VERSION
         );
 
+        $front_css_version = file_exists(EA_PLUGIN_DIR . 'css/eafront.css')
+            ? filemtime(EA_PLUGIN_DIR . 'css/eafront.css')
+            : EASY_APPOINTMENTS_VERSION;
         wp_register_style(
             'ea-frontend-style',
             EA_PLUGIN_URL . 'css/eafront.css',
             array(),
-            EASY_APPOINTMENTS_VERSION
+            $front_css_version
         );
 
+        $bootstrap_css_version = file_exists(EA_PLUGIN_DIR . 'css/eafront-bootstrap.css')
+            ? filemtime(EA_PLUGIN_DIR . 'css/eafront-bootstrap.css')
+            : EASY_APPOINTMENTS_VERSION;
         wp_register_style(
             'ea-frontend-bootstrap',
             EA_PLUGIN_URL . 'css/eafront-bootstrap.css',
             array(),
-            EASY_APPOINTMENTS_VERSION
+            $bootstrap_css_version
         );
 
         $new_ui_version = file_exists(EA_PLUGIN_DIR . 'css/eafront-bootstrap-new-ui.css')
@@ -297,6 +309,10 @@ class Easy_EA_Frontend
         $settings['trans.weeks'] = __('week(s)', 'easy-appointments');
         $settings['trans.never'] = __('Never', 'easy-appointments');
         $settings['trans.min'] = __('min', 'easy-appointments');
+        $settings['trans.select-services'] = __('Select Services', 'easy-appointments');
+        $settings['trans.selected'] = __('selected', 'easy-appointments');
+        $settings['trans.total-duration'] = __('Total duration', 'easy-appointments');
+        $settings['trans.total-price'] = __('Total price', 'easy-appointments');
         $settings['trans.wizard_step_service'] = __('Service', 'easy-appointments');
         $settings['trans.wizard_step_datetime'] = __('Date & Time', 'easy-appointments');
         $settings['trans.wizard_step_details'] = __('Details', 'easy-appointments');
@@ -979,6 +995,10 @@ class Easy_EA_Frontend
         $settings['trans.weeks'] = __('week(s)', 'easy-appointments');
         $settings['trans.never'] = __('Never', 'easy-appointments');
         $settings['trans.min'] = __('min', 'easy-appointments');
+        $settings['trans.select-services'] = __('Select Services', 'easy-appointments');
+        $settings['trans.selected'] = __('selected', 'easy-appointments');
+        $settings['trans.total-duration'] = __('Total duration', 'easy-appointments');
+        $settings['trans.total-price'] = __('Total price', 'easy-appointments');
         $settings['trans.wizard_step_service'] = __('Service', 'easy-appointments');
         $settings['trans.wizard_step_datetime'] = __('Date & Time', 'easy-appointments');
         $settings['trans.wizard_step_details'] = __('Details', 'easy-appointments');

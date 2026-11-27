@@ -210,6 +210,7 @@ class EAOptions
             'user.access.vacation'          => '',
             'max.appointments_by_user'      => '0',
             'is_multiple_booking_allowed'   => '0',
+            'services.allow_multiple'       => '0',
             'services.order_by_sequence'    => '0',
             'webhook.endpoints' => '[]',
             'pending_message'   => 'Your appointment has been submitted and is currently pending approval. You will be notified once it is confirmed.',

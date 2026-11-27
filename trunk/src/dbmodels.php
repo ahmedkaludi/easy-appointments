@@ -410,7 +410,7 @@ class EADBModels
         $values = array();
 
         foreach ($options as $key => $value) {
-            if ($key === 'next') {
+            if ($key === 'next' || is_array($value)) {
                 continue;
             }
 
@@ -461,10 +461,12 @@ class EADBModels
 
         $vars = '';
         $values = array();
+        $multi_service_count = 0;
+        $allow_multiple_services = $this->options->get_option_value('services.allow_multiple', '0') === '1';
 
         foreach ($options as $key => $value) {
 
-            if ($key === 'next') {
+            if ($key === 'next' || is_array($value)) {
                 continue;
             }
 
@@ -473,13 +475,16 @@ class EADBModels
             // =========================
             if ($key === 'service' && strpos((string)$value, ',') !== false) {
 
-                $ids = array_filter(
+                $ids = array_values(array_unique(array_filter(
                     array_map('intval', explode(',', $value))
-                );
+                )));
 
                 if (!empty($ids)) {
 
                     $vars .= " AND $key IN (" . implode(',', $ids) . ")";
+                    if ($allow_multiple_services && $options['next'] !== 'service' && count($ids) > 1) {
+                        $multi_service_count = count($ids);
+                    }
                 }
 
                 continue;
@@ -501,8 +506,17 @@ class EADBModels
         }
 
         $current_date = current_time('Y-m-d');
-        // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
-        $query = $this->wpdb->prepare( "SELECT DISTINCT {$options['next']} FROM $table_name WHERE is_working=1 AND (day_to IS NULL OR CAST(day_to AS CHAR) = '' OR CAST(day_to AS CHAR) = '0000-00-00' OR day_to >= %s)$vars", array_merge(array($current_date), $values) );
+        if ($multi_service_count > 1) {
+            // Require workers/locations with active connections for ALL selected services
+            // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
+            $query = $this->wpdb->prepare(
+                "SELECT {$options['next']} FROM $table_name WHERE is_working=1 AND (day_to IS NULL OR CAST(day_to AS CHAR) = '' OR CAST(day_to AS CHAR) = '0000-00-00' OR day_to >= %s)$vars GROUP BY {$options['next']} HAVING COUNT(DISTINCT service) = %d",
+                array_merge(array($current_date), $values, array($multi_service_count))
+            );
+        } else {
+            // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
+            $query = $this->wpdb->prepare( "SELECT DISTINCT {$options['next']} FROM $table_name WHERE is_working=1 AND (day_to IS NULL OR CAST(day_to AS CHAR) = '' OR CAST(day_to AS CHAR) = '0000-00-00' OR day_to >= %s)$vars", array_merge(array($current_date), $values) );
+        }
 
         // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.PreparedSQL.NotPrepared
         $next_rows_raw = $this->wpdb->get_results($query, ARRAY_N);

@@ -240,6 +240,7 @@ class EATableColumns
             'form_class',
             'label.from_to',
             'is_multiple_booking_allowed',
+            'services.allow_multiple',
             'webhook.endpoints',
             'pending_message',
             'confirmed_message',

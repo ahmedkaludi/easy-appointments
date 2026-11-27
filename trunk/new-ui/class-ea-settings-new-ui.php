@@ -84,6 +84,7 @@ class EA_Settings_New_UI
         'multiple.work',
         'compatibility.mode',
         'is_multiple_booking_allowed',
+        'services.allow_multiple',
         'services.order_by_sequence',
         'daily_schedule.enabled',
         'max.appointments',
