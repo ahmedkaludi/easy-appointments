@@ -201,6 +201,152 @@
             renderBoxes();
         },
 
+        isInfiniteConnection: function (conn) {
+            if (!conn || !conn.day_to || conn.day_to === '0000-00-00') {
+                return true;
+            }
+            var startStr = (conn.day_from && conn.day_from !== '0000-00-00') ? conn.day_from : moment().format('YYYY-MM-DD');
+            var mFrom = moment(startStr, 'YYYY-MM-DD', true);
+            var mTo   = moment(conn.day_to, 'YYYY-MM-DD', true);
+            if (!mFrom.isValid() || !mTo.isValid()) {
+                return false;
+            }
+            return mTo.diff(mFrom, 'years', true) >= 10;
+        },
+
+        parseDateStringLocal: function (str) {
+            if (!str || str === '0000-00-00') return null;
+            var parts = String(str).split('-');
+            if (parts.length !== 3) return null;
+            var y = parseInt(parts[0], 10);
+            var m = parseInt(parts[1], 10) - 1;
+            var d = parseInt(parts[2], 10);
+            if (isNaN(y) || isNaN(m) || isNaN(d)) return null;
+            return new Date(y, m, d);
+        },
+
+        resolveSettingDateBound: function (settingVal, fallbackToday) {
+            var now = new Date();
+            var today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+            if (settingVal === null || typeof settingVal === 'undefined' || settingVal === '') {
+                return fallbackToday ? today : null;
+            }
+            if (typeof settingVal === 'number' || /^-?\d+$/.test(String(settingVal).trim())) {
+                var d = new Date(today.getTime());
+                d.setDate(d.getDate() + parseInt(settingVal, 10));
+                return d;
+            }
+            var parsed = this.parseDateStringLocal(String(settingVal).trim());
+            if (parsed) {
+                return parsed;
+            }
+            return fallbackToday ? today : null;
+        },
+
+        getConnectionDateBounds: function () {
+            var baseMin = this.resolveSettingDateBound(ea_settings.min_date, true);
+            var hasExplicitMax = !(ea_settings.max_date === null || typeof ea_settings.max_date === 'undefined' || ea_settings.max_date === '');
+            var baseMax = hasExplicitMax ? this.resolveSettingDateBound(ea_settings.max_date, false) : null;
+
+            var locationId = this.$element.find('[name="location"]').val();
+            var serviceCsv = this.getSelectedServiceCsv();
+            var workerId   = this.$element.find('[name="worker"]').val();
+
+            if (typeof ea_connections === 'undefined' || !Array.isArray(ea_connections) || ea_connections.length === 0 || !locationId || !serviceCsv || !workerId) {
+                return { minDate: baseMin, maxDate: hasExplicitMax ? (baseMax || ea_settings.max_date) : null };
+            }
+
+            var serviceIdList = this.isMultiServiceEnabled() ? this.getSelectedServiceIds() : [String(serviceCsv)];
+            var now = new Date();
+            var today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+            var tomorrow = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
+            var plugin = this;
+
+            var overallConnMin = null;
+            var overallConnMax = null;
+
+            for (var sIdx = 0; sIdx < serviceIdList.length; sIdx++) {
+                var reqSid = serviceIdList[sIdx];
+                var svcMin = null;
+                var svcMax = null;
+                var svcHasInfinite = false;
+                var matchedCount = 0;
+
+                for (var cIdx = 0; cIdx < ea_connections.length; cIdx++) {
+                    var conn = ea_connections[cIdx];
+                    if (conn.location == locationId && conn.service == reqSid && conn.worker == workerId) {
+                        matchedCount++;
+
+                        if (parseInt(conn.repeat_week, 10) === -1) {
+                            svcMin = (!svcMin || tomorrow < svcMin) ? new Date(tomorrow.getTime()) : svcMin;
+                            if (!svcHasInfinite) {
+                                svcMax = (!svcMax || tomorrow > svcMax) ? new Date(tomorrow.getTime()) : svcMax;
+                            }
+                            continue;
+                        }
+
+                        var cFrom = plugin.parseDateStringLocal(conn.day_from);
+                        if (cFrom) {
+                            svcMin = (!svcMin || cFrom < svcMin) ? cFrom : svcMin;
+                        }
+
+                        if (plugin.isInfiniteConnection(conn)) {
+                            svcHasInfinite = true;
+                            svcMax = null;
+                        } else if (!svcHasInfinite) {
+                            var cTo = plugin.parseDateStringLocal(conn.day_to);
+                            if (cTo && (!svcMax || cTo > svcMax)) {
+                                svcMax = cTo;
+                            }
+                        }
+                    }
+                }
+
+                if (matchedCount === 0) {
+                    continue;
+                }
+
+                if (svcMin && (!overallConnMin || svcMin > overallConnMin)) {
+                    overallConnMin = svcMin;
+                }
+                if (!svcHasInfinite && svcMax) {
+                    if (!overallConnMax || svcMax < overallConnMax) {
+                        overallConnMax = svcMax;
+                    }
+                }
+            }
+
+            var finalMin = baseMin || today;
+            if (overallConnMin && overallConnMin > finalMin) {
+                finalMin = overallConnMin;
+            }
+
+            var finalMax = null;
+            if (overallConnMax) {
+                finalMax = (baseMax && baseMax < overallConnMax) ? baseMax : overallConnMax;
+            } else if (hasExplicitMax) {
+                finalMax = baseMax || ea_settings.max_date;
+            }
+
+            return { minDate: finalMin, maxDate: finalMax };
+        },
+
+        applyConnectionDateBounds: function () {
+            var $date = this.$element.find('.date');
+            if (!$date.length || !$date.hasClass('hasDatepicker')) {
+                return;
+            }
+            var bounds = this.getConnectionDateBounds();
+            var minKey = bounds.minDate instanceof Date ? bounds.minDate.getTime() : String(bounds.minDate);
+            var maxKey = bounds.maxDate instanceof Date ? bounds.maxDate.getTime() : String(bounds.maxDate);
+            var key = minKey + '|' + maxKey;
+            if (this._lastDateBoundsKey === key) {
+                return;
+            }
+            this._lastDateBoundsKey = key;
+            $date.datepicker('option', { minDate: bounds.minDate, maxDate: bounds.maxDate });
+        },
+
         vacation: function(workerId, day, serviceId) {
             serviceId = serviceId || null;
             var response = [true, day, ''];
@@ -421,8 +567,8 @@
 
                                 jQuery.each(ea_connections, function(i, conn) {
                                     if (conn.location == locationId && conn.service == reqServiceId && conn.worker == workerId) {
-                                        if (conn.day_from && dateString < conn.day_from) return true;
-                                        if (conn.day_to && dateString > conn.day_to) return true;
+                                        if (conn.day_from && conn.day_from !== '0000-00-00' && dateString < conn.day_from) return true;
+                                        if (conn.day_to && conn.day_to !== '0000-00-00' && dateString > conn.day_to) return true;
 
                                         // "Tomorrow Only" connection: only allow tomorrow's date
                                         if (parseInt(conn.repeat_week, 10) === -1) {
@@ -468,6 +614,7 @@
 
             // hide options with one choiche
             this.hideDefault();
+            this.applyConnectionDateBounds();
 
             // time is selected
             this.$element.find('.time').on('click', '.time-value', function (event) {
@@ -835,8 +982,15 @@
 
             var $date = this.$element.find('.date');
             if ($date.hasClass('hasDatepicker')) {
+                this.applyConnectionDateBounds();
                 $date.datepicker('refresh');
             }
+
+            if (this._dateReq && this._dateReq.readyState !== 4) {
+                this._dateReq.abort();
+            }
+            this._dateReqToken = (this._dateReqToken || 0) + 1;
+            this.$element.find('.time').empty();
 
             // blur next options
             this.blurNextSteps(step, isLocationOrService);
@@ -953,6 +1107,7 @@
 
                 var $date = plugin.$element.find('.date');
                 if ($date.hasClass('hasDatepicker')) {
+                    plugin.applyConnectionDateBounds();
                     $date.datepicker('refresh');
                 }
             }, 'json')
@@ -1026,6 +1181,7 @@
             if (current.hasClass('calendar')) {
 
                 var calendar = this.$element.find('.date');
+                this.applyConnectionDateBounds();
 
                 this.$element.find('.ui-datepicker-current-day').click();
 
@@ -1042,6 +1198,12 @@
 
             calendar = jQuery(calendar.dpDiv).parents('.date');
 
+            if (plugin._dateReq && plugin._dateReq.readyState !== 4) {
+                plugin._dateReq.abort();
+            }
+            plugin._dateReqToken = (plugin._dateReqToken || 0) + 1;
+            var reqToken = plugin._dateReqToken;
+
             calendar.parent().next().addClass('disabled');
 
             var options = this.getPrevousOptions(calendar);
@@ -1053,7 +1215,10 @@
 
             this.placeLoader(calendar);
 
-            jQuery.get(ea_ajaxurl, options, function (response_m) {
+            plugin._dateReq = jQuery.get(ea_ajaxurl, options, function (response_m) {
+                if (reqToken !== plugin._dateReqToken) {
+                    return;
+                }
                 var response = response_m.calendar_slots;
 
                 var next_element = jQuery(calendar).parent().next('.step').children('.time');
@@ -1136,6 +1301,9 @@
 
             }, 'json')
                 .always(function () {
+                    if (reqToken !== plugin._dateReqToken) {
+                        return;
+                    }
                     plugin.removeLoader();
                 });
         },
@@ -1495,6 +1663,7 @@
                 try {
                     $date.datepicker('setDate', null);
                     $date.find('.ui-datepicker-current-day').removeClass('ui-datepicker-current-day');
+                    plugin.applyConnectionDateBounds();
                 } catch (e) {}
             }
 

@@ -383,3 +383,10 @@ input.error, textarea.error, select.error {
     font-weight: 600;
     color: #1e293b;
 }
+
+.ea-standard .ui-datepicker .ui-datepicker-prev.ui-state-disabled,
+.ea-standard .ui-datepicker .ui-datepicker-next.ui-state-disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+    pointer-events: none;
+}

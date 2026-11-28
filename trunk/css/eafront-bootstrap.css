@@ -109,6 +109,13 @@
 	color: #ccc;
 	font-size: 1.5em;
 }
+.ui-datepicker .ui-datepicker-prev.ui-state-disabled,
+.ui-datepicker .ui-datepicker-next.ui-state-disabled {
+	display: inline-block;
+	opacity: 0.35;
+	cursor: not-allowed;
+	pointer-events: none;
+}
 .ui-datepicker a.ui-state-disabled {
 	display: none;
 }

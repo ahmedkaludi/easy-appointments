@@ -605,6 +605,14 @@
     background: rgba(32, 30, 29, 0.05);
 }
 
+.ea-new-ui .ui-datepicker .ui-datepicker-prev.ui-state-disabled,
+.ea-new-ui .ui-datepicker .ui-datepicker-next.ui-state-disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+    pointer-events: none;
+    background: transparent;
+}
+
 .ea-new-ui .ui-datepicker table {
     width: 100%;
     border-collapse: collapse;
